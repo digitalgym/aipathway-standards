@@ -23,7 +23,11 @@ Or copy any `skills/<name>/` folder into `.claude/skills/` in your own project.
 |---|---|---|
 | `AIP-BS-DATABASE-REACTIVATION` | [`database-reactivation`](skills/database-reactivation/SKILL.md) | Database Reactivation Build Standard |
 | `AIP-BS-DEBTOR-CHASING` | [`debtor-chasing`](skills/debtor-chasing/SKILL.md) | Debtor Chasing Build Standard |
+| `AIP-BS-BOOKED-AFTER-HOURS` | [`booked-after-hours`](skills/booked-after-hours/SKILL.md) | Booked After Hours Build Standard |
 | `AIP-BS-RENT-ARREARS` | [`rent-arrears`](skills/rent-arrears/SKILL.md) | Rent Arrears Build Standard |
+| `AIP-BS-FIRE-SERVICE-PACK-STANDARD` | [`fire-service-pack-standard`](skills/fire-service-pack-standard/SKILL.md) | Fire Service Pack Standard |
+| `AIP-BS-MULTI-SITE-CONFORMANCE` | [`multi-site-conformance`](skills/multi-site-conformance/SKILL.md) | Multi Site Conformance Build Standard |
+| `AIP-BS-CITED-ANSWER` | [`cited-answer`](skills/cited-answer/SKILL.md) | Cited Answer Build Standard |
 | `AIP-BS-COMPLIANCE-CALENDAR` | [`compliance-calendar`](skills/compliance-calendar/SKILL.md) | Compliance Calendar Build Standard |
 | `AIP-BS-INVOICE-CHECK` | [`invoice-check`](skills/invoice-check/SKILL.md) | Invoice Check Build Standard |
 | `AIP-BS-REJECTED-PACK` | [`rejected-pack`](skills/rejected-pack/SKILL.md) | Rejected Pack Build Standard |

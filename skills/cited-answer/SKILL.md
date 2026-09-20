@@ -1,28 +1,28 @@
 ---
-name: compliance-calendar
-description: How to build a compliance calendar that survives a rule change. Dated rules and derived due dates, the obligation record, the four states, and the hard parts: unknown anchor dates, cross-border rules, and the owner who declines the work. Free to implement, with a conformance checklist. Use when building, reviewing or auditing this workflow. Carries the AIP-BS-COMPLIANCE-CALENDAR open standard, free to implement under CC BY 4.0.
+name: cited-answer
+description: How to build an assistant that answers questions about the rules you are accountable for without inventing them. Source cards, the four queues, the change feed and who accepts it, and why declining to answer is a valid output. Free to implement, with a conformance checklist. Use when building, reviewing or auditing this workflow. Carries the AIP-BS-CITED-ANSWER open standard, free to implement under CC BY 4.0.
 license: CC-BY-4.0
 ---
 
-# Compliance Calendar Build Standard
+# Cited Answer Build Standard
 
-**Spec:** AIP-BS-COMPLIANCE-CALENDAR · **Version:** 2026-09-10 · **Canonical:** https://aipathway.com.au/explore-ai/compliance-calendar-build-standard
+**Spec:** AIP-BS-CITED-ANSWER · **Version:** 2026-09-17 · **Canonical:** https://aipathway.com.au/explore-ai/cited-answer-build-standard
 
-Open specification: how to build a compliance calendar that survives a rule change. Dated rules and derived due dates, the obligation record, the four states, and the hard parts: unknown anchor dates, cross-border rules, and the owner who declines the work. Free to implement, with a conformance checklist.
+Open specification: how to build an assistant that answers questions about the rules you are accountable for without inventing them. Source cards, the four queues, the change feed and who accepts it, and why declining to answer is a valid output. Free to implement, with a conformance checklist.
 
 ## Read the standard first
 
-The full specification is in `reference/compliance-calendar.md` in this skill. Read it
+The full specification is in `reference/cited-answer.md` in this skill. Read it
 before writing code. It is about 3,000 words and it is the whole job: the
 checks in order, the objects with their fields, what must never be automated,
 and a pass test.
 
-For the current version, fetch https://aipathway.com.au/explore-ai/compliance-calendar-build-standard.md. This copy is 2026-09-10.
+For the current version, fetch https://aipathway.com.au/explore-ai/cited-answer-build-standard.md. This copy is 2026-09-17.
 
 The checks are also structured data, so you do not have to infer a test plan from
-the prose: https://aipathway.com.au/explore-ai/compliance-calendar-build-standard/checks.json gives each check a stable id, the ports it
+the prose: https://aipathway.com.au/explore-ai/cited-answer-build-standard/checks.json gives each check a stable id, the ports it
 observes, what to inject and what to assert. `npx @aipathway/conformance show
-compliance-calendar-build-standard` prints them and comes with a stub and a runner, so a build can be
+cited-answer-build-standard` prints them and comes with a stub and a runner, so a build can be
 driven through those ports and asserted without a live phone number. Verdicts
 are not pass/fail: a check needing a live number returns `with_us` rather than
 failing you, and one asking what you measured before building returns
@@ -68,20 +68,18 @@ skill asserts.
 ## The work, in order
 
 - 1. What this standard covers
-- 2. Dated rules, derived dates
-- 3. The obligation record
-- 4. The four states
-- 5. Six rules that keep it trustworthy
-- 6. The parts that are harder than they look
-- 7. What breaks after it works
-- 8. What It Is Worth
-- 9. The objects, and what is in them
-- 10. Provider: what to stub, and what not to hand-roll
-- 11. Conformance checklist
+- 2. The objects, and what is in them
+- 3. The checks, in order
+- 4. The four queues
+- 5. The change feed, and who accepts it
+- 6. Internal and public are different policies
+- 7. What stays with a person
+- 8. Provider: what to stub, and what not to hand-roll
+- 9. Conformance checklist
 
 ## Attribution
 
-AIP-BS-COMPLIANCE-CALENDAR, 2026-09-10, AI Pathway, https://aipathway.com.au/explore-ai/compliance-calendar-build-standard
+AIP-BS-CITED-ANSWER, 2026-09-17, AI Pathway, https://aipathway.com.au/explore-ai/cited-answer-build-standard
 
 Licensed CC BY 4.0. Free to implement, including commercially. If you build to
 this standard, cite the spec ID: a workflow built to a shared standard can be

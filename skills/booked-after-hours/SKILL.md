@@ -1,28 +1,28 @@
 ---
-name: compliance-calendar
-description: How to build a compliance calendar that survives a rule change. Dated rules and derived due dates, the obligation record, the four states, and the hard parts: unknown anchor dates, cross-border rules, and the owner who declines the work. Free to implement, with a conformance checklist. Use when building, reviewing or auditing this workflow. Carries the AIP-BS-COMPLIANCE-CALENDAR open standard, free to implement under CC BY 4.0.
+name: booked-after-hours
+description: The open build standard for answering a trade business phone out of hours. Disclosure and recording consent before the first question, a fixed emergency / routine / quote taxonomy, the address resolved by lookup rather than transcribed, one job written not two, typed escalation with the on-call rule, a stub to build against, and a pass test you can stage on your own phone in a minute. Use when building, reviewing or auditing this workflow. Carries the AIP-BS-BOOKED-AFTER-HOURS open standard, free to implement under CC BY 4.0.
 license: CC-BY-4.0
 ---
 
-# Compliance Calendar Build Standard
+# Booked After Hours Build Standard
 
-**Spec:** AIP-BS-COMPLIANCE-CALENDAR · **Version:** 2026-09-10 · **Canonical:** https://aipathway.com.au/explore-ai/compliance-calendar-build-standard
+**Spec:** AIP-BS-BOOKED-AFTER-HOURS · **Version:** 2026-09-18 · **Canonical:** https://aipathway.com.au/explore-ai/booked-after-hours-build-standard
 
-Open specification: how to build a compliance calendar that survives a rule change. Dated rules and derived due dates, the obligation record, the four states, and the hard parts: unknown anchor dates, cross-border rules, and the owner who declines the work. Free to implement, with a conformance checklist.
+The open build standard for answering a trade business phone out of hours. Disclosure and recording consent before the first question, a fixed emergency / routine / quote taxonomy, the address resolved by lookup rather than transcribed, one job written not two, typed escalation with the on-call rule, a stub to build against, and a pass test you can stage on your own phone in a minute.
 
 ## Read the standard first
 
-The full specification is in `reference/compliance-calendar.md` in this skill. Read it
+The full specification is in `reference/booked-after-hours.md` in this skill. Read it
 before writing code. It is about 3,000 words and it is the whole job: the
 checks in order, the objects with their fields, what must never be automated,
 and a pass test.
 
-For the current version, fetch https://aipathway.com.au/explore-ai/compliance-calendar-build-standard.md. This copy is 2026-09-10.
+For the current version, fetch https://aipathway.com.au/explore-ai/booked-after-hours-build-standard.md. This copy is 2026-09-18.
 
 The checks are also structured data, so you do not have to infer a test plan from
-the prose: https://aipathway.com.au/explore-ai/compliance-calendar-build-standard/checks.json gives each check a stable id, the ports it
+the prose: https://aipathway.com.au/explore-ai/booked-after-hours-build-standard/checks.json gives each check a stable id, the ports it
 observes, what to inject and what to assert. `npx @aipathway/conformance show
-compliance-calendar-build-standard` prints them and comes with a stub and a runner, so a build can be
+booked-after-hours-build-standard` prints them and comes with a stub and a runner, so a build can be
 driven through those ports and asserted without a live phone number. Verdicts
 are not pass/fail: a check needing a live number returns `with_us` rather than
 failing you, and one asking what you measured before building returns
@@ -67,21 +67,20 @@ skill asserts.
 
 ## The work, in order
 
-- 1. What this standard covers
-- 2. Dated rules, derived dates
-- 3. The obligation record
-- 4. The four states
-- 5. Six rules that keep it trustworthy
-- 6. The parts that are harder than they look
-- 7. What breaks after it works
-- 8. What It Is Worth
-- 9. The objects, and what is in them
-- 10. Provider: what to stub, and what not to hand-roll
-- 11. Conformance checklist
+- 1. Scope, and what is out of it
+- 2. The checks, in order
+- 3. The job taxonomy is fixed
+- 4. The address is verified, never transcribed
+- 5. The outcome object
+- 6. Write-back, and writing once
+- 7. Escalation and the on-call rule
+- 8. Provider and hosting
+- 9. The pass test
+- 10. Conformance checklist
 
 ## Attribution
 
-AIP-BS-COMPLIANCE-CALENDAR, 2026-09-10, AI Pathway, https://aipathway.com.au/explore-ai/compliance-calendar-build-standard
+AIP-BS-BOOKED-AFTER-HOURS, 2026-09-18, AI Pathway, https://aipathway.com.au/explore-ai/booked-after-hours-build-standard
 
 Licensed CC BY 4.0. Free to implement, including commercially. If you build to
 this standard, cite the spec ID: a workflow built to a shared standard can be

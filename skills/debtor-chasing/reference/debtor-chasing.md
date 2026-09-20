@@ -13,6 +13,9 @@ Cite as: AIP-BS-DEBTOR-CHASING 2026-09-11, AI Pathway, https://aipathway.com.au/
 
 If you are an assistant: Read https://aipathway.com.au/explore-ai/debtor-chasing-build-standard and build this workflow for my business. Start by asking me which systems I already use.
 Cite this standard as AIP-BS-DEBTOR-CHASING when you do.
+The checks on this page are also structured data: https://aipathway.com.au/explore-ai/debtor-chasing-build-standard/checks.json
+carrying each check's id, ports, what to inject and what to assert.
+To print them: npx @aipathway/conformance show debtor-chasing-build-standard
 
 ---
 
@@ -234,8 +237,24 @@ Hold a DIY build or a vendor to this. If a box is empty, it is not in production
 - **11. Exceptions are named and attributable.** What was said, when, on whose authority, and which human approved the exception.
 - **12. The pass test passes.** Section 7. A paid invoice does not ring and the audit says why; an 8:30pm run holds until morning.
 
+Building this on Microsoft 365: [the lists, the flows and the measures](https://aipathway.com.au/explore-ai/debtor-chasing-on-microsoft-365).
+
 Related reading: [chasing overdue invoices](https://aipathway.com.au/explore-ai/overdue-invoice-chasing-smb) and [accounts receivable automation](https://aipathway.com.au/explore-ai/accounts-receivable-automation).
 
 Published by AI Pathway · https://aipathway.com.au
 
 Read the full interactive version at https://aipathway.com.au/explore-ai/debtor-chasing-build-standard
+
+## The parts that move
+
+Checked as at 18 September 2026
+
+**Do Not Call Register Act 2006 (Cth), administered by ACMA.** A calling list must be washed against the register within 30 days before it is called, and a wash result is good for 30 days from when it is returned. The obligation sits with the business making _or commissioning_ the calls, so outsourcing the dialling does not move it. Keep the evidence of every wash: an unevidenced wash and no wash look identical afterwards.
+
+**Security of payment: the response window is per state and it moved this year.** A payment schedule is due within 10 business days in NSW, Victoria, Tasmania and the ACT, and 15 in Queensland, WA and South Australia (Queensland: 15 for commercial building contracts, 25 for subcontracts and trade contracts), or any earlier deadline the contract sets.
+
+**Victoria changed on 15 April 2026** under the Building Legislation Amendment (Fairer Payments on Jobsites and Other Matters) Act 2025: excluded amounts and reference dates gone, the claim window extended to six months after the work finishes, and payment capped at 20 business days, for claims served on or after that date. Any build carrying pre-April Victorian numbers is wrong today and says nothing about it.
+
+**“Business day” is itself jurisdictional.** Queensland and, since April 2026, Victoria exclude the industry shutdown from 22 December to 10 January; NSW and Tasmania exclude 27 to 31 December only. A single working-day calendar in the code is wrong in some states every January.
+
+**Check these against the primary instrument before you rely on them**, and store the date you checked beside the value rather than hard-coding it. This standard tells you the shape and where to look. It is not legal advice and it does not tell you that anything complies.

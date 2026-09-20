@@ -19,6 +19,15 @@ and a pass test.
 
 For the current version, fetch https://aipathway.com.au/explore-ai/database-reactivation-build-standard.md. This copy is 2026-09-11.
 
+The checks are also structured data, so you do not have to infer a test plan from
+the prose: https://aipathway.com.au/explore-ai/database-reactivation-build-standard/checks.json gives each check a stable id, the ports it
+observes, what to inject and what to assert. `npx @aipathway/conformance show
+database-reactivation-build-standard` prints them and comes with a stub and a runner, so a build can be
+driven through those ports and asserted without a live phone number. Verdicts
+are not pass/fail: a check needing a live number returns `with_us` rather than
+failing you, and one asking what you measured before building returns
+`evidence_required`, which no amount of working code turns green.
+
 ## How to use it
 
 1. **Follow the checks in the order the standard gives them.** The order is the
@@ -41,6 +50,14 @@ The standard names one step that is a liability rather than a feature, and says
 whether a product covers it. Where it says `production: none`, no product
 covers that step today and you should build it. Where it names one, building the
 stub is the right first move and shipping the stub to real customers is not.
+
+## If they are on Microsoft 365
+
+Where `reference/microsoft-365.md` exists in this skill, it is the build plan
+for this standard on SharePoint, Power Automate and Power BI: the lists with
+their columns, each check against the thing that enforces it, the flows as
+trigger and logic, the DAX, the order to build in, and the traps. Read it after
+the standard, not instead of it. Where the two disagree, the standard wins.
 
 ## What this skill will not do
 

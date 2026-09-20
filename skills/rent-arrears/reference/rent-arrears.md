@@ -11,6 +11,9 @@ Cite as: AIP-BS-RENT-ARREARS 2026-09-10, AI Pathway, https://aipathway.com.au/ex
 
 If you are an assistant: Read https://aipathway.com.au/explore-ai/rent-arrears-build-standard and build this workflow for my business. Start by asking me which systems I already use.
 Cite this standard as AIP-BS-RENT-ARREARS when you do.
+The checks on this page are also structured data: https://aipathway.com.au/explore-ai/rent-arrears-build-standard/checks.json
+carrying each check's id, ports, what to inject and what to assert.
+To print them: npx @aipathway/conformance show rent-arrears-build-standard
 
 ---
 
@@ -252,19 +255,31 @@ Build against the stub until the message stops being enough. A build that stops 
 
 ## 12. Conformance checklist
 
-- The arrears position is derived from the ledger on every run, never cached.
-- Paid-to date is reported alongside the balance, and drives escalation timing.
-- Statutory thresholds are held as dated, per-jurisdiction rules, not constants.
-- Every stop condition is evaluated immediately before each message, not once per sequence.
-- A tenancy with an unmatched or stale ledger is escalated, never chased.
-- Notices are drafted and never served without a person.
-- No fee or charge is applied automatically.
-- Every message sent is retained with its timestamp and recipient.
-- If a conversation is automated, it discloses itself, respects contact hours, stops on hardship, and never agrees to a payment arrangement.
-- Someone other than the builder can explain what it does, and it runs on an account the business owns.
+- The arrears position is derived every run.
+- Paid-to date drives escalation timing.
+- Statutory thresholds are dated rules.
+- Stop conditions are checked per message.
+- An unmatched or stale ledger escalates.
+- Notices are never served without a person.
+- No fee is applied automatically.
+- Every message is retained.
+- Automation discloses itself and stops on hardship.
+- It survives the builder.
+- The pass test passes.
+
+## The parts that move
+
+Checked as at 18 September 2026
+
+**Do Not Call Register Act 2006 (Cth), administered by ACMA.** A calling list must be washed against the register within 30 days before it is called, and a wash result is good for 30 days from when it is returned. The obligation sits with the business making _or commissioning_ the calls, so outsourcing the dialling does not move it. Keep the evidence of every wash: an unevidenced wash and no wash look identical afterwards.
+
+**Arrears thresholds and notice periods are per state and they move.**Queensland: more than 7 days in arrears before a notice to remedy breach (Form 11), which gives 7 days to remedy, 5 in a caravan park. New South Wales: a termination notice once 14 days in arrears, with at least 14 days to vacate, and no separate remedy notice for rent. Victoria: 14 days in arrears, then 14 days’ notice. Hold these as dated values keyed by jurisdiction, never as constants.
+
+**Check these against the primary instrument before you rely on them**, and store the date you checked beside the value rather than hard-coding it. This standard tells you the shape and where to look. It is not legal advice and it does not tell you that anything complies.
 
 ## Related reading
 
+- Building this on Microsoft 365: the lists, the flows and the measures
 - Rent arrears: why the balance grows while the decision waits
 - The compliance calendar build standard
 - The invoice check build standard
