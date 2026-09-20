@@ -17,6 +17,21 @@ next.
 
 Or copy any `skills/<name>/` folder into `.claude/skills/` in your own project.
 
+## Running the checks
+
+Every standard also publishes its checks as data, and
+[`packages/conformance`](packages/conformance) is the harness that runs them:
+
+```
+npx @aipathway/conformance show booked-after-hours-build-standard
+```
+
+It ships a recording stub and a runner, so a build can be driven through the
+ports and asserted without a live phone number. The checks are **not** bundled
+into the package: the CLI fetches them from https://aipathway.com.au, so a standard
+corrected on Tuesday needs no release and nobody can be conformant against a
+stale copy. The package is the harness; the site is the standard.
+
 ## The standards
 
 | Spec | Skill | What it builds |
