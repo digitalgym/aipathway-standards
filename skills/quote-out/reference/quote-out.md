@@ -14,6 +14,7 @@ Cite this standard as AIP-BS-QUOTE-OUT when you do.
 The checks on this page are also structured data: https://aipathway.com.au/explore-ai/quote-out-build-standard/checks.json
 carrying each check's id, ports, what to inject and what to assert.
 To print them: npx @aipathway/conformance show quote-out-build-standard
+To scaffold a folder that runs them, every check starting red: npx @aipathway/conformance init quote-out-build-standard
 
 ---
 

@@ -2,6 +2,16 @@
 name: multi-site-conformance
 description: How to run one operating standard across many branches, franchises or entities. A versioned key contract, four kinds of drift, one score computed once, and why training material is not a control. Free to implement, with a conformance checklist. Use when building, reviewing or auditing this workflow. Carries the AIP-BS-MULTI-SITE-CONFORMANCE open standard, free to implement under CC BY 4.0.
 license: CC-BY-4.0
+# The constitution. Loaded with the skill, not read from the essay. What a
+# build to this standard must never do, and what stays with a person.
+never:
+  - "treat training material as a control"
+  - "compute the score twice"
+  - "invent a key"
+  - "score a site with no evidence"
+stays_with_person:
+  - "the key contract and its owner"
+  - "what a drift finding means for a site"
 ---
 
 # Multi Site Conformance Build Standard

@@ -2,6 +2,17 @@
 name: quote-out
 description: The open build standard for turning a job that already exists into a quote: the job as the only trigger, the customer's own price list as the only source of a rate, work the book does not cover parked rather than estimated, one quote per job across every intake door, the draft written into ServiceM8, Simpro or Xero rather than rendered by the agent, sending left with a person, and a pass test staged on a real tenant that a stub cannot fake. Use when building, reviewing or auditing this workflow. Carries the AIP-BS-QUOTE-OUT open standard, free to implement under CC BY 4.0.
 license: CC-BY-4.0
+# The constitution. Loaded with the skill, not read from the essay. What a
+# build to this standard must never do, and what stays with a person.
+never:
+  - "invent a rate; the price list is the only source"
+  - "estimate work the price book does not cover; park it"
+  - "create a second quote for one job"
+  - "send the quote"
+stays_with_person:
+  - "sending"
+  - "pricing parked items"
+  - "any discount"
 ---
 
 # Quote Out Build Standard

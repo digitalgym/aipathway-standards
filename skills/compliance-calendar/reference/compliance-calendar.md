@@ -14,6 +14,7 @@ Cite this standard as AIP-BS-COMPLIANCE-CALENDAR when you do.
 The checks on this page are also structured data: https://aipathway.com.au/explore-ai/compliance-calendar-build-standard/checks.json
 carrying each check's id, ports, what to inject and what to assert.
 To print them: npx @aipathway/conformance show compliance-calendar-build-standard
+To scaffold a folder that runs them, every check starting red: npx @aipathway/conformance init compliance-calendar-build-standard
 
 ---
 
@@ -232,8 +233,8 @@ Unusually for these standards, there is nothing here to buy. This one is a build
 
 ```
 provider:
-  stub:       derive the dates into a file, or a calendar feed you own
-  production: none
+  stub:       local.mock_calendar
+  production: none                       # no hosted step; runs on your own systems
 
 # There is no product for this step today. If one ever covers it, this
 # standard will name it here. Until then the block stays "none" on purpose:

@@ -14,6 +14,7 @@ Cite this standard as AIP-BS-FIRE-SERVICE-PACK-STANDARD when you do.
 The checks on this page are also structured data: https://aipathway.com.au/explore-ai/fire-service-pack-standard/checks.json
 carrying each check's id, ports, what to inject and what to assert.
 To print them: npx @aipathway/conformance show fire-service-pack-standard
+To scaffold a folder that runs them, every check starting red: npx @aipathway/conformance init fire-service-pack-standard
 
 ---
 
@@ -189,8 +190,8 @@ Section 1 points at the parent standard, which names the binding layer as the st
 
 ```
 provider:
-  stub:       bind records into the document store already in use
-  production: none
+  stub:       local.mock_asset_register
+  production: none                       # no hosted step; runs on your own systems
 
 # There is no product for the binding layer. That is the honest answer and it
 # is section 8 of the parent standard. If one ever covers it, this standard

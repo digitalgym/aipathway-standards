@@ -14,6 +14,7 @@ Cite this standard as AIP-BS-REJECTED-PACK when you do.
 The checks on this page are also structured data: https://aipathway.com.au/explore-ai/rejected-pack-build-standard/checks.json
 carrying each check's id, ports, what to inject and what to assert.
 To print them: npx @aipathway/conformance show rejected-pack-build-standard
+To scaffold a folder that runs them, every check starting red: npx @aipathway/conformance init rejected-pack-build-standard
 
 ---
 
@@ -361,8 +362,8 @@ Section 8 names the binding layer as the hard step and says plainly that no prod
 
 ```
 provider:
-  stub:       derive the pack into the document store already in use
-  production: none
+  stub:       local.mock_pack
+  production: none                       # scoped build, not a product
 
 # There is no product for the binding layer. This is the honest answer and
 # it is section 8. If one ever covers it, this standard will name it here.

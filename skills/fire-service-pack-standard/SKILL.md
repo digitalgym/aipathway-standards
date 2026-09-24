@@ -2,6 +2,17 @@
 name: fire-service-pack-standard
 description: A test recorded against the wrong asset, or with no photograph of the tag, did not happen. Eight checks in a fixed order, four queues, required evidence per asset class, and why unbound is not the same as pass. Use when building, reviewing or auditing this workflow. Carries the AIP-BS-FIRE-SERVICE-PACK-STANDARD open standard, free to implement under CC BY 4.0.
 license: CC-BY-4.0
+# The constitution. Loaded with the skill, not read from the essay. What a
+# build to this standard must never do, and what stays with a person.
+never:
+  - "record a test without the asset and the photograph of the tag"
+  - "treat unbound as pass"
+  - "certify"
+  - "file a pack with a missing item"
+stays_with_person:
+  - "signing"
+  - "binding the pack"
+  - "the named human gate"
 ---
 
 # Fire Service Pack Standard

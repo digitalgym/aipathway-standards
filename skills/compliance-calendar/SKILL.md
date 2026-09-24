@@ -2,6 +2,17 @@
 name: compliance-calendar
 description: How to build a compliance calendar that survives a rule change. Dated rules and derived due dates, the obligation record, the four states, and the hard parts: unknown anchor dates, cross-border rules, and the owner who declines the work. Free to implement, with a conformance checklist. Use when building, reviewing or auditing this workflow. Carries the AIP-BS-COMPLIANCE-CALENDAR open standard, free to implement under CC BY 4.0.
 license: CC-BY-4.0
+# The constitution. Loaded with the skill, not read from the essay. What a
+# build to this standard must never do, and what stays with a person.
+never:
+  - "type a due date; derive it from a dated rule"
+  - "mark an obligation complete without evidence"
+  - "certify or attest"
+  - "guess an anchor date"
+stays_with_person:
+  - "accepting an obligation"
+  - "the owner who declines the work"
+  - "cross-border interpretation"
 ---
 
 # Compliance Calendar Build Standard

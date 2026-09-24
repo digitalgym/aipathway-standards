@@ -2,6 +2,18 @@
 name: booked-after-hours
 description: The open build standard for answering a trade business phone out of hours. Disclosure and recording consent before the first question, a fixed emergency / routine / quote taxonomy, the address resolved by lookup rather than transcribed, one job written not two, typed escalation with the on-call rule, a stub to build against, and a pass test you can stage on your own phone in a minute. Use when building, reviewing or auditing this workflow. Carries the AIP-BS-BOOKED-AFTER-HOURS open standard, free to implement under CC BY 4.0.
 license: CC-BY-4.0
+# The constitution. Loaded with the skill, not read from the essay. What a
+# build to this standard must never do, and what stays with a person.
+never:
+  - "guess or transcribe an address; resolve it by lookup or flag it"
+  - "write a second job for the same caller on the same day"
+  - "quote a price or a rate"
+  - "wake the on-call for anything but a real emergency"
+  - "stand up telephony, disclosure, recording or a register check of your own"
+stays_with_person:
+  - "the on-call judgement after an escalate"
+  - "any price or licence claim"
+  - "sending a quote"
 ---
 
 # Booked After Hours Build Standard

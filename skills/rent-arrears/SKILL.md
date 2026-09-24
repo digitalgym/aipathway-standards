@@ -2,6 +2,18 @@
 name: rent-arrears
 description: How to automate rent arrears without chasing the wrong tenant. Derived positions, the four triage outcomes, the six stop conditions, the statutory clock, and the point where the chase becomes a conversation. Free to implement, with a conformance checklist. Use when building, reviewing or auditing this workflow. Carries the AIP-BS-RENT-ARREARS open standard, free to implement under CC BY 4.0.
 license: CC-BY-4.0
+# The constitution. Loaded with the skill, not read from the essay. What a
+# build to this standard must never do, and what stays with a person.
+never:
+  - "chase past any of the six stop conditions"
+  - "promise anything on the landlord's behalf"
+  - "invent a position; derive it from the ledger"
+  - "contact a tenant outside the statutory clock"
+stays_with_person:
+  - "notices and breach steps"
+  - "hardship"
+  - "anything before a tribunal"
+  - "who may promise what"
 ---
 
 # Rent Arrears Build Standard

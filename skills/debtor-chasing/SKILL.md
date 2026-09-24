@@ -2,6 +2,18 @@
 name: debtor-chasing
 description: The method for chasing your own debtor book. Four buckets, why ranking by age sends you to the wrong end of the ledger, the opener that returns a date, promise-to-pay as an object, and the compliance gate that is the one step not to hand-roll. Use when building, reviewing or auditing this workflow. Carries the AIP-BS-DEBTOR-CHASING open standard, free to implement under CC BY 4.0.
 license: CC-BY-4.0
+# The constitution. Loaded with the skill, not read from the essay. What a
+# build to this standard must never do, and what stays with a person.
+never:
+  - "invent a rate, a fee or an amount owing; read the live ledger"
+  - "chase an invoice the ledger shows as paid"
+  - "give or take bank details on a call"
+  - "pressure a customer in hardship"
+  - "dial a number without a basis or a register check"
+stays_with_person:
+  - "disputes"
+  - "hardship and payment plans"
+  - "credit policy: buckets, stop rules, escalation owner"
 ---
 
 # Debtor Chasing Build Standard

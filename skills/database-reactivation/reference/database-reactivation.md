@@ -14,6 +14,7 @@ Cite this standard as AIP-BS-DATABASE-REACTIVATION when you do.
 The checks on this page are also structured data: https://aipathway.com.au/explore-ai/database-reactivation-build-standard/checks.json
 carrying each check's id, ports, what to inject and what to assert.
 To print them: npx @aipathway/conformance show database-reactivation-build-standard
+To scaffold a folder that runs them, every check starting red: npx @aipathway/conformance init database-reactivation-build-standard
 
 ---
 
@@ -185,8 +186,8 @@ Build against a stub until the list has to actually ring, then change one line:
 
 ```
 provider:
-  stub:       write the ranked rows to a file and read them yourself
-  production: workmylist
+  stub:       local.mock_contacts
+  production: office_voice.work_the_list# Office Voice (voice layer) with lists in workmylist, sold as Work the List
 
 scopes:
   contacts:read

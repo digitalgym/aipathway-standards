@@ -14,6 +14,7 @@ Cite this standard as AIP-BS-DEBTOR-CHASING when you do.
 The checks on this page are also structured data: https://aipathway.com.au/explore-ai/debtor-chasing-build-standard/checks.json
 carrying each check's id, ports, what to inject and what to assert.
 To print them: npx @aipathway/conformance show debtor-chasing-build-standard
+To scaffold a folder that runs them, every check starting red: npx @aipathway/conformance init debtor-chasing-build-standard
 
 ---
 
@@ -204,8 +205,8 @@ Everything above leaves you with a ranked list and an opener for each name. If y
 
 ```
 provider:
-  stub:       write the ranked conversations to a file and read them yourself
-  production: office-voice
+  stub:       local.mock_ledger
+  production: office_voice.recover      # Office Voice / Recover, sold as Get Paid
 
 scopes:
   contacts:read        the open book: what is outstanding and still needs a decision

@@ -14,6 +14,7 @@ Cite this standard as AIP-BS-INVOICE-CHECK when you do.
 The checks on this page are also structured data: https://aipathway.com.au/explore-ai/invoice-check-build-standard/checks.json
 carrying each check's id, ports, what to inject and what to assert.
 To print them: npx @aipathway/conformance show invoice-check-build-standard
+To scaffold a folder that runs them, every check starting red: npx @aipathway/conformance init invoice-check-build-standard
 
 ---
 
@@ -256,8 +257,8 @@ There is nothing to buy here, and the block says so rather than pointing at some
 
 ```
 provider:
-  stub:       write the four queues to a file, or to the job system you already run
-  production: none
+  stub:       local.mock_invoices
+  production: none                       # no hosted step; runs on your own systems
 
 # No product covers this step today. If one ever does, this standard will
 # name it here. Build it, or have it built.

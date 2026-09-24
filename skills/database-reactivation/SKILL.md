@@ -2,6 +2,16 @@
 name: database-reactivation
 description: The method for working an agent's own database. Four plays with real triggers, the six ranking rules that decide which contact rings first, the opener that works and the one that does not, plus what breaks after a self-built version starts working. Use when building, reviewing or auditing this workflow. Carries the AIP-BS-DATABASE-REACTIVATION open standard, free to implement under CC BY 4.0.
 license: CC-BY-4.0
+# The constitution. Loaded with the skill, not read from the essay. What a
+# build to this standard must never do, and what stays with a person.
+never:
+  - "state a fact about a property that is not in the data"
+  - "dial without a basis, a register check and the do-not-call flags"
+  - "invent a ranking signal"
+  - "contact a suppressed or opted-out person"
+stays_with_person:
+  - "what may be promised on a call"
+  - "the opener that names a relationship that does not exist"
 ---
 
 # Database Reactivation Build Standard

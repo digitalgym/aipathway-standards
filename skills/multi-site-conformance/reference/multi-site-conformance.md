@@ -14,6 +14,7 @@ Cite this standard as AIP-BS-MULTI-SITE-CONFORMANCE when you do.
 The checks on this page are also structured data: https://aipathway.com.au/explore-ai/multi-site-conformance-build-standard/checks.json
 carrying each check's id, ports, what to inject and what to assert.
 To print them: npx @aipathway/conformance show multi-site-conformance-build-standard
+To scaffold a folder that runs them, every check starting red: npx @aipathway/conformance init multi-site-conformance-build-standard
 
 ---
 

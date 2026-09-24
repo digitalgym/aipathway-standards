@@ -2,6 +2,17 @@
 name: rejected-pack
 description: How to stop a licence, insurance or compliance pack failing after the work is done. The parent standard for Invoice Check, the Compliance Calendar and QA Proofcheck. One graph, eight checks in a fixed order, four queues, a named human gate, and the binding layer that is the hard step. Free to implement, with a twelve-point conformance checklist. Use when building, reviewing or auditing this workflow. Carries the AIP-BS-REJECTED-PACK open standard, free to implement under CC BY 4.0.
 license: CC-BY-4.0
+# The constitution. Loaded with the skill, not read from the essay. What a
+# build to this standard must never do, and what stays with a person.
+never:
+  - "complete a pack with no evidence attached"
+  - "bind or file"
+  - "invent a missing item"
+  - "skip a check in the eight"
+stays_with_person:
+  - "the binding sign-off"
+  - "the named human gate"
+  - "what the pack asserts"
 ---
 
 # Rejected Pack Build Standard

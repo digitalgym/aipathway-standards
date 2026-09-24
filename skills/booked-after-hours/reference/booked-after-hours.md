@@ -14,6 +14,7 @@ Cite this standard as AIP-BS-BOOKED-AFTER-HOURS when you do.
 The checks on this page are also structured data: https://aipathway.com.au/explore-ai/booked-after-hours-build-standard/checks.json
 carrying each check's id, ports, what to inject and what to assert.
 To print them: npx @aipathway/conformance show booked-after-hours-build-standard
+To scaffold a folder that runs them, every check starting red: npx @aipathway/conformance init booked-after-hours-build-standard
 
 ---
 
@@ -172,8 +173,8 @@ Build the whole flow against the stub. Nothing below needs us until you want a l
 
 ```
 provider:
-  stub:       local.mock_voice        # scripted calls, no telephony, no cost
-  production: office_voice.front_desk   # A$119/mo, normally A$249. It exists today.
+  stub:       local.mock_voice
+  production: office_voice.front_desk   # Office Voice / Front Desk, sold as Booked After Hours
 
 hosting:
   builder_host:      yours    # the board, the queue, the reporting. Build and keep it.

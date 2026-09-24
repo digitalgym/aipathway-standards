@@ -2,6 +2,17 @@
 name: cited-answer
 description: How to build an assistant that answers questions about the rules you are accountable for without inventing them. Source cards, the four queues, the change feed and who accepts it, and why declining to answer is a valid output. Free to implement, with a conformance checklist. Use when building, reviewing or auditing this workflow. Carries the AIP-BS-CITED-ANSWER open standard, free to implement under CC BY 4.0.
 license: CC-BY-4.0
+# The constitution. Loaded with the skill, not read from the essay. What a
+# build to this standard must never do, and what stays with a person.
+never:
+  - "answer without a source card"
+  - "invent an edition, a jurisdiction or a date"
+  - "accept a change to the rules"
+  - "interpret law"
+stays_with_person:
+  - "accepting a change into the source set"
+  - "legal interpretation"
+  - "declining to answer is a valid output"
 ---
 
 # Cited Answer Build Standard

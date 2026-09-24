@@ -2,6 +2,17 @@
 name: invoice-check
 description: How to build an automated subcontractor invoice check properly. The four checks in order, the four queues, the six rules that decide whether anyone still trusts it in six months, and the parts that are harder than they look: PO matching, progressive claims, finding the variation approval. Free to implement, with a conformance checklist. Use when building, reviewing or auditing this workflow. Carries the AIP-BS-INVOICE-CHECK open standard, free to implement under CC BY 4.0.
 license: CC-BY-4.0
+# The constitution. Loaded with the skill, not read from the essay. What a
+# build to this standard must never do, and what stays with a person.
+never:
+  - "approve a claim"
+  - "alter a rate"
+  - "match a PO by guesswork"
+  - "pass a variation without its approval"
+stays_with_person:
+  - "approval"
+  - "variations"
+  - "disputes with a subcontractor"
 ---
 
 # Invoice Check Build Standard
