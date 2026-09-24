@@ -17,6 +17,11 @@ next.
 
 Or copy any `skills/<name>/` folder into `.claude/skills/` in your own project.
 
+Not on Claude? The same rules are in `AGENTS.md` (Codex, Copilot CLI and
+anything that reads the convention), `.cursor/rules/aipathway-standards.mdc`
+(Cursor) and `.github/copilot-instructions.md` (GitHub Copilot). All three
+are generated from the same list as the skills, so they say the same thing.
+
 ## Running the checks
 
 Every standard also publishes its checks as data, and
