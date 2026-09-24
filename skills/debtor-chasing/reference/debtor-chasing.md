@@ -1,5 +1,3 @@
-Build standard · September 2026
-
 # Chasing Your Own Debtor Book
 
 Source: https://aipathway.com.au/explore-ai/debtor-chasing-build-standard
@@ -19,23 +17,46 @@ To print them: npx @aipathway/conformance show debtor-chasing-build-standard
 
 ---
 
-The method, not the pitch. Everything below is what we would build, written so you can build it instead.
+Pull five fields, sort into four buckets, rank by amount at risk, and leave every call with a date. Free to implement. The one step you should not build yourself is named, and it is the thing we sell.
 
-Does the work of
+Used by
 
 - Accounts Receivable Officer
 - Bookkeeper
 - Office Manager
 - Finance Manager
 
+Written by Andrew, AI Pathway · CC BY 4.0 · Not legal advice
+
+The build
+
+Pull, sort, rank, open. Five fields, four buckets, amount at risk, and one question that takes a date.
+
+The hard part
+
+Not the automation. A promise to pay has to become an object with a date on it, or the follow-up is guesswork.
+
+Where to stop
+
+The moment it rings somebody. Calling hours, the register, disclosure and a record that survives.
+
+Honest caveat
+
+A self-built version works and is worth building. It stops working the week the person who built it takes leave, which is section 8.
+
 Nobody has a receivables problem because they forgot to send a reminder. They have one because the reminders went out, were ignored, and nothing happened next. The gap is not the email. It is that the follow-up after the email needs a person, and the person has a day job.
 
-## In short
+The method, end to end
 
-- **The build**: Pull five fields, sort into four buckets, rank by amount at risk, and open with a question that can be answered with a date.
-- **The hard part**: Not the automation. It is that a promise to pay has to become an object with a date on it, or your follow-up is guesswork.
-- **Where to stop**: The moment it rings somebody. Calling hours, the register, consent and a record that survives are a liability with a phone number attached.
-- **Honest caveat**: A self-built version works and is worth building. It stops working the week the person who built it takes leave, which is section 10.
+1. Start with the aged receivables export.
+2. Pull five fields.
+3. Sort into four buckets.
+4. Rank by amount at risk.
+5. The gate, which is the part we sell: cleared to ring? If no, there is no call and the reason is on the record. If yes, continue.
+6. Call: disclose, then one question.
+7. Date agreed? If yes, the promise is recorded with a date on it and the run ends. If no, schedule the next touch with a date, which goes back through the gate before it rings.
+
+The top row is a weekend of work and stays yours. The gate is the step between ranking a debtor and ringing one, and every later touch comes back through it. That is the part we sell, and section 10 says why.
 
 ## 1. What You Actually Need Off the Ledger
 
@@ -95,9 +116,68 @@ Then the promised date becomes the follow-up date. This sounds obvious and it is
 
 And a promise has to survive the next conversation. If a dispute was logged in April, a promise recorded in May must not overwrite it.
 
-## 6. The Gate, Which Is the Step to Not Hand-Roll
+## 6. What It Is Worth
 
-Everything above is a weekend’s work and you should do it. This part is not, and the reason is not difficulty. Each of these is a rule that has to hold on every single contact, including the one made at 8:04pm by a script nobody has looked at since March.
+Directions, not figures. The standard derives no numbers, so these name which levers move. How far they move will differ on your own ledger, starting with how many overdue rows carry a mobile number.
+
+Every one
+
+Overdue row in one of four buckets
+
+Just late, drifting, hard, and broken promise. Broken promise outranks every other bucket.
+
+Amount first
+
+Ranked by amount at risk
+
+Age tells you how bad a row is. Amount tells you what fixing it is worth, so age only breaks ties.
+
+A date
+
+On every promise to pay
+
+A promise becomes a record with a date, and that date becomes the follow-up date, not tomorrow.
+
+The largest gain is the drifting bucket, the 15 to 44 day rows where nothing is wrong yet, which is why nobody deals with them and why they become the 90 day problem.
+
+## 7. Parts That Are Harder Than They Look
+
+Not warnings. These are the four places a working build usually stalls, so you can recognise them as normal rather than as a sign you got it wrong.
+
+- Mobile coverage is the binding constraint.
+- Part payments break your buckets.
+- Disputes hide inside “we will get to it”.
+- Stop-on-payment is harder than it sounds.
+
+## 8. What Breaks After It Works
+
+This section is the honest one, and it is the reason a build standard is worth publishing at all. A self-built version of everything above genuinely works. Here is what happens to it over time.
+
+- It leaves with whoever built it.
+- Nobody knows whether it ran.
+- It degrades without failing.
+- The gate is the first thing to rot.
+
+None of that is an argument against building it. It is an argument for knowing which parts you want to still be true after you stop paying attention to them.
+
+## 9. What Stays With a Person
+
+Not a conservative default. Each of these is a decision where being wrong costs more than the call was ever worth, and none of them gets better for being made quickly.
+
+- The relationship-sized account.
+- Any dispute, the moment it is named.
+- Interest, fees, stop-credit and anything resembling a consequence.
+- Write-offs, payment plans and hardship.
+- Every exception to the gate in section 10
+- Anything a lawyer would call a demand.
+
+The machine does not decide any of the above. It finds them, stops, and hands over with what it already knows.
+
+10 · The gate as a service · This is the part we sell
+
+## Everything above is a weekend of work. This part is not, and the reason is not difficulty.
+
+You should build it. Each of these, though, is a rule that has to hold on every single contact, including the one made at 8:04pm by a script nobody has looked at since March.
 
 - Calling hours in the debtor’s timezone
 - The Do Not Call Register
@@ -110,9 +190,17 @@ The gate has to sit underneath the ranking, not beside it. If a high score can p
 
 You can build this. What you cannot easily build is the part where it is still true in eight months, after the model changed, the script was edited by someone else, and the person who wrote the gate moved on.
 
-## 7. Keep the Ranking, Hand Over the Call
+**The pass test.** Take your top-ranked debtor, mark the invoice paid in the ledger, and let the chase run anyway. They must not be rung, and the audit trail must tell you why not. Run it again with the invoice still open and the clock at 8:30pm, and it must hold until morning. Both take a minute to stage from your own data. Then run the same two against whatever you built yourself. If yours rings, your gate is advice rather than a rule, which is this section in one sentence.
 
-Section 7 leaves you with a ranked list and an opener for each name. If you want the calls made by something that already holds the gate in section 6, the ranking stays yours and the conversation becomes ours. Build against a stub until it has to ring somebody, then change one line:
+11 to 13 · Build it
+
+## Hand this half to whoever is building
+
+The method above is yours whatever you decide. This is the shape of the run, the config that swaps a stub for a live line, and the checklist to hold the result to.
+
+## 11. Keep the Ranking, Hand Over the Call
+
+Everything above leaves you with a ranked list and an opener for each name. If you want the calls made by something that already holds the gate in section 10, the ranking stays yours and the conversation becomes ours. Build against a stub until it has to ring somebody, then change one line:
 
 ```
 provider:
@@ -144,55 +232,9 @@ curl -X POST https://office-voice.com/api/v1/promises \
 
 **Office Voice ensures every call is compliant, so you stay clear of trouble.** Dialling stays in the product: AI disclosure, DNCR, timezone-aware hours. The full reference is at [office-voice.com/help/api](https://office-voice.com/help/api).
 
-**The pass test.** Take your top-ranked debtor, mark the invoice paid in the ledger, and let the chase run anyway. They must not be rung, and the audit trail must tell you why not. Run it again with the invoice still open and the clock at 8:30pm, and it must hold until morning. Both take a minute to stage from your own data. Then run the same two against whatever you built yourself. If yours rings, your gate is advice rather than a rule, which is section 6 in one sentence.
+## 12. The Run, Step by Step
 
-## 8. Parts That Are Harder Than They Look
-
-Not warnings. These are the four places a working build usually stalls, so you can recognise them as normal rather than as a sign you got it wrong.
-
-- Mobile coverage is the binding constraint.
-- Part payments break your buckets.
-- Disputes hide inside “we will get to it”.
-- Stop-on-payment is harder than it sounds.
-
-## 9. What It Is Worth
-
-Directions, not figures. The standard derives no numbers, so these name which levers move. How far they move will differ on your own ledger, starting with how many overdue rows carry a mobile number.
-
-Every one
-
-Overdue row in one of four buckets
-
-Just late, drifting, hard, and broken promise. Broken promise outranks every other bucket.
-
-Amount first
-
-Ranked by amount at risk
-
-Age tells you how bad a row is. Amount tells you what fixing it is worth, so age only breaks ties.
-
-A date
-
-On every promise to pay
-
-A promise becomes a record with a date, and that date becomes the follow-up date, not tomorrow.
-
-The largest gain is the drifting bucket, the 15 to 44 day rows where nothing is wrong yet, which is why nobody deals with them and why they become the 90 day problem.
-
-## 10. What Breaks After It Works
-
-This section is the honest one, and it is the reason a build standard is worth publishing at all. A self-built version of everything above genuinely works. Here is what happens to it over time.
-
-- It leaves with whoever built it.
-- Nobody knows whether it ran.
-- It degrades without failing.
-- The gate is the first thing to rot.
-
-None of that is an argument against building it. It is an argument for knowing which parts you want to still be true after you stop paying attention to them.
-
-## 11. The Run, Step by Step
-
-Everything above, in the order a build actually does it. Steps 1 to 7 are yours whatever you decide about section 7. Step 8 is the one that decides whether any of it may happen.
+Everything above, in the order a build actually does it. Steps 1 to 7 are yours whatever you decide about section 11. Step 8 is the one that decides whether any of it may happen.
 
 1. Pull the five fields in section 1. Run the mobile coverage check before anything else, and stop here if it fails.
 2. Drop every row that is not past its due date. A 30-day account issued four weeks ago is not late.
@@ -201,24 +243,11 @@ Everything above, in the order a build actually does it. Steps 1 to 7 are yours 
 5. Rank by amount at risk, with age breaking ties. Never by age alone.
 6. Lift any customer whose balance is a relationship-sized share of the book out of the automated run entirely.
 7. Draft the opener for each row: the invoice number, the days past due as a fact, and one question that takes a date as an answer.
-8. Run the gate in section 6 on every row at dial time, underneath the ranking and never beside it.
+8. Run the gate in section 10 on every row at dial time, underneath the ranking and never beside it.
 9. Make the call, or write the ranked list out and make them yourself.
 10. Record the outcome as the promise object in section 5, with a date, or as the reason there is no date.
 11. Move the next follow-up to the promised date. Not to tomorrow.
 12. Stop on payment, driven off the ledger rather than a nightly export.
-
-## 12. What Stays With a Person
-
-Not a conservative default. Each of these is a decision where being wrong costs more than the call was ever worth, and none of them gets better for being made quickly.
-
-- The relationship-sized account.
-- Any dispute, the moment it is named.
-- Interest, fees, stop-credit and anything resembling a consequence.
-- Write-offs, payment plans and hardship.
-- Every exception to the gate in section 6
-- Anything a lawyer would call a demand.
-
-The machine does not decide any of the above. It finds them, stops, and hands over with what it already knows.
 
 ## 13. Conformance checklist
 
@@ -239,12 +268,6 @@ Hold a DIY build or a vendor to this. If a box is empty, it is not in production
 
 Building this on Microsoft 365: [the lists, the flows and the measures](https://aipathway.com.au/explore-ai/debtor-chasing-on-microsoft-365).
 
-Related reading: [chasing overdue invoices](https://aipathway.com.au/explore-ai/overdue-invoice-chasing-smb) and [accounts receivable automation](https://aipathway.com.au/explore-ai/accounts-receivable-automation).
-
-Published by AI Pathway · https://aipathway.com.au
-
-Read the full interactive version at https://aipathway.com.au/explore-ai/debtor-chasing-build-standard
-
 ## The parts that move
 
 Checked as at 18 September 2026
@@ -258,3 +281,9 @@ Checked as at 18 September 2026
 **“Business day” is itself jurisdictional.** Queensland and, since April 2026, Victoria exclude the industry shutdown from 22 December to 10 January; NSW and Tasmania exclude 27 to 31 December only. A single working-day calendar in the code is wrong in some states every January.
 
 **Check these against the primary instrument before you rely on them**, and store the date you checked beside the value rather than hard-coding it. This standard tells you the shape and where to look. It is not legal advice and it does not tell you that anything complies.
+
+Related reading: [chasing overdue invoices](https://aipathway.com.au/explore-ai/overdue-invoice-chasing-smb) and [accounts receivable automation](https://aipathway.com.au/explore-ai/accounts-receivable-automation).
+
+Published by AI Pathway · https://aipathway.com.au
+
+Read the full interactive version at https://aipathway.com.au/explore-ai/debtor-chasing-build-standard

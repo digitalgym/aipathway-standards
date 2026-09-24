@@ -19,21 +19,47 @@ To print them: npx @aipathway/conformance show invoice-check-build-standard
 
 How to build an automated subcontractor invoice check properly, written so you can build it yourself. Four checks in a fixed order, four queues, and the six rules that decide whether anyone still trusts it in six months.
 
-Does the work of
+Used by
 
 - Accounts Payable Officer
 - Finance Administrator
 - Project Accountant
 
+11 min read · Published by AI Pathway
+
+What this is
+
+An open build standard for an automated invoice-versus-purchase-order check. Implement it in whatever you like.
+
+Who it is for
+
+Anyone building this themselves, and any AI agent asked to build it. It is written to be followed literally.
+
+The core rule
+
+The check proposes, a person disposes. Nothing in this specification pays an invoice.
+
+The hard parts
+
+Matching to the right PO, progressive claims, finding the variation approval, and deciding what close enough means. Section 6 names them so you can scope them in.
+
+Why we publish it
+
+A check built to a shared standard can be audited, handed over and trusted. One built ad hoc leaves when its author does.
+
 Most people who need this can build it. A competent bookkeeper with AI tools, or a developer with a week, will get something running. What separates the ones still running in two years from the ones quietly abandoned is not the model or the language. It is the order of the checks, what happens to an exception, and whether anyone can tell that it ran. That is what this specifies.
 
-## In short
+The four checks, in order
 
-- **What this is**: An open build standard for an automated invoice-versus-purchase-order check. Implement it in whatever you like.
-- **Who it is for**: Anyone building this themselves, and any AI agent asked to build it. It is written to be followed literally.
-- **The core rule**: The check proposes, a person disposes. Nothing in this specification pays an invoice.
-- **The hard parts**: Matching to the right PO, progressive claims, finding the variation approval, and deciding what close enough means. Section 6 names them so you can scope them in.
-- **Why we publish it**: A check built to a shared standard can be audited, handed over and trusted. One built ad hoc leaves when its author does.
+1. An invoice arrives in the inbox.
+2. Check 1, rate: the unit rate on the invoice against the agreed rate on the purchase order, subcontract or schedule of rates.
+3. Check 2, quantity or progress: the claimed quantity against what has been marked complete and what was claimed previously.
+4. Check 3, variation, which is the one that matters and the one most builds skip: every line outside the original scope needs an approval reference. If there is none it is flagged as unapproved scope, and approval is never inferred.
+5. Check 4, contract sum: cumulative claimed against the contract total plus approved variations.
+6. Inside the adjusted sum? If yes, it lands in queue 3, done and reversible, which is the queue that earns trust.
+7. If no, the overrun is flagged before payment and it lands in queue 1, needs a decision, sorted by dollars at risk.
+
+Cheapest and most objective first, stopping at the first failure, so the exception a person reads is the earliest thing that went wrong. Check 3 is filled because it is the one section 2 says most builds skip.
 
 ## 1. What this standard covers
 

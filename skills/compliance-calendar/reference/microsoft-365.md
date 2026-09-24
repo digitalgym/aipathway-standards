@@ -11,7 +11,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/compliance-cal
 
 Every check in the standard, mapped to the list, flow or measure that enforces it. Written to be executed rather than read, including by an agent working in your tenant.
 
-Does the work of
+Used by
 
 - AI Officer
 - Business Systems Analyst

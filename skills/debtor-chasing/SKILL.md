@@ -72,13 +72,12 @@ skill asserts.
 - 3. Which Invoice Gets Chased First
 - 4. The Opener Decides Whether You Get a Date
 - 5. A Promise Is an Object, Not a Feeling
-- 6. The Gate, Which Is the Step to Not Hand-Roll
-- 7. Keep the Ranking, Hand Over the Call
-- 8. Parts That Are Harder Than They Look
-- 9. What It Is Worth
-- 10. What Breaks After It Works
-- 11. The Run, Step by Step
-- 12. What Stays With a Person
+- 6. What It Is Worth
+- 7. Parts That Are Harder Than They Look
+- 8. What Breaks After It Works
+- 9. What Stays With a Person
+- 11. Keep the Ranking, Hand Over the Call
+- 12. The Run, Step by Step
 - 13. Conformance checklist
 
 ## Attribution

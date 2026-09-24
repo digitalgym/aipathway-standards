@@ -11,7 +11,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/arrears-on-mic
 
 The escalation clock here is written in legislation, which makes the derive step and the stop check carry weight the other build plans do not have to.
 
-Does the work of
+Used by
 
 - Business Systems Analyst
 - Property Manager
@@ -218,6 +218,7 @@ An adaptive card that says a notice is about to go, with a cancel button, is not
 
 ## Related reading
 
+- The platform holds the money, not the work
 - The rent arrears build standard
 - The compliance calendar on Microsoft 365
 - Building the standards on Microsoft 365

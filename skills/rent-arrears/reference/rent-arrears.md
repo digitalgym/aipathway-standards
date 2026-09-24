@@ -19,20 +19,43 @@ To print them: npx @aipathway/conformance show rent-arrears-build-standard
 
 Rent accrues, and the escalation clock is written in legislation rather than in your credit policy. How to build arrears handling that respects both, and that knows when to stop.
 
-Does the work of
+Used by
 
 - Property Manager
 - Arrears Officer
 - Head of Property Management
 
+10 min read · Published by AI Pathway
+
+What this is
+
+An open build standard for arrears triage and escalation across a rent roll. Implement it in whatever you like.
+
+The core rule
+
+Arrears is a derived position, not a stored number, and the escalation clock belongs to legislation rather than to you.
+
+What it never does
+
+Serve a notice, apply a fee, or message a tenant whose ledger has not been verified. Drafting is the boundary.
+
+The hard part
+
+Knowing when to stop. A chase sent to someone who already paid, or who is in hardship, costs more than the arrears.
+
 Your platform already sends the automatic reminders, and it should keep sending them. Those collect the tenancies that were going to pay anyway. What is left is a short list where something is genuinely wrong, and each one needs a conversation on a particular day. Automating arrears does not mean sending more messages. It means producing that short list correctly, and never messaging anyone who should not have been on it.
 
-## In short
+The daily run, end to end
 
-- **What this is**: An open build standard for arrears triage and escalation across a rent roll. Implement it in whatever you like.
-- **The core rule**: Arrears is a derived position, not a stored number, and the escalation clock belongs to legislation rather than to you.
-- **What it never does**: Serve a notice, apply a fee, or message a tenant whose ledger has not been verified. Drafting is the boundary.
-- **The hard part**: Knowing when to stop. A chase sent to someone who already paid, or who is in hardship, costs more than the arrears.
+1. Start at the ledger, every day.
+2. Derive the position rather than storing it: paid-to date first, then days in arrears, then balance.
+3. Triage to exactly one of four outcomes: not actually in arrears, will self-resolve, needs a conversation, or on the statutory path.
+4. Draft the chase, but do not send it yet.
+5. Any stop condition? Payment in transit, a payment arrangement, hardship or dispute on file, already on the formal path, a person has paused it, or the ledger is stale. If any is true, nothing sends and it goes to a person.
+6. If none is true, the chase is released, one channel at a time.
+7. Past the statutory threshold? If yes, the notice is drafted and never served, because dates and service method are legal facts. If no, the next touch is dated, and the stop conditions are evaluated again before that message goes.
+
+The position is derived every day rather than stored. The stop conditions are the filled diamond because section 4 puts them before every message, not once when the sequence starts, which is why the loop returns through them.
 
 ## 1. What this standard covers
 

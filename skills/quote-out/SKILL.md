@@ -1,28 +1,28 @@
 ---
-name: booked-after-hours
-description: The open build standard for answering a trade business phone out of hours. Disclosure and recording consent before the first question, a fixed emergency / routine / quote taxonomy, the address resolved by lookup rather than transcribed, one job written not two, typed escalation with the on-call rule, a stub to build against, and a pass test you can stage on your own phone in a minute. Use when building, reviewing or auditing this workflow. Carries the AIP-BS-BOOKED-AFTER-HOURS open standard, free to implement under CC BY 4.0.
+name: quote-out
+description: The open build standard for turning a job that already exists into a quote: the job as the only trigger, the customer's own price list as the only source of a rate, work the book does not cover parked rather than estimated, one quote per job across every intake door, the draft written into ServiceM8, Simpro or Xero rather than rendered by the agent, sending left with a person, and a pass test staged on a real tenant that a stub cannot fake. Use when building, reviewing or auditing this workflow. Carries the AIP-BS-QUOTE-OUT open standard, free to implement under CC BY 4.0.
 license: CC-BY-4.0
 ---
 
-# Booked After Hours Build Standard
+# Quote Out Build Standard
 
-**Spec:** AIP-BS-BOOKED-AFTER-HOURS · **Version:** 2026-09-18 · **Canonical:** https://aipathway.com.au/explore-ai/booked-after-hours-build-standard
+**Spec:** AIP-BS-QUOTE-OUT · **Version:** 2026-09-21 · **Canonical:** https://aipathway.com.au/explore-ai/quote-out-build-standard
 
-The open build standard for answering a trade business phone out of hours. Disclosure and recording consent before the first question, a fixed emergency / routine / quote taxonomy, the address resolved by lookup rather than transcribed, one job written not two, typed escalation with the on-call rule, a stub to build against, and a pass test you can stage on your own phone in a minute.
+The open build standard for turning a job that already exists into a quote: the job as the only trigger, the customer's own price list as the only source of a rate, work the book does not cover parked rather than estimated, one quote per job across every intake door, the draft written into ServiceM8, Simpro or Xero rather than rendered by the agent, sending left with a person, and a pass test staged on a real tenant that a stub cannot fake.
 
 ## Read the standard first
 
-The full specification is in `reference/booked-after-hours.md` in this skill. Read it
+The full specification is in `reference/quote-out.md` in this skill. Read it
 before writing code. It is about 3,000 words and it is the whole job: the
 checks in order, the objects with their fields, what must never be automated,
 and a pass test.
 
-For the current version, fetch https://aipathway.com.au/explore-ai/booked-after-hours-build-standard.md. This copy is 2026-09-18.
+For the current version, fetch https://aipathway.com.au/explore-ai/quote-out-build-standard.md. This copy is 2026-09-21.
 
 The checks are also structured data, so you do not have to infer a test plan from
-the prose: https://aipathway.com.au/explore-ai/booked-after-hours-build-standard/checks.json gives each check a stable id, the ports it
+the prose: https://aipathway.com.au/explore-ai/quote-out-build-standard/checks.json gives each check a stable id, the ports it
 observes, what to inject and what to assert. `npx @aipathway/conformance show
-booked-after-hours-build-standard` prints them and comes with a stub and a runner, so a build can be
+quote-out-build-standard` prints them and comes with a stub and a runner, so a build can be
 driven through those ports and asserted without a live phone number. Verdicts
 are not pass/fail: a check needing a live number returns `with_us` rather than
 failing you, and one asking what you measured before building returns
@@ -69,19 +69,17 @@ skill asserts.
 
 - 1. Scope, and what is out of it
 - 2. The checks, in order
-- 3. The job taxonomy is fixed
-- 4. The address is verified, never transcribed
-- 5. The outcome object
+- 3. The price list is the only source of a rate
+- 4. What gets parked
+- 5. The quote object
 - 6. Write-back, and writing once
-- 7. Escalation and the on-call rule
+- 7. Sending stays with a person
 - 8. Provider and hosting
-- 9. Switching it on, if you decide to
-- 10. The pass test
-- 11. Conformance checklist
+- 10. Conformance checklist
 
 ## Attribution
 
-AIP-BS-BOOKED-AFTER-HOURS, 2026-09-18, AI Pathway, https://aipathway.com.au/explore-ai/booked-after-hours-build-standard
+AIP-BS-QUOTE-OUT, 2026-09-21, AI Pathway, https://aipathway.com.au/explore-ai/quote-out-build-standard
 
 Licensed CC BY 4.0. Free to implement, including commercially. If you build to
 this standard, cite the spec ID: a workflow built to a shared standard can be

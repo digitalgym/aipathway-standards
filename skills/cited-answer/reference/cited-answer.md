@@ -19,21 +19,44 @@ To print them: npx @aipathway/conformance show cited-answer-build-standard
 
 How to build an assistant that answers questions about the rules your business is accountable for, without inventing them. Written so you can build it yourself.
 
-Does the work of
+Used by
 
 - AI Officer
 - Compliance Officer
 - Quality Manager
 - Technical Advisor
 
+9 min read · Published by AI Pathway
+
+What this is
+
+An open build standard for an assistant that answers on standards, regulations, policies or contracts. Implement it in whatever you like.
+
+The core rule
+
+Every answer carries a source card, or it is not an answer. No card means the question goes to a person.
+
+What it does not do
+
+It does not certify, sign, or decide compliance. It finds the clause and shows its working. A person still signs.
+
+The hard part
+
+Not the retrieval. The week the rule changes, and every answer you already gave that was true on the day.
+
 Every business with a compliance obligation ends up with the same question asked forty times a week. What does the standard require for this asset, this site, this state. An assistant is an obvious answer, and a confident wrong answer about a rule someone signs against is worse than no assistant at all. The difference is not the model. It is whether the thing is allowed to answer without a citation.
 
-## In short
+One question, end to end
 
-- **What this is**: An open build standard for an assistant that answers on standards, regulations, policies or contracts. Implement it in whatever you like.
-- **The core rule**: Every answer carries a source card, or it is not an answer. No card means the question goes to a person.
-- **What it does not do**: It does not certify, sign, or decide compliance. It finds the clause and shows its working. A person still signs.
-- **The hard part**: Not the retrieval. The week the rule changes, and every answer you already gave that was true on the day.
+1. A question arrives.
+2. Identify the jurisdiction and the date the question is asked about, before retrieving anything.
+3. Retrieve clauses, not documents. A page reference the reader has to search is not a citation.
+4. Check every retrieved clause is live on the asked-about date. A superseded clause is a source conflict, not an answer.
+5. Does a live clause cover it? If no, decline and hand to a named person with the question intact. That is a success, not an error.
+6. If yes, compose the answer only from the retrieved clauses, with a source card attached: instrument, clause, edition, jurisdiction, effective date and the link it came from.
+7. Still the live edition? If yes, the answer stands with its card. If no, it becomes change pending and is declined until a person accepts the change, then it goes back through the check.
+
+Jurisdiction and date come first because they change what counts as a live clause. The filled diamond is the decline, which section 4 calls the output that earns the assistant its place.
 
 ## 1. What this standard covers
 

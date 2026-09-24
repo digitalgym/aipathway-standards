@@ -19,21 +19,44 @@ To print them: npx @aipathway/conformance show rejected-pack-build-standard
 
 How to stop a pack failing after the work is done. Checks in a fixed order, what happens to an exception, the hard step, and a conformance checklist you can hold a build to.
 
-Does the work of
+Used by
 
 - HSEQ Administrator
 - Compliance Officer
 - Document Controller
 - Office Administrator
 
+14 min read · Published by AI Pathway
+
+What this is
+
+An open build standard for the licence, insurance and compliance pack a trade or construction business hands to a builder, insurer or inspector. The parent of Invoice Check, the Compliance Calendar and QA Proofcheck.
+
+The core rule
+
+One graph. A fact lives once and every artifact reads it. Rules carry an effective date and due dates are derived. If a value exists in two places, the build is already lying.
+
+What it does not do
+
+It does not file with a regulator and it never says compliant. It says current, cited, reviewed, as-of. A named person accepts every version.
+
+The hard part
+
+Not the documents. Applicability, which is a rules problem, and the binding layer that keeps a pack current when a rule or a ticket moves.
+
 The invoice, timesheet, SWMS, licence copy, insurance certificate or compliance pack fails after the work is done. A rejected pack costs a claim, a licence, a contractor payment, or a week of unpaid admin. The work was fine. The paperwork was not current. This is the parent standard for the three papers that already cover pieces of that problem, because a build that only does one of them will still reject packs. The pack is a set. Treat it as a set.
 
-## In short
+The eight checks, in order
 
-- **What this is**: An open build standard for the licence, insurance and compliance pack a trade or construction business hands to a builder, insurer or inspector. The parent of Invoice Check, the Compliance Calendar and QA Proofcheck.
-- **The core rule**: One graph. A fact lives once and every artifact reads it. Rules carry an effective date and due dates are derived. If a value exists in two places, the build is already lying.
-- **What it does not do**: It does not file with a regulator and it never says compliant. It says current, cited, reviewed, as-of. A named person accepts every version.
-- **The hard part**: Not the documents. Applicability, which is a rules problem, and the binding layer that keeps a pack current when a rule or a ticket moves.
+1. A subcontractor pack comes in. Run the eight checks in order and stop at the first failure.
+2. Checks 1 and 2, identity then tickets: ABN active, entity name matching the licence, and every ticket current. Expired is a queue, not a warning.
+3. Check 3, applicability: which obligations apply to this work type, state, headcount and site, and the written reason why the others do not.
+4. Checks 4 to 6: every applicable obligation has a current artifact, shared fields appear once in the graph and everywhere in the artifacts, and every generated clause cites a source with an as-of timestamp.
+5. Check 7, the human gate: has a named person accepted this version? If no, it does not leave the building. The machine does not file, submit, or tell a client they are compliant.
+6. If yes, check 8: handover, one pack per location, with version history included.
+7. A rule or ticket moved? If not, the pack sits in queue 1, pass, current as of now. If one has, it goes back to the queue it belongs in and through the human gate again.
+
+Stop at the first failure: a pack that passes check four and fails check one is how you pay a contractor on an expired licence. The filled diamond is check 7, and nothing leaves the building without it.
 
 ## 1. What this standard is
 

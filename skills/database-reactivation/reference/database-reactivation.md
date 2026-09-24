@@ -1,5 +1,3 @@
-Build standard · September 2026
-
 # Working Your Own Database
 
 Source: https://aipathway.com.au/explore-ai/database-reactivation-build-standard
@@ -21,20 +19,43 @@ To print them: npx @aipathway/conformance show database-reactivation-build-stand
 
 The method, not the pitch. Everything below is what we would build, written so you can build it instead.
 
-Does the work of
+Used by
 
 - Sales Administrator
 - Business Development Manager
 - Sales Associate
 
+Published by AI Pathway
+
+The build
+
+Export five fields, split into four plays, rank inside each one, and write an opener with a reason in it.
+
+The hard part
+
+Not the automation. It is the ranking, because the list is always longer than your capacity to call it.
+
+Where to stop
+
+The compliance gate and the record. Everything above it is a weekend. That step is a liability with a phone number attached.
+
+Honest caveat
+
+A self-built version works. It stops working when the person who built it leaves, which is section 10.
+
 Most agents are sitting on a list they paid to acquire and have never worked. The reason is almost never the idea. It is that the list is longer than the day, so without a rule for who to ring first you ring whoever is at the top of a spreadsheet, get four polite nothings, and stop.
 
-## In short
+The method, end to end
 
-- **The build**: Export five fields, split into four plays, rank inside each one, and write an opener with a reason in it.
-- **The hard part**: Not the automation. It is the ranking, because the list is always longer than your capacity to call it.
-- **Where to stop**: The compliance gate and the record. Everything above it is a weekend. That step is a liability with a phone number attached.
-- **Honest caveat**: A self-built version works. It stops working when the person who built it leaves, which is section 10.
+1. Start with the whole database export.
+2. Pull the five fields that carry the method: name and mobile, address, purchase or settlement date, last contact outcome, and whether they are an investor or owner-occupier.
+3. Run four plays, each with its own trigger, rather than one campaign across the whole list.
+4. Rank which contact rings first. The ranking orders, it never permits: a score decides who is called first, never whether someone may be called at all.
+5. The gate, which is the step not to hand-roll: cleared to call? If no, there is no call and the reason is on the record.
+6. If yes, make the call. The opener is the whole call.
+7. Appointment agreed? If yes, the appraisal is booked with a date on it. If no, that no buys months rather than a removal, the outcome is written back, and the next touch comes back through the gate.
+
+Everything across the top is a weekend of work and stays yours. The ranking orders, it never permits: the gate sits underneath it, and every later touch comes back through the same diamond.
 
 ## 1. The Five Fields That Matter
 

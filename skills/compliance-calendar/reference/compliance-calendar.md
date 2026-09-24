@@ -19,20 +19,43 @@ To print them: npx @aipathway/conformance show compliance-calendar-build-standar
 
 How to build a compliance calendar that survives a rule change, an owner who says no, and the property manager who set it up leaving. Written so you can build it yourself.
 
-Does the work of
+Used by
 
 - Compliance Officer
 - Property Manager
 - Operations Manager
 
+10 min read · Published by AI Pathway
+
+What this is
+
+An open build standard for a compliance calendar across a rent roll or an asset register. Implement it in whatever you like.
+
+The core rule
+
+Store the rule with an effective date. Derive the due date. Never store a due date as a fact.
+
+What it does not do
+
+It does not decide. It surfaces what is due, drafts the action, and escalates what is at risk. A person still says yes.
+
+The hard part
+
+Not the dates. The owner who declines the work, and the obligation that stays live anyway.
+
 Most compliance calendars are a spreadsheet of due dates. They work until a rule changes, and then every date in the column is wrong and nobody can tell which ones. The difference between a calendar and a list of dates is that a calendar stores the rule and derives the date. That single decision is most of this specification.
 
-## In short
+One obligation, end to end
 
-- **What this is**: An open build standard for a compliance calendar across a rent roll or an asset register. Implement it in whatever you like.
-- **The core rule**: Store the rule with an effective date. Derive the due date. Never store a due date as a fact.
-- **What it does not do**: It does not decide. It surfaces what is due, drafts the action, and escalates what is at risk. A person still says yes.
-- **The hard part**: Not the dates. The owner who declines the work, and the obligation that stays live anyway.
+1. Start with a dated rule and the anchor date it applies to. Rules carry an effective date and old versions are kept, so an audit can show which rule governed a date that has already passed.
+2. Derive the due date. It is recomputed whenever the rule or the anchor changes, never stored as a fact.
+3. Write the obligation record: what is required, the anchor, the derived due date, evidence of last completion, who is responsible, and the state.
+4. Inside the lead time it becomes state 2: due, with the notice, booking or request already drafted.
+5. Drafted, never sent: released by a person? If no, nothing sends and it stays drafted.
+6. If yes, the notice goes out and the work is booked.
+7. Evidence on file? If yes, the obligation closes and stays provable later. If no, it sits in state 3, waiting on someone, carrying who, since when, and the next chase date, which is drafted and released the same way.
+
+A due date is not a fact about a property, it is a rule applied to an anchor, and both sides move. The filled diamond is the release: drafted, never sent, and a person lets it go.
 
 ## 1. What this standard covers
 

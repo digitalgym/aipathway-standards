@@ -19,21 +19,44 @@ To print them: npx @aipathway/conformance show multi-site-conformance-build-stan
 
 How to run one operating standard across many branches, franchises or entities without ending up with one system per site. Written so you can build it yourself.
 
-Does the work of
+Used by
 
 - Franchise Manager
 - Operations Manager
 - Quality Manager
 - National Operations
 
+10 min read · Published by AI Pathway
+
+What this is
+
+An open build standard for running any of our other standards across many segments: branches, franchises, regions or legal entities.
+
+The core rule
+
+A small set of keys and required fields is fixed for everybody. Everything else is local, and that is what makes the fixed part hold.
+
+What it does not do
+
+It surfaces drift and scores it consistently. What to do about a branch that keeps drifting is a person's job and stays one.
+
+The hard part
+
+Not the detection. Publishing the same report every week in the month everyone would rather it went quiet.
+
 A head office can specify a process perfectly and roll it out to fourteen branches, and within a quarter there will be fourteen spreadsheets. This is not a discipline problem and it does not respond to more training. It happens because the local version is faster for the person using it, and nothing in the system ever tells anybody it has happened.
 
-## In short
+How the centre sees fourteen places
 
-- **What this is**: An open build standard for running any of our other standards across many segments: branches, franchises, regions or legal entities.
-- **The core rule**: A small set of keys and required fields is fixed for everybody. Everything else is local, and that is what makes the fixed part hold.
-- **What it does not do**: It surfaces drift and scores it consistently. What to do about a branch that keeps drifting is a person's job and stays one.
-- **The hard part**: Not the detection. Publishing the same report every week in the month everyone would rather it went quiet.
+1. Define the key contract: the small set of identifiers and required fields every segment carries, named once and versioned. Segments may add, never rename or fork.
+2. Give every record a segment from group membership rather than a typed label, so ownership cannot drift from access.
+3. Run the drift check on a schedule, for records missing required fields, keys that do not resolve, and values outside a closed list, alongside the gate-bypass check.
+4. Score each segment on the same measures the centre uses. One definition, computed once, read by everybody.
+5. Past a threshold? If no, the report is still published to every segment and to the centre on the same schedule, whether or not the numbers are good.
+6. If yes, route it to a named person rather than another all-branch email.
+7. Finding resolved? If yes, it closes and appears on the next report. If no, it stays open with an owner and is scored again on the next run.
+
+The contract comes first because every later check compares against it. The report publishes on schedule either way: the failure this prevents is invisibility, not non-compliance.
 
 ## 1. What this standard covers
 

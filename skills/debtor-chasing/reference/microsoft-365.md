@@ -11,7 +11,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/debtor-chasing
 
 The ledger keeps the money. The tenant keeps the ranking, the gate and the record of who was contacted and what they said.
 
-Does the work of
+Used by
 
 - AI Officer
 - Business Systems Analyst
@@ -220,6 +220,7 @@ If only successful conversations are written back, the contact history understat
 
 ## Related reading
 
+- A ledger per client, and nowhere that holds the work
 - The debtor chasing build standard
 - Building the standards on Microsoft 365
 - Database reactivation on Microsoft 365

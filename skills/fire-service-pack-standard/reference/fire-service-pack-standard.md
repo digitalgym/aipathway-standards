@@ -19,21 +19,44 @@ To print them: npx @aipathway/conformance show fire-service-pack-standard
 
 The visit happened. The record fails three months later, when a building owner, an insurer or an auditor asks for it. Binding evidence to an asset identity is what stops that.
 
-Does the work of
+Used by
 
 - Fire Safety Advisor
 - Quality Manager
 - Document Controller
 - Service Coordinator
 
+9 min read · Published by AI Pathway
+
+What this is
+
+The rejected pack standard applied to fire and electrical service records. The parent owns the specification; this is what the trade adds.
+
+The core rule
+
+Evidence binds to the asset identity before the job can close. Chasing evidence afterwards is the failure, not the fix.
+
+What it does not do
+
+It assembles a complete record and puts it in front of the person who certifies. It does not certify, and it does not decide a pass.
+
+The hard part
+
+Unbound work is invisible unless you build the queue. Nothing surfaces it on its own, and it ages quietly.
+
 In this trade the work and the record of the work are not two things. A test that was performed correctly and recorded against the wrong asset, or with no photograph of the tag, is worth nothing to the person who has to rely on it. The failure is almost never the technician. It is that the system let the job close.
 
-## In short
+One visit, and whether it counts
 
-- **What this is**: The rejected pack standard applied to fire and electrical service records. The parent owns the specification; this is what the trade adds.
-- **The core rule**: Evidence binds to the asset identity before the job can close. Chasing evidence afterwards is the failure, not the fix.
-- **What it does not do**: It assembles a complete record and puts it in front of the person who certifies. It does not certify, and it does not decide a pass.
-- **The hard part**: Unbound work is invisible unless you build the queue. Nothing surfaces it on its own, and it ages quietly.
+1. A service visit happens.
+2. Checks 1 and 2: the right site and the right asset identity, then which of the asset's live obligations this visit discharges. A visit that discharges nothing is a visit nobody can count.
+3. Check 3: the result is recorded by a competent person as pass, defect or isolated. Recorded, never computed.
+4. Checks 4 and 5: evidence captured and bound to the asset identity and location, and any defect coded to a closed list rather than written as a paragraph.
+5. Is the evidence bound? If no, it lands in the unbound queue. That is not a pass, and it is the queue the whole standard exists to make visible.
+6. If yes, checks 6 and 7: any electrical certificate attached, and the next action owner named.
+7. A defect or an isolation? If neither, it is a pass, the only state that counts as coverage. If either, it is coded with a retest date and comes back round, because an isolation without one is a defect wearing a different label.
+
+Identity first, the document last. The filled diamond is the unbound queue: work marked done with evidence missing is not a pass, and it is the queue the whole standard exists to make visible.
 
 ## 1. Read the parent standard first
 

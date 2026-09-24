@@ -11,7 +11,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/cited-answer-o
 
 An assistant over your own documents is the easy half and you may already have it. The half that makes it safe to rely on is the part nobody ships by default.
 
-Does the work of
+Used by
 
 - AI Officer
 - Business Systems Analyst

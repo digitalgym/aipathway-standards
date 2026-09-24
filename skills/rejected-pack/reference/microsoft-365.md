@@ -11,7 +11,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/binding-the-pa
 
 One graph where each fact lives once, obligations that carry their citation, and a pack generated from bound records rather than assembled in a folder.
 
-Does the work of
+Used by
 
 - Business Systems Analyst
 - HSEQ Administrator

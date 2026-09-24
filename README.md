@@ -39,6 +39,7 @@ stale copy. The package is the harness; the site is the standard.
 | `AIP-BS-DATABASE-REACTIVATION` | [`database-reactivation`](skills/database-reactivation/SKILL.md) | Database Reactivation Build Standard |
 | `AIP-BS-DEBTOR-CHASING` | [`debtor-chasing`](skills/debtor-chasing/SKILL.md) | Debtor Chasing Build Standard |
 | `AIP-BS-BOOKED-AFTER-HOURS` | [`booked-after-hours`](skills/booked-after-hours/SKILL.md) | Booked After Hours Build Standard |
+| `AIP-BS-QUOTE-OUT` | [`quote-out`](skills/quote-out/SKILL.md) | Quote Out Build Standard |
 | `AIP-BS-RENT-ARREARS` | [`rent-arrears`](skills/rent-arrears/SKILL.md) | Rent Arrears Build Standard |
 | `AIP-BS-FIRE-SERVICE-PACK-STANDARD` | [`fire-service-pack-standard`](skills/fire-service-pack-standard/SKILL.md) | Fire Service Pack Standard |
 | `AIP-BS-MULTI-SITE-CONFORMANCE` | [`multi-site-conformance`](skills/multi-site-conformance/SKILL.md) | Multi Site Conformance Build Standard |

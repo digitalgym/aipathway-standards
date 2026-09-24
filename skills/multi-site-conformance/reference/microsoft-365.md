@@ -11,7 +11,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/multi-site-con
 
 Shared keys, drift detection on a clock, one score computed once, and one question about tenancy that decides whether any of it is possible.
 
-Does the work of
+Used by
 
 - Franchise Manager
 - Operations Manager

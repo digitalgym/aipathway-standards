@@ -11,7 +11,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/database-react
 
 Four plays with triggers you can query, a rank nobody sorts by hand, and a gate that runs on every send rather than on the view.
 
-Does the work of
+Used by
 
 - AI Officer
 - Business Systems Analyst

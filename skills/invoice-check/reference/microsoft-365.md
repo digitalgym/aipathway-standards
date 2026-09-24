@@ -11,7 +11,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/checking-invoi
 
 Four checks in a fixed order, stopping at the first failure. The order is the claim, and a parallel implementation quietly discards it.
 
-Does the work of
+Used by
 
 - Business Systems Analyst
 - Contract Administrator

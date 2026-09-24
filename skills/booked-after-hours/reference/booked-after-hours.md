@@ -19,22 +19,51 @@ To print them: npx @aipathway/conformance show booked-after-hours-build-standard
 
 An open specification for answering a trade business phone when nobody is there. Build it yourself, hand it to an AI coding agent, or hold whoever built yours to it.
 
-Does the work of
+Used by
 
 - Receptionist / Administration Assistant
 - Scheduling Coordinator
 - Office Administrator
 
+10 min read · Published by AI Pathway
+
+What this covers
+
+One inbound call, outside business hours, to an Australian trade business, ending in a job that exists in the system of record or a deliberate hand to a person.
+
+The first rule
+
+Disclosure and the recording notice happen before anything else is asked. Not after the greeting, not on request. First.
+
+The hard part
+
+Classification and address. The model may phrase the question; it may not invent the job type or the address. Both come from a fixed list or a lookup, or the call escalates.
+
+Write once
+
+One call, one job. A second call from the same number about the same problem updates the existing job rather than creating a rival copy of it.
+
+What stays with a person
+
+Price, variations, safety advice, an upset caller, and any job the taxonomy does not fit. All hand over with the transcript attached.
+
+The pass test
+
+Section 10. Two calls from one phone, one minute, on your own data. A stubbed implementation cannot pass it.
+
 A burst pipe at 9pm is not a hard conversation. The caller knows what is wrong, they know their address, and they want to know if someone is coming. Almost every part of that is mechanical. The part that is not is deciding whether it is worth waking somebody up, and that decision has to be made the same way every time or it is worth nothing.
 
-## In short
+How one call runs, end to end
 
-- **What this covers:** One inbound call, outside business hours, to an Australian trade business, ending in a job that exists in the system of record or a deliberate hand to a person.
-- **The first rule:** Disclosure and the recording notice happen before anything else is asked. Not after the greeting, not on request. First.
-- **The hard part:** Classification and address. The model may phrase the question; it may not invent the job type or the address. Both come from a fixed list or a lookup, or the call escalates.
-- **Write once:** One call, one job. A second call from the same number about the same problem updates the existing job rather than creating a rival copy of it.
-- **What stays with a person:** Price, variations, safety advice, an upset caller, and any job the taxonomy does not fit. All hand over with the transcript attached.
-- **The pass test:** Section 9. Two calls from one phone, one minute, on your own data. A stubbed implementation cannot pass it.
+1. A call arrives outside business hours.
+2. Identify and disclose, which is first because it is a legal obligation.
+3. Capture the problem and classify it as one of three fixed values: emergency, routine or quote.
+4. Resolve the address through a lookup and read it back for the caller to confirm. The spoken address is a query, never a value.
+5. Every check complete? If no, the call escalates to a person with the transcript attached, and the reason comes from a fixed list.
+6. If yes, write the job and confirm it to the caller.
+7. The on-call rule, which is the part we sell: is it an emergency? If yes, wake the on-call person, and only for this. If no, it waits in the morning queue.
+
+The order is the specification, and any step that cannot complete escalates rather than guessing. The filled diamond is the on-call rule from section 7: a person is woken for an emergency and nothing else.
 
 ## 1. Scope, and what is out of it
 
@@ -78,7 +107,7 @@ Speech recognition on Australian street names, over a phone line, at 9pm, with a
 
 So the rule is: the spoken address is a query, not a value. It goes to an address lookup, the agent reads back the resolved result, and the caller confirms. The resolved address is what reaches the job. If the lookup returns nothing confident, the call escalates rather than writing a best guess.
 
-This is also the cheapest thing on the list to test, and section 9 tests it.
+This is also the cheapest thing on the list to test, and section 10 tests it.
 
 ## 5. The outcome object
 
@@ -160,7 +189,21 @@ hosting:
 
 Build against `local.mock_voice` for as long as you like. You only switch the provider over when you want a real phone number, and that is the moment anything is charged. What that costs is on [the pricing page](https://aipathway.com.au/pricing).
 
-## 9. The pass test
+## 9. Switching it on, if you decide to
+
+Nothing above required us. If the checks are green against the stub, you have a working build and you are welcome to stop here. This is what happens if you want a real number behind it, in the order it happens, so the decision is not a conversation.
+
+1. An account, and a trial before anything is charged.
+2. **Connect the job system.** write_job
+3. The number, which is the part people worry about.
+
+What happens to the build you just wrote
+
+It keeps running and it stays yours. Section 8 splits the hosting three ways, and switching the provider only moves the middle one: the board, the queue and the reporting stay on your host, the live call moves to ours, and the system of record was always theirs. The two halves meet in the job system rather than in an integration you have to maintain. Your board reads the jobs; the call writes them.
+
+Then run your own conformance suite again with the provider flipped. The checks that reported `with_us` on the stub are the ones that can finally be evaluated, and check 12 is the whole standard holding at once on live telephony. If it does not go green, that is a fixture with our name on it rather than yours.
+
+## 10. The pass test
 
 One minute, your own phone, your own data. Deliberately nothing here touches the Do Not Call register, because a test you cannot legally stage is not a test.
 
@@ -168,7 +211,7 @@ One minute, your own phone, your own data. Deliberately nothing here touches the
 
 A stub cannot pass this. It cannot resolve an address it did not hear correctly, it cannot dedupe against a job system it is not connected to, and it cannot produce a recording with a disclosure on it. If your build passes all four, the thing works. If it passes the first call and fails the second, your write is not idempotent, which is section 6.
 
-## 10. Conformance checklist
+## 11. Conformance checklist
 
 A build conforms to this standard when every line is true. Hand this to whoever built yours, including an AI coding agent, and make them answer it.
 
