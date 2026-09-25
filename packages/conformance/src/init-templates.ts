@@ -276,10 +276,21 @@ const scenariosToRun = scenarios;
  * Nothing here needs editing. The files that do are build.mjs${map ? ", ports.mjs" : ""}
  * and scenarios.mjs.
  */
-import { writeFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import { fetchChecks, runStandard } from "@aipathway/conformance";
 ${liveImports}import { build } from "./build.mjs";
 import { scenarios${map ? ", liveScenarios" : ""} } from "./scenarios.mjs";
+
+// .env beside this file, written by \`npx @aipathway/conformance connect\` and
+// kept out of git. What is already in the environment wins.
+try {
+  for (const line of (await readFile(new URL("./.env", import.meta.url), "utf8")).split(/\\r?\\n/)) {
+    const m = /^([A-Z_][A-Z0-9_]*)=(.*)$/.exec(line.trim());
+    if (m) process.env[m[1]] ??= m[2].replace(/^"(.*)"$/, "$1");
+  }
+} catch {
+  // No .env: fine on the stub, and the hosted ports file says what is missing.
+}
 
 const SLUG = ${lit(slug)};
 const origin = process.env.AIPATHWAY_ORIGIN ?? "https://aipathway.com.au";
@@ -417,6 +428,11 @@ Markdown: ${comment(std.markdown)}
 3. Fill in \`holds\` in \`scenarios.mjs\`, one per check. Each carries the
    check's own conformance statement, what to inject, and what to assert.
 4. Run \`node run.mjs\`. Every check starts red. Go green.
+5. For the second run against the hosted provider, run
+   \`npx @aipathway/conformance connect\`, give the person the link and the code
+   it prints, and wait. It writes the key to \`.env\` and then tells you what the
+   account still needs; anything that is a connection is a link for the person,
+   not a thing you build. Then \`AIPATHWAY_ENV=production AIPATHWAY_PROVIDER=<provider> node run.mjs\`.
 
 ## Await every port call
 
@@ -520,8 +536,18 @@ checks run again and prove the write landed:
     AIPATHWAY_ENV=production node run.mjs
 
 Where the standard names one of our providers, \`ports.office-voice.mjs\` is
-the same run against us: \`OFFICE_VOICE_API_KEY=... AIPATHWAY_PROVIDER=<provider> AIPATHWAY_ENV=production node run.mjs\`.
-The write-back checks then prove one job, not two, in your real job system through the live insert.
+the same run against us. Get the key without leaving the terminal:
+
+    npx @aipathway/conformance connect
+
+It prints a link and a code; the account owner opens the link, signs in, checks
+the code and approves. The key lands in \`.env\` here (git-ignored; run.mjs reads
+it) and the command then says what the account still needs, with the link the
+owner opens to connect their job system or ledger. Then:
+
+    AIPATHWAY_PROVIDER=<provider> AIPATHWAY_ENV=production node run.mjs
+
+The write-back checks then prove the write landed in the real system through the live insert.
 
 Whether this folder has a \`ports.mjs\` to fill in depends on the standard.
 Where it does not, the live port map for that standard is not published yet, and

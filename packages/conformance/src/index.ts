@@ -5,6 +5,7 @@ export * from "./runner.js";
 export * from "./fetch-checks.js";
 export * from "./live.js";
 export * from "./init-templates.js";
+export * from "./connect.js";
 
 // The worlds, by name rather than `export *`.
 //
