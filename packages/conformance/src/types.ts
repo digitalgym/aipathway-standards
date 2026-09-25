@@ -61,6 +61,12 @@ export const ALL_PORTS = [
   "resolve_address",
   "write_job",
   "read_job",
+  // quoting. `read_pricebook` is deliberately a READ: the standard that uses
+  // these refuses to invent a price, so the only sanctioned source of a rate
+  // is the customer's own price list. `draft_quote` is a write into their
+  // system of record, never a document we render and hold.
+  "read_pricebook",
+  "draft_quote",
   // ledger
   "read_ledger",
   "record_promise",
@@ -116,6 +122,8 @@ export const PORT_SHAPE: Record<Port, { verb: PortVerb; subject: string }> = {
   resolve_address: { verb: "read", subject: "address" },
   // write
   write_job: { verb: "write", subject: "job" },
+  read_pricebook: { verb: "read", subject: "pricebook" },
+  draft_quote: { verb: "write", subject: "quote" },
   write_ledger: { verb: "write", subject: "ledger" },
   record_promise: { verb: "write", subject: "promise" },
   record_service: { verb: "write", subject: "service_record" },
@@ -232,18 +240,44 @@ const word = (n: number) => WORDS[n] ?? String(n);
 const cap = (w: string) => w.charAt(0).toUpperCase() + w.slice(1);
 
 /**
+ * What the production-only checks actually need, in the words of the standard
+ * rather than a guess.
+ *
+ * WHY THIS IS DERIVED. The sentence used to hardcode "a live call", which was
+ * true of every standard until Quote Out (2026-09-21), whose one production
+ * check is an authenticated write into a ServiceM8, Simpro or Xero tenant and
+ * involves no telephony at all. The wrong noun reached the machine surface as
+ * well as the page: `/api/agent/checks/quote-out-build-standard` told an agent
+ * the last check was a live call, which would have it looking for a phone
+ * number that does not exist in the spec.
+ *
+ * So the noun comes from the ports the production checks observe. A standard
+ * that talks needs a live line; one that only writes needs a real tenant.
+ */
+function productionNoun(checks: readonly Check[]): { one: string; many: string } {
+  const ports = new Set(
+    checks.filter((c) => c.assertable === "production").flatMap((c) => c.ports),
+  );
+  const talks = ports.has("talk") || ports.has("disclose");
+  return talks
+    ? { one: "a live call", many: "live calls" }
+    : { one: "a live tenant", many: "live tenants" };
+}
+
+/**
  * The sentence the runner and the page both use, generated so they cannot drift.
  * Leads with what the builder keeps, because most of it is theirs and the
  * framing should not open with the part we sell.
  */
 export function ownershipLine(checks: readonly Check[]): string {
   const t = assertableTally(checks);
+  const noun = productionNoun(checks);
   const ours =
     t.productionOnly === 0
       ? ""
       : t.productionOnly === 1
-        ? " The last one is a live call, and that one runs with us."
-        : ` The remaining ${word(t.productionOnly)} are live calls, and those run with us.`;
+        ? ` The last one is ${noun.one}, and that one runs with us.`
+        : ` The remaining ${word(t.productionOnly)} are ${noun.many}, and those run with us.`;
   const homework =
     t.preconditions === 0
       ? ""

@@ -10,6 +10,21 @@ import type { Check } from "./types.js";
  */
 export interface FetchedStandard {
   spec: string;
+  /** The standard's edition (its last-changed date). Null from a site that predates the field. */
+  version?: string | null;
+  boundary?: { never: string[]; stays_with_person: string[] } | null;
+  substrate?: { requires: { role: string; label: string; need: string; with_us?: true }[] } | null;
+  /** The live step as data, and the one-line next action for with_us. Absent from older sites. */
+  provider?: {
+    job: string;
+    skill: string;
+    stub: string;
+    production: string | null;
+    product: string | null;
+    insert: string | null;
+    with_us: { kind: string } & Record<string, unknown>;
+  } | null;
+  with_us_next?: string;
   standard: string;
   source: string;
   markdown: string;

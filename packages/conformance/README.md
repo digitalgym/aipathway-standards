@@ -4,9 +4,34 @@ Run a published [AI Pathway build standard](https://aipathway.com.au/explore-ai)
 against your own build, on your own machine, before you talk to anybody.
 
 ```bash
-npx @aipathway/conformance list
-npx @aipathway/conformance show booked-after-hours-build-standard
+npx @aipathway/conformance init booked-after-hours-build-standard
+cd booked-after-hours-build-standard && npm install && node run.mjs
 ```
+
+That writes a folder that runs: the harness, a build file to implement, and one
+scenario per check carrying that check's own words. Every check starts red.
+Going green is the work, and a green run means something because a red one was
+possible.
+
+```bash
+npx @aipathway/conformance list     # the standards
+npx @aipathway/conformance show <slug>   # every check, what it injects, what it asserts
+npx @aipathway/conformance json <slug>   # the same, for your own harness
+npx @aipathway/conformance init <slug> [dir]
+```
+
+## What `init` writes
+
+| file | whose | what |
+|---|---|---|
+| `build.mjs` | yours | the build. The only file that does the job |
+| `scenarios.mjs` | yours | one `holds` per check, generated with the check's own words |
+| `run.mjs` | ours | fetches the checks, runs, prints. No edits needed |
+| `AGENTS.md` | ours | the same instructions, written for a coding agent |
+
+It does not look for, patch or launch your existing code. It writes a new folder
+beside it, because guessing how somebody's project boots is how a tool becomes a
+framework.
 
 ## What this is
 
@@ -66,7 +91,7 @@ package is the harness. The site is the standard.
 
 ## The standards
 
-Ten, each one a job that leaks money in an Australian small business. Every one
+Eleven, each one a job that leaks money in an Australian small business. Every one
 publishes its checks as data at the same `/checks.json` path.
 
 | Standard | The job |
@@ -81,6 +106,7 @@ publishes its checks as data at the same `/checks.json` path.
 | [cited-answer](https://aipathway.com.au/explore-ai/cited-answer-build-standard) | Answers that carry their source and stop when it moves |
 | [multi-site-conformance](https://aipathway.com.au/explore-ai/multi-site-conformance-build-standard) | Branches that have quietly diverged |
 | [fire-service-pack](https://aipathway.com.au/explore-ai/fire-service-pack-standard) | Service evidence bound to the right asset |
+| [quote-out](https://aipathway.com.au/explore-ai/quote-out-build-standard) | A job that exists turned into a draft quote, priced only from the book |
 
 ## Also available
 
