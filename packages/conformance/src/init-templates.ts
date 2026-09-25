@@ -106,14 +106,15 @@ const WORLDS: Record<string, string> = {
  * build speaks through. `StubWorld` knows that internally; `LiveWorld` needs it
  * as data, because the implementations are the builder's own.
  *
- * Only the call world is published so far. The others are deliberately absent
- * rather than guessed: a map naming the wrong port would record a real write
- * under the wrong name, and a trace that misdescribes what happened is worse
- * than no trace. `init` simply does not offer a production run for those, and
- * says so, instead of writing a ports file nobody can trust.
+ * The call world and the quote world are published. The others are
+ * deliberately absent rather than guessed: a map naming the wrong port would
+ * record a real write under the wrong name, and a trace that misdescribes what
+ * happened is worse than no trace. `init` simply does not offer a production
+ * run for those, and says so, instead of writing a ports file nobody can trust.
  */
 const LIVE_MAPS: Record<string, string> = {
   "booked-after-hours-build-standard": "CALL_PORT_MAP",
+  "quote-out-build-standard": "QUOTE_PORT_MAP",
 };
 
 /** The live port map for a standard, if one is published. */
@@ -165,6 +166,7 @@ function scenarioFor(check: Check, world: string): string {
 export function scenariosFile(std: StandardDoc, slug: string): string {
   const world = worldFor(slug);
   const runnable = std.checks.filter((c) => c.assertable !== "production");
+  const live = std.checks.filter((c) => c.assertable === "production");
   return `/**
  * One scenario per check of ${comment(std.standard)}.
  *
@@ -180,15 +182,24 @@ export function scenariosFile(std: StandardDoc, slug: string): string {
  * Every \`holds\` returns false until you write it. That is deliberate: the first
  * run is all red, and going green is the work.
  *
- * Checks that only run against the live provider are left out. The runner
- * reports them as \`with_us\` rather than failing you for not having a phone
- * number, a real ledger or a real register.
+ * Checks that only run against the live provider are kept apart, in
+ * \`liveScenarios\` below. On the stub the runner reports them as \`with_us\`
+ * rather than failing you for not having a phone number, a real ledger or a
+ * real register; in production run.mjs appends them and they run like the rest.
  */
 
 import { ${world} } from "@aipathway/conformance";
 
 export const scenarios = [
 ${runnable.map((c) => scenarioFor(c, world)).join("\n")}
+];
+
+// The checks a stub cannot pass, and is not asked to. These run only in
+// production (AIPATHWAY_ENV=production), against your own systems or the
+// hosted provider, and their \`holds\` is yours to write like the others. The
+// world is a placeholder here: run.mjs swaps in the live one.
+export const liveScenarios = [
+${live.map((c) => scenarioFor(c, world)).join("\n")}
 ];
 `;
 }
@@ -246,8 +257,9 @@ const portsModule = live
   ? provider.startsWith("office_voice.") ? "./ports.office-voice.mjs" : "./ports.mjs"
   : null;
 const livePorts = portsModule ? (await import(portsModule)).ports : null;
+// In production the checks a stub cannot pass run too, from liveScenarios.
 const scenariosToRun = live
-  ? scenarios.map((s) => ({ ...s, world: () => new LiveWorld(livePorts, ${map}) }))
+  ? [...scenarios, ...liveScenarios].map((s) => ({ ...s, world: () => new LiveWorld(livePorts, ${map}) }))
   : scenarios;
 `
     : `
@@ -267,7 +279,7 @@ const scenariosToRun = scenarios;
 import { writeFile } from "node:fs/promises";
 import { fetchChecks, runStandard } from "@aipathway/conformance";
 ${liveImports}import { build } from "./build.mjs";
-import { scenarios } from "./scenarios.mjs";
+import { scenarios${map ? ", liveScenarios" : ""} } from "./scenarios.mjs";
 
 const SLUG = ${lit(slug)};
 const origin = process.env.AIPATHWAY_ORIGIN ?? "https://aipathway.com.au";
@@ -565,7 +577,15 @@ export function portsFile(std: StandardDoc, slug: string): string {
 /** @type {Partial<Record<keyof typeof import("@aipathway/conformance").${map}, Function>>} */
 export const ports = {
   // Example. Delete it and wire your own.
-  //
+  //${map === "QUOTE_PORT_MAP" ? `
+  // async readPricebook() {
+  //   const items = await xero.items();
+  //   return items.map((i) => ({ catalogueId: i.Code, description: i.Name, rate: Math.round(i.SalesDetails.UnitPrice * 100) }));
+  // },
+  // async draftQuote({ jobId, lines }, intentId) {
+  //   const q = await xero.createQuote({ Status: "DRAFT", Reference: \`job:\${jobId}\`, LineItems: lines.map((l) => ({ ItemCode: l.catalogueId })) });
+  //   return q ? { id: q.QuoteID, jobId, lines, total: lines.reduce((s, l) => s + l.rate, 0), state: "draft", updates: 0 } : null;
+  // },` : `
   // async writeJob(job, intentId) {
   //   const created = await serviceM8.createJob({
   //     phone: job.phone,
@@ -573,7 +593,7 @@ export const ports = {
   //     type: job.type,
   //   });
   //   return { id: created.uuid, ...job, open: true, updates: 0 };
-  // },
+  // },`}
 };
 `;
 }
@@ -594,21 +614,28 @@ export function officeVoicePortsFile(std: StandardDoc, slug: string): string {
   const map = liveMapFor(slug);
   if (!map) throw new Error(`${slug} has no published live port map`);
   const provider = std.provider?.production ?? "office_voice.front_desk";
+  const body = map === "QUOTE_PORT_MAP" ? quotePortsBody(provider) : callPortsBody();
   return `/**
  * The ports, behind the hosted provider: ${comment(provider)}.
  *
  *   OFFICE_VOICE_API_KEY=ovk_live_... AIPATHWAY_ENV=production AIPATHWAY_PROVIDER=${comment(provider)} node run.mjs
  *
  * This is the second run against US rather than against your own systems.
- * The write-back ports call the Office Voice MCP (find_or_create_job, with
- * the dedupe the standard requires); the call ports throw, because the live
- * call is the step the standard says not to hand-roll and the insert performs
- * it on a real line, not from here. Their checks report \`with_us\`.
+ * ${comment(map === "QUOTE_PORT_MAP"
+   ? "Every port calls the Office Voice MCP: read_job, read_pricebook and draft_quote are the standard's own verbs, and escalate and notify are recorded as facts against the job so a parked quote leaves a trace. Nothing here names a rate: draft_quote takes catalogue ids and the system of record prices them."
+   : "The write-back ports call the Office Voice MCP (find_or_create_job, with the dedupe the standard requires); the call ports throw, because the live call is the step the standard says not to hand-roll and the insert performs it on a real line, not from here. Their checks report with_us.")}
  *
  * Env:
- *   OFFICE_VOICE_API_KEY     a key minted at /api/keys with contacts:write
+ *   OFFICE_VOICE_API_KEY     a key minted at /app/keys with contacts:read and contacts:write
  *   OFFICE_VOICE_MCP_URL     default https://office-voice.com/api/mcp
- *   OFFICE_VOICE_TENANT_ID   only when the key reaches several orgs
+ *   OFFICE_VOICE_TENANT_ID   only when the key reaches several orgs${map === "QUOTE_PORT_MAP" ? `
+ *
+ * The job has to exist. Xero has no jobs, so the job lives in Office Voice
+ * (find_or_create_job made it, or the office did) and your scenarios drive the
+ * build with a real id: build(world.ports(), process.env.OFFICE_VOICE_JOB_ID).
+ * The office's Xero must be connected with quote drafting on
+ * (/api/integrations/xero/connect?tenant_id=…&quotes=1); without it draft_quote
+ * answers write_not_verified with that URL, which is check 6 doing its job.` : ""}
  */
 
 const MCP_URL = process.env.OFFICE_VOICE_MCP_URL ?? "https://office-voice.com/api/mcp";
@@ -617,7 +644,7 @@ const TENANT = process.env.OFFICE_VOICE_TENANT_ID;
 
 let rpcId = 0;
 async function call(tool, args) {
-  if (!KEY) throw new Error("OFFICE_VOICE_API_KEY is not set. Mint one at /api/keys with contacts:write.");
+  if (!KEY) throw new Error("OFFICE_VOICE_API_KEY is not set. Mint one at office-voice.com/app/keys with contacts:read and contacts:write.");
   const res = await fetch(MCP_URL, {
     method: "POST",
     headers: { "content-type": "application/json", authorization: \`Bearer \${KEY}\` },
@@ -648,7 +675,15 @@ function withUs(port) {
 }
 
 /** @type {Partial<Record<keyof typeof import("@aipathway/conformance").${map}, Function>>} */
-export const ports = {
+${map === "QUOTE_PORT_MAP" ? `export const ports = (() => {${body}
+})();` : `export const ports = {${body}
+};`}
+`;
+}
+
+/** The call world behind the hosted provider: writes go out, the call itself is with us. */
+function callPortsBody(): string {
+  return `
   async findOpenJob(phone) {
     const r = await call("find_or_create_job", { find_only: true, caller_e164: phone });
     if (!r.found) return null;
@@ -690,9 +725,83 @@ export const ports = {
   hear: withUs("hear"),
   notify: withUs("notify"),
   escalate: withUs("escalate"),
-  sendSms: withUs("sendSms"),
-};
-`;
+  sendSms: withUs("sendSms"),`;
+}
+
+/**
+ * The quote world behind the hosted provider. Every method is a real MCP call.
+ * The rate never appears in a request: draft_quote is sent catalogue ids and
+ * the system of record prices them, which is the standard's check 2 in the
+ * strongest form it can take.
+ */
+function quotePortsBody(provider: string): string {
+  return `
+  // Remembered per run so updateQuote, which only has the quote id, can name
+  // the job, and so escalate, which has neither, can name the last job read.
+  const byQuote = new Map();
+  let lastJob = null;
+  const cents = (n) => Math.round(Number(n) * 100);
+  const toQuote = (r, lines) => ({
+    id: r.quote_external_id,
+    jobId: r.job_external_id,
+    lines: (r.line_items ?? lines).map((l) => ({ catalogueId: l.catalogue_id ?? l.catalogueId, description: l.description, rate: cents(l.line_total ?? l.unit_price ?? l.rate / 100) })),
+    total: cents(r.amount ?? 0),
+    state: "draft",
+    updates: r.outcome === "quote_reused" ? 1 : 0,
+    ...(r.duplicate_of ? { duplicateOf: r.duplicate_of } : {}),
+  });
+
+  return {
+    async readJob(jobId) {
+      const r = await call("read_job", { job_external_id: jobId });
+      if (r.outcome !== "job_read") return null;
+      lastJob = r.job_external_id;
+      return { id: r.job_external_id, source: "call", wants: r.description ? [r.description] : [], ...(r.quote_external_id ? { quoteId: r.quote_external_id } : {}) };
+    },
+
+    async readPricebook() {
+      const r = await call("read_pricebook", {});
+      // no_price_list and unavailable are both a park, and the reason says which.
+      if (r.outcome !== "priced") throw new Error(\`read_pricebook: \${r.outcome}: \${r.reason}\`);
+      return r.lines.map((l) => ({ catalogueId: l.catalogue_id, description: l.description, rate: cents(l.unit_price) }));
+    },
+
+    async draftQuote(input, intentId) {
+      const r = await call("draft_quote", {
+        job_external_id: input.jobId,
+        line_items: input.lines.map((l) => ({ catalogue_id: l.catalogueId, ...(l.description ? { description: l.description } : {}) })),
+      });
+      // parked, not_supported and write_not_verified all mean no quote exists
+      // in the system of record. Null is the standard's "write not verified".
+      if (r.outcome !== "quote_drafted" && r.outcome !== "quote_reused") return null;
+      const quote = toQuote(r, input.lines);
+      byQuote.set(quote.id, { jobId: input.jobId, lines: input.lines, quote });
+      return quote;
+    },
+
+    async updateQuote(quoteId, intentId) {
+      const known = byQuote.get(quoteId);
+      if (!known) throw new Error(\`updateQuote: \${quoteId} was not drafted in this run\`);
+      const r = await call("draft_quote", {
+        job_external_id: known.jobId,
+        line_items: known.lines.map((l) => ({ catalogue_id: l.catalogueId, ...(l.description ? { description: l.description } : {}) })),
+      });
+      if (r.outcome !== "quote_drafted" && r.outcome !== "quote_reused") return null;
+      known.quote.updates += 1;
+      known.quote.duplicateOf = known.quote.duplicateOf ?? r.duplicate_of ?? quoteId;
+      return { ...known.quote };
+    },
+
+    async escalate(reason, detail) {
+      // A parked quote is a real outcome, so it is recorded where the office
+      // will read it: as a fact on the job.
+      await call("record_fact", { subject_kind: "job", subject_ref: lastJob ?? "unknown-job", key: "quote.parked", value: { reason, ...(detail ? { detail } : {}) }, confidence: "verified" });
+    },
+
+    async notify(to, jobId, reason) {
+      await call("record_fact", { subject_kind: "job", subject_ref: jobId, key: "quote.notify", value: { to, reason, provider: ${JSON.stringify(provider)} }, confidence: "verified" });
+    },
+  };`;
 }
 
 /**

@@ -77,6 +77,24 @@ export const CALL_PORT_MAP = {
   sendSms: "send_sms",
 } as const satisfies Record<string, Port>;
 
+/**
+ * The quote world's methods, mapped to the ports they speak through.
+ *
+ * `draftQuote` and `updateQuote` share `draft_quote` for the same reason the
+ * call world's two job writes share `write_job`: creating the draft and the
+ * second pass that finds it are one port with two payloads, and check 5 (one
+ * quote per job) reads both. There is no send port. A build handed this map
+ * cannot express sending, which is how check 7 is proved rather than promised.
+ */
+export const QUOTE_PORT_MAP = {
+  readJob: "read_job",
+  readPricebook: "read_pricebook",
+  draftQuote: "draft_quote",
+  updateQuote: "draft_quote",
+  escalate: "escalate",
+  notify: "notify",
+} as const satisfies Record<string, Port>;
+
 export interface LiveOptions {
   /**
    * The clock. Real time by default.
