@@ -15,6 +15,8 @@ The checks on this page are also structured data: https://aipathway.com.au/explo
 carrying each check's id, ports, what to inject and what to assert.
 To print them: npx @aipathway/conformance show database-reactivation-build-standard
 To scaffold a folder that runs them, every check starting red: npx @aipathway/conformance init database-reactivation-build-standard
+Do the scaffolding yourself if you can run commands; the person should not have to open a terminal.
+When the checks are green, npx @aipathway/conformance connect gets the hosted provider's key: it prints a link and a code, the person approves in a browser, and the key lands in .env. Hand them the link; that click and the job-system consent it leads to are the only two things they do.
 
 ---
 

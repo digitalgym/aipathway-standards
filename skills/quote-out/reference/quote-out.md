@@ -15,6 +15,8 @@ The checks on this page are also structured data: https://aipathway.com.au/explo
 carrying each check's id, ports, what to inject and what to assert.
 To print them: npx @aipathway/conformance show quote-out-build-standard
 To scaffold a folder that runs them, every check starting red: npx @aipathway/conformance init quote-out-build-standard
+Do the scaffolding yourself if you can run commands; the person should not have to open a terminal.
+When the checks are green, npx @aipathway/conformance connect gets the hosted provider's key: it prints a link and a code, the person approves in a browser, and the key lands in .env. Hand them the link; that click and the job-system consent it leads to are the only two things they do.
 
 ---
 
@@ -74,7 +76,7 @@ Out of scope: creating the job. That is the [Booked After Hours Build Standard](
 
 Also out of scope, deliberately: pricing judgement. Variations to an accepted quote, discounts, and any line the price list does not cover are parked for a person. A build that estimates its way around a missing catalogue line is not a conforming build, it is a liability with a total on it.
 
-Systems this can be met on: ServiceM8, Simpro and Xero, all of which expose a write for a quote record. Tradify cannot meet this standard: it has no public API, so there is no sanctioned route that creates a quote in it. That is the same position we take on [the trades page](https://aipathway.com.au/trades) about booking a job, and for the same reason.
+Systems this can be met on: ServiceM8, Simpro and Xero all expose a write for a quote record. Our hosted step (section 8) writes the draft into Xero today, priced by Xero from its Items; through our connector, ServiceM8 and Simpro answer not-supported until their catalogue read and draft write are built, and Simpro is parts-only either way, because prebuild sell prices are not in its API. Tradify cannot meet this standard: it has no public API, so there is no sanctioned route that creates a quote in it. That is the same position we take on [the trades page](https://aipathway.com.au/trades) about booking a job, and for the same reason.
 
 ## 2. The checks, in order
 
@@ -178,7 +180,7 @@ const stub: QuoteOutPorts = makeQuoteOutStub({ seed: "burst-pipe" });
 const live: QuoteOutPorts = serviceM8Adapter({ tenant, oauth });
 ```
 
-The swap from `stub` to a real adapter is the only step that needs anything from anybody else: an authenticated tenant, its price list, and a write that vendor will accept. That is the step this standard says not to hand-roll.
+The swap from `stub` to a real adapter is the only step that needs anything from anybody else: an authenticated tenant, its price list, and a write that vendor will accept. That is the step this standard says not to hand-roll. Getting the key for it is one command, `npx @aipathway/conformance connect`: it prints a link and a code, the account owner approves in a browser, and the key lands beside your scaffold.
 
 **9. The pass test** Take one real job in a real ServiceM8, Simpro or Xero tenant, where the work needs three things from your price list and one thing that is not in it. Run the flow. You should get one quote, in draft, in that tenant, with three priced lines carrying real catalogue ids and a fourth line parked as `no_catalogue_line`, no total, and nothing sent. Now run it a second time on the same job. There must still be exactly one quote, updated rather than duplicated, carrying `duplicate_of`.
 
