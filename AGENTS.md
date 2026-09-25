@@ -11,7 +11,9 @@ workflows:
 2. Follow the checks in the order given. The order is the claim.
 3. Run `npx @aipathway/conformance init <standard-slug>` for a folder that runs
    every check red, then make them green. Assert on the recorded port calls,
-   never on stub memory.
+   never on stub memory. For the second run against the hosted provider, run
+   `npx @aipathway/conformance connect`: it prints a link and a code, the
+   account owner approves in a browser, and the key lands in `.env`.
 4. Never build the step the standard says not to hand-roll: an Australian phone
    number with AI disclosure, the Do Not Call Register check, calling hours, a
    record that survives a dispute. A check that needs one returns `with_us`;

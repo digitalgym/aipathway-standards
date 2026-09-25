@@ -18,7 +18,18 @@ npx @aipathway/conformance list     # the standards
 npx @aipathway/conformance show <slug>   # every check, what it injects, what it asserts
 npx @aipathway/conformance json <slug>   # the same, for your own harness
 npx @aipathway/conformance init <slug> [dir]
+npx @aipathway/conformance connect [dir] [--wait]   # a key for the hosted step
 ```
+
+## Getting the key
+
+Where a standard names one of our providers, the second run is against us, and
+that needs a key. `connect` gets one without leaving the terminal: it prints a
+link and a code, the account owner opens the link, signs in, checks the code and
+approves, and the key is written to `.env` beside the scaffold (git-ignored;
+`run.mjs` reads it). It never asks for the scope that makes a phone ring. Then
+it prints what the account still needs, with the link the owner opens to connect
+their job system or ledger, and `--wait` keeps checking until they have.
 
 ## What `init` writes
 

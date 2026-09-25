@@ -28,7 +28,9 @@ Every standard also publishes its checks as data, and
 [`packages/conformance`](packages/conformance) is the harness that runs them:
 
 ```
-npx @aipathway/conformance show booked-after-hours-build-standard
+npx @aipathway/conformance init booked-after-hours-build-standard
+cd booked-after-hours-build-standard && npm install && node run.mjs
+npx @aipathway/conformance connect     # a key for the hosted step; the owner approves in a browser
 ```
 
 It ships a recording stub and a runner, so a build can be driven through the
