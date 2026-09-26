@@ -95,6 +95,27 @@ export const QUOTE_PORT_MAP = {
   notify: "notify",
 } as const satisfies Record<string, Port>;
 
+/**
+ * The invoice world's methods, mapped to the ports they speak through.
+ *
+ * Published 2026-09-26 with the hosted draft_invoice tool. The release and the
+ * send are the standard's gates: a person's act in the ledger, so in the
+ * hosted file they are recorded as facts against the job rather than
+ * performed, and the check that reads the trace sees exactly that.
+ */
+export const INVOICE_PORT_MAP = {
+  readJobs: "read_job",
+  readInvoiceForJob: "read_job",
+  readReleaseRule: "read_job",
+  readRecord: "read_job",
+  readPricebook: "read_pricebook",
+  writeInvoice: "write_invoice",
+  attachEvidence: "evidence",
+  release: "gate",
+  send: "issue_notice",
+  escalate: "escalate",
+} as const satisfies Record<string, Port>;
+
 export interface LiveOptions {
   /**
    * The clock. Real time by default.

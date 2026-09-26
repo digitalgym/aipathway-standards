@@ -171,14 +171,15 @@ One step not to hand-roll: the authenticated, idempotent write into the ledger, 
 ```
 provider:
   stub:       local.mock_ledger
-  production: none                       # scoped build, not a product
+  production: office_voice.draft_invoice# Office Voice / Recover, sold as Get Paid
 
-where the live step lands
-  - Office Voice, inside Get Paid, as draft_invoice: read the job, read
-    the book, write one DRAFT invoice into Xero priced by Xero from the
-    item codes, reference job:<id> so a second event updates it. The
-    Xero write exists in the runtime today; the MCP tool is the next
-    job, and the provider line above flips the day it is live.
+the live step
+  - Office Voice, inside Get Paid, as draft_invoice on the MCP: read the
+    job, read the book, write one DRAFT invoice into Xero priced by Xero
+    from the item codes, reference job:<id> (and the stage under a
+    contract) so a second event updates it. A job the system does not
+    show as complete is parked. It never authorises and never sends; the
+    release is yours, in Xero.
 
 stays local                          # yours, and the standard
   - reading completion from the job system

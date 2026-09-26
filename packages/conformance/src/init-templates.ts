@@ -126,6 +126,7 @@ const WORLDS: Record<string, string> = {
 const LIVE_MAPS: Record<string, string> = {
   "booked-after-hours-build-standard": "CALL_PORT_MAP",
   "quote-out-build-standard": "QUOTE_PORT_MAP",
+  "invoice-out-build-standard": "INVOICE_PORT_MAP",
 };
 
 /** The live port map for a standard, if one is published. */
@@ -651,7 +652,7 @@ export function officeVoicePortsFile(std: StandardDoc, slug: string): string {
   const map = liveMapFor(slug);
   if (!map) throw new Error(`${slug} has no published live port map`);
   const provider = std.provider?.production ?? "office_voice.front_desk";
-  const body = map === "QUOTE_PORT_MAP" ? quotePortsBody(provider) : callPortsBody();
+  const body = map === "QUOTE_PORT_MAP" ? quotePortsBody(provider) : map === "INVOICE_PORT_MAP" ? invoicePortsBody(provider) : callPortsBody();
   return `/**
  * The ports, behind the hosted provider: ${comment(provider)}.
  *
@@ -660,12 +661,21 @@ export function officeVoicePortsFile(std: StandardDoc, slug: string): string {
  * This is the second run against US rather than against your own systems.
  * ${comment(map === "QUOTE_PORT_MAP"
    ? "Every port calls the Office Voice MCP: read_job, read_pricebook and draft_quote are the standard's own verbs, and escalate and notify are recorded as facts against the job so a parked quote leaves a trace. Nothing here names a rate: draft_quote takes catalogue ids and the system of record prices them."
-   : "The write-back ports call the Office Voice MCP (find_or_create_job, with the dedupe the standard requires); the call ports throw, because the live call is the step the standard says not to hand-roll and the insert performs it on a real line, not from here. Their checks report with_us.")}
+   : map === "INVOICE_PORT_MAP"
+     ? "Every port calls the Office Voice MCP: read_job, read_pricebook and draft_invoice are the standard's own verbs. Nothing here names a rate: draft_invoice takes catalogue ids and the ledger prices them. The release and the send are a person's act in the ledger, so here they are recorded as facts against the job rather than performed, and nothing in this file can authorise or send an invoice."
+     : "The write-back ports call the Office Voice MCP (find_or_create_job, with the dedupe the standard requires); the call ports throw, because the live call is the step the standard says not to hand-roll and the insert performs it on a real line, not from here. Their checks report with_us.")}
  *
  * Env:
  *   OFFICE_VOICE_API_KEY     a key minted at /app/keys with contacts:read and contacts:write
  *   OFFICE_VOICE_MCP_URL     default https://office-voice.com/api/mcp
- *   OFFICE_VOICE_TENANT_ID   only when the key reaches several orgs${map === "QUOTE_PORT_MAP" ? `
+ *   OFFICE_VOICE_TENANT_ID   only when the key reaches several orgs${map === "INVOICE_PORT_MAP" ? `
+ *   OFFICE_VOICE_JOB_ID      the complete job to invoice (Xero has no jobs; it lives in Office Voice)
+ *   OFFICE_VOICE_JOB_LINES   JSON: [{"code":"CALL","qty":1,"kind":"callout"}, ...] the job's lines by catalogue code
+ *
+ * The office's Xero must be connected with drafting on
+ * (/api/integrations/xero/connect?tenant_id=…&quotes=1); the same scope covers
+ * a draft invoice. Without it draft_invoice answers write_not_verified with
+ * that URL, which is check 7 doing its job.` : ""}${map === "QUOTE_PORT_MAP" ? `
  *
  * The job has to exist. Xero has no jobs, so the job lives in Office Voice
  * (find_or_create_job made it, or the office did) and your scenarios drive the
@@ -763,6 +773,97 @@ function callPortsBody(): string {
   notify: withUs("notify"),
   escalate: withUs("escalate"),
   sendSms: withUs("sendSms"),`;
+}
+
+/**
+ * The invoice world behind the hosted provider. Every method is a real MCP
+ * call except the two gates, which are a person's act in the ledger and are
+ * recorded as facts so the trace shows them asked for rather than performed.
+ * The rate never appears in a request: draft_invoice is sent catalogue ids and
+ * the ledger prices them, which is the standard's check 3 in the strongest
+ * form it can take.
+ */
+function invoicePortsBody(provider: string): string {
+  return `
+  // The one job under test, from the environment: Xero has no jobs, so the job
+  // lives in Office Voice and the runner names it. Its lines come from the
+  // environment too, by catalogue code, because read_job does not carry them.
+  const JOB_ID = process.env.OFFICE_VOICE_JOB_ID;
+  const JOB_LINES = JSON.parse(process.env.OFFICE_VOICE_JOB_LINES ?? "[]");
+  const cents = (n) => Math.round(Number(n) * 100);
+  const byJob = new Map();
+  const toInvoice = (r) => ({
+    id: r.invoice_external_id,
+    externalId: r.invoice_external_id,
+    jobId: r.job_external_id,
+    lines: (r.line_items ?? []).map((l) => ({ code: l.catalogue_id, qty: l.quantity ?? 1, rate: cents(l.unit_price ?? 0), kind: "labour" })),
+    bookEdition: r.pricebook_read_at ?? null,
+    ...(r.stage ? { stage: r.stage } : {}),
+    status: r.outcome === "parked" ? "parked" : "draft",
+    ...(r.park_reason ? { parkReason: r.park_reason } : {}),
+    evidence: [],
+    updates: r.outcome === "invoice_reused" ? 1 : 0,
+  });
+
+  return {
+    async readJobs() {
+      if (!JOB_ID) throw new Error("OFFICE_VOICE_JOB_ID is not set: name the complete job the run invoices.");
+      const r = await call("read_job", { job_external_id: JOB_ID });
+      if (r.outcome !== "job_read") return [];
+      return [{ id: r.job_external_id, customerId: r.customer_external_id ?? "unknown", status: "complete", lines: JOB_LINES.map((l) => ({ code: l.code, qty: l.qty ?? 1, kind: l.kind ?? "labour", description: l.description ?? l.code, ...(l.signedAcceptance ? { signedAcceptance: l.signedAcceptance } : {}) })), ...(r.contract_stage ? { contractStage: r.contract_stage } : {}) }];
+    },
+
+    async readInvoiceForJob(jobId) {
+      return byJob.get(jobId) ?? null;
+    },
+
+    async readPricebook() {
+      const r = await call("read_pricebook", {});
+      if (r.outcome !== "priced") throw new Error(\`read_pricebook: \${r.outcome}: \${r.reason}\`);
+      return { edition: r.read_at ?? "live", items: r.lines.map((l) => ({ code: l.catalogue_id, description: l.description, rate: cents(l.unit_price) })) };
+    },
+
+    async readReleaseRule() {
+      // The release is a person's act in the ledger. No rule releases for them here.
+      return null;
+    },
+
+    async writeInvoice(input) {
+      const r = await call("draft_invoice", {
+        job_external_id: input.jobId,
+        line_items: input.lines.map((l) => ({ catalogue_id: l.code, quantity: l.qty })),
+        ...(input.stage ? { stage: input.stage } : {}),
+      });
+      // parked, not_supported and write_not_verified all mean no invoice exists
+      // in the ledger. Null is the standard's "write not verified".
+      if (r.outcome !== "invoice_drafted" && r.outcome !== "invoice_reused") return null;
+      const invoice = toInvoice(r);
+      byJob.set(input.jobId, invoice);
+      return invoice;
+    },
+
+    async attachEvidence(invoiceId, ref) {
+      await call("record_fact", { subject_kind: "job", subject_ref: JOB_ID ?? "unknown-job", key: "invoice.evidence", value: { invoiceId, ref }, confidence: "verified" });
+    },
+
+    async release(invoiceId, by) {
+      // Recorded, never performed: a person releases in the ledger.
+      await call("record_fact", { subject_kind: "job", subject_ref: JOB_ID ?? "unknown-job", key: "invoice.release_requested", value: { invoiceId, ...by, provider: ${JSON.stringify(provider)} }, confidence: "verified" });
+    },
+
+    async send(invoiceId) {
+      // Recorded, never performed. Nothing in this file can send an invoice.
+      await call("record_fact", { subject_kind: "job", subject_ref: JOB_ID ?? "unknown-job", key: "invoice.send_requested", value: { invoiceId }, confidence: "verified" });
+    },
+
+    async readRecord(jobId) {
+      return { invoice: byJob.get(jobId) ?? null };
+    },
+
+    async escalate(reason, detail) {
+      await call("record_fact", { subject_kind: "job", subject_ref: JOB_ID ?? "unknown-job", key: "invoice.parked", value: { reason, ...(detail ? { detail } : {}) }, confidence: "verified" });
+    },
+  };`;
 }
 
 /**
