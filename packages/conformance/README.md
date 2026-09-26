@@ -102,8 +102,8 @@ package is the harness. The site is the standard.
 
 ## The standards
 
-Eleven, each one a job that leaks money in an Australian small business. Every one
-publishes its checks as data at the same `/checks.json` path.
+Thirteen, each one a job that leaks money in an Australian small business or
+network. Every one publishes its checks as data at the same `/checks.json` path.
 
 | Standard | The job |
 |---|---|
@@ -118,6 +118,8 @@ publishes its checks as data at the same `/checks.json` path.
 | [multi-site-conformance](https://aipathway.com.au/explore-ai/multi-site-conformance-build-standard) | Branches that have quietly diverged |
 | [fire-service-pack](https://aipathway.com.au/explore-ai/fire-service-pack-standard) | Service evidence bound to the right asset |
 | [quote-out](https://aipathway.com.au/explore-ai/quote-out-build-standard) | A job that exists turned into a draft quote, priced only from the book |
+| [advice-file](https://aipathway.com.au/explore-ai/advice-file-build-standard) | Every interview becomes one file the next person can pick up |
+| [knowledge-graph](https://aipathway.com.au/explore-ai/knowledge-graph-build-standard) | A fact lives once, and retiring a source takes its answers with it |
 
 ## Also available
 

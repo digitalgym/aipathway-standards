@@ -97,6 +97,8 @@ const WORLDS: Record<string, string> = {
   "multi-site-conformance-build-standard": "MultiSiteWorld",
   "quote-out-build-standard": "QuoteWorld",
   "fire-service-pack-standard": "CalendarWorld",
+  "advice-file-build-standard": "AdviceFileWorld",
+  "knowledge-graph-build-standard": "KnowledgeGraphWorld",
 };
 
 /**

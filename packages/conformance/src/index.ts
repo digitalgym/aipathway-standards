@@ -19,11 +19,13 @@ export * from "./connect.js";
 // cited-answer and rejected-pack) and a star export makes that ambiguous. The
 // classes are the surface a builder needs; the supporting types stay behind
 // their own module.
+export { AdviceFileWorld } from "./advice-file.world.js";
 export { CalendarWorld } from "./asset-register.world.js";
 export { CitedAnswerWorld } from "./cited-answer.world.js";
 export { ReactivationWorld } from "./database-reactivation.world.js";
 export { DebtorWorld } from "./debtor-chasing.world.js";
 export { InvoiceWorld } from "./invoice-check.world.js";
+export { KnowledgeGraphWorld } from "./knowledge-graph.world.js";
 export { MultiSiteWorld } from "./multi-site-conformance.world.js";
 export { QuoteWorld } from "./quote-out.world.js";
 export { PackWorld } from "./rejected-pack.world.js";

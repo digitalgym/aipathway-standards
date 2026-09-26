@@ -86,6 +86,18 @@ export const ALL_PORTS = [
   // money out
   "write_ledger",
   "release_payment",
+  // the advice file. `record_consent` is a WRITE, not a `say`: the standard
+  // does not sell the call, it asserts that the disclosure was recorded on
+  // the interview before the first field was written. `raise_task` is a
+  // record with an owner and a due date, which a chat reminder is not.
+  "record_consent",
+  "read_file",
+  "write_file",
+  "raise_task",
+  // the graph. Nodes are the customer's own library, versioned and accepted;
+  // reading one is a read of their record, never of a model's memory.
+  "read_node",
+  "write_node",
   // the run itself
   "rank",
   "gate",
@@ -137,6 +149,13 @@ export const PORT_SHAPE: Record<Port, { verb: PortVerb; subject: string }> = {
   issue_notice: { verb: "say", subject: "notice" },
   answer: { verb: "say", subject: "answer" },
   publish_report: { verb: "say", subject: "report" },
+  // the advice file and the graph
+  record_consent: { verb: "write", subject: "consent" },
+  read_file: { verb: "read", subject: "file" },
+  write_file: { verb: "write", subject: "file" },
+  raise_task: { verb: "write", subject: "task" },
+  read_node: { verb: "read", subject: "node" },
+  write_node: { verb: "write", subject: "node" },
   // attach
   evidence: { verb: "attach", subject: "evidence" },
   cite: { verb: "attach", subject: "citation" },

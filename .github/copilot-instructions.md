@@ -27,10 +27,12 @@ Standards in this repo:
 - AIP-BS-QUOTE-OUT: skills/quote-out/ (Quote Out Build Standard)
 - AIP-BS-RENT-ARREARS: skills/rent-arrears/ (Rent Arrears Build Standard)
 - AIP-BS-FIRE-SERVICE-PACK-STANDARD: skills/fire-service-pack-standard/ (Fire Service Pack Standard)
+- AIP-BS-ADVICE-FILE: skills/advice-file/ (Advice File Build Standard)
 - AIP-BS-MULTI-SITE-CONFORMANCE: skills/multi-site-conformance/ (Multi Site Conformance Build Standard)
 - AIP-BS-CITED-ANSWER: skills/cited-answer/ (Cited Answer Build Standard)
 - AIP-BS-COMPLIANCE-CALENDAR: skills/compliance-calendar/ (Compliance Calendar Build Standard)
 - AIP-BS-INVOICE-CHECK: skills/invoice-check/ (Invoice Check Build Standard)
 - AIP-BS-REJECTED-PACK: skills/rejected-pack/ (Rejected Pack Build Standard)
+- AIP-BS-KNOWLEDGE-GRAPH: skills/knowledge-graph/ (Knowledge Graph Build Standard)
 
 Canonical text and checks: https://aipathway.com.au/llms.txt · https://aipathway.com.au/AGENTS.md

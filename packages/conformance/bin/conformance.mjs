@@ -56,7 +56,9 @@ const KNOWN = [
   "invoice-check-build-standard",
   "rejected-pack-build-standard",
   "multi-site-conformance-build-standard",
-  "quote-out-build-standard"
+  "quote-out-build-standard",
+  "advice-file-build-standard",
+  "knowledge-graph-build-standard"
 ];
 
 const [cmd, slug] = process.argv.slice(2);

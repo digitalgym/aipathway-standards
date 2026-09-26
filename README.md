@@ -49,11 +49,13 @@ stale copy. The package is the harness; the site is the standard.
 | `AIP-BS-QUOTE-OUT` | [`quote-out`](skills/quote-out/SKILL.md) | Quote Out Build Standard |
 | `AIP-BS-RENT-ARREARS` | [`rent-arrears`](skills/rent-arrears/SKILL.md) | Rent Arrears Build Standard |
 | `AIP-BS-FIRE-SERVICE-PACK-STANDARD` | [`fire-service-pack-standard`](skills/fire-service-pack-standard/SKILL.md) | Fire Service Pack Standard |
+| `AIP-BS-ADVICE-FILE` | [`advice-file`](skills/advice-file/SKILL.md) | Advice File Build Standard |
 | `AIP-BS-MULTI-SITE-CONFORMANCE` | [`multi-site-conformance`](skills/multi-site-conformance/SKILL.md) | Multi Site Conformance Build Standard |
 | `AIP-BS-CITED-ANSWER` | [`cited-answer`](skills/cited-answer/SKILL.md) | Cited Answer Build Standard |
 | `AIP-BS-COMPLIANCE-CALENDAR` | [`compliance-calendar`](skills/compliance-calendar/SKILL.md) | Compliance Calendar Build Standard |
 | `AIP-BS-INVOICE-CHECK` | [`invoice-check`](skills/invoice-check/SKILL.md) | Invoice Check Build Standard |
 | `AIP-BS-REJECTED-PACK` | [`rejected-pack`](skills/rejected-pack/SKILL.md) | Rejected Pack Build Standard |
+| `AIP-BS-KNOWLEDGE-GRAPH` | [`knowledge-graph`](skills/knowledge-graph/SKILL.md) | Knowledge Graph Build Standard |
 
 ## What a standard contains
 
