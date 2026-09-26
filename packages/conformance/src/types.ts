@@ -67,6 +67,9 @@ export const ALL_PORTS = [
   // system of record, never a document we render and hold.
   "read_pricebook",
   "draft_quote",
+  // Invoice Out. A write into the ledger the business already runs, keyed to
+  // the job so a second completion event cannot make a second invoice.
+  "write_invoice",
   // ledger
   "read_ledger",
   "record_promise",
@@ -142,6 +145,7 @@ export const PORT_SHAPE: Record<Port, { verb: PortVerb; subject: string }> = {
   write_job: { verb: "write", subject: "job" },
   read_pricebook: { verb: "read", subject: "pricebook" },
   draft_quote: { verb: "write", subject: "quote" },
+  write_invoice: { verb: "write", subject: "invoice" },
   write_ledger: { verb: "write", subject: "ledger" },
   record_promise: { verb: "write", subject: "promise" },
   record_service: { verb: "write", subject: "service_record" },

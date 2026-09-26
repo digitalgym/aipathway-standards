@@ -53,6 +53,7 @@ stale copy. The package is the harness; the site is the standard.
 | `AIP-BS-MULTI-SITE-CONFORMANCE` | [`multi-site-conformance`](skills/multi-site-conformance/SKILL.md) | Multi Site Conformance Build Standard |
 | `AIP-BS-CITED-ANSWER` | [`cited-answer`](skills/cited-answer/SKILL.md) | Cited Answer Build Standard |
 | `AIP-BS-COMPLIANCE-CALENDAR` | [`compliance-calendar`](skills/compliance-calendar/SKILL.md) | Compliance Calendar Build Standard |
+| `AIP-BS-INVOICE-OUT` | [`invoice-out`](skills/invoice-out/SKILL.md) | Invoice Out Build Standard |
 | `AIP-BS-INVOICE-CHECK` | [`invoice-check`](skills/invoice-check/SKILL.md) | Invoice Check Build Standard |
 | `AIP-BS-REJECTED-PACK` | [`rejected-pack`](skills/rejected-pack/SKILL.md) | Rejected Pack Build Standard |
 | `AIP-BS-KNOWLEDGE-BASE` | [`knowledge-base`](skills/knowledge-base/SKILL.md) | Knowledge Base Build Standard |

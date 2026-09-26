@@ -34,6 +34,7 @@ Standards in this repo:
 - AIP-BS-MULTI-SITE-CONFORMANCE: skills/multi-site-conformance/ (Multi Site Conformance Build Standard)
 - AIP-BS-CITED-ANSWER: skills/cited-answer/ (Cited Answer Build Standard)
 - AIP-BS-COMPLIANCE-CALENDAR: skills/compliance-calendar/ (Compliance Calendar Build Standard)
+- AIP-BS-INVOICE-OUT: skills/invoice-out/ (Invoice Out Build Standard)
 - AIP-BS-INVOICE-CHECK: skills/invoice-check/ (Invoice Check Build Standard)
 - AIP-BS-REJECTED-PACK: skills/rejected-pack/ (Rejected Pack Build Standard)
 - AIP-BS-KNOWLEDGE-BASE: skills/knowledge-base/ (Knowledge Base Build Standard)

@@ -25,6 +25,7 @@ export { CitedAnswerWorld } from "./cited-answer.world.js";
 export { ReactivationWorld } from "./database-reactivation.world.js";
 export { DebtorWorld } from "./debtor-chasing.world.js";
 export { InvoiceWorld } from "./invoice-check.world.js";
+export { InvoiceOutWorld } from "./invoice-out.world.js";
 export { KnowledgeBaseWorld } from "./knowledge-base.world.js";
 export { KnowledgeGraphWorld } from "./knowledge-graph.world.js";
 export { MultiSiteWorld } from "./multi-site-conformance.world.js";

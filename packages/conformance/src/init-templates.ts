@@ -100,6 +100,7 @@ const WORLDS: Record<string, string> = {
   "advice-file-build-standard": "AdviceFileWorld",
   "knowledge-graph-build-standard": "KnowledgeGraphWorld",
   "knowledge-base-build-standard": "KnowledgeBaseWorld",
+  "invoice-out-build-standard": "InvoiceOutWorld",
 };
 
 /**

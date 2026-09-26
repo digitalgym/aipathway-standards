@@ -20,7 +20,7 @@ When the checks are green, npx @aipathway/conformance connect gets the hosted pr
 
 ---
 
-How to turn a knowledge base into a graph a later standard can trust. A fact lives once, a person accepts every node, and retiring a source takes its answers with it. Written so you can build it yourself.
+How to turn your documents and records into a map of connected facts an assistant can rely on. Each piece of information is stored in one place. Nothing goes in unless a person approves it. Throw out a document and every answer that came from it goes too. Written so you can build it yourself.
 
 Used by
 
@@ -33,19 +33,19 @@ Used by
 
 What this is
 
-An open build standard for ingesting policies, lender manuals, procedures, price lists and contracts into a graph that the Cited Answer, Advice File and Rejected Pack standards can read.
+A free, open recipe for turning your policies, manuals, price lists and contracts into a graph: a map where every fact is a dot and every line says how two dots relate. The other standards on this site answer questions from that map.
 
 The core rule
 
-A fact lives on one node. Every other artefact points at it. If the same sentence exists as a chunk, a summary and a weight, you have three places the lie can hide.
+A fact is one small piece of information, like “the site office opens at 7am”. It is written in one place and everything else points there. If the same sentence lives in three places, you have three places for it to go wrong.
 
 What it does not do
 
-It does not answer questions; that is Cited Answer. It does not write the file; that is Advice File. A person accepts a source into the live graph.
+It does not answer questions; that is Cited Answer. It does not write the file; that is Advice File. A person approves every document before anything from it goes live.
 
 The hard part
 
-Not the extract. The week the PDF is replaced, and every node built from page 14 has to move or die. A chunk index cannot say which answers used page 14. A graph can.
+Not getting the facts in. It is the week page 14 of the PDF is replaced, and every fact that came from page 14 has to be updated or removed. Ordinary search cannot tell you which answers used page 14. This can.
 
 A folder of PDFs is a pile. A vector store is a pile with better search. A graph is a set of typed nodes, typed edges, and a change you can find. Embed the pile if you want. Do not call it the graph until a fact lives once and retiring a source takes its answers with it.
 
