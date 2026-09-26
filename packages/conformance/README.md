@@ -102,8 +102,8 @@ package is the harness. The site is the standard.
 
 ## The standards
 
-Fifteen, each one a job that leaks money in an Australian small business or
-network. Every one publishes its checks as data at the same `/checks.json` path.
+Twenty-two, each one a job that leaks money in an Australian small business or
+network, and one for every category the eight-minute diagnosis can name. Every one publishes its checks as data at the same `/checks.json` path.
 
 | Standard | The job |
 |---|---|
@@ -122,6 +122,13 @@ network. Every one publishes its checks as data at the same `/checks.json` path.
 | [knowledge-graph](https://aipathway.com.au/explore-ai/knowledge-graph-build-standard) | A fact lives once, and retiring a source takes its answers with it |
 | [knowledge-base](https://aipathway.com.au/explore-ai/knowledge-base-build-standard) | Everything the business relies on, in one place, with a name on it |
 | [invoice-out](https://aipathway.com.au/explore-ai/invoice-out-build-standard) | The invoice exists the day the job finishes, one per job, priced only from the book |
+| [dispatch-board](https://aipathway.com.au/explore-ai/dispatch-board-build-standard) | The right person at the right house at the right time, told once |
+| [inbox-triage](https://aipathway.com.au/explore-ai/inbox-triage-build-standard) | Nothing in the inbox lost, nothing answered that a person should answer |
+| [follow-up](https://aipathway.com.au/explore-ai/follow-up-build-standard) | The quote decision or document owed, chased until it arrives and not after |
+| [two-records](https://aipathway.com.au/explore-ai/two-records-build-standard) | Two systems say the same thing, and a person sees both numbers first |
+| [timesheet-check](https://aipathway.com.au/explore-ai/timesheet-check-build-standard) | Every hour traced to a person, a day and a job before payroll |
+| [material-order](https://aipathway.com.au/explore-ai/material-order-build-standard) | Materials ordered from the job, from the catalogue, once |
+| [recurring-report](https://aipathway.com.au/explore-ai/recurring-report-build-standard) | The report on schedule, every figure traced to its source |
 
 ## Also available
 

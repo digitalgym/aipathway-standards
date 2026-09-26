@@ -107,6 +107,13 @@ export const ALL_PORTS = [
   "write_register",
   "index_passage",
   "search_index",
+  // the inbox: a message read from the mailbox, and a message filed against
+  // the record it belongs to (a job note, a bill draft, a task).
+  "read_inbox",
+  "file_message",
+  // ordering: a purchase order written into the system the business orders
+  // from, keyed to the job and the supplier so a second run cannot re-order.
+  "write_order",
   // the run itself
   "rank",
   "gate",
@@ -170,6 +177,9 @@ export const PORT_SHAPE: Record<Port, { verb: PortVerb; subject: string }> = {
   write_register: { verb: "write", subject: "register" },
   index_passage: { verb: "attach", subject: "passage" },
   search_index: { verb: "read", subject: "index" },
+  read_inbox: { verb: "read", subject: "message" },
+  file_message: { verb: "attach", subject: "message" },
+  write_order: { verb: "write", subject: "order" },
   // attach
   evidence: { verb: "attach", subject: "evidence" },
   cite: { verb: "attach", subject: "citation" },

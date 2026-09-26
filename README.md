@@ -44,6 +44,13 @@ stale copy. The package is the harness; the site is the standard.
 | Spec | Skill | What it builds |
 |---|---|---|
 | `AIP-BS-DATABASE-REACTIVATION` | [`database-reactivation`](skills/database-reactivation/SKILL.md) | Database Reactivation Build Standard |
+| `AIP-BS-DISPATCH-BOARD` | [`dispatch-board`](skills/dispatch-board/SKILL.md) | Dispatch Board Build Standard |
+| `AIP-BS-INBOX-TRIAGE` | [`inbox-triage`](skills/inbox-triage/SKILL.md) | Inbox Triage Build Standard |
+| `AIP-BS-FOLLOW-UP` | [`follow-up`](skills/follow-up/SKILL.md) | Follow Up Build Standard |
+| `AIP-BS-TWO-RECORDS` | [`two-records`](skills/two-records/SKILL.md) | Two Records Build Standard |
+| `AIP-BS-TIMESHEET-CHECK` | [`timesheet-check`](skills/timesheet-check/SKILL.md) | Timesheet Check Build Standard |
+| `AIP-BS-MATERIAL-ORDER` | [`material-order`](skills/material-order/SKILL.md) | Material Order Build Standard |
+| `AIP-BS-RECURRING-REPORT` | [`recurring-report`](skills/recurring-report/SKILL.md) | Recurring Report Build Standard |
 | `AIP-BS-DEBTOR-CHASING` | [`debtor-chasing`](skills/debtor-chasing/SKILL.md) | Debtor Chasing Build Standard |
 | `AIP-BS-BOOKED-AFTER-HOURS` | [`booked-after-hours`](skills/booked-after-hours/SKILL.md) | Booked After Hours Build Standard |
 | `AIP-BS-QUOTE-OUT` | [`quote-out`](skills/quote-out/SKILL.md) | Quote Out Build Standard |

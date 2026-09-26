@@ -60,7 +60,14 @@ const KNOWN = [
   "advice-file-build-standard",
   "knowledge-graph-build-standard",
   "knowledge-base-build-standard",
-  "invoice-out-build-standard"
+  "invoice-out-build-standard",
+  "dispatch-board-build-standard",
+  "inbox-triage-build-standard",
+  "follow-up-build-standard",
+  "two-records-build-standard",
+  "timesheet-check-build-standard",
+  "material-order-build-standard",
+  "recurring-report-build-standard"
 ];
 
 const [cmd, slug] = process.argv.slice(2);

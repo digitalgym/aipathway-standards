@@ -101,6 +101,13 @@ const WORLDS: Record<string, string> = {
   "knowledge-graph-build-standard": "KnowledgeGraphWorld",
   "knowledge-base-build-standard": "KnowledgeBaseWorld",
   "invoice-out-build-standard": "InvoiceOutWorld",
+  "dispatch-board-build-standard": "DispatchWorld",
+  "inbox-triage-build-standard": "InboxWorld",
+  "follow-up-build-standard": "FollowUpWorld",
+  "two-records-build-standard": "TwoRecordsWorld",
+  "timesheet-check-build-standard": "TimesheetWorld",
+  "material-order-build-standard": "MaterialOrderWorld",
+  "recurring-report-build-standard": "ReportWorld",
 };
 
 /**

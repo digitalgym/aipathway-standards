@@ -22,6 +22,13 @@ workflows:
 
 Standards in this repo:
 - AIP-BS-DATABASE-REACTIVATION: skills/database-reactivation/ (Database Reactivation Build Standard)
+- AIP-BS-DISPATCH-BOARD: skills/dispatch-board/ (Dispatch Board Build Standard)
+- AIP-BS-INBOX-TRIAGE: skills/inbox-triage/ (Inbox Triage Build Standard)
+- AIP-BS-FOLLOW-UP: skills/follow-up/ (Follow Up Build Standard)
+- AIP-BS-TWO-RECORDS: skills/two-records/ (Two Records Build Standard)
+- AIP-BS-TIMESHEET-CHECK: skills/timesheet-check/ (Timesheet Check Build Standard)
+- AIP-BS-MATERIAL-ORDER: skills/material-order/ (Material Order Build Standard)
+- AIP-BS-RECURRING-REPORT: skills/recurring-report/ (Recurring Report Build Standard)
 - AIP-BS-DEBTOR-CHASING: skills/debtor-chasing/ (Debtor Chasing Build Standard)
 - AIP-BS-BOOKED-AFTER-HOURS: skills/booked-after-hours/ (Booked After Hours Build Standard)
 - AIP-BS-QUOTE-OUT: skills/quote-out/ (Quote Out Build Standard)
