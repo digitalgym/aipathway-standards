@@ -69,6 +69,8 @@ It does not cover a personal notes database, a marketing content lake, or a chat
 
 The failure this prevents is specific. It is the answer that cites “the knowledge base” the way a student cites “the internet”. Retrieval appeared to work. Nothing in the system can show which clause, which edition, which date, or which other node will break when that file is replaced.
 
+The phase before this one. Check 2 registers a source as an instrument as if the source were to hand. For most businesses it is in somebody’s email. The [Knowledge Base standard](https://aipathway.com.au/explore-ai/knowledge-base-build-standard) is that phase: one register with an owner per source, on the Microsoft 365 or Workspace tenant the business already runs, and a watch that notices a changed edition. The graph takes its sources from that register, never from a fresh upload. It is the long, foundational part, and it is measured in weeks for a network.
+
 What this is not. Pointing a copilot at a document library. Fine-tuning on “all our data” and naming the weights. A wiki with backlinks. An ontology slide in a deck. Those can sit beside a graph. They are not one.
 
 ## 2. Pile, index, graph
@@ -269,6 +271,7 @@ Hold a DIY build or a vendor to this. If a box is empty, it is not in production
 
 ## Related reading
 
+- The Knowledge Base Build Standard, the phase before this one
 - Combining the build standards: from the shared drive to the advice file
 - The Cited Answer Build Standard, which reads this graph
 - The Advice File Build Standard, which attaches cards from it

@@ -102,7 +102,7 @@ package is the harness. The site is the standard.
 
 ## The standards
 
-Thirteen, each one a job that leaks money in an Australian small business or
+Fourteen, each one a job that leaks money in an Australian small business or
 network. Every one publishes its checks as data at the same `/checks.json` path.
 
 | Standard | The job |
@@ -120,6 +120,7 @@ network. Every one publishes its checks as data at the same `/checks.json` path.
 | [quote-out](https://aipathway.com.au/explore-ai/quote-out-build-standard) | A job that exists turned into a draft quote, priced only from the book |
 | [advice-file](https://aipathway.com.au/explore-ai/advice-file-build-standard) | Every interview becomes one file the next person can pick up |
 | [knowledge-graph](https://aipathway.com.au/explore-ai/knowledge-graph-build-standard) | A fact lives once, and retiring a source takes its answers with it |
+| [knowledge-base](https://aipathway.com.au/explore-ai/knowledge-base-build-standard) | Everything the business relies on, in one place, with a name on it |
 
 ## Also available
 

@@ -36,6 +36,7 @@ Standards in this repo:
 - AIP-BS-COMPLIANCE-CALENDAR: skills/compliance-calendar/ (Compliance Calendar Build Standard)
 - AIP-BS-INVOICE-CHECK: skills/invoice-check/ (Invoice Check Build Standard)
 - AIP-BS-REJECTED-PACK: skills/rejected-pack/ (Rejected Pack Build Standard)
+- AIP-BS-KNOWLEDGE-BASE: skills/knowledge-base/ (Knowledge Base Build Standard)
 - AIP-BS-KNOWLEDGE-GRAPH: skills/knowledge-graph/ (Knowledge Graph Build Standard)
 
 Canonical text and checks: https://aipathway.com.au/llms.txt · https://aipathway.com.au/AGENTS.md

@@ -99,6 +99,7 @@ const WORLDS: Record<string, string> = {
   "fire-service-pack-standard": "CalendarWorld",
   "advice-file-build-standard": "AdviceFileWorld",
   "knowledge-graph-build-standard": "KnowledgeGraphWorld",
+  "knowledge-base-build-standard": "KnowledgeBaseWorld",
 };
 
 /**

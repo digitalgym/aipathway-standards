@@ -58,7 +58,8 @@ const KNOWN = [
   "multi-site-conformance-build-standard",
   "quote-out-build-standard",
   "advice-file-build-standard",
-  "knowledge-graph-build-standard"
+  "knowledge-graph-build-standard",
+  "knowledge-base-build-standard"
 ];
 
 const [cmd, slug] = process.argv.slice(2);

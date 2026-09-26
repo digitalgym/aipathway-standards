@@ -98,6 +98,12 @@ export const ALL_PORTS = [
   // reading one is a read of their record, never of a model's memory.
   "read_node",
   "write_node",
+  // the knowledge base under the graph. The register is the inventory of
+  // sources with an owner each; the index finds passages and never answers.
+  "read_register",
+  "write_register",
+  "index_passage",
+  "search_index",
   // the run itself
   "rank",
   "gate",
@@ -156,6 +162,10 @@ export const PORT_SHAPE: Record<Port, { verb: PortVerb; subject: string }> = {
   raise_task: { verb: "write", subject: "task" },
   read_node: { verb: "read", subject: "node" },
   write_node: { verb: "write", subject: "node" },
+  read_register: { verb: "read", subject: "register" },
+  write_register: { verb: "write", subject: "register" },
+  index_passage: { verb: "attach", subject: "passage" },
+  search_index: { verb: "read", subject: "index" },
   // attach
   evidence: { verb: "attach", subject: "evidence" },
   cite: { verb: "attach", subject: "citation" },
