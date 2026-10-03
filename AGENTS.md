@@ -27,12 +27,20 @@ workflows:
    so a stub cannot pass it.
 6. If the site's edition of a standard is newer than the one you built against,
    rebuild from the standard. Do not patch the generated board.
+7. A vendor's connector (an MCP server, a chat plugin) is a port, not the build.
+   A chat session in which the model says it created the job or sent the quote
+   is not a write and not a release: the write counts only when the port
+   observes it, and a send still waits for a person or a named rule. A build
+   that runs only while a chat is open fails; name the event that starts each
+   step. The id the first write returns is the id every later step reads, and a
+   second record or a missing id is a fail.
 
 Standards in this repo:
 - AIP-BS-DATABASE-REACTIVATION: skills/database-reactivation/ (Database Reactivation Build Standard)
 - AIP-BS-DISPATCH-BOARD: skills/dispatch-board/ (Dispatch Board Build Standard)
 - AIP-BS-INBOX-TRIAGE: skills/inbox-triage/ (Inbox Triage Build Standard)
 - AIP-BS-FOLLOW-UP: skills/follow-up/ (Follow Up Build Standard)
+- AIP-BS-CASH-SEAM: skills/cash-seam/ (Cash Seam Build Standard)
 - AIP-BS-TWO-RECORDS: skills/two-records/ (Two Records Build Standard)
 - AIP-BS-TIMESHEET-CHECK: skills/timesheet-check/ (Timesheet Check Build Standard)
 - AIP-BS-MATERIAL-ORDER: skills/material-order/ (Material Order Build Standard)
