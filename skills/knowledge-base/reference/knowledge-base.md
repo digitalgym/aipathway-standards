@@ -2,10 +2,10 @@
 
 Source: https://aipathway.com.au/explore-ai/knowledge-base-build-standard
 Spec: AIP-BS-KNOWLEDGE-BASE
-Version: 2026-09-26
+Version: 2026-10-03
 Licence: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
 Publisher: AI Pathway (https://aipathway.com.au)
-Cite as: AIP-BS-KNOWLEDGE-BASE 2026-09-26, AI Pathway, https://aipathway.com.au/explore-ai/knowledge-base-build-standard
+Cite as: AIP-BS-KNOWLEDGE-BASE 2026-10-03, AI Pathway, https://aipathway.com.au/explore-ai/knowledge-base-build-standard
 
 > Open specification: the phase before a knowledge graph. Every source the business relies on inventoried on one register with a named owner, a location, a checksum and an edition; duplicates resolved to one canonical copy; customer material quarantined from the shared index; passages indexed with replayable locators; search that returns passages and never a composed answer; a scheduled watch that catches a changed checksum and tells the owner; and a handover to the Knowledge Graph standard that carries the register id. Built on Microsoft 365 or Google Workspace. Free to implement, with a conformance checklist.
 
@@ -16,7 +16,7 @@ carrying each check's id, ports, what to inject and what to assert.
 To print them: npx @aipathway/conformance show knowledge-base-build-standard
 To scaffold a folder that runs them, every check starting red: npx @aipathway/conformance init knowledge-base-build-standard
 Do the scaffolding yourself if you can run commands; the person should not have to open a terminal.
-When the checks are green, npx @aipathway/conformance connect gets the hosted provider's key: it prints a link and a code, the person approves in a browser, and the key lands in .env. Hand them the link; that click and the job-system consent it leads to are the only two things they do.
+This standard has no hosted provider; do not run conformance connect. For the checks a stub cannot prove: No hosted step. The production check runs over the business's real drive and mailbox with its real owners. The watch is the part not to hand-roll: a scheduled re-fetch and checksum compare of every source, with the owner told when it moves. It is a schedule and a table, not a product. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence.
 
 ---
 
@@ -140,7 +140,7 @@ The order is the claim. Chunk the drive first and you have a search nobody owns;
 6. Every indexed passage names its source and a locator that can be opened.
 7. Search returns passages with their source and locator, and composes nothing.
 8. A source that should exist and cannot be found is a gap with an owner and a date.
-9. Every source is re-fetched on a schedule, and a changed checksum reaches its owner.
+9. Every source on the drive is re-fetched on a schedule, and a changed checksum reaches its owner.
 10. Retention and access follow the kind of source.
 11. A source reaches the graph only from the register, carrying its id, edition, checksum and locator scheme.
 12. It survives the builder.
@@ -156,14 +156,14 @@ What search is for, then: a person finding the passage to read, a person finding
 
 ## 6. Building it on Microsoft 365 or Workspace
 
-Nothing in this standard needs a product the business does not already pay for. Both tenants answer every role, and the drive does not move.
+Nothing in this standard needs a product the business does not already pay for. Both tenants answer every role, and the drive does not move. One limit applies to both: the scheduled watch can only compare what sits on the drive. A source the issuer publishes only on its own site is watched by a recheck task to the owner, so for that source the catch is a person, not software.
 
 | Role | Microsoft 365 | Google Workspace |
 | --- | --- | --- |
 | The drive | SharePoint document libraries and OneDrive, as they are. Nothing moves | Shared drives, as they are. Nothing moves |
 | The register | One SharePoint list: a row per source, the owner a person column, kind a choice column, checksum and edition as text | One Sheet, same columns, owner validated against the directory |
 | The index | Microsoft Search over the libraries the register names, scoped so customer material is not in the shared results | Drive search, or Vertex AI Search over the named folders, with the same scoping |
-| The watch | A scheduled Power Automate flow: for each register row, fetch, hash, compare, update, and post to the owner | A time-driven Apps Script doing the same four steps and emailing the owner |
+| The watch | A scheduled Power Automate flow: for each register row, fetch, compare the checksum (the file ETag in the tenant, a content hash where the file is downloaded), update, and post to the owner. For a source published outside the tenant, a recheck task to the owner on the same schedule | A time-driven Apps Script: for each row, fetch, compare the checksum (the Drive file's md5Checksum, or a content hash), update, and email the owner. For a source published outside the drive, a recheck task to the owner on the same schedule |
 | Gaps | Planner or a task list, one task per missing source | Tasks, or a row on a second sheet with a due date |
 | Retention | Retention labels by kind, applied from the register | Vault rules by folder, folders assigned by kind |
 
@@ -171,7 +171,7 @@ The register is a list, not a database, on purpose. A list is what the people wh
 
 ## 7. The handover to the graph
 
-The Knowledge Graph standard’s second check registers a source as an instrument with a title, an issuer, an edition, a jurisdiction, effective dates and a checksum. Every one of those is on the register entry already. The handover is a promotion of the entry, by a person, carrying its id. The graph never takes a fresh upload, because a fresh upload has no owner and no history, and the first replaced edition would have nowhere to go.
+The Knowledge Graph standard’s second check registers a source as an instrument with a title, an issuer, an edition, a jurisdiction, effective dates and a checksum. The title, edition, checksum and retrieved date are on the register entry already. The person promoting it adds the issuer, the jurisdiction and the effective dates, and the graph refuses the promotion without them. The handover is a promotion of the entry, by a person, carrying its id. The graph never takes a fresh upload, because a fresh upload has no owner and no history, and the first replaced edition would have nowhere to go.
 
 Read upward, the stack is this standard, then the graph, then Cited Answer, then the Advice File. The order and the reasons are in [combining the build standards](https://aipathway.com.au/explore-ai/combining-the-standards).
 
@@ -183,7 +183,7 @@ Read upward, the stack is this standard, then the graph, then Cited Answer, then
 - Who may read customer material, and for how long it is kept.
 - Promoting a register entry to the graph.
 
-The build may propose all five. It may not occupy owner, canonical_by or promoted_by.
+The build may propose all five. It may not occupy owner or promoted_by, and it may not set duplicate_of without a person.
 
 ## 9. Provider: what to stub, and what not to hand-roll
 
@@ -195,9 +195,11 @@ provider:
   production: none                       # no hosted step; runs on your own systems
 
 do not hand-roll
-  - the watch. Every source re-fetched on a schedule, hashed, compared,
-    the register updated, the owner told in the same run. Skip it and
-    the register is a photograph of the drive on the day it was taken.
+  - the watch. Every source on the drive re-fetched on a schedule, its
+    checksum compared, the register updated, the owner told in the same
+    run. A source held only by the issuer gets a recheck task to the
+    owner on the same schedule. Skip it and the register is a
+    photograph of the drive on the day it was taken.
 
 may be bought
   - the search over the libraries the register names
@@ -210,7 +212,7 @@ the long part
 
 There is no hosted product for this standard. The production check runs over the business's real drive and mailbox with its real owners. A vendor selling a searchable knowledge base is selling the index, and is usually silent about who owns each source and what happens when one is replaced. Ask them that first.
 
-**The pass test.** On the business’s real drive, not a sample. Register every source with a person against it, and compare the register to the drive: anything on the drive and not on the register, or the other way round, is the finding. Find the two copies of the same manual the drive is holding, because it is, and resolve them to one entry. Find the client file in the wrong folder, register it as customer material with an access list, and confirm it does not appear in the shared search for someone outside that list. Pick one instrument the issuer will actually replace during the trial and let the watch run: the new checksum must be on the register and the owner must have been told within one cycle, without anybody noticing the change by hand first. Then run a search for something the material covers and hand the result to the owner: every locator must open to the passage it names, and the result must contain no paragraph the tool wrote.
+**The pass test.** On the business’s real drive, not a sample. Register every source with a person against it, and compare the register to the drive: anything on the drive and not on the register, or the other way round, is the finding. Find the two copies of the same manual the drive is holding, because it is, and resolve them to one entry. Find the client file in the wrong folder, register it as customer material with an access list, and confirm it does not appear in the shared search for someone outside that list. Pick one instrument the issuer will actually replace during the trial and let the watch run: once the new edition lands on the drive, the new checksum must be on the register and the owner must have been told within one cycle, without anybody noticing the change by hand first. For a source only the issuer holds, the recheck task must fire on schedule and the owner’s confirmation must be recorded. Then run a search for something the material covers and hand the result to the owner: every locator must open to the passage it names, and the result must contain no paragraph the tool wrote.
 
 ## 10. Conformance checklist
 
@@ -224,7 +226,7 @@ Hold a DIY build or a vendor to this. If a box is empty, it is not in production
 - **6. Every indexed passage names its source and a locator that can be opened.** Page and section, offsets in a stable file version, or seconds on a recording. "Chunk 47" is not a locator.
 - **7. Search returns passages with their source and locator, and composes nothing.** A query returns what was found and where. It does not return a paragraph the model wrote. Answering is the Cited Answer standard, over the graph.
 - **8. A source that should exist and cannot be found is a gap with an owner and a date.** The current edition of an instrument the business relies on, not on the drive, is not a blank row. It is a task for a person.
-- **9. Every source is re-fetched on a schedule, and a changed checksum reaches its owner.** The watch runs whether or not anything changed. When a checksum moves, the register records the new one, marks the old copy superseded, and the owner is told the same run.
+- **9. Every source on the drive is re-fetched on a schedule, and a changed checksum reaches its owner.** The watch runs whether or not anything changed. When a checksum moves, the register records the new one, marks the old copy superseded, and the owner is told the same run. A source held only by the issuer gets a recheck task to its owner on the same schedule, and the confirmation is recorded.
 - **10. Retention and access follow the kind of source.** An issued instrument is kept with every edition. Customer material carries an expiry and an access list. The kind decides, not the folder it was found in.
 - **11. A source reaches the graph only from the register, carrying its id, edition, checksum and locator scheme.** The Knowledge Graph standard registers a source as an instrument. That instrument is this register entry, not a fresh upload. A graph source with no register id has skipped this standard.
 - **12. It survives the builder.** Someone other than the builder can explain what it does, and it runs on an account the business owns.

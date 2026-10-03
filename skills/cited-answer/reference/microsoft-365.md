@@ -40,50 +40,50 @@ So the assistant is the part you already have. The clause library, the source ca
 ```
 Site: Knowledge
 
-LIBRARY  Instruments               the documents as issued
-  InstrumentId    Text
+LIBRARY  Instruments        the documents as issued
+  InstrumentId    Text            indexed
   Title           Text
   IssuingBody     Text
-  Jurisdiction    Choice
+  Jurisdiction    Choice          the states you operate in
   Edition         Text
-  EffectiveFrom   Date
-  EffectiveTo     Date            blank means live
+  EffectiveFrom   DateTime
+  EffectiveTo     DateTime        blank means live
   RetrievedAt     DateTime
 
-LIST  Clauses                      retrieval runs over THIS
+LIST  Clauses               retrieval runs over THIS
   ClauseId        Text            indexed
-  Instrument      Lookup -> Instruments
+  Instrument      Text            lookup to Instruments
   ClauseRef       Text
-  Text            Multi-line
+  Text            Note
   Supersedes      Text            a ClauseId, or blank
 
 LIST  SourceCards
-  Clause          Lookup -> Clauses
+  Clause          Text            indexed. lookup to Clauses
   Edition         Text
-  Jurisdiction    Choice
-  EffectiveFrom   Date
-  AcceptedBy      Person          required
-  AcceptedOn      Date            required
-  RetiredOn       Date            blank means live
+  Jurisdiction    Choice          the states you operate in
+  EffectiveFrom   DateTime
+  AcceptedBy      Person          REQUIRED
+  AcceptedOn      DateTime        REQUIRED
+  RetiredOn       DateTime        blank means live
 
 LIST  Answers
-  Question        Multi-line
+  Question        Note
   AskedOn         DateTime
-  AskedAboutDate  Date            defaults to AskedOn, often is not
-  Jurisdiction    Choice
+  AskedAboutDate  DateTime        defaults to AskedOn, often is not
+  Jurisdiction    Choice          the states you operate in
   Audience        Choice          internal | public
-  Body            Multi-line
-  SourceCardIds   Text            STORED. Not looked up later.
+  Body            Note
+  SourceCardIds   Text            indexed. STORED. Not looked up later.
   Queue           Choice          answered | declined | conflict
                                   | change_pending
 
 LIST  ChangeDeltas
-  Instrument      Lookup -> Instruments
-  DetectedOn      Date
-  Summary         Multi-line
+  Instrument      Text            indexed. lookup to Instruments
+  DetectedOn      DateTime
+  Summary         Note
   Status          Choice          pending | accepted | rejected
   DecidedBy       Person
-  DecidedOn       Date
+  DecidedOn       DateTime
   AffectedAnswers Text
 
 An Answer with Queue = answered and no SourceCardIds should not

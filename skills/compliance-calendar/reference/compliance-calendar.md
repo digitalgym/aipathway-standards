@@ -2,10 +2,10 @@
 
 Source: https://aipathway.com.au/explore-ai/compliance-calendar-build-standard
 Spec: AIP-BS-COMPLIANCE-CALENDAR
-Version: 2026-09-10
+Version: 2026-10-03
 Licence: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
 Publisher: AI Pathway (https://aipathway.com.au)
-Cite as: AIP-BS-COMPLIANCE-CALENDAR 2026-09-10, AI Pathway, https://aipathway.com.au/explore-ai/compliance-calendar-build-standard
+Cite as: AIP-BS-COMPLIANCE-CALENDAR 2026-10-03, AI Pathway, https://aipathway.com.au/explore-ai/compliance-calendar-build-standard
 
 > Open specification: how to build a compliance calendar that survives a rule change. Dated rules and derived due dates, the obligation record, the four states, and the hard parts: unknown anchor dates, cross-border rules, and the owner who declines the work. Free to implement, with a conformance checklist.
 
@@ -16,7 +16,7 @@ carrying each check's id, ports, what to inject and what to assert.
 To print them: npx @aipathway/conformance show compliance-calendar-build-standard
 To scaffold a folder that runs them, every check starting red: npx @aipathway/conformance init compliance-calendar-build-standard
 Do the scaffolding yourself if you can run commands; the person should not have to open a terminal.
-When the checks are green, npx @aipathway/conformance connect gets the hosted provider's key: it prints a link and a code, the person approves in a browser, and the key lands in .env. Hand them the link; that click and the job-system consent it leads to are the only two things they do.
+This standard has no hosted provider; do not run conformance connect. For the checks a stub cannot prove: No hosted step. The production check runs against the calendar and document store already in use. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence.
 
 ---
 
@@ -121,7 +121,7 @@ The date passed, or it cannot now be met within the lead time
 
 Escalates to a named person. Never clears itself
 
-**The fourth state must never clear itself.** A missed obligation that quietly disappears when the work is eventually done destroys the only record that it was ever missed, which is exactly what you need when someone asks why.
+**The fourth state must never clear itself.** A breached obligation that quietly disappears when the work is eventually done destroys the only record that it was ever breached, which is exactly what you need when someone asks why.
 
 ## 5. Six rules that keep it trustworthy
 
@@ -203,6 +203,8 @@ rule:                            # versioned. Never edited in place.
   jurisdiction:   string         # the state, because they differ
   requirement:    string
   interval:       string         # e.g. every 12 months from the anchor
+  anchor:         string         # what the interval counts from, e.g. last_completed_date
+  lead_time:      string         # how early the action is drafted, e.g. 45 days
   effective_from: date
   effective_to:   date | null    # null means current
   citation:       string         # what says so, so a person can check
@@ -213,10 +215,17 @@ obligation:                      # one row per obligation per property
   rule_version:     string       # WHICH version produced the date below
   anchor_date:      date | null  # what the interval counts from
   anchor_source:    string       # where that date came from, or "unknown"
-  due_date:         date         # DERIVED. Computed, shown, never typed in.
+  due_date:         date | null  # DERIVED. Computed, shown, never typed in.
+                                 # null while the anchor is unknown
   responsible:      agency | owner | tenant
   evidence:         document_ref | null   # the report, not a tick
-  state:            not_due | due | done | missed
+  state:            scheduled | due_action_drafted | waiting_on_someone | breached_or_at_risk
+  anchor_status:    known | unknown       # unknown surfaces for verification, never defaults
+  waiting_on:       string | null         # who: tenant access, owner approval, contractor
+  waiting_since:    date | null
+  next_chase:       date | null
+  refused_at:       date | null           # a refusal is a dated outcome, not an absence
+  refused_by:       string | null         # the obligation stays live after it
   last_completed:   date | null
 
 state_change:                    # append only
@@ -227,7 +236,7 @@ state_change:                    # append only
   by:             string         # a person, or the rule that fired
 ```
 
-The missed state must never clear itself. A missed obligation that quietly disappears when the work is finally done destroys the only record that it was ever missed, which is exactly the record somebody asks for.
+The breached state must never clear itself. A breached obligation that quietly disappears when the work is finally done destroys the only record that it was ever breached, which is exactly the record somebody asks for.
 
 ## 10. Provider: what to stub, and what not to hand-roll
 
@@ -251,7 +260,7 @@ stays_local:                     # all of it, in this case
 
 What makes this a build rather than a purchase is that the rule set is jurisdictional and yours. A vendor selling a national compliance calendar is selling the part that is easy and skipping the part that is hard.
 
-**The pass test.** Change one rule’s interval and give the change an effective date. Every obligation derived from that rule must show a new due date, and each one must still be able to tell you which rule version produced it. Then take an obligation in the missed state, complete it, and confirm the record still says it was missed. Both take a minute against your own data. If the first needs anyone to retype a date, the due dates are stored rather than derived; if the second quietly reads as done, you have lost the only evidence that matters.
+**The pass test.** Change one rule’s interval and give the change an effective date. Every obligation derived from that rule must show a new due date, and each one must still be able to tell you which rule version produced it. Then take an obligation in the breached state, complete it, and confirm the record still says it was breached. Both take a minute against your own data. If the first needs anyone to retype a date, the due dates are stored rather than derived; if the second quietly reads as done, you have lost the only evidence that matters.
 
 ## 11. Conformance checklist
 
@@ -266,6 +275,7 @@ A build conforms if all of the following are true. Use it on your own implementa
 - Nothing sends a legal notice without a person releasing it.
 - A breached obligation never clears itself when the work is finally done.
 - Someone other than the builder can explain what it does, and it runs on an account the business owns.
+- A rule change moves every open due date derived from it, and a breach that is completed late still reads as breached.
 
 ## Related reading
 

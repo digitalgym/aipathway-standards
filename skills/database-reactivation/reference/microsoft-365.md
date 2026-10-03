@@ -41,22 +41,27 @@ Three lists. Play and Rank are values on the row rather than views over it, whic
 Site: OwnList
 
 LIST  People
-  ContactRef      Text            your source system's id, indexed
+  ContactRef      Text            indexed. your source system's id
   Name            Text
   Channels        Text            what you may actually reach them on
   LastContactedAt DateTime        maintained by the contact flow
-  LastOutcome     Choice
-  Play            Choice          the play that selected them, or blank
+  LastOutcome     Choice          spoke | no_answer | replied | opted_out
+                                  | not_now | converted
+                                  the newest Contacts outcome, copied back
+  Play            Choice          tenure | equity_check_in | investor
+                                  | lapsed_appraisal
+                                  the play that selected them, or blank
   PlaySetAt       DateTime
   Rank            Number          WRITTEN BY THE RANK FLOW ONLY
   RankReason      Text
   SourceAsOf      DateTime        when the source system last refreshed this
-  <your trigger fields>           whatever the plays actually filter on
 
-LIST  Contacts                    (append only)
+LIST  Contacts              (append only)
   ContactRef      Text            indexed
-  Play            Choice          which play produced this attempt
-  Channel         Choice
+  Play            Choice          tenure | equity_check_in | investor
+                                  | lapsed_appraisal
+                                  which play produced this attempt
+  Channel         Choice          call | sms | email
   AttemptedAt     DateTime
   Outcome         Choice          spoke | no_answer | replied | opted_out
                                   | not_now | converted
@@ -65,12 +70,14 @@ LIST  Contacts                    (append only)
 
 LIST  Suppressions
   ContactRef      Text            indexed
-  Reason          Choice          opted_out | complaint | duplicate
-                                  | deceased | do_not_contact | other
+  Reason          Choice          opted_out | complaint | duplicate | deceased
+                                  | do_not_contact | other
   AddedBy         Person
   AddedAt         DateTime
   ClearedAt       DateTime        blank means live
   Note            Text
+
+Add your own trigger fields to People: whatever the plays actually filter on.
 
 opted_out is permanent. It is the one reason with no ClearedAt path.
 ```

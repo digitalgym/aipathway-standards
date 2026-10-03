@@ -40,28 +40,33 @@ Six lists and two libraries. The shape looks heavier than the others because it 
 ```
 Site: Packs
 
-LIST  Entity                      (usually one row. Sometimes a few.)
-  ABN             Text
+LIST  Entity                (usually one row. Sometimes a few.)
+  ABN             Text            indexed
   LegalName       Text
   TradingName     Text
   TradingAddress  Text            CHANGE IT HERE. Nothing copies it.
 
-LIST  Locations                   Lookup -> Entity
-LIST  People                      Lookup -> Entity, plus Role
+LIST  Locations
+  Entity          Text            indexed. lookup to Entity
+
+LIST  People
+  Entity          Text            indexed. lookup to Entity
+  Role            Text
 
 LIST  Tickets
-  Person          Lookup -> People
-  Class           Choice
+  Person          Text            lookup to People
+  Class           Choice          licence | white_card | high_risk | induction
+                                  | visa
   Number          Text
-  ExpiresOn       Date            indexed
-  Evidence        Hyperlink -> Evidence library
+  ExpiresOn       DateTime        indexed
+  Evidence        Hyperlink       into the Evidence library
 
-LIST  Cover                       (insurance)
-  Entity          Lookup -> Entity
-  Type            Choice
+LIST  Cover                 (insurance)
+  Entity          Text            lookup to Entity
+  Type            Choice          workers_comp | public_liability | vehicle
   Insurer         Text
   PolicyNo        Text
-  ExpiresOn       Date            indexed
+  ExpiresOn       DateTime        indexed
   Evidence        Hyperlink
 
 LIST  Obligations
@@ -70,23 +75,26 @@ LIST  Obligations
   Citation        Text            REQUIRED. The rule that says so.
   Artifact        Text            what has to exist as a result
   Cadence         Text
-  PenaltyClass    Choice
-  EffectiveFrom   Date
+  PenaltyClass    Choice          your regulator's own classes
+  EffectiveFrom   DateTime
   Applicability   Choice          applies | does_not_apply
   WhyNot          Text            REQUIRED when does_not_apply
-  Location        Lookup -> Locations
+  Location        Text            lookup to Locations
 
-LIBRARY  Evidence                 the documents, with what they evidence
-LIBRARY  Packs                    generated output only. Never hand-edited.
+LIBRARY  Evidence           (the documents, with what they evidence)
+  BoundTo         Text            indexed, REQUIRED. What it evidences.
+
+LIBRARY  Packs              (generated output only. Never hand-edited.)
+  Pack            Text            indexed. The id PackArtifacts points at.
 
 LIST  PackArtifacts
   Pack            Text            indexed
-  Obligation      Lookup -> Obligations
+  Obligation      Text            lookup to Obligations
   Version         Text
   GeneratedAt     DateTime
   AsOf            DateTime        the facts as at this moment
   Sources         Text            which rows produced it
-  Bound           Yes/No          false blocks the pack
+  Bound           Boolean         false blocks the pack
 ```
 
 PackArtifacts is what makes a pack regenerable and auditable. Without it you have a PDF and a hope, and the question you cannot answer six months later is which version of which fact it carried.

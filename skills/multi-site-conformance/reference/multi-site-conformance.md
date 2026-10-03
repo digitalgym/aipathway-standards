@@ -2,10 +2,10 @@
 
 Source: https://aipathway.com.au/explore-ai/multi-site-conformance-build-standard
 Spec: AIP-BS-MULTI-SITE-CONFORMANCE
-Version: 2026-09-17
+Version: 2026-10-03
 Licence: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
 Publisher: AI Pathway (https://aipathway.com.au)
-Cite as: AIP-BS-MULTI-SITE-CONFORMANCE 2026-09-17, AI Pathway, https://aipathway.com.au/explore-ai/multi-site-conformance-build-standard
+Cite as: AIP-BS-MULTI-SITE-CONFORMANCE 2026-10-03, AI Pathway, https://aipathway.com.au/explore-ai/multi-site-conformance-build-standard
 
 > Open specification: how to run one operating standard across many branches, franchises or entities. A versioned key contract, four kinds of drift, one score computed once, and why training material is not a control. Free to implement, with a conformance checklist.
 
@@ -16,7 +16,7 @@ carrying each check's id, ports, what to inject and what to assert.
 To print them: npx @aipathway/conformance show multi-site-conformance-build-standard
 To scaffold a folder that runs them, every check starting red: npx @aipathway/conformance init multi-site-conformance-build-standard
 Do the scaffolding yourself if you can run commands; the person should not have to open a terminal.
-When the checks are green, npx @aipathway/conformance connect gets the hosted provider's key: it prints a link and a code, the person approves in a browser, and the key lands in .env. Hand them the link; that click and the job-system consent it leads to are the only two things they do.
+This standard has no hosted provider; do not run conformance connect. For the checks a stub cannot prove: No hosted step. The production check runs over the sites' own key contract and evidence. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence.
 
 ---
 
@@ -99,15 +99,17 @@ A DriftFinding with status accepted is important and is not the same as resolved
 
 The contract comes first because every later check is a comparison against it, and onboarding comes last because a segment that takes real records before its gates are live starts with drift already in it.
 
-1. Define the key contract: the small set of identifiers and required fields every segment must carry, named once and versioned.
-2. Let segments add, never rename or fork. An extra column is local colour. A renamed key is a second system.
+1. Define the key contract: the small set of identifiers and required fields every segment must carry, written down once and versioned.
+2. Let segments add, never rename or fork, and enforce that at validation rather than by asking. An extra column is local colour. A renamed key is a second system.
 3. Give every record a segment, from group membership rather than a typed label, so ownership cannot drift from access.
-4. Run the drift check on a schedule: records missing required fields, keys that do not resolve, values outside a closed list.
-5. Run the gate-bypass check alongside it: dates typed rather than derived, work closed without evidence, contacts made without a suppression check.
-6. Score each segment on the same measures the centre uses. One definition, computed once, read by everybody.
-7. Publish the report to every segment and to the centre on the same schedule, whether or not the numbers are good.
+4. Run the drift check on a schedule, covering all four kinds: schema drift, gate bypass, shadow register and silence. Detecting only the loud two is the common partial build.
+5. Score each segment on the same measures the centre uses. One definition, computed once, read by everybody.
+6. Publish the report on schedule regardless of the numbers. A quiet period still publishes, saying so, because its absence must never become the signal.
+7. Let each segment see its own findings at the same detail the centre sees. A centre-only report is surveillance, not feedback.
 8. Route a segment past a threshold to a named person, not to another all-branch email.
 9. Onboard a new segment with the gates already live, before it takes its first real record.
+10. Make sure it survives the builder: someone else can explain it, and it runs on an account the business owns.
+11. Run the pass test below, in production, not on a stub.
 
 ## 4. Four kinds of drift
 
@@ -153,12 +155,16 @@ The fourth is the one that decides whether this standard helps or harms. A scori
 This is a build on top of whatever you already run. The only thing worth buying here is the identity you almost certainly already own.
 
 ```
+provider:
+  stub:       local.mock_sites
+  production: none                       # no hosted step; runs on your own systems
+
 stub in development
   - two segments, one deliberately misconfigured
   - the drift check run by hand
   - a printed report instead of a posted one
 
-production
+build it on what you already run
   - membership and access: your existing identity provider.
     Group membership, never a typed segment label.
   - detection and scoring: your own queries. Ordinary build.
@@ -172,7 +178,7 @@ do not hand-roll
 
 There is no product for this standard and we do not know of a credible one. Franchise and multi-site platforms generally solve reporting, which is the half you get free once the keys hold, and are silent on drift detection, which is the half that is hard.
 
-**The pass test.** In a non-production copy, take one segment and break the contract two ways. First, create a record that is missing a required key, or put a value in a closed-list field that is not on the list. Second, do something a gate should prevent: type a date the system is supposed to derive, or close a piece of work with its required evidence absent. Then wait for the next scheduled run without touching anything. Both must appear as drift findings against that segment, in the report that segment receives, with enough detail to find the record. If either is missing, you have a report rather than a control; if they appear only in the centre’s copy and not the segment’s, you have surveillance rather than a feedback loop, and it will be resented accordingly.
+**The pass test.** In a non-production copy, take one segment and break the contract two ways. First, create a record that is missing a required key, or put a value in a closed-list field that is not on the list. Second, do something a gate should prevent: type a date the system is supposed to derive, or close a piece of work with its required evidence absent. Then wait for the next scheduled run without touching anything. Both must appear as drift findings against that segment, in the report that segment receives, with enough detail to find the record. Next, try to rename a key in that segment: validation must refuse it at the source, not flag it in a report afterwards. Last, let a period pass with nothing to report: the report must still publish on time, saying so. If a finding is missing, you have a report rather than a control; if findings appear only in the centre’s copy and not the segment’s, you have surveillance rather than a feedback loop, and it will be resented accordingly; if the quiet period goes unreported, silence now means both “fine” and “stopped”.
 
 ## 9. Conformance checklist
 
@@ -188,7 +194,7 @@ Hold a DIY build or a vendor to this. If a box is empty, it is not in production
 - **8. A threshold routes to a named person.** Not to an all-branch email.
 - **9. A new segment's gates are live before its first real record.** Onboarding does not start with drift already in the data.
 - **10. It survives the builder.** Someone other than the builder can explain what it does, and it runs on an account the business owns.
-- **11. The pass test passes.** Rename a key in one segment and the validation refuses it; skip a period with nothing to report and the report still publishes.
+- **11. The pass test passes.** Break one segment's contract and bypass a gate, and both appear in that segment's own report; rename a key and validation refuses it; let a period pass with nothing to report and the report still publishes on time.
 
 ## Related reading
 

@@ -38,7 +38,7 @@ Decide one thing first: what the invoice is being checked against. A purchase or
 Site: InvoiceChecks
 
 LIBRARY  Originals
-  InvoiceRef      Text            the file, kept as received
+  InvoiceRef      Text            indexed. The file, kept as received.
   ReceivedAt      DateTime
 
 LIST  Invoices
@@ -51,7 +51,7 @@ LIST  Invoices
   ReceivedAt      DateTime
   Outcome         Choice          pass | exception | not_checked
 
-LIST  CheckResults               (one row per check, per invoice)
+LIST  CheckResults          (one row per check, per invoice)
   InvoiceRef      Text            indexed
   Check           Choice          rate | quantity | variation | contract_sum
   Sequence        Number          1 to 4. The order is data, not code.
@@ -62,13 +62,13 @@ LIST  CheckResults               (one row per check, per invoice)
   Confidence      Number
   ConfidenceBasis Text            so a person can discount it
 
-LIST  Exceptions                 (a record, not a notification)
+LIST  Exceptions            (a record, not a notification)
   InvoiceRef      Text            indexed
-  FailedCheck     Choice
+  FailedCheck     Choice          rate | quantity | variation | contract_sum
   NeverRan        Text            the checks after the failure
   Difference      Currency
-  Queue           Choice          needs_decision | waiting
-                                  | done_reversible | blocked
+  Queue           Choice          needs_decision | waiting | done_reversible
+                                  | blocked
   OpenedAt        DateTime
   DecidedBy       Person          blank until decided
   DecidedAt       DateTime

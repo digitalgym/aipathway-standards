@@ -39,36 +39,38 @@ If it is several, you have two workable shapes. Guest access to one shared site 
 Three lists on top of whatever the underlying standard already built. They are deliberately thin: this standard governs other lists rather than holding work of its own.
 
 ```
-Site: Conformance   (a hub site, with the segment sites associated)
+Site: Conformance
 
 LIST  Segments
   SegmentId       Text            indexed
   Name            Text
   Kind            Choice          branch | franchise | region | entity
   EntraGroup      Text            the group object id. THE source of truth.
-  Owner           Person          required
-  Coach           Person          required
-  OnboardedOn     Date
+  Owner           Person          REQUIRED
+  Coach           Person          REQUIRED
+  OnboardedOn     DateTime
   Thresholds      Text            when this segment routes to its coach
 
-LIST  KeyContract                 (versioned; supersede, never edit)
-  Version         Text            required
-  EffectiveFrom   Date            required
-  RequiredKeys    Multi-line      the identifiers every record carries
-  RequiredFields  Multi-line      per record type
-  ClosedLists     Multi-line      field -> permitted values
+LIST  KeyContract           (versioned; supersede, never edit)
+  Version         Text            indexed, REQUIRED
+  EffectiveFrom   DateTime        REQUIRED
+  RequiredKeys    Note            the identifiers every record carries
+  RequiredFields  Note            per record type
+  ClosedLists     Note            field -> permitted values
   ExtensionRule   Text            "add freely, never rename or fork"
 
 LIST  DriftFindings
-  Segment         Lookup -> Segments
-  DetectedOn      Date            indexed
-  Kind            Choice          schema | gate_bypass
-                                  | shadow_register | silence
+  Segment         Text            lookup to Segments
+  DetectedOn      DateTime        indexed
+  Kind            Choice          schema | gate_bypass | shadow_register
+                                  | silence
   RecordRef       Text            enough to find the row
-  Detail          Multi-line
+  Detail          Note
   Status          Choice          open | accepted | resolved
   Owner           Person
-  ResolvedOn      Date
+  ResolvedOn      DateTime
+
+Conformance is a hub site, with the segment sites associated to it.
 
 accepted is not resolved. A legitimate local variation that
 somebody looked at and signed off stays visible, and stops being

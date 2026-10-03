@@ -2,10 +2,10 @@
 
 Source: https://aipathway.com.au/explore-ai/timesheet-check-build-standard
 Spec: AIP-BS-TIMESHEET-CHECK
-Version: 2026-09-26
+Version: 2026-10-03
 Licence: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
 Publisher: AI Pathway (https://aipathway.com.au)
-Cite as: AIP-BS-TIMESHEET-CHECK 2026-09-26, AI Pathway, https://aipathway.com.au/explore-ai/timesheet-check-build-standard
+Cite as: AIP-BS-TIMESHEET-CHECK 2026-10-03, AI Pathway, https://aipathway.com.au/explore-ai/timesheet-check-build-standard
 
 > Open specification: checking hours before the payroll run. Every entry traced to a person, a day and an allocated job; totals computed never typed; anomalies as a closed list each with an owner; award penalties and allowances applied only from a cited rule with an edition and an effective date, never interpreted; anomalies resolved only by a person with a reason; nothing exported to payroll without a release; one export per period; a run that publishes regardless. Free to implement, with a conformance checklist.
 
@@ -16,7 +16,7 @@ carrying each check's id, ports, what to inject and what to assert.
 To print them: npx @aipathway/conformance show timesheet-check-build-standard
 To scaffold a folder that runs them, every check starting red: npx @aipathway/conformance init timesheet-check-build-standard
 Do the scaffolding yourself if you can run commands; the person should not have to open a terminal.
-When the checks are green, npx @aipathway/conformance connect gets the hosted provider's key: it prints a link and a code, the person approves in a browser, and the key lands in .env. Hand them the link; that click and the job-system consent it leads to are the only two things they do.
+This standard has no hosted provider; do not run conformance connect. For the checks a stub cannot prove: No hosted step. The production check runs over the business's own roster, entries and payroll system, released by a person. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence.
 
 ---
 
@@ -55,7 +55,7 @@ One period, entries to payroll
 2. Every entry is traced to a person, a day and a job that person was allocated. An entry that does not trace is an anomaly, not a line.
 3. Daily and weekly totals are computed from entries, never typed. Overlaps, over-hours days, missing breaks and unrostered days join the anomaly queue with an owner each.
 4. Every penalty or allowance applied cites a rule with an edition and an effective date. An entry the dated rule does not plainly cover is parked for a person.
-5. Are the anomalies at zero, each resolved by a person with a reason, and has a named person released the period? If no, the period waits with the queue in front of its owners.
+5. Are the anomalies at zero, each resolved by a person with a reason, and has a named person released the period? If no, the period waits with the queue in front of its owners, and the run still publishes hours, anomalies found and resolved, and that nobody has released.
 6. If yes, one export is written into payroll with its id back.
 7. Has the period stayed unchanged since the export? If yes, the run publishes hours, anomalies found and resolved, and the release. If no, the export is updated, never duplicated.
 

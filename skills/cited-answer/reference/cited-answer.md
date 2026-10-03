@@ -2,10 +2,10 @@
 
 Source: https://aipathway.com.au/explore-ai/cited-answer-build-standard
 Spec: AIP-BS-CITED-ANSWER
-Version: 2026-09-17
+Version: 2026-10-03
 Licence: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
 Publisher: AI Pathway (https://aipathway.com.au)
-Cite as: AIP-BS-CITED-ANSWER 2026-09-17, AI Pathway, https://aipathway.com.au/explore-ai/cited-answer-build-standard
+Cite as: AIP-BS-CITED-ANSWER 2026-10-03, AI Pathway, https://aipathway.com.au/explore-ai/cited-answer-build-standard
 
 > Open specification: how to build an assistant that answers questions about the rules you are accountable for without inventing them. Source cards, the four queues, the change feed and who accepts it, and why declining to answer is a valid output. Free to implement, with a conformance checklist.
 
@@ -16,7 +16,7 @@ carrying each check's id, ports, what to inject and what to assert.
 To print them: npx @aipathway/conformance show cited-answer-build-standard
 To scaffold a folder that runs them, every check starting red: npx @aipathway/conformance init cited-answer-build-standard
 Do the scaffolding yourself if you can run commands; the person should not have to open a terminal.
-When the checks are green, npx @aipathway/conformance connect gets the hosted provider's key: it prints a link and a code, the person approves in a browser, and the key lands in .env. Hand them the link; that click and the job-system consent it leads to are the only two things they do.
+This standard has no hosted provider; do not run conformance connect. For the checks a stub cannot prove: No hosted step. The production check runs over the source cards and change feed the office owns. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence.
 
 ---
 
@@ -54,7 +54,7 @@ One question, end to end
 1. A question arrives.
 2. Identify the jurisdiction and the date the question is asked about, before retrieving anything.
 3. Retrieve clauses, not documents. A page reference the reader has to search is not a citation.
-4. Check every retrieved clause is live on the asked-about date. A superseded clause is a source conflict, not an answer.
+4. Check every retrieved clause is live on the asked-about date. A superseded clause is not an answer: answer from its accepted live replacement, or, if the change has not been accepted, the question goes to change pending.
 5. Does a live clause cover it? If no, decline and hand to a named person with the question intact. That is a success, not an error.
 6. If yes, compose the answer only from the retrieved clauses, with a source card attached: instrument, clause, edition, jurisdiction, effective date and the link it came from.
 7. Still the live edition? If yes, the answer stands with its card. If no, it becomes change pending and is declined until a person accepts the change, then it goes back through the check.
@@ -88,6 +88,7 @@ SourceCard
   - edition, jurisdiction, effective_from
   - accepted_by (person), accepted_on
   - retired_on (nullable)
+  - status (live | change_pending | retired)
 
 Answer
   - id, question, asked_on, asked_about_date, jurisdiction
@@ -110,7 +111,7 @@ The order matters. Jurisdiction and date come first because they change what cou
 
 1. Identify the jurisdiction and the date the question is being asked about, before retrieving anything. The same question has different answers in two states and in two editions.
 2. Retrieve clauses, not documents. A page reference the reader has to search is not a citation.
-3. Check every retrieved clause is live on the asked-about date. A superseded clause is a source conflict, not an answer.
+3. Check every retrieved clause is live on the asked-about date. A superseded clause is not an answer: answer from its accepted live replacement, or, if the change has not been accepted, the question goes to change pending.
 4. Compose the answer only from retrieved clauses. Nothing from the model's own memory of the standard reaches the reader.
 5. Attach a source card to the answer: instrument, clause, edition, jurisdiction, effective date, and the link or file it came from.
 6. If no clause covers it, decline and hand to a named person. Do not answer the nearest question you can source.
@@ -162,13 +163,13 @@ stub in development
   - keyword search is enough to build against
   - a hard-coded reviewer as the accepting person
 
-production
+production: none   # no hosted step, build it on your own systems
   - retrieval: your own index over the clause library. Ordinary build.
   - model: whichever you already pay for. It composes, it does not recall.
   - the certifier gate: a named person. There is no product for this
     and you should be suspicious of anyone selling one.
 
-do not hand-roll
+do not skip
   - the source card and the change feed. Not because they are
     difficult, but because they are the two parts that look
     optional while the system appears to work.
@@ -176,7 +177,7 @@ do not hand-roll
 
 There is no product for this standard. A vendor selling a compliance chatbot is selling the retrieval, which is the easy half, and is usually silent about who accepts a rule change. Ask them that question first.
 
-**The pass test.** Take a clause your assistant answers from today and retire it: set an effective end date and load the replacement with a later effective date. Ask the same question again. The answer must either change and cite the new clause, or decline into the change pending queue until somebody accepts the delta. Then ask a question your library genuinely does not cover, something adjacent but absent. It must decline and name a person. Both take a few minutes against your own material. If the first still answers from the retired clause, your cards are decoration; if the second produces a plausible paragraph with no card, the model is answering from memory and the standard is not implemented.
+**The pass test.** Take a clause your assistant answers from today and retire it: set an effective end date and load the replacement with a later effective date. Ask the same question again. The answer must either change and cite the new clause, or decline into the change pending queue until somebody accepts the delta. Then list every answer already given that relied on the retired clause; the list must come from the stored cards, not a search. Then ask a question your library genuinely does not cover, something adjacent but absent. It must decline and name a person. Both take a few minutes against your own material. If the first still answers from the retired clause, your cards are decoration; if the second produces a plausible paragraph with no card, the model is answering from memory and the standard is not implemented.
 
 ## 9. Conformance checklist
 

@@ -39,43 +39,43 @@ Four lists, following the standard's own objects. The one thing to notice is the
 ```
 Site: Arrears
 
-LIST  Rules                       (per jurisdiction, versioned)
-  Jurisdiction    Choice          required
+LIST  Rules                 (per jurisdiction, versioned)
+  Jurisdiction    Choice          indexed, REQUIRED. the states you operate in
   Step            Text            what this period governs
   DaysAfter       Number
   CountsFrom      Choice          paid_to | notice_issued | previous_step
-  EffectiveFrom   Date            required
-  EffectiveTo     Date            blank means current
+  EffectiveFrom   DateTime        REQUIRED
+  EffectiveTo     DateTime        blank means current
   RuleVersion     Text
   Citation        Text
 
-LIST  Positions                   (refreshed; never hand-edited)
+LIST  Positions             (refreshed; never hand-edited)
   TenancyRef      Text            indexed
-  PaidTo          Date            REPORT THIS FIRST. The clock runs on it.
+  PaidTo          DateTime        REPORT THIS FIRST. The clock runs on it.
   DaysInArrears   Number          derived on refresh from PaidTo
   Balance         Currency        secondary on every view, on purpose
   RentPeriod      Choice          weekly | fortnightly | monthly
-  Jurisdiction    Choice
-  AsOf            DateTime        required, shown wherever a figure is shown
+  Jurisdiction    Choice          the states you operate in
+  AsOf            DateTime        REQUIRED. shown wherever a figure is shown
   Outcome         Choice          not_in_arrears | will_self_resolve
                                   | needs_conversation | statutory_path
   OutcomeEvidence Text            what in the ledger says so
-  NoticeIssued    Date
+  NoticeIssued    DateTime
   RuleVersion     Text            which version produced the dates below
   NextLawfulStep  Text
-  NextLawfulDate  Date            DERIVED. Written by the clock flow only.
+  NextLawfulDate  DateTime        DERIVED. Written by the clock flow only.
 
-LIST  StopConditions              (the gate, read before every message)
+LIST  StopConditions        (the gate, read before every message)
   TenancyRef      Text            indexed
-  Condition       Choice          hardship | dispute | payment_plan
-                                  | tribunal | vulnerable | agency_error
+  Condition       Choice          hardship | dispute | payment_plan | tribunal
+                                  | vulnerable | agency_error
   AddedBy         Person
   AddedAt         DateTime
   ClearedAt       DateTime        blank means live
   Note            Text
 
-LIST  Messages                    (append only)
-  TenancyRef      Text
+LIST  Messages              (append only)
+  TenancyRef      Text            indexed
   Kind            Choice          reminder | conversation | notice
   DraftedAt       DateTime
   ApprovedBy      Person          required for kind = notice

@@ -2,10 +2,10 @@
 
 Source: https://aipathway.com.au/explore-ai/knowledge-graph-build-standard
 Spec: AIP-BS-KNOWLEDGE-GRAPH
-Version: 2026-09-26
+Version: 2026-10-03
 Licence: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
 Publisher: AI Pathway (https://aipathway.com.au)
-Cite as: AIP-BS-KNOWLEDGE-GRAPH 2026-09-26, AI Pathway, https://aipathway.com.au/explore-ai/knowledge-graph-build-standard
+Cite as: AIP-BS-KNOWLEDGE-GRAPH 2026-10-03, AI Pathway, https://aipathway.com.au/explore-ai/knowledge-graph-build-standard
 
 > Open specification: how to turn a knowledge base into a graph an assistant can trust. Pile, index and graph as three layers with only the third the standard; a versioned key contract of seven node types and eight edge types; sources registered as instruments with an edition and a checksum; nodes that reach live only through a named person with a replayable locator; scope as an APPLIES_TO edge; supersession and conflict as written edges the model never resolves; a change delta that lists every affected node; an index that may propose and never answer; and the detach test. Free to implement, with a conformance checklist.
 
@@ -16,7 +16,7 @@ carrying each check's id, ports, what to inject and what to assert.
 To print them: npx @aipathway/conformance show knowledge-graph-build-standard
 To scaffold a folder that runs them, every check starting red: npx @aipathway/conformance init knowledge-graph-build-standard
 Do the scaffolding yourself if you can run commands; the person should not have to open a terminal.
-When the checks are green, npx @aipathway/conformance connect gets the hosted provider's key: it prints a link and a code, the person approves in a browser, and the key lands in .env. Hand them the link; that click and the job-system consent it leads to are the only two things they do.
+This standard has no hosted provider; do not run conformance connect. For the checks a stub cannot prove: No hosted step. The production check runs over the business's own corpus, register ids and accepted library. Identity, the change list and acceptance are the three parts not to hand-roll, and they are data, not a product. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence.
 
 ---
 
@@ -118,7 +118,7 @@ Add types by bumping the contract version. Do not silently invent a RELATED_TO e
 
 ## 4. The objects, and what is in them
 
-Eight objects the build actually stores. The acceptance and the supersession are the two most retrieval builds leave out, because search appears to function without them.
+Nine objects the build actually stores. The acceptance and the supersession are the two most retrieval builds leave out, because search appears to function without them.
 
 ```
 KeyContract
@@ -184,7 +184,7 @@ The order is the claim. Chunk, then embed, then hope is a different order, and i
 6. Scope is an APPLIES_TO edge, and an unscoped clause cannot answer a scoped question.
 7. Supersession and conflict are written edges, and the model never picks a winner.
 8. Replacing a source produces a delta with a computed list of affected nodes.
-9. Proposed, live, change_pending and retired are states, not labels.
+9. Proposed, live, conflict, change_pending and retired are states, not labels.
 10. The index can propose and rank. Emptying it does not empty the graph and does not invent an answer.
 11. Customer files and interviews are not sources unless a person promotes a claim.
 12. It survives the builder.
@@ -263,11 +263,11 @@ Hold a DIY build or a vendor to this. If a box is empty, it is not in production
 - **6. Scope is an APPLIES_TO edge, and an unscoped clause cannot answer a scoped question.** A clause with no jurisdiction, product, work type or entity on it can decline or sit in conflict. It cannot answer a question asked about one state or one product.
 - **7. Supersession and conflict are written edges, and the model never picks a winner.** A new node retires the old through SUPERSEDES and the old cannot answer. Two live nodes that disagree get a CONFLICTS edge and a named person, never an average and never a confidence score.
 - **8. Replacing a source produces a delta with a computed list of affected nodes.** When the checksum moves, the graph lists every node built from that source and every historic answer that used them. If you cannot produce that list, you have an index.
-- **9. Proposed, live, change_pending and retired are states, not labels.** A retired node must not appear on a new source card. It must remain findable for the answers that used it.
+- **9. Proposed, live, conflict, change_pending and retired are states, not labels.** A retired node must not appear on a new source card. It must remain findable for the answers that used it.
 - **10. The index can propose and rank. Emptying it does not empty the graph and does not invent an answer.** Detach the vector index and the model weights. The live nodes are unchanged. A question the graph covers still answers from the same node; a question it does not cover declines.
 - **11. Customer files and interviews are not sources unless a person promotes a claim.** A claim from an interview becomes a Fact only when a named person promotes it, and the Fact still needs provenance. A crawler finding it in the same drive does not make it policy.
 - **12. It survives the builder.** Someone other than the builder can explain what it does, and it runs on an account the business owns.
-- **13. The pass test passes.** Load, ask, move, identity, the forbidden path and one-fact-two-places, on a corpus the business controls with at least one system-of-record id, as section 10 describes.
+- **13. The pass test passes.** Load, ask, move, identity, the forbidden path and one-fact-two-places, on a corpus the business controls with at least one system-of-record id, as the pass test describes.
 
 ## Related reading
 

@@ -2,10 +2,10 @@
 
 Source: https://aipathway.com.au/explore-ai/invoice-check-build-standard
 Spec: AIP-BS-INVOICE-CHECK
-Version: 2026-09-10
+Version: 2026-10-03
 Licence: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
 Publisher: AI Pathway (https://aipathway.com.au)
-Cite as: AIP-BS-INVOICE-CHECK 2026-09-10, AI Pathway, https://aipathway.com.au/explore-ai/invoice-check-build-standard
+Cite as: AIP-BS-INVOICE-CHECK 2026-10-03, AI Pathway, https://aipathway.com.au/explore-ai/invoice-check-build-standard
 
 > Open specification: how to build an automated subcontractor invoice check properly. The four checks in order, the four queues, the six rules that decide whether anyone still trusts it in six months, and the parts that are harder than they look: PO matching, progressive claims, finding the variation approval. Free to implement, with a conformance checklist.
 
@@ -16,7 +16,7 @@ carrying each check's id, ports, what to inject and what to assert.
 To print them: npx @aipathway/conformance show invoice-check-build-standard
 To scaffold a folder that runs them, every check starting red: npx @aipathway/conformance init invoice-check-build-standard
 Do the scaffolding yourself if you can run commands; the person should not have to open a terminal.
-When the checks are green, npx @aipathway/conformance connect gets the hosted provider's key: it prints a link and a code, the person approves in a browser, and the key lands in .env. Hand them the link; that click and the job-system consent it leads to are the only two things they do.
+This standard has no hosted provider; do not run conformance connect. For the checks a stub cannot prove: No hosted step. The production check runs against the job system and ledger already in use. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence.
 
 ---
 
@@ -255,7 +255,7 @@ The exception keeps its date and its evidence after it is closed. In an industry
 
 ## 10. Provider: what to stub, and what not to hand-roll
 
-There is nothing to buy here, and the block says so rather than pointing at something adjacent. The reason is section 8: the hard part is the binding between an invoice line and the approval record, and that binding is specific to how a business already works.
+There is nothing to buy here, and the block says so rather than pointing at something adjacent. The reason is section 6: the hard part is the binding between an invoice line and the approval record, and that binding is specific to how a business already works.
 
 ```
 provider:

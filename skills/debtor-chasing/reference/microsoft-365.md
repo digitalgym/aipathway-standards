@@ -42,42 +42,42 @@ Four lists. Note what is absent: there is no invoice table and no balance column
 ```
 Site: Receivables
 
-LIST  Positions                   (refreshed, never hand-edited)
-  DebtorRef       Text            the ledger's own identifier, indexed
+LIST  Positions             (refreshed, never hand-edited)
+  DebtorRef       Text            indexed. The ledger's own identifier.
   DebtorName      Text
-  OldestDueDate   Date
+  OldestDueDate   DateTime
   DaysOldest      Number          derived on refresh, not stored by hand
-  AmountOutstanding  Currency     AS AT AsOf. Display with the stamp.
-  AsOf            DateTime        required. Every view shows it.
+  AmountOutstanding Currency        AS AT AsOf. Display with the stamp.
+  AsOf            DateTime        REQUIRED. Every view shows it.
   Rank            Number          WRITTEN BY THE RANK FLOW ONLY
   RankReason      Text            why this row is where it is
-  NextActionDate  Date
+  NextActionDate  DateTime
   Status          Choice          open | promised | broken | disputed | closed
 
-LIST  Contacts                    (append only)
+LIST  Contacts              (append only)
   DebtorRef       Text            indexed
   Channel         Choice          call | email | sms | letter
   AttemptedAt     DateTime
-  Outcome         Choice          spoke | no_answer | wrong_number
-                                  | refused | promise | dispute
+  Outcome         Choice          spoke | no_answer | wrong_number | refused
+                                  | promise | dispute
   Notes           Text
   By              Person
 
 LIST  Promises
-  DebtorRef       Text
+  DebtorRef       Text            indexed
   PromisedAmount  Currency
-  PromisedDate    Date
+  PromisedDate    DateTime
   MadeAt          DateTime
   State           Choice          open | kept | broken
   Evidence        Text            what was said, in their words
 
-LIST  Suppressions                (the gate reads this, every send)
+LIST  Suppressions          (the gate reads this, every send)
   DebtorRef       Text            indexed
   Reason          Choice          do_not_contact | dispute | claim
                                   | payment_plan | hardship | legal
   AddedBy         Person
   AddedAt         DateTime
-  ReviewBy        Date            blank means indefinite
+  ReviewBy        DateTime        blank means indefinite
   ClearedAt       DateTime        blank means live
 
 No Invoices list. No stored balance outside Positions.AsOf.

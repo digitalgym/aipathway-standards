@@ -42,44 +42,45 @@ Three lists and one library. Internal names matter: a flow and a Power BI model 
 ```
 Site: Compliance
 
-LIST  Rules                       (append only; supersede, never edit)
-  RuleId          Text            required, indexed
+LIST  Rules                 (append only; supersede, never edit)
+  RuleId          Text            indexed, REQUIRED
   Jurisdiction    Choice          the states you operate in
+                                  the states you operate in
   Requirement     Text
   IntervalMonths  Number          integer
   AnchorBasis     Choice          last_completed | installed | commissioned
-  EffectiveFrom   Date            required
-  EffectiveTo     Date            blank means current
+  EffectiveFrom   DateTime        REQUIRED
+  EffectiveTo     DateTime        blank means current
   Citation        Text            what says so, so a person can check
-  RuleVersion     Text            required
+  RuleVersion     Text            REQUIRED
 
 LIST  Obligations
   Title           Text            "<PropertyRef> - <RuleId>"
   PropertyRef     Text            indexed
-  Rule            Lookup -> Rules
+  Rule            Text            lookup to Rules
   RuleVersion     Text            snapshot of the version that derived DueDate
-  AnchorDate      Date
+  AnchorDate      DateTime
   AnchorSource    Choice          known | unknown | estimated
-  DueDate         Date            WRITTEN BY FLOW 1 ONLY. Not on any form.
+  DueDate         DateTime        indexed. WRITTEN BY FLOW 1 ONLY. Not on any form.
   Responsible     Choice          agency | owner | tenant
-  State           Choice          not_due | due | done | missed   indexed
-  LastCompleted   Date
-  DueOverride     Date            a person may write this, and it is measured
+  State           Choice          indexed. not_due | due | done | missed
+  LastCompleted   DateTime
+  DueOverride     DateTime        a person may write this, and it is measured
   OverrideBy      Person
   OverrideReason  Text
-  LateCompletion  Yes/No          done after missed. Never clears the history.
+  LateCompletion  Boolean         done after missed. Never clears the history.
 
-LIST  StateChanges                (append only, enforced by permissions)
-  Obligation      Lookup -> Obligations
+LIST  StateChanges          (append only, enforced by permissions)
+  Obligation      Text            indexed. lookup to Obligations
   FromState       Text
   ToState         Text
   At              DateTime
-  By              Person or Text  a person, or the rule that fired
+  By              Text            a person, or the rule that fired
   Reason          Text
 
 LIBRARY  Evidence
-  Obligation      Lookup -> Obligations
-  CapturedOn      Date
+  Obligation      Text            indexed. lookup to Obligations
+  CapturedOn      DateTime
   CapturedBy      Person
 
 Index DueDate, State and PropertyRef before the list grows.

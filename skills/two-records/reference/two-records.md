@@ -2,10 +2,10 @@
 
 Source: https://aipathway.com.au/explore-ai/two-records-build-standard
 Spec: AIP-BS-TWO-RECORDS
-Version: 2026-09-26
+Version: 2026-10-03
 Licence: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
 Publisher: AI Pathway (https://aipathway.com.au)
-Cite as: AIP-BS-TWO-RECORDS 2026-09-26, AI Pathway, https://aipathway.com.au/explore-ai/two-records-build-standard
+Cite as: AIP-BS-TWO-RECORDS 2026-10-03, AI Pathway, https://aipathway.com.au/explore-ai/two-records-build-standard
 
 > Open specification: making two systems of record agree without a machine deciding which is right. A declared pair contract naming both sources, the shared key and the master per field; joins on ids never labels; a matched pair silent and a mismatch a Difference object with both values; nothing corrected without a named person's acceptance; orphans and tolerances as declared objects; a run that publishes on schedule including the all-clear; history kept on every fix. Free to implement, with a conformance checklist.
 
@@ -16,7 +16,7 @@ carrying each check's id, ports, what to inject and what to assert.
 To print them: npx @aipathway/conformance show two-records-build-standard
 To scaffold a folder that runs them, every check starting red: npx @aipathway/conformance init two-records-build-standard
 Do the scaffolding yourself if you can run commands; the person should not have to open a terminal.
-When the checks are green, npx @aipathway/conformance connect gets the hosted provider's key: it prints a link and a code, the person approves in a browser, and the key lands in .env. Hand them the link; that click and the job-system consent it leads to are the only two things they do.
+This standard has no hosted provider; do not run conformance connect. For the checks a stub cannot prove: No hosted step. The production check runs over the business's own two sources with a person on every correction. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence.
 
 ---
 
@@ -177,7 +177,7 @@ Hold a DIY build or a vendor to this. If a box is empty, it is not in production
 - **4. A correction is proposed with both values and written only after a named person accepts it.** The run proposes the master's value for the other source. The write happens once, after a named person accepts the proposal, and never before. A write with no acceptance fails.
 - **5. A record with no partner is an orphan with a reason and an owner, not a silent gap.** A record in one source with no record under the same id in the other is raised as an orphan naming the source, a reason and the person who owns it. It is counted on the run and never dropped.
 - **6. Rounding and timing tolerances are declared per field with a value, and never assumed.** A tolerance is a number a person wrote against a field in the contract. A difference inside it is recorded as within_tolerance, still an object. A field with no declared tolerance has none, so any difference on it is open.
-- **7. The run publishes on schedule with its counts, including the all-clear.** Every scheduled run publishes a count of matched, mismatched, orphaned and corrected, even when every number but matched is zero. Its absence is never the signal.
+- **7. The run publishes on schedule with its counts, including the all-clear.** Every scheduled run publishes a count of matched, within tolerance, mismatched, orphaned and corrected, even when every number but matched is zero. Its absence is never the signal.
 - **8. A difference over the declared threshold, or too many mismatches, reaches a named person that run.** The contract declares an amount and a rate. A single difference over the amount, or a run whose open mismatches exceed the rate, goes to the named person in the same run, not the next one.
 - **9. Every accepted correction keeps both original values and the person who accepted.** The Difference keeps both values as they were. The Correction records the proposed value, who accepted, when, and the id the write returned. A fix that overwrites the history fails.
 - **10. For any shared id, the runs, differences and corrections are retrievable.** When somebody asks why the ledger says what it says about a job, the record by that id shows every run that raised a difference on it, each difference with both values, and each correction with who accepted it.

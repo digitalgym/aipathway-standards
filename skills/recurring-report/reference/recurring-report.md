@@ -2,10 +2,10 @@
 
 Source: https://aipathway.com.au/explore-ai/recurring-report-build-standard
 Spec: AIP-BS-RECURRING-REPORT
-Version: 2026-09-26
+Version: 2026-10-03
 Licence: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
 Publisher: AI Pathway (https://aipathway.com.au)
-Cite as: AIP-BS-RECURRING-REPORT 2026-09-26, AI Pathway, https://aipathway.com.au/explore-ai/recurring-report-build-standard
+Cite as: AIP-BS-RECURRING-REPORT 2026-10-03, AI Pathway, https://aipathway.com.au/explore-ai/recurring-report-build-standard
 
 > Open specification: the weekly or monthly report a business produces from its systems of record. Every figure with a definition in a register, one definition per measure, the source and the as-of time on every figure, published on schedule whether or not anything changed, a figure that cannot be computed published as unavailable never as last period's value, no narrative that invents a number, thresholds routed to a named person, one view per audience, corrections as a new version by a person. Free to implement, with a conformance checklist.
 
@@ -16,7 +16,7 @@ carrying each check's id, ports, what to inject and what to assert.
 To print them: npx @aipathway/conformance show recurring-report-build-standard
 To scaffold a folder that runs them, every check starting red: npx @aipathway/conformance init recurring-report-build-standard
 Do the scaffolding yourself if you can run commands; the person should not have to open a terminal.
-When the checks are green, npx @aipathway/conformance connect gets the hosted provider's key: it prints a link and a code, the person approves in a browser, and the key lands in .env. Hand them the link; that click and the job-system consent it leads to are the only two things they do.
+This standard has no hosted provider; do not run conformance connect. For the checks a stub cannot prove: No hosted step. The production check runs over the business's own sources and definitions register, on its own schedule. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence.
 
 ---
 
@@ -151,7 +151,7 @@ The same rule this site holds itself to. A number without a source is not on the
 
 ## 8. Provider: what to stub, and what not to hand-roll
 
-One step not to hand-roll: the definitions register and the schedule that publishes regardless. Everything else a coding agent builds against the stub in an afternoon.
+No hosted step. The part not to get wrong is the schedule that publishes regardless, with its version history, on your own tenant. The register stays yours. Everything else a coding agent builds against the stub in an afternoon.
 
 ```
 provider:
@@ -196,4 +196,4 @@ Hold a DIY build or a vendor to this. If a box is empty, it is not in production
 - The Multi-Site Conformance Build Standard: one definition per measure
 - The Cited Answer Build Standard: where a sentence about a rule comes from
 - The Two Records Build Standard: when the sources disagree
-- The roadmap: where this sits
+- The roadmap
