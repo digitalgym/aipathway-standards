@@ -2,10 +2,10 @@
 
 Source: https://aipathway.com.au/explore-ai/invoice-out-build-standard
 Spec: AIP-BS-INVOICE-OUT
-Version: 2026-10-02
+Version: 2026-10-05
 Licence: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
 Publisher: AI Pathway (https://aipathway.com.au)
-Cite as: AIP-BS-INVOICE-OUT 2026-10-02, AI Pathway, https://aipathway.com.au/explore-ai/invoice-out-build-standard
+Cite as: AIP-BS-INVOICE-OUT 2026-10-05, AI Pathway, https://aipathway.com.au/explore-ai/invoice-out-build-standard
 
 > Open specification: the invoice exists in the ledger the day the job finishes. The job system's completion event as the only trigger; every line traced to the job and priced only from the price book read at draft time, with a line the book does not hold parking the invoice; a variation billed only with a signed acceptance attached; a stage invoice for jobs under a building contract, never a progress claim; one invoice per job written once into Xero, MYOB or the job system with its own id back; a release gate held by a person or a threshold rule; parked invoices as a queue with a reason and an owner. Free to implement, with a conformance checklist.
 
@@ -21,7 +21,7 @@ When the checks are green, npx @aipathway/conformance connect gets the hosted pr
 
 ---
 
-How the invoice gets out the day the job finishes, into the ledger you already run, with the job’s lines at your own rates and nothing invented. Written so you can build it yourself.
+How the invoice gets out the day the job finishes, into the ledger you already run, with the job’s lines at your own rates and nothing invented. Written so you can build it yourself. Or skip the build: every business that bills finished jobs does this, so we built the standard into a ready-made version, the Invoice Out sheet on Office Voice.
 
 Used by
 
@@ -61,6 +61,23 @@ One job, complete to sent
 7. Released by a named person, or under the threshold of a rule the person set? If yes, it is sent, with the job, the lines, the book edition and the release on the record. If no, it waits for a person. Nothing parked is ever sent.
 
 Completion is the trigger and the book is read at draft time. The filled diamond is the write into the ledger, one per job with the ledger’s id back, which is the step not to hand-roll. The loop is the parked queue: a reason, a person, and back through the same gate.
+
+## Done for you: the Invoice Out sheet
+
+Every business that bills finished jobs does this job, so we built this standard into a ready-made version: the Invoice Out sheet, a Google Sheet you copy that runs on Office Voice. Mark a job complete and its draft invoice is in Xero within ten minutes, at your own Xero prices, waiting for you to approve and email it.
+
+What it does today
+
+- Connects in one sitting: you approve a key on Office Voice by checking a code on screen, and connect Xero there. The sheet never holds your Xero login.
+- Checks every ten minutes for finished jobs: rows marked complete in the sheet, or jobs finished in ServiceM8 or Simpro once you sign in to them on Office Voice.
+- Runs the standard’s checks in order and parks rather than guesses: no lines, a code that is not in your Xero items, a variation with no signed acceptance, a contract job with no stage.
+- Writes one draft invoice per job (or per stage) into Xero, priced by Xero from your Items, after Office Voice checks the job is complete and every code is one of your items. A second completion keeps the same draft.
+- Emails the person you name when an invoice parks, with the reason, and drafts it on the next run once the cause is fixed.
+- Never approves or sends. You do that in Xero, and the sheet records who released each invoice, when, and whether it went to the customer.
+
+[Make your own copy](https://docs.google.com/spreadsheets/d/1q-kNpit9ABgJdSkT8hfXFGOAj_vXyOA9bGe3_7Rsgmk/copy), then choose **Invoice Out > Connect** and name who fixes a parked invoice. It runs on Office Voice, so you need an Office Voice subscription; prices are on the [pricing page](https://aipathway.com.au/pricing). If you would rather we set it up for you, that is a fixed-price set-up: [pick a time](https://aipathway.com.au/ai-audit#book).
+
+Rather build it yourself? Everything you need is below, free. Joining it to your own inbox, ledger or a bigger workflow? See joining it to your own system. [the Invoice Out sheet](https://docs.google.com/spreadsheets/d/1q-kNpit9ABgJdSkT8hfXFGOAj_vXyOA9bGe3_7Rsgmk/copy) is held to the pass tests on this page like anything else.
 
 ## 1. What this standard covers
 
@@ -165,7 +182,7 @@ Tradify has no public or partner API, confirmed in writing by their support on 1
 
 **Check these against the primary instrument before you rely on them**, and store the date you checked beside the value rather than hard-coding it. This standard tells you the shape and where to look. It is not legal advice and it does not tell you that anything complies.
 
-## 9. Provider: what to stub, and what not to hand-roll
+## 9. Join It to Your Own System: the one write not to hand-roll
 
 One step not to hand-roll: the authenticated, idempotent write into the ledger, with an id back and a proof. Everything else a coding agent builds against the stub in an afternoon. The default is the hosted step: the owner connects Xero once in a browser, with no developer app and no keys. A coding agent should build to that, and should not write its own Xero connection unless the owner asks for one after hearing this.
 
@@ -205,7 +222,7 @@ A vendor selling automated invoicing is usually selling the arithmetic and a PDF
 
 ## A day with it running: the invoice is out before the van is home
 
-Dave owns a plumbing business. Tom is one of his plumbers. Nobody in this story types an invoice. Each step says whether it works in production today, because a story that skips that is a brochure.
+Dave owns a plumbing business. Tom is one of his plumbers. Nobody in this story types an invoice. Every step below works in production today.
 
 ### Setting up: one sitting
 
@@ -248,7 +265,7 @@ The Invoice Out sheet is this standard, built. [Make your own copy](https://docs
 - In a business that runs on a Google Sheet, whoever keeps the sheet changes the row to complete, and the rest is the same.
 - Nobody created a developer app, put a key into code, or opened a terminal. Nothing was copied anywhere.
 
-Live and Not yet checked against Office Voice on 2 October 2026.
+Checked against Office Voice on 2 October 2026.
 
 **The pass test.** On a real job system and a real ledger, not a sample. Mark one job complete twice, an hour apart: one invoice must exist in the ledger with the ledger’s own id, and the second event must have updated it or done nothing. Put a variation on a job with no signed acceptance on file: the invoice must park with reason unsigned_variation and a person must be told, and billing it must be impossible until the signature is attached. Put a code on a job that the price book does not hold: the invoice must park with reason not_in_pricebook and carry no rate for that line. Set a release rule with a threshold and complete one job under it and one over it: the first goes out with the rule’s name on the release, the second waits for a person. Then pull the record for any sent invoice by job id: the lines, the book edition, the release and the send time must all be there. If any of those five is not what happened, the standard is not implemented, however good the PDF looks.
 

@@ -38,6 +38,7 @@ Standards in this repo:
 - AIP-BS-INBOX-TRIAGE: skills/inbox-triage/ (Inbox Triage Build Standard)
 - AIP-BS-FOLLOW-UP: skills/follow-up/ (Follow Up Build Standard)
 - AIP-BS-CASH-SEAM: skills/cash-seam/ (Cash Seam Build Standard)
+- AIP-BS-SIMPRO-CLAUDE-CONNECTOR: skills/simpro-claude-connector/ (Simpro Claude Connector Build Standard)
 - AIP-BS-TWO-RECORDS: skills/two-records/ (Two Records Build Standard)
 - AIP-BS-TIMESHEET-CHECK: skills/timesheet-check/ (Timesheet Check Build Standard)
 - AIP-BS-MATERIAL-ORDER: skills/material-order/ (Material Order Build Standard)

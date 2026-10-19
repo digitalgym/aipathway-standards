@@ -18,7 +18,7 @@ stays_with_person:
 
 # Debtor Chasing Build Standard
 
-**Spec:** AIP-BS-DEBTOR-CHASING · **Version:** 2026-10-03 · **Canonical:** https://aipathway.com.au/explore-ai/debtor-chasing-build-standard
+**Spec:** AIP-BS-DEBTOR-CHASING · **Version:** 2026-10-06 · **Canonical:** https://aipathway.com.au/explore-ai/debtor-chasing-build-standard
 
 Build standard: the method for chasing your own debtor book. Four buckets, why ranking by age sends you to the wrong end of the ledger, the opener that returns a date, promise-to-pay as an object, and the compliance gate that is the one step not to hand-roll.
 
@@ -29,7 +29,7 @@ before writing code. It is about 3,000 words and it is the whole job: the
 checks in order, the objects with their fields, what must never be automated,
 and a pass test.
 
-For the current version, fetch https://aipathway.com.au/explore-ai/debtor-chasing-build-standard.md. This copy is 2026-10-03.
+For the current version, fetch https://aipathway.com.au/explore-ai/debtor-chasing-build-standard.md. This copy is 2026-10-06.
 
 The checks are also structured data, so you do not have to infer a test plan from
 the prose: https://aipathway.com.au/explore-ai/debtor-chasing-build-standard/checks.json gives each check a stable id, the ports it
@@ -99,13 +99,13 @@ skill asserts.
 - 7. Parts That Are Harder Than They Look
 - 8. What Breaks After It Works
 - 9. What Stays With a Person
-- 11. Hand Over the Call
+- 11. Join It to Your Own System: Hand Over the Call
 - 12. The Run, Step by Step
 - 13. Conformance checklist
 
 ## Attribution
 
-AIP-BS-DEBTOR-CHASING, 2026-10-03, AI Pathway, https://aipathway.com.au/explore-ai/debtor-chasing-build-standard
+AIP-BS-DEBTOR-CHASING, 2026-10-06, AI Pathway, https://aipathway.com.au/explore-ai/debtor-chasing-build-standard
 
 Licensed CC BY 4.0. Free to implement, including commercially. If you build to
 this standard, cite the spec ID: a workflow built to a shared standard can be

@@ -99,7 +99,7 @@ Order matters. The price list is read before anything is priced, and what cannot
 
 Every priced line carries the catalogue id it came from. Not a description that resembles a catalogue line: the id. This is the check that makes the rest of the standard auditable, because it is the one that lets somebody ask, six months later, where a number came from and get an answer.
 
-Three things are therefore banned, and they are banned because each is a plausible-looking thing a language model will do if you let it. A rate _inferred_ from the job description. A rate _averaged_ from similar past jobs. A rate _recalled_from another customer’s quote. All three produce a number that looks right and is not yours.
+Three things are therefore banned, and they are banned because each is a plausible-looking thing a language model will do if you let it. A rate _inferred_ from the job description. A rate _averaged_ from similar past jobs. A rate _recalled_ from another customer’s quote. All three produce a number that looks right and is not yours.
 
 The read happens at draft time. A cached price list is how a build quotes last quarter’s rates after the office put through an increase, and the failure is silent: the quote is well-formed, the catalogue ids are real, and the money is wrong. If the cache is older than the window you agreed, or the price list cannot be read at all, the quote parks with `pricebook_unreadable`.
 

@@ -20,7 +20,7 @@ stays_with_person:
 
 # Invoice Out Build Standard
 
-**Spec:** AIP-BS-INVOICE-OUT · **Version:** 2026-10-02 · **Canonical:** https://aipathway.com.au/explore-ai/invoice-out-build-standard
+**Spec:** AIP-BS-INVOICE-OUT · **Version:** 2026-10-05 · **Canonical:** https://aipathway.com.au/explore-ai/invoice-out-build-standard
 
 Open specification: the invoice exists in the ledger the day the job finishes. The job system's completion event as the only trigger; every line traced to the job and priced only from the price book read at draft time, with a line the book does not hold parking the invoice; a variation billed only with a signed acceptance attached; a stage invoice for jobs under a building contract, never a progress claim; one invoice per job written once into Xero, MYOB or the job system with its own id back; a release gate held by a person or a threshold rule; parked invoices as a queue with a reason and an owner. Free to implement, with a conformance checklist.
 
@@ -31,7 +31,7 @@ before writing code. It is about 3,000 words and it is the whole job: the
 checks in order, the objects with their fields, what must never be automated,
 and a pass test.
 
-For the current version, fetch https://aipathway.com.au/explore-ai/invoice-out-build-standard.md. This copy is 2026-10-02.
+For the current version, fetch https://aipathway.com.au/explore-ai/invoice-out-build-standard.md. This copy is 2026-10-05.
 
 The checks are also structured data, so you do not have to infer a test plan from
 the prose: https://aipathway.com.au/explore-ai/invoice-out-build-standard/checks.json gives each check a stable id, the ports it
@@ -99,12 +99,12 @@ skill asserts.
 - 5. Builders: a stage invoice, never a claim
 - 6. The release gate
 - 7. What stays with a person
-- 9. Provider: what to stub, and what not to hand-roll
+- 9. Join It to Your Own System: the one write not to hand-roll
 - 10. Conformance checklist
 
 ## Attribution
 
-AIP-BS-INVOICE-OUT, 2026-10-02, AI Pathway, https://aipathway.com.au/explore-ai/invoice-out-build-standard
+AIP-BS-INVOICE-OUT, 2026-10-05, AI Pathway, https://aipathway.com.au/explore-ai/invoice-out-build-standard
 
 Licensed CC BY 4.0. Free to implement, including commercially. If you build to
 this standard, cite the spec ID: a workflow built to a shared standard can be

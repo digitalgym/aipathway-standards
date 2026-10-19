@@ -2,10 +2,10 @@
 
 Source: https://aipathway.com.au/explore-ai/booked-after-hours-build-standard
 Spec: AIP-BS-BOOKED-AFTER-HOURS
-Version: 2026-10-03
+Version: 2026-10-06
 Licence: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
 Publisher: AI Pathway (https://aipathway.com.au)
-Cite as: AIP-BS-BOOKED-AFTER-HOURS 2026-10-03, AI Pathway, https://aipathway.com.au/explore-ai/booked-after-hours-build-standard
+Cite as: AIP-BS-BOOKED-AFTER-HOURS 2026-10-06, AI Pathway, https://aipathway.com.au/explore-ai/booked-after-hours-build-standard
 
 > The open build standard for answering a trade business phone out of hours. Disclosure and recording consent before the first question, a fixed emergency / routine / quote taxonomy, the address resolved by lookup rather than transcribed, one job written not two, typed escalation with the on-call rule, a stub to build against, and a pass test you can stage on your own phone in a minute.
 
@@ -21,7 +21,7 @@ When the checks are green, npx @aipathway/conformance connect gets the hosted pr
 
 ---
 
-An open specification for answering a trade business phone when nobody is there. Build it yourself, hand it to an AI coding agent, or hold whoever built yours to it.
+An open specification for answering a trade business phone when nobody is there. Build it yourself, hand it to an AI coding agent, or hold whoever built yours to it. Or skip the build: every trade business has a phone that rings after hours, so we built the standard into a product, Front Desk on Office Voice.
 
 Used by
 
@@ -68,6 +68,24 @@ How one call runs, end to end
 7. The on-call rule, which is the part we sell: is it an emergency? If yes, wake the on-call person, and only for this. If no, it waits in the morning queue.
 
 The order is the specification, and any step that cannot complete escalates rather than guessing. The filled diamond is the on-call rule from section 7: a person is woken for an emergency and nothing else.
+
+## Done for you: Front Desk
+
+Every trade business has a phone that rings when nobody is there, so we built this standard into a standalone product: Front Desk on Office Voice. It answers your number out of hours, sorts the call into a fixed job type, and writes the job into ServiceM8 or Simpro during the call. It is held to the pass test in section 10 like any other build.
+
+What it does today
+
+- Answers on your own number, forwarded after hours, and says it is an AI and that the call is recorded before it asks anything.
+- Sorts every call into emergency, routine or quote. A call that fits none of them is not written as a job: it takes a message for you.
+- Writes an emergency job into your system first, then puts the caller through to your on-call phone.
+- Rings the on-call once per job. A repeat call about the same job adds a note to it and tells the caller the on-call already has it.
+- Confirms the address with Google before writing a job, checks it against your service area, and tells an out-of-area caller plainly. An address it cannot confirm goes to a person instead of being written as heard.
+- Writes one job per caller, not two: a second call about the same problem adds to the open job. Holds the trade heads-up text out of hours unless the job is an emergency.
+- Asks before texting the caller, and sends the booking text only if they say yes. Every hand-off carries a fixed reason (a price question, a complaint, an address it could not confirm), and a job your system did not take is never reported as booked.
+
+Start a 30-day free trial, connect ServiceM8 or Simpro and forward your number after hours; prices are on the [pricing page](https://aipathway.com.au/pricing). If you would rather we set it up for you, that is a fixed-price set-up: [pick a time](https://aipathway.com.au/ai-audit#book).
+
+Rather build it yourself? Everything you need is below, free. Joining it to your own inbox, ledger or a bigger workflow? See joining it to your own system. [Front Desk](https://office-voice.com/) is held to the pass tests on this page like anything else.
 
 ## 1. Scope, and what is out of it
 
@@ -147,7 +165,7 @@ call_outcome:
   transcript_uri: string
 ```
 
-`unclassified` and `escalated`are first-class outcomes, not errors. A system that cannot record “I did not know” will quietly guess instead, which is the failure this whole standard exists to prevent.
+`unclassified` and `escalated` are first-class outcomes, not errors. A system that cannot record “I did not know” will quietly guess instead, which is the failure this whole standard exists to prevent.
 
 ## 6. Write-back, and writing once
 
@@ -198,32 +216,20 @@ hosting:
 
 Build against `local.mock_voice` for as long as you like. You only switch the provider over when you want a real phone number, and that is the moment anything is charged. What that costs is on [the pricing page](https://aipathway.com.au/pricing).
 
-## 9. Switching it on, if you decide to
+## 9. Join It to Your Own System
 
-Nothing above required us. If the checks are green against the stub, you have a working build and you are welcome to stop here. This is what happens if you want a real number behind it, in the order it happens, so the decision is not a conversation.
+Nothing above required us. If the checks are green against the stub, you have a working build and you are welcome to stop here. This is how the live call joins your own system if you want a real number behind it, in the order it happens, so the decision is not a conversation.
 
-1. An account, and a trial before anything is charged.
+1. **An account, and a trial before anything is charged.** the pricing page
 2. **Connect the job system.** write_job
 3. The number, which is the part people worry about.
-
-What the hosted step does not yet hold
-
-Front Desk does not yet conform to this whole standard. Six checks are not held by the hosted call today:
-
-- Check 3, fixed taxonomy.
-- Check 4, address resolved.
-- Check 5, service area.
-- Check 8, on-call once per job.
-- Check 9, typed escalation.
-- Check 10, consent before SMS.
-
-So the second call of the pass test will fail on the hosted product today: on-call is alerted again. Treat the hosted step as the number, the disclosure, the recording and the write, and plan for these six rather than assume them.
+4. Set the service area.
 
 What happens to the build you just wrote
 
 It keeps running and it stays yours. Section 8 splits the hosting three ways, and switching the provider only moves the middle one: the board, the queue and the reporting stay on your host, the live call moves to ours, and the system of record was always theirs. The two halves meet in the job system rather than in an integration you have to maintain. Your board reads the jobs; the call writes them.
 
-Then run your own conformance suite again with the provider flipped. The checks that reported `with_us` on the stub are the ones that can finally be evaluated, and check 12 is the whole standard holding at once on live telephony. Against the hosted step today it will not go green, for the six reasons in the box above.
+Then run your own conformance suite again with the provider flipped. The checks that reported `with_us` on the stub are the ones that can finally be evaluated, and check 12 is the whole standard holding at once on live telephony.
 
 ## 10. The pass test
 
@@ -250,7 +256,7 @@ A build conforms to this standard when every line is true. Hand this to whoever 
 - **11. The log survives.** Recording, transcript, tool calls and outcome are retained together and retrievable by call_id.
 - **12. The pass test passes.** Section 10, staged on the real system, both calls, including the price question.
 
-**Eleven of these twelve checks run on your own machine, against the stub, before you talk to anybody. The last one is a live call, and that one runs with us.** That last one is the step this standard told you not to hand-roll, so a red result there is not a bug in your build. Point the number at us and the live call runs, but the hosted step does not yet hold checks 3, 4, 5, 8, 9 and 10 (section 9 says why), so check 12 is not yet green there either.
+**Eleven of these twelve checks run on your own machine, against the stub, before you talk to anybody. The last one is a live call, and that one runs with us.** That last one is the step this standard told you not to hand-roll, so a red result there is not a bug in your build. Point the number at us and the live call runs, and section 9 says how.
 
 ## The parts that move
 

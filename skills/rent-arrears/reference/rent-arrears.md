@@ -306,7 +306,7 @@ Checked as at 18 September 2026
 
 **Do Not Call Register Act 2006 (Cth), administered by ACMA.** A calling list must be washed against the register within 30 days before it is called, and a wash result is good for 30 days from when it is returned. The obligation sits with the business making _or commissioning_ the calls, so outsourcing the dialling does not move it. Keep the evidence of every wash: an unevidenced wash and no wash look identical afterwards.
 
-**Arrears thresholds and notice periods are per state and they move.**Queensland: more than 7 days in arrears before a notice to remedy breach (Form 11), which gives 7 days to remedy, 5 in a caravan park. New South Wales: a termination notice once 14 days in arrears, with at least 14 days to vacate, and no separate remedy notice for rent. Victoria: 14 days in arrears, then 14 days’ notice. Hold these as dated values keyed by jurisdiction, never as constants.
+**Arrears thresholds and notice periods are per state and they move.** Queensland: more than 7 days in arrears before a notice to remedy breach (Form 11), which gives 7 days to remedy, 5 in a caravan park. New South Wales: a termination notice once 14 days in arrears, with at least 14 days to vacate, and no separate remedy notice for rent. Victoria: 14 days in arrears, then 14 days’ notice. Hold these as dated values keyed by jurisdiction, never as constants.
 
 **Check these against the primary instrument before you rely on them**, and store the date you checked beside the value rather than hard-coding it. This standard tells you the shape and where to look. It is not legal advice and it does not tell you that anything complies.
 

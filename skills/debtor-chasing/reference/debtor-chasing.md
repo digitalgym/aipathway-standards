@@ -2,10 +2,10 @@
 
 Source: https://aipathway.com.au/explore-ai/debtor-chasing-build-standard
 Spec: AIP-BS-DEBTOR-CHASING
-Version: 2026-10-03
+Version: 2026-10-06
 Licence: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
 Publisher: AI Pathway (https://aipathway.com.au)
-Cite as: AIP-BS-DEBTOR-CHASING 2026-10-03, AI Pathway, https://aipathway.com.au/explore-ai/debtor-chasing-build-standard
+Cite as: AIP-BS-DEBTOR-CHASING 2026-10-06, AI Pathway, https://aipathway.com.au/explore-ai/debtor-chasing-build-standard
 
 > Build standard: the method for chasing your own debtor book. Four buckets, why ranking by age sends you to the wrong end of the ledger, the opener that returns a date, promise-to-pay as an object, and the compliance gate that is the one step not to hand-roll.
 
@@ -21,7 +21,7 @@ When the checks are green: Enable Get Paid on Office Voice / Recover; npx @aipat
 
 ---
 
-Pull five fields, sort into four buckets, rank by amount at risk, and leave every call with a date. Free to implement. The one step you should not build yourself is named, and it is the thing we sell.
+Pull five fields, sort into four buckets, rank by amount at risk, and leave every call with a date. Free to implement, with everything you need below. Or skip the build: every business with a debtor book does this, so we built the standard into a product, Get Paid on Office Voice.
 
 Used by
 
@@ -61,6 +61,23 @@ The method, end to end
 7. Date agreed? If yes, the promise is recorded with a date on it and the run ends. If no, schedule the next touch with a date, which goes back through the gate before it rings.
 
 The top row is a weekend of work and stays yours. The gate is the step between ranking a debtor and ringing one, and every later touch comes back through it. That is the part we sell, and section 10 says why.
+
+## Done for you: Get Paid
+
+Every business with a debtor book does this job, so we built this standard into a standalone product: Get Paid on Office Voice. It reads your Xero debtor book, rings each customer on a real line inside the gate in section 10, and records what was agreed as a date. It is held to the pass test in section 12 like any other build.
+
+What it does today
+
+- Rings customers with invoices 30 or more days overdue, one call per customer covering every invoice they owe, on a real Australian line, and says it is an AI at the start of every call.
+- Holds calling hours (9am to 8pm weekdays, 9am to 5pm Saturdays, no Sundays) in the debtor’s own state, and that state’s public holidays.
+- Re-reads every invoice from Xero just before the dial. A paid, voided or deleted invoice is not rung, and the audit row names the read.
+- Checks promises, disputes and opt-outs again just before every dial, and records a promise to pay as a date, with the follow-up moved to it.
+- Reads the balance out, can text a payment link mid-call, and captures a dispute for a person.
+- Places your list in your order when you send one, and keeps a recording and a record of every call.
+
+Start a 30-day free trial, connect Xero and switch Get Paid on; prices are on the [pricing page](https://aipathway.com.au/pricing). If you would rather we set it up for you, that is a fixed-price set-up: [pick a time](https://aipathway.com.au/ai-audit#book).
+
+Rather build it yourself? Everything you need is below, free. Joining it to your own inbox, ledger or a bigger workflow? See joining it to your own system. [Get Paid](https://office-voice.com/) is held to the pass tests on this page like anything else.
 
 ## 1. What You Actually Need Off the Ledger
 
@@ -194,11 +211,7 @@ The gate has to sit underneath the ranking, not beside it. If a high score can p
 
 You can build this. What you cannot easily build is the part where it is still true in eight months, after the model changed, the script was edited by someone else, and the person who wrote the gate moved on.
 
-**Where the Office Voice gate stands today.** AI disclosure at the start of every call, the Do Not Call Register, and calling hours of 9am to 8pm on weekdays and 9am to 5pm on Saturdays, nothing on Sundays. Three parts of the list above are not yet held:
-
-- Hours are checked in your business’s timezone
-- National public holidays only.
-- The stop on payment is applied when a run is put together, not at dial time.
+**Where the Office Voice gate stands today.** AI disclosure at the start of every call, the Do Not Call Register, and calling hours of 9am to 8pm on weekdays and 9am to 5pm on Saturdays, nothing on Sundays, judged in the debtor’s own state (from the Xero contact’s region or postcode; where neither is known, your business’s timezone, with an audit row saying so). Every invoice is re-read from the ledger at dial time: one paid, voided or deleted since it was queued is not rung, and the audit row names the read. Public holidays are blocked for the debtor’s state, national and state.
 
 **The pass test.** Take your top-ranked debtor, mark the invoice paid in the ledger, and let the chase run anyway. They must not be rung, and the audit trail must tell you why not. Run it again with the invoice still open and the clock at 8:30pm, and it must hold until morning. Both take a minute to stage from your own data. Run the same two against whatever you built yourself, and against any provider, us included. If it rings, the gate is advice rather than a rule, which is this section in one sentence. Office Voice today holds the 8:30pm run. It does not yet pass the paid-invoice leg on its own: see the note below.
 
@@ -208,17 +221,11 @@ You can build this. What you cannot easily build is the part where it is still t
 
 The method above is yours whatever you decide. This is what the hosted call does and does not do today, the shape of the run, and the checklist to hold the result to.
 
-## 11. Hand Over the Call
+## 11. Join It to Your Own System: Hand Over the Call
 
 Everything above leaves you with a ranked list and an opener for each name. If you want the calls made by Office Voice, which holds the parts of the gate in section 10 that are marked as held, you send it the names and it queues the calls. Build against a stub first. The conformance kit has no live mapping for this standard yet, so the provider line below does not switch your run to a live line. Not yet.
 
-Be clear on what the hosted call does today, because it is not the method above:
-
-- It covers invoices 30 or more days overdue.
-- It does not keep your ranking.
-- It is one call per invoice, not per customer.
-- It uses Office Voice’s own opener
-- A promise you send back does not stop a call you queue through the API.
+Calls are placed in the order you send them, so your ranking stands. A promise, a dispute or an opt-out is checked again just before every dial, including a call already queued when the promise arrives. The queue matches invoices 30 or more days overdue; a name you send with nothing that old comes back as unmatched and is not called.
 
 ```
 provider:
@@ -242,16 +249,17 @@ curl -H "Authorization: Bearer ovk_live_..." \
   "https://office-voice.com/api/v1/contacts?kind=lapsed_promise&limit=100"
 
 # The debtor rang YOUR office and gave a date. Send it back, so the
-# follow-up moves with it and Office Voice's own scheduled runs hold
-# until that date. Calls queued through the API do not check it yet.
+# follow-up moves with it and no call rings before that date, including
+# calls already queued through the API.
 curl -X POST https://office-voice.com/api/v1/promises \
   -H "Authorization: Bearer ovk_live_..." \
   -H "Content-Type: application/json" \
   -d '{"tenant_id":"...","thread_ref":"INV-1042","amount":2400,
         "date":"2026-09-30","method":"bank_transfer"}'
 
-# Queue calls for named customers in one client org. Needs campaigns:initiate.
-# Only invoices 30+ days overdue match; anything else comes back as unmatched.
+# Queue calls for named customers in one client org, in your ranked order.
+# Needs campaigns:initiate. Only invoices 30+ days overdue match; anything
+# else comes back as unmatched.
 curl -X POST https://office-voice.com/api/v1/campaigns \
   -H "Authorization: Bearer ovk_live_..." \
   -H "Content-Type: application/json" \
@@ -259,7 +267,7 @@ curl -X POST https://office-voice.com/api/v1/campaigns \
         "customer_external_ids":["...","..."]}'
 ```
 
-Dialling stays in the product, and every queued call goes through the gate at dial time: AI disclosure, DNCR, and calling hours in your business’s timezone. A single named customer also needs a `basis` (callback, existing_job, existing_invoice or they_asked). The full reference is at [office-voice.com/help/api](https://office-voice.com/help/api).
+Dialling stays in the product, and every queued call goes through the gate at dial time: AI disclosure, DNCR, calling hours in the debtor’s own state, and a fresh read of the ledger and of any promise. A single named customer also needs a `basis` (callback, existing_job, existing_invoice or they_asked). The full reference is at [office-voice.com/help/api](https://office-voice.com/help/api).
 
 ## 12. The Run, Step by Step
 

@@ -18,7 +18,7 @@ stays_with_person:
 
 # Follow Up Build Standard
 
-**Spec:** AIP-BS-FOLLOW-UP · **Version:** 2026-10-03 · **Canonical:** https://aipathway.com.au/explore-ai/follow-up-build-standard
+**Spec:** AIP-BS-FOLLOW-UP · **Version:** 2026-10-05 · **Canonical:** https://aipathway.com.au/explore-ai/follow-up-build-standard
 
 Open specification: chasing what is owed to the business that is not money. A quote decision, a signed variation, a certificate, a purchase order number or a form, each an open item with a kind, an owner on the other side and a due date; ranked by value at risk then age; a capped cadence on channels with consent; a call that discloses first and records one outcome as a date or a decision; stops the moment the item arrives; escalates to a person on a no, a dispute or the cap. The call is the hosted step. Free to implement, with a conformance checklist.
 
@@ -29,7 +29,7 @@ before writing code. It is about 3,000 words and it is the whole job: the
 checks in order, the objects with their fields, what must never be automated,
 and a pass test.
 
-For the current version, fetch https://aipathway.com.au/explore-ai/follow-up-build-standard.md. This copy is 2026-10-03.
+For the current version, fetch https://aipathway.com.au/explore-ai/follow-up-build-standard.md. This copy is 2026-10-05.
 
 The checks are also structured data, so you do not have to infer a test plan from
 the prose: https://aipathway.com.au/explore-ai/follow-up-build-standard/checks.json gives each check a stable id, the ports it
@@ -98,12 +98,12 @@ skill asserts.
 - 6. The cadence and the cap
 - 7. The call
 - 8. What stays with a person
-- 9. Provider: what to stub, and what not to hand-roll
+- 9. Join It to Your Own System: What to Stub, and What Not to Hand-Roll
 - 10. Conformance checklist
 
 ## Attribution
 
-AIP-BS-FOLLOW-UP, 2026-10-03, AI Pathway, https://aipathway.com.au/explore-ai/follow-up-build-standard
+AIP-BS-FOLLOW-UP, 2026-10-05, AI Pathway, https://aipathway.com.au/explore-ai/follow-up-build-standard
 
 Licensed CC BY 4.0. Free to implement, including commercially. If you build to
 this standard, cite the spec ID: a workflow built to a shared standard can be

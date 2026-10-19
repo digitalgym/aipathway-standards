@@ -2,10 +2,10 @@
 
 Source: https://aipathway.com.au/explore-ai/follow-up-build-standard
 Spec: AIP-BS-FOLLOW-UP
-Version: 2026-10-03
+Version: 2026-10-05
 Licence: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
 Publisher: AI Pathway (https://aipathway.com.au)
-Cite as: AIP-BS-FOLLOW-UP 2026-10-03, AI Pathway, https://aipathway.com.au/explore-ai/follow-up-build-standard
+Cite as: AIP-BS-FOLLOW-UP 2026-10-05, AI Pathway, https://aipathway.com.au/explore-ai/follow-up-build-standard
 
 > Open specification: chasing what is owed to the business that is not money. A quote decision, a signed variation, a certificate, a purchase order number or a form, each an open item with a kind, an owner on the other side and a due date; ranked by value at risk then age; a capped cadence on channels with consent; a call that discloses first and records one outcome as a date or a decision; stops the moment the item arrives; escalates to a person on a no, a dispute or the cap. The call is the hosted step. Free to implement, with a conformance checklist.
 
@@ -21,7 +21,7 @@ When the checks are green: Enable Get Paid on Office Voice / Recover; npx @aipat
 
 ---
 
-How the quote nobody answered, the document nobody sent back and the decision somebody owes you get chased: on a written cadence, over channels they agreed to, until it arrives and not one touch after. Written so you can build it yourself.
+How the quote nobody answered, the document nobody sent back and the decision somebody owes you get chased: on a written cadence, over channels they agreed to, until it arrives and not one touch after. Written so you can build it yourself. Or skip the build: chasing a quote is common enough that we built the standard into a product, Get Paid on Office Voice.
 
 Used by
 
@@ -60,7 +60,26 @@ One open item, owed to arrived
 6. If yes, the touch goes: a text, an email, or the call. The call opens with the AI identification and the recording notice, asks for the one thing owed, and records the answer as a date, a decision, a no or a dispute. That call is the hosted step.
 7. If the answer arrived, or the item went to a person on a no, the chase stops. If not, the next touch comes back through the same gate at the next spacing, up to the cap, and at the cap the item goes to a named person with its history.
 
-The open item is the trigger, and the plain diamond is the gate a builder proves on the stub: not arrived, not owed by us, inside the cap, on a consented channel. The filled diamond is the call, disclosed first with one ask and one recorded answer. The live line is the hosted step, and section 9 says where the hosted quote call differs from this. The loop is the cadence, up to the cap.
+The open item is the trigger, and the plain diamond is the gate a builder proves on the stub: not arrived, not owed by us, inside the cap, on a consented channel. The filled diamond is the call, disclosed first with one ask and one recorded answer. The live line is the hosted step, and section 9 says how to join it to your own build. The loop is the cadence, up to the cap.
+
+## Done for you: Get Paid
+
+Every business that sends quotes does this job, so we built this standard into a standalone product: Get Paid on Office Voice. It reads the quotes you have sent that nobody has answered, rings each customer on a real line, disclosed and recorded as section 7 asks, and keeps the outcome of every call. It chases the quote, the first kind in section 2.
+
+What it does today
+
+- Reads your sent quotes that nobody has accepted or declined from Xero, and each morning between 9 and 10 rings the customer on any quote a day or more old, inside a daily call cap for the business.
+- Says it is an AI, and that the call is recorded, at the start of every call.
+- Places every call on the existing-customer basis, a quote you sent them, so no Do Not Call Register wash runs on it.
+- Holds calling hours (9am to 8pm weekdays, 9am to 5pm Saturdays, no Sundays) in the customer’s own state, and national public holidays.
+- Re-reads the quote just before the dial, and stands the call down if the quote has been accepted or declined since.
+- Leaves out anyone who has opted out or is marked no call, and holds a quote until the day the customer asked to be rung back. A call you queue is checked again for an opt-out, a promised date or a dispute just before it rings.
+- On the call it checks the quote arrived, answers questions without re-quoting or discounting, and books a callback or puts the customer through to your team. On a no it asks once why, and ends politely.
+- Places your list in your order when you send one, and keeps a recording and a record of every call.
+
+Start a 30-day free trial, connect Xero and switch Get Paid on; prices are on the [pricing page](https://aipathway.com.au/pricing). If you would rather we set it up for you, that is a fixed-price set-up: [pick a time](https://aipathway.com.au/ai-audit#book).
+
+Rather build it yourself? Everything you need is below, free. Joining it to your own inbox, ledger or a bigger workflow? See joining it to your own system. [Get Paid](https://office-voice.com/) is held to the pass tests on this page like anything else.
 
 ## 1. What this standard covers
 
@@ -168,7 +187,7 @@ The channel follows consent, not convenience. A contact who gave an email addres
 
 Most of the cadence is a text or an email, and those a builder proves on the stub. The call is different. It opens with the disclosure, that this is an AI calling for the business and that the call is recorded, before anything is asked. Then it asks for the one thing owed and nothing else. Then it records the answer as an object: a date, a decision, a no, or a dispute. A sentence in a transcript that somebody will read on Friday is not an answer. A date is.
 
-The call is where the standard stops being provable at home. The stub can show the first turn was the disclosure. Only a live line shows the words were heard. Every dial needs a lawful basis on the record, and a number with none needs a wash against the Do Not Call Register, which takes an agreement a stub cannot hold; the Debtor Chasing standard dates the obligation (as at 3 October 2026). Calling hours need a real clock in the contact’s real day. Those, with the recording as proof, are the hosted step, and the provider block below says exactly how far it goes today.
+The call is where the standard stops being provable at home. The stub can show the first turn was the disclosure. Only a live line shows the words were heard. Every dial needs a lawful basis on the record, and a number with none needs a wash against the Do Not Call Register, which takes an agreement a stub cannot hold; the Debtor Chasing standard dates the obligation (as at 3 October 2026). Calling hours need a real clock in the contact’s real day. Those, with the recording as proof, are the hosted step, and section 9 says how to join it to your own build.
 
 What the call never does: argue with a no, ask a second time after a dispute, or offer a discount, an extension or any concession to get the answer. It records what was said and hands the item to a person. A concession offered by a machine to a customer who was about to say yes anyway is money gone for nothing, and one offered to a customer who had a real complaint is worse.
 
@@ -181,9 +200,9 @@ What the call never does: argue with a no, ask a second time after a dispute, or
 - Writing the cadence: the cap, the gap, the channels and the name at the end of it.
 - Clearing we_owe. Only a person can say the business has done its part.
 
-## 9. Provider: what to stub, and what not to hand-roll
+## 9. Join It to Your Own System: What to Stub, and What Not to Hand-Roll
 
-One step not to hand-roll: the call on a real line, disclosed and recorded, with the lawful basis for each dial and calling hours underneath it. The hosted quote call does more than this standard allows and covers less than it lists, and the block says where. Everything else a coding agent builds against the stub in an afternoon.
+One step not to hand-roll: the call on a real line, disclosed and recorded, with calling hours and the lawful basis for each dial underneath it. That is the Get Paid quote call. Everything else a coding agent builds against the stub in an afternoon, and this is what you need to join the two.
 
 ```
 provider:
@@ -194,29 +213,26 @@ provider:
 the hosted step                      # Office Voice, Recover, sold as Get Paid
   - the call itself, on a real line, for open quotes
   - the AI identification and the recording notice, first
-  - the lawful basis recorded on every dial (existing-customer
-    follow-up), with a wash against the Do Not Call Register for
-    any number that has none. The quote call always carries that
-    basis, so no wash has run on these calls
-  - calling hours
+  - the existing-customer basis on every dial, so no register
+    wash runs on these calls
+  - calling hours in the customer's own state
   - the recording and the outcome, as the proof
   The quote call is its own call (outbound.quote_closer), a sibling
   of the invoice call in the same runtime, which is how one product
   serves this standard and Debtor Chasing.
 
-where the hosted quote call differs from this standard
-  - switched on, it runs its own run each morning on every
-    quote sent a day or more ago, under a daily cap per business,
-    with no gap per quote, no attempt cap and no ranking by value.
-    A build that keeps the ranking, the cadence and the cap local
-    leaves the quote campaign off and orders the calls itself
-  - it is not one ask: it answers objections, books the work, and
-    can offer to hold the quote or look at ways to bring the cost
-    down. On a no it asks one feedback question. It can transfer
-    to a person, but a no is not handed to a named person on the
-    record
-  - variations, certificates, PO numbers and forms: Not yet. No
-    hosted call is built for them
+joining it to your build
+  - the hosted call takes open quotes, and no other kind of item
+  - switched on, it rings each morning on open quotes sent a day
+    or more ago, inside the business's daily call cap. Calls you
+    queue count against the same cap
+  - to queue quote calls in your own ranked order: POST
+    /api/v1/campaigns with query_key quotes_older_than_60d or
+    quotes_over_5000_not_booked, and customer_external_ids in
+    order. Needs the campaigns:initiate scope. At most 50 per
+    request, and a single customer needs a basis. A name with no
+    quote the query matches comes back unmatched and is not rung
+  - every queued call goes through the same gate at dial time
 
 stays local                          # yours, and the standard
   - the register of open items, on your own records

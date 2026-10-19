@@ -48,6 +48,7 @@ stale copy. The package is the harness; the site is the standard.
 | `AIP-BS-INBOX-TRIAGE` | [`inbox-triage`](skills/inbox-triage/SKILL.md) | Inbox Triage Build Standard |
 | `AIP-BS-FOLLOW-UP` | [`follow-up`](skills/follow-up/SKILL.md) | Follow Up Build Standard |
 | `AIP-BS-CASH-SEAM` | [`cash-seam`](skills/cash-seam/SKILL.md) | Cash Seam Build Standard |
+| `AIP-BS-SIMPRO-CLAUDE-CONNECTOR` | [`simpro-claude-connector`](skills/simpro-claude-connector/SKILL.md) | Simpro Claude Connector Build Standard |
 | `AIP-BS-TWO-RECORDS` | [`two-records`](skills/two-records/SKILL.md) | Two Records Build Standard |
 | `AIP-BS-TIMESHEET-CHECK` | [`timesheet-check`](skills/timesheet-check/SKILL.md) | Timesheet Check Build Standard |
 | `AIP-BS-MATERIAL-ORDER` | [`material-order`](skills/material-order/SKILL.md) | Material Order Build Standard |
