@@ -110,18 +110,18 @@ An Item whose thread already has one is the defect this standard exists to make 
 
 The order is the claim. The kind comes before the filing, the filing before the queue, and the queue before anything is sent, because a build that acknowledges first and files later produces a customer who was promised a reply on an item nobody owns.
 
-1. Every message gets exactly one kind from a closed list.
-2. A message about a job or a supplier is filed against that record by id.
-3. A supplier invoice attachment is filed as evidence with its hash and the message id.
-4. Every classified message lands in the queue for its kind, with a named owner and a due date.
-5. A complaint is escalated to a named person with the full message, and nothing is sent to the customer.
-6. The only automatic outbound is an acknowledgement, and any substantive reply carries a named person's release.
-7. Each kind carries a response clock, and an item past its clock escalates to the owner's manager.
-8. A follow-up in the same thread updates the existing item.
-9. Spam is filed to quarantine with its hash, retrievable, and never deleted by the machine.
-10. Message id, kind, record, owner, clock, what was sent and by whom are retrievable by message.
-11. It survives the builder.
-12. The pass test passes.
+1. Every message gets exactly one kind from a closed list. The kinds are supplier_invoice, quote_request, job_update, statement, complaint, remittance, spam and other. Every message gets one of those and only one. A free-text kind, or a message with two kinds or none, fails.
+2. A message about a job or a supplier is filed against that record by id. The message is attached to the job or the supplier it belongs to, by the record's own id, never as a copy in a folder. A filed message with no record id fails. A message classified other may stay unfiled, but it must become a task for a person.
+3. A supplier invoice attachment is filed as evidence with its hash and the message id. The attachment is the artefact, filed as evidence carrying its hash, the message id and the supplier record, so the Invoice Check standard can read it where it was filed. The body text alone is not the artefact.
+4. Every classified message lands in the queue for its kind, with a named owner and a due date. Each kind has a queue, and the queue has a named owner and a response clock. The item takes the owner's name and a due date from that clock. A message with no queue, no owner or no due date fails.
+5. A complaint is escalated to a named person with the full message, and nothing is sent to the customer. A complaint is never acknowledged, answered or summarised by the machine. It is handed whole to a named person, and the item is marked escalated. Any outbound on a complaint fails.
+6. The only automatic outbound is an acknowledgement, and any substantive reply carries a named person's release. The machine may send one thing on its own: an acknowledgement saying a person will reply and by when. Anything that quotes a price, a date or a decision leaves only after a release event naming a person. A reply with no release fails.
+7. Each kind carries a response clock, and an item past its clock escalates to the owner's manager. The clock belongs to the kind, not to whoever happens to be looking. An open item still unanswered when its clock runs out is escalated to the owner's manager, named. It never just gets older.
+8. A follow-up in the same thread updates the existing item. One thread is one item. A second message in a thread the build has already raised an item for is filed to that item, and the item now carries both message ids. A second item for one thread fails.
+9. Spam is filed to quarantine with its hash, retrievable, and never deleted by the machine. A message classified spam is moved to quarantine with its hash, where a person can find it. The machine never deletes a message. A message the machine trashed fails.
+10. Message id, kind, record, owner, clock, what was sent and by whom are retrievable by message. When the customer says nobody answered, the record shows the message, its kind, the record it was filed to, the owner, the due date, every outbound and the person who released it.
+11. It survives the builder. Someone other than the builder can explain what it does, and it runs on an account the business owns.
+12. The pass test passes. On the real mailbox for a week: a real supplier invoice filed as evidence against its supplier, a real complaint reaching a person untouched, a real thread of three messages held as one item, and nothing substantive sent without a release.
 
 ## 4. The four queues
 

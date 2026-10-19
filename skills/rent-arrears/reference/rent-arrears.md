@@ -75,9 +75,9 @@ An arrears position is the output of a calculation over the ledger, not a number
 
 Three things have to be derived together, and reported together:
 
-- Paid-to date
-- Days in arrears
-- Balance
+- **Paid-to date**: the date rent is paid up to, which is the figure legislation and tribunals reason about
+- **Days in arrears**: derived from paid-to and today, not from when someone last looked
+- **Balance**: the dollar figure, which is the least useful of the three on its own
 
 **Report the paid-to date first.** A balance of $1,840 means nothing without knowing whether that is a fortnightly rent eight days late or a weekly rent a month behind, and the statutory clock runs on days, not dollars.
 
@@ -173,12 +173,12 @@ Text and email are one-way. They deliver a message and wait. A conversation is d
 
 What hardening a conversation actually means
 
-- Every branch a real tenant takes.
-- Recognising a stop condition mid-sentence.
-- Never negotiating.
-- Compliance while talking.
-- Reading the live ledger during the call.
-- Writing back what was actually said,
+- **Every branch a real tenant takes.** “I paid yesterday.” “I lost my job.” “Talk to my advocate.” “That’s not my rent, I split it with my partner.” Each is a different outcome and one of them ends the call immediately.
+- **Recognising a stop condition mid-sentence.** Hardship does not arrive as a form field. It arrives halfway through an explanation, and the conversation has to stop pressing the moment it does.
+- **Never negotiating.** A payment arrangement is a decision with legal weight. A conversation may capture a proposal; it must not agree to one.
+- **Compliance while talking.** Disclosure that it is an AI, permitted contact hours, recording consent, the Do Not Call position, and what happens if the person asks to stop.
+- **Reading the live ledger during the call.** If a payment landed this morning, the conversation needs to know before its second sentence, not after.
+- **Writing back what was actually said,** in a form the next person and a tribunal can both read.
 
 This is the part of the standard we would not expect anyone to build from scratch, and the honest reason is not complexity. It is that a conversation fails in public, with a tenant, on a topic with legal consequences. The iteration required to make one safe is not a weekend, and the failure mode is not a wrong number in a queue.
 
@@ -190,10 +190,10 @@ The rest of this standard stands on its own. A build that stops at the short lis
 
 ## 8. What breaks after it works
 
-- A threshold changes and nobody notices.
-- The suppression list decays.
-- It leaves when they do.
-- Nobody can show what was sent.
+- **A threshold changes and nobody notices.** The escalation dates are now wrong across the whole rent roll, in the direction of acting too late or too early.
+- **The suppression list decays.** Hardship flags and payment arrangements are set once and never reviewed, so either they expire and the chasing resumes wrongly, or they never expire and real arrears goes unworked.
+- **It leaves when they do.** Which tenants are genuinely struggling, which owners want a hard line, which references are habitually wrong: none of it is in the system.
+- **Nobody can show what was sent.** At a tribunal the question is what was communicated and when. A sequence that fired without keeping the sent copy cannot answer it.
 
 ## 9. What It Is Worth
 

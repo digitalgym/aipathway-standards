@@ -78,12 +78,12 @@ Rules are also per jurisdiction. Intervals, notice periods and entry rules diffe
 
 One row per obligation per property. It needs enough on it that somebody who has never seen the property can act:
 
-- What is required
-- The anchor
-- The derived due date
-- Evidence of last completion
-- Who is responsible
-- State
+- **What is required**: with the rule version that says so
+- **The anchor**: the date the interval counts from, and where that date came from
+- **The derived due date**: computed, shown, never typed in
+- **Evidence of last completion**: the certificate or report, attached, not just a tick
+- **Who is responsible**: the agency, the owner, or the tenant, because it is not always you
+- **State**: one of the four below
 
 The evidence field is the one people leave out and the one a tribunal asks for. A tick confirming an alarm was tested is worth very little without the report that proves it.
 
@@ -164,10 +164,10 @@ A contractor emails a PDF certificate. Matching it to the right property and obl
 
 A spreadsheet calendar works while the person who built it is reading it every week. The failures come later:
 
-- A rule changes and nothing recomputes.
-- It leaves when they do.
-- Completion is recorded without evidence.
-- The breach list gets cleared.
+- **A rule changes and nothing recomputes.** Every date in the column is now wrong and there is no way to tell which. This is the failure the whole standard is designed around.
+- **It leaves when they do.** The knowledge of which properties are exceptions, which owners always decline, and which contractor actually turns up is not in the spreadsheet.
+- **Completion is recorded without evidence.** Ticks accumulate, certificates do not, and the file is worth nothing at a tribunal.
+- **The breach list gets cleared.** Someone tidies up the overdue rows, and with them the record that anything was ever missed.
 
 ## 8. What It Is Worth
 

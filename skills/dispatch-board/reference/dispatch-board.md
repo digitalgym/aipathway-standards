@@ -109,18 +109,18 @@ A Slot with a null resolved address is the defect this standard exists to make u
 
 The order is the claim. The address resolves before the licence is read, and the licence is read before the slot is placed, because a build that fits the day first and checks afterwards produces a full board with the wrong people on it.
 
-1. No slot until the address resolves.
-2. A licence requirement is a rule read from the record, never assumed.
-3. The slot sits inside the customer's window and after the previous job plus travel.
-4. One slot per job, written once, updated on a second event.
-5. An emergency takes a slot only when a named dispatcher accepts the displacement.
-6. The customer is told once per slot, on a channel they consented to.
-7. The tech's notification carries the job, the address, the window and what the customer said.
-8. A change to the job moves the slot and tells each affected party exactly once.
-9. A job that cannot be slotted is escalated with a reason and an owner.
-10. Who was assigned, when, by whom or by which rule, and what the customer was told are retrievable by job.
-11. It survives the builder.
-12. The pass test passes.
+1. No slot until the address resolves. A job is given a slot only after its address resolves to a real place. An address that will not resolve leaves the job unslotted and named to a person, never slotted to where somebody hopes it is.
+2. A licence requirement is a rule read from the record, never assumed. A job carrying a licence requirement (gas, electrical, height) is assigned only to a tech whose licence record covers that code and is current on the day. The rule is read before the assignment. No person overrides it, and no build infers it from a name or a job history.
+3. The slot sits inside the customer's window and after the previous job plus travel. A slot starts no earlier than the customer's window opens and ends no later than it closes. Where the tech has a previous job, the slot starts after that job's end plus the travel from its resolved address. Travel is read, never guessed.
+4. One slot per job, written once, updated on a second event. The write is keyed to the job. A second scheduling event for the same job updates the existing slot or does nothing. A null external id is a failed write, not a slot.
+5. An emergency takes a slot only when a named dispatcher accepts the displacement. An emergency may displace a slotted job only after a named person accepts that displacement. The displaced job is re-slotted or escalated with a reason and an owner. It is never silently dropped from the board.
+6. The customer is told once per slot, on a channel they consented to. One confirmation goes to the customer for each slot, on a channel with consent recorded, after the consent is checked. A second identical message, or a message to a customer with no consent on that channel, is a failure. A customer without consent is named to a person to phone.
+7. The tech's notification carries the job, the address, the window and what the customer said. The tech is told with the record: the job id, the resolved address, the customer's window, and the customer's own words about the fault. A bare notification saying there is a new job is not a notification.
+8. A change to the job moves the slot and tells each affected party exactly once. When the job's time, address or tech changes after the slot is written, the slot is updated in place and one fresh message goes to each party the change touches. A change that leaves the old slot in place, or that messages anybody twice, is a failure.
+9. A job that cannot be slotted is escalated with a reason and an owner. No licensed tech, an address that will not resolve, a window no tech can meet: each leaves the job in a queue with a reason and a named owner. Nothing is left off the board in silence.
+10. Who was assigned, when, by whom or by which rule, and what the customer was told are retrievable by job. When the customer says nobody told them, the record shows the slot, the tech, the person or rule that set it, and the message the customer was sent with its time.
+11. It survives the builder. Someone other than the builder can explain what it does, and it runs on an account the business owns.
+12. The pass test passes. On the real job system: one job scheduled twice, one licence-gated job, one emergency displacing a slot with a dispatcher's acceptance, one change to a slotted job.
 
 ## 4. The four queues
 

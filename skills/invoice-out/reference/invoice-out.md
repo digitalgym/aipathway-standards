@@ -128,18 +128,18 @@ An Invoice with status sent and no release is the defect this standard exists to
 
 The order is the claim. The book is read before a line is priced and the existing invoice is read before one is written, because a build that does those the other way round produces a plausible invoice with last month’s rate, twice.
 
-1. The job's completion is the only trigger.
-2. Every invoice line traces to a line on the job.
-3. Every line is priced from the price book, and a line the book does not cover parks the invoice.
-4. A variation is billed only with a signed acceptance attached.
-5. A job under a building contract is invoiced as a stage invoice, and the claim stays with the builder.
-6. One invoice per job, written once, updated on a second event.
-7. The invoice exists in the ledger the business runs, with an external id back.
-8. Nothing is sent without a release by a person, or by a rule a person set with a threshold.
-9. A parked invoice is a queue with a reason and an owner, and nothing parked is sent.
-10. Job id, invoice id, the lines, the rates read, who released and when it was sent are retrievable by job.
-11. It survives the builder.
-12. The pass test passes.
+1. The job's completion is the only trigger. An invoice is drafted because the job system says the job is complete, never because somebody remembered. A job that is not complete produces no invoice.
+2. Every invoice line traces to a line on the job. Labour, materials, the callout: each invoice line is a job line with a catalogue code. Nothing is added that the job does not carry, and nothing on the job is dropped without a parked reason.
+3. Every line is priced from the price book, and a line the book does not cover parks the invoice. The rate on a line is the book's rate for that code, read at draft time. No rate is typed, averaged or recalled. A code the book does not hold parks the invoice with reason not_in_pricebook.
+4. A variation is billed only with a signed acceptance attached. A variation line on the job is invoiced only when the customer's signed acceptance is attached to the invoice. Without one, the invoice is parked with reason unsigned_variation and a person is told.
+5. A job under a building contract is invoiced as a stage invoice, and the claim stays with the builder. Where the job carries a contract stage, the invoice names that stage and is a stage invoice. The words progress claim never appear, and nothing here serves, certifies or argues a claim under security of payment law.
+6. One invoice per job, written once, updated on a second event. The write is keyed to the job. A second completion event for the same job updates the existing invoice or does nothing. A null external id is a failed write, not a success.
+7. The invoice exists in the ledger the business runs, with an external id back. The draft is written into Xero, MYOB, or the job system's own invoicing, never into a document we render and hold. The ledger's own id is stored against the job.
+8. Nothing is sent without a release by a person, or by a rule a person set with a threshold. A draft leaves as sent only after a release event that names the person, or names the rule and shows the invoice is under the threshold that rule carries. Over the threshold goes to a person.
+9. A parked invoice is a queue with a reason and an owner, and nothing parked is sent. Parked means a person has a reason in front of them: not_in_pricebook, unsigned_variation, write_failed. It is never silence, and it is never sent.
+10. Job id, invoice id, the lines, the rates read, who released and when it was sent are retrievable by job. When the customer disputes the bill, the record shows the job, the book edition the rates came from, and the person who released it.
+11. It survives the builder. Someone other than the builder can explain what it does, and it runs on an account the business owns.
+12. The pass test passes. On a real job system and a real ledger: one job completed twice, one variation unsigned, one line the book does not hold, and one draft over the release threshold.
 
 ## 4. The four queues
 

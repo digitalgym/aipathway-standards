@@ -124,19 +124,19 @@ A Period with an export_external_id and no released_by is the defect this standa
 
 The order is the claim. The entry is traced before it is totalled, the rule is read before a card is written, and the anomalies are at zero before the release is even asked for.
 
-1. Every entry traces to a person, a day and a job.
-2. Daily and weekly totals are computed from entries, never typed.
-3. An anomaly is one of a closed list of kinds, and it has an owner.
-4. Any penalty, overtime or allowance applied cites the rule, its edition and its effective date.
-5. A retired rule edition cannot apply to the next period.
-6. An entry the dated rule does not plainly cover is parked for a person.
-7. An anomaly leaves the queue only with a person's name and a reason.
-8. Nothing reaches payroll without a release by a named person.
-9. One export per period, written once, updated on a second release.
-10. Every period publishes hours, anomalies found and resolved, and the release, including a clean one.
-11. Entries, anomalies, resolutions, rules cited and the release are retrievable by person and period.
-12. It survives the builder.
-13. The pass test passes.
+1. Every entry traces to a person, a day and a job. Every entry carries a person id from the contact list, a date, and a job id from the job system that the person was allocated on that day. An entry with no job, or a job the person was not allocated, is an anomaly and never a line on the sheet.
+2. Daily and weekly totals are computed from entries, never typed. A total is the sum of the entries it names, computed at run time. A total that names no entries, or whose hours differ from the sum of the entries it names, is a typed total and fails.
+3. An anomaly is one of a closed list of kinds, and it has an owner. Over-hours in a day, overlapping entries, a missing break, an entry on a day not rostered, a job not allocated, and a rule that does not plainly apply. Each anomaly carries a kind from that list and the name of the person who owns it. A kind outside the list, or an anomaly with no owner, fails.
+4. Any penalty, overtime or allowance applied cites the rule, its edition and its effective date. An entry that attracts overtime, a weekend penalty or an allowance carries a card naming the rule, its edition and the date it took effect, read from the rule store at run time. A rule applied with no card fails.
+5. A retired rule edition cannot apply to the next period. Once a rule edition is retired, the next period applies the edition in force for its dates or parks the entry. A card for a period after the retirement that cites the retired edition fails.
+6. An entry the dated rule does not plainly cover is parked for a person. A disputed break, an unusual shift, a situation the rule text does not plainly name: the entry is parked with kind rule_unclear and an owner, and no card is written for it. The build never decides which clause applies.
+7. An anomaly leaves the queue only with a person's name and a reason. A resolution is a person's name, a reason from the list approved, corrected or rejected, and the time. The person's decision is attached as evidence. An anomaly resolved with no name, or with no decision behind it, fails.
+8. Nothing reaches payroll without a release by a named person. The period export is written only after a named person releases the period, and only when every anomaly in it is resolved. A run with no release writes nothing. An export with no release behind it, or with an open anomaly, fails.
+9. One export per period, written once, updated on a second release. The export is keyed to the period. A second release for the same period updates the existing export or refuses; it never writes a second one. A null external id is a failed export, not a success.
+10. Every period publishes hours, anomalies found and resolved, and the release, including a clean one. Each run publishes a report for the period: the hours by person and day, how many anomalies were found and how many resolved, and who released it or that nobody has. A clean period publishes too, so silence never means clean.
+11. Entries, anomalies, resolutions, rules cited and the release are retrievable by person and period. When a person disputes their pay, the record for that person and period shows every entry, every anomaly with who resolved it and why, every rule card, and who released the period.
+12. It survives the builder. Someone other than the builder can explain what it does, and it runs on an account the business owns.
+13. The pass test passes. On a real period with real entries: one overlapping pair caught, one unallocated job caught, one rule edition change parking the next period, one release by a person, and one export in the payroll system with its id.
 
 ## 5. The award is a rule you read, not one you interpret
 

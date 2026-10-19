@@ -111,18 +111,18 @@ A Figure with a value and no definition_id is the defect this standard exists to
 
 The order is the claim. The definition is read before the source, the source before the figure, and the figure exists with its as-of time before a sentence is written about it.
 
-1. Every figure on the report names a definition in the register.
-2. One definition of every measure, computed once per period and reused.
-3. Every figure carries the source it was read from and the time it was read.
-4. The report publishes at the scheduled time whether or not anything changed.
-5. A figure whose source could not be read publishes as unavailable, with the reason.
-6. Prose on the report describes figures that exist and never states a number they do not carry.
-7. A figure past its declared threshold against the prior period notifies a named person that run.
-8. Each audience sees the figures declared for it and nothing else.
-9. A published figure changes only by a named person publishing a new version with the reason.
-10. For any period: the figures, definitions, sources, as-of times, versions and who published, retrievable.
-11. It survives the builder.
-12. The pass test passes.
+1. Every figure on the report names a definition in the register. A figure is published only from a definition written once in a definitions register: the query over the source, the period and the filters. A figure with a value and no definition is never published; a measure the register does not define publishes as unavailable with reason no_definition.
+2. One definition of every measure, computed once per period and reused. A measure is computed once per period from its one definition and the same figure is reused in every view that carries it. Two definitions for one measure, or two computations that happen to agree today, fail.
+3. Every figure carries the source it was read from and the time it was read. Each figure names the source system and the as-of time the source was read for it, taken from the read itself and never typed. A figure with a value and no source, or no as-of time, fails.
+4. The report publishes at the scheduled time whether or not anything changed. The schedule is the only trigger. The report for a period publishes when its scheduled time arrives, never before it and never because somebody remembered, and it publishes even when every figure is the same as last period. A skipped period fails; so does one published early.
+5. A figure whose source could not be read publishes as unavailable, with the reason. When a source cannot be read, the figure is published with no value and a reason, and the definition's owner is told. It is never the previous period's value shown as current, and never a blank with no reason.
+6. Prose on the report describes figures that exist and never states a number they do not carry. A sentence on the report may name a figure and say what it is. It may not state a number, a percentage or a comparison the figure list does not carry. A sentence with a number that is not on the figure list fails.
+7. A figure past its declared threshold against the prior period notifies a named person that run. A threshold is a measure, a direction, an amount and a person, set once by a person. When a figure moves past it against the prior period, the named person is notified in the same run. Where the prior period's figure is unavailable the comparison is escalated, never assumed.
+8. Each audience sees the figures declared for it and nothing else. An audience is a named recipient group with a declared list of measures. Its view of the report carries exactly those measures. A lender's view carrying staff-level detail fails; so does an owner's view missing a measure declared for it.
+9. A published figure changes only by a named person publishing a new version with the reason. A published report is never edited in place. A correction is a gate carrying the person's name and the reason, followed by a new version that supersedes the old one. The old version stays readable. Editing a published figure in place, or a version with no person or no reason, fails.
+10. For any period: the figures, definitions, sources, as-of times, versions and who published, retrievable. When the lender asks where a number came from, the record for that period shows every version of every view, each figure's definition, source and as-of time, and who published each version and why.
+11. It survives the builder. Someone other than the builder can explain what it does, and it runs on an account the business owns.
+12. The pass test passes. On real sources for two periods: one source made unreadable and its figure published as unavailable, one threshold crossed and a person notified, one correction published as a new version, and both periods published on time.
 
 ## 5. The five queues
 

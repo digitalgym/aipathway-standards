@@ -93,12 +93,12 @@ skill asserts.
 
 ## The work, in order
 
-- 1. What this standard covers
-- 2. The key, made in your own Simpro
+- 1. Claude answers from your Simpro, and you can check every answer
+- 2. You make the key in your own Simpro, and deleting it switches everything off
 - 3. The objects, and what is in them
 - 4. The checks, in order
-- 5. Where Simpro misleads a first build
-- 6. What stays with a person
+- 5. Seven places a quick setup gives wrong answers
+- 6. Four decisions always stay with a person
 - 7. Provider: what to stub, and what not to hand-roll
 - 8. Conformance checklist
 

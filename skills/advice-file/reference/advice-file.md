@@ -142,20 +142,20 @@ An AdviceFile that is complete while required keys still sit in MissingField is 
 
 The order is the claim. A build that does the same things in another order usually fails the pass test: fields written before the disclosure, a summary mapped before the verbatim is stored, a recommendation drafted before completeness is computed.
 
-1. Disclosure and consent are recorded before the first field.
-2. Verbatim is stored before any field is filled.
-3. Only published field keys are writable, and completeness is computed.
-4. Anything with a lookup is resolved, read back, and written as resolved.
-5. One live file per client, updated and never duplicated.
-6. Every blocking gap is a task with an owner and a due date, raised once.
-7. Lender policy is a cited answer, never a recalled one.
-8. A retired clause cannot answer, and a new one answers only once a person accepts it.
-9. A recommendation cannot leave draft with a blocking gap or no card, and is sent by a person.
-10. Coaching cites a span or a clause, and breach_suspect goes to a named person.
-11. Recording, transcript, extracts, writes, cards, tasks and coaching are retrievable together.
-12. With the library detached, the assistant declines.
-13. It survives the builder.
-14. The pass test passes.
+1. Disclosure and consent are recorded before the first field. On every recorded channel, the recording and transcription notice is given and recorded before the first question. Refused consent means notes typed by a person, not a file the assistant pretends it heard.
+2. Verbatim is stored before any field is filled. The client's own words are kept with a span before classification is applied. Classification is applied to a copy, never to the only copy.
+3. Only published field keys are writable, and completeness is computed. "Client seems comfortable with repayments" is not a field. Serviceability inputs are. Completeness is a function of the required keys for that purpose, never a flag somebody sets.
+4. Anything with a lookup is resolved, read back, and written as resolved. Address, employer, existing lender, product: the spoken value is the query, the resolved value is what is written. Low confidence becomes a MissingField with reason asked_unclear, not a guessed value.
+5. One live file per client, updated and never duplicated. The CRM record is the file. A second interview on the same client updates it. A null external_id is a failed interview, not a completed one.
+6. Every blocking gap is a task with an owner and a due date, raised once. Each missing required key becomes a MissingField and, where it blocks the next stage, one task with a named owner and a due date. A reminder in chat does not count, and a task is not raised twice for the same gap.
+7. Lender policy is a cited answer, never a recalled one. A panel question is answered from clauses with an edition and an effective date, with a source card, or it is declined to a person. The model's memory of what a lender does is not a source.
+8. A retired clause cannot answer, and a new one answers only once a person accepts it. When the lender moves the policy, answers drawn from the old clause change or decline, and the new clause answers only after a named person accepts it.
+9. A recommendation cannot leave draft with a blocking gap or no card, and is sent by a person. Ready_for_person is a gate, not a vibe. A draft with an open blocking MissingField or an empty source_card_ids stays in draft or blocked. Sent_by is a person, and a machine cannot occupy it.
+10. Coaching cites a span or a clause, and breach_suspect goes to a named person. A CoachingEvent without an evidence span or a source card is a note, and notes do not roll into a score. A finding marked breach_suspect is escalated to a named compliance person, not softened into tone.
+11. Recording, transcript, extracts, writes, cards, tasks and coaching are retrievable together. Everything the interview produced can be listed by interview id and by file id. If the recording dies and the fields remain, the file is hearsay.
+12. With the library detached, the assistant declines. Ask the policy question with the panel library removed. The only conforming output is a decline. A remembered answer fails, even when the words are right.
+13. It survives the builder. Someone other than the builder can explain what it does, and it runs on an account the business owns.
+14. The pass test passes. Two interviews on a real CRM tenant, one panel move in a dated library the business controls, and the detached-library question, all as the pass test after section 8 describes.
 
 ## 4. What “trained on all our data” is allowed to mean
 

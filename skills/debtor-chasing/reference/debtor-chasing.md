@@ -83,11 +83,11 @@ Rather build it yourself? Everything you need is below, free. Joining it to your
 
 Export the aged receivables report and ignore most of it. Five fields carry the method:
 
-- Customer.
-- Amount outstanding, per invoice.
-- Days past due.
-- A mobile number.
-- Last contact, and what was said.
+- **Customer.** The unit of the conversation. Not the invoice, which is the mistake in section 3.
+- **Amount outstanding, per invoice.** You need them separately to talk about them, and summed to rank.
+- **Days past due.** Off the due date, not the issue date. A 30-day account issued four weeks ago is not late.
+- **A mobile number.** The field that decides whether any of this is workable. Most ledgers hold a billing email and an office landline, which is the wrong end of the building.
+- **Last contact, and what was said.** Almost never in the ledger. Section 5 is about making this exist.
 
 Run the coverage check before anything else. If two thirds of your overdue rows have no mobile, you do not have a chasing problem yet, you have a data problem, and the fix is a field on the account-setup form rather than anything on this page.
 
@@ -95,10 +95,10 @@ Run the coverage check before anything else. If two thirds of your overdue rows 
 
 A single overdue list treats a customer who is four days late the same as one who broke a promise in June. They need opposite conversations.
 
-- Just late, 1 to 14 days.
-- Drifting, 15 to 44 days.
-- Hard, 45 days and over with no contact logged.
-- Broken promise.
+- **Just late, 1 to 14 days.** Almost always an oversight: the invoice is in someone’s inbox behind forty others. A short, friendly nudge clears most of it, and the tone matters more here than anywhere else because these are customers who are about to pay you.
+- **Drifting, 15 to 44 days.** The bucket that decides your debtor days. Nothing is wrong yet, which is exactly why nobody deals with it, and it is the one that quietly becomes the 90-day problem.
+- **Hard, 45 days and over with no contact logged.** Something is going on and you do not know what. The job of the first call is to find out which: cash flow, a dispute nobody told you about, or a purchase order you never had.
+- **Broken promise.** A date was given and it passed. This outranks every other bucket, because it is the only one where you already have a commitment to refer back to, and referring back to it is most of the call.
 
 ## 3. Which Invoice Gets Chased First
 
@@ -114,11 +114,11 @@ One more rule, and it is a judgement rather than a formula: flag any customer wh
 
 The purpose of the call is not to be paid on the call. It is to leave with a date. Everything in the opener should serve that.
 
-- Name the invoice and the number.
-- Say how far past due, without editorialising.
-- Ask one question that takes a date as an answer.
-- Do not apologise for calling.
-- Do not mention interest, fees or consequences
+- **Name the invoice and the number.** Vagueness reads as a mass mailout and gets treated like one.
+- **Say how far past due, without editorialising.** “Thirty-eight days” is a fact. “Significantly overdue” is an opinion they can argue with.
+- **Ask one question that takes a date as an answer.** “When can we expect it?” beats “Can you pay this?”, which takes yes or no and gets you neither.
+- **Do not apologise for calling.** You are asking for money you are owed.
+- **Do not mention interest, fees or consequences** unless they are real, written into your terms, and you intend to apply them. An empty threat is worse than no threat and it is the fastest way to a dispute.
 
 The most useful thing an opener can do is make it easy to say the real reason. A large share of “we will get to it” is actually a dispute, a missing purchase order, or an invoice that went to the wrong person, and none of those get solved by another reminder.
 
@@ -128,10 +128,10 @@ The most useful thing an opener can do is make it easy to say the real reason. A
 
 This is the part that separates a build that works from one that feels busy. When somebody says they will pay, that has to become a record with fields, not a sentence in a note:
 
-- An amount
-- A date.
-- A method
-- When it was captured
+- **An amount**, which may legitimately be empty. “I will sort it this week” is a real outcome with no number in it, and forcing a number invents one.
+- **A date.** The whole point. No date means you did not get a promise, you got a deflection, and the follow-up should be scheduled accordingly.
+- **A method**, if offered. Bank transfer, card link, cheque in the post. It tells you when to stop expecting it.
+- **When it was captured**, so a promise made in March is not still driving behaviour in June.
 
 Then the promised date becomes the follow-up date. This sounds obvious and it is the single most common gap: a system records the promise, leaves the chase schedule where it was, and rings the customer the next morning anyway. Nothing destroys the credibility of an automated chase faster.
 
@@ -165,19 +165,19 @@ The largest gain is the drifting bucket, the 15 to 44 day rows where nothing is 
 
 Not warnings. These are the four places a working build usually stalls, so you can recognise them as normal rather than as a sign you got it wrong.
 
-- Mobile coverage is the binding constraint.
-- Part payments break your buckets.
-- Disputes hide inside “we will get to it”.
-- Stop-on-payment is harder than it sounds.
+- **Mobile coverage is the binding constraint.** Ledgers hold billing emails and office landlines. The fix is upstream, on the account-setup form and in conversation, and it takes months to pay off, which is why section 1 says check it first.
+- **Part payments break your buckets.** A customer pays half. Is that invoice still overdue, still the same age, still the same bucket? Decide before it happens, because it will happen in the first week.
+- **Disputes hide inside “we will get to it”.** Until you capture the reason, your aged report says the problem is time when it is actually a missing purchase order or a job somebody is unhappy with.
+- **Stop-on-payment is harder than it sounds.** Off a nightly export you will ring somebody the morning after they paid, and that single call costs more goodwill than the other forty earned.
 
 ## 8. What Breaks After It Works
 
 This section is the honest one, and it is the reason a build standard is worth publishing at all. A self-built version of everything above genuinely works. Here is what happens to it over time.
 
-- It leaves with whoever built it.
-- Nobody knows whether it ran.
-- It degrades without failing.
-- The gate is the first thing to rot.
+- **It leaves with whoever built it.** The rules live in one person’s head and one spreadsheet under their login, and this is a role that turns over.
+- **Nobody knows whether it ran.** A quiet week and a broken week look identical from the outside. Receivables is the worst place for that, because the number moves slowly enough that you will not notice for a month.
+- **It degrades without failing.** An export changes a column name, the broken-promise bucket matches nothing, and the system cheerfully reports zero broken promises. A false negative is worse than an error, because an error gets looked at.
+- **The gate is the first thing to rot.** Not because anyone removes it, but because a holiday table goes stale, or a new workflow is added beside it rather than under it, and nobody re-runs the pass test in section 10.
 
 None of that is an argument against building it. It is an argument for knowing which parts you want to still be true after you stop paying attention to them.
 
@@ -185,12 +185,12 @@ None of that is an argument against building it. It is an argument for knowing w
 
 Not a conservative default. Each of these is a decision where being wrong costs more than the call was ever worth, and none of them gets better for being made quickly.
 
-- The relationship-sized account.
-- Any dispute, the moment it is named.
-- Interest, fees, stop-credit and anything resembling a consequence.
-- Write-offs, payment plans and hardship.
-- Every exception to the gate in section 10
-- Anything a lawyer would call a demand.
+- **The relationship-sized account.** Section 3. If chasing them is a commercial decision about the account rather than a collections call, someone who knows the account rings them.
+- **Any dispute, the moment it is named.** The job of the automated call is to find out that one exists and to stop. Arguing the merits of a job somebody is unhappy with is not a chase.
+- **Interest, fees, stop-credit and anything resembling a consequence.** Only if it is real, written into your terms, and you intend to apply it. That is a judgement about the customer, not a field.
+- **Write-offs, payment plans and hardship.** A plan is a new agreement. Recording one somebody else made is fine; making one is not.
+- **Every exception to the gate in section 10**, named, with whose authority, in the record.
+- **Anything a lawyer would call a demand.** Collections escalation is a regulated conversation and it is not this.
 
 The machine does not decide any of the above. It finds them, stops, and hands over with what it already knows.
 
@@ -200,12 +200,12 @@ The machine does not decide any of the above. It finds them, stops, and hands ov
 
 You should build it. Each of these, though, is a rule that has to hold on every single contact, including the one made at 8:04pm by a script nobody has looked at since March.
 
-- Calling hours in the debtor’s timezone
-- The Do Not Call Register
-- Public holidays
-- Disclosure
-- A stop on payment.
-- A record that survives
+- **Calling hours in the debtor’s timezone**, not yours and not the server’s. Australia has three, and more in summer.
+- **The Do Not Call Register**, and knowing which of your debtors are exempt and why. An existing-business-relationship exemption is real and it has to be recorded as claimed, not assumed.
+- **Public holidays**, which are per state and are not a lookup you want to maintain by hand.
+- **Disclosure** when the caller is an AI, every time, at the start.
+- **A stop on payment.** The invoice clears at 9am and nothing should ring at 10. This needs to be driven off the ledger, not off a nightly export.
+- **A record that survives**: what was said, when, on whose authority, and which human approved any exception.
 
 The gate has to sit underneath the ranking, not beside it. If a high score can promote a debtor past a check, the check is advice rather than a rule, and the first time that matters will be the time somebody is looking.
 

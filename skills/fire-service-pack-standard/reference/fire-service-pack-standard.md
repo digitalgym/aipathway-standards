@@ -69,18 +69,18 @@ The specification is [the rejected pack build standard](https://aipathway.com.au
 
 The order is not cosmetic. Identity comes first because every later check is meaningless if it is attached to the wrong thing. A missing electrical certificate is checked before defects are coded, because it stops the close outright. The client-facing document is generated from the record rather than assembled alongside it. These are the same twelve checks, in the same order, as the conformance checklist in section 10.
 
-1. Identity before everything.
-2. The visit discharges something.
-3. Result is recorded, never computed.
-4. Evidence is a property of the class.
-5. Baseline absence is reportable.
-6. Electrical work blocks the close.
-7. Defects are coded.
-8. Isolation carries a revisit date.
-9. Unbound is a queue you can see.
-10. Documents are generated from the record.
-11. Jurisdiction is data.
-12. The pass test passes.
+1. **Identity before everything.** A record cannot be created without resolving to exactly one asset. An unresolvable asset is a finding, not a note on the job.
+2. **The visit discharges something.** Every record names the obligation it satisfies. A visit that discharges nothing cannot be counted as coverage.
+3. **Result is recorded, never computed.** Pass, defect or isolated is entered by the competent person who attended. Nothing in the system derives it from the evidence.
+4. **Evidence is a property of the class.** Required evidence differs by asset class, and readings are stored as numbers in fields rather than photographs of gauges.
+5. **Baseline absence is reportable.** Where baseline data was required and unavailable, the record stores that as a non-conformance rather than leaving the field blank.
+6. **Electrical work blocks the close.** A missing certificate or test sheet stops the job closing. It never raises a reminder and lets the job through.
+7. **Defects are coded.** Defects come from a closed list with a named owner for the next action, so they can be counted and chased. Free text is a description, not a defect.
+8. **Isolation carries a revisit date.** An isolation records who authorised it, why, and the date it must be revisited, and it escalates when that date passes.
+9. **Unbound is a queue you can see.** Work marked done with required evidence missing sits in its own queue with its age on a chart. It is never reported as a pass.
+10. **Documents are generated from the record.** Anything client-facing is derived from the bound record, never assembled from a template on somebody's desktop.
+11. **Jurisdiction is data.** Retention period and who may attest are dated, cited values per state, not constants in the code.
+12. **The pass test passes.** The signature stays with a person. The build assembles and presents the pack; it does not certify, decide compliance, or produce a certificate.
 
 ## 3. Four queues, and unbound is not pass
 

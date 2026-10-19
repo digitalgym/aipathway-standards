@@ -176,19 +176,19 @@ A Node with queue live and empty provenance is the defect, and it should not be 
 
 The order is the claim. Chunk, then embed, then hope is a different order, and it fails the pass test.
 
-1. The key contract is written and versioned before the first extract.
-2. Every source is registered as an instrument, not a file path.
-3. No node is live without a named acceptance and a replayable locator.
-4. Production reads live nodes, and a card names a node, never a file.
-5. Entity identity comes from a system of record, or SAME_AS is an accepted edge.
-6. Scope is an APPLIES_TO edge, and an unscoped clause cannot answer a scoped question.
-7. Supersession and conflict are written edges, and the model never picks a winner.
-8. Replacing a source produces a delta with a computed list of affected nodes.
-9. Proposed, live, conflict, change_pending and retired are states, not labels.
-10. The index can propose and rank. Emptying it does not empty the graph and does not invent an answer.
-11. Customer files and interviews are not sources unless a person promotes a claim.
-12. It survives the builder.
-13. The pass test passes.
+1. The key contract is written and versioned before the first extract. Node types, edge types, predicates and required fields are a closed list at each version. An extract that invents a type has forked the graph and is refused.
+2. Every source is registered as an instrument, not a file path. Title, issuer, edition, jurisdiction, effective dates, checksum and retrieved_at. A drive link with no edition is a pile entry, not a Source.
+3. No node is live without a named acceptance and a replayable locator. Ingestion is not production. A node reaches live only when a named person accepts it, and only when its provenance names a passage with a locator that can be opened and highlighted.
+4. Production reads live nodes, and a card names a node, never a file. Cited Answer and Advice File attach source cards from live nodes. An answer that cites a passage hash, a chunk id or a filename has not used the graph.
+5. Entity identity comes from a system of record, or SAME_AS is an accepted edge. A lender, a product, a site or a person carries the id the CRM, the panel or the register already uses. Two labels that look alike are two things until a person accepts SAME_AS. An embedding that thinks they match is not identity.
+6. Scope is an APPLIES_TO edge, and an unscoped clause cannot answer a scoped question. A clause with no jurisdiction, product, work type or entity on it can decline or sit in conflict. It cannot answer a question asked about one state or one product.
+7. Supersession and conflict are written edges, and the model never picks a winner. A new node retires the old through SUPERSEDES and the old cannot answer. Two live nodes that disagree get a CONFLICTS edge and a named person, never an average and never a confidence score.
+8. Replacing a source produces a delta with a computed list of affected nodes. When the checksum moves, the graph lists every node built from that source and every historic answer that used them. If you cannot produce that list, you have an index.
+9. Proposed, live, conflict, change_pending and retired are states, not labels. A retired node must not appear on a new source card. It must remain findable for the answers that used it.
+10. The index can propose and rank. Emptying it does not empty the graph and does not invent an answer. Detach the vector index and the model weights. The live nodes are unchanged. A question the graph covers still answers from the same node; a question it does not cover declines.
+11. Customer files and interviews are not sources unless a person promotes a claim. A claim from an interview becomes a Fact only when a named person promotes it, and the Fact still needs provenance. A crawler finding it in the same drive does not make it policy.
+12. It survives the builder. Someone other than the builder can explain what it does, and it runs on an account the business owns.
+13. The pass test passes. Load, ask, move, identity, the forbidden path and one-fact-two-places, on a corpus the business controls with at least one system-of-record id, as the pass test describes.
 
 ## 6. The four queues for a node
 

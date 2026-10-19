@@ -123,15 +123,15 @@ A Quote with no job_id, an Invoice whose job_id came from a name search, and a C
 
 The order is the claim. Identity comes first because every other check is about carrying it. The null id comes before the chain because a chain that carries a null forward is worse than one that stops. The trigger and the owner come last because they are what keeps the chain moving when nobody is watching, and what stops it safely when something goes wrong.
 
-1. Every downstream step takes its id from the system of record, never from a name or a phone number.
-2. One job per enquiry: a repeat call or a second door attaches to the open job.
-3. A write that comes back without an external id is treated as not written.
-4. The quote carries the job id, the invoice carries the quote or job id, and the chase reads the invoice id off the live ledger.
-5. A chat or connector confirmation is not a write and not a release.
-6. Every hop starts from a named event, and none waits for a chat session.
-7. An exception names its owner, travels with the record, and the next step does not pass it.
-8. It survives the builder.
-9. The pass test passes.
+1. Every downstream step takes its id from the system of record, never from a name or a phone number. Once a job exists, every later step reads the upstream record's id from the job system or the ledger: from the event that woke it, or from a read of that record by id. It never mints its own key and never matches on a customer name or a phone number.
+2. One job per enquiry: a repeat call or a second door attaches to the open job. Before writing a job, the build reads for an open job on that customer or number. A repeat call, or the same customer arriving through a second door, attaches to the open job with duplicate_of set. A second job is a fail.
+3. A write that comes back without an external id is treated as not written. A write into the job system or the ledger that returns a null or missing external_id did not happen, as far as the chain is concerned. The build escalates it and nothing downstream acts on it: no quote from that job, no send of that quote, no chase of that invoice.
+4. The quote carries the job id, the invoice carries the quote or job id, and the chase reads the invoice id off the live ledger. Each record carries the id of the one before it. The quote names the job. The invoice names the accepted quote and the job. The chase names an invoice id the ledger returned when the build read it. A break anywhere in the chain is a fail.
+5. A chat or connector confirmation is not a write and not a release. A write counts only when it is read back through the port from the system of record. Every send to the customer, the quote, the invoice and the chase, waits for a release that names a person or a named rule. The model saying it is done is neither.
+6. Every hop starts from a named event, and none waits for a chat session. Each hop is woken by a named event arriving by webhook, schedule or polling: job created, quote accepted, job completed, invoice overdue. A build that only moves while somebody has a chat window open fails, and so does one that acts on a chat message as if it were an event.
+7. An exception names its owner, travels with the record, and the next step does not pass it. A parked or escalated item names the person who owns it, taken from the owners the business set for that stage. The exception stays on the record, and the next step reads it and stops rather than proceeding past it.
+8. It survives the builder. Someone other than the builder can explain what it does, and it runs on an account the business owns.
+9. The pass test passes. On the business's own job system and ledger: the same caller rings twice, the quote is accepted, the job completes and the invoice goes overdue. Exactly one job, one quote, one invoice and one chase exist, each carrying the upstream id. A null external id injected anywhere stops the chain.
 
 ## 4. The three handovers
 

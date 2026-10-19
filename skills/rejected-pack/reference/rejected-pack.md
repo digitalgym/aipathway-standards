@@ -65,9 +65,9 @@ Stop at the first failure: a pack that passes check four and fails check one is 
 
 This is the public specification for the fifth job on the homepage: stop rejected paperwork. The other four jobs already have a standard. This one had three pieces and no spine. They stay. This standard is what they hang on.
 
-- Invoice Check
-- **Compliance Calendar**: licence, insurance and tracking
-- QA Proofcheck
+- [Invoice Check](https://aipathway.com.au/explore-ai/invoice-check-build-standard): the subcontractor invoice is wrong, late, or missing a ticket.
+- [Compliance Calendar](https://aipathway.com.au/explore-ai/compliance-calendar-build-standard): a date lived in the wrong system and the rule moved. Its companion paper on [licence, insurance and tracking](https://aipathway.com.au/explore-ai/compliance-tracking-trades) covers QBCC, public liability, workers comp, vehicle, white card, visa and induction.
+- [QA Proofcheck](https://aipathway.com.au/explore-ai/compliance-proofcheck-trades): the form went out with last year’s address and an expired ticket.
 
 A build that only does one of those three will still reject packs. The pack is a set. Treat it as a set.
 

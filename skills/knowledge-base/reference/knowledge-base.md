@@ -132,19 +132,19 @@ A Passage with a null register_id is the defect this standard exists to make unr
 
 The order is the claim. Chunk the drive first and you have a search nobody owns; register first and the search inherits an owner, a checksum and a scope from every entry it is built on.
 
-1. Every source is on the register before anything is indexed.
-2. Duplicates resolve to one canonical copy, and only the canonical is indexed.
-3. Every source has a named owner, and a team is not an owner.
-4. Retrieved date, checksum and edition are recorded when the source arrives.
-5. Customer material is registered as such, restricted, and kept out of the shared index.
-6. Every indexed passage names its source and a locator that can be opened.
-7. Search returns passages with their source and locator, and composes nothing.
-8. A source that should exist and cannot be found is a gap with an owner and a date.
-9. Every source on the drive is re-fetched on a schedule, and a changed checksum reaches its owner.
-10. Retention and access follow the kind of source.
-11. A source reaches the graph only from the register, carrying its id, edition, checksum and locator scheme.
-12. It survives the builder.
-13. The pass test passes.
+1. Every source is on the register before anything is indexed. A file is registered with a title, a location and an owner before a passage from it is chunked or embedded. Indexing an unregistered file fails.
+2. Duplicates resolve to one canonical copy, and only the canonical is indexed. Two copies of the same source are one register entry with the others marked duplicate_of. The index holds the canonical copy once.
+3. Every source has a named owner, and a team is not an owner. The owner is the person who is asked when the source moves or goes missing. "Operations" cannot be asked anything.
+4. Retrieved date, checksum and edition are recorded when the source arrives. A source without a checksum cannot be watched. One without an edition, where the issuer publishes one, cannot be handed to the graph.
+5. Customer material is registered as such, restricted, and kept out of the shared index. Client files, interviews and emails are inventoried with kind customer_material and an access list. They are never chunked into the search everyone uses.
+6. Every indexed passage names its source and a locator that can be opened. Page and section, offsets in a stable file version, or seconds on a recording. "Chunk 47" is not a locator.
+7. Search returns passages with their source and locator, and composes nothing. A query returns what was found and where. It does not return a paragraph the model wrote. Answering is the Cited Answer standard, over the graph.
+8. A source that should exist and cannot be found is a gap with an owner and a date. The current edition of an instrument the business relies on, not on the drive, is not a blank row. It is a task for a person.
+9. Every source on the drive is re-fetched on a schedule, and a changed checksum reaches its owner. The watch runs whether or not anything changed. When a checksum moves, the register records the new one, marks the old copy superseded, and the owner is told the same run. A source held only by the issuer gets a recheck task to its owner on the same schedule, and the confirmation is recorded.
+10. Retention and access follow the kind of source. An issued instrument is kept with every edition. Customer material carries an expiry and an access list. The kind decides, not the folder it was found in.
+11. A source reaches the graph only from the register, carrying its id, edition, checksum and locator scheme. The Knowledge Graph standard registers a source as an instrument. That instrument is this register entry, not a fresh upload. A graph source with no register id has skipped this standard.
+12. It survives the builder. Someone other than the builder can explain what it does, and it runs on an account the business owns.
+13. The pass test passes. On the business's real drive: every source registered with a person, one duplicate found and resolved, one client file quarantined, a real edition change caught by the watch within a cycle, and a search that returns locators the owner can open.
 
 ## 5. Search finds, and never answers
 

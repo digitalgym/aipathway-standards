@@ -99,15 +99,15 @@ The reason to write this down before building: an agent with no written scope wi
 
 Order is part of the specification, not a suggestion. Two of these are legal obligations and they come first.
 
-1. **Identify and disclose.** the compliance paper
-2. Capture the problem
-3. Classify
-4. Resolve the address
-5. Check the service area.
-6. Check for an existing job
-7. Write the job
-8. Confirm to the caller
-9. Alert on-call
+1. Identify and disclose. Business name, that this is an AI assistant, and that the call is recorded. Before any question. See section 4 of [the compliance paper](https://aipathway.com.au/explore-ai/ai-compliance-australia#recording) for why Victoria, Tasmania and the ACT decide this for everyone.
+2. Capture the problem in the caller’s words, verbatim, before any classification.
+3. Classify from the fixed list in section 3. No free-text job type ever reaches the job system.
+4. Resolve the address against a lookup, per section 4. A transcribed address is not an address.
+5. Check the service area. Outside it, say so on the call and do not create a job.
+6. Check for an existing job on that number or address before writing a new one.
+7. Write the job, once, per section 6.
+8. Confirm to the caller with a reference, and text it only if consent was captured.
+9. Alert on-call only if the classification is emergency, per section 7.
 
 This is the order of the call. The numbered checklist in section 11 is the order of the checks, and it adds two that run alongside the call rather than as a step in it: verifying the write, and typing every escalation.
 
@@ -117,9 +117,9 @@ Any step that cannot complete escalates. It does not guess and carry on, and it 
 
 Three job types, plus `unclassified`, which always escalates. Not free text.
 
-- emergency
-- routine
-- quote
+- emergency: active water, no power, gas, sewage, security, or a stated safety risk. Wakes a person tonight.
+- routine: broken but containable. Booked for the next working slot.
+- quote: wants a price for work not yet agreed. Never an emergency, regardless of how it is described.
 
 The taxonomy is fixed because the consequence is asymmetric. A routine job misfiled as an emergency costs a call-out. An emergency misfiled as routine costs a flooded house and, eventually, an insurer’s question about what your system did. Write the emergency triggers down as a list your own team agrees with, and make the agent match against that list rather than reason about urgency.
 
@@ -175,9 +175,9 @@ Write once. Before creating anything, look for an open job on that caller number
 
 Know what your system can actually take. This is where most builds overclaim:
 
-- ServiceM8
-- **Tradify**: enquiry system: tradify_enquiry
-- Anything else
+- ServiceM8 has a real OAuth API. A job with a client, address and job type. This is the reference implementation.
+- Tradify has no public or partner API. The sanctioned route is their Enquiries channel: the business enables it in settings, takes a public slug, and a structured email to that slug lands as an _enquiry_. That is a lead for a person to convert, not a booked job, and nothing can be read back. Set `system: tradify_enquiry` and do not report it as booked.
+- Anything else: deliver the outcome object by email or webhook and be honest that the last step is manual.
 
 A null `external_id` is a failed call, not a completed one. Alert on it.
 
@@ -220,10 +220,10 @@ Build against `local.mock_voice` for as long as you like. You only switch the pr
 
 Nothing above required us. If the checks are green against the stub, you have a working build and you are welcome to stop here. This is how the live call joins your own system if you want a real number behind it, in the order it happens, so the decision is not a conversation.
 
-1. **An account, and a trial before anything is charged.** the pricing page
-2. **Connect the job system.** write_job
-3. The number, which is the part people worry about.
-4. Set the service area.
+1. **An account, and a trial before anything is charged.** Front Desk on Office Voice runs the live call: the AU number, the disclosure and recording notice, the recording itself, write-back to ServiceM8 or Simpro by OAuth, and one job per caller rather than two. Prices are on [the pricing page](https://aipathway.com.au/pricing), and there is a 30-day free trial. The trial is the point: you have a build and a pass test already, so you can prove it on a live number before you pay for one.
+2. **Connect the job system.** ServiceM8 or Simpro, by OAuth, inside the product. Not a key you paste into your build: the write-back is the live step and it authenticates as itself. This is the same `write_job` your scenarios have been asserting against, pointed at the tenant that actually bills.
+3. **The number, which is the part people worry about.** You keep the one you already advertise and forward it after hours. Nothing is ported unless you ask for that, and forwarding is reversible from your own carrier account without us. Answering happens in your business name.
+4. **Set the service area.** Postcodes or a radius, in the product. The out-of-area check reads it, and with none set every address counts as in area, so set it before you forward the number.
 
 What happens to the build you just wrote
 

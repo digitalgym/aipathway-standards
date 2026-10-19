@@ -131,12 +131,12 @@ The third queue is the one people leave out, and it is the one that decides adop
 
 An exception is not a notification. It is a record, and it needs enough on it that a person can decide without opening anything else:
 
-- What arrived
-- What was expected
-- The difference
-- Which check failed
-- Confidence
-- The date, kept
+- **What arrived**: invoice number, supplier, amount, and a link to the source document
+- **What was expected**: the PO or contract reference and its figure
+- **The difference**: stated in dollars, not as a percentage or a similarity score
+- **Which check failed**, and therefore which checks were never run
+- **Confidence**, and what it is based on, so a person can discount it
+- **The date, kept**: the record survives the decision
 
 Keep the source document attached to the record. In an industry that gets audited, a decision without the evidence that informed it is worth very little eighteen months later.
 
@@ -183,10 +183,10 @@ None of these is a reason to stop. They are the reason a build takes longer than
 
 A self-built check usually works when it is built, because the person who built it is also the person running it and they carry what it does not cover in their head. The failures come later, and they are consistent enough to design against:
 
-- It leaves when they do.
-- Nobody knows whether it ran.
-- It degrades quietly.
-- It cannot be audited.
+- **It leaves when they do.** A prompt library in someone’s chat history, a spreadsheet of their formulas, an inbox rule under their login. None of that gets handed over.
+- **Nobody knows whether it ran.** A check performed when someone remembers, phrased how they phrased it that day, with no record that two runs agreed.
+- **It degrades quietly.** Rates change, a supplier changes their invoice layout, a new PO format appears. It keeps returning “nothing to flag” and everyone believes it.
+- **It cannot be audited.** No dated record of what was compared against what.
 
 None of these is a reason not to build it yourself. They are the things to design against if you do. Rules 3, 4 and 6 above exist specifically because of them, and following this standard is what makes a self-built check survivable by the next person in the seat.
 
@@ -284,11 +284,11 @@ Connect the document store the business already runs rather than moving the docu
 
 This standard finds and files. It does not decide, and the difference is the whole reason anyone trusts the queues six months later.
 
-- Approving anything.
-- Whether a difference is worth pursuing.
-- Anything under Security of Payment.
-- Telling a supplier they are wrong.
-- Accepting a low-confidence extraction.
+- **Approving anything.** An exception is a record put in front of a named person. The machine does not release a payment, and it never approves a variation.
+- **Whether a difference is worth pursuing.** A small overcharge from a subcontractor you need next month is a commercial decision, not an arithmetic one.
+- **Anything under Security of Payment.** Statutory timeframes with the builder’s name on them. They stay with the builder and their advisor, and nothing in this standard touches them.
+- **Telling a supplier they are wrong.** The build produces the comparison. A person has the conversation.
+- **Accepting a low-confidence extraction.** A marked field is a prompt for a human, never something that promotes itself once nobody looks.
 
 ## 12. Conformance checklist
 

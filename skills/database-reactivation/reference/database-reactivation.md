@@ -65,11 +65,11 @@ Everything across the top is a weekend of work and stays yours. The ranking orde
 
 Export the whole database, then ignore most of it. Five fields carry the method:
 
-1. Name and mobile.
-2. Address.
-3. Purchase or settlement date.
-4. Last contact outcome.
-5. Investor or owner-occupier.
+1. **Name and mobile.** A landline is not a warm contact, it is a switchboard.
+2. **Address.** Everything in section 3 hangs off resolving this to a property.
+3. **Purchase or settlement date.** The single highest-value field and the one most likely to be missing.
+4. **Last contact outcome.** Not the date, the outcome. “Asked me to call back in spring” is worth more than every other field combined.
+5. **Investor or owner-occupier.** Only if you actually know. Guessing produces the worst call in section 2.
 
 If purchase date is sparse, do not stop and do not estimate it. Flag the gap, run the other plays, and capture the date in conversation when you do get someone on the phone. A database fills itself in if the calls write back to it.
 
@@ -161,22 +161,22 @@ Write two openers per play, not one, and alternate them by contact so the split 
 
 A warm database is an asset that a bad cadence converts into a cold one. Five rules hold it together:
 
-- One play at a time.
-- Every sequence has a defined end, and a reply ends it.
-- One slow value touch a month
-- A no buys months, not a removal.
-- Write every outcome back.
+- **One play at a time.** A contact who qualifies for two plays sits in one of them, and gets at most one opener a week. Two plays ringing the same person in the same week is how a warm contact learns you are running a list.
+- **Every sequence has a defined end, and a reply ends it.** The calls and openers in a play stop at a set step whether or not anyone answered. A reply stops them at once, and nothing further goes out from that sequence.
+- **One slow value touch a month** for contacts who are mid-journey and quiet. Something worth reading, not a check-in. This is a separate, low-frequency track, not the tail of a sequence, and a reply or an opt-out ends it too.
+- **A no buys months, not a removal.** Demote, wait, come back with a different play. The tenure call and the equity call are different conversations, and a no to one is not a no to the other.
+- **Write every outcome back.** A call that does not update the record is a call you will make again, and the second time it is not warm, it is annoying.
 
 ## 6. The Gate, Which Is the Step to Not Hand-Roll
 
 Everything above is a weekend’s work and you should do it. This part is not, and the reason is not difficulty. Each of these is a rule that has to hold on every single call, including the one made at 8:04pm by a script nobody has looked at since March.
 
-- Warm only.
-- Do not contact, honoured across every play.
-- Calling hours in the contact’s timezone
-- The Do Not Call Register
-- Disclosure and recording consent
-- A record that survives
+- **Warm only.** A contact with no prior relationship is a cold call wearing a warm list’s clothes.
+- **Do not contact, honoured across every play.** An opt-out is a decision about you, not about one campaign.
+- **Calling hours in the contact’s timezone**, not yours, and not the server’s.
+- **The Do Not Call Register**, and knowing which of your contacts are exempt and why.
+- **Disclosure and recording consent** where required, on the call, every time.
+- **A record that survives**: what was said, when, and by what authority you rang.
 
 The gate has to sit underneath the ranking, not beside it. If a high score can promote a contact past a check, then the check is advice rather than a rule, and the first time it matters will be the time somebody is looking.
 
@@ -186,8 +186,8 @@ You can build this. What you cannot easily build is the part where it is still t
 
 Sections 1 to 4 leave you with a ranked list and a reason written against each name. This is how that becomes calls. There are two doors and the first one is not the lesser one.
 
-- Export and import.
-- Post it.
+- **Export and import.** Sign up, upload the CSV, create a campaign. If your ranking is something you redo every month or two, this is the right shape and you should stop reading here.
+- **Post it.** If the ranking runs on a schedule, or lives inside the tool you just built, the dashboard is the wrong shape. Mint a key and hand us the list directly.
 
 Build against a stub until the list has to actually ring, then change one line:
 
@@ -231,10 +231,10 @@ One gap to know about. The hosted run counts each skip by its reason, but it doe
 
 Not warnings. These are the four places a working build usually stalls, so you can recognise them as normal rather than as a sign you got it wrong.
 
-- Purchase dates are missing.
-- Address to property is not a lookup.
-- “Warm” is a judgement, not a column.
-- Capacity is the binding constraint, not the list.
+- **Purchase dates are missing.** Most CRMs have them for a third of contacts. The tenure play is the best one and it depends on the sparsest field, which is why section 1 says capture it in conversation instead of waiting.
+- **Address to property is not a lookup.** Unit numbers, renamed streets and duplicate records mean a meaningful slice will not resolve. Decide up front what a call with no property data says, because you will make a lot of them.
+- **“Warm” is a judgement, not a column.** Someone who enquired once in 2019 and never replied is in the database and is not warm. You will have to define this and you will get it wrong twice.
+- **Capacity is the binding constraint, not the list.** This is why section 3 exists. Every hour spent on the automation before the ranking is an hour spent making it easier to call the wrong people faster.
 
 ## 9. What It Is Worth
 
@@ -264,10 +264,10 @@ Capacity is the binding constraint, not the list, which is why the ranking is th
 
 This section is the honest one, and it is the reason a build standard is worth publishing at all. A self-built version of everything above genuinely works. Here is what happens to it over time.
 
-- It leaves with whoever built it.
-- Nobody knows whether it ran.
-- It degrades without failing.
-- Attribution arrives too late to steer by.
+- **It leaves with whoever built it.** The rules live in one person’s head and one spreadsheet under their login. The replacement starts from nothing, and this is a role that turns over.
+- **Nobody knows whether it ran.** A silent week looks identical to a working week. There is no alarm for a queue that quietly stopped refilling.
+- **It degrades without failing.** A CRM export changes a column name, the tenure play matches nothing, and the system keeps reporting zero opportunities. A false negative is worse than an error, because an error gets looked at.
+- **Attribution arrives too late to steer by.** The listing comes eight months after the call. By the time you can prove it worked you have already decided whether to keep doing it.
 
 None of that is an argument against building it. It is an argument for knowing which parts you want to still be true after you stop paying attention to them.
 

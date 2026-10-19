@@ -107,10 +107,10 @@ The read happens at draft time. A cached price list is how a build quotes last q
 
 Parking is a real outcome, not a failure. A parked quote carries a reason from a fixed list, and the list is short on purpose:
 
-- not_in_pricebook
-- variation_to_accepted_quote
-- discount_requested
-- pricebook_unreadable
+- `not_in_pricebook`: the work is real, the price list does not cover it
+- `variation_to_accepted_quote`: this changes a quote that has already been accepted
+- `discount_requested`: the customer has asked for a number off the book
+- `pricebook_unreadable`: the price list could not be read fresh, so nothing can be priced
 
 The quote is not drafted around the unpriceable line. If one of four lines cannot be priced, the whole quote parks with the other three attached, ready for a person to finish in under a minute. Sending three quarters of a quote is how a business ends up doing the fourth quarter for free.
 
