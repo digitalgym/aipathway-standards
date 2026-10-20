@@ -98,7 +98,7 @@ skill asserts.
 - 8. Parts That Are Harder Than They Look
 - 9. What It Is Worth
 - 10. What Breaks After It Works
-- 11. Conformance checklist
+- 11. A checklist to hold any build or supplier to
 
 ## Attribution
 

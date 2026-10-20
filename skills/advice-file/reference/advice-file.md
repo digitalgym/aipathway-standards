@@ -81,7 +81,7 @@ The worked example. In September 2026 Yellow Brick Road described a suite of age
 
 Coaching is not a fifth job. Coaching is a derived view over the file and the source cards. If the file is empty, the coach is a speech. How the five fit together, and the order to build them, is in [combining the build standards](https://aipathway.com.au/explore-ai/combining-the-standards).
 
-## 2. The objects, and what is in them
+## 2. The records it keeps, in the shape your developer needs
 
 Seven objects. The source card and the missing field are the two most implementations leave out, because the conversation appears to function without them.
 
@@ -202,7 +202,7 @@ These are not conservative defaults. They are the parts where an Australian cred
 
 The assistant may draft. It may not occupy sent_by, waived_by, accepted_by or decided_by.
 
-## 8. Provider: what to stub, and what not to hand-roll
+## 8. What your developer builds, and the step that needs care
 
 One step not to hand-roll: the live CRM write. Everything else an AI coding agent can build against the stub in an afternoon.
 
@@ -235,7 +235,7 @@ There is no hosted product for this standard. The production check runs against 
 
 **The pass test.** Stage it on a real tenant of the CRM and a dated panel library you control. Interview A: a purchase file, owner-occupier, PAYG, genuine savings spoken unclearly, the address said once and slightly wrong. Disclosure must precede the first question, the address must be resolved and read back, the savings figure must land as a missing field with reason asked_unclear rather than a guessed dollar amount, one file must be written with an external id, and nothing may reach ready_for_person. Interview B: the same client, the same day, the savings figure now clear. The existing file is updated, not duplicated; the gap closes; a second task is not raised; still no send. Then retire the clause a draft would have used and load its replacement accepted by a named person: the draft moves to blocked, a search returns the new card or a decline, and the retired clause cannot come back as live. Then detach the library and ask the same scenario. The only conforming output is a decline. If it answers from memory, the build fails even if the words are right.
 
-## 9. Conformance checklist
+## 9. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 

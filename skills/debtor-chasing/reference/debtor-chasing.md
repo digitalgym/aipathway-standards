@@ -286,7 +286,7 @@ Everything above, in the order a build actually does it. Steps 1 to 7 are yours 
 11. Move the next follow-up to the promised date. Not to tomorrow.
 12. Stop on payment, driven off the ledger rather than a nightly export.
 
-## 13. Conformance checklist
+## 13. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 
@@ -305,7 +305,7 @@ Hold a DIY build or a vendor to this. If a box is empty, it is not in production
 
 Building this on Microsoft 365: [the lists, the flows and the measures](https://aipathway.com.au/explore-ai/debtor-chasing-on-microsoft-365).
 
-## The parts that move
+## Facts that can change, and when we checked them
 
 Checked as at 18 September 2026
 

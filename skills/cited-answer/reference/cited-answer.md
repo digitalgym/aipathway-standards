@@ -69,7 +69,7 @@ It does not cover assistants that draft, summarise or rewrite your own material.
 
 The failure this prevents is specific and it is not hallucination in general. It is the answer that was correct eighteen months ago, delivered today with the same confidence, because the model learned the rule rather than reading it.
 
-## 2. The objects, and what is in them
+## 2. The records it keeps, in the shape your developer needs
 
 Five objects. The source card is the one that does the work, and it is the one most implementations leave out because retrieval appears to function without it.
 
@@ -153,7 +153,7 @@ Internal answers may be specific and may name what to do next. Public answers de
 - Any answer where the consequence of being wrong is somebody's safety rather than somebody's afternoon.
 - Deciding that a question is outside the body of rules you hold, and saying so to the person who asked.
 
-## 8. Provider: what to stub, and what not to hand-roll
+## 8. What your developer builds, and the step that needs care
 
 Retrieval over a clause library is an ordinary build and you should do it yourself. The part worth naming is that the gate is not a component you can buy.
 
@@ -179,7 +179,7 @@ There is no product for this standard. A vendor selling a compliance chatbot is 
 
 **The pass test.** Take a clause your assistant answers from today and retire it: set an effective end date and load the replacement with a later effective date. Ask the same question again. The answer must either change and cite the new clause, or decline into the change pending queue until somebody accepts the delta. Then list every answer already given that relied on the retired clause; the list must come from the stored cards, not a search. Then ask a question your library genuinely does not cover, something adjacent but absent. It must decline and name a person. Both take a few minutes against your own material. If the first still answers from the retired clause, your cards are decoration; if the second produces a plausible paragraph with no card, the model is answering from memory and the standard is not implemented.
 
-## 9. Conformance checklist
+## 9. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 

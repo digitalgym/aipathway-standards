@@ -71,7 +71,7 @@ What it does not cover. It does not classify well. Whether a build tells a state
 
 What cannot meet it. A job system with no API cannot take the filing write, so on Tradify the record side of this standard cannot be met. The message can still be filed against the supplier in Xero and the job reference kept on the item, and the standard says that plainly rather than claiming a write that does not exist.
 
-## 2. The objects, and what is in them
+## 2. The records it keeps, in the shape your developer needs
 
 Six objects. The release is the one most builds leave out, because a reply appears to go out fine without anybody having said so. The evidence is the other, because the body text looks like enough until the bookkeeper needs the PDF.
 
@@ -158,7 +158,7 @@ The clock belongs to the kind. A complaint has hours, a quote request has a day,
 - Reading everything the machine called other. That queue is the classifier admitting it does not know.
 - The queue table itself: who owns each kind and how long it may wait.
 
-## 8. Provider: what to stub, and what not to hand-roll
+## 8. What your developer builds, and the step that needs care
 
 Two steps not to hand-roll: the filing write that attaches a message to the right job or supplier by id in a system you do not own, and the release gate on every reply. There is no hosted product for either. Everything else a coding agent builds against the stub in an afternoon.
 
@@ -191,7 +191,7 @@ A vendor selling inbox automation is usually selling the classifier and an auto-
 
 **The pass test.** On the real mailbox for a week, not a sample. A real supplier invoice must end up as evidence on the supplier’s record with the attachment’s hash and the message id, where the Invoice Check standard can read it. A real complaint must reach a named person whole, with the item marked escalated and nothing sent to the customer, not even an acknowledgement. A real thread of three messages must be one item carrying three message ids. Every reply in the sent folder for the week must trace to a release naming a person who works there, and every other outbound must be an acknowledgement with a promised time and nothing else in it. Then pull the record for any message by its id: the kind, the record it was filed to, the owner, the due date, and who released what went out must all be there. If any of those is not what happened, the standard is not implemented, however good the classifier is.
 
-## 9. Conformance checklist
+## 9. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 

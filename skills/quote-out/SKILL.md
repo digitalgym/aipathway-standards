@@ -97,7 +97,7 @@ skill asserts.
 - 6. Write-back, and writing once
 - 7. Sending stays with a person
 - 8. Provider and hosting
-- 10. Conformance checklist
+- 10. A checklist to hold any build or supplier to
 
 ## Attribution
 

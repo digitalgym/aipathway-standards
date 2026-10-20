@@ -116,7 +116,7 @@ The same shape as the Multi-Site Conformance standard. A small set of types, nam
 
 Add types by bumping the contract version. Do not silently invent a RELATED_TO edge. That edge is how a pile sneaks back in.
 
-## 4. The objects, and what is in them
+## 4. The records it keeps, in the shape your developer needs
 
 Nine objects the build actually stores. The acceptance and the supersession are the two most retrieval builds leave out, because search appears to function without them.
 
@@ -222,7 +222,7 @@ If a vendor’s architecture diagram reads embeddings, then model, then answer, 
 
 The extractor may propose. It may not occupy accepted_by or decided_by. Client material does not become a source because it was sitting in the same drive. Promoting an interview claim into a fact is a person, and the fact still needs provenance.
 
-## 9. Provider: what to stub, and what not to hand-roll
+## 9. What your developer builds, and the step that needs care
 
 Three steps not to hand-roll, and they are the same three the Rejected Pack standard already named in other words. Extraction, embedding, the interface and the first cut of types, an agent can build against the stub in an afternoon.
 
@@ -251,7 +251,7 @@ There is no hosted product for this standard. The production check runs over the
 
 **The pass test.** Stage it on a corpus you control, with at least one system-of-record id. Load two sources, a lender policy with a dated edition and a one-page internal rule that cites it: two Source records with checksums, passages with replayable locators, proposed clauses and at least one APPLIES_TO, and nothing live until a named person accepts the sources and the nodes. Ask a question the clause covers with an asked-about date inside the edition: the hit is a node id, not a chunk id, and a card can be built from it. Detach the vector index and ask again: the same node, or a decline, never a new paragraph from memory. Replace the PDF with an edition that drops the clause: the delta lists the old clause, the old node leaves live, the queries that used it are findable, and the new extract is proposed rather than silently live. Name the lender two ways, in the PDF and in the CRM: SAME_AS accepted by a person, or two nodes and a conflict. Drop the same PDF into a folder, embed it, and answer without writing a Source: the build cannot call that path production. Then edit the internal rule so it restates the lender clause and change the lender clause: the restated fact goes change pending with its parent, or the fact lived twice and the standard is not implemented.
 
-## 10. Conformance checklist
+## 10. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 

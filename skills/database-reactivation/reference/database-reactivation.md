@@ -271,7 +271,7 @@ This section is the honest one, and it is the reason a build standard is worth p
 
 None of that is an argument against building it. It is an argument for knowing which parts you want to still be true after you stop paying attention to them.
 
-## 11. Conformance checklist
+## 11. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 
@@ -294,7 +294,7 @@ Published by AI Pathway · https://aipathway.com.au
 
 Read the full interactive version at https://aipathway.com.au/explore-ai/database-reactivation-build-standard
 
-## The parts that move
+## Facts that can change, and when we checked them
 
 Checked as at 18 September 2026
 

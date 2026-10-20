@@ -96,13 +96,13 @@ skill asserts.
 - 1. What this standard covers
 - 2. Pile, index, graph
 - 3. The key contract
-- 4. The objects, and what is in them
+- 4. The records it keeps, in the shape your developer needs
 - 5. The checks, in order
 - 6. The four queues for a node
 - 7. What the index is allowed to do
 - 8. What stays with a person
-- 9. Provider: what to stub, and what not to hand-roll
-- 10. Conformance checklist
+- 9. What your developer builds, and the step that needs care
+- 10. A checklist to hold any build or supplier to
 
 ## Attribution
 

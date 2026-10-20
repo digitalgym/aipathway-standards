@@ -102,8 +102,8 @@ skill asserts.
 - 11. Sequencing against the other four jobs
 - 12. What It Is Worth
 - 13. The three objects, as fields
-- 14. Provider: what to stub, and what not to hand-roll
-- 15. Conformance checklist
+- 14. What your developer builds, and the step that needs care
+- 15. A checklist to hold any build or supplier to
 
 ## Attribution
 

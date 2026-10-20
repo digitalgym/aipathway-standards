@@ -75,7 +75,7 @@ Before a report exists, a person writes the definition of each measure once: whi
 
 The register is the product. The report is what it produces.
 
-## 3. The objects, and what is in them
+## 3. The records it keeps, in the shape your developer needs
 
 Six objects. The definition and the version are the two most reporting tools leave out, because a dashboard that refreshes looks like it has both.
 
@@ -149,7 +149,7 @@ The same rule this site holds itself to. A number without a source is not on the
 - What a figure means to a lender, a franchisor or a board.
 - Whether a report goes outside the business at all.
 
-## 8. Provider: what to stub, and what not to hand-roll
+## 8. What your developer builds, and the step that needs care
 
 No hosted step. The part not to get wrong is the schedule that publishes regardless, with its version history, on your own tenant. The register stays yours. Everything else a coding agent builds against the stub in an afternoon.
 
@@ -173,7 +173,7 @@ A vendor selling a dashboard is selling the refresh, which is the easy half, and
 
 **The pass test.** On real sources, for two periods. Make one source unreadable for the second period: the figure must publish as unavailable with the reason and its owner must be told, and the report must still go out on time. Set a threshold on one measure and cross it: a named person must be told that run. Correct a published figure as a named person: a new version must exist with the reason, the old version must be readable, and nothing edited in place. Then check both periods published at their scheduled time with a source and an as-of time on every figure, and read the commentary for any number that is not on the figure list. If a stale figure showed as current, or a sentence invented one, the standard is not implemented.
 
-## 9. Conformance checklist
+## 9. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 

@@ -69,7 +69,7 @@ It covers the slot, not the call. The [Booked After Hours standard](https://aipa
 
 What cannot meet it. Tradify has no public API, so a slot cannot be written into it or read back. ServiceM8, Simpro and Jobber can all take a booked time against a job. On a spreadsheet board the standard still holds, but the write and the id are yours to keep honest.
 
-## 2. The objects, and what is in them
+## 2. The records it keeps, in the shape your developer needs
 
 Six objects. The consent and the escalation are the two most boards leave out, because the board looks fine without them right up until a customer is texted twice and a job is dropped.
 
@@ -152,7 +152,7 @@ The licence rule has no such override. A gas job goes to a gas-licensed tech or 
 - Anything said to a customer who is upset that the time moved.
 - Which licences each tech holds and when they expire. The board reads that record; a person keeps it true.
 
-## 8. Provider: what to stub, and what not to hand-roll
+## 8. What your developer builds, and the step that needs care
 
 Two steps not to hand-roll: the write into the job system's schedule with an id back, and the customer message with consent. Everything else a coding agent builds against the stub in an afternoon.
 
@@ -185,7 +185,7 @@ There is no hosted dispatch product. A vendor selling a smart board is usually s
 
 **The pass test.** On the real job system, not a sample. Mark one job for scheduling twice, an hour apart: one slot must exist with the system’s own id, updated not duplicated. Put a gas requirement on a job and make the only free tech the one whose licence expired: the job must be unassignable with that reason and an owner, never slotted. Raise an emergency at a time a routine job holds: the board must propose the displacement, wait for a named dispatcher, and re-slot or escalate the displaced job in the same run. Then change the window on a slotted job: the slot must move, and the customer and the tech must each receive exactly one fresh message. If any of those four is not what happened, the standard is not implemented, however full the board looks.
 
-## 9. Conformance checklist
+## 9. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 

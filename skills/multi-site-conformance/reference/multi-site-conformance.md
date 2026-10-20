@@ -67,7 +67,7 @@ Any business running the same operating process in more than one place under mor
 
 The failure it prevents is not non-compliance. It is invisibility. A branch working entirely outside the system looks identical, on every report the centre has, to a branch with nothing happening, and both look better than a branch that is honestly recording its problems.
 
-## 2. The objects, and what is in them
+## 2. The records it keeps, in the shape your developer needs
 
 Three objects on top of whatever the underlying standard already defines. The key contract is the one that has to be written down and versioned, because an unwritten convention is what forks.
 
@@ -150,7 +150,7 @@ Publish on a fixed schedule regardless of the numbers. A report that appears whe
 
 The fourth is the one that decides whether this standard helps or harms. A scoring system that punishes honest recording will get clean numbers within two months and will have destroyed the only instrument you had.
 
-## 8. Provider: what to stub, and what not to hand-roll
+## 8. What your developer builds, and the step that needs care
 
 This is a build on top of whatever you already run. The only thing worth buying here is the identity you almost certainly already own.
 
@@ -180,7 +180,7 @@ There is no product for this standard and we do not know of a credible one. Fran
 
 **The pass test.** In a non-production copy, take one segment and break the contract two ways. First, create a record that is missing a required key, or put a value in a closed-list field that is not on the list. Second, do something a gate should prevent: type a date the system is supposed to derive, or close a piece of work with its required evidence absent. Then wait for the next scheduled run without touching anything. Both must appear as drift findings against that segment, in the report that segment receives, with enough detail to find the record. Next, try to rename a key in that segment: validation must refuse it at the source, not flag it in a report afterwards. Last, let a period pass with nothing to report: the report must still publish on time, saying so. If a finding is missing, you have a report rather than a control; if findings appear only in the centre’s copy and not the segment’s, you have surveillance rather than a feedback loop, and it will be resented accordingly; if the quiet period goes unreported, silence now means both “fine” and “stopped”.
 
-## 9. Conformance checklist
+## 9. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 

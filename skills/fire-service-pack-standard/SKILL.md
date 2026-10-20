@@ -98,8 +98,8 @@ skill asserts.
 - 6. Who is waiting at the end
 - 7. Jurisdiction is data, not a constant
 - 8. The objects, and the fields that make them bindable
-- 9. Provider: what to stub, and what not to hand-roll
-- 10. Conformance checklist
+- 9. What your developer builds, and the step that needs care
+- 10. A checklist to hold any build or supplier to
 
 ## Attribution
 

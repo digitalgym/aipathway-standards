@@ -86,7 +86,7 @@ Six kinds, a closed list. The kind decides who may read it and how long it is ke
 
 The last row is the one that goes wrong. A client interview saved in the policy folder gets embedded with the policy, and the shared search then returns a client’s circumstances to whoever asks a policy question. Kind is set on arrival and the index is scoped by it.
 
-## 3. The objects, and what is in them
+## 3. The records it keeps, in the shape your developer needs
 
 Six objects. The register entry does the work. The watch run and the gap are the two most builds leave out, because a search over a drive appears to function without either.
 
@@ -185,7 +185,7 @@ Read upward, the stack is this standard, then the graph, then Cited Answer, then
 
 The build may propose all five. It may not occupy owner or promoted_by, and it may not set duplicate_of without a person.
 
-## 9. Provider: what to stub, and what not to hand-roll
+## 9. What your developer builds, and the step that needs care
 
 One step not to hand-roll, and it is a schedule and a table rather than software. The rest an agent builds on the tenant in an afternoon once the sources are found.
 
@@ -214,7 +214,7 @@ There is no hosted product for this standard. The production check runs over the
 
 **The pass test.** On the business’s real drive, not a sample. Register every source with a person against it, and compare the register to the drive: anything on the drive and not on the register, or the other way round, is the finding. Find the two copies of the same manual the drive is holding, because it is, and resolve them to one entry. Find the client file in the wrong folder, register it as customer material with an access list, and confirm it does not appear in the shared search for someone outside that list. Pick one instrument the issuer will actually replace during the trial and let the watch run: once the new edition lands on the drive, the new checksum must be on the register and the owner must have been told within one cycle, without anybody noticing the change by hand first. For a source only the issuer holds, the recheck task must fire on schedule and the owner’s confirmation must be recorded. Then run a search for something the material covers and hand the result to the owner: every locator must open to the passage it names, and the result must contain no paragraph the tool wrote.
 
-## 10. Conformance checklist
+## 10. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 

@@ -99,9 +99,9 @@ skill asserts.
 - 7. When the chase becomes a conversation
 - 8. What breaks after it works
 - 9. What It Is Worth
-- 10. The objects, and what is in them
-- 11. Provider: what to stub, and what not to hand-roll
-- 12. Conformance checklist
+- 10. The records it keeps, in the shape your developer needs
+- 11. What your developer builds, and the step that needs care
+- 12. A checklist to hold any build or supplier to
 
 ## Attribution
 

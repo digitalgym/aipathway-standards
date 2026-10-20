@@ -84,7 +84,7 @@ Six kinds. A closed list, so an anomaly always has a name and an owner, and a ne
 
 An entry with an open anomaly is not a line on the sheet. It is not paid at a guessed figure and it is not quietly dropped. It waits, in front of its owner, with a reason.
 
-## 3. The objects, and what is in them
+## 3. The records it keeps, in the shape your developer needs
 
 Seven objects. The card and the release are the two most timesheet tools leave out, because a total that adds up looks finished.
 
@@ -151,7 +151,7 @@ An entry the rule does not plainly cover, a disputed break, a split shift nobody
 - Which award applies to the business, and which clause applies to the odd shift.
 - Any dispute with the person whose hours they are. The check shows the entry; a person has the conversation.
 
-## The parts that move
+## Facts that can change, and when we checked them
 
 Checked as at 26 September 2026
 
@@ -159,7 +159,7 @@ Modern award rates, penalties and allowances change on a schedule set by the Fai
 
 **Check these against the primary instrument before you rely on them**, and store the date you checked beside the value rather than hard-coding it. This standard tells you the shape and where to look. It is not legal advice and it does not tell you that anything complies.
 
-## 8. Provider: what to stub, and what not to hand-roll
+## 8. What your developer builds, and the step that needs care
 
 One step not to hand-roll: the release gate and the idempotent export into payroll, with an id back. Everything else a coding agent builds against the stub in an afternoon.
 
@@ -183,7 +183,7 @@ A vendor selling timesheet automation is usually selling the capture and the ari
 
 **The pass test.** On a real period, with the entries people actually captured. Seed two entries for one person that overlap: both must be in the anomaly queue with a supervisor’s name. Seed an entry on a job the person was never allocated: it must be an anomaly, not a line. Retire the current award edition and load the next with a later effective date: the following period must cite the new edition only, and an entry the new edition does not plainly cover must park with the kind rule_unclear. Clear every anomaly as a named person with a reason, release the period as a named person, and run twice an hour apart: exactly one export must exist in payroll with its own id, and the record for any person must show their entries, their anomalies with resolutions, the cards, and the release with a name. If the export exists without a release, or a card cites the retired edition, the standard is not implemented.
 
-## 9. Conformance checklist
+## 9. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 

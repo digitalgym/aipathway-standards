@@ -69,7 +69,7 @@ It sits between two standards that exist. The [Quote Out standard](https://aipat
 
 What cannot meet it. A supplier with no catalogue the business can read, only a phone number, cannot be the source of a price. Orders to that supplier park on every line until a person prices them, and the standard says so rather than letting a remembered price through.
 
-## 2. The objects, and what is in them
+## 2. The records it keeps, in the shape your developer needs
 
 Seven objects. The stock read and the docket are the two most ordering tools leave out, because an order that arrived looks finished.
 
@@ -150,7 +150,7 @@ The matched delivery is the record the supplier’s invoice should be compared a
 - Accepting a substitution, on site, with their name on the line.
 - Every variance: short, over, wrong, damaged, or a price that moved between catalogue and invoice.
 
-## 7. Provider: what to stub, and what not to hand-roll
+## 7. What your developer builds, and the step that needs care
 
 One step not to hand-roll: the idempotent write of the order into the system the business buys from, with an id back. Everything else a coding agent builds against the stub in an afternoon.
 
@@ -174,7 +174,7 @@ A vendor selling purchasing automation is usually selling the picking list, whic
 
 **The pass test.** On the real job system and a real supplier account. Order one job twice, an hour apart: one order per supplier must exist with the system’s own id, updated not duplicated. Put stock on the shelf for one line: it must be reserved, not ordered. Put a code on the job that no catalogue holds: the order must park with that reason and carry no price for it. Set a threshold and order one job over it: it must wait for a named person, and go out only with their name on the release. Then record a delivery one line short: the variance must be in the queue with an owner. If any of those five is not what happened, the standard is not implemented.
 
-## 8. Conformance checklist
+## 8. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 

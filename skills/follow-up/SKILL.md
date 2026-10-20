@@ -92,14 +92,14 @@ skill asserts.
 
 - 1. What this standard covers
 - 2. The kinds of thing owed
-- 3. The objects, and what is in them
+- 3. The records it keeps, in the shape your developer needs
 - 4. The checks, in order
 - 5. The four queues
 - 6. The cadence and the cap
 - 7. The call
 - 8. What stays with a person
 - 9. Join It to Your Own System: What to Stub, and What Not to Hand-Roll
-- 10. Conformance checklist
+- 10. A checklist to hold any build or supplier to
 
 ## Attribution
 

@@ -92,13 +92,13 @@ skill asserts.
 ## The work, in order
 
 - 1. What this standard covers
-- 2. The objects, and what is in them
+- 2. The records it keeps, in the shape your developer needs
 - 3. The checks, in order
 - 4. The six queues
 - 5. Delivery, and what it feeds
 - 6. What stays with a person
-- 7. Provider: what to stub, and what not to hand-roll
-- 8. Conformance checklist
+- 7. What your developer builds, and the step that needs care
+- 8. A checklist to hold any build or supplier to
 
 ## Attribution
 

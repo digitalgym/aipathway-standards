@@ -101,7 +101,7 @@ skill asserts.
 - 9. What Stays With a Person
 - 11. Join It to Your Own System: Hand Over the Call
 - 12. The Run, Step by Step
-- 13. Conformance checklist
+- 13. A checklist to hold any build or supplier to
 
 ## Attribution
 

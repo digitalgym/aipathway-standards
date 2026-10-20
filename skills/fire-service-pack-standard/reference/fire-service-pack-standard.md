@@ -192,7 +192,7 @@ queue:              pass | defect | blocked | unbound
 
 The two fields that carry the whole standard are service_record.asset_id and evidence. If a record can exist without them, the unbound queue in section 3 cannot be built, and unbound work stays invisible.
 
-## 9. Provider: what to stub, and what not to hand-roll
+## 9. What your developer builds, and the step that needs care
 
 Section 1 points at the parent standard, which names the binding layer as the step not to hand-roll and says plainly that no product covers it. That is still true here. This block exists so an agent does not go looking for one, and does not stand up a second document store beside the one the business already keeps.
 
@@ -222,7 +222,7 @@ Fire and electrical work is licensed work. The build routes and records; it does
 
 **The pass test.** Take one completed visit and delete its tag photograph, then try to close the job: it must not close, and the record must land in unbound rather than pass. Then take a visit where no baseline reading was available and look at the record: the absence must be stored as a recorded non-conformance, not as an empty field, because an empty field and a missing baseline are different facts and only one of them is reportable. Then ask the system for the same asset’s pack twice, once as a Queensland site and once as a Victorian one: if the retention period and the person who may attest do not differ, the jurisdiction is hard-coded somewhere and the build is wrong in at least one state.
 
-## 10. Conformance checklist
+## 10. A checklist to hold any build or supplier to
 
 A build conforms to this standard when every line is true. Hand it to whoever built yours, including an AI coding agent, and make them answer it.
 

@@ -89,7 +89,7 @@ What cannot meet it. Tradify has no public API, so nothing can read a completed 
 
 The failure this prevents is specific: not the wrong number, but the invoice that did not exist on the day, and the second one that did exist because the job was marked complete twice.
 
-## 2. The objects, and what is in them
+## 2. The records it keeps, in the shape your developer needs
 
 Five objects. The release is the one most builds leave out, because the invoice appears to go out fine without anybody having said so.
 
@@ -172,7 +172,7 @@ The gate is on the object, not in a prompt. A build that sends because a model d
 - The claim under security of payment law, with the builder and their advisor.
 - Credit notes, write-offs and discounts. This standard raises invoices; it never reduces one.
 
-## The parts that move
+## Facts that can change, and when we checked them
 
 Checked as at 26 September 2026
 
@@ -269,7 +269,7 @@ Checked against Office Voice on 2 October 2026.
 
 **The pass test.** On a real job system and a real ledger, not a sample. Mark one job complete twice, an hour apart: one invoice must exist in the ledger with the ledger’s own id, and the second event must have updated it or done nothing. Put a variation on a job with no signed acceptance on file: the invoice must park with reason unsigned_variation and a person must be told, and billing it must be impossible until the signature is attached. Put a code on a job that the price book does not hold: the invoice must park with reason not_in_pricebook and carry no rate for that line. Set a release rule with a threshold and complete one job under it and one over it: the first goes out with the rule’s name on the release, the second waits for a person. Then pull the record for any sent invoice by job id: the lines, the book edition, the release and the send time must all be there. If any of those five is not what happened, the standard is not implemented, however good the PDF looks.
 
-## 10. Conformance checklist
+## 10. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 

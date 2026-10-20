@@ -214,7 +214,7 @@ Otherwise nobody can tell a check that found three problems from one that silent
 
 The most valuable output is often check three: making the absence of a written variation approval visible, because that is where the money actually goes.
 
-## 9. The objects, and what is in them
+## 9. The records it keeps, in the shape your developer needs
 
 Sections 2 to 4 in the shape a build needs them. The check result carries which check failed AND which checks never ran, because the order is part of the specification and an exception that does not say where it stopped cannot be acted on.
 
@@ -253,7 +253,7 @@ exception:                          # a record, not a notification
 
 The exception keeps its date and its evidence after it is closed. In an industry that gets audited, a decision without the document that informed it is worth very little eighteen months later.
 
-## 10. Provider: what to stub, and what not to hand-roll
+## 10. What your developer builds, and the step that needs care
 
 There is nothing to buy here, and the block says so rather than pointing at something adjacent. The reason is section 6: the hard part is the binding between an invoice line and the approval record, and that binding is specific to how a business already works.
 
@@ -290,7 +290,7 @@ This standard finds and files. It does not decide, and the difference is the who
 - **Telling a supplier they are wrong.** The build produces the comparison. A person has the conversation.
 - **Accepting a low-confidence extraction.** A marked field is a prompt for a human, never something that promotes itself once nobody looks.
 
-## 12. Conformance checklist
+## 12. A checklist to hold any build or supplier to
 
 A build conforms to this standard if all of the following are true. Use it on your own implementation, or on one an AI built for you.
 
@@ -306,7 +306,7 @@ A build conforms to this standard if all of the following are true. Use it on yo
 - It survives the builder.
 - The pass test passes.
 
-## The parts that move
+## Facts that can change, and when we checked them
 
 Checked as at 18 September 2026
 

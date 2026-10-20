@@ -84,7 +84,7 @@ Each of those passes on its own, and none of them fails if the id dies between t
 
 What cannot meet it. A job system with no API cannot hand its job id to anything, so the chain cannot start from it. Tradify is the common case: a Tradify business can run Quote Out, Invoice Out and Debtor Chasing from the ledger alone, with the job entered by a person, but not the seam from the call. The standard says so rather than claiming a link that does not exist.
 
-## 2. The objects, and what is in them
+## 2. The records it keeps, in the shape your developer needs
 
 Five objects, all of them already in the job system or the ledger. The seam adds no table of its own: it adds one field to each record, the id of the record before it, and an owner on every exception.
 
@@ -158,7 +158,7 @@ The test is a read through the port. A record counts once the job system or the 
 - Deciding two enquiries are the same job when the number does not say so.
 - Everything the four standards it binds already keep with a person: prices, variations, disputes and hardship.
 
-## The parts that move
+## Facts that can change, and when we checked them
 
 Checked as at 3 October 2026
 
@@ -168,7 +168,7 @@ Each hop’s hosted step is live on its own page. No end-to-end run of the seam 
 
 **Check these against the primary instrument before you rely on them**, and store the date you checked beside the value rather than hard-coding it. This standard tells you the shape and where to look. It is not legal advice and it does not tell you that anything complies.
 
-## 8. Provider: what to stub, and what not to hand-roll
+## 8. What your developer builds, and the step that needs care
 
 One step not to hand-roll, and it is the same step at every hop: identity from the system of record, and the authenticated single write into the job system or the ledger that returns its id. Everything else is wiring a coding agent builds against the stub in an afternoon.
 
@@ -199,7 +199,7 @@ A vendor selling an end-to-end cash flow is usually selling four screens that ea
 
 **The pass test.** On the business’s own job system and ledger, not a sample. Ring the line twice from the same number. Accept the quote that comes out. Mark the job complete. Let the invoice go past its due date. There must be exactly one job, one quote, one invoice and one chase, and each must carry the id of the one before it as the job system or the ledger issued it: the second call attached to the first job, the quote naming the job, the invoice naming the quote and the job, the chase naming the invoice it read off the ledger. Then run it again and force one write to come back with no external id. The chain must stop there, with an escalation naming its owner and nothing released, sent or chased downstream of it. A stub cannot pass this: it issues whatever ids it likes and links whatever it is told to, so a build can agree with itself there and still key the real invoice to a name.
 
-## 9. Conformance checklist
+## 9. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 

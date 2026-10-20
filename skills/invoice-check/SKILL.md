@@ -97,10 +97,10 @@ skill asserts.
 - 6. The parts that are harder than they look
 - 7. What breaks after it works
 - 8. What It Is Worth
-- 9. The objects, and what is in them
-- 10. Provider: what to stub, and what not to hand-roll
+- 9. The records it keeps, in the shape your developer needs
+- 10. What your developer builds, and the step that needs care
 - 11. What stays with a person
-- 12. Conformance checklist
+- 12. A checklist to hold any build or supplier to
 
 ## Attribution
 

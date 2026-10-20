@@ -193,7 +193,7 @@ Every row carries the certificate or report, not just a tick, which is what a tr
 
 The largest gain is the rule change that recomputes every date instead of leaving a column quietly wrong with no way to tell which rows moved.
 
-## 9. The objects, and what is in them
+## 9. The records it keeps, in the shape your developer needs
 
 Sections 2 and 3 in the shape a build needs them. The whole standard turns on one relationship: a rule has an effective date, and a due date is derived from it. Storing the due date and letting somebody edit it is the failure this exists to prevent.
 
@@ -238,7 +238,7 @@ state_change:                    # append only
 
 The breached state must never clear itself. A breached obligation that quietly disappears when the work is finally done destroys the only record that it was ever breached, which is exactly the record somebody asks for.
 
-## 10. Provider: what to stub, and what not to hand-roll
+## 10. What your developer builds, and the step that needs care
 
 Unusually for these standards, there is nothing here to buy. This one is a build, and the honest version of a provider block says so rather than inventing a product to point at.
 
@@ -262,7 +262,7 @@ What makes this a build rather than a purchase is that the rule set is jurisdict
 
 **The pass test.** Change one rule’s interval and give the change an effective date. Every obligation derived from that rule must show a new due date, and each one must still be able to tell you which rule version produced it. Then take an obligation in the breached state, complete it, and confirm the record still says it was breached. Both take a minute against your own data. If the first needs anyone to retype a date, the due dates are stored rather than derived; if the second quietly reads as done, you have lost the only evidence that matters.
 
-## 11. Conformance checklist
+## 11. A checklist to hold any build or supplier to
 
 A build conforms if all of the following are true. Use it on your own implementation, or on one an AI built for you.
 

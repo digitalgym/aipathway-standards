@@ -189,7 +189,7 @@ The swap from `stub` to a real adapter is the only step that needs anything from
 
 A stub cannot pass this. It cannot authenticate into a tenant it does not have, it cannot be rejected by that vendor’s validation, and it cannot prove the catalogue ids it used are the ones the office actually bills on. If your build passes the second run and fails the third, your write is not idempotent, which is section 6. If it prices the fourth line in the first run, it is not conforming, and that is the one failure on this page that costs real money.
 
-## 10. Conformance checklist
+## 10. A checklist to hold any build or supplier to
 
 A build conforms to this standard when every line is true. Hand this to whoever built yours, including an AI coding agent, and make them answer it.
 

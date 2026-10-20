@@ -75,7 +75,7 @@ Before a run reads a record, a person writes down four things. Which two sources
 
 The master per field is the decision most businesses have never made explicitly. The ledger is master for the amount; the job system is master for the address; the bank feed is master for the date it landed. Write it once. Most of the standard is that sentence.
 
-## 3. The objects, and what is in them
+## 3. The records it keeps, in the shape your developer needs
 
 Five objects. The contract and the correction are the two most reconciliations leave out, because a spreadsheet with two columns and a highlighter appears to work without either.
 
@@ -143,7 +143,7 @@ The all-clear publishes. A run that says nothing when everything matched is indi
 - Setting a tolerance, and changing one.
 - Deciding an orphan is real: a record that should exist in the other source, or one that should not exist at all.
 
-## 7. Provider: what to stub, and what not to hand-roll
+## 7. What your developer builds, and the step that needs care
 
 One step not to hand-roll: the accepted correction's write into the target source, with both original values kept. Everything else a coding agent builds against the stub in an afternoon.
 
@@ -167,7 +167,7 @@ A vendor selling reconciliation is usually selling the comparison, which is the 
 
 **The pass test.** On the real pair, not a sample. Seed one mismatch you know about: the run must show both values side by side with the master’s value and change nothing. Delete one record from one side: the run must raise an orphan with a reason and an owner. Accept the seeded correction as a named person: it must be written once into the target with its own id, and both original values must still be readable afterwards. Then run again with nothing changed: the run must publish an all-clear with its counts. If the correction was written before anyone accepted it, or the old value is gone, the standard is not implemented, however tidy the two records look.
 
-## 8. Conformance checklist
+## 8. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 

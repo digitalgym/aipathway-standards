@@ -219,7 +219,7 @@ Escalate the pattern break and the first miss on a long tenancy. The platform al
 
 The hard part is knowing when to stop. A chase sent to someone who already paid, or who is in hardship, costs more than the arrears.
 
-## 10. The objects, and what is in them
+## 10. The records it keeps, in the shape your developer needs
 
 Sections 2 to 4 in the shape a build needs them. The arrears position is derived on every read and never stored, which is the property most implementations get wrong: a cached number is right on the day it was written and wrong every day after.
 
@@ -255,7 +255,7 @@ statutory_clock:
 
 Nothing above stores a days-in-arrears figure. If your schema has a column for it, the number will be wrong on a Monday after a weekend payment, and the tenant will be chased for money they have paid.
 
-## 11. Provider: what to stub, and what not to hand-roll
+## 11. What your developer builds, and the step that needs care
 
 Everything in sections 2 to 5 is yours and worth building. The line is the conversation: the moment this stops sending messages and starts talking to a person about their home.
 
@@ -286,7 +286,7 @@ Build against the stub until the message stops being enough. A build that stops 
 
 **The pass test.** Start a chase on a tenancy that is showing arrears. After the first message and before the next, apply a payment in the ledger that clears it. Nothing more may be sent, and the record must say which stop condition caught it. Then push one tenancy past the threshold: the notice is drafted and sits unserved until a named person releases it. As an extra step, re-run the first with the payment reversed and a hardship flag set: again nothing, again with a reason. Each takes a minute to stage from your own data. If a message sends after the payment, your stop conditions are being evaluated once at the start of the sequence rather than before every message, which is section 4 in one sentence. If the notice goes out on its own, section 5 is not built.
 
-## 12. Conformance checklist
+## 12. A checklist to hold any build or supplier to
 
 - The arrears position is derived every run.
 - Paid-to date drives escalation timing.
@@ -300,7 +300,7 @@ Build against the stub until the message stops being enough. A build that stops 
 - It survives the builder.
 - The pass test passes.
 
-## The parts that move
+## Facts that can change, and when we checked them
 
 Checked as at 18 September 2026
 

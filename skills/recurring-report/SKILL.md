@@ -93,13 +93,13 @@ skill asserts.
 
 - 1. What this standard covers
 - 2. The definitions register
-- 3. The objects, and what is in them
+- 3. The records it keeps, in the shape your developer needs
 - 4. The checks, in order
 - 5. The five queues
 - 6. What a sentence on a report may say
 - 7. What stays with a person
-- 8. Provider: what to stub, and what not to hand-roll
-- 9. Conformance checklist
+- 8. What your developer builds, and the step that needs care
+- 9. A checklist to hold any build or supplier to
 
 ## Attribution
 

@@ -80,13 +80,13 @@ An administrator in your Simpro creates the key. No partner, no marketplace, nob
 
 The key opens your whole Simpro, because Simpro does not offer keys that open only part of it. That is why the connection mostly reads, makes one kind of booking at most, and records every request. Deleting the key is the off switch, and the pass test proves it works.
 
-## The parts that move
+## Facts that can change, and when we checked them
 
 Checked as at 19 October 2026
 
 **Check these against the primary instrument before you rely on them**, and store the date you checked beside the value rather than hard-coding it. This standard tells you the shape and where to look. It is not legal advice and it does not tell you that anything complies.
 
-## 3. The objects, and what is in them
+## 3. The records it keeps, in the shape your developer needs
 
 Four records. The request log is the one a quick setup leaves out, and it is the one you need the day an answer looks wrong.
 
@@ -175,7 +175,7 @@ Check:   GET /api/v1.0/info/ says whether the build is multi-company
 - Anything a customer will see: every email, text and quote sent.
 - Deciding two customers are the same person when the phone number does not say so.
 
-## 7. Provider: what to stub, and what not to hand-roll
+## 7. What your developer builds, and the step that needs care
 
 Nothing to buy and nothing we host. It runs on your own computer or account, on your own key. Your developer tests it against a practice copy first, then points it at your Simpro.
 
@@ -199,7 +199,7 @@ A connector sold to you as a hosted service puts someone else's key between Clau
 
 **The pass test.** On your own Simpro, with your own key. Ask for the three oldest quotes still waiting on the customer, and check them by number against Simpro’s quote list filtered the same way: an internally approved quote the customer has not answered must be among them. Book a job for a caller who is already a customer, giving their number written differently from how Simpro holds it, and then book it again: one job must exist, on the existing customer, at the first status. Then delete the key in Simpro and ask again: the answer must say Simpro refused the connection and give no figures, and the log must show every request. If a figure comes back after the key is gone, the standard is not implemented.
 
-## 8. Conformance checklist
+## 8. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 

@@ -107,7 +107,7 @@ Five kinds, a closed list. The kind decides the cadence and what the value at ri
 
 The variation is the one that matters most and the one most often chased by hand. It is billed only when signed, so an unsigned variation is work done for nothing until the signature comes back. This standard chases the signature. It never approves the variation on a call, and it never bills it.
 
-## 3. The objects, and what is in them
+## 3. The records it keeps, in the shape your developer needs
 
 Six objects. The outcome is the one most builds leave out, because a call that ended in a transcript looks like a call that ended in an answer.
 
@@ -250,7 +250,7 @@ A vendor selling automated follow-up is usually selling the reminders. Ask them 
 
 **The pass test.** On real open items with real numbers, not a sample. Put five things the business is actually owed on the register, of at least three kinds, with the value at risk from the record. Run the cadence the business wrote down over its own days. While it runs, have one of the documents actually come back, mid-cadence: that item must show the arrival as evidence and carry no touch after it. Have one contact say no on the call: the item must carry a declined outcome, be with a named person, and receive nothing further. Let one item run past the cap with nothing back: it must be escalated once, to a named person, with every touch listed, and never texted again. Then listen to every call recording: each opens with the AI identification and the recording notice before the ask, and each ends with an outcome on the record that is a date or a decision, not a paragraph. If any of those four is not what happened, the standard is not implemented, however tidy the reminders look.
 
-## 10. Conformance checklist
+## 10. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 

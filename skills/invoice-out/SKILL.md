@@ -93,14 +93,14 @@ skill asserts.
 ## The work, in order
 
 - 1. What this standard covers
-- 2. The objects, and what is in them
+- 2. The records it keeps, in the shape your developer needs
 - 3. The checks, in order
 - 4. The four queues
 - 5. Builders: a stage invoice, never a claim
 - 6. The release gate
 - 7. What stays with a person
 - 9. Join It to Your Own System: the one write not to hand-roll
-- 10. Conformance checklist
+- 10. A checklist to hold any build or supplier to
 
 ## Attribution
 

@@ -93,12 +93,12 @@ skill asserts.
 
 - 1. What this standard covers
 - 2. The closed list of anomalies
-- 3. The objects, and what is in them
+- 3. The records it keeps, in the shape your developer needs
 - 4. The checks, in order
 - 5. The award is a rule you read, not one you interpret
 - 6. What stays with a person
-- 8. Provider: what to stub, and what not to hand-roll
-- 9. Conformance checklist
+- 8. What your developer builds, and the step that needs care
+- 9. A checklist to hold any build or supplier to
 
 ## Attribution
 

@@ -137,7 +137,7 @@ This is also the cheapest thing on the list to test, and section 10 tests it.
 
 Every call returns the same shape, whether it booked, escalated or was out of area. One schema means the board, the report and the audit all read the same thing.
 
-## The objects, and what is in them
+## The records it keeps, in the shape your developer needs
 
 ```
 call_outcome:
@@ -193,7 +193,7 @@ What stays with a person, always: quoting a price, agreeing a variation, safety 
 
 Build the whole flow against the stub. Nothing below needs us until you want a live number behind it.
 
-## Provider: what to stub, and what not to hand-roll
+## What your developer builds, and the step that needs care
 
 ```
 provider:
@@ -239,7 +239,7 @@ One minute, your own phone, your own data. Deliberately nothing here touches the
 
 A stub cannot pass this. It cannot resolve an address it did not hear correctly, it cannot dedupe against a job system it is not connected to, and it cannot produce a recording with a disclosure on it. If your build passes all four, the thing works. If it passes the first call and fails the second, your write is not idempotent, which is section 6.
 
-## 11. Conformance checklist
+## 11. A checklist to hold any build or supplier to
 
 A build conforms to this standard when every line is true. Hand this to whoever built yours, including an AI coding agent, and make them answer it.
 
@@ -258,7 +258,7 @@ A build conforms to this standard when every line is true. Hand this to whoever 
 
 **Eleven of these twelve checks run on your own machine, against the stub, before you talk to anybody. The last one is a live call, and that one runs with us.** That last one is the step this standard told you not to hand-roll, so a red result there is not a bug in your build. Point the number at us and the live call runs, and section 9 says how.
 
-## The parts that move
+## Facts that can change, and when we checked them
 
 Checked as at 18 September 2026
 

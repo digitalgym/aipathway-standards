@@ -357,7 +357,7 @@ pack:                            # handover-shaped, not a folder
 
 The pack is an object, not a directory. If it cannot be handed to an inspector, a builder or an insurer without a scavenger hunt, the build failed however good the documents look.
 
-## 14. Provider: what to stub, and what not to hand-roll
+## 14. What your developer builds, and the step that needs care
 
 Section 8 names the binding layer as the hard step and says plainly that no product covers it. That stays true here: this block exists to stop an agent going looking for one, and to stop it standing up a document store the business already has.
 
@@ -385,7 +385,7 @@ The build reads from the library the business already keeps, extracts into the g
 
 **The pass test.** Change the trading address once, in the business graph. Every open artifact that carries an address must re-derive, and each one must be able to tell you the rule version and the as-of date behind it. Then take a pack in the fail queue and try to hand it over: it must not be possible. Both take a minute against your own data. If the first leaves a stale address in a generated document, you have a second copy of a fact somewhere, which is section 3 in one sentence; if the second succeeds, the queues are labels rather than states.
 
-## 15. Conformance checklist
+## 15. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 

@@ -100,7 +100,7 @@ skill asserts.
 - 8. Provider and hosting
 - 9. Join It to Your Own System
 - 10. The pass test
-- 11. Conformance checklist
+- 11. A checklist to hold any build or supplier to
 
 ## Attribution
 
