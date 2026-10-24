@@ -114,6 +114,33 @@ export const ALL_PORTS = [
   // ordering: a purchase order written into the system the business orders
   // from, keyed to the job and the supplier so a second run cannot re-order.
   "write_order",
+  // the Simpro connector (2026-10-19). `read_quote` reads a quote with its
+  // customer-facing stage, which is a different field from the internal one.
+  // `write_log` is the business's own record of every call the connector
+  // made: the trace is ours, the log is theirs, and the standard asks for both.
+  "read_quote",
+  "write_log",
+  // Price One-Pager (2026-10-24). `read_sales` reads recorded sales out of a
+  // property-data source, each with where it came from and the date it
+  // settled or was reported. Deliberately a READ: the standard refuses to
+  // invent a price, so the only sanctioned source of a number on the page is
+  // a sale somebody recorded. The durable record of what was shown reuses
+  // `evidence`; the release to the vendor reuses `publish_report`.
+  "read_sales",
+  // Open-Home Feedback (2026-10-24). `draft_message` writes a follow-up that
+  // waits for a person's yes; `send_message` is the separate release of an
+  // approved draft. Two ports rather than one so the trace shows the draft
+  // and the send as different events, which is the human gate the standard
+  // turns on: a build with a send and no draft before it skipped the person.
+  // the just-sold pack (2026-10-24). `read_sale` reads one sale's facts from
+  // a source with a time it was verified at: the only sanctioned origin of a
+  // price or a date in a draft. `draft_message` writes a letter, SMS or email
+  // into a pack a person reviews, and `send_message` is the separate step that
+  // only an approved draft can take. Two ports, not one, because the gap
+  // between them is where the person stands.
+  "read_sale",
+  "draft_message",
+  "send_message",
   // the run itself
   "rank",
   "gate",
@@ -180,6 +207,12 @@ export const PORT_SHAPE: Record<Port, { verb: PortVerb; subject: string }> = {
   read_inbox: { verb: "read", subject: "message" },
   file_message: { verb: "attach", subject: "message" },
   write_order: { verb: "write", subject: "order" },
+  read_quote: { verb: "read", subject: "quote" },
+  write_log: { verb: "write", subject: "log" },
+  read_sales: { verb: "read", subject: "sales" },
+  read_sale: { verb: "read", subject: "sale" },
+  draft_message: { verb: "write", subject: "draft" },
+  send_message: { verb: "say", subject: "message" },
   // attach
   evidence: { verb: "attach", subject: "evidence" },
   cite: { verb: "attach", subject: "citation" },
@@ -302,9 +335,11 @@ function productionNoun(checks: readonly Check[]): { one: string; many: string }
     checks.filter((c) => c.assertable === "production").flatMap((c) => c.ports),
   );
   const talks = ports.has("talk") || ports.has("disclose");
-  return talks
-    ? { one: "a live call", many: "live calls" }
-    : { one: "a live tenant", many: "live tenants" };
+  if (talks) return { one: "a live call", many: "live calls" };
+  // Price One-Pager (2026-10-24): its production check reads live recorded
+  // sales and a kept record, and writes into nobody's tenant.
+  if (ports.has("read_sales")) return { one: "live sales and a kept record", many: "live sales and kept records" };
+  return { one: "a live tenant", many: "live tenants" };
 }
 
 /**

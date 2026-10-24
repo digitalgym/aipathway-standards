@@ -20,7 +20,8 @@ export * from "./connect.js";
 // classes are the surface a builder needs; the supporting types stay behind
 // their own module.
 export { AdviceFileWorld } from "./advice-file.world.js";
-export { CalendarWorld } from "./asset-register.world.js";
+export { CalendarWorld, FireWorld } from "./asset-register.world.js";
+export { CashSeamWorld } from "./cash-seam.world.js";
 export { CitedAnswerWorld } from "./cited-answer.world.js";
 export { ReactivationWorld } from "./database-reactivation.world.js";
 export { DebtorWorld } from "./debtor-chasing.world.js";
@@ -29,13 +30,17 @@ export { FollowUpWorld } from "./follow-up.world.js";
 export { InboxWorld } from "./inbox-triage.world.js";
 export { InvoiceWorld } from "./invoice-check.world.js";
 export { InvoiceOutWorld } from "./invoice-out.world.js";
+export { JustSoldWorld } from "./just-sold-pack.world.js";
 export { KnowledgeBaseWorld } from "./knowledge-base.world.js";
 export { KnowledgeGraphWorld } from "./knowledge-graph.world.js";
 export { MaterialOrderWorld } from "./material-order.world.js";
 export { MultiSiteWorld } from "./multi-site-conformance.world.js";
+export { OpenHomeWorld } from "./open-home-feedback.world.js";
+export { PriceWorld } from "./price-one-pager.world.js";
 export { QuoteWorld } from "./quote-out.world.js";
 export { ReportWorld } from "./recurring-report.world.js";
 export { PackWorld } from "./rejected-pack.world.js";
 export { ArrearsWorld } from "./rent-arrears.world.js";
+export { SimproError, SimproWorld } from "./simpro-claude-connector.world.js";
 export { TimesheetWorld } from "./timesheet-check.world.js";
 export { TwoRecordsWorld } from "./two-records.world.js";

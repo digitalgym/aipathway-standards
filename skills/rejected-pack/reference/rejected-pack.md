@@ -238,7 +238,7 @@ The binding layer is the hard step: one graph, official form maps, field reuse a
 
 Highest option, job five
 
-**None as a product yet.** If a product existed for the binding layer, this standard would name it, the way the debtor standard names Office Voice and the reactivation standard names Office Voice Work the List, with the lists in workmylist. It does not, and we are not building one for now. This job is yours to build, to this standard.
+**None as a product yet.**If a product existed for the binding layer, this standard would name it, the way the debtor standard names Office Voice and the reactivation standard names Office Voice’s governed call for callbacks. It does not, and we are not building one for now. This job is yours to build, to this standard.
 
 Use the standard as a checklist if the pack is small and slow-moving. Build the binding layer when the pack is the thing that costs a claim, a licence, or a contractor payment. Call us when the graph spans three systems and a team that will not maintain a Zap.
 
@@ -288,7 +288,7 @@ The roadmap already says QA and compliance come after the pipeline is predictabl
 
 - If the leak is missed calls: the Booked After Hours standard. Office Voice Front Desk is the step not to hand-roll. Not this.
 - If the leak is unpaid invoices: the Debtor Chasing standard. Office Voice is the step not to hand-roll.
-- If the leak is a quiet rent roll: the Database Reactivation standard. Office Voice Work the List, with the lists in workmylist, is the step not to hand-roll.
+- If the leak is a quiet database: the Database Reactivation standard. The calls are yours from a daily list; a callback someone asked for is Office Voice’s governed call, the step not to hand-roll.
 - If the leak is packs failing after the work: this standard. A scoped build if the binding layer is the cost.
 
 The diagnosis still names the job. The $500 audit still says product, build, or leave it alone.

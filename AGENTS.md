@@ -37,11 +37,14 @@ workflows:
 
 Standards in this repo:
 - AIP-BS-DATABASE-REACTIVATION: skills/database-reactivation/ (Database Reactivation Build Standard)
+- AIP-BS-PRICE-ONE-PAGER: skills/price-one-pager/ (Price One Pager Build Standard)
+- AIP-BS-OPEN-HOME-FEEDBACK: skills/open-home-feedback/ (Open Home Feedback Build Standard)
 - AIP-BS-DISPATCH-BOARD: skills/dispatch-board/ (Dispatch Board Build Standard)
 - AIP-BS-INBOX-TRIAGE: skills/inbox-triage/ (Inbox Triage Build Standard)
 - AIP-BS-FOLLOW-UP: skills/follow-up/ (Follow Up Build Standard)
 - AIP-BS-CASH-SEAM: skills/cash-seam/ (Cash Seam Build Standard)
 - AIP-BS-SIMPRO-CLAUDE-CONNECTOR: skills/simpro-claude-connector/ (Simpro Claude Connector Build Standard)
+- AIP-BS-JUST-SOLD-PACK: skills/just-sold-pack/ (Just Sold Pack Build Standard)
 - AIP-BS-TWO-RECORDS: skills/two-records/ (Two Records Build Standard)
 - AIP-BS-TIMESHEET-CHECK: skills/timesheet-check/ (Timesheet Check Build Standard)
 - AIP-BS-MATERIAL-ORDER: skills/material-order/ (Material Order Build Standard)

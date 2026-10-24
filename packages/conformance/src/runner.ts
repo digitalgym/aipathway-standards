@@ -106,7 +106,10 @@ export async function runCheck<W extends RunnerWorld = StubWorld>(
       title: check.title,
       verdict: verdictFor(check, env, undefined),
       expected: check.assertion,
-      actual: "Not attempted here. This check runs on the production provider.",
+      // Neutral on purpose: most standards have no hosted provider, and for
+      // them this check runs on the business's own systems or is quoted as a
+      // scoped build. with_us_next in checks.json says which.
+      actual: "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
       stimulus: { description: check.stimulus, now: new Date().toISOString(), inputs: [] },
       calls: [],
       artefacts: [],

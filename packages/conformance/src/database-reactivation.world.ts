@@ -23,6 +23,15 @@
  * ONE PLAY AT A TIME NEEDS STATE ACROSS RUNS. Check 4 says the runner holds
  * state across runs to see this at all, so `openersSent` persists for the life
  * of the world and a second run in the same week can be refused on it.
+ *
+ * THE DAILY LIST IS FOR A PERSON (added 2026-10-24). Each morning the ranked,
+ * gated run becomes a short list a human works: `listToday` takes it and
+ * `dailyCap` says how long it may be. The voice step is optional and off by
+ * default (`voiceTail`), and when it is on it only works what is below the
+ * cap. `recordOutcome` is the agent's accept, skip or done coming back: it
+ * writes to the contact row the same day, the way a CRM write-back would, so
+ * the next morning's list has to be made from the rows as they now stand. A
+ * build that serves yesterday's list again is the failure check 12 names.
  */
 
 import type { Port } from "./types.js";
@@ -55,6 +64,8 @@ export interface Contact {
   /** A comparable sale nearby, which is the strongest opener hook. */
   freshSaleNearby?: boolean;
   timezone?: string;
+  /** When the last outcome was written back. Set by `recordOutcome`. */
+  lastOutcomeAt?: string;
 }
 
 export interface RankedEntry {
@@ -68,6 +79,21 @@ export interface GateDecision {
   allowed: boolean;
   reason?: "do_not_contact" | "outside_hours" | "already_opened_this_week";
 }
+
+/** One row of the day's list, for a person to work. */
+export interface TodayRow {
+  contactId: string;
+  play: Play;
+  /** The trigger, in words. A row with no reason fails check 11. */
+  reason: string;
+  /** Drafted for the agent to say or send. It has to use the reason. */
+  opener: string;
+  /** What happened last time, or "none". */
+  lastOutcome: string;
+}
+
+/** What the agent records against a row. */
+export type Outcome = "spoke" | "no_answer" | "callback_requested" | "not_interested" | "do_not_contact";
 
 export interface Skip {
   contactId: string;
@@ -99,6 +125,14 @@ export interface ReactivationPorts {
   /** Record a skip, with its own reason. */
   skip(contactId: string, reason: string): void;
   escalate(contactId: string, reason: "price_question" | "complaint"): void;
+  /** How many rows the agent wants on the day's list. Theirs to set. */
+  dailyCap(): number;
+  /** Whether the agent turned the optional voice step on for the tail. Off by default. */
+  voiceTail(): boolean;
+  /** Hand the day's list to a person: a CRM task list, a digest, a shared sheet. */
+  listToday(rows: TodayRow[]): void;
+  /** The agent's outcome, written back to the contact the same day. */
+  recordOutcome(contactId: string, outcome: Outcome): void;
 }
 
 export interface ReactivationWorldOptions {
@@ -108,6 +142,10 @@ export interface ReactivationWorldOptions {
   callingHours?: { from: number; to: number };
   /** Steps in a full cadence before it stops on its own. */
   cadenceLength?: number;
+  /** Rows on the day's list. */
+  dailyCap?: number;
+  /** The optional voice step for the tail. Off unless the agent turns it on. */
+  voiceTail?: boolean;
 }
 
 export class ReactivationWorld {
@@ -120,6 +158,10 @@ export class ReactivationWorld {
   readonly skips: Skip[] = [];
   readonly escalations: Array<{ contactId: string; reason: string }> = [];
   readonly gateDecisions: Array<{ contactId: string; decision: GateDecision }> = [];
+  /** Every day's list, in the order they were made, with the day each was made. */
+  readonly todayLists: Array<{ at: string; rows: TodayRow[] }> = [];
+  /** Every outcome written back, with the day it was written. */
+  readonly outcomes: Array<{ contactId: string; outcome: Outcome; at: string }> = [];
   readonly calls: PortCall[] = [];
 
   /** Openers already sent, across runs. Check 4 needs this to persist. */
@@ -131,6 +173,8 @@ export class ReactivationWorld {
   private readonly repliedTo = new Set<string>();
   private readonly hours: { from: number; to: number };
   private readonly cadenceLength: number;
+  private readonly cap: number;
+  private readonly tail: boolean;
   private clock: Date;
 
   constructor(opts: ReactivationWorldOptions = {}) {
@@ -139,6 +183,13 @@ export class ReactivationWorld {
     for (const id of opts.doNotContact ?? []) this.doNotContact.add(id);
     this.hours = opts.callingHours ?? { from: 8, to: 19 };
     this.cadenceLength = opts.cadenceLength ?? 3;
+    this.cap = opts.dailyCap ?? 10;
+    this.tail = opts.voiceTail ?? false;
+  }
+
+  /** The cap, for assertions. */
+  get capSetting(): number {
+    return this.cap;
   }
 
   advance(ms: number): void {
@@ -296,6 +347,28 @@ export class ReactivationWorld {
       escalate: (contactId, reason) => {
         this.escalations.push({ contactId, reason });
         this.record("escalate", { contactId, reason }, { ok: true });
+      },
+
+      dailyCap: () => this.cap,
+
+      voiceTail: () => this.tail,
+
+      listToday: (rows) => {
+        const copy = rows.map((r) => ({ ...r }));
+        this.todayLists.push({ at: this.clock.toISOString(), rows: copy });
+        this.record("raise_task", { rows: copy.length }, { listed: copy.map((r) => r.contactId) });
+      },
+
+      recordOutcome: (contactId, outcome) => {
+        const at = this.clock.toISOString();
+        this.outcomes.push({ contactId, outcome, at });
+        // Written to the row the same day, as a CRM write-back would be.
+        this.contacts = this.contacts.map((c) =>
+          c.id === contactId ? { ...c, lastContactOutcome: outcome, lastOutcomeAt: at } : c,
+        );
+        // An opt-out is permanent and global, so it goes where an import cannot reach.
+        if (outcome === "do_not_contact") this.doNotContact.add(contactId);
+        this.record("write_log", { contactId, outcome }, { written: true, at });
       },
     };
   }

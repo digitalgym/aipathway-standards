@@ -44,11 +44,14 @@ stale copy. The package is the harness; the site is the standard.
 | Spec | Skill | What it builds |
 |---|---|---|
 | `AIP-BS-DATABASE-REACTIVATION` | [`database-reactivation`](skills/database-reactivation/SKILL.md) | Database Reactivation Build Standard |
+| `AIP-BS-PRICE-ONE-PAGER` | [`price-one-pager`](skills/price-one-pager/SKILL.md) | Price One Pager Build Standard |
+| `AIP-BS-OPEN-HOME-FEEDBACK` | [`open-home-feedback`](skills/open-home-feedback/SKILL.md) | Open Home Feedback Build Standard |
 | `AIP-BS-DISPATCH-BOARD` | [`dispatch-board`](skills/dispatch-board/SKILL.md) | Dispatch Board Build Standard |
 | `AIP-BS-INBOX-TRIAGE` | [`inbox-triage`](skills/inbox-triage/SKILL.md) | Inbox Triage Build Standard |
 | `AIP-BS-FOLLOW-UP` | [`follow-up`](skills/follow-up/SKILL.md) | Follow Up Build Standard |
 | `AIP-BS-CASH-SEAM` | [`cash-seam`](skills/cash-seam/SKILL.md) | Cash Seam Build Standard |
 | `AIP-BS-SIMPRO-CLAUDE-CONNECTOR` | [`simpro-claude-connector`](skills/simpro-claude-connector/SKILL.md) | Simpro Claude Connector Build Standard |
+| `AIP-BS-JUST-SOLD-PACK` | [`just-sold-pack`](skills/just-sold-pack/SKILL.md) | Just Sold Pack Build Standard |
 | `AIP-BS-TWO-RECORDS` | [`two-records`](skills/two-records/SKILL.md) | Two Records Build Standard |
 | `AIP-BS-TIMESHEET-CHECK` | [`timesheet-check`](skills/timesheet-check/SKILL.md) | Timesheet Check Build Standard |
 | `AIP-BS-MATERIAL-ORDER` | [`material-order`](skills/material-order/SKILL.md) | Material Order Build Standard |

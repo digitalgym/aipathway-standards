@@ -1,6 +1,6 @@
 ---
 name: database-reactivation
-description: The method for working an agent's own database. Four plays with real triggers, the six ranking rules that decide which contact rings first, the opener that works and the one that does not, plus what breaks after a self-built version starts working. Use when building, reviewing or auditing this workflow. Carries the AIP-BS-DATABASE-REACTIVATION open standard, free to implement under CC BY 4.0.
+description: The method for working an agent's own database. Four plays with real triggers, the six ranking rules that decide which contact rings first, the daily call list a person works with outcomes written back the same day, the opener that works and the one that does not, plus what breaks after a self-built version starts working. Use when building, reviewing or auditing this workflow. Carries the AIP-BS-DATABASE-REACTIVATION open standard, free to implement under CC BY 4.0.
 license: CC-BY-4.0
 # The constitution. Loaded with the skill, not read from the essay. What a
 # build to this standard must never do, and what stays with a person.
@@ -16,9 +16,9 @@ stays_with_person:
 
 # Database Reactivation Build Standard
 
-**Spec:** AIP-BS-DATABASE-REACTIVATION · **Version:** 2026-10-03 · **Canonical:** https://aipathway.com.au/explore-ai/database-reactivation-build-standard
+**Spec:** AIP-BS-DATABASE-REACTIVATION · **Version:** 2026-10-24 · **Canonical:** https://aipathway.com.au/explore-ai/database-reactivation-build-standard
 
-Build standard: the method for working an agent's own database. Four plays with real triggers, the six ranking rules that decide which contact rings first, the opener that works and the one that does not, plus what breaks after a self-built version starts working.
+Build standard: the method for working an agent's own database. Four plays with real triggers, the six ranking rules that decide which contact rings first, the daily call list a person works with outcomes written back the same day, the opener that works and the one that does not, plus what breaks after a self-built version starts working.
 
 ## Read the standard first
 
@@ -27,7 +27,7 @@ before writing code. It is about 3,000 words and it is the whole job: the
 checks in order, the objects with their fields, what must never be automated,
 and a pass test.
 
-For the current version, fetch https://aipathway.com.au/explore-ai/database-reactivation-build-standard.md. This copy is 2026-10-03.
+For the current version, fetch https://aipathway.com.au/explore-ai/database-reactivation-build-standard.md. This copy is 2026-10-24.
 
 The checks are also structured data, so you do not have to infer a test plan from
 the prose: https://aipathway.com.au/explore-ai/database-reactivation-build-standard/checks.json gives each check a stable id, the ports it
@@ -94,15 +94,16 @@ skill asserts.
 - 4. The Opener Is the Whole Call
 - 5. Cadence, and When to Stop
 - 6. The Gate, Which Is the Step to Not Hand-Roll
-- 7. Hand Us the List
-- 8. Parts That Are Harder Than They Look
-- 9. What It Is Worth
-- 10. What Breaks After It Works
-- 11. A checklist to hold any build or supplier to
+- 7. The Daily Call List: Who Do I Ring Today?
+- 8. The Callbacks Office Voice Can Ring
+- 9. Parts That Are Harder Than They Look
+- 10. What It Is Worth
+- 11. What Breaks After It Works
+- 12. A checklist to hold any build or supplier to
 
 ## Attribution
 
-AIP-BS-DATABASE-REACTIVATION, 2026-10-03, AI Pathway, https://aipathway.com.au/explore-ai/database-reactivation-build-standard
+AIP-BS-DATABASE-REACTIVATION, 2026-10-24, AI Pathway, https://aipathway.com.au/explore-ai/database-reactivation-build-standard
 
 Licensed CC BY 4.0. Free to implement, including commercially. If you build to
 this standard, cite the spec ID: a workflow built to a shared standard can be

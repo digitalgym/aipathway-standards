@@ -96,7 +96,10 @@ const WORLDS: Record<string, string> = {
   "cited-answer-build-standard": "CitedAnswerWorld",
   "multi-site-conformance-build-standard": "MultiSiteWorld",
   "quote-out-build-standard": "QuoteWorld",
-  "fire-service-pack-standard": "CalendarWorld",
+  // FireWorld, not CalendarWorld (corrected 2026-10-03): the fire checks
+  // name resolveTag, storeRecord, closeVisit and the isolation ports, which
+  // only FireWorld exposes.
+  "fire-service-pack-standard": "FireWorld",
   "advice-file-build-standard": "AdviceFileWorld",
   "knowledge-graph-build-standard": "KnowledgeGraphWorld",
   "knowledge-base-build-standard": "KnowledgeBaseWorld",
@@ -108,6 +111,11 @@ const WORLDS: Record<string, string> = {
   "timesheet-check-build-standard": "TimesheetWorld",
   "material-order-build-standard": "MaterialOrderWorld",
   "recurring-report-build-standard": "ReportWorld",
+  "cash-seam-build-standard": "CashSeamWorld",
+  "simpro-claude-connector-build-standard": "SimproWorld",
+  "price-one-pager-build-standard": "PriceWorld",
+  "open-home-feedback-build-standard": "OpenHomeWorld",
+  "just-sold-pack-build-standard": "JustSoldWorld",
 };
 
 /**
@@ -136,6 +144,51 @@ export function liveMapFor(slug: string): string | null {
 
 export function worldFor(slug: string): string {
   return WORLDS[slug] ?? "StubWorld";
+}
+
+/**
+ * How a scaffold talks about the checks a stub cannot prove.
+ *
+ * WHY THIS EXISTS (2026-10-03). Every scaffold used to say those checks "run on
+ * the production provider", told the agent to run `connect` and switch
+ * AIPATHWAY_PROVIDER, and described them as telephony. That is true for the
+ * call standards and false for the rest: most standards have no hosted
+ * provider, and only the standards in LIVE_MAPS have a production run at all.
+ * An agent that followed the old text asked the owner to approve an Office
+ * Voice key that does nothing for the standard it was building.
+ */
+type LiveStep = "hosted" | "own_systems" | "scoped_build";
+
+function liveStepOf(std: StandardDoc, slug?: string): LiveStep {
+  if (std.provider?.production) return "hosted";
+  // An older site serves no provider block. A standard with a published live
+  // port map is hosted all the same, so it keeps the "never build it" lines.
+  if (!std.provider && slug && liveMapFor(slug)) return "hosted";
+  return std.provider?.with_us.kind === "scoped_build" ? "scoped_build" : "own_systems";
+}
+
+/** One line for a check that only runs in production, by what stands behind it. */
+function productionOnlyLabel(std: StandardDoc): string {
+  switch (liveStepOf(std)) {
+    case "hosted":
+      return "runs on the production provider, reports `with_us`";
+    case "scoped_build":
+      return "not provable on the stub, reports `with_us`; the live step is quoted as a scoped build";
+    case "own_systems":
+      return "not provable on the stub, reports `with_us`; proved on your own systems, with the evidence attached";
+  }
+}
+
+/** The "Not tasks" line for the same check. */
+function notTaskLabel(std: StandardDoc): string {
+  switch (liveStepOf(std)) {
+    case "hosted":
+      return "`with_us`. Do not build it.";
+    case "scoped_build":
+      return "`with_us`. Quoted as a scoped build: send the check id, do not build it yourself.";
+    case "own_systems":
+      return "`with_us`. Your build does this on the business's own systems; prove it there by hand and attach the evidence.";
+  }
 }
 
 /** A JS block comment body, with the terminator defanged. */
@@ -275,6 +328,17 @@ const scenariosToRun = live
   : scenarios;
 `
     : `
+// No live port map is published for this standard, so there is no production
+// run. Running the stub scenarios again under a production label would write a
+// manifest that says "production" about a stub, so the run refuses instead.
+if (env === "production") {
+  console.error(
+    "No production run for this standard yet: its live port map is not published, " +
+      "so AIPATHWAY_ENV=production would only rerun the stub. Run node run.mjs on the stub. " +
+      (std.with_us_next ?? ""),
+  );
+  process.exit(1);
+}
 const scenariosToRun = scenarios;
 `;
 
@@ -424,7 +488,42 @@ export function packageJsonFile(slug: string, version: string): string {
  * folder at one. It says what to do in the order it has to happen, which is the
  * thing prose on a web page cannot do.
  */
-export function agentsFile(std: StandardDoc): string {
+export function agentsFile(std: StandardDoc, slug: string): string {
+  const step = liveStepOf(std, slug);
+  const map = liveMapFor(slug);
+  const next = std.with_us_next ? comment(std.with_us_next) : "";
+  const step5 =
+    step === "hosted" && map
+      ? `5. For the second run against the hosted provider, run
+   \`npx @aipathway/conformance connect\`, give the person the link and the code
+   it prints, and wait. It writes the key to \`.env\` and then tells you what the
+   account still needs; anything that is a connection is a link for the person,
+   not a thing you build. Then \`AIPATHWAY_ENV=production AIPATHWAY_PROVIDER=<provider> node run.mjs\`.`
+      : step === "hosted"
+        ? `5. There is no production run for this standard yet: its live port map is not
+   published, so the stub run is the finished build. The live step itself runs on
+   ${comment(std.provider?.product ?? "the hosted provider")}${std.provider?.insert ? ` (${comment(std.provider.insert)})` : ""}. ${next}`
+        : `5. This standard has no hosted provider, and there is no production run for it
+   yet: the stub run is the finished build. Do not run \`conformance connect\`; it
+   gets a key for a provider this standard does not use. ${next}`;
+  const cannotBuild =
+    step === "hosted"
+      ? `Some checks are \`with_us\`. They need the live provider, which carries what a
+stub cannot hold: for a call, a phone number with AI disclosure, Do Not Call
+Register washing and calling hours by state; for a write, the authenticated
+write into the real ledger or job system, landed once with an id back. Do not
+implement those, and do not stand up telephony. The standard names the
+production provider for that step, and the run reports \`with_us\` rather than
+failing the build for not having one.`
+      : `Some checks are \`with_us\`. This standard has no hosted provider for them:
+they need the business's real systems or a person, which a stub cannot hold,
+and the run reports \`with_us\` rather than failing the build. ${next}`;
+  const withUsRow =
+    step === "hosted"
+      ? "do what the run prints beside it: point the number, enable the insert, or send the check id. Never build it"
+      : step === "scoped_build"
+        ? "send the check id for a scoped build. Do not build it yourself"
+        : "prove it by hand on the business's own systems and attach the evidence";
   return `# Build ${comment(std.standard)}
 
 You are implementing a published build standard. The standard is the
@@ -440,11 +539,7 @@ Markdown: ${comment(std.markdown)}
 3. Fill in \`holds\` in \`scenarios.mjs\`, one per check. Each carries the
    check's own conformance statement, what to inject, and what to assert.
 4. Run \`node run.mjs\`. Every check starts red. Go green.
-5. For the second run against the hosted provider, run
-   \`npx @aipathway/conformance connect\`, give the person the link and the code
-   it prints, and wait. It writes the key to \`.env\` and then tells you what the
-   account still needs; anything that is a connection is a link for the person,
-   not a thing you build. Then \`AIPATHWAY_ENV=production AIPATHWAY_PROVIDER=<provider> node run.mjs\`.
+${step5}
 
 ## Await every port call
 
@@ -475,17 +570,12 @@ ports leaves it empty, and the run reports that rather than passing.
 | \`pass\` | asserted green here | nothing |
 | \`fail\` | asserted red here | fix the build, or the assertion |
 | \`shape_only\` | shape holds on the stub, truth needs the live provider | re-runs when the provider flips |
-| \`with_us\` | cannot be proved here at all | do what the run prints beside it: point the number, enable the insert, or send the check id. Never build it |
+| \`with_us\` | cannot be proved here at all | ${withUsRow} |
 | \`evidence_required\` | not a software check | the operator does it, then attaches proof |
 
 ## What you cannot build, and should not try
 
-Some checks are \`with_us\`. They need a live provider carrying an Australian
-legal obligation that a stub cannot hold: a phone number with AI disclosure,
-Do Not Call Register washing, calling hours by state, a record that survives a
-dispute. Do not implement those. Do not stand up telephony. The standard names
-the production provider for that step, and the run reports \`with_us\` rather
-than failing the build for not having one.
+${cannotBuild}
 
 Getting every other check green is the finished job.
 
@@ -514,6 +604,37 @@ generated board. The spec is the source of truth and this folder is disposable.
 
 export function readmeFile(std: StandardDoc, slug: string): string {
   const tally = std.tally;
+  const step = liveStepOf(std, slug);
+  const map = liveMapFor(slug);
+  const secondRun = map
+    ? `The stub proves the shape. Once the ports in \`ports.mjs\` are wired to real
+systems, the same checks run again and prove the write landed:
+
+    AIPATHWAY_ENV=production node run.mjs
+${std.provider?.production?.startsWith("office_voice.") ? `
+\`ports.office-voice.mjs\` is the same run against the hosted provider. Get the
+key without leaving the terminal:
+
+    npx @aipathway/conformance connect
+
+It prints a link and a code; the account owner opens the link, signs in, checks
+the code and approves. The key lands in \`.env\` here (git-ignored; run.mjs reads
+it) and the command then says what the account still needs, with the link the
+owner opens to connect their job system or ledger. Then:
+
+    AIPATHWAY_PROVIDER=<provider> AIPATHWAY_ENV=production node run.mjs
+
+The write-back checks then prove the write landed in the real system through the hosted provider.
+` : ""}`
+    : `There is no second run for this standard yet. Its live port map is not
+published, so this folder has no \`ports.mjs\`, and \`AIPATHWAY_ENV=production\`
+is refused rather than rerunning the stub under a production label. The stub run
+is the whole of what can be proved here.${step === "hosted" ? "" : `
+
+This standard has no hosted provider, so \`conformance connect\` does not apply to it.`}${std.with_us_next ? `
+
+${comment(std.with_us_next)}` : ""}
+`;
   return `# ${comment(std.standard)}: conformance harness
 
 Generated by \`npx @aipathway/conformance init ${slug}\`.
@@ -534,39 +655,16 @@ run means something because a red one was possible.
 
 ## This standard
 
-${tally.total} checks: ${tally.onStub} provable here on the stub, ${tally.productionOnly} only against the live
-provider, ${tally.partial} partial, ${tally.preconditions} preconditions needing evidence rather than code.
+${tally.total} checks: ${tally.onStub} provable here on the stub, ${tally.productionOnly} only in
+production, ${tally.partial} partial, ${tally.preconditions} preconditions needing evidence rather than code.
 
 The checks are fetched at run time from ${comment(std.source)},
 so a correction published there reaches you without a release here.
 
 ## The second run
 
-The stub proves the shape. Once the ports are wired to real systems, the same
-checks run again and prove the write landed:
-
-    AIPATHWAY_ENV=production node run.mjs
-
-Where the standard names one of our providers, \`ports.office-voice.mjs\` is
-the same run against us. Get the key without leaving the terminal:
-
-    npx @aipathway/conformance connect
-
-It prints a link and a code; the account owner opens the link, signs in, checks
-the code and approves. The key lands in \`.env\` here (git-ignored; run.mjs reads
-it) and the command then says what the account still needs, with the link the
-owner opens to connect their job system or ledger. Then:
-
-    AIPATHWAY_PROVIDER=<provider> AIPATHWAY_ENV=production node run.mjs
-
-The write-back checks then prove the write landed in the real system through the live insert.
-
-Whether this folder has a \`ports.mjs\` to fill in depends on the standard.
-Where it does not, the live port map for that standard is not published yet, and
-the stub run is the whole of what can be proved here.
-
-The checks that never go green either way are the step the standard says not to
-hand-roll. They report \`with_us\`.
+${secondRun}
+The checks that never go green on the stub report \`with_us\`.
 
 ## Handing this to a coding agent
 
@@ -642,8 +740,8 @@ export const ports = {
  * THE PRODUCTION GATE. The stub proved the shape; ports.mjs proves the
  * builder's own systems; this proves the hosted insert: the same scenarios
  * drive the same build, and the write-back ports call Office Voice over
- * Streamable HTTP with the workspace's key. The call ports (disclose, say,
- * hear, notify, escalate, sendSms) are the live step itself: the insert does
+ * Streamable HTTP with the workspace's key. The call ports (resolveAddress,
+ * disclose, say, hear, notify, escalate, sendSms) are the live step itself: the insert does
  * them on a real call, not from a test harness, so here they throw with the
  * verdict the check will carry. What CAN be proved from a harness is the
  * write: one job, not two, in the real job system, through the real provider.
@@ -669,8 +767,11 @@ export function officeVoicePortsFile(std: StandardDoc, slug: string): string {
  *   OFFICE_VOICE_API_KEY     a key minted at /app/keys with contacts:read and contacts:write
  *   OFFICE_VOICE_MCP_URL     default https://office-voice.com/api/mcp
  *   OFFICE_VOICE_TENANT_ID   only when the key reaches several orgs${map === "INVOICE_PORT_MAP" ? `
- *   OFFICE_VOICE_JOB_ID      the complete job to invoice (Xero has no jobs; it lives in Office Voice)
- *   OFFICE_VOICE_JOB_LINES   JSON: [{"code":"CALL","qty":1,"kind":"callout"}, ...] the job's lines by catalogue code
+ *   OFFICE_VOICE_JOB_ID      the complete job to invoice: its id in ServiceM8 or Simpro, or in your own build
+ *   OFFICE_VOICE_JOB_INLINE  only when your build holds the job (no job system): JSON
+ *                            {"status":"complete","customer":{"name":"…","email":"…"}}, sent inline to draft_invoice
+ *   OFFICE_VOICE_JOB_LINES   JSON: [{"code":"CALL","qty":1,"kind":"callout"}, ...] the job's lines by catalogue code.
+ *                            With a job system, read_job returns the lines and this is only the fallback
  *
  * The office's Xero must be connected with drafting on
  * (/api/integrations/xero/connect?tenant_id=…&quotes=1); the same scope covers
@@ -722,7 +823,7 @@ function withUs(port) {
 }
 
 /** @type {Partial<Record<keyof typeof import("@aipathway/conformance").${map}, Function>>} */
-${map === "QUOTE_PORT_MAP" ? `export const ports = (() => {${body}
+${map === "QUOTE_PORT_MAP" || map === "INVOICE_PORT_MAP" ? `export const ports = (() => {${body}
 })();` : `export const ports = {${body}
 };`}
 `;
@@ -767,6 +868,7 @@ function callPortsBody(): string {
     return known;
   },
 
+  resolveAddress: withUs("resolveAddress"),
   disclose: withUs("disclose"),
   say: withUs("say"),
   hear: withUs("hear"),
@@ -785,11 +887,15 @@ function callPortsBody(): string {
  */
 function invoicePortsBody(provider: string): string {
   return `
-  // The one job under test, from the environment: Xero has no jobs, so the job
-  // lives in Office Voice and the runner names it. Its lines come from the
-  // environment too, by catalogue code, because read_job does not carry them.
+  // The one job under test, named by the runner. With ServiceM8 or Simpro
+  // connected, read_job returns the job and its lines by catalogue code. With
+  // no job system the build holds the job, so it comes from the environment and
+  // goes to draft_invoice inline. OFFICE_VOICE_JOB_LINES is the fallback for a
+  // job system whose lines read_job cannot read.
   const JOB_ID = process.env.OFFICE_VOICE_JOB_ID;
   const JOB_LINES = JSON.parse(process.env.OFFICE_VOICE_JOB_LINES ?? "[]");
+  const INLINE = process.env.OFFICE_VOICE_JOB_INLINE ? JSON.parse(process.env.OFFICE_VOICE_JOB_INLINE) : null;
+  const fromEnv = () => JOB_LINES.map((l) => ({ code: l.code, qty: l.qty ?? 1, kind: l.kind ?? "labour", description: l.description ?? l.code, ...(l.signedAcceptance ? { signedAcceptance: l.signedAcceptance } : {}) }));
   const cents = (n) => Math.round(Number(n) * 100);
   const byJob = new Map();
   const toInvoice = (r) => ({
@@ -808,9 +914,15 @@ function invoicePortsBody(provider: string): string {
   return {
     async readJobs() {
       if (!JOB_ID) throw new Error("OFFICE_VOICE_JOB_ID is not set: name the complete job the run invoices.");
+      if (INLINE) {
+        return [{ id: JOB_ID, customerId: INLINE.customer?.email ?? INLINE.customer?.name ?? "unknown", status: INLINE.status ?? "complete", lines: fromEnv() }];
+      }
       const r = await call("read_job", { job_external_id: JOB_ID });
       if (r.outcome !== "job_read") return [];
-      return [{ id: r.job_external_id, customerId: r.customer_external_id ?? "unknown", status: "complete", lines: JOB_LINES.map((l) => ({ code: l.code, qty: l.qty ?? 1, kind: l.kind ?? "labour", description: l.description ?? l.code, ...(l.signedAcceptance ? { signedAcceptance: l.signedAcceptance } : {}) })), ...(r.contract_stage ? { contractStage: r.contract_stage } : {}) }];
+      const lines = r.lines_status === "read" && (r.lines ?? []).length
+        ? r.lines.map((l) => ({ code: l.catalogue_id, qty: l.quantity, kind: "labour", description: l.description ?? l.catalogue_id ?? "" }))
+        : fromEnv();
+      return [{ id: r.job_external_id, customerId: r.customer_external_id ?? "unknown", status: "complete", lines, ...(r.contract_stage ? { contractStage: r.contract_stage } : {}) }];
     },
 
     async readInvoiceForJob(jobId) {
@@ -833,6 +945,7 @@ function invoicePortsBody(provider: string): string {
         job_external_id: input.jobId,
         line_items: input.lines.map((l) => ({ catalogue_id: l.code, quantity: l.qty })),
         ...(input.stage ? { stage: input.stage } : {}),
+        ...(INLINE ? { job: INLINE } : {}),
       });
       // parked, not_supported and write_not_verified all mean no invoice exists
       // in the ledger. Null is the standard's "write not verified".
@@ -974,7 +1087,7 @@ ${runnable.map((c) => `- **${comment(c.id)}** ${comment(c.title)}. ${comment(c.s
 
 ## Out of scope for the build, by design
 
-${live.map((c) => `- **${comment(c.id)}** ${comment(c.title)}: runs on the production provider, reports \`with_us\`.`).join("\n") || "- none"}
+${live.map((c) => `- **${comment(c.id)}** ${comment(c.title)}: ${productionOnlyLabel(std)}.`).join("\n") || "- none"}
 
 ${std.with_us_next ? `When a check is \`with_us\`: ${comment(std.with_us_next)}` : ""}
 `;
@@ -982,6 +1095,13 @@ ${std.with_us_next ? `When a check is \`with_us\`: ${comment(std.with_us_next)}`
 
 export function specKitPlanFile(std: StandardDoc, slug: string): string {
   const roles = std.substrate?.requires ?? [];
+  const step = liveStepOf(std, slug);
+  const map = liveMapFor(slug);
+  const provider = map
+    ? `Stub first (\`node run.mjs\`), your own systems second (\`AIPATHWAY_ENV=production\`)${step === "hosted" ? `,
+the hosted provider for the live step (\`AIPATHWAY_PROVIDER=<provider>\`)` : ""}.`
+    : `Stub only (\`node run.mjs\`). No production run is offered for this standard yet:
+its live port map is not published.${step === "hosted" ? "" : " It has no hosted provider."}${std.with_us_next ? ` ${comment(std.with_us_next)}` : ""}`;
   return `# Plan: ${comment(std.standard)}
 
 The technical strategy is yours. The standard names roles, never vendors, so
@@ -1004,8 +1124,7 @@ somebody needs to look at the book mid-day.
 
 ## Provider
 
-Stub first (\`node run.mjs\`), your own systems second (\`AIPATHWAY_ENV=production\`),
-the hosted provider for the live step (\`AIPATHWAY_PROVIDER=<provider>\`).
+${provider}
 Run \`npx @aipathway/conformance show ${slug}\` for the check list.
 `;
 }
@@ -1022,7 +1141,7 @@ ${runnable.map((c) => `- [ ] **${comment(c.id)}** ${comment(c.title)}\n  - injec
 
 ## Not tasks
 
-${std.checks.filter((c) => c.assertable === "production").map((c) => `- ${comment(c.id)} ${comment(c.title)}: \`with_us\`. Do not build it.`).join("\n") || "- none"}
+${std.checks.filter((c) => c.assertable === "production").map((c) => `- ${comment(c.id)} ${comment(c.title)}: ${notTaskLabel(std)}`).join("\n") || "- none"}
 `;
 }
 
@@ -1071,7 +1190,7 @@ export function scaffold(
     { name: "run.mjs", contents: runFile(std, slug) },
     { name: "build.mjs", contents: buildFile(std, slug) },
     { name: "scenarios.mjs", contents: scenariosFile(std, slug) },
-    { name: "AGENTS.md", contents: agentsFile(std) },
+    { name: "AGENTS.md", contents: agentsFile(std, slug) },
     { name: "README.md", contents: readmeFile(std, slug) },
   ];
 

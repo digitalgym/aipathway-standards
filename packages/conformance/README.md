@@ -102,8 +102,8 @@ package is the harness. The site is the standard.
 
 ## The standards
 
-Twenty-two, each one a job that leaks money in an Australian small business or
-network, and one for every category the eight-minute diagnosis can name. Every one publishes its checks as data at the same `/checks.json` path.
+27 of them, each one a job that leaks money in an Australian small business or
+network. Every one publishes its checks as data at the same `/checks.json` path.
 
 | Standard | The job |
 |---|---|
@@ -129,6 +129,11 @@ network, and one for every category the eight-minute diagnosis can name. Every o
 | [timesheet-check](https://aipathway.com.au/explore-ai/timesheet-check-build-standard) | Every hour traced to a person, a day and a job before payroll |
 | [material-order](https://aipathway.com.au/explore-ai/material-order-build-standard) | Materials ordered from the job, from the catalogue, once |
 | [recurring-report](https://aipathway.com.au/explore-ai/recurring-report-build-standard) | The report on schedule, every figure traced to its source |
+| [cash-seam](https://aipathway.com.au/explore-ai/cash-seam-build-standard) | One record from the call to the chase, each carrying the id of the one before |
+| [simpro-claude-connector](https://aipathway.com.au/explore-ai/simpro-claude-connector-build-standard) | Claude on your own Simpro, on your own key, touching nothing a customer sees |
+| [price-one-pager](https://aipathway.com.au/explore-ai/price-one-pager-build-standard) | The vendor sees where the price came from, and the record proves it later |
+| [open-home-feedback](https://aipathway.com.au/explore-ai/open-home-feedback-build-standard) | Every open-home attendee followed up with your yes, and the vendor told what buyers said |
+| [just-sold-pack](https://aipathway.com.au/explore-ai/just-sold-pack-build-standard) | A sale nearby told to the neighbours, every message approved by a person |
 
 ## Also available
 

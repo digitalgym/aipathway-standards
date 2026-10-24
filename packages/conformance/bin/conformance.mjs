@@ -67,7 +67,12 @@ const KNOWN = [
   "two-records-build-standard",
   "timesheet-check-build-standard",
   "material-order-build-standard",
-  "recurring-report-build-standard"
+  "recurring-report-build-standard",
+  "cash-seam-build-standard",
+  "simpro-claude-connector-build-standard",
+  "price-one-pager-build-standard",
+  "open-home-feedback-build-standard",
+  "just-sold-pack-build-standard"
 ];
 
 const [cmd, slug] = process.argv.slice(2);
@@ -208,10 +213,16 @@ if (cmd === "init") {
 
 console.log(`\n${std.spec}  ${std.version ?? "(unversioned)"}  ${std.source}\n`);
 console.log(std.how_to_read + "\n");
+// "runs with us" only where a hosted provider stands behind the check.
+const productionLabel = std.provider?.production
+  ? "runs with us"
+  : std.provider?.with_us?.kind === "scoped_build"
+    ? "not on the stub: quoted as a scoped build"
+    : "not on the stub: proved on your own systems";
 for (const c of std.checks) {
   const where =
     c.assertable === "production"
-      ? "runs with us"
+      ? productionLabel
       : c.assertable === "precondition"
         ? "needs evidence"
         : c.assertable === "both"

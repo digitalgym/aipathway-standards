@@ -5,22 +5,32 @@
  * The payables world: supplier invoices, the purchase orders they claim to
  * match, and the four checks that decide which queue each lands in.
  *
+ * NUMBERING. "Check 1" to "check 4" below are the four checks the page sets in
+ * order: rate, quantity, variation, contract sum. "Conformance check N" is the
+ * Nth item of the conformance checklist in invoice-check.checks.ts.
+ *
+ * THE PURCHASE ORDER COMES FIRST AND IS NOT A CHECK. An invoice that names no
+ * purchase order, or names one that does not exist, has nothing to run the four
+ * checks against. It is escalated into `blocked` with the question "which job is
+ * this?" before check 1, and no check is recorded for it. That is why
+ * `CheckName` has no purchase-order member.
+ *
  * WHY IT IS NOT THE PACK WORLD. Both run ordered checks and route to queues, so
  * they looked like one world from the port list. They are not. The subject here
- * carries money: a dollar difference against a PO, a tolerance with a date, and
- * a release that must never happen without a person. The pack world's subject is
+ * carries money: a dollar difference against an agreed rate, a claimed
+ * quantity or a contract sum, a tolerance with a date, and a release that must never happen without a person. The pack world's subject is
  * a document assembled from a fact graph. Sharing one world would have meant a
  * pack with an amount and an invoice with clauses, and every scenario explaining
  * which half it meant.
  *
  * THE RELEASE IS THE POINT. `releasePayment` refuses without a named person, in
- * the world rather than in the build, because check 7 says a clean pass is a
- * recommendation and not an authorisation. A build cannot blur the two here even
- * if its author wants to: there is no call that pays without a name.
+ * the world rather than in the build, because conformance check 7 says a clean
+ * pass is a recommendation and not an authorisation. A build cannot blur the two
+ * here even if its author wants to: there is no call that pays without a name.
  *
- * MATCHING BY INFERENCE IS MADE EXPENSIVE ON PURPOSE. Check 2 forbids matching
- * an invoice with no PO to a nearby one of a similar amount, and calls it the
- * tempting wrong answer. So `readOpenPurchaseOrders` exists and will happily
+ * MATCHING BY INFERENCE IS MADE EXPENSIVE ON PURPOSE. Conformance check 2
+ * forbids matching an invoice with no PO to a nearby one of a similar amount,
+ * and calls it the tempting wrong answer. So `readOpenPurchaseOrders` exists and will happily
  * hand a build every open PO for that supplier. The temptation is real, the port
  * records who looked, and the assertion reads whether the build escalated or
  * guessed.
@@ -30,25 +40,46 @@ import type { Port } from "./types.js";
 import { PORT_SHAPE } from "./types.js";
 import type { PortCall } from "./envelope.js";
 
-/** The four queues. Closed: every invoice lands in exactly one. */
-export const INVOICE_QUEUES = ["clean", "exception", "hold", "escalated"] as const;
+/**
+ * The four queues, as the page names them: needs a decision, waiting on
+ * someone, done and reversible, blocked by nature. Closed: every invoice lands
+ * in exactly one.
+ */
+export const INVOICE_QUEUES = ["needs_decision", "waiting", "done_reversible", "blocked"] as const;
 export type InvoiceQueue = (typeof INVOICE_QUEUES)[number];
 
-/** The four checks, in the order they must run. */
-export const CHECK_ORDER = [
-  "po-exists",
-  "amount-within-tolerance",
-  "variation-approved-in-writing",
-  "goods-received",
-] as const;
+/**
+ * The four checks, in the order they must run. A missing purchase order is not
+ * among them: it is escalated into `blocked` before check 1.
+ */
+export const CHECK_ORDER = ["rate", "quantity", "variation", "contract_sum"] as const;
 export type CheckName = (typeof CHECK_ORDER)[number];
 
+/** The purchase order, subcontract or schedule of rates an invoice is checked against. */
 export interface PurchaseOrder {
   id: string;
   supplierId: string;
   /** Cents. */
   amount: number;
+  /** The agreed unit rate, in cents. Check 1 compares against it. */
+  unitRateCents: number;
+  /** The contract total, in cents. Check 4 compares against it. */
+  contractSumCents: number;
+  /** Variations approved in writing so far, in cents. Added to the contract sum for check 4. */
+  approvedVariationsCents: number;
   open: boolean;
+}
+
+/** One line of a supplier invoice. */
+export interface InvoiceLine {
+  description: string;
+  /** The unit rate the invoice charges, in cents. Check 1. */
+  unitRateCents: number;
+  quantity: number;
+  /** False for a line outside the original scope. Check 3 needs an approval for it. */
+  inScope: boolean;
+  /** The written approval a line outside scope points at, in the document store. */
+  approvalRef?: string;
 }
 
 export interface SupplierInvoice {
@@ -56,24 +87,35 @@ export interface SupplierInvoice {
   supplierId: string;
   /** Cents. */
   amount: number;
-  /** The PO the invoice itself names. Absent is the check-2 case. */
+  /**
+   * The PO the invoice itself names. Absent is the conformance check 2 case: it
+   * is escalated into `blocked` before check 1.
+   */
   poId?: string;
-  /** A document reference in the store, for the variation record. */
+  /** Source documents in the store, kept as received. */
   documents: string[];
+  lines: InvoiceLine[];
+  /** Quantity marked complete to date. Check 2. */
+  completedQuantity: number;
+  /** Quantity claimed on earlier invoices. Check 2 reads the cumulative position. */
+  previouslyClaimedQuantity: number;
+  /** Everything claimed against the order to date, this invoice included, in cents. Check 4. */
+  cumulativeClaimedCents: number;
   /** A note claiming verbal approval. Not a record, and check 3 says so. */
   verbalApprovalNote?: string;
-  receivedGoods?: boolean;
 }
 
 export interface Tolerance {
-  /** Cents a supplier invoice may exceed its PO before it is an exception. */
-  overPoCents: number;
+  /** The check this threshold belongs to. */
+  check: CheckName;
+  /** The dollar difference, in cents, the check accepts before it fails. Zero means exact. */
+  withinCents: number;
   effectiveFrom: string;
 }
 
 export interface Exception {
   invoiceId: string;
-  /** The dollar difference. A percentage or a description alone fails check 6. */
+  /** The dollar difference. A percentage or a description alone fails conformance check 6. */
   differenceCents: number;
   /** The document it was computed from. */
   source: string;
@@ -84,7 +126,7 @@ export interface CheckRecord {
   invoiceId: string;
   checkName: CheckName;
   passed: boolean;
-  /** What it saw at the time, not just the outcome. Check 8. */
+  /** What it saw at the time, not just the outcome. Conformance check 8. */
   saw: string;
   at: string;
 }
@@ -103,14 +145,15 @@ export interface InvoicePorts {
   readOpenPurchaseOrders(supplierId: string): PurchaseOrder[];
   /** The PO an invoice names, or null. */
   readPurchaseOrder(poId: string): PurchaseOrder | null;
-  /** Thresholds as readable values with their dates. Check 9. */
+  /** Thresholds as readable values with their dates. Conformance check 9. */
   readTolerances(): Tolerance[];
   /** Is there a written record in the document store? A note is not one. */
   readDocument(ref: string): { ref: string; kind: string } | null;
   /**
    * Record one check. The first failure sticks and later checks must not run:
-   * a build that evaluates all four and reports the last fails check 1, and the
-   * world records enough for the assertion to tell the difference.
+   * a build that evaluates all four and reports the last fails conformance
+   * check 1, and the world records enough for the assertion to tell the
+   * difference.
    */
   recordCheck(invoiceId: string, checkName: CheckName, passed: boolean, saw: string): void;
   /** Put the invoice in exactly one queue. */
@@ -147,7 +190,7 @@ export class InvoiceWorld {
 
   constructor(opts: InvoiceWorldOptions = {}) {
     this.clock = opts.now ?? new Date("2026-09-21T00:00:00.000Z");
-    this.invoices = (opts.invoices ?? []).map((i) => ({ ...i }));
+    this.invoices = (opts.invoices ?? []).map((i) => ({ ...i, lines: i.lines.map((l) => ({ ...l })) }));
     this.pos = (opts.purchaseOrders ?? []).map((p) => ({ ...p }));
     this.tolerances = (opts.tolerances ?? []).map((t) => ({ ...t }));
     this.documents = (opts.documents ?? []).map((d) => ({ ...d }));
@@ -157,7 +200,7 @@ export class InvoiceWorld {
     this.clock = new Date(this.clock.getTime() + ms);
   }
 
-  /** Which queues an invoice ended up in. More than one is check 4's failure. */
+  /** Which queues an invoice ended up in. More than one is conformance check 4's failure. */
   queuesFor(invoiceId: string): InvoiceQueue[] {
     return [...new Set(this.routed.filter((r) => r.invoiceId === invoiceId).map((r) => r.queue))];
   }
@@ -184,7 +227,7 @@ export class InvoiceWorld {
       now: () => new Date(this.clock),
 
       readInvoices: () => {
-        const rows = this.invoices.map((i) => ({ ...i }));
+        const rows = this.invoices.map((i) => ({ ...i, lines: i.lines.map((l) => ({ ...l })) }));
         this.record("read_ledger", { batch: true }, { invoices: rows.length });
         return rows;
       },
@@ -197,7 +240,19 @@ export class InvoiceWorld {
 
       readPurchaseOrder: (poId) => {
         const po = this.pos.find((p) => p.id === poId) ?? null;
-        this.record("read_ledger", { poId }, po ? { id: po.id, amount: po.amount } : null);
+        this.record(
+          "read_ledger",
+          { poId },
+          po
+            ? {
+                id: po.id,
+                amount: po.amount,
+                unitRateCents: po.unitRateCents,
+                contractSumCents: po.contractSumCents,
+                approvedVariationsCents: po.approvedVariationsCents,
+              }
+            : null,
+        );
         return po ? { ...po } : null;
       },
 

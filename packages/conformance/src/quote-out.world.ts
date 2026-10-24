@@ -67,7 +67,7 @@ export interface Quote {
   total: number;
   /** The only state this world can produce. There is no "sent". */
   state: "draft";
-  /** Set when a second pass updates rather than creates. */
+  /** Set when a second pass keeps (returns) the existing quote rather than creating one. */
   duplicateOf?: string;
   updates: number;
 }
@@ -100,7 +100,7 @@ export interface QuotePorts {
     input: { jobId: string; lines: QuoteLine[] },
     intentId: string,
   ): Quote | null;
-  /** The second pass. Updates the existing quote and records duplicate_of. */
+  /** The second pass. Keeps (returns) the existing quote and records duplicate_of. */
   updateQuote(quoteId: string, intentId: string): Quote | null;
   escalate(reason: ParkReason, detail?: string): void;
   notify(to: string, jobId: string, reason: string): void;
