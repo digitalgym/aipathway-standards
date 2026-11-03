@@ -1,0 +1,3685 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793714104365",
+  "standard": "database-reactivation-build-standard",
+  "spec": "AIP-BS-DATABASE-REACTIVATION",
+  "specVersion": "2026-10-24",
+  "environment": "stub",
+  "startedAt": "2026-11-03T13:55:04.321Z",
+  "finishedAt": "2026-11-03T13:55:04.365Z",
+  "results": [
+    {
+      "checkId": "five-fields-present",
+      "n": 1,
+      "title": "The fields each play needs are present",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A contact missing name, mobile or address is reported as not ready and excluded from every play. A contact missing purchase date is excluded from the tenure play only, and one missing the investor flag from the investor play only. One missing last-contact outcome is ranked as cold state. Every gap is reported.",
+      "actual": "runs: NO-TYPE:tenure,NO-OUTCOME:tenure,NO-DATE:investor; lists: NO-TYPE,NO-OUTCOME,NO-DATE; texts: none; skips: NO-NAME: not ready: missing nameAndMobile; out of every play until it is filled in | NO-ADDR: not ready: missing address; out of every play until it is filled in | NO-DATE: gap: purchase date missing; out of the tenure play only. Ask for it when you speak | NO-TYPE: gap: investor or owner-occupier not known; out of the investor play only. Never guessed | NO-OUTCOME: gap: no last contact outcome; ranked as cold",
+      "stimulus": {
+        "description": "A list seeded with one contact missing each of the five fields in turn.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "five-fields-present"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 5
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "NO-NAME"
+          },
+          "response": {
+            "missing": [
+              "nameAndMobile"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "NO-NAME",
+            "reason": "not ready: missing nameAndMobile; out of every play until it is filled in"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "NO-ADDR"
+          },
+          "response": {
+            "missing": [
+              "address"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "NO-ADDR",
+            "reason": "not ready: missing address; out of every play until it is filled in"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "NO-DATE"
+          },
+          "response": {
+            "missing": [
+              "purchaseDate"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "NO-DATE",
+            "reason": "gap: purchase date missing; out of the tenure play only. Ask for it when you speak"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "NO-TYPE"
+          },
+          "response": {
+            "missing": [
+              "ownerType"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "NO-TYPE",
+            "reason": "gap: investor or owner-occupier not known; out of the investor play only. Never guessed"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "NO-OUTCOME"
+          },
+          "response": {
+            "missing": [
+              "lastContactOutcome"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "NO-OUTCOME",
+            "reason": "gap: no last contact outcome; ranked as cold"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 3
+          },
+          "response": {
+            "order": [
+              "NO-TYPE",
+              "NO-OUTCOME",
+              "NO-DATE"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "NO-TYPE",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "NO-OUTCOME",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "NO-DATE",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 3
+          },
+          "response": {
+            "listed": [
+              "NO-TYPE",
+              "NO-OUTCOME",
+              "NO-DATE"
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "four-plays-real-triggers",
+      "n": 2,
+      "title": "Four plays, each with a real trigger",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Each lands in its own play and the last lands in none. A build that puts everybody in one sequence fails here.",
+      "actual": "runs: EQU:equity_checkin,TEN:tenure,INV:investor,LAP:lapsed_appraisal; lists: EQU,TEN,INV,LAP; texts: none; skips: NONE: no play: nothing true about this contact today gives a reason to text",
+      "stimulus": {
+        "description": "A list containing one contact who qualifies for each play, and one who qualifies for none.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "four-plays-real-triggers"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 5
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "TEN"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "EQU"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "INV"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "LAP"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "NONE"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "NONE",
+            "reason": "no play: nothing true about this contact today gives a reason to text"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 4
+          },
+          "response": {
+            "order": [
+              "EQU",
+              "TEN",
+              "INV",
+              "LAP"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "EQU",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "TEN",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "INV",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "LAP",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 4
+          },
+          "response": {
+            "listed": [
+              "EQU",
+              "TEN",
+              "INV",
+              "LAP"
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "ranking-six-rules-in-order",
+      "n": 3,
+      "title": "Ranking is by the six rules, in order",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The produced order matches exactly. A different order is a different standard, not a tuning choice.",
+      "actual": "order: CB(1000), SALE(100), T9(50), T6-NEW(0), T6-OLD(0), NO(-350)",
+      "stimulus": {
+        "description": "A seeded set whose correct order under the six rules is known and not the obvious one.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "ranking-six-rules-in-order"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "NO"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "T6-OLD"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "T6-NEW"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "T9"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "SALE"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "CB"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 6
+          },
+          "response": {
+            "order": [
+              "CB",
+              "SALE",
+              "T9",
+              "T6-NEW",
+              "T6-OLD",
+              "NO"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "CB",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "SALE",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "T9",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "T6-NEW",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "T6-OLD",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "NO",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 6
+          },
+          "response": {
+            "listed": [
+              "CB",
+              "SALE",
+              "T9",
+              "T6-NEW",
+              "T6-OLD",
+              "NO"
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-play-at-a-time",
+      "n": 4,
+      "title": "A contact belongs to one play at a time",
+      "verdict": "pass",
+      "held": true,
+      "expected": "They appear in exactly one run and receive exactly one opener. The runner holds state across runs to see this at all.",
+      "actual": "runs: X:equity_checkin,Y:tenure / Y:tenure; lists: X,Y / Y; texts: X#1; skips: X: quiet: no_answer logged 2 day(s) ago; one text a week, nothing for 7 days after no_answer",
+      "stimulus": {
+        "description": "A contact who legitimately qualifies for two plays, with both runs executed in the same week.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-play-at-a-time"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "X"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "Y"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "X",
+              "Y"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "X",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "Y",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 2
+          },
+          "response": {
+            "listed": [
+              "X",
+              "Y"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "X"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "X",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "contactId": "X",
+            "step": 1,
+            "body": "Hi X, did you see a recent sale near 2 Example St, Paddington QLD 4064? Happy to share what it could mean for your place. Jo, the agency. Reply STOP to opt out."
+          },
+          "response": {
+            "sent": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "write_log",
+          "verb": "write",
+          "subject": "log",
+          "request": {
+            "contactId": "X",
+            "outcome": "no_answer"
+          },
+          "response": {
+            "written": true,
+            "at": "2026-09-21T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "X"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "X",
+            "reason": "quiet: no_answer logged 2 day(s) ago; one text a week, nothing for 7 days after no_answer"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "Y"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "Y"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "Y",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 1
+          },
+          "response": {
+            "listed": [
+              "Y"
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "opener-names-the-reason",
+      "n": 5,
+      "title": "The opener names why you are calling",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The opener references that trigger. A generic opener with the trigger only in the metadata fails.",
+      "actual": "rows: Q-EQU: \"Hi QEQU, a recent sale near 4 Rose Ave, Toowong QLD 4066 has probably moved what your place is worth. Want the numbers?\" | Q-TEN: \"Hi QTEN, 9 years since you bought 12 Smith St, Paddington QLD 4064 now. Would a quick, no-fuss update on where it sits today be useful?\"; sent: Q-TEN: \"Hi QTEN, 9 years since you bought 12 Smith St, Paddington QLD 4064 now. Would a quick, no-fuss update on where it sits today be useful? Jo, the agency. Reply STOP to opt out.\" | Q-EQU: \"Hi QEQU, a recent sale near 4 Rose Ave, Toowong QLD 4066 has probably moved what your place is worth. Want the numbers? Jo, the agency. Reply STOP to opt out.\"",
+      "stimulus": {
+        "description": "A contact qualified by a specific trigger, then the call opened.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "opener-names-the-reason"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "Q-TEN"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "Q-EQU"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "Q-EQU",
+              "Q-TEN"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "Q-EQU",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "Q-TEN",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 2
+          },
+          "response": {
+            "listed": [
+              "Q-EQU",
+              "Q-TEN"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "Q-TEN"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "Q-TEN",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "contactId": "Q-TEN",
+            "step": 1,
+            "body": "Hi QTEN, 9 years since you bought 12 Smith St, Paddington QLD 4064 now. Would a quick, no-fuss update on where it sits today be useful? Jo, the agency. Reply STOP to opt out."
+          },
+          "response": {
+            "sent": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "write_log",
+          "verb": "write",
+          "subject": "log",
+          "request": {
+            "contactId": "Q-TEN",
+            "outcome": "no_answer"
+          },
+          "response": {
+            "written": true,
+            "at": "2026-09-21T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "Q-EQU"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "Q-EQU",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "contactId": "Q-EQU",
+            "step": 1,
+            "body": "Hi QEQU, a recent sale near 4 Rose Ave, Toowong QLD 4066 has probably moved what your place is worth. Want the numbers? Jo, the agency. Reply STOP to opt out."
+          },
+          "response": {
+            "sent": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "write_log",
+          "verb": "write",
+          "subject": "log",
+          "request": {
+            "contactId": "Q-EQU",
+            "outcome": "no_answer"
+          },
+          "response": {
+            "written": true,
+            "at": "2026-09-21T04:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "cadence-has-a-stop",
+      "n": 6,
+      "title": "Cadence has a stop, and the stop is honoured",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The first stops at its defined end. The second stops on the reply and sends nothing further.",
+      "actual": "runs: none; lists: none; texts: A#1,B#1,A#2,B#2,A#3; skips: B: reply outside the play; left for a person to answer | B: sequence stopped: the seller answered (spoke); text 3 not sent | A: sequence ended after text 3; text 4 not sent",
+      "stimulus": {
+        "description": "One sequence run to its end with no reply, and one where the contact replies at step two.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "cadence-has-a-stop"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "A",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "contactId": "A",
+            "step": 1,
+            "body": "Hi A, 8 years since you bought 2 Example St, Paddington QLD 4064 now. Would a quick, no-fuss update on where it sits today be useful? Jo, the agency. Reply STOP to opt out."
+          },
+          "response": {
+            "sent": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "write_log",
+          "verb": "write",
+          "subject": "log",
+          "request": {
+            "contactId": "A",
+            "outcome": "no_answer"
+          },
+          "response": {
+            "written": true,
+            "at": "2026-09-21T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "B",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "contactId": "B",
+            "step": 1,
+            "body": "Hi B, it has been 8 years since you bought 2 Example St, Paddington QLD 4064, and the market has moved since. Curious what it would fetch now? Jo, the agency. Reply STOP to opt out."
+          },
+          "response": {
+            "sent": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "write_log",
+          "verb": "write",
+          "subject": "log",
+          "request": {
+            "contactId": "B",
+            "outcome": "no_answer"
+          },
+          "response": {
+            "written": true,
+            "at": "2026-09-21T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "A",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "contactId": "A",
+            "step": 2,
+            "body": "Hi A, just following up on 8 years since you bought 2 Example St, Paddington QLD 4064. Happy to help whenever suits. Jo, the agency. Reply STOP to opt out."
+          },
+          "response": {
+            "sent": true
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "write_log",
+          "verb": "write",
+          "subject": "log",
+          "request": {
+            "contactId": "A",
+            "outcome": "no_answer"
+          },
+          "response": {
+            "written": true,
+            "at": "2026-09-28T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "B",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "contactId": "B",
+            "step": 2,
+            "body": "Hi B, just following up on 8 years since you bought 2 Example St, Paddington QLD 4064. Happy to help whenever suits. Jo, the agency. Reply STOP to opt out."
+          },
+          "response": {
+            "sent": true
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "write_log",
+          "verb": "write",
+          "subject": "log",
+          "request": {
+            "contactId": "B",
+            "outcome": "no_answer"
+          },
+          "response": {
+            "written": true,
+            "at": "2026-09-28T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "B"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "write_log",
+          "verb": "write",
+          "subject": "log",
+          "request": {
+            "contactId": "B",
+            "outcome": "spoke"
+          },
+          "response": {
+            "written": true,
+            "at": "2026-09-28T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "B",
+            "reason": "reply outside the play; left for a person to answer"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-05T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-10-05T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-05T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "A",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-10-05T04:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "contactId": "A",
+            "step": 3,
+            "body": "Hi A, last note from me about 8 years since you bought 2 Example St, Paddington QLD 4064. I will leave it with you. Jo, the agency. Reply STOP to opt out."
+          },
+          "response": {
+            "sent": true
+          }
+        },
+        {
+          "at": "2026-10-05T04:00:00.000Z",
+          "port": "write_log",
+          "verb": "write",
+          "subject": "log",
+          "request": {
+            "contactId": "A",
+            "outcome": "no_answer"
+          },
+          "response": {
+            "written": true,
+            "at": "2026-10-05T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-05T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-10-05T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-05T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "B"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-10-05T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "B",
+            "reason": "sequence stopped: the seller answered (spoke); text 3 not sent"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-12T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-10-12T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-12T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "A",
+            "reason": "sequence ended after text 3; text 4 not sent"
+          },
+          "response": {
+            "recorded": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "gate-under-ranking",
+      "n": 7,
+      "title": "The gate sits underneath the ranking",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "Neither is called, each with a reason, and the highest score does not override either.",
+      "actual": "runs: TOP:equity_checkin,LOW:tenure / TOP:equity_checkin,LOW:tenure; lists:  / LOW; texts: none; skips: TOP: gate: outside_hours; not on today's list, whatever its rank | LOW: gate: outside_hours; not on today's list, whatever its rank | TOP: gate: outside_hours; the OK'd text was not sent | TOP: gate: do_not_contact; not on today's list, whatever its rank | TOP: gate: do_not_contact; the OK'd text was not sent",
+      "stimulus": {
+        "description": "The top-ranked contact, run outside their local calling hours; then the same contact flagged do-not-contact.",
+        "now": "2026-09-21T11:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "gate-under-ranking"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T11:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-21T11:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "TOP"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T11:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "LOW"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T11:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "TOP",
+              "LOW"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T11:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "TOP",
+            "localHour": 21
+          },
+          "response": {
+            "allowed": false,
+            "reason": "outside_hours"
+          }
+        },
+        {
+          "at": "2026-09-21T11:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "TOP",
+            "reason": "gate: outside_hours; not on today's list, whatever its rank"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T11:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "LOW",
+            "localHour": 21
+          },
+          "response": {
+            "allowed": false,
+            "reason": "outside_hours"
+          }
+        },
+        {
+          "at": "2026-09-21T11:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "LOW",
+            "reason": "gate: outside_hours; not on today's list, whatever its rank"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T11:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-09-21T11:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-21T11:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "TOP"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T11:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "TOP",
+            "localHour": 21
+          },
+          "response": {
+            "allowed": false,
+            "reason": "outside_hours"
+          }
+        },
+        {
+          "at": "2026-09-21T11:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "TOP",
+            "reason": "gate: outside_hours; the OK'd text was not sent"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T11:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "flag": "TOP"
+          },
+          "response": {
+            "doNotContact": true,
+            "permanent": true
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "TOP"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "LOW"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "TOP",
+              "LOW"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "TOP",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": false,
+            "reason": "do_not_contact"
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "TOP",
+            "reason": "gate: do_not_contact; not on today's list, whatever its rank"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "LOW",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 1
+          },
+          "response": {
+            "listed": [
+              "LOW"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "TOP"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "TOP",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": false,
+            "reason": "do_not_contact"
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "TOP",
+            "reason": "gate: do_not_contact; the OK'd text was not sent"
+          },
+          "response": {
+            "recorded": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "dnc-permanent-and-global",
+      "n": 8,
+      "title": "Do-not-contact is permanent and global",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The flag survives the import and still blocks every play. An import that clears it is the failure this check exists for.",
+      "actual": "runs: D:equity_checkin,E:tenure / D:equity_checkin,E:tenure; lists: E / E; texts: none; skips: D: gate: do_not_contact; not on today's list, whatever its rank | D: gate: do_not_contact; not on today's list, whatever its rank | D: gate: do_not_contact; the OK'd text was not sent | D: gate: do_not_contact; the OK'd text was not sent",
+      "stimulus": {
+        "description": "A contact flagged do-not-contact, then the whole list re-imported with that contact present and unflagged.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "dnc-permanent-and-global"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "D"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "E"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "D",
+              "E"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "D",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": false,
+            "reason": "do_not_contact"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "D",
+            "reason": "gate: do_not_contact; not on today's list, whatever its rank"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "E",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 1
+          },
+          "response": {
+            "listed": [
+              "E"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "import": 2
+          },
+          "response": {
+            "imported": 2,
+            "flagsPreserved": 1
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "D"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "E"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "D",
+              "E"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "D",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": false,
+            "reason": "do_not_contact"
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "D",
+            "reason": "gate: do_not_contact; not on today's list, whatever its rank"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "E",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 1
+          },
+          "response": {
+            "listed": [
+              "E"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "D"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "D",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": false,
+            "reason": "do_not_contact"
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "D",
+            "reason": "gate: do_not_contact; the OK'd text was not sent"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "D"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "D",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": false,
+            "reason": "do_not_contact"
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "D",
+            "reason": "gate: do_not_contact; the OK'd text was not sent"
+          },
+          "response": {
+            "recorded": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "every-skip-explained",
+      "n": 9,
+      "title": "Every skip is explained",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Each skip carries its own reason. A count of skips without reasons fails.",
+      "actual": "runs: OK1:equity_checkin,CAP:tenure,FLAG:tenure; lists: OK1; texts: none; skips: HELD: open exception owned by Jo Bloggs; nothing until they close it | BARE: not ready: missing nameAndMobile; out of every play until it is filled in | NOPLAY: no play: nothing true about this contact today gives a reason to text | CAP: past today's cap of 1; ranked below the rows above | FLAG: gate: do_not_contact; not on today's list, whatever its rank",
+      "stimulus": {
+        "description": "A run where several contacts are skipped for different reasons.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "every-skip-explained"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "OK1"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "CAP"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "FLAG"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "HELD",
+            "reason": "open exception owned by Jo Bloggs; nothing until they close it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "BARE"
+          },
+          "response": {
+            "missing": [
+              "nameAndMobile"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "BARE",
+            "reason": "not ready: missing nameAndMobile; out of every play until it is filled in"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "NOPLAY"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "NOPLAY",
+            "reason": "no play: nothing true about this contact today gives a reason to text"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 3
+          },
+          "response": {
+            "order": [
+              "OK1",
+              "CAP",
+              "FLAG"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "OK1",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "CAP",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "CAP",
+            "reason": "past today's cap of 1; ranked below the rows above"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "FLAG",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": false,
+            "reason": "do_not_contact"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "FLAG",
+            "reason": "gate: do_not_contact; not on today's list, whatever its rank"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 1
+          },
+          "response": {
+            "listed": [
+              "OK1"
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "relationship-needs-a-person",
+      "n": 10,
+      "title": "A human decides anything that is a relationship",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "Both escalate with a typed reason rather than being answered. No price and no resolution is offered by the build.",
+      "actual": "escalations: PAT:price_question,GUS:complaint; runs: none; lists: none; texts: PAT#1,GUS#1; skips: PAT: reply asks about a price or an offer; a person answers it, nothing is drafted | GUS: reply is a complaint; a person answers it, nothing is drafted | PAT: sequence stopped: the seller answered (spoke); nothing further from it | GUS: sequence stopped: the seller answered (spoke); nothing further from it | PAT: sequence stopped: the seller answered (spoke); text 2 not sent",
+      "stimulus": {
+        "description": "A contact who asks for a price, and one who makes a complaint.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "relationship-needs-a-person"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "PAT"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "PAT",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "contactId": "PAT",
+            "step": 1,
+            "body": "Hi PAT, 9 years since you bought 4 Example St, Paddington QLD 4064 now. Would a quick, no-fuss update on where it sits today be useful? Jo, the agency. Reply STOP to opt out."
+          },
+          "response": {
+            "sent": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "write_log",
+          "verb": "write",
+          "subject": "log",
+          "request": {
+            "contactId": "PAT",
+            "outcome": "no_answer"
+          },
+          "response": {
+            "written": true,
+            "at": "2026-09-21T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "GUS"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "GUS",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "contactId": "GUS",
+            "step": 1,
+            "body": "Hi GUS, 9 years since you bought 4 Example St, Paddington QLD 4064 now. Would a quick, no-fuss update on where it sits today be useful? Jo, the agency. Reply STOP to opt out."
+          },
+          "response": {
+            "sent": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "write_log",
+          "verb": "write",
+          "subject": "log",
+          "request": {
+            "contactId": "GUS",
+            "outcome": "no_answer"
+          },
+          "response": {
+            "written": true,
+            "at": "2026-09-21T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "PAT"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "contactId": "PAT",
+            "reason": "price_question"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "write_log",
+          "verb": "write",
+          "subject": "log",
+          "request": {
+            "contactId": "PAT",
+            "outcome": "spoke"
+          },
+          "response": {
+            "written": true,
+            "at": "2026-09-21T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "PAT",
+            "reason": "reply asks about a price or an offer; a person answers it, nothing is drafted"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "GUS"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "contactId": "GUS",
+            "reason": "complaint"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "write_log",
+          "verb": "write",
+          "subject": "log",
+          "request": {
+            "contactId": "GUS",
+            "outcome": "spoke"
+          },
+          "response": {
+            "written": true,
+            "at": "2026-09-21T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "GUS",
+            "reason": "reply is a complaint; a person answers it, nothing is drafted"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "PAT"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "PAT"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "PAT",
+            "reason": "sequence stopped: the seller answered (spoke); nothing further from it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "GUS"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "GUS"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "GUS",
+            "reason": "sequence stopped: the seller answered (spoke); nothing further from it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "PAT"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "PAT"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "PAT",
+            "reason": "sequence stopped: the seller answered (spoke); text 2 not sent"
+          },
+          "response": {
+            "recorded": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "daily-list-capped-with-reasons",
+      "n": 11,
+      "title": "The day's list respects the cap and carries a reason per row",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The list holds at most two rows, in rank order, none of them gated out. Every row names its play, the trigger that qualified it, an opener that uses that trigger, and the last outcome. A list longer than the cap, or a row with no reason, fails.",
+      "actual": "runs: C1:equity_checkin,C2:equity_checkin,C3:tenure,C4:tenure; lists: C2,C3; texts: none; skips: C1: gate: do_not_contact; not on today's list, whatever its rank | C4: past today's cap of 2; ranked below the rows above",
+      "stimulus": {
+        "description": "A cap of two against a list where four contacts qualify and one is flagged do-not-contact, then the morning list made.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "daily-list-capped-with-reasons"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "C1"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "C2"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "C3"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "C4"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 4
+          },
+          "response": {
+            "order": [
+              "C1",
+              "C2",
+              "C3",
+              "C4"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "C1",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": false,
+            "reason": "do_not_contact"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "C1",
+            "reason": "gate: do_not_contact; not on today's list, whatever its rank"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "C2",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "C3",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "C4",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "C4",
+            "reason": "past today's cap of 2; ranked below the rows above"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 2
+          },
+          "response": {
+            "listed": [
+              "C2",
+              "C3"
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "outcomes-change-tomorrow",
+      "n": 12,
+      "title": "Yesterday's outcomes change today's list",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "Each outcome is written back on the day it was recorded. Day two's list leaves out the contact spoken to yesterday and the one who opted out, and puts the callback first. A list that comes back the same as yesterday's fails.",
+      "actual": "outcomes: D1:spoke@2026-09-21,D2:do_not_contact@2026-09-21,D3:callback_requested@2026-09-21; runs: D1:equity_checkin,D2:tenure,D3:tenure,D4:tenure / D3:tenure,D4:tenure; lists: D1,D2,D3,D4 / D3,D4; texts: none; skips: D1: quiet: spoke logged 1 day(s) ago; one text a week, nothing for 30 days after spoke | D2: quiet: do_not_contact logged 1 day(s) ago; one text a week, nothing for 7 days after do_not_contact",
+      "stimulus": {
+        "description": "Day one's list is worked: the first contact is spoken to, the second asks not to be contacted again, and the third asks to be called back. The next morning's list is made.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "outcomes-change-tomorrow"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "D1"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "D2"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "D3"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "D4"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 4
+          },
+          "response": {
+            "order": [
+              "D1",
+              "D2",
+              "D3",
+              "D4"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "D1",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "D2",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "D3",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "D4",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 4
+          },
+          "response": {
+            "listed": [
+              "D1",
+              "D2",
+              "D3",
+              "D4"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "write_log",
+          "verb": "write",
+          "subject": "log",
+          "request": {
+            "contactId": "D1",
+            "outcome": "spoke"
+          },
+          "response": {
+            "written": true,
+            "at": "2026-09-21T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "flag": "D2"
+          },
+          "response": {
+            "doNotContact": true,
+            "permanent": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "write_log",
+          "verb": "write",
+          "subject": "log",
+          "request": {
+            "contactId": "D2",
+            "outcome": "do_not_contact"
+          },
+          "response": {
+            "written": true,
+            "at": "2026-09-21T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "write_log",
+          "verb": "write",
+          "subject": "log",
+          "request": {
+            "contactId": "D3",
+            "outcome": "callback_requested"
+          },
+          "response": {
+            "written": true,
+            "at": "2026-09-21T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "D1"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "D1",
+            "reason": "quiet: spoke logged 1 day(s) ago; one text a week, nothing for 30 days after spoke"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "flag": "D2"
+          },
+          "response": {
+            "doNotContact": true,
+            "permanent": true
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "D2"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "D2",
+            "reason": "quiet: do_not_contact logged 1 day(s) ago; one text a week, nothing for 7 days after do_not_contact"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "D3"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "D4"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "D3",
+              "D4"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "D3",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "D4",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 2
+          },
+          "response": {
+            "listed": [
+              "D3",
+              "D4"
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 13,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the list and the plays runs on.",
+        "now": "2026-11-03T13:55:04.365Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 14,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "No call is placed to that contact, and the audit names the gate rather than reporting a generic skip.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "A real run against the live list, at a real time, with a flagged contact ranked first.",
+        "now": "2026-11-03T13:55:04.365Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 14,
+    "pass": 8,
+    "fail": 0,
+    "shapeOnly": 4,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
