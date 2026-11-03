@@ -1,0 +1,1938 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793708825816",
+  "standard": "invoice-check-build-standard",
+  "spec": "AIP-BS-INVOICE-CHECK",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-03T12:27:05.811Z",
+  "finishedAt": "2026-11-03T12:27:05.816Z",
+  "results": [
+    {
+      "checkId": "checks-in-order-stop-first-failure",
+      "n": 1,
+      "title": "The four checks run in order and stop at the first failure",
+      "verdict": "pass",
+      "held": true,
+      "expected": "It is reported against the second. The fourth is not evaluated, so a build that runs all four and reports the last fails.",
+      "actual": "8 port call(s); routed [[\"CL-1001\",\"needs_decision\"]]; checks [[\"CL-1001\",\"rate\",true],[\"CL-1001\",\"quantity\",false]]; exceptions [{\"invoiceId\":\"CL-1001\",\"differenceCents\":36000,\"source\":\"doc/claim-1001.pdf\",\"checkName\":\"quantity\"}]; releases 0",
+      "stimulus": {
+        "description": "An invoice seeded to fail the second check and also the fourth.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "checks-in-order-stop-first-failure"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": []
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc/claim-1001.pdf"
+          },
+          "response": {
+            "kind": "claim"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-501"
+          },
+          "response": {
+            "id": "PO-501",
+            "amount": 900000,
+            "unitRateCents": 9000,
+            "contractSumCents": 900000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1001",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-501 agreed rate $90.00; \"Rough-in, level 2\" $90.00 x 14 vs agreed $90.00; difference $0.00; tolerance $0.00 effective none written: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1001",
+            "check": "quantity",
+            "passed": false
+          },
+          "response": {
+            "saw": "PO PO-501: claimed 14 this claim; completed 10; previously claimed 0; available 10; over by 4 ($360.00); tolerance $0.00 effective none written: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "exception": "CL-1001"
+          },
+          "response": {
+            "differenceCents": 36000,
+            "source": "doc/claim-1001.pdf"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1001",
+            "queue": "needs_decision",
+            "reason": "failed quantity by $360.00 against PO-501; never ran: variation, contract_sum"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "no-po-escalates",
+      "n": 2,
+      "title": "No matching purchase order escalates",
+      "verdict": "pass",
+      "held": true,
+      "expected": "It escalates. Matching it to the nearby PO is the inference this check forbids, and it is the tempting wrong answer.",
+      "actual": "5 port call(s); routed [[\"CL-1002\",\"blocked\"]]; checks []; exceptions []; releases 0",
+      "stimulus": {
+        "description": "An invoice with no PO, from a supplier with exactly one open PO of a similar amount.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "no-po-escalates"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": []
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc/claim-1002.pdf"
+          },
+          "response": {
+            "kind": "claim"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "invoiceId": "CL-1002",
+            "reason": "claim names no purchase order or subcontract: which job is this?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1002",
+            "queue": "blocked",
+            "reason": "claim names no purchase order or subcontract: which job is this?"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "variation-against-a-record",
+      "n": 3,
+      "title": "Variation approval is checked against a written record",
+      "verdict": "pass",
+      "held": true,
+      "expected": "It is not passed. A note claiming approval is not a record.",
+      "actual": "25 port call(s); routed [[\"CL-1003\",\"blocked\"],[\"CL-1004\",\"blocked\"],[\"CL-1005\",\"done_reversible\"]]; checks [[\"CL-1003\",\"rate\",true],[\"CL-1003\",\"quantity\",true],[\"CL-1003\",\"variation\",false],[\"CL-1004\",\"rate\",true],[\"CL-1004\",\"quantity\",true],[\"CL-1004\",\"variation\",false],[\"CL-1005\",\"rate\",true],[\"CL-1005\",\"quantity\",true],[\"CL-1005\",\"variation\",true],[\"CL-1005\",\"contract_sum\",true]]; exceptions [{\"invoiceId\":\"CL-1003\",\"differenceCents\":45000,\"source\":\"doc/claim-1003.pdf\",\"checkName\":\"variation\"},{\"invoiceId\":\"CL-1004\",\"differenceCents\":45000,\"source\":\"doc/claim-1004.pdf\",\"checkName\":\"variation\"}]; releases 0",
+      "stimulus": {
+        "description": "An invoice exceeding its PO, with a verbal approval noted and no written record.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "variation-against-a-record"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 3
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": []
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc/claim-1003.pdf"
+          },
+          "response": {
+            "kind": "claim"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-501"
+          },
+          "response": {
+            "id": "PO-501",
+            "amount": 900000,
+            "unitRateCents": 9000,
+            "contractSumCents": 900000,
+            "approvedVariationsCents": 45000
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1003",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-501 agreed rate $90.00; \"Rough-in, level 2\" $90.00 x 10 vs agreed $90.00; difference $0.00; tolerance $0.00 effective none written: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1003",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-501: claimed 10 this claim; completed 10; previously claimed 0; available 10; over by 0 ($0.00); tolerance $0.00 effective none written: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1003",
+            "check": "variation",
+            "passed": false
+          },
+          "response": {
+            "saw": "1 line(s) outside original scope: \"Variation: additional works as discussed\" has no approval reference; unapproved $450.00; a note claims \"Site super OK'd it on the phone, all good\", which is not a written record"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "exception": "CL-1003"
+          },
+          "response": {
+            "differenceCents": 45000,
+            "source": "doc/claim-1003.pdf"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1003",
+            "queue": "blocked",
+            "reason": "failed variation by $450.00 against PO-501; never ran: contract_sum"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc/claim-1004.pdf"
+          },
+          "response": {
+            "kind": "claim"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-501"
+          },
+          "response": {
+            "id": "PO-501",
+            "amount": 900000,
+            "unitRateCents": 9000,
+            "contractSumCents": 900000,
+            "approvedVariationsCents": 45000
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1004",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-501 agreed rate $90.00; \"Rough-in, level 2\" $90.00 x 10 vs agreed $90.00; difference $0.00; tolerance $0.00 effective none written: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1004",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-501: claimed 10 this claim; completed 10; previously claimed 0; available 10; over by 0 ($0.00); tolerance $0.00 effective none written: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "va/VA-09.pdf"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1004",
+            "check": "variation",
+            "passed": false
+          },
+          "response": {
+            "saw": "1 line(s) outside original scope: \"Variation: additional works as discussed\" cites va/VA-09.pdf, not in the document store; unapproved $450.00"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "exception": "CL-1004"
+          },
+          "response": {
+            "differenceCents": 45000,
+            "source": "doc/claim-1004.pdf"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1004",
+            "queue": "blocked",
+            "reason": "failed variation by $450.00 against PO-501; never ran: contract_sum"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc/claim-1005.pdf"
+          },
+          "response": {
+            "kind": "claim"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-501"
+          },
+          "response": {
+            "id": "PO-501",
+            "amount": 900000,
+            "unitRateCents": 9000,
+            "contractSumCents": 900000,
+            "approvedVariationsCents": 45000
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1005",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-501 agreed rate $90.00; \"Rough-in, level 2\" $90.00 x 10 vs agreed $90.00; difference $0.00; tolerance $0.00 effective none written: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1005",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-501: claimed 10 this claim; completed 10; previously claimed 0; available 10; over by 0 ($0.00); tolerance $0.00 effective none written: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "va/VA-07-signed.pdf"
+          },
+          "response": {
+            "kind": "written_variation_approval"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1005",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "1 line(s) outside original scope: \"Variation: additional works as discussed\" approved by va/VA-07-signed.pdf (written_variation_approval); unapproved $0.00"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1005",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-501: cumulative claimed $900.00 vs contract $9000.00 + approved variations $450.00 = $9450.00; over by $0.00; tolerance $0.00 effective none written: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1005",
+            "queue": "done_reversible",
+            "reason": "all four checks passed against PO-501; waiting for a named person to approve"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "exactly-one-queue",
+      "n": 4,
+      "title": "Every invoice lands in exactly one of the four queues",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Each appears in exactly one queue. Nothing is absent and nothing is in two.",
+      "actual": "26 port call(s); routed [[\"CL-1006\",\"done_reversible\"],[\"CL-1007\",\"needs_decision\"],[\"CL-1008\",\"waiting\"],[\"CL-1009\",\"blocked\"],[\"CL-1010\",\"needs_decision\"]]; checks [[\"CL-1006\",\"rate\",true],[\"CL-1006\",\"quantity\",true],[\"CL-1006\",\"variation\",true],[\"CL-1006\",\"contract_sum\",true],[\"CL-1007\",\"rate\",false],[\"CL-1010\",\"rate\",false]]; exceptions [{\"invoiceId\":\"CL-1007\",\"differenceCents\":5000,\"source\":\"doc/claim-1007.pdf\",\"checkName\":\"rate\"},{\"invoiceId\":\"CL-1010\",\"differenceCents\":8000,\"source\":\"doc/claim-1002.pdf\",\"checkName\":\"rate\"}]; releases 0",
+      "stimulus": {
+        "description": "A batch containing one invoice for each queue, plus one that could arguably be two.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "exactly-one-queue"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 5
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": []
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc/claim-1006.pdf"
+          },
+          "response": {
+            "kind": "claim"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-501"
+          },
+          "response": {
+            "id": "PO-501",
+            "amount": 900000,
+            "unitRateCents": 9000,
+            "contractSumCents": 900000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1006",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-501 agreed rate $90.00; \"Rough-in, level 2\" $90.00 x 10 vs agreed $90.00; difference $0.00; tolerance $0.00 effective none written: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1006",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-501: claimed 10 this claim; completed 10; previously claimed 0; available 10; over by 0 ($0.00); tolerance $0.00 effective none written: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1006",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "0 line(s) outside original scope: none; unapproved $0.00"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1006",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-501: cumulative claimed $900.00 vs contract $9000.00 + approved variations $0.00 = $9000.00; over by $0.00; tolerance $0.00 effective none written: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1006",
+            "queue": "done_reversible",
+            "reason": "all four checks passed against PO-501; waiting for a named person to approve"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc/claim-1007.pdf"
+          },
+          "response": {
+            "kind": "claim"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-501"
+          },
+          "response": {
+            "id": "PO-501",
+            "amount": 900000,
+            "unitRateCents": 9000,
+            "contractSumCents": 900000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1007",
+            "check": "rate",
+            "passed": false
+          },
+          "response": {
+            "saw": "PO PO-501 agreed rate $90.00; \"Rough-in, level 2\" $95.00 x 10 vs agreed $90.00; difference $50.00; tolerance $0.00 effective none written: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "exception": "CL-1007"
+          },
+          "response": {
+            "differenceCents": 5000,
+            "source": "doc/claim-1007.pdf"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1007",
+            "queue": "needs_decision",
+            "reason": "failed rate by $50.00 against PO-501; never ran: quantity, variation, contract_sum"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc/claim-1008.pdf"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "invoiceId": "CL-1008",
+            "reason": "source document doc/claim-1008.pdf is not in the document store"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1008",
+            "queue": "waiting",
+            "reason": "source document doc/claim-1008.pdf not in the store: ask the subcontractor to resend"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc/claim-1001.pdf"
+          },
+          "response": {
+            "kind": "claim"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-999"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "invoiceId": "CL-1009",
+            "reason": "claim names PO-999, which does not exist: which job is this?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1009",
+            "queue": "blocked",
+            "reason": "claim names PO-999, which does not exist: which job is this?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc/claim-1002.pdf"
+          },
+          "response": {
+            "kind": "claim"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-501"
+          },
+          "response": {
+            "id": "PO-501",
+            "amount": 900000,
+            "unitRateCents": 9000,
+            "contractSumCents": 900000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1010",
+            "check": "rate",
+            "passed": false
+          },
+          "response": {
+            "saw": "PO PO-501 agreed rate $90.00; \"Rough-in, level 2\" $98.00 x 10 vs agreed $90.00; difference $80.00; tolerance $0.00 effective none written: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "exception": "CL-1010"
+          },
+          "response": {
+            "differenceCents": 8000,
+            "source": "doc/claim-1002.pdf"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1010",
+            "queue": "needs_decision",
+            "reason": "failed rate by $80.00 against PO-501; never ran: quantity, variation, contract_sum"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "clean-matches-visible",
+      "n": 5,
+      "title": "Clean matches are visible in a list",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The clean matches are listed. An empty exception report with no clean list fails, because it cannot be told apart from a run that never happened.",
+      "actual": "23 port call(s); routed [[\"CL-1001\",\"done_reversible\"],[\"CL-1002\",\"done_reversible\"],[\"CL-1003\",\"done_reversible\"]]; checks [[\"CL-1001\",\"rate\",true],[\"CL-1001\",\"quantity\",true],[\"CL-1001\",\"variation\",true],[\"CL-1001\",\"contract_sum\",true],[\"CL-1002\",\"rate\",true],[\"CL-1002\",\"quantity\",true],[\"CL-1002\",\"variation\",true],[\"CL-1002\",\"contract_sum\",true],[\"CL-1003\",\"rate\",true],[\"CL-1003\",\"quantity\",true],[\"CL-1003\",\"variation\",true],[\"CL-1003\",\"contract_sum\",true]]; exceptions []; releases 0",
+      "stimulus": {
+        "description": "A batch where every invoice matches cleanly.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "clean-matches-visible"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 3
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": []
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc/claim-1001.pdf"
+          },
+          "response": {
+            "kind": "claim"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-501"
+          },
+          "response": {
+            "id": "PO-501",
+            "amount": 900000,
+            "unitRateCents": 9000,
+            "contractSumCents": 900000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1001",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-501 agreed rate $90.00; \"Rough-in, level 2\" $90.00 x 10 vs agreed $90.00; difference $0.00; tolerance $0.00 effective none written: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1001",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-501: claimed 10 this claim; completed 10; previously claimed 0; available 10; over by 0 ($0.00); tolerance $0.00 effective none written: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1001",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "0 line(s) outside original scope: none; unapproved $0.00"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1001",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-501: cumulative claimed $900.00 vs contract $9000.00 + approved variations $0.00 = $9000.00; over by $0.00; tolerance $0.00 effective none written: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1001",
+            "queue": "done_reversible",
+            "reason": "all four checks passed against PO-501; waiting for a named person to approve"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc/claim-1002.pdf"
+          },
+          "response": {
+            "kind": "claim"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-501"
+          },
+          "response": {
+            "id": "PO-501",
+            "amount": 900000,
+            "unitRateCents": 9000,
+            "contractSumCents": 900000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1002",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-501 agreed rate $90.00; \"Rough-in, level 2\" $90.00 x 10 vs agreed $90.00; difference $0.00; tolerance $0.00 effective none written: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1002",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-501: claimed 10 this claim; completed 10; previously claimed 0; available 10; over by 0 ($0.00); tolerance $0.00 effective none written: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1002",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "0 line(s) outside original scope: none; unapproved $0.00"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1002",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-501: cumulative claimed $900.00 vs contract $9000.00 + approved variations $0.00 = $9000.00; over by $0.00; tolerance $0.00 effective none written: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1002",
+            "queue": "done_reversible",
+            "reason": "all four checks passed against PO-501; waiting for a named person to approve"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc/claim-1003.pdf"
+          },
+          "response": {
+            "kind": "claim"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-501"
+          },
+          "response": {
+            "id": "PO-501",
+            "amount": 900000,
+            "unitRateCents": 9000,
+            "contractSumCents": 900000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1003",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-501 agreed rate $90.00; \"Rough-in, level 2\" $90.00 x 10 vs agreed $90.00; difference $0.00; tolerance $0.00 effective none written: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1003",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-501: claimed 10 this claim; completed 10; previously claimed 0; available 10; over by 0 ($0.00); tolerance $0.00 effective none written: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1003",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "0 line(s) outside original scope: none; unapproved $0.00"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1003",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-501: cumulative claimed $900.00 vs contract $9000.00 + approved variations $0.00 = $9000.00; over by $0.00; tolerance $0.00 effective none written: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1003",
+            "queue": "done_reversible",
+            "reason": "all four checks passed against PO-501; waiting for a named person to approve"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "exceptions-carry-dollars-and-source",
+      "n": 6,
+      "title": "Every exception carries the difference and the source",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The exception states the dollar difference and points at the document it was computed from. A percentage or a description alone fails.",
+      "actual": "7 port call(s); routed [[\"CL-1004\",\"needs_decision\"]]; checks [[\"CL-1004\",\"rate\",false]]; exceptions [{\"invoiceId\":\"CL-1004\",\"differenceCents\":5000,\"source\":\"doc/claim-1004.pdf\",\"checkName\":\"rate\"}]; releases 0",
+      "stimulus": {
+        "description": "An invoice over its PO by a known amount.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "exceptions-carry-dollars-and-source"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": []
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc/claim-1004.pdf"
+          },
+          "response": {
+            "kind": "claim"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-501"
+          },
+          "response": {
+            "id": "PO-501",
+            "amount": 900000,
+            "unitRateCents": 9000,
+            "contractSumCents": 900000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1004",
+            "check": "rate",
+            "passed": false
+          },
+          "response": {
+            "saw": "PO PO-501 agreed rate $90.00; \"Rough-in, level 2\" $95.00 x 10 vs agreed $90.00; difference $50.00; tolerance $0.00 effective none written: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "exception": "CL-1004"
+          },
+          "response": {
+            "differenceCents": 5000,
+            "source": "doc/claim-1004.pdf"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1004",
+            "queue": "needs_decision",
+            "reason": "failed rate by $50.00 against PO-501; never ran: quantity, variation, contract_sum"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "payment-needs-a-person",
+      "n": 7,
+      "title": "Nothing pays or releases without a person",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "No payment is released. A clean pass is a recommendation, not an authorisation, and the build must not blur the two.",
+      "actual": "9 port call(s); routed [[\"CL-1005\",\"done_reversible\"]]; checks [[\"CL-1005\",\"rate\",true],[\"CL-1005\",\"quantity\",true],[\"CL-1005\",\"variation\",true],[\"CL-1005\",\"contract_sum\",true]]; exceptions []; releases 0",
+      "stimulus": {
+        "description": "An invoice that passes all four checks cleanly.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "payment-needs-a-person"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": []
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc/claim-1005.pdf"
+          },
+          "response": {
+            "kind": "claim"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-501"
+          },
+          "response": {
+            "id": "PO-501",
+            "amount": 900000,
+            "unitRateCents": 9000,
+            "contractSumCents": 900000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1005",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-501 agreed rate $90.00; \"Rough-in, level 2\" $90.00 x 10 vs agreed $90.00; difference $0.00; tolerance $0.00 effective none written: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1005",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-501: claimed 10 this claim; completed 10; previously claimed 0; available 10; over by 0 ($0.00); tolerance $0.00 effective none written: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1005",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "0 line(s) outside original scope: none; unapproved $0.00"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1005",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-501: cumulative claimed $900.00 vs contract $9000.00 + approved variations $0.00 = $9000.00; over by $0.00; tolerance $0.00 effective none written: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1005",
+            "queue": "done_reversible",
+            "reason": "all four checks passed against PO-501; waiting for a named person to approve"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "record-survives-the-decision",
+      "n": 8,
+      "title": "The record of a check survives the decision",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The check record is still retrievable with what it saw at the time, not just the outcome.",
+      "actual": "8 port call(s); routed [[\"CL-1006\",\"needs_decision\"]]; checks [[\"CL-1006\",\"rate\",false]]; exceptions [{\"invoiceId\":\"CL-1006\",\"differenceCents\":2000,\"source\":\"doc/claim-1006.pdf\",\"checkName\":\"rate\"}]; releases 1",
+      "stimulus": {
+        "description": "An invoice checked, decided, paid, and then queried months later.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "record-survives-the-decision"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": []
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc/claim-1006.pdf"
+          },
+          "response": {
+            "kind": "claim"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-501"
+          },
+          "response": {
+            "id": "PO-501",
+            "amount": 900000,
+            "unitRateCents": 9000,
+            "contractSumCents": 900000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1006",
+            "check": "rate",
+            "passed": false
+          },
+          "response": {
+            "saw": "PO PO-501 agreed rate $90.00; \"Rough-in, level 2\" $92.00 x 10 vs agreed $90.00; difference $20.00; tolerance $0.00 effective none written: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "exception": "CL-1006"
+          },
+          "response": {
+            "differenceCents": 2000,
+            "source": "doc/claim-1006.pdf"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1006",
+            "queue": "needs_decision",
+            "reason": "failed rate by $20.00 against PO-501; never ran: quantity, variation, contract_sum"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-23T00:00:00.000Z",
+          "port": "release_payment",
+          "verb": "write",
+          "subject": "payment",
+          "request": {
+            "invoiceId": "CL-1006",
+            "person": "Priya Shah (contracts administrator)"
+          },
+          "response": {
+            "released": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "tolerances-are-readable",
+      "n": 9,
+      "title": "Tolerance thresholds are written down where the operator can read them",
+      "verdict": "pass",
+      "held": true,
+      "expected": "They are returned as readable values with their dates. Thresholds that exist only inside the matching code fail.",
+      "actual": "14 port call(s); routed [[\"CL-1007\",\"done_reversible\"],[\"CL-1008\",\"needs_decision\"]]; checks [[\"CL-1007\",\"rate\",true],[\"CL-1007\",\"quantity\",true],[\"CL-1007\",\"variation\",true],[\"CL-1007\",\"contract_sum\",true],[\"CL-1008\",\"rate\",false]]; exceptions [{\"invoiceId\":\"CL-1008\",\"differenceCents\":250,\"source\":\"doc/claim-1008.pdf\",\"checkName\":\"rate\"}]; releases 0",
+      "stimulus": {
+        "description": "A request for the thresholds currently in force.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "tolerances-are-readable"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 2
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": [
+              {
+                "check": "rate",
+                "withinCents": 200,
+                "effectiveFrom": "2026-07-01"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc/claim-1007.pdf"
+          },
+          "response": {
+            "kind": "claim"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-501"
+          },
+          "response": {
+            "id": "PO-501",
+            "amount": 900000,
+            "unitRateCents": 9000,
+            "contractSumCents": 900000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1007",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-501 agreed rate $90.00; \"Rough-in, level 2\" $90.15 x 10 vs agreed $90.00; difference $1.50; tolerance $2.00 effective 2026-07-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1007",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-501: claimed 10 this claim; completed 10; previously claimed 0; available 10; over by 0 ($0.00); tolerance $0.00 effective none written: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1007",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "0 line(s) outside original scope: none; unapproved $0.00"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1007",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-501: cumulative claimed $900.00 vs contract $9000.00 + approved variations $0.00 = $9000.00; over by $0.00; tolerance $0.00 effective none written: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1007",
+            "queue": "done_reversible",
+            "reason": "all four checks passed against PO-501; waiting for a named person to approve"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc/claim-1008.pdf"
+          },
+          "response": {
+            "kind": "claim"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-501"
+          },
+          "response": {
+            "id": "PO-501",
+            "amount": 900000,
+            "unitRateCents": 9000,
+            "contractSumCents": 900000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1008",
+            "check": "rate",
+            "passed": false
+          },
+          "response": {
+            "saw": "PO PO-501 agreed rate $90.00; \"Rough-in, level 2\" $90.25 x 10 vs agreed $90.00; difference $2.50; tolerance $2.00 effective 2026-07-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "exception": "CL-1008"
+          },
+          "response": {
+            "differenceCents": 250,
+            "source": "doc/claim-1008.pdf"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "CL-1008",
+            "queue": "needs_decision",
+            "reason": "failed rate by $2.50 against PO-501; never ran: quantity, variation, contract_sum"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 10,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the check runs on.",
+        "now": "2026-11-03T12:27:05.816Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 11,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "The first lands in the decision queue naming check 1, the difference in dollars, and the three checks that never ran. The second is flagged as unapproved scope at check 3 and does not pass on a confident covering email. No payment leaves without a named person.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "Against the live ledger and the real document store: an invoice that matches its order exactly with one unit rate changed, then an invoice with a line outside the original scope and no written approval.",
+        "now": "2026-11-03T12:27:05.816Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 11,
+    "pass": 7,
+    "fail": 0,
+    "shapeOnly": 2,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
