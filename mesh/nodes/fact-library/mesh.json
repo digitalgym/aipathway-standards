@@ -1,0 +1,61 @@
+{
+  "slug": "fact-library",
+  "name": "Fact Library",
+  "office_task": "Keep one read-only company knowledge graph that every bot in the fleet asks, where nothing goes live until a named person accepts it and a replaced document takes its answers with it.",
+  "verticals": ["b2b-office"],
+  "standards": ["knowledge-graph"],
+  "systems_of_record": [
+    "the document store that issues the document_id for each source in the watched library folder (Drive, SharePoint)",
+    "the business's own graph store and library register, which hold sources with edition and checksum, nodes, edges, change deltas and the answers given (lists, Postgres or a graph database on the business's account)",
+    "the system of record that issues entity ids (the Xero contact, the CRM id, the ABN)",
+    "the exception desk the business runs, which issues the exception_id"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/fact-library" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "webhook", "schedule"],
+  "consumes": [
+    { "event": "document.received", "wake": "webhook" },
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "report.published",
+      "write": "the change delta for a source whose checksum moved, written into the library register the knowledge owner opens: the source's document_id, the old and new checksum, and the computed list of every node built from it, each moved to change_pending",
+      "readback": "the library register returns a report_id, and reading that id back returns the document_id, both checksums and the affected node ids; no id back means the delta was not written, kg.change_pending is raised to the named owner and no affected node answers"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the source or node naming the person who owns it: a source that is not an instrument, customer material offered as a source, an acceptance with no name or no locator, a type the key contract does not name, an entity with no system-of-record id and no accepted SAME_AS, two live nodes in conflict, a change pending acceptance, or a question no live node covers",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the document_id or node id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "kg.source_not_an_instrument",
+      "kg.customer_material_not_a_source",
+      "kg.acceptance_refused",
+      "kg.type_not_in_contract",
+      "kg.no_registered_source",
+      "kg.identity_unconfirmed",
+      "kg.conflict_needs_person",
+      "kg.promotion_refused",
+      "kg.change_pending",
+      "kg.not_covered"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.document_id", "seam.contract_version", "seam.source_checksum", "seam.node_queue", "seam.accepted_by", "seam.delta_id", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Ops Knowledge Observer",
+    "original_author": "Stephen Ruhe",
+    "share_link": "https://x.ai/bot/CIgxhKdiPj7KflehWkaEr",
+    "licence_or_permission": "reimplementation"
+  }
+}
