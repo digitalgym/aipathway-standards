@@ -1,0 +1,59 @@
+{
+  "slug": "inbox-desk",
+  "name": "Inbox Desk",
+  "office_task": "Each weekday, read the shared business inbox, file every message against its job or supplier, and hold every real reply for a named person.",
+  "verticals": ["b2b-office"],
+  "standards": ["inbox-triage"],
+  "systems_of_record": [
+    "the mail system that issues the message_id (the shared Gmail or Outlook mailbox)",
+    "the job system or ledger that holds the job and supplier records messages are filed against",
+    "the exception desk the business runs, holding the queue table and its items"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/inbox-desk" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "webhook", "schedule"],
+  "consumes": [
+    { "event": "email.received", "wake": "webhook" },
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "exception.raised",
+      "write": "an item on the exception desk naming the person who owns it, one per thread: a message waiting on its queue owner's reply, an unmatched message left as a task, a complaint handed whole to a person, or an item past its kind's clock handed to the owner's manager",
+      "readback": "the exception desk returns an exception_id (the item id), and reading the record back by message_id returns the item with its kind, record_ref, owner, due date and every outbound with who released it; no item back means nothing was raised and the message is escalated to the other queue's owner"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "inbox.awaiting_release",
+      "inbox.unmatched_task",
+      "inbox.complaint",
+      "inbox.past_clock",
+      "inbox.readback_failed"
+    ],
+    "owner_field": "owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.message_id",
+      "seam.thread_id",
+      "seam.kind",
+      "seam.record_ref",
+      "seam.owner",
+      "seam.due",
+      "seam.status",
+      "seam.released_by"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Inbox Triage",
+    "original_author": "Cristopher Guido",
+    "share_link": "https://x.ai/bot/lDp666Fm-QgyBGqK7ee4l",
+    "licence_or_permission": "reimplementation"
+  }
+}
