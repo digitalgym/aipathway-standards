@@ -1,0 +1,1181 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793703890427",
+  "standard": "cited-answer-build-standard",
+  "spec": "AIP-BS-CITED-ANSWER",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-03T11:04:50.416Z",
+  "finishedAt": "2026-11-03T11:04:50.427Z",
+  "results": [
+    {
+      "checkId": "answers-carry-a-card",
+      "n": 1,
+      "title": "Every production answer carries a source card",
+      "verdict": "pass",
+      "held": true,
+      "expected": "No answer is returned. It lands in declined. An answer returned with an empty card list fails.",
+      "actual": "answers: A1 declined cards=0",
+      "stimulus": {
+        "description": "A question the clause library cannot support.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "answers-carry-a-card"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "clauses": 5
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cited.not_in_library",
+            "detail": "M-101: no clause in the library covers this question"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "What are the fire hydrant flow test intervals for a hospital?",
+            "policy": "public",
+            "cards": 0
+          },
+          "response": {
+            "id": "A1",
+            "outcome": "declined"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "cards-are-specific",
+      "n": 2,
+      "title": "Cards name an edition, a jurisdiction and an effective date",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every card carries edition, jurisdiction and effective date. A title and a page number alone fail.",
+      "actual": "cards: [[{\"instrumentId\":\"EXAMPLE-STATE-BUILDING-REGULATION\",\"clauseId\":\"BR-201\",\"edition\":\"2023\",\"jurisdiction\":\"QLD\",\"effectiveDate\":\"2023-09-01T00:00:00.000Z\"}],[{\"instrumentId\":\"EXAMPLE-CITY-PLANNING-SCHEME\",\"clauseId\":\"PS-102\",\"edition\":\"2024 v3\",\"jurisdiction\":\"QLD\",\"effectiveDate\":\"2024-07-01T00:00:00.000Z\"}]]",
+      "stimulus": {
+        "description": "Any answerable question.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "cards-are-specific"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "clauses": 5
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "When is a frame inspection needed for a deck?",
+            "policy": "public",
+            "cards": 1
+          },
+          "response": {
+            "id": "A1",
+            "outcome": "answered"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "answerId": "A1"
+          },
+          "response": {
+            "cards": [
+              {
+                "instrumentId": "EXAMPLE-STATE-BUILDING-REGULATION",
+                "clauseId": "BR-201",
+                "edition": "2023",
+                "jurisdiction": "QLD",
+                "effectiveDate": "2023-09-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "clauses": 5
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "How many employees can a home business have before it needs a planning permit?",
+            "policy": "internal",
+            "cards": 1
+          },
+          "response": {
+            "id": "A2",
+            "outcome": "answered"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "answerId": "A2"
+          },
+          "response": {
+            "cards": [
+              {
+                "instrumentId": "EXAMPLE-CITY-PLANNING-SCHEME",
+                "clauseId": "PS-102",
+                "edition": "2024 v3",
+                "jurisdiction": "QLD",
+                "effectiveDate": "2024-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "superseded-cannot-answer",
+      "n": 3,
+      "title": "Superseded clauses cannot produce a live answer",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The second answer changes or declines. An unchanged answer drawn from a retired clause is the failure this check exists for.",
+      "actual": "A1 answered [PS-101]; A2 declined []; A3 answered [PS-101A]",
+      "stimulus": {
+        "description": "A question answered from one clause, then that clause retired, then the same question.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "superseded-cannot-answer"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "clauses": 5
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "Do I need a planning permit for a shed in the low density residential zone?",
+            "policy": "public",
+            "cards": 1
+          },
+          "response": {
+            "id": "A1",
+            "outcome": "answered"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "answerId": "A1"
+          },
+          "response": {
+            "cards": [
+              {
+                "instrumentId": "EXAMPLE-CITY-PLANNING-SCHEME",
+                "clauseId": "PS-101",
+                "edition": "2024 v3",
+                "jurisdiction": "QLD",
+                "effectiveDate": "2024-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T01:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T01:00:00.000Z"
+          },
+          "response": {
+            "clauses": 6
+          }
+        },
+        {
+          "at": "2026-09-21T01:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cited.change_pending",
+            "detail": "M-302: instrument EXAMPLE-CITY-PLANNING-SCHEME has a version loaded that no named person has accepted"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T01:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "Do I need a planning permit for a shed in the low density residential zone?",
+            "policy": "public",
+            "cards": 0
+          },
+          "response": {
+            "id": "A2",
+            "outcome": "declined"
+          }
+        },
+        {
+          "at": "2026-09-21T02:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "accept": "PS-101A",
+            "by": "Sam Ortiz, building surveyor"
+          },
+          "response": {
+            "accepted": true
+          }
+        },
+        {
+          "at": "2026-09-21T02:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T02:00:00.000Z"
+          },
+          "response": {
+            "clauses": 6
+          }
+        },
+        {
+          "at": "2026-09-21T02:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "Do I need a planning permit for a shed in the low density residential zone?",
+            "policy": "public",
+            "cards": 1
+          },
+          "response": {
+            "id": "A3",
+            "outcome": "answered"
+          }
+        },
+        {
+          "at": "2026-09-21T02:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "answerId": "A3"
+          },
+          "response": {
+            "cards": [
+              {
+                "instrumentId": "EXAMPLE-CITY-PLANNING-SCHEME",
+                "clauseId": "PS-101A",
+                "edition": "2026 v4",
+                "jurisdiction": "QLD",
+                "effectiveDate": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "change-accepted-by-a-person",
+      "n": 4,
+      "title": "Instrument changes are accepted before production",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The unaccepted version does not reach the answer. Once accepted, the acceptance carries a name and a date.",
+      "actual": "answers: A1 declined []; A2 declined []; A3 answered [BR-201B]; acceptances: [{\"clauseId\":\"BR-201B\",\"by\":\"Priya Shah, building certifier\",\"at\":\"2026-09-21T02:00:00.000Z\"}]; refused: 0",
+      "stimulus": {
+        "description": "A new instrument version loaded but not accepted, then a question that would draw on it.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "change-accepted-by-a-person"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "clauses": 6
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cited.change_pending",
+            "detail": "M-401: instrument EXAMPLE-STATE-BUILDING-REGULATION has a version loaded that no named person has accepted"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "When is a frame inspection needed for a deck?",
+            "policy": "internal",
+            "cards": 0
+          },
+          "response": {
+            "id": "A1",
+            "outcome": "declined"
+          }
+        },
+        {
+          "at": "2026-09-21T01:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cited.acceptance_without_person",
+            "detail": "clause BR-201B: an acceptance needs a named person and is not applied"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T01:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T01:00:00.000Z"
+          },
+          "response": {
+            "clauses": 6
+          }
+        },
+        {
+          "at": "2026-09-21T01:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cited.change_pending",
+            "detail": "M-402: instrument EXAMPLE-STATE-BUILDING-REGULATION has a version loaded that no named person has accepted"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T01:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "When is a frame inspection needed for a deck?",
+            "policy": "internal",
+            "cards": 0
+          },
+          "response": {
+            "id": "A2",
+            "outcome": "declined"
+          }
+        },
+        {
+          "at": "2026-09-21T02:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "accept": "BR-201B",
+            "by": "Priya Shah, building certifier"
+          },
+          "response": {
+            "accepted": true
+          }
+        },
+        {
+          "at": "2026-09-21T02:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T02:00:00.000Z"
+          },
+          "response": {
+            "clauses": 6
+          }
+        },
+        {
+          "at": "2026-09-21T02:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "When is a frame inspection needed for a deck?",
+            "policy": "internal",
+            "cards": 1
+          },
+          "response": {
+            "id": "A3",
+            "outcome": "answered"
+          }
+        },
+        {
+          "at": "2026-09-21T02:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "answerId": "A3"
+          },
+          "response": {
+            "cards": [
+              {
+                "instrumentId": "EXAMPLE-STATE-BUILDING-REGULATION",
+                "clauseId": "BR-201B",
+                "edition": "2026",
+                "jurisdiction": "QLD",
+                "effectiveDate": "2026-09-01T00:00:00.000Z"
+              }
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "declining-is-implemented",
+      "n": 5,
+      "title": "Declining is an implemented output",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A decline is returned as a typed outcome with a route to a person. A generic apology paragraph, or a thrown error, both fail.",
+      "actual": "declined: [{\"id\":\"A1\",\"question\":\"What are the fire hydrant flow test intervals for a hospital?\",\"outcome\":\"declined\",\"text\":null,\"policy\":\"internal\",\"cards\":[],\"route\":\"Sam Ortiz, building surveyor\",\"at\":\"2026-09-21T00:00:00.000Z\"}]; escalations: [{\"reason\":\"cited.not_in_library\",\"detail\":\"M-501: no clause in the library covers this question\"}]",
+      "stimulus": {
+        "description": "A question outside the library.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "declining-is-implemented"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "clauses": 5
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cited.not_in_library",
+            "detail": "M-501: no clause in the library covers this question"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "What are the fire hydrant flow test intervals for a hospital?",
+            "policy": "internal",
+            "cards": 0
+          },
+          "response": {
+            "id": "A1",
+            "outcome": "declined"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "policy-is-a-field",
+      "n": 6,
+      "title": "Public and internal answers run different policies",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The answers differ where the policy differs, and each carries the policy it ran under as a field.",
+      "actual": "public: EXAMPLE-CITY-PLANNING-SCHEME clause PS-101 (2024 v3, QLD, in force from 2024-07-01): \"A shed or carport in the low density residential zone needs no planning permit where it is under 3.6 metres high and set back at least 1.5 metres from the side boundary.\" This is what the rule says. Whether a particular building or site meets it is for the licensed building certifier to decide. | internal: EXAMPLE-CITY-PLANNING-SCHEME clause PS-101 (2024 v3, QLD, in force from 2024-07-01): \"A shed or carport in the low density residential zone needs no planning permit where it is under 3.6 metres high and set back at least 1.5 metres from the side boundary.\" Next step: check the job's site details against this clause and raise anything unclear with the certifier on the job before work starts.",
+      "stimulus": {
+        "description": "The same question asked on the public policy and on the internal one.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "policy-is-a-field"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "clauses": 5
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "Do I need a planning permit for a shed in the low density residential zone?",
+            "policy": "public",
+            "cards": 1
+          },
+          "response": {
+            "id": "A1",
+            "outcome": "answered"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "answerId": "A1"
+          },
+          "response": {
+            "cards": [
+              {
+                "instrumentId": "EXAMPLE-CITY-PLANNING-SCHEME",
+                "clauseId": "PS-101",
+                "edition": "2024 v3",
+                "jurisdiction": "QLD",
+                "effectiveDate": "2024-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "clauses": 5
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "Do I need a planning permit for a shed in the low density residential zone?",
+            "policy": "internal",
+            "cards": 1
+          },
+          "response": {
+            "id": "A2",
+            "outcome": "answered"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "answerId": "A2"
+          },
+          "response": {
+            "cards": [
+              {
+                "instrumentId": "EXAMPLE-CITY-PLANNING-SCHEME",
+                "clauseId": "PS-101",
+                "edition": "2024 v3",
+                "jurisdiction": "QLD",
+                "effectiveDate": "2024-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "answers-stored-with-cards",
+      "n": 7,
+      "title": "Answers are stored with their cards",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The query returns exactly the answers drawn from that instrument. This is the check that makes a change survivable rather than a search.",
+      "actual": "cite queries: [{\"answers\":[\"A1\",\"A2\"]}]; escalations: [{\"reason\":\"cited.change_pending\",\"detail\":\"instrument EXAMPLE-CITY-PLANNING-SCHEME moved; answers relying on it: A1, A2; owner: Sam Ortiz, building surveyor\"}]",
+      "stimulus": {
+        "description": "Several answers given, then one instrument moved, then a query for what relied on it.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "answers-stored-with-cards"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "clauses": 5
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "Do I need a planning permit for a shed in the low density residential zone?",
+            "policy": "public",
+            "cards": 1
+          },
+          "response": {
+            "id": "A1",
+            "outcome": "answered"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "answerId": "A1"
+          },
+          "response": {
+            "cards": [
+              {
+                "instrumentId": "EXAMPLE-CITY-PLANNING-SCHEME",
+                "clauseId": "PS-101",
+                "edition": "2024 v3",
+                "jurisdiction": "QLD",
+                "effectiveDate": "2024-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "clauses": 5
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "How many employees can a home business have before it needs a planning permit?",
+            "policy": "internal",
+            "cards": 1
+          },
+          "response": {
+            "id": "A2",
+            "outcome": "answered"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "answerId": "A2"
+          },
+          "response": {
+            "cards": [
+              {
+                "instrumentId": "EXAMPLE-CITY-PLANNING-SCHEME",
+                "clauseId": "PS-102",
+                "edition": "2024 v3",
+                "jurisdiction": "QLD",
+                "effectiveDate": "2024-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "clauses": 5
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "When is a frame inspection needed for a deck?",
+            "policy": "public",
+            "cards": 1
+          },
+          "response": {
+            "id": "A3",
+            "outcome": "answered"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "answerId": "A3"
+          },
+          "response": {
+            "cards": [
+              {
+                "instrumentId": "EXAMPLE-STATE-BUILDING-REGULATION",
+                "clauseId": "BR-201",
+                "edition": "2023",
+                "jurisdiction": "QLD",
+                "effectiveDate": "2023-09-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-22T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-22T00:00:00.000Z"
+          },
+          "response": {
+            "clauses": 6
+          }
+        },
+        {
+          "at": "2026-09-22T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "citing": "EXAMPLE-CITY-PLANNING-SCHEME"
+          },
+          "response": {
+            "answers": [
+              "A1",
+              "A2"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-22T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cited.change_pending",
+            "detail": "instrument EXAMPLE-CITY-PLANNING-SCHEME moved; answers relying on it: A1, A2; owner: Sam Ortiz, building surveyor"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "no-certificate",
+      "n": 8,
+      "title": "Nothing issues, implies or forecloses a certificate",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "No answer states or implies compliance, and none forecloses the licensed person's decision.",
+      "actual": "public declined -> Sam Ortiz, building surveyor (the licensed certifier decides; this assistant does not); internal declined -> Sam Ortiz, building surveyor (the licensed certifier decides; this assistant does not); public answered; internal answered; public declined -> Sam Ortiz, building surveyor (the licensed certifier decides; this assistant does not); internal declined -> Sam Ortiz, building surveyor (the licensed certifier decides; this assistant does not)",
+      "stimulus": {
+        "description": "Questions that invite it: whether something complies, whether it would pass, whether a certificate can be issued.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "no-certificate"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cited.certificate_question",
+            "detail": "M-800P: the question asks for a compliance decision or a certificate"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "Does my deck comply with the building regulation?",
+            "policy": "public",
+            "cards": 0
+          },
+          "response": {
+            "id": "A1",
+            "outcome": "declined"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cited.certificate_question",
+            "detail": "M-800I: the question asks for a compliance decision or a certificate"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "Does my deck comply with the building regulation?",
+            "policy": "internal",
+            "cards": 0
+          },
+          "response": {
+            "id": "A2",
+            "outcome": "declined"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "clauses": 5
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "Would this shed pass the final inspection?",
+            "policy": "public",
+            "cards": 1
+          },
+          "response": {
+            "id": "A3",
+            "outcome": "answered"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "answerId": "A3"
+          },
+          "response": {
+            "cards": [
+              {
+                "instrumentId": "EXAMPLE-INSPECTION-SCHEDULE",
+                "clauseId": "IS-301",
+                "edition": "2025 rev 1",
+                "jurisdiction": "QLD",
+                "effectiveDate": "2025-01-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "clauses": 5
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "Would this shed pass the final inspection?",
+            "policy": "internal",
+            "cards": 1
+          },
+          "response": {
+            "id": "A4",
+            "outcome": "answered"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "answerId": "A4"
+          },
+          "response": {
+            "cards": [
+              {
+                "instrumentId": "EXAMPLE-INSPECTION-SCHEDULE",
+                "clauseId": "IS-301",
+                "edition": "2025 rev 1",
+                "jurisdiction": "QLD",
+                "effectiveDate": "2025-01-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cited.certificate_question",
+            "detail": "M-802P: the question asks for a compliance decision or a certificate"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "Can you issue a certificate for the deck so we can sign off the job?",
+            "policy": "public",
+            "cards": 0
+          },
+          "response": {
+            "id": "A5",
+            "outcome": "declined"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cited.certificate_question",
+            "detail": "M-802I: the question asks for a compliance decision or a certificate"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "Can you issue a certificate for the deck so we can sign off the job?",
+            "policy": "internal",
+            "cards": 0
+          },
+          "response": {
+            "id": "A6",
+            "outcome": "declined"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 9,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the clause library runs on.",
+        "now": "2026-11-03T11:04:50.427Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 10,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "The live answer moves, and the affected prior answers are listed rather than searched for.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "A real instrument change in the live library, against answers already given.",
+        "now": "2026-11-03T11:04:50.427Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 10,
+    "pass": 7,
+    "fail": 0,
+    "shapeOnly": 1,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
