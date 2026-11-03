@@ -1,0 +1,64 @@
+{
+  "slug": "hours-audit",
+  "name": "Hours Audit",
+  "office_task": "Every week before the pay run, check the Square timecards against the roster and the award edition, put anything odd in front of its owner, and export only what a person released.",
+  "verticals": ["b2b-office"],
+  "standards": ["timesheet-check"],
+  "systems_of_record": [
+    "Square Team (team members, scheduled shifts with the job each is for, and timecards)",
+    "the business's rule store holding each award edition as a dated row",
+    "the business's Australian payroll system, which issues the export batch id",
+    "the exception desk the business runs (the anomaly queue)"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/hours-audit" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "report.published",
+      "write": "the period report: hours by person and day, daily and weekly totals each naming the entries they sum, anomalies found and resolved, who released the period or that nobody has, and the payroll batch id when there is one. Published every run, a clean period included",
+      "readback": "the report store returns a report_id, and reading that id back returns the period id, the totals with their entry ids and the release field; no id back means nothing was published and the run stops"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an anomaly on the timecard entry, one of the six kinds (over_hours, overlap, missing_break, not_rostered, not_allocated, rule_unclear), naming the person who owns it",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the entry id, the kind and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "timesheet.over_hours",
+      "timesheet.overlap",
+      "timesheet.missing_break",
+      "timesheet.not_rostered",
+      "timesheet.not_allocated",
+      "timesheet.rule_unclear"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "seam-mirror",
+    "fields": [
+      "seam.period_id",
+      "seam.anomalies_open",
+      "seam.rule_edition",
+      "seam.released_by",
+      "seam.export_external_id",
+      "seam.report_id",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Square Crew, Payroll & HR Helper",
+    "original_author": "Anatoliy Belyshev",
+    "share_link": "https://x.ai/bot/OQZaBnEMi7H_0En2qys0a",
+    "licence_or_permission": "reimplementation"
+  }
+}
