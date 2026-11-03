@@ -1,0 +1,2200 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793713555741",
+  "standard": "knowledge-graph-build-standard",
+  "spec": "AIP-BS-KNOWLEDGE-GRAPH",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-03T13:45:55.731Z",
+  "finishedAt": "2026-11-03T13:45:55.741Z",
+  "results": [
+    {
+      "checkId": "key-contract-before-extract",
+      "n": 1,
+      "title": "The key contract is written and versioned before the first extract",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The contract read precedes the first proposal in the trace. The published type is accepted as proposed. The invented type is refused and the refusal is recorded. A build that never reads the contract fails.",
+      "actual": "7 port call(s); nodes cl-po-step:proposed",
+      "stimulus": {
+        "description": "A build that reads the contract, then proposes one node of a published type and one of a type the contract does not name.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "key-contract-before-extract"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "version": "1.0",
+            "nodeTypes": 7
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 1,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 1,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 1,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_node",
+          "verb": "write",
+          "subject": "node",
+          "request": {
+            "node": "cl-po-step",
+            "type": "Clause",
+            "sourceId": "src-ops-manual",
+            "locator": "p.6 s.3.2"
+          },
+          "response": {
+            "accepted": true,
+            "queue": "proposed"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "extract.type_not_in_contract",
+            "detail": "{\"owner\":\"Priya Shah, operations manager\",\"nodeId\":\"bn-po-step\",\"type\":\"Bottleneck\",\"contractVersion\":\"1.0\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "live": true
+          },
+          "response": {
+            "count": 0
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "source-is-an-instrument",
+      "n": 2,
+      "title": "Every source is registered as an instrument, not a file path",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The complete one is registered as proposed. The bare one is refused with the missing fields named. A source accepted without a checksum fails.",
+      "actual": "sources src-ops-manual:proposed; refused [{\"id\":\"src-drive-link\",\"missing\":[\"issuer\",\"edition\",\"jurisdiction\",\"effectiveFrom\",\"checksum\"]}]",
+      "stimulus": {
+        "description": "Two sources registered: one with every field, one with a title and a link only.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "source-is-an-instrument"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "version": "1.0",
+            "nodeTypes": 7
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 0,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_node",
+          "verb": "write",
+          "subject": "node",
+          "request": {
+            "source": "src-ops-manual",
+            "kind": "internal_rule",
+            "checksum": "sha256:4f1c9a02"
+          },
+          "response": {
+            "accepted": true,
+            "queue": "proposed"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_node",
+          "verb": "write",
+          "subject": "node",
+          "request": {
+            "source": "src-drive-link",
+            "kind": "internal_rule"
+          },
+          "response": {
+            "accepted": false,
+            "missing": [
+              "issuer",
+              "edition",
+              "jurisdiction",
+              "effectiveFrom",
+              "checksum"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "source.not_an_instrument",
+            "detail": "{\"owner\":\"Priya Shah, operations manager\",\"sourceId\":\"src-drive-link\",\"missing\":[\"issuer\",\"edition\",\"jurisdiction\",\"effectiveFrom\",\"checksum\"]}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 1,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "source.acceptance_refused",
+            "detail": "{\"owner\":\"Priya Shah, operations manager\",\"sourceId\":\"src-drive-link\",\"why\":\"not a registered instrument\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 1,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "live": true
+          },
+          "response": {
+            "count": 0
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "nothing-live-without-acceptance",
+      "n": 3,
+      "title": "No node is live without a named acceptance and a replayable locator",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Exactly one node is live: the one with a name and a locator. The nameless acceptance and the locator-less node are refused, and both refusals are recorded. A live node with empty provenance fails.",
+      "actual": "live cl-named; refused []; 2 escalation(s)",
+      "stimulus": {
+        "description": "A source accepted by a person, nodes proposed from it, one accepted with a name, one accepted with no name, one with no locator.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "nothing-live-without-acceptance"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "version": "1.0",
+            "nodeTypes": 7
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 1,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 1,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 1,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_node",
+          "verb": "write",
+          "subject": "node",
+          "request": {
+            "node": "cl-named",
+            "type": "Clause",
+            "sourceId": "src-ops-manual",
+            "locator": "p.6 s.3.2"
+          },
+          "response": {
+            "accepted": true,
+            "queue": "proposed"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_node",
+          "verb": "write",
+          "subject": "node",
+          "request": {
+            "node": "cl-nameless",
+            "type": "Clause",
+            "sourceId": "src-ops-manual",
+            "locator": "p.6 s.3.1"
+          },
+          "response": {
+            "accepted": true,
+            "queue": "proposed"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_node",
+          "verb": "write",
+          "subject": "node",
+          "request": {
+            "node": "cl-no-locator",
+            "type": "Clause",
+            "sourceId": "src-ops-manual",
+            "locator": null
+          },
+          "response": {
+            "accepted": true,
+            "queue": "proposed"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "all": true
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "acceptNode": "cl-named",
+            "by": "Priya Shah"
+          },
+          "response": {
+            "accepted": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "all": true
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "node.acceptance_refused",
+            "detail": "{\"owner\":\"Priya Shah, operations manager\",\"nodeId\":\"cl-nameless\",\"why\":\"no named person\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "all": true
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "node.acceptance_refused",
+            "detail": "{\"owner\":\"Priya Shah, operations manager\",\"nodeId\":\"cl-no-locator\",\"why\":\"no replayable locator\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "live": true
+          },
+          "response": {
+            "count": 1
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "production-reads-live-nodes",
+      "n": 4,
+      "title": "Production reads live nodes, and a card names a node, never a file",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The answer's citations are node ids that are live on the asked-about date. A citation that is a filename or a chunk id fails, and so does an answer with no node id.",
+      "actual": "answers [{\"outcome\":\"answered\",\"nodeIds\":[\"cl-po-approver\"],\"other\":[]}]",
+      "stimulus": {
+        "description": "A question the live graph covers, with the index also holding a matching chunk.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "production-reads-live-nodes"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "version": "1.0",
+            "nodeTypes": 7
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 1,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 1,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 1,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "live": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "index": "Who approves a purchase order over $5,000 ex GST at the Brisbane site?",
+            "detached": false
+          },
+          "response": {
+            "hits": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "live": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "Who approves a purchase order over $5,000 ex GST at the Brisbane site?",
+            "jurisdiction": "QLD",
+            "nodes": 1,
+            "other": 0
+          },
+          "response": {
+            "id": "A1",
+            "outcome": "answered"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "answerId": "A1"
+          },
+          "response": {
+            "nodeIds": [
+              "cl-po-approver"
+            ],
+            "other": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "identity-from-the-system-of-record",
+      "n": 5,
+      "title": "Entity identity comes from a system of record, or SAME_AS is an accepted edge",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "Either one Entity node carrying the CRM id, or two nodes joined by a SAME_AS edge that carries accepted_by. Two nodes with no edge, or a merge by label, fails.",
+      "actual": "entities [{\"id\":\"xero:c7a1e2f0-5d3b-4e8a-9f21-0b6c2d4e8a11\",\"externalId\":\"c7a1e2f0-5d3b-4e8a-9f21-0b6c2d4e8a11\"},{\"id\":\"ent-coastal-steel-manual\",\"externalId\":null}]; edges [{\"type\":\"SAME_AS\",\"from\":\"ent-coastal-steel-manual\",\"to\":\"xero:c7a1e2f0-5d3b-4e8a-9f21-0b6c2d4e8a11\",\"acceptedBy\":\"Priya Shah\"}]",
+      "stimulus": {
+        "description": "A source naming a lender in full, and a CRM key for the same lender.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "identity-from-the-system-of-record"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "version": "1.0",
+            "nodeTypes": 7
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 1,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 1,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 1,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_node",
+          "verb": "write",
+          "subject": "node",
+          "request": {
+            "node": "xero:c7a1e2f0-5d3b-4e8a-9f21-0b6c2d4e8a11",
+            "type": "Entity",
+            "sourceId": null,
+            "locator": null
+          },
+          "response": {
+            "accepted": true,
+            "queue": "proposed"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_node",
+          "verb": "write",
+          "subject": "node",
+          "request": {
+            "node": "ent-coastal-steel-manual",
+            "type": "Entity",
+            "sourceId": "src-ops-manual",
+            "locator": "p.9 s.5.1"
+          },
+          "response": {
+            "accepted": true,
+            "queue": "proposed"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_node",
+          "verb": "write",
+          "subject": "node",
+          "request": {
+            "edge": "SAME_AS",
+            "from": "ent-coastal-steel-manual",
+            "to": "xero:c7a1e2f0-5d3b-4e8a-9f21-0b6c2d4e8a11",
+            "acceptedBy": "Priya Shah"
+          },
+          "response": {
+            "accepted": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "live": true
+          },
+          "response": {
+            "count": 0
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "scope-is-an-edge",
+      "n": 6,
+      "title": "Scope is an APPLIES_TO edge, and an unscoped clause cannot answer a scoped question",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The answer cites the scoped clause only. An answer citing the unscoped clause for a scoped question fails.",
+      "actual": "answers [{\"outcome\":\"answered\",\"nodeIds\":[\"cl-handover-qld\"]}]",
+      "stimulus": {
+        "description": "Two live clauses on the same topic, one scoped to a state and one with no scope, and a question about that state.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "scope-is-an-edge"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "version": "1.0",
+            "nodeTypes": 7
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 1,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 1,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 1,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "live": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "index": "Who signs off a site handover in Queensland?",
+            "detached": false
+          },
+          "response": {
+            "hits": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "live": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "Who signs off a site handover in Queensland?",
+            "jurisdiction": "QLD",
+            "nodes": 1,
+            "other": 0
+          },
+          "response": {
+            "id": "A1",
+            "outcome": "answered"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "answerId": "A1"
+          },
+          "response": {
+            "nodeIds": [
+              "cl-handover-qld"
+            ],
+            "other": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "supersedes-and-conflicts-are-written",
+      "n": 7,
+      "title": "Supersession and conflict are written edges, and the model never picks a winner",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The superseded node is out of live and the edge exists. The conflicting pair carries a CONFLICTS edge and an escalation to a named person, and neither is cited until a person's pick is recorded.",
+      "actual": "queues cl-po-old:retired, cl-variation-ops:conflict, cl-variation-handover:conflict, cl-po-new:live; edges [{\"type\":\"SUPERSEDES\",\"from\":\"cl-po-new\",\"to\":\"cl-po-old\",\"acceptedBy\":\"Priya Shah\"},{\"type\":\"CONFLICTS\",\"from\":\"cl-variation-ops\",\"to\":\"cl-variation-handover\"}]; conflicts [{\"id\":\"K1\",\"nodeIds\":[\"cl-variation-ops\",\"cl-variation-handover\"]}]",
+      "stimulus": {
+        "description": "A replacement clause accepted, and separately two live clauses that answer one question differently.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "supersedes-and-conflicts-are-written"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "version": "1.0",
+            "nodeTypes": 7
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 2,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 2,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 2,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_node",
+          "verb": "write",
+          "subject": "node",
+          "request": {
+            "node": "cl-po-new",
+            "type": "Clause",
+            "sourceId": "src-ops-manual",
+            "locator": "p.6 s.3.3"
+          },
+          "response": {
+            "accepted": true,
+            "queue": "proposed"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "all": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "acceptNode": "cl-po-new",
+            "by": "Priya Shah"
+          },
+          "response": {
+            "accepted": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_node",
+          "verb": "write",
+          "subject": "node",
+          "request": {
+            "edge": "SUPERSEDES",
+            "from": "cl-po-new",
+            "to": "cl-po-old",
+            "acceptedBy": "Priya Shah"
+          },
+          "response": {
+            "accepted": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_node",
+          "verb": "write",
+          "subject": "node",
+          "request": {
+            "retire": "cl-po-old",
+            "to": "retired"
+          },
+          "response": {
+            "done": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "live": true
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_node",
+          "verb": "write",
+          "subject": "node",
+          "request": {
+            "edge": "CONFLICTS",
+            "from": "cl-variation-ops",
+            "to": "cl-variation-handover",
+            "acceptedBy": null
+          },
+          "response": {
+            "accepted": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "conflict": "K1",
+            "nodeIds": [
+              "cl-variation-ops",
+              "cl-variation-handover"
+            ],
+            "person": "Priya Shah, operations manager"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "graph.conflict_open",
+            "detail": "{\"owner\":\"Priya Shah, operations manager\",\"conflictId\":\"K1\",\"nodeIds\":[\"cl-variation-ops\",\"cl-variation-handover\"]}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "index": "Who approves a client variation at a Queensland site?",
+            "detached": false
+          },
+          "response": {
+            "hits": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "live": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "Who approves a client variation at a Queensland site?",
+            "jurisdiction": "QLD",
+            "nodes": 0,
+            "other": 0
+          },
+          "response": {
+            "id": "A2",
+            "outcome": "declined"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "change-computes-affected-nodes",
+      "n": 8,
+      "title": "Replacing a source produces a delta with a computed list of affected nodes",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The delta's affected node ids equal the nodes whose provenance is that source, and those nodes are no longer live. A delta with an empty or guessed list, or nodes still live after the move, fails.",
+      "actual": "deltas [{\"id\":\"Δ2\",\"sourceId\":\"src-ops-manual\",\"oldChecksum\":\"sha256:4f1c9a02\",\"newChecksum\":\"sha256:77e0b5c4\",\"affectedNodeIds\":[\"cl-po-approver\",\"cl-po-release\",\"pa-ops-6\"],\"at\":\"2026-09-27T00:00:00.000Z\"}]; queues cl-po-approver:change_pending, cl-po-release:change_pending, pa-ops-6:proposed, cl-handover-qld:live",
+      "stimulus": {
+        "description": "A source replaced by a new edition with a different checksum, after nodes were built from it and answers were given.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "change-computes-affected-nodes"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "version": "1.0",
+            "nodeTypes": 7
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 2,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 2,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 2,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "live": true
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "index": "Who approves a purchase order over $5,000 ex GST at the Brisbane site?",
+            "detached": false
+          },
+          "response": {
+            "hits": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "live": true
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "Who approves a purchase order over $5,000 ex GST at the Brisbane site?",
+            "jurisdiction": "QLD",
+            "nodes": 1,
+            "other": 0
+          },
+          "response": {
+            "id": "A1",
+            "outcome": "answered"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "answerId": "A1"
+          },
+          "response": {
+            "nodeIds": [
+              "cl-po-approver"
+            ],
+            "other": []
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "version": "1.0",
+            "nodeTypes": 7
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 2,
+            "pending": [
+              "src-ops-manual"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "all": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "write_node",
+          "verb": "write",
+          "subject": "node",
+          "request": {
+            "replaceSource": "src-ops-manual",
+            "newChecksum": "sha256:77e0b5c4",
+            "affected": [
+              "cl-po-approver",
+              "cl-po-release",
+              "pa-ops-6"
+            ]
+          },
+          "response": {
+            "delta": "Δ2"
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "write_node",
+          "verb": "write",
+          "subject": "node",
+          "request": {
+            "retire": "cl-po-approver",
+            "to": "change_pending"
+          },
+          "response": {
+            "done": true
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "write_node",
+          "verb": "write",
+          "subject": "node",
+          "request": {
+            "retire": "cl-po-release",
+            "to": "change_pending"
+          },
+          "response": {
+            "done": true
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "change.delta_awaiting_person",
+            "detail": "{\"owner\":\"Priya Shah, operations manager\",\"sourceId\":\"src-ops-manual\",\"deltaId\":\"Δ2\",\"affected\":[\"cl-po-approver\",\"cl-po-release\",\"pa-ops-6\"]}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 2,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 2,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "live": true
+          },
+          "response": {
+            "count": 1
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "queues-are-states",
+      "n": 9,
+      "title": "Proposed, live, conflict, change_pending and retired are states, not labels",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The second answer does not cite the retired node. The retired node is still returned when asked what an earlier answer relied on. Citing a retired node as live fails.",
+      "actual": "answers [{\"route\":\"live_graph\",\"outcome\":\"answered\",\"nodeIds\":[\"cl-po-approver\"]},{\"route\":\"declined_no_live_node\",\"outcome\":\"declined\",\"nodeIds\":[]},{\"route\":\"provenance_lookup\",\"outcome\":\"answered\",\"nodeIds\":[\"cl-po-approver\"]}]",
+      "stimulus": {
+        "description": "A clause cited, then retired, then the same question asked again.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "queues-are-states"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "version": "1.0",
+            "nodeTypes": 7
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 1,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 1,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 1,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "live": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "index": "Who approves a purchase order over $5,000 ex GST at the Brisbane site?",
+            "detached": false
+          },
+          "response": {
+            "hits": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "live": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "Who approves a purchase order over $5,000 ex GST at the Brisbane site?",
+            "jurisdiction": "QLD",
+            "nodes": 1,
+            "other": 0
+          },
+          "response": {
+            "id": "A1",
+            "outcome": "answered"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "answerId": "A1"
+          },
+          "response": {
+            "nodeIds": [
+              "cl-po-approver"
+            ],
+            "other": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "version": "1.0",
+            "nodeTypes": 7
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 1,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 1,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 1,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "live": true
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "index": "Who approves a purchase order over $5,000 ex GST at the Brisbane site?",
+            "detached": false
+          },
+          "response": {
+            "hits": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "live": true
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "Who approves a purchase order over $5,000 ex GST at the Brisbane site?",
+            "jurisdiction": "QLD",
+            "nodes": 0,
+            "other": 0
+          },
+          "response": {
+            "id": "A2",
+            "outcome": "declined"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "all": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "What did answer A1 rely on?",
+            "jurisdiction": null,
+            "nodes": 1,
+            "other": 0
+          },
+          "response": {
+            "id": "A3",
+            "outcome": "answered"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "answerId": "A3"
+          },
+          "response": {
+            "nodeIds": [
+              "cl-po-approver"
+            ],
+            "other": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "index-proposes-only",
+      "n": 10,
+      "title": "The index can propose and rank. Emptying it does not empty the graph and does not invent an answer",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The covered question cites the same node as before. The uncovered one declines. An answer that appears only while the index is attached, or a new paragraph with no node id, fails.",
+      "actual": "answers [{\"outcome\":\"answered\",\"nodeIds\":[\"cl-po-approver\"],\"other\":[]},{\"outcome\":\"answered\",\"nodeIds\":[\"cl-po-approver\"],\"other\":[]},{\"outcome\":\"declined\",\"nodeIds\":[],\"other\":[]}]",
+      "stimulus": {
+        "description": "The index detached, then the covered question from check 4 and an uncovered question.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "index-proposes-only"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "version": "1.0",
+            "nodeTypes": 7
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 1,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 1,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 1,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "live": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "index": "Who approves a purchase order over $5,000 ex GST at the Brisbane site?",
+            "detached": false
+          },
+          "response": {
+            "hits": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "live": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "Who approves a purchase order over $5,000 ex GST at the Brisbane site?",
+            "jurisdiction": "QLD",
+            "nodes": 1,
+            "other": 0
+          },
+          "response": {
+            "id": "A1",
+            "outcome": "answered"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "answerId": "A1"
+          },
+          "response": {
+            "nodeIds": [
+              "cl-po-approver"
+            ],
+            "other": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "version": "1.0",
+            "nodeTypes": 7
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 1,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 1,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 1,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "live": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "index": "Who approves a purchase order over $5,000 ex GST at the Brisbane site?",
+            "detached": true
+          },
+          "response": {
+            "hits": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "live": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "Who approves a purchase order over $5,000 ex GST at the Brisbane site?",
+            "jurisdiction": "QLD",
+            "nodes": 1,
+            "other": 0
+          },
+          "response": {
+            "id": "A2",
+            "outcome": "answered"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "answerId": "A2"
+          },
+          "response": {
+            "nodeIds": [
+              "cl-po-approver"
+            ],
+            "other": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "index": "Who approves overtime for apprentices?",
+            "detached": true
+          },
+          "response": {
+            "hits": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "live": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "Who approves overtime for apprentices?",
+            "jurisdiction": "QLD",
+            "nodes": 0,
+            "other": 0
+          },
+          "response": {
+            "id": "A3",
+            "outcome": "declined"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "customer-material-is-not-a-source",
+      "n": 11,
+      "title": "Customer files and interviews are not sources unless a person promotes a claim",
+      "verdict": "pass",
+      "held": true,
+      "expected": "No source of kind customer_material is accepted. The claim exists as a Fact only if promoted with a person's name, and that Fact carries provenance. A live node built from unpromoted customer material fails.",
+      "actual": "sources src-ops-manual:internal_rule:accepted, src-client-interview:customer_material:proposed; nodes fa-promoted:live",
+      "stimulus": {
+        "description": "A customer interview transcript in the same folder as the policy, and a claim in it that a build might want as a Fact.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "customer-material-is-not-a-source"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "version": "1.0",
+            "nodeTypes": 7
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 2,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 2,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "source.acceptance_refused",
+            "detail": "{\"owner\":\"Priya Shah, operations manager\",\"sourceId\":\"src-client-interview\",\"why\":\"customer material is not a source\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "sources": true
+          },
+          "response": {
+            "count": 2,
+            "pending": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "extract.source_not_accepted",
+            "detail": "{\"owner\":\"Priya Shah, operations manager\",\"nodeId\":\"fa-crawled\",\"sourceId\":\"src-client-interview\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "all": true
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "node.acceptance_refused",
+            "detail": "{\"owner\":\"Priya Shah, operations manager\",\"nodeId\":\"fa-crawled\",\"why\":\"no such proposed node\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "promote": "fa-promoted",
+            "sourceId": "src-client-interview",
+            "by": "Priya Shah"
+          },
+          "response": {
+            "queue": "live"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_node",
+          "verb": "read",
+          "subject": "node",
+          "request": {
+            "live": true
+          },
+          "response": {
+            "count": 1
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 12,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the graph, the acceptances and the change list runs on.",
+        "now": "2026-11-03T13:45:55.741Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 13,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "Nothing live before acceptance; a card built from a node id; the delta lists the old clause and it leaves live; SAME_AS accepted or two nodes in conflict; the folder path cannot be called production; the restated fact goes change_pending with its parent.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "Two real sources loaded and accepted by a named person, a real question, the PDF replaced by a new edition, a lender named two ways, and the same PDF dropped in a folder and embedded with no Source written.",
+        "now": "2026-11-03T13:45:55.741Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 13,
+    "pass": 10,
+    "fail": 0,
+    "shapeOnly": 1,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}

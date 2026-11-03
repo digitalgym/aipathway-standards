@@ -1,0 +1,60 @@
+{
+  "slug": "ops-map",
+  "name": "Ops Map",
+  "office_task": "Keep one accepted map of how the business runs, step by step, from its own procedures, and name a person when two procedures disagree or one is replaced.",
+  "verticals": ["b2b-office"],
+  "standards": ["knowledge-graph"],
+  "systems_of_record": [
+    "the document store that issues the document_id for each procedure and edition (SharePoint or Drive)",
+    "Xero, for the contact id of each supplier the procedures name",
+    "the exception desk the business runs, which issues the exception_id"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/ops-map" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "webhook", "schedule"],
+  "consumes": [
+    { "event": "document.received", "wake": "webhook" },
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "report.published",
+      "write": "the change delta for a replaced procedure, written into the ops map store: the source's document_id, its old and new checksum, and the computed list of every step node built from it, which wait for a named person to accept the delta",
+      "readback": "the store returns the delta's report_id, and reading that id back returns the document_id, both checksums and the affected node ids; no id back means no delta was written and the affected nodes stay out of live"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception naming the person who owns the map: two live procedures answering one step differently, a source that is not an instrument, a refused acceptance, a SAME_AS a person has not decided, or a delta awaiting acceptance",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the node or document ids, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "graph.conflict_open",
+      "change.delta_awaiting_person",
+      "source.not_an_instrument",
+      "source.customer_material_held",
+      "source.acceptance_refused",
+      "extract.type_not_in_contract",
+      "extract.source_not_accepted",
+      "node.acceptance_refused",
+      "identity.same_as_needed",
+      "claim.promotion_refused"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["node.queue", "node.accepted_by", "node.provenance", "source.checksum", "delta.affected_node_ids", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "OS: Ontology Stack",
+    "original_author": "Damiano Redemagni",
+    "share_link": "https://x.ai/bot/9Uh8RaBqp6PrcOcZjMHbD",
+    "licence_or_permission": "reimplementation"
+  }
+}
