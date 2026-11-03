@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-03T13:37:08.021Z",
+  "generated_at": "2026-11-03T14:19:14.056Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -1165,6 +1165,111 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 12
+        }
+      ]
+    },
+    {
+      "slug": "consultant-hours",
+      "name": "Consultant Hours",
+      "office_task": "Total each consultant's onsite, remote and unplaced hours from their PDF timesheets, put the odd ones in front of a named person, and send nothing to payroll until someone releases it.",
+      "verticals": [
+        "b2b-office"
+      ],
+      "standards": [
+        "timesheet-check"
+      ],
+      "systems_of_record": [
+        "the document store that issues the document_id for each PDF timesheet (SharePoint or Google Drive); entries are keyed <document_id>#<row>",
+        "the job system that issues the job_id and holds the allocations and the roster",
+        "the payroll system that takes one export per period and returns its id (Xero Payroll, Employment Hero or MYOB)",
+        "the workbook or report store the payroll officer opens, which returns a report_id",
+        "the exception desk the business runs, for the anomaly queue"
+      ],
+      "consumes": [
+        {
+          "event": "document.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the period report appended to the hours workbook: hours by consultant and day with totals that list the entry ids they sum, onsite, remote and unknown hours per consultant (a row the sheet does not place stays unknown, never guessed), anomalies found and resolved, the award edition on each card, who released the period or that nobody has, and the payroll export id once one exists. Published every run, a clean period included",
+          "readback": "the report store returns a report_id, and reading that id back returns the period id, the totals with their entry ids and the release field; the payroll export is read back by period with readExport before any write, and a null external id is reported as a failed export, never a success"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an anomaly on the timesheet entry, from the closed list (over_hours, overlap, missing_break, not_rostered, not_allocated, rule_unclear), naming the person who owns it: the consultant's supervisor, whoever keeps the roster, the job's owner, or whoever answers for the award",
+          "readback": "the exception desk returns an exception_id, and reading the period's queue back returns that id with the entry id, the kind and the owner; one anomaly per entry and kind, so a retried wake raises none twice"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "over_hours",
+          "overlap",
+          "missing_break",
+          "not_rostered",
+          "not_allocated",
+          "rule_unclear"
+        ],
+        "owner_field": "owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "anomaly.kind",
+          "anomaly.owner",
+          "anomaly.resolution",
+          "card.rule_id",
+          "card.edition",
+          "period.released_by",
+          "period.export_external_id"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/consultant-hours"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Extract consultant hours from PDF timesheets with Azure OpenAI and Excel",
+        "original_author": "Christoph Dibbern",
+        "share_link": "https://n8n.io/workflows/20465",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "timesheet-check",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:44:42.825Z",
+          "run_id": "run-1793713482823",
+          "green": 10,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 13
         }
       ]
     },
@@ -3255,6 +3360,219 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 12
+        }
+      ]
+    },
+    {
+      "slug": "job-files",
+      "name": "Job Files",
+      "office_task": "Find the permit, approval and job paperwork on our drive and give back the exact page of the exact file, knowing it is the current copy and who owns it.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "knowledge-base"
+      ],
+      "systems_of_record": [
+        "the job system that issues the job_id (ServiceM8, Simpro, Tradify, Fergus), whose id names each job's folder on the drive",
+        "the shared drive that holds the job folders and company files and issues the document_id (Google Drive or SharePoint), left where it is",
+        "the register on that tenant (one Sheet or SharePoint list: a row per source, owner a person, kind, edition and checksum)",
+        "the task list the office runs (Google Tasks, Planner or a sheet), which issues the exception_id for each open question"
+      ],
+      "consumes": [
+        {
+          "event": "document.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the job file sheet, written as one Doc into Jobs/<job_id>/ after each run: every registered permit, approval, certificate and job file for that job_id with its owner, edition and the locator that opens it, the company-wide codes it works under, and the open tasks for the job, every line by register id or task id and nothing composed from the files",
+          "readback": "the drive returns the sheet's file id as the report_id, and reading that id back returns the Doc with the job_id, the run time and the register ids it lists; no id back means no sheet was published and the run raises an exception to the register keeper"
+        },
+        {
+          "event": "exception.raised",
+          "write": "a task on the office's task list naming the person who owns it, with a due date: an approval edition or code the office expects and the drive does not hold, a file whose only owner is a team, two copies of one notice waiting for a person to pick the one the office works from, a homeowner's or client's material waiting for someone to set who may read it and for how long, an instrument with no edition printed, or a registered file gone from the drive",
+          "readback": "the task list returns an exception_id, and reading that id back returns what is expected, the owner and the due date; no id back means nothing was raised, and the file stays off the index"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "kb.expected_edition_missing",
+          "kb.owner_not_a_person",
+          "kb.canonical_copy_undecided",
+          "kb.customer_access_undecided",
+          "kb.instrument_without_edition",
+          "kb.source_gone_from_drive"
+        ],
+        "owner_field": "owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "register.id",
+          "register.kind",
+          "register.owner",
+          "register.location",
+          "register.edition",
+          "register.checksum",
+          "register.retrieved_at",
+          "register.status",
+          "register.duplicate_of",
+          "register.access_list",
+          "register.expires_on",
+          "register.superseded_checksums"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/job-files"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "File Crawler",
+        "original_author": "Duncan Waring",
+        "share_link": "https://x.ai/bot/bNv8Ii8E5LgmB39kN5uyj",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "knowledge-base",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:44:28.936Z",
+          "run_id": "run-1793713468935",
+          "green": 11,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 13
+        }
+      ]
+    },
+    {
+      "slug": "job-hours",
+      "name": "Job Hours",
+      "office_task": "When a tech closes a job or the pay week ends, check every hour against the job it was booked to, put the odd ones in front of their owner, and export to payroll only what a person released.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "timesheet-check"
+      ],
+      "systems_of_record": [
+        "the job system that issues the job_id and holds the allocations, the roster and the techs' time entries (ServiceM8, Simpro, Tradify, Fergus or similar)",
+        "the business's rule store holding each award edition as a dated row",
+        "the Australian payroll system that takes one export per pay period and returns its id (Xero Payroll, Employment Hero, KeyPay or MYOB)",
+        "the exception desk the business runs, for the anomaly queue"
+      ],
+      "consumes": [
+        {
+          "event": "job.completed",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the pay period's hours report into the system the payroll officer opens: hours by tech and day with daily and weekly totals that list the entry ids they sum, each line's job_id, anomalies found and resolved, the award edition on every card, who released the period or that nobody has, and the payroll export id once one exists. Published every run, a clean period included",
+          "readback": "the report store returns a report_id, and reading that id back returns the period id, the totals with their entry ids and the release field; the payroll export is read back by period before any write, and a null external id is reported as a failed export, never a success"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an anomaly on the time entry, one of the six closed kinds (over_hours, overlap, missing_break, not_rostered, not_allocated, rule_unclear), naming its owner: the tech's supervisor, whoever keeps the roster, the job's owner, or whoever answers for the award",
+          "readback": "the exception desk returns an exception_id, and reading the period's queue back returns that id with the entry id, the kind and the owner; one anomaly per entry and kind, so a retried wake raises none twice"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "timesheet.over_hours",
+          "timesheet.overlap",
+          "timesheet.missing_break",
+          "timesheet.not_rostered",
+          "timesheet.not_allocated",
+          "timesheet.rule_unclear"
+        ],
+        "owner_field": "owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.period_id",
+          "seam.job_id",
+          "seam.anomaly_owner",
+          "seam.card_rule_edition",
+          "seam.released_by",
+          "seam.export_external_id",
+          "seam.report_id"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/job-hours"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Kairos · Timesheet Manager",
+        "original_author": "ᑕᕼIᑕᗩᘜO MAGA",
+        "share_link": "https://x.ai/bot/KvPsNsHBQIkadJ9HBZ6D0",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "timesheet-check",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:45:41.447Z",
+          "run_id": "run-1793713541445",
+          "green": 10,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 13
         }
       ]
     },
@@ -5982,6 +6300,113 @@
       ]
     },
     {
+      "slug": "van-board",
+      "name": "Van Board",
+      "office_task": "Turn each service work order into a dispatch package: verified address, a licensed tech at a time that fits, customer and tech told once, the rest handed to the dispatcher.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "dispatch-board"
+      ],
+      "systems_of_record": [
+        "the job system that issues the job_id and holds its schedule (ServiceM8, Simpro or Jobber)",
+        "the tech licence register the business keeps"
+      ],
+      "consumes": [
+        {
+          "event": "job.created",
+          "wake": "webhook"
+        },
+        {
+          "event": "job.updated",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "job.updated",
+          "write": "the dispatch package on the work order: one slot on the job's schedule (tech, start, end, resolved address, the rule or named dispatcher that set it, what displaced it), updated in place on a change and never written twice, with the customer confirmation attached as evidence",
+          "readback": "the job system returns the slot's external id, and reading the job's slot back by job_id returns that external id and the job version it was made for; no id back is a failed write, escalated as write_failed, and nothing is sent"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an escalation on the work order naming its owner: an address that will not resolve, no tech with a current licence for the work, a window too short for the job, no capacity, no consent to message the customer, a failed slot write, or a displaced job that could not be re-slotted",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the job_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "dispatch.address_unresolved",
+          "dispatch.no_licensed_tech",
+          "dispatch.window_impossible",
+          "dispatch.no_capacity",
+          "dispatch.no_consent",
+          "dispatch.write_failed",
+          "dispatch.displaced"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.slot_external_id",
+          "seam.job_version",
+          "seam.updated_by",
+          "seam.displaced_by",
+          "seam.customer_message_ref",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/van-board"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Claire",
+        "original_author": "Thomas Matteson",
+        "share_link": "https://x.ai/bot/G6MW63VZ6uLP6tPnL0nCR",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "dispatch-board",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:44:05.198Z",
+          "run_id": "run-1793713445197",
+          "green": 8,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        }
+      ]
+    },
+    {
       "slug": "vendor-actuals",
       "name": "Vendor Actuals",
       "office_task": "Check each supplier invoice against its purchase order and what the supplier has claimed to date, clear what matches for a person to approve, and hand the rest to a named owner.",
@@ -6206,6 +6631,7 @@
     "chase-list",
     "claim-check",
     "comp-report",
+    "consultant-hours",
     "cover-check",
     "crew-board",
     "deadline-desk",
@@ -6226,6 +6652,8 @@
     "invoice-desk",
     "invoice-hold",
     "invoice-pair",
+    "job-files",
+    "job-hours",
     "lead-sort",
     "matter-billing",
     "nudge-desk",
@@ -6251,6 +6679,7 @@
     "tenant-inbox",
     "terms-watch",
     "timesheet-billing",
+    "van-board",
     "vendor-actuals",
     "vendor-pack"
   ],
@@ -6276,6 +6705,12 @@
     {
       "from": "after-hours-desk",
       "to": "repair-board",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "after-hours-desk",
+      "to": "van-board",
       "event": "job.created",
       "id": "job_id"
     },
@@ -6306,6 +6741,12 @@
     {
       "from": "crew-board",
       "to": "site-orders",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "crew-board",
+      "to": "van-board",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -6382,6 +6823,12 @@
       "id": "job_id"
     },
     {
+      "from": "practice-desk",
+      "to": "van-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
       "from": "quote-desk",
       "to": "quote-keeper",
       "event": "quote.sent",
@@ -6419,6 +6866,48 @@
     },
     {
       "from": "repair-board",
+      "to": "site-orders",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "repair-board",
+      "to": "van-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "van-board",
+      "to": "crew-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "van-board",
+      "to": "hours-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "van-board",
+      "to": "parts-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "van-board",
+      "to": "quote-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "van-board",
+      "to": "repair-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "van-board",
       "to": "site-orders",
       "event": "job.updated",
       "id": "job_id"
