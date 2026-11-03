@@ -1,0 +1,23 @@
+{
+  "slug": "your-bot-slug",
+  "name": "Your bot's name",
+  "office_task": "The one office job this bot does, in a sentence the owner would say.",
+  "verticals": ["trades-building"],
+  "standards": ["quote-out"],
+  "systems_of_record": ["ServiceM8"],
+  "links": { "bot": "https://grok.com/... the adapted bot's share link", "repo": "https://github.com/you/your-bot" },
+  "maintainer": { "name": "Your name", "github": "your-handle" },
+  "runtime": ["grok-bot-routine", "webhook"],
+  "consumes": [{ "event": "job.created", "wake": "webhook" }],
+  "emits": [{ "event": "quote.sent", "write": "the quote, on the job it was drafted from", "readback": "GET /api_1.0/jobquote/{uuid}.json returns the quote with the job uuid" }],
+  "matches_after_intake": "id-only",
+  "exceptions": { "raises": ["quote.missing_scope"], "owner_field": "exception_owner", "halts_on_open": true },
+  "durable_state": { "writes_to": "system-of-record", "fields": ["seam.quote_id", "seam.status", "seam.exception_owner"] },
+  "private_memory": "preferences-only",
+  "port_of": {
+    "original_name": "The public bot you started from",
+    "original_author": "Its author, as they publish their name",
+    "share_link": "https://... the original's share link",
+    "licence_or_permission": "reimplementation"
+  }
+}

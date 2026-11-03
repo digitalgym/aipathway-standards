@@ -39,6 +39,15 @@ into the package: the CLI fetches them from https://aipathway.com.au, so a stand
 corrected on Tuesday needs no release and nobody can be conformant against a
 stale copy. The package is the harness; the site is the standard.
 
+## The Mesh Directory
+
+[`mesh/`](mesh) is a directory of Grok Bots, and agents like them, ported to
+these standards so they work as one team: one id from the system of record on
+every hop, each hop woken by a named event, an open exception stopping the
+chain. A bot is listed by pull request with a green conformance run, and every
+port credits the bot it came from. See [`mesh/README.md`](mesh/README.md) and
+https://aipathway.com.au/explore-ai/mesh-directory.
+
 ## The standards
 
 | Spec | Skill | What it builds |

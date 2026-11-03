@@ -1,0 +1,44 @@
+name: Submit a bot to the Mesh Directory
+description: For a port of a public bot, or an original build, that implements an aipathway standard and has a green conformance run. A pull request adding mesh/nodes/<slug>/ is faster; use this if you would rather we add it.
+title: "Mesh node: <slug>"
+labels: ["mesh", "submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The directory takes bots for trades and building, fire and electrical compliance, accounting and bookkeeping, property, and B2B office work. Read mesh/README.md first: a node is listed only when its manifest declares its ports and its conformance run is green.
+  - type: input
+    id: bot
+    attributes:
+      label: Link to the adapted bot or repo
+    validations:
+      required: true
+  - type: textarea
+    id: manifest
+    attributes:
+      label: mesh.json
+      description: Start from mesh/TEMPLATE.mesh.json. It names the standards, the events the bot consumes and emits, the ids it carries, and the original it ports.
+      render: json
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Attach manifest.json and envelope.json from `node run.mjs` for each standard, plus Cash Seam if the bot touches Booked After Hours, Quote Out, Invoice Out or Debtor Chasing. Every check green; with_us and evidence_required are allowed.
+    validations:
+      required: true
+  - type: input
+    id: original
+    attributes:
+      label: Original bot's share link and author (if this is a port)
+      description: We tell the original author the port has been submitted. They can have it taken down at any time.
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Confirm
+      options:
+        - label: Where this is a port, I rewrote the bot rather than copying its prompt text, or I have the original author's written permission, or its licence allows it.
+          required: true
+        - label: The bot keeps nothing the next bot needs in its own memory. Durable state is on the job or invoice record.
+          required: true
