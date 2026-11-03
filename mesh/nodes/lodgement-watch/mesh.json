@@ -1,0 +1,52 @@
+{
+  "slug": "lodgement-watch",
+  "name": "Lodgement Watch",
+  "office_task": "Keep every client's BAS, IAS and payroll tax due dates worked out from the ATO and state rules, file the lodgement receipts, and put anything late in front of a named person.",
+  "verticals": ["accounting-bookkeeping"],
+  "standards": ["compliance-calendar"],
+  "systems_of_record": ["the practice's obligation register (its client lodgement calendar, dated rule set and the document store lodgement receipts are filed in)"],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/lodgement-watch" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "email.received", "wake": "webhook" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "evidence.filed",
+      "write": "a lodgement receipt attached to an email, filed as evidence of completion on the client obligation it names by obligation id; an email with no obligation id is never matched on a client name and is raised instead",
+      "readback": "the obligation is read back by its id and must return the same evidence reference (the message_id and attachment) and a completion date; if it does not, nothing was filed and lodgement.evidence_not_read_back is raised"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the client obligation naming the person who owns it: an unknown anchor, no rule in force, a past date no retained rule version explains, a 'lodged' email with no receipt, a client's dated refusal to supply records, a breach, a drafted records request awaiting a named release, a release with no named person, silence past the next chase date, or an email with no obligation id",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the obligation id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "lodgement.anchor_unknown",
+      "lodgement.no_rule_in_force",
+      "lodgement.history_unexplained",
+      "lodgement.completion_without_evidence",
+      "lodgement.evidence_not_read_back",
+      "lodgement.refusal_recorded",
+      "lodgement.breached",
+      "lodgement.request_drafted_awaiting_release",
+      "lodgement.release_refused",
+      "lodgement.chase_due",
+      "lodgement.email_unmatched"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.obligation_ref", "seam.rule_version", "seam.anchor_status", "seam.state", "seam.evidence", "seam.refused_at", "seam.breached_at", "seam.next_chase", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
