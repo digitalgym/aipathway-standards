@@ -1,0 +1,51 @@
+{
+  "slug": "sub-pay-check",
+  "name": "Sub Pay Check",
+  "office_task": "Before a subbie's payment claim is approved, check their licence, insurance, cover and statements are on file and current, file each one, and hold the payment for a named person.",
+  "verticals": ["trades-building"],
+  "standards": ["rejected-pack"],
+  "systems_of_record": [
+    "Xero (the subcontractor's bill, which issues the bill_id)",
+    "Gmail (the message each statement or certificate arrived on)",
+    "Google Drive (the document store that issues each document_id)",
+    "a Google Sheet as the exception desk (exception_id, exception_owner)"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/sub-pay-check" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "webhook", "schedule"],
+  "consumes": [
+    { "event": "bill.received", "wake": "webhook" },
+    { "event": "email.received", "wake": "poll" },
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "evidence.filed",
+      "write": "each statement, licence and certificate of currency filed against the bill_id it supports, by reference to the subbie's facts in the graph",
+      "readback": "the document store returns the document_id, and reading that id back returns the bill_id and the message_id it arrived on; no id back means it was not filed and the pack stays on Hold"
+    },
+    {
+      "event": "bill.checked",
+      "write": "the bill marked as pack checked, with the as-of, the rule versions cited and the named person who accepted the pack; nothing is paid",
+      "readback": "GET the bill by bill_id from the ledger returns the pack-checked status, as-of and accepted_by; the status is only stamped after the handover returned ok"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the bill naming its owner: a check failed (do not pay), paperwork missing (Hold), a release with no name, or a pack waiting for a named person to accept it",
+      "readback": "the exception desk returns an exception_id, and reading it back returns the bill_id, the check it stopped at and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": ["pack.fail", "pack.hold", "pack.awaiting_release", "pack.release_unnamed", "pack.handover_refused"],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.bill_id", "seam.pack_queue", "seam.stopped_at", "seam.as_of", "seam.rule_versions", "seam.accepted_by", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
