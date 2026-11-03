@@ -1,0 +1,54 @@
+{
+  "slug": "comp-check",
+  "name": "Comp Check",
+  "office_task": "For each appraisal, check the price against comparable sales chosen by written rules, each sourced and dated, and hold the one-page evidence for the agent to approve.",
+  "verticals": ["property"],
+  "standards": ["price-one-pager"],
+  "systems_of_record": [
+    "the agency's listing system, which issues the listing_id for the appraisal and holds the subject property and the agent's appraisal",
+    "the recorded sales source the agency already licenses (for example a state valuer-general sales record)",
+    "the document store the approved one-pager and its record of what was shown are published into, which issues the report_id"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/comp-check" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "report.published",
+      "write": "the exact one-pager version the agent approved, released to the vendor on the listing, with an append-only record of what was shown: the rules, every comparable with its source, sale date and read date, the range, the agent's estimate apart, who approved it, who it went to and the date",
+      "readback": "reading the listing's records back by listing_id and date returns each report_id with its version, released_on and approved_by, matching the approved version comparable for comparable; no id back means nothing was released and an exception is raised"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the listing naming the agent: a quoted figure below the evidence (held, with the sales above it), sales still stale after a re-read (held), too few comparables for a range, or a version the agent has not approved",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the listing_id, the version, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "price.underquote_held",
+      "price.sales_stale_held",
+      "price.too_few_comparables",
+      "price.awaiting_approval",
+      "price.release_refused"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.listing_id", "seam.version", "seam.sales_read_on", "seam.report_id", "seam.approved_by", "seam.released_on", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Listing Agent Desk LITE",
+    "original_author": "Balaci Claudiu",
+    "share_link": "https://x.ai/bot/8JiqD02tWEQRGcVqPsswi",
+    "licence_or_permission": "reimplementation"
+  }
+}
