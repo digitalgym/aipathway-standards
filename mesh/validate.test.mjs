@@ -173,3 +173,13 @@ test("an author who asks not to be named keeps the port listed without the credi
   assert.equal(registry.nodes[0].port_of.credited, false);
   assert.equal(registry.nodes[0].port_of.original_author, undefined);
 });
+
+test("listed_at is the first day a node was listed and survives a rebuild", () => {
+  const first = build([node(quoteBot())]).registry;
+  assert.equal(first.nodes[0].listed_at, new Date(NOW).toISOString().slice(0, 10));
+  const later = buildRegistry({
+    nodes: [node(quoteBot())], vocab, standards, removals: [], now: NOW + 30 * 86400000,
+    previous: { nodes: [{ slug: "quote-chaser", listed_at: "2026-01-05" }] },
+  }).registry;
+  assert.equal(later.nodes[0].listed_at, "2026-01-05");
+});

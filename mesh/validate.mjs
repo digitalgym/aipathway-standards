@@ -189,8 +189,12 @@ export function removalFor(manifest, removals) {
  * The whole directory, from parsed inputs. Pure, so the tests drive it without
  * a filesystem. `nodes` is [{ folder, manifest, evidence: { [skill]: { manifest, envelope } } }].
  */
-export function buildRegistry({ nodes, vocab, standards, removals, now }) {
+export function buildRegistry({ nodes, vocab, standards, removals, now, previous }) {
   const problems = [];
+  // listed_at is the day a slug first reached the registry, carried forward from the last
+  // registry.json so a rebuild never resets it. It is what "grew by X in Y days" counts.
+  const firstListed = new Map((previous?.nodes ?? []).map((n) => [n.slug, n.listed_at]));
+  const today = new Date(now).toISOString().slice(0, 10);
   const listed = [];
   const slugs = new Set();
 
@@ -249,6 +253,7 @@ export function buildRegistry({ nodes, vocab, standards, removals, now }) {
       maintainer: m.maintainer,
       port_of,
       status: stale ? "stale" : "listed",
+      listed_at: firstListed.get(m.slug) ?? today,
       routable: !stale,
       evidence_kind: "self-run",
       evidence,
@@ -322,7 +327,9 @@ function main() {
   const skillsDir = join(HERE, "..", "skills");
   const standards = readdirSync(skillsDir).filter((f) => statSync(join(skillsDir, f)).isDirectory());
 
-  const { problems, registry } = buildRegistry({ nodes: loadNodes(join(HERE, "nodes")), vocab, standards, removals, now });
+  const regFile = join(HERE, "registry.json");
+  const previous = existsSync(regFile) ? JSON.parse(readFileSync(regFile, "utf8")) : null;
+  const { problems, registry } = buildRegistry({ nodes: loadNodes(join(HERE, "nodes")), vocab, standards, removals, now, previous });
 
   for (const p of problems) {
     console.error(`\n${p.node}:`);
@@ -332,7 +339,7 @@ function main() {
   console.log(`\n${registry.nodes.length} node(s) listed, ${registry.routable.length} routable, ${stale} stale, ${registry.edges.length} handover(s), ${problems.length} refused.`);
 
   if (args.includes("--write")) {
-    writeFileSync(join(HERE, "registry.json"), JSON.stringify(registry, null, 2) + "\n", "utf8");
+    writeFileSync(regFile, JSON.stringify(registry, null, 2) + "\n", "utf8");
     console.log("Wrote mesh/registry.json.");
   }
   process.exit(problems.length ? 1 : 0);
