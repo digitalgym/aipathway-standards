@@ -1,0 +1,57 @@
+{
+  "slug": "quote-keeper",
+  "name": "Quote Keeper",
+  "office_task": "Keep every quote we send on the register and follow each quiet customer up on our cadence and in our wording until they decide, then hand a no, a dispute or the cap to a person.",
+  "verticals": ["trades-building"],
+  "standards": ["follow-up"],
+  "systems_of_record": [
+    "the job system that issues the quote_id and job_id (ServiceM8, Simpro, or for Tradify a register kept beside it)",
+    "the exception desk the business runs (a sheet or a task list that issues the exception_id)"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/quote-keeper" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "quote.sent", "wake": "webhook" },
+    { "event": "quote.accepted", "wake": "webhook" },
+    { "event": "quote.declined", "wake": "webhook" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "evidence.filed",
+      "write": "the arrival that ends the chase, filed against the job the quote belongs to by its job_id: the customer's signed acceptance or reply by message_id, or the decision recorded on the call; the open item moves to arrived and is never touched again",
+      "readback": "reading the job by its job_id returns the filed attachment or note with its message_id or outcome id and the quote_id; nothing on the read-back means it was not filed, and the item stays open for a person rather than being chased"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the quote naming the person who owns it, with every touch so far: a no on the call, a dispute or a stop request, or the cadence's cap reached with no decision",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the quote_id, the reason, the touch history and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": ["followup.declined", "followup.dispute", "followup.cap_reached"],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.quote_id",
+      "seam.job_id",
+      "seam.followup_touches",
+      "seam.followup_outcome",
+      "seam.arrival_ref",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "preferences-only",
+  "port_of": {
+    "original_name": "The Follow-Up Machine — Quotes Don't Die in the Inbox Anymore",
+    "original_author": "News Gurus",
+    "share_link": "https://x.ai/bot/iXXRYul0WYgEQeFBSxba_",
+    "licence_or_permission": "reimplementation"
+  }
+}
