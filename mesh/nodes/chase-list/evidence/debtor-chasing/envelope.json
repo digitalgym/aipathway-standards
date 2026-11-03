@@ -1,0 +1,1977 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793709133972",
+  "standard": "debtor-chasing-build-standard",
+  "spec": "AIP-BS-DEBTOR-CHASING",
+  "specVersion": "2026-10-06",
+  "environment": "stub",
+  "startedAt": "2026-11-03T12:32:13.930Z",
+  "finishedAt": "2026-11-03T12:32:13.972Z",
+  "results": [
+    {
+      "checkId": "coverage-measured",
+      "n": 1,
+      "title": "Mobile coverage was checked first",
+      "verdict": "evidence_required",
+      "expected": "A coverage figure is present and dated. The runner reports it, and never scores it as passed on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The build declares the measured share, and the builder attaches how it was measured.",
+        "now": "2026-11-03T12:32:13.931Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "overdue-off-due-date",
+      "n": 2,
+      "title": "Overdue is measured off the due date",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The not-yet-due invoice is absent from the run. Every row in the run is past its due date, not its issue date.",
+      "actual": "8 port call(s); runs 1; last run [[\"C-LATE\",\"just_late\",180000,\"\"],[\"C-FRESH\",\"just_late\",95000,\"\"]]; gate [[\"C-LATE\",true,\"\"],[\"C-FRESH\",true,\"\"]]; dials 0; escalations debtor.reminder_ready_for_release debtor.reminder_ready_for_release; promises 0; overrides 0/0 refused",
+      "stimulus": {
+        "description": "A seeded book with invoices whose issue and due dates differ, including one issued long ago but not yet due.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "overdue-off-due-date"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 3
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 3
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "C-LATE",
+              "C-FRESH"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-LATE",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "{\"owner\":\"Dana Whitfield (accounts receivable)\",\"customerId\":\"C-LATE\",\"invoiceIds\":[\"INV-202\"],\"tone\":\"friendly\",\"draft\":\"Hi Late Payer Pty Ltd,\\n\\nA quick note in case this slipped past: INV-202 for $1,800.00 is 6 days past its due date. When can we expect payment?\\n\\nThanks,\\nAccounts\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-FRESH",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "{\"owner\":\"Dana Whitfield (accounts receivable)\",\"customerId\":\"C-FRESH\",\"invoiceIds\":[\"INV-203\"],\"tone\":\"friendly\",\"draft\":\"Hi Fresh Issue Pty Ltd,\\n\\nA quick note in case this slipped past: INV-203 for $950.00 is 1 day past its due date. When can we expect payment?\\n\\nThanks,\\nAccounts\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "four-buckets",
+      "n": 3,
+      "title": "Four buckets, not one list",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Each seeded row lands in its expected bucket, and no row carries a free-text bucket.",
+      "actual": "12 port call(s); runs 1; last run [[\"C-BP\",\"broken_promise\",40000,\"\"],[\"C-HD\",\"hard\",90000,\"\"],[\"C-DR\",\"drifting\",70000,\"\"],[\"C-JL\",\"just_late\",50000,\"\"]]; gate [[\"C-BP\",true,\"\"],[\"C-HD\",true,\"\"],[\"C-DR\",true,\"\"],[\"C-JL\",true,\"\"]]; dials 0; escalations debtor.reminder_ready_for_release debtor.reminder_ready_for_release debtor.reminder_ready_for_release debtor.reminder_ready_for_release; promises 1; overrides 0/0 refused",
+      "stimulus": {
+        "description": "A seeded book with one row belonging in each bucket.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "four-buckets"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 4
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 4
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 4
+          },
+          "response": {
+            "order": [
+              "C-BP",
+              "C-HD",
+              "C-DR",
+              "C-JL"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-BP",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "{\"owner\":\"Dana Whitfield (accounts receivable)\",\"customerId\":\"C-BP\",\"invoiceIds\":[\"INV-304\"],\"tone\":\"final\",\"draft\":\"Hi Broken Promise Co,\\n\\nYou let us know payment of INV-304 would be made by 2026-09-15. Our records show $400.00 is still outstanding and 10 days past its due date. What date will it be paid?\\n\\nThanks,\\nAccounts\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-HD",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "{\"owner\":\"Dana Whitfield (accounts receivable)\",\"customerId\":\"C-HD\",\"invoiceIds\":[\"INV-303\"],\"tone\":\"final\",\"draft\":\"Hi Hard Co,\\n\\nINV-303 for $900.00 is 60 days past its due date and we have not been able to reach you about it. Please reply with the date it will be paid, or tell us if there is a problem with the invoice.\\n\\nThanks,\\nAccounts\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-DR",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "{\"owner\":\"Dana Whitfield (accounts receivable)\",\"customerId\":\"C-DR\",\"invoiceIds\":[\"INV-302\"],\"tone\":\"firm\",\"draft\":\"Hi Drifting Co,\\n\\nOur records show INV-302 for $700.00 is now 30 days past its due date. If something is holding it up, a missing order number or a query on the work, reply and we will sort it. Otherwise, what date can we expect payment?\\n\\nThanks,\\nAccounts\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-JL",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "{\"owner\":\"Dana Whitfield (accounts receivable)\",\"customerId\":\"C-JL\",\"invoiceIds\":[\"INV-301\"],\"tone\":\"friendly\",\"draft\":\"Hi Just Late Co,\\n\\nA quick note in case this slipped past: INV-301 for $500.00 is 5 days past its due date. When can we expect payment?\\n\\nThanks,\\nAccounts\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "broken-promise-outranks",
+      "n": 4,
+      "title": "Broken promise outranks everything",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The broken promise ranks above the larger row despite the smaller amount.",
+      "actual": "8 port call(s); runs 1; last run [[\"C-SMALL\",\"broken_promise\",30000,\"\"],[\"C-BIG\",\"just_late\",4000000,\"\"]]; gate [[\"C-SMALL\",true,\"\"],[\"C-BIG\",true,\"\"]]; dials 0; escalations debtor.reminder_ready_for_release debtor.reminder_ready_for_release; promises 1; overrides 0/0 refused",
+      "stimulus": {
+        "description": "A small broken promise seeded alongside a much larger invoice that is merely late.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "broken-promise-outranks"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "C-SMALL",
+              "C-BIG"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-SMALL",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "{\"owner\":\"Dana Whitfield (accounts receivable)\",\"customerId\":\"C-SMALL\",\"invoiceIds\":[\"INV-401\"],\"tone\":\"final\",\"draft\":\"Hi Small Promise Pty Ltd,\\n\\nYou let us know payment of INV-401 would be made by 2026-09-17. Our records show $300.00 is still outstanding and 12 days past its due date. What date will it be paid?\\n\\nThanks,\\nAccounts\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-BIG",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "{\"owner\":\"Dana Whitfield (accounts receivable)\",\"customerId\":\"C-BIG\",\"invoiceIds\":[\"INV-402\"],\"tone\":\"friendly\",\"draft\":\"Hi Big Late Pty Ltd,\\n\\nA quick note in case this slipped past: INV-402 for $40,000.00 is 5 days past its due date. When can we expect payment?\\n\\nThanks,\\nAccounts\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "rank-by-amount-at-risk",
+      "n": 5,
+      "title": "Ranking is by amount at risk",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The larger amount ranks first. Age decides only when amounts are equal.",
+      "actual": "12 port call(s); runs 1; last run [[\"C-NEWLARGE\",\"drifting\",4000000,\"\"],[\"C-TIE-OLD\",\"drifting\",250000,\"\"],[\"C-TIE-NEW\",\"drifting\",250000,\"\"],[\"C-OLDSMALL\",\"drifting\",40000,\"\"]]; gate [[\"C-NEWLARGE\",true,\"\"],[\"C-TIE-OLD\",true,\"\"],[\"C-TIE-NEW\",true,\"\"],[\"C-OLDSMALL\",true,\"\"]]; dials 0; escalations debtor.reminder_ready_for_release debtor.reminder_ready_for_release debtor.reminder_ready_for_release debtor.reminder_ready_for_release; promises 0; overrides 0/0 refused",
+      "stimulus": {
+        "description": "Two rows in the same bucket: one older and small, one newer and large.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "rank-by-amount-at-risk"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 4
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 4
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 4
+          },
+          "response": {
+            "order": [
+              "C-NEWLARGE",
+              "C-TIE-OLD",
+              "C-TIE-NEW",
+              "C-OLDSMALL"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-NEWLARGE",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "{\"owner\":\"Dana Whitfield (accounts receivable)\",\"customerId\":\"C-NEWLARGE\",\"invoiceIds\":[\"INV-502\"],\"tone\":\"firm\",\"draft\":\"Hi New Large,\\n\\nOur records show INV-502 for $40,000.00 is now 20 days past its due date. If something is holding it up, a missing order number or a query on the work, reply and we will sort it. Otherwise, what date can we expect payment?\\n\\nThanks,\\nAccounts\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-TIE-OLD",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "{\"owner\":\"Dana Whitfield (accounts receivable)\",\"customerId\":\"C-TIE-OLD\",\"invoiceIds\":[\"INV-504\"],\"tone\":\"firm\",\"draft\":\"Hi Tie Older,\\n\\nOur records show INV-504 for $2,500.00 is now 36 days past its due date. If something is holding it up, a missing order number or a query on the work, reply and we will sort it. Otherwise, what date can we expect payment?\\n\\nThanks,\\nAccounts\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-TIE-NEW",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "{\"owner\":\"Dana Whitfield (accounts receivable)\",\"customerId\":\"C-TIE-NEW\",\"invoiceIds\":[\"INV-503\"],\"tone\":\"firm\",\"draft\":\"Hi Tie Newer,\\n\\nOur records show INV-503 for $2,500.00 is now 16 days past its due date. If something is holding it up, a missing order number or a query on the work, reply and we will sort it. Otherwise, what date can we expect payment?\\n\\nThanks,\\nAccounts\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-OLDSMALL",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "{\"owner\":\"Dana Whitfield (accounts receivable)\",\"customerId\":\"C-OLDSMALL\",\"invoiceIds\":[\"INV-501\"],\"tone\":\"firm\",\"draft\":\"Hi Old Small,\\n\\nOur records show INV-501 for $400.00 is now 40 days past its due date. If something is holding it up, a missing order number or a query on the work, reply and we will sort it. Otherwise, what date can we expect payment?\\n\\nThanks,\\nAccounts\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-customer-one-conversation",
+      "n": 6,
+      "title": "One customer is one conversation",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The run contains exactly one entry for that customer, carrying the summed amount and all six invoice references.",
+      "actual": "8 port call(s); runs 1; last run [[\"C-SIX\",\"drifting\",400000,\"\"],[\"C-ONE\",\"just_late\",80000,\"\"]]; gate [[\"C-SIX\",true,\"\"],[\"C-ONE\",true,\"\"]]; dials 0; escalations debtor.reminder_ready_for_release debtor.reminder_ready_for_release; promises 0; overrides 0/0 refused",
+      "stimulus": {
+        "description": "One customer seeded with six overdue invoices.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-customer-one-conversation"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 7
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "C-SIX",
+              "C-ONE"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-SIX",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "{\"owner\":\"Dana Whitfield (accounts receivable)\",\"customerId\":\"C-SIX\",\"invoiceIds\":[\"INV-601\",\"INV-602\",\"INV-603\",\"INV-604\",\"INV-605\",\"INV-606\"],\"tone\":\"firm\",\"draft\":\"Hi Six Invoices Pty Ltd,\\n\\nOur records show INV-601, INV-602, INV-603, INV-604, INV-605, INV-606 for $4,000.00 is now 20 days past its due date. If something is holding it up, a missing order number or a query on the work, reply and we will sort it. Otherwise, what date can we expect payment?\\n\\nThanks,\\nAccounts\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-ONE",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "{\"owner\":\"Dana Whitfield (accounts receivable)\",\"customerId\":\"C-ONE\",\"invoiceIds\":[\"INV-607\"],\"tone\":\"friendly\",\"draft\":\"Hi One Invoice Pty Ltd,\\n\\nA quick note in case this slipped past: INV-607 for $800.00 is 3 days past its due date. When can we expect payment?\\n\\nThanks,\\nAccounts\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "relationship-balances-excluded",
+      "n": 7,
+      "title": "Relationship-sized balances are out of the run",
+      "verdict": "pass",
+      "held": true,
+      "expected": "That customer is absent from the dial list, carries an exclusion reason, and an escalate names who it went to.",
+      "actual": "7 port call(s); runs 1; last run [[\"C-NORMAL\",\"just_late\",220000,\"\"],[\"C-ANCHOR\",\"drifting\",25000000,\"relationship_sized_balance\"]]; gate [[\"C-NORMAL\",true,\"\"]]; dials 0; escalations debtor.relationship_account debtor.reminder_ready_for_release; promises 0; overrides 0/0 refused",
+      "stimulus": {
+        "description": "A debtor seeded far above the configured relationship threshold.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "relationship-balances-excluded"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "C-NORMAL",
+              "C-ANCHOR"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.relationship_account",
+            "detail": "{\"owner\":\"Dana Whitfield (accounts receivable)\",\"customerId\":\"C-ANCHOR\",\"invoiceIds\":[\"INV-701\"],\"amount\":25000000,\"bucket\":\"drifting\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-NORMAL",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "{\"owner\":\"Dana Whitfield (accounts receivable)\",\"customerId\":\"C-NORMAL\",\"invoiceIds\":[\"INV-702\"],\"tone\":\"friendly\",\"draft\":\"Hi Normal Debtor Pty Ltd,\\n\\nA quick note in case this slipped past: INV-702 for $2,200.00 is 10 days past its due date. When can we expect payment?\\n\\nThanks,\\nAccounts\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "promise-is-an-object",
+      "n": 8,
+      "title": "A promise is an object with a date",
+      "verdict": "pass",
+      "held": true,
+      "expected": "record_promise carries a date and a capture timestamp, a null amount is accepted, and the dispute is still present afterwards.",
+      "actual": "12 port call(s); runs 1; last run [[\"C-OTHER\",\"drifting\",150000,\"\"],[\"C-DISP\",\"broken_promise\",640000,\"dispute_open\"]]; gate [[\"C-OTHER\",true,\"\"]]; dials 0; escalations debtor.dispute_open debtor.dispute_open debtor.reminder_ready_for_release; promises 1; overrides 0/0 refused",
+      "stimulus": {
+        "description": "A call where the debtor says they will pay Friday without naming a figure, on an invoice already carrying a dispute.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "promise-is-an-object"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "record_promise",
+          "verb": "write",
+          "subject": "promise",
+          "request": {
+            "customerId": "C-DISP",
+            "date": "2026-09-25",
+            "amount": null
+          },
+          "response": {
+            "capturedAt": "2026-09-21T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.dispute_open",
+            "detail": "{\"owner\":\"Dana Whitfield (accounts receivable)\",\"customerId\":\"C-DISP\",\"invoiceId\":\"INV-801\",\"promisedDate\":\"2026-09-25\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-26T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "C-OTHER",
+              "C-DISP"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.dispute_open",
+            "detail": "{\"owner\":\"Dana Whitfield (accounts receivable)\",\"customerId\":\"C-DISP\",\"invoiceIds\":[\"INV-801\"],\"amount\":640000,\"bucket\":\"broken_promise\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-OTHER",
+            "localHour": 14,
+            "date": "2026-09-26"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "{\"owner\":\"Dana Whitfield (accounts receivable)\",\"customerId\":\"C-OTHER\",\"invoiceIds\":[\"INV-802\"],\"tone\":\"firm\",\"draft\":\"Hi Other Debtor Pty Ltd,\\n\\nOur records show INV-802 for $1,500.00 is now 15 days past its due date. If something is holding it up, a missing order number or a query on the work, reply and we will sort it. Otherwise, what date can we expect payment?\\n\\nThanks,\\nAccounts\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-26T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "promised-date-is-followup",
+      "n": 9,
+      "title": "The promised date is the follow-up date",
+      "verdict": "pass",
+      "held": true,
+      "expected": "That customer appears in no run before the promised date.",
+      "actual": "32 port call(s); runs 5; last run [[\"C-PROM\",\"drifting\",520000,\"\"],[\"C-STEADY\",\"just_late\",80000,\"\"]]; gate [[\"C-STEADY\",true,\"\"],[\"C-STEADY\",true,\"\"],[\"C-STEADY\",true,\"\"],[\"C-STEADY\",true,\"\"],[\"C-PROM\",true,\"\"],[\"C-STEADY\",true,\"\"]]; dials 0; escalations debtor.reminder_ready_for_release debtor.reminder_ready_for_release debtor.reminder_ready_for_release debtor.reminder_ready_for_release debtor.reminder_ready_for_release debtor.reminder_ready_for_release; promises 1; overrides 0/0 refused",
+      "stimulus": {
+        "description": "A promise for a date five days out, then a run on each of the next four days.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "promised-date-is-followup"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-22T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "C-STEADY"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-STEADY",
+            "localHour": 14,
+            "date": "2026-09-22"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "{\"owner\":\"Dana Whitfield (accounts receivable)\",\"customerId\":\"C-STEADY\",\"invoiceIds\":[\"INV-902\"],\"tone\":\"friendly\",\"draft\":\"Hi Steady Late Pty Ltd,\\n\\nA quick note in case this slipped past: INV-902 for $800.00 is 5 days past its due date. When can we expect payment?\\n\\nThanks,\\nAccounts\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-23T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "C-STEADY"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-STEADY",
+            "localHour": 14,
+            "date": "2026-09-23"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "{\"owner\":\"Dana Whitfield (accounts receivable)\",\"customerId\":\"C-STEADY\",\"invoiceIds\":[\"INV-902\"],\"tone\":\"friendly\",\"draft\":\"Hi Steady Late Pty Ltd,\\n\\nA quick note in case this slipped past: INV-902 for $800.00 is 6 days past its due date. When can we expect payment?\\n\\nThanks,\\nAccounts\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-24T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "C-STEADY"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-STEADY",
+            "localHour": 14,
+            "date": "2026-09-24"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "{\"owner\":\"Dana Whitfield (accounts receivable)\",\"customerId\":\"C-STEADY\",\"invoiceIds\":[\"INV-902\"],\"tone\":\"friendly\",\"draft\":\"Hi Steady Late Pty Ltd,\\n\\nA quick note in case this slipped past: INV-902 for $800.00 is 7 days past its due date. When can we expect payment?\\n\\nThanks,\\nAccounts\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-25T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "C-STEADY"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-STEADY",
+            "localHour": 14,
+            "date": "2026-09-25"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "{\"owner\":\"Dana Whitfield (accounts receivable)\",\"customerId\":\"C-STEADY\",\"invoiceIds\":[\"INV-902\"],\"tone\":\"friendly\",\"draft\":\"Hi Steady Late Pty Ltd,\\n\\nA quick note in case this slipped past: INV-902 for $800.00 is 8 days past its due date. When can we expect payment?\\n\\nThanks,\\nAccounts\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-26T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "C-PROM",
+              "C-STEADY"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-PROM",
+            "localHour": 14,
+            "date": "2026-09-26"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "{\"owner\":\"Dana Whitfield (accounts receivable)\",\"customerId\":\"C-PROM\",\"invoiceIds\":[\"INV-901\"],\"tone\":\"firm\",\"draft\":\"Hi Promised Pty Ltd,\\n\\nOur records show INV-901 for $5,200.00 is now 20 days past its due date. If something is holding it up, a missing order number or a query on the work, reply and we will sort it. Otherwise, what date can we expect payment?\\n\\nThanks,\\nAccounts\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-STEADY",
+            "localHour": 14,
+            "date": "2026-09-26"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "{\"owner\":\"Dana Whitfield (accounts receivable)\",\"customerId\":\"C-STEADY\",\"invoiceIds\":[\"INV-902\"],\"tone\":\"friendly\",\"draft\":\"Hi Steady Late Pty Ltd,\\n\\nA quick note in case this slipped past: INV-902 for $800.00 is 9 days past its due date. When can we expect payment?\\n\\nThanks,\\nAccounts\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "gate-under-ranking",
+      "n": 10,
+      "title": "The gate sits underneath the ranking",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "No dial in any of the three. Each is held with a reason, and the highest score in the book does not override it.",
+      "actual": "19 port call(s); runs 3; last run [[\"C-TOP\",\"drifting\",3800000,\"\"],[\"C-NEXT\",\"just_late\",120000,\"\"]]; gate [[\"C-TOP\",false,\"outside_hours\"],[\"C-NEXT\",false,\"outside_hours\"],[\"C-TOP\",false,\"public_holiday\"],[\"C-NEXT\",false,\"public_holiday\"],[\"C-TOP\",false,\"already_paid\"],[\"C-NEXT\",true,\"\"]]; dials 0; escalations debtor.reminder_ready_for_release; promises 0; overrides 0/0 refused",
+      "stimulus": {
+        "description": "The top-ranked row, run at 8:30pm in the debtor's timezone; then the same row on a state public holiday; then the same row after the ledger shows it paid.",
+        "now": "2026-09-21T10:30:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "gate-under-ranking"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T10:30:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "C-TOP",
+              "C-NEXT"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-TOP",
+            "localHour": 20.5,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": false,
+            "reason": "outside_hours"
+          }
+        },
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-NEXT",
+            "localHour": 20.5,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": false,
+            "reason": "outside_hours"
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-22T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "C-TOP",
+              "C-NEXT"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-TOP",
+            "localHour": 14,
+            "date": "2026-09-22"
+          },
+          "response": {
+            "allowed": false,
+            "reason": "public_holiday"
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-NEXT",
+            "localHour": 14,
+            "date": "2026-09-22"
+          },
+          "response": {
+            "allowed": false,
+            "reason": "public_holiday"
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-23T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "C-TOP",
+              "C-NEXT"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-TOP",
+            "localHour": 14,
+            "date": "2026-09-23"
+          },
+          "response": {
+            "allowed": false,
+            "reason": "already_paid"
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-NEXT",
+            "localHour": 14,
+            "date": "2026-09-23"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "{\"owner\":\"Dana Whitfield (accounts receivable)\",\"customerId\":\"C-NEXT\",\"invoiceIds\":[\"INV-1002\"],\"tone\":\"friendly\",\"draft\":\"Hi Next Down Pty Ltd,\\n\\nA quick note in case this slipped past: INV-1002 for $1,200.00 is 10 days past its due date. When can we expect payment?\\n\\nThanks,\\nAccounts\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "exceptions-attributable",
+      "n": 11,
+      "title": "Exceptions are named and attributable",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The override records the reason, the timestamp and the approving person. An override with no named approver is refused.",
+      "actual": "12 port call(s); runs 1; last run [[\"C-ASKED\",\"drifting\",410000,\"\"],[\"C-UNSIGNED\",\"drifting\",390000,\"\"]]; gate [[\"C-ASKED\",false,\"outside_hours\"],[\"C-UNSIGNED\",false,\"outside_hours\"]]; dials 0; escalations debtor.reminder_ready_for_release; promises 0; overrides 1/1 refused",
+      "stimulus": {
+        "description": "An override applied to a held row.",
+        "now": "2026-09-21T10:30:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "exceptions-attributable"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T10:30:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "C-ASKED",
+              "C-UNSIGNED"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-ASKED",
+            "localHour": 20.5,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": false,
+            "reason": "outside_hours"
+          }
+        },
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-UNSIGNED",
+            "localHour": 20.5,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": false,
+            "reason": "outside_hours"
+          }
+        },
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "override": "C-ASKED",
+            "reason": "Customer asked by email to be contacted after 7pm",
+            "approver": "Dana Whitfield"
+          },
+          "response": {
+            "accepted": true
+          }
+        },
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T10:30:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "{\"owner\":\"Dana Whitfield (accounts receivable)\",\"customerId\":\"C-ASKED\",\"invoiceIds\":[\"INV-1101\"],\"tone\":\"firm\",\"draft\":\"Hi Asked After Hours Pty Ltd,\\n\\nOur records show INV-1101 for $4,100.00 is now 20 days past its due date. If something is holding it up, a missing order number or a query on the work, reply and we will sort it. Otherwise, what date can we expect payment?\\n\\nThanks,\\nAccounts\",\"override\":{\"reason\":\"Customer asked by email to be contacted after 7pm\",\"approver\":\"Dana Whitfield\"}}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "override": "C-UNSIGNED",
+            "reason": "Push it through tonight"
+          },
+          "response": {
+            "accepted": false
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 12,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "The paid invoice is not dialled and the audit row says which ledger read stopped it; the late run holds until morning.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "A real run against a live ledger, at a real time of day, on a real number.",
+        "now": "2026-11-03T12:32:13.972Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 12,
+    "pass": 9,
+    "fail": 0,
+    "shapeOnly": 1,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
