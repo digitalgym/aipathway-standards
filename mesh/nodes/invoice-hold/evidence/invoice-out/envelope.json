@@ -1,0 +1,2397 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793711659603",
+  "standard": "invoice-out-build-standard",
+  "spec": "AIP-BS-INVOICE-OUT",
+  "specVersion": "2026-10-05",
+  "environment": "stub",
+  "startedAt": "2026-11-03T13:14:19.596Z",
+  "finishedAt": "2026-11-03T13:14:19.603Z",
+  "results": [
+    {
+      "checkId": "completion-is-the-trigger",
+      "n": 1,
+      "title": "The job's completion is the only trigger",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Two invoices exist and each traces to a job read that showed it complete. An invoice for the open job, or one written before any job was read, fails.",
+      "actual": "20 port call(s): read_job, read_pricebook, read_job, write_invoice, read_job, escalate, read_job, read_pricebook, read_job, write_invoice, read_job, escalate, read_job, read_pricebook, read_job, read_pricebook, read_job, read_pricebook, read_job, read_job; invoices INV1/JOB-101/draft INV2/JOB-102/draft; escalations over_threshold over_threshold; sends 0",
+      "stimulus": {
+        "description": "Three jobs in the system: two marked complete today, one still open.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "completion-is-the-trigger"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "JOB-101",
+              "JOB-102",
+              "JOB-104"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items (renovations)",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-101"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-101",
+            "lines": [
+              "SITE-VISITx1@15000",
+              "CARP-HRx3@8800"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Job JOB-101."
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "{\"job_id\":\"JOB-101\",\"invoice_id\":\"INV1\",\"reason\":\"awaiting_release\",\"total\":41400,\"rule\":null,\"exception_owner\":\"Mel Carter (office manager)\",\"node\":\"invoice-hold\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "JOB-101",
+              "JOB-102",
+              "JOB-104"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items (renovations)",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-102"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-102",
+            "lines": [
+              "SITE-VISITx1@15000",
+              "WPM-BATHx1@68000"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Job JOB-102."
+          },
+          "response": {
+            "id": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "{\"job_id\":\"JOB-102\",\"invoice_id\":\"INV2\",\"reason\":\"awaiting_release\",\"total\":83000,\"rule\":null,\"exception_owner\":\"Mel Carter (office manager)\",\"node\":\"invoice-hold\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "JOB-101",
+              "JOB-102",
+              "JOB-104"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items (renovations)",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "JOB-101",
+              "JOB-102",
+              "JOB-104"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items (renovations)",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "JOB-101",
+              "JOB-102",
+              "JOB-104"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items (renovations)",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-101"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-102"
+          },
+          "response": {
+            "invoiceId": "INV2",
+            "externalId": "xero-INV2"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "lines-come-from-the-job",
+      "n": 2,
+      "title": "Every invoice line traces to a line on the job",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The invoice carries those three codes and quantities and no others. An extra line, or a missing one with no parked reason, fails.",
+      "actual": "6 port call(s): read_job, read_pricebook, read_job, write_invoice, read_job, escalate; invoices INV1/JOB-201/draft; escalations over_threshold; sends 0",
+      "stimulus": {
+        "description": "A complete job with three lines: a callout, two hours of labour and a material.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "lines-come-from-the-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "complete": [
+              "JOB-201"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items (renovations)",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-201"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-201",
+            "lines": [
+              "SITE-VISITx1@15000",
+              "CARP-HRx3@8800",
+              "VAN-900x1@129000"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Job JOB-201."
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "{\"job_id\":\"JOB-201\",\"invoice_id\":\"INV1\",\"reason\":\"awaiting_release\",\"total\":170400,\"rule\":null,\"exception_owner\":\"Mel Carter (office manager)\",\"node\":\"invoice-hold\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "rates-only-from-the-book",
+      "n": 3,
+      "title": "Every line is priced from the price book, and a line the book does not cover parks the invoice",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The book is read before the write. Every priced line's rate equals the book's rate for its code. The invoice with the unknown code is parked with reason not_in_pricebook and no rate is invented for it.",
+      "actual": "11 port call(s): read_job, read_pricebook, read_job, write_invoice, escalate, read_job, read_pricebook, read_job, write_invoice, read_job, escalate; invoices INV1/JOB-301/parked:not_in_pricebook INV2/JOB-302/draft; escalations not_in_pricebook over_threshold; sends 0",
+      "stimulus": {
+        "description": "A complete job whose lines include one code the price book does not hold.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "rates-only-from-the-book"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "JOB-301",
+              "JOB-302"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items (renovations)",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-301"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-301",
+            "lines": [
+              "SITE-VISITx1@15000",
+              "TILE-M2x12@9500"
+            ],
+            "stage": null,
+            "park": "not_in_pricebook",
+            "notes": "Job JOB-301."
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "not_in_pricebook",
+            "detail": "{\"job_id\":\"JOB-301\",\"invoice_id\":\"INV1\",\"codes_without_rate\":[\"TAP-BRASS-X\"],\"park_reason\":\"not_in_pricebook\",\"exception_owner\":\"Mel Carter (office manager)\",\"node\":\"invoice-hold\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "JOB-301",
+              "JOB-302"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items (renovations)",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-302"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-302",
+            "lines": [
+              "SITE-VISITx1@15000",
+              "WPM-BATHx1@68000"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Job JOB-302."
+          },
+          "response": {
+            "id": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "{\"job_id\":\"JOB-302\",\"invoice_id\":\"INV2\",\"reason\":\"awaiting_release\",\"total\":83000,\"rule\":null,\"exception_owner\":\"Mel Carter (office manager)\",\"node\":\"invoice-hold\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "variation-needs-a-signature",
+      "n": 4,
+      "title": "A variation is billed only with a signed acceptance attached",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The signed one is invoiced with the acceptance attached as evidence. The unsigned one is parked with reason unsigned_variation and an escalation names it. Billing an unsigned variation fails.",
+      "actual": "12 port call(s): read_job, read_pricebook, read_job, write_invoice, evidence, read_job, escalate, read_job, read_pricebook, read_job, write_invoice, escalate; invoices INV1/JOB-402/draft INV2/JOB-403/parked:unsigned_variation; escalations over_threshold unsigned_variation; sends 0",
+      "stimulus": {
+        "description": "Two complete jobs each carrying a variation line: one with a signed acceptance on file, one without.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "variation-needs-a-signature"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "JOB-402",
+              "JOB-403"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items (renovations)",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-402"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-402",
+            "lines": [
+              "SITE-VISITx1@15000",
+              "WPM-BATHx1@68000",
+              "VAR-NICHEx1@42000"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Job JOB-402."
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "invoiceId": "INV1",
+            "ref": "doc:variations/JOB-402/niche-signed.pdf"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "{\"job_id\":\"JOB-402\",\"invoice_id\":\"INV1\",\"reason\":\"awaiting_release\",\"total\":125000,\"rule\":null,\"exception_owner\":\"Mel Carter (office manager)\",\"node\":\"invoice-hold\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "JOB-402",
+              "JOB-403"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items (renovations)",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-403"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-403",
+            "lines": [
+              "SITE-VISITx1@15000",
+              "WPM-BATHx1@68000"
+            ],
+            "stage": null,
+            "park": "unsigned_variation",
+            "notes": "Job JOB-403."
+          },
+          "response": {
+            "id": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "unsigned_variation",
+            "detail": "{\"job_id\":\"JOB-403\",\"invoice_id\":\"INV2\",\"variations_unsigned\":[\"VAR-NICHE\"],\"park_reason\":\"unsigned_variation\",\"exception_owner\":\"Mel Carter (office manager)\",\"node\":\"invoice-hold\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "stage-invoice-never-claim",
+      "n": 5,
+      "title": "A job under a building contract is invoiced as a stage invoice, and the claim stays with the builder",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The invoice carries the stage name. No invoice, line or note contains the phrase progress claim. An invoice on a staged job with no stage fails.",
+      "actual": "11 port call(s): read_job, read_pricebook, read_job, write_invoice, read_job, escalate, read_job, read_pricebook, read_job, write_invoice, escalate; invoices INV1/JOB-501/draft INV2/JOB-502/parked:no_stage; escalations over_threshold no_stage; sends 0",
+      "stimulus": {
+        "description": "A complete job carrying a contract stage name.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "stage-invoice-never-claim"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "JOB-501",
+              "JOB-502"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items (renovations)",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-501"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-501",
+            "lines": [
+              "WPM-BATHx1@68000",
+              "TILE-M2x12@9500"
+            ],
+            "stage": "Stage 3: waterproofing and tiling",
+            "park": null,
+            "notes": "Stage invoice: Stage 3: waterproofing and tiling. Job JOB-501."
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "{\"job_id\":\"JOB-501\",\"invoice_id\":\"INV1\",\"reason\":\"awaiting_release\",\"total\":182000,\"rule\":null,\"exception_owner\":\"Mel Carter (office manager)\",\"node\":\"invoice-hold\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "JOB-501",
+              "JOB-502"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items (renovations)",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-502"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-502",
+            "lines": [
+              "CARP-HRx3@8800"
+            ],
+            "stage": null,
+            "park": "no_stage",
+            "notes": "Job JOB-502."
+          },
+          "response": {
+            "id": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "no_stage",
+            "detail": "{\"job_id\":\"JOB-502\",\"invoice_id\":\"INV2\",\"park_reason\":\"no_stage\",\"exception_owner\":\"Mel Carter (office manager)\",\"node\":\"invoice-hold\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-invoice-per-job",
+      "n": 6,
+      "title": "One invoice per job, written once, updated on a second event",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Exactly one invoice exists for the job, with an external id, and the second event produced an update or no write. A second invoice, or a null id treated as success, fails.",
+      "actual": "16 port call(s): read_job, read_pricebook, read_job, write_invoice, read_job, escalate, read_job, read_pricebook, read_job, read_job, read_pricebook, read_job, read_job, write_invoice, read_job, escalate; invoices INV1/JOB-601/draft INV2/JOB-602/draft; escalations over_threshold over_threshold; sends 0",
+      "stimulus": {
+        "description": "The same job's completion event delivered twice.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-invoice-per-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "JOB-601",
+              "JOB-602"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items (renovations)",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-601"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-601",
+            "lines": [
+              "SITE-VISITx1@15000",
+              "CARP-HRx3@8800"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Job JOB-601."
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "{\"job_id\":\"JOB-601\",\"invoice_id\":\"INV1\",\"reason\":\"awaiting_release\",\"total\":41400,\"rule\":null,\"exception_owner\":\"Mel Carter (office manager)\",\"node\":\"invoice-hold\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "JOB-601",
+              "JOB-602"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items (renovations)",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-601"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "JOB-601",
+              "JOB-602"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items (renovations)",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-601"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-602"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-602",
+            "lines": [
+              "SITE-VISITx1@15000"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Job JOB-602."
+          },
+          "response": {
+            "id": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "{\"job_id\":\"JOB-602\",\"invoice_id\":\"INV2\",\"reason\":\"awaiting_release\",\"total\":15000,\"rule\":null,\"exception_owner\":\"Mel Carter (office manager)\",\"node\":\"invoice-hold\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "written-into-the-ledger",
+      "n": 7,
+      "title": "The invoice exists in the ledger the business runs, with an external id back",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The write returns an external id and the id is stored against the job. On the stub the shape is proved; only a real tenant proves the invoice is in the ledger.",
+      "actual": "11 port call(s): read_job, read_pricebook, read_job, write_invoice, escalate, read_job, read_pricebook, read_job, write_invoice, read_job, escalate; invoices INV1/JOB-702/draft; escalations write_failed over_threshold; sends 0",
+      "stimulus": {
+        "description": "A complete, fully priced job.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "written-into-the-ledger"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "JOB-701",
+              "JOB-702"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items (renovations)",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-701"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-701",
+            "lines": 1
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "write_failed",
+            "detail": "{\"job_id\":\"JOB-701\",\"invoice_id\":null,\"park_reason\":\"write_failed\",\"exception_owner\":\"Mel Carter (office manager)\",\"node\":\"invoice-hold\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "JOB-701",
+              "JOB-702"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items (renovations)",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-702"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-702",
+            "lines": [
+              "SITE-VISITx1@15000",
+              "VAN-900x1@129000"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Job JOB-702."
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "{\"job_id\":\"JOB-702\",\"invoice_id\":\"INV1\",\"reason\":\"awaiting_release\",\"total\":144000,\"rule\":null,\"exception_owner\":\"Mel Carter (office manager)\",\"node\":\"invoice-hold\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "send-is-a-gate",
+      "n": 8,
+      "title": "Nothing is sent without a release by a person, or by a rule a person set with a threshold",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The first is released by the rule and sent. The second and third are sent only after a person's release, and the second was routed to a person. A send with no release fails.",
+      "actual": "18 port call(s): read_job, read_pricebook, read_job, write_invoice, read_job, gate, issue_notice, read_job, read_pricebook, read_job, write_invoice, read_job, escalate, read_job, read_job, read_job, gate, issue_notice; invoices INV1/JOB-801/sent INV2/JOB-802/sent; escalations over_threshold; sends 2",
+      "stimulus": {
+        "description": "Three drafts: one under an auto-release threshold, one over it, one with no rule set.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "send-is-a-gate"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "JOB-801",
+              "JOB-802"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items (renovations)",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-801"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-801",
+            "lines": [
+              "SITE-VISITx1@15000",
+              "CARP-HRx3@8800"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Job JOB-801."
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Mel's rule: release under $1,000 ex GST",
+            "threshold": 100000
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "INV1",
+            "person": null,
+            "rule": "Mel's rule: release under $1,000 ex GST"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "send": "INV1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "JOB-801",
+              "JOB-802"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items (renovations)",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-802"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-802",
+            "lines": [
+              "WPM-BATHx1@68000",
+              "VAN-900x1@129000"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Job JOB-802."
+          },
+          "response": {
+            "id": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Mel's rule: release under $1,000 ex GST",
+            "threshold": 100000
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "{\"job_id\":\"JOB-802\",\"invoice_id\":\"INV2\",\"reason\":\"awaiting_release\",\"total\":197000,\"rule\":\"Mel's rule: release under $1,000 ex GST\",\"exception_owner\":\"Mel Carter (office manager)\",\"node\":\"invoice-hold\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "JOB-801",
+              "JOB-802"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "JOB-801",
+              "JOB-802"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-802"
+          },
+          "response": {
+            "invoiceId": "INV2",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "INV2",
+            "person": "Mel Carter (office manager)",
+            "rule": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "send": "INV2"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "parked-is-a-queue",
+      "n": 9,
+      "title": "A parked invoice is a queue with a reason and an owner, and nothing parked is sent",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every parked invoice carries a reason and an escalation names it to a person. No parked invoice has a send event.",
+      "actual": "36 port call(s): read_job, read_pricebook, read_job, write_invoice, escalate, read_job, read_pricebook, read_job, write_invoice, escalate, read_job, read_pricebook, read_job, write_invoice, escalate, read_job, read_pricebook, read_job, write_invoice, escalate, read_job, read_pricebook, read_job, write_invoice, read_job, gate, issue_notice, read_job, write_invoice, escalate, read_job, write_invoice, escalate, read_job, write_invoice, escalate; invoices INV1/JOB-901/parked:not_in_pricebook INV2/JOB-902/parked:unsigned_variation INV3/JOB-903/parked:no_stage INV4/JOB-900/sent; escalations write_failed not_in_pricebook unsigned_variation no_stage not_in_pricebook unsigned_variation no_stage; sends 1",
+      "stimulus": {
+        "description": "The parked invoices from the checks above.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "parked-is-a-queue"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "JOB-900",
+              "JOB-901",
+              "JOB-902",
+              "JOB-903"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items (renovations)",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-900"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-900",
+            "lines": 1
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "write_failed",
+            "detail": "{\"job_id\":\"JOB-900\",\"invoice_id\":null,\"park_reason\":\"write_failed\",\"exception_owner\":\"Mel Carter (office manager)\",\"node\":\"invoice-hold\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "JOB-900",
+              "JOB-901",
+              "JOB-902",
+              "JOB-903"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items (renovations)",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-901"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-901",
+            "lines": [
+              "SITE-VISITx1@15000"
+            ],
+            "stage": null,
+            "park": "not_in_pricebook",
+            "notes": "Job JOB-901."
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "not_in_pricebook",
+            "detail": "{\"job_id\":\"JOB-901\",\"invoice_id\":\"INV1\",\"codes_without_rate\":[\"TAP-BRASS-X\"],\"park_reason\":\"not_in_pricebook\",\"exception_owner\":\"Mel Carter (office manager)\",\"node\":\"invoice-hold\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "JOB-900",
+              "JOB-901",
+              "JOB-902",
+              "JOB-903"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items (renovations)",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-902"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-902",
+            "lines": [
+              "SITE-VISITx1@15000"
+            ],
+            "stage": null,
+            "park": "unsigned_variation",
+            "notes": "Job JOB-902."
+          },
+          "response": {
+            "id": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "unsigned_variation",
+            "detail": "{\"job_id\":\"JOB-902\",\"invoice_id\":\"INV2\",\"variations_unsigned\":[\"VAR-NICHE\"],\"park_reason\":\"unsigned_variation\",\"exception_owner\":\"Mel Carter (office manager)\",\"node\":\"invoice-hold\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "JOB-900",
+              "JOB-901",
+              "JOB-902",
+              "JOB-903"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items (renovations)",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-903"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-903",
+            "lines": [
+              "SITE-VISITx1@15000"
+            ],
+            "stage": null,
+            "park": "no_stage",
+            "notes": "Job JOB-903."
+          },
+          "response": {
+            "id": "INV3",
+            "externalId": "xero-INV3"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "no_stage",
+            "detail": "{\"job_id\":\"JOB-903\",\"invoice_id\":\"INV3\",\"park_reason\":\"no_stage\",\"exception_owner\":\"Mel Carter (office manager)\",\"node\":\"invoice-hold\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "JOB-900",
+              "JOB-901",
+              "JOB-902",
+              "JOB-903"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items (renovations)",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-900"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-900",
+            "lines": [
+              "SITE-VISITx1@15000"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Job JOB-900."
+          },
+          "response": {
+            "id": "INV4",
+            "externalId": "xero-INV4"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Mel's rule: release under $1,000 ex GST",
+            "threshold": 100000
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "INV4",
+            "person": null,
+            "rule": "Mel's rule: release under $1,000 ex GST"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "send": "INV4"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-901"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "update": "INV1",
+            "jobId": "JOB-901",
+            "lines": 1,
+            "park": "not_in_pricebook"
+          },
+          "response": {
+            "externalId": "xero-INV1",
+            "updates": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "not_in_pricebook",
+            "detail": "{\"job_id\":\"JOB-901\",\"invoice_id\":\"INV1\",\"codes_without_rate\":[\"TAP-BRASS-X\"],\"park_reason\":\"not_in_pricebook\",\"exception_owner\":\"Mel Carter (office manager)\",\"node\":\"invoice-hold\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-902"
+          },
+          "response": {
+            "invoiceId": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "update": "INV2",
+            "jobId": "JOB-902",
+            "lines": 1,
+            "park": "unsigned_variation"
+          },
+          "response": {
+            "externalId": "xero-INV2",
+            "updates": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "unsigned_variation",
+            "detail": "{\"job_id\":\"JOB-902\",\"invoice_id\":\"INV2\",\"variations_unsigned\":[\"VAR-NICHE\"],\"park_reason\":\"unsigned_variation\",\"exception_owner\":\"Mel Carter (office manager)\",\"node\":\"invoice-hold\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-903"
+          },
+          "response": {
+            "invoiceId": "INV3",
+            "externalId": "xero-INV3"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "update": "INV3",
+            "jobId": "JOB-903",
+            "lines": 1,
+            "park": "no_stage"
+          },
+          "response": {
+            "externalId": "xero-INV3",
+            "updates": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "no_stage",
+            "detail": "{\"job_id\":\"JOB-903\",\"invoice_id\":\"INV3\",\"park_reason\":\"no_stage\",\"exception_owner\":\"Mel Carter (office manager)\",\"node\":\"invoice-hold\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "the-record-by-job",
+      "n": 10,
+      "title": "Job id, invoice id, the lines, the rates read, who released and when it was sent are retrievable by job",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A read by job id returns the invoice, its lines with the rates and the book edition, the release with a name or rule, and the send time. A record missing the release fails.",
+      "actual": "12 port call(s): read_job, read_pricebook, read_job, write_invoice, evidence, read_job, escalate, read_job, read_job, gate, issue_notice, read_job; invoices INV1/JOB-1001/sent; escalations over_threshold; sends 1",
+      "stimulus": {
+        "description": "One job invoiced, released and sent.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "the-record-by-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "complete": [
+              "JOB-1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items (renovations)",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-1001"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-1001",
+            "lines": [
+              "SITE-VISITx1@15000",
+              "TILE-M2x12@9500",
+              "VAR-NICHEx1@42000"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Job JOB-1001."
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "invoiceId": "INV1",
+            "ref": "doc:variations/JOB-402/niche-signed.pdf"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "{\"job_id\":\"JOB-1001\",\"invoice_id\":\"INV1\",\"reason\":\"awaiting_release\",\"total\":171000,\"rule\":null,\"exception_owner\":\"Mel Carter (office manager)\",\"node\":\"invoice-hold\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T05:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "complete": [
+              "JOB-1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T05:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1001"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-09-26T05:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "INV1",
+            "person": "Mel Carter (office manager)",
+            "rule": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T05:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "send": "INV1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T05:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1001"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "status": "sent"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 11,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the ledger write and the release rule runs on.",
+        "now": "2026-11-03T13:14:19.603Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 12,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "One invoice per job in the ledger with the ledger's id, the variation parked and named, the unknown code parked and not priced, the over-threshold draft waiting for a person, and every sent invoice carrying a release.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "Real completion events on the business's own tenant, driven by marking real jobs complete.",
+        "now": "2026-11-03T13:14:19.603Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 12,
+    "pass": 7,
+    "fail": 0,
+    "shapeOnly": 3,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
