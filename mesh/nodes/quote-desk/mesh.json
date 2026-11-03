@@ -1,0 +1,50 @@
+{
+  "slug": "quote-desk",
+  "name": "Quote Desk",
+  "office_task": "When a job is booked, draft its quote in our job system from our own price list, or park it with a reason, and leave it for us to send.",
+  "verticals": ["trades-building"],
+  "standards": ["quote-out"],
+  "systems_of_record": ["ServiceM8", "Simpro", "Xero"],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/quote-desk" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["grok-bot-routine", "webhook"],
+  "consumes": [
+    { "event": "job.created", "wake": "webhook" },
+    { "event": "job.updated", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "quote.sent",
+      "write": "A draft quote on the job it was drafted from, every line carrying a catalogue id from the job system's own price list. This node never sends it: quote.sent fires from the job system when the named person releases the draft.",
+      "readback": "The quote is read back by the id the job system returned (ServiceM8 GET /api_1.0/jobquote/{uuid}.json, Simpro GET /api/v1.0/companies/{companyID}/quotes/{quoteID}, Xero GET /api.xro/2.0/Quotes/{QuoteID}) and must carry the job id. No id back is not a write: it raises quote.write_failed."
+    },
+    {
+      "event": "exception.raised",
+      "write": "A parked quote as an exception on the job: the park reason from the standard's fixed list, the priced lines, no total, and exception_owner set to the person the business named for quotes.",
+      "readback": "The job read by its id shows the open exception with its exception_owner; the next hop reads it there and stops."
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "quote.not_in_pricebook",
+      "quote.variation_to_accepted_quote",
+      "quote.discount_requested",
+      "quote.pricebook_unreadable",
+      "quote.write_failed"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.job_id", "seam.quote_id", "seam.status", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Tiffany",
+    "original_author": "Micah Watson",
+    "share_link": "https://x.ai/bot/7DlZjgLrcgPUNVkl_cC95",
+    "licence_or_permission": "reimplementation"
+  }
+}
