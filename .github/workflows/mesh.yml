@@ -1,0 +1,41 @@
+name: mesh
+
+# The Mesh Directory gate. A pull request that touches mesh/ is validated;
+# a merge to main, and a weekly run, rewrite mesh/registry.json, which
+# aipathway.com.au/explore-ai/mesh-directory and /mesh.json read. The weekly
+# run is what marks a node stale when its conformance run passes 90 days.
+
+on:
+  pull_request:
+    paths: ["mesh/**", ".github/workflows/mesh.yml"]
+  push:
+    branches: [main]
+    paths: ["mesh/**", "skills/**", ".github/workflows/mesh.yml"]
+  schedule:
+    - cron: "0 20 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: The gate's own tests
+        run: node --test mesh/validate.test.mjs
+      - name: Validate every node
+        run: node mesh/validate.mjs --write
+      - name: Commit the registry
+        if: github.event_name != 'pull_request'
+        run: |
+          if git diff --quiet -- mesh/registry.json; then exit 0; fi
+          git config user.name "aipathway-mesh"
+          git config user.email "hello@aipathway.com.au"
+          git add mesh/registry.json
+          git commit -m "mesh: regenerate the registry"
+          git push

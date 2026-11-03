@@ -1,0 +1,53 @@
+{
+  "version": "1.0",
+  "verticals": [
+    { "id": "trades-building", "name": "Trades and building", "note": "Plumbers, electricians, HVAC, builders, any business that runs jobs out of ServiceM8, Simpro, Tradify, Fergus or similar." },
+    { "id": "fire-electrical", "name": "Fire and electrical compliance", "note": "Asset registers, service cycles, defect quotes, compliance packs." },
+    { "id": "accounting-bookkeeping", "name": "Accounting and bookkeeping", "note": "Practices and the businesses they keep books for: Xero, MYOB, receivables, payables, reporting." },
+    { "id": "property", "name": "Property and real estate", "note": "Property management and sales agencies: arrears, compliance, vendor reporting, open homes." },
+    { "id": "b2b-office", "name": "B2B office work", "note": "Back-office work any business-to-business firm shares: inbox, filing, follow-up, knowledge, exceptions. Consumer-facing bots do not qualify." }
+  ],
+  "ids": [
+    { "id": "job_id", "issued_by": "the job system (ServiceM8, Simpro, Tradify, Fergus, a job sheet)" },
+    { "id": "quote_id", "issued_by": "the job system or the ledger" },
+    { "id": "invoice_id", "issued_by": "the ledger (Xero, MYOB, QuickBooks)" },
+    { "id": "payment_id", "issued_by": "the ledger or the bank feed" },
+    { "id": "bill_id", "issued_by": "the ledger" },
+    { "id": "exception_id", "issued_by": "the exception desk the business runs (a task list, a sheet, a ticket)" },
+    { "id": "call_id", "issued_by": "the phone provider" },
+    { "id": "message_id", "issued_by": "the mail system (Gmail, Outlook)" },
+    { "id": "document_id", "issued_by": "the document store (Drive, SharePoint)" },
+    { "id": "tenancy_id", "issued_by": "the property management system" },
+    { "id": "asset_id", "issued_by": "the asset register" },
+    { "id": "report_id", "issued_by": "the system the report is published into" }
+  ],
+  "events": [
+    { "name": "call.received", "id": "call_id", "entry": true, "means": "A call or voicemail landed. The only hop allowed to match on a phone number, because no job exists yet." },
+    { "name": "email.received", "id": "message_id", "entry": true, "means": "A message arrived in a watched inbox." },
+    { "name": "document.received", "id": "document_id", "entry": true, "means": "A file landed in a watched folder." },
+    { "name": "schedule.tick", "id": null, "entry": true, "means": "A routine woke on its schedule. It lists records by status from the system of record, then works each one by its id." },
+    { "name": "job.created", "id": "job_id", "means": "The job system issued a job id." },
+    { "name": "job.updated", "id": "job_id", "means": "A field the mesh reads changed on the job." },
+    { "name": "job.completed", "id": "job_id", "means": "The job was marked complete in the job system." },
+    { "name": "quote.sent", "id": "quote_id", "carries": ["job_id"], "means": "A quote left the business, with the job id it was drafted from." },
+    { "name": "quote.accepted", "id": "quote_id", "carries": ["job_id"], "means": "The customer accepted the quote in the system of record." },
+    { "name": "quote.declined", "id": "quote_id", "carries": ["job_id"], "means": "The customer declined, or the quote expired." },
+    { "name": "invoice.raised", "id": "invoice_id", "carries": ["job_id", "quote_id"], "means": "The ledger returned an invoice id. Draft or approved, it has an id that reads back." },
+    { "name": "invoice.sent", "id": "invoice_id", "carries": ["job_id"], "means": "The invoice was sent from the ledger." },
+    { "name": "invoice.overdue", "id": "invoice_id", "means": "The invoice passed its due date unpaid, read off the live ledger." },
+    { "name": "promise.recorded", "id": "invoice_id", "means": "A dated promise to pay was written onto the invoice in the ledger." },
+    { "name": "payment.received", "id": "payment_id", "carries": ["invoice_id"], "means": "Money arrived and was applied in the ledger." },
+    { "name": "bill.received", "id": "bill_id", "means": "A supplier bill was entered in the ledger." },
+    { "name": "rent.overdue", "id": "tenancy_id", "means": "Rent on a tenancy fell into arrears in the property system." },
+    { "name": "asset.service_due", "id": "asset_id", "means": "An asset in the register came due for its service or test." },
+    { "name": "report.published", "id": "report_id", "means": "A report was written into the system the reader opens." },
+    { "name": "exception.raised", "id": "exception_id", "means": "A step stopped and named a person. Everything downstream of that record waits." },
+    { "name": "exception.closed", "id": "exception_id", "means": "The named person closed the exception. The chain may resume from the record." }
+  ],
+  "wake": ["webhook", "schedule", "poll"],
+  "durable_state": ["system-of-record", "seam-mirror"],
+  "private_memory": ["none", "preferences-only"],
+  "licence_or_permission": ["reimplementation", "permission-granted", "open-licence"],
+  "cash_path": ["booked-after-hours", "quote-out", "invoice-out", "debtor-chasing"],
+  "evidence_max_age_days": 90
+}
