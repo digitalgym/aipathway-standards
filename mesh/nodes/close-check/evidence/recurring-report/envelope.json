@@ -1,0 +1,6015 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793714417615",
+  "standard": "recurring-report-build-standard",
+  "spec": "AIP-BS-RECURRING-REPORT",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-03T14:00:17.597Z",
+  "finishedAt": "2026-11-03T14:00:17.615Z",
+  "results": [
+    {
+      "checkId": "every-figure-has-a-definition",
+      "n": 1,
+      "title": "Every figure on the report names a definition in the register",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every figure with a value cites a definition id the register holds, for the same measure. The undefined measure is published with no value and reason no_definition. A valued figure with no definition, or one citing a definition for a different measure, fails.",
+      "actual": "bank_lines_unreconciled=14 def=DEF-bank_lines_unreconciled; bills_awaiting_approval=no_definition def=null; suspense_balance=1250 def=DEF-suspense_balance; close_steps_open=4 def=DEF-close_steps_open",
+      "stimulus": {
+        "description": "A register holding three definitions, and an audience whose declared measures include a fourth the register does not define.",
+        "now": "2026-10-01T21:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "every-figure-has-a-definition"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-09"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "practice"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "bank.statement_lines_unreconciled",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 14,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bank_lines_unreconciled",
+            "definitionId": "DEF-bank_lines_unreconciled",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT1"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "report.no_definition",
+            "detail": "bills_awaiting_approval for 2026-09: the register holds no definition"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "accounts.suspense_balance_at_month_end",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 1250,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "suspense_balance",
+            "definitionId": "DEF-suspense_balance",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT2"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "practice",
+            "queryRef": "close_job.steps_open",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 4,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "close_steps_open",
+            "definitionId": "DEF-close_steps_open",
+            "source": "practice",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT3"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-09",
+            "audienceId": "practice",
+            "figures": [
+              {
+                "measure": "bank_lines_unreconciled",
+                "value": 14,
+                "unavailable": null,
+                "definition": "DEF-bank_lines_unreconciled",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "bills_awaiting_approval",
+                "value": null,
+                "unavailable": "no_definition",
+                "definition": null,
+                "source": null,
+                "asOf": null
+              },
+              {
+                "measure": "suspense_balance",
+                "value": 1250,
+                "unavailable": null,
+                "definition": "DEF-suspense_balance",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "close_steps_open",
+                "value": 4,
+                "unavailable": null,
+                "definition": "DEF-close_steps_open",
+                "source": "practice",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              }
+            ],
+            "narrative": "Month-end close check for 2026-09: Not ready. At least one item could not be read, so this file cannot be called ready. To fix: Bank statement lines not reconciled: 14; Suspense account balance (AUD): 1250; Close job steps still open: 4. Not available this month: Bills awaiting approval (no_definition).",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT4",
+            "version": 1,
+            "publishedAt": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": [
+              "RPT4@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-definition-per-measure",
+      "n": 2,
+      "title": "One definition of every measure, computed once per period and reused",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The register holds one definition for the measure. The source is read once for that measure and period, and both views carry the same value citing the same definition. A second read of the same query and period fails.",
+      "actual": "1 read(s) of bank.statement_lines_unreconciled; views: practice=14, client=14",
+      "stimulus": {
+        "description": "Two audiences that both carry the same measure over the same period.",
+        "now": "2026-10-01T21:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-definition-per-measure"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-09"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "practice",
+              "client"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "bank.statement_lines_unreconciled",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 14,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bank_lines_unreconciled",
+            "definitionId": "DEF-bank_lines_unreconciled",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT1"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.accpay_unapproved_in_month",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 6,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bills_awaiting_approval",
+            "definitionId": "DEF-bills_awaiting_approval",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT2"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-09",
+            "audienceId": "practice",
+            "figures": [
+              {
+                "measure": "bank_lines_unreconciled",
+                "value": 14,
+                "unavailable": null,
+                "definition": "DEF-bank_lines_unreconciled",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "bills_awaiting_approval",
+                "value": 6,
+                "unavailable": null,
+                "definition": "DEF-bills_awaiting_approval",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              }
+            ],
+            "narrative": "Month-end close check for 2026-09: Not ready. Items to fix are listed below. To fix: Bank statement lines not reconciled: 14; Bills awaiting approval: 6.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT3",
+            "version": 1,
+            "publishedAt": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-09",
+            "audienceId": "client",
+            "figures": [
+              {
+                "measure": "bank_lines_unreconciled",
+                "value": 14,
+                "unavailable": null,
+                "definition": "DEF-bank_lines_unreconciled",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              }
+            ],
+            "narrative": "Month-end close check for 2026-09: Not ready. Items to fix are listed below. To fix: Bank statement lines not reconciled: 14.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT4",
+            "version": 1,
+            "publishedAt": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": [
+              "RPT3@v1",
+              "RPT4@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "source-and-as-of-on-every-figure",
+      "n": 3,
+      "title": "Every figure carries the source it was read from and the time it was read",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every valued figure carries a source and an as-of time, and the as-of time equals the one the recorded read of that source returned for that query and period. A figure with neither, or one whose as-of time matches no read, fails.",
+      "actual": "bank_lines_unreconciled@xero/2026-10-01T22:06:00.000Z; sales_invoices_in_draft@xero/2026-10-01T22:06:00.000Z; bills_awaiting_approval@xero/2026-10-01T22:06:00.000Z; suspense_balance@xero/2026-10-01T22:06:00.000Z; lines_without_gst_code@xero/2026-10-01T22:06:00.000Z; close_steps_open@practice/2026-10-01T22:06:00.000Z",
+      "stimulus": {
+        "description": "Definitions over two sources, a ledger and a job system, for one period.",
+        "now": "2026-10-01T21:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "source-and-as-of-on-every-figure"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-09"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "practice"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "bank.statement_lines_unreconciled",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 14,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bank_lines_unreconciled",
+            "definitionId": "DEF-bank_lines_unreconciled",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT1"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.accrec_draft_in_month",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 3,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "sales_invoices_in_draft",
+            "definitionId": "DEF-sales_invoices_in_draft",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT2"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.accpay_unapproved_in_month",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 6,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bills_awaiting_approval",
+            "definitionId": "DEF-bills_awaiting_approval",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT3"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "accounts.suspense_balance_at_month_end",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 1250,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "suspense_balance",
+            "definitionId": "DEF-suspense_balance",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT4"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "journals.lines_no_tax_rate_in_month",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 2,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "lines_without_gst_code",
+            "definitionId": "DEF-lines_without_gst_code",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT5"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "practice",
+            "queryRef": "close_job.steps_open",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 4,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "close_steps_open",
+            "definitionId": "DEF-close_steps_open",
+            "source": "practice",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT6"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-09",
+            "audienceId": "practice",
+            "figures": [
+              {
+                "measure": "bank_lines_unreconciled",
+                "value": 14,
+                "unavailable": null,
+                "definition": "DEF-bank_lines_unreconciled",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "sales_invoices_in_draft",
+                "value": 3,
+                "unavailable": null,
+                "definition": "DEF-sales_invoices_in_draft",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "bills_awaiting_approval",
+                "value": 6,
+                "unavailable": null,
+                "definition": "DEF-bills_awaiting_approval",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "suspense_balance",
+                "value": 1250,
+                "unavailable": null,
+                "definition": "DEF-suspense_balance",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "lines_without_gst_code",
+                "value": 2,
+                "unavailable": null,
+                "definition": "DEF-lines_without_gst_code",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "close_steps_open",
+                "value": 4,
+                "unavailable": null,
+                "definition": "DEF-close_steps_open",
+                "source": "practice",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              }
+            ],
+            "narrative": "Month-end close check for 2026-09: Not ready. Items to fix are listed below. To fix: Bank statement lines not reconciled: 14; Sales invoices still in draft: 3; Bills awaiting approval: 6; Suspense account balance (AUD): 1250; Transaction lines with no GST code: 2; Close job steps still open: 4.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT7",
+            "version": 1,
+            "publishedAt": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": [
+              "RPT7@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "publishes-on-schedule-regardless",
+      "n": 4,
+      "title": "The report publishes at the scheduled time whether or not anything changed",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A report exists for each period, published at or after its scheduled time and not before, and the second is published although nothing changed. A missing period, or a report published before its time, fails.",
+      "actual": "2026-09: 2026-10-01T22:06:00.000Z (due 2026-10-01T22:00:00.000Z); 2026-10: 2026-11-02T22:06:00.000Z (due 2026-11-02T22:00:00.000Z)",
+      "stimulus": {
+        "description": "Two scheduled periods with the same source values in both, and the clock advanced to each scheduled time in turn.",
+        "now": "2026-10-01T21:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "publishes-on-schedule-regardless"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-01T21:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-10-01T21:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-09",
+              "2026-10"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T21:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-01T21:30:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "practice"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T21:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-09",
+              "2026-10"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "practice"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "bank.statement_lines_unreconciled",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 0,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bank_lines_unreconciled",
+            "definitionId": "DEF-bank_lines_unreconciled",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT1"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.accrec_draft_in_month",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 0,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "sales_invoices_in_draft",
+            "definitionId": "DEF-sales_invoices_in_draft",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT2"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.accpay_unapproved_in_month",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 0,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bills_awaiting_approval",
+            "definitionId": "DEF-bills_awaiting_approval",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT3"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "accounts.suspense_balance_at_month_end",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 0,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "suspense_balance",
+            "definitionId": "DEF-suspense_balance",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT4"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "journals.lines_no_tax_rate_in_month",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 0,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "lines_without_gst_code",
+            "definitionId": "DEF-lines_without_gst_code",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT5"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "practice",
+            "queryRef": "close_job.steps_open",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 0,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "close_steps_open",
+            "definitionId": "DEF-close_steps_open",
+            "source": "practice",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT6"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-09",
+            "audienceId": "practice",
+            "figures": [
+              {
+                "measure": "bank_lines_unreconciled",
+                "value": 0,
+                "unavailable": null,
+                "definition": "DEF-bank_lines_unreconciled",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "sales_invoices_in_draft",
+                "value": 0,
+                "unavailable": null,
+                "definition": "DEF-sales_invoices_in_draft",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "bills_awaiting_approval",
+                "value": 0,
+                "unavailable": null,
+                "definition": "DEF-bills_awaiting_approval",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "suspense_balance",
+                "value": 0,
+                "unavailable": null,
+                "definition": "DEF-suspense_balance",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "lines_without_gst_code",
+                "value": 0,
+                "unavailable": null,
+                "definition": "DEF-lines_without_gst_code",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "close_steps_open",
+                "value": 0,
+                "unavailable": null,
+                "definition": "DEF-close_steps_open",
+                "source": "practice",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              }
+            ],
+            "narrative": "Month-end close check for 2026-09: Ready to close. Every item reads zero. Clear: Bank statement lines not reconciled; Sales invoices still in draft; Bills awaiting approval; Suspense account balance (AUD); Transaction lines with no GST code; Close job steps still open.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT7",
+            "version": 1,
+            "publishedAt": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": [
+              "RPT7@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-02T21:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-11-02T21:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-09",
+              "2026-10"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T21:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-02T21:30:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "practice"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T21:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": [
+              "RPT7@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T21:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-09",
+              "2026-10"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "practice"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": [
+              "RPT7@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-10"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "bank.statement_lines_unreconciled",
+            "period": "2026-10"
+          },
+          "response": {
+            "ok": true,
+            "value": 0,
+            "asOf": "2026-11-02T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bank_lines_unreconciled",
+            "definitionId": "DEF-bank_lines_unreconciled",
+            "source": "xero",
+            "asOf": "2026-11-02T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT8"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.accrec_draft_in_month",
+            "period": "2026-10"
+          },
+          "response": {
+            "ok": true,
+            "value": 0,
+            "asOf": "2026-11-02T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "sales_invoices_in_draft",
+            "definitionId": "DEF-sales_invoices_in_draft",
+            "source": "xero",
+            "asOf": "2026-11-02T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT9"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.accpay_unapproved_in_month",
+            "period": "2026-10"
+          },
+          "response": {
+            "ok": true,
+            "value": 0,
+            "asOf": "2026-11-02T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bills_awaiting_approval",
+            "definitionId": "DEF-bills_awaiting_approval",
+            "source": "xero",
+            "asOf": "2026-11-02T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT10"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "accounts.suspense_balance_at_month_end",
+            "period": "2026-10"
+          },
+          "response": {
+            "ok": true,
+            "value": 0,
+            "asOf": "2026-11-02T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "suspense_balance",
+            "definitionId": "DEF-suspense_balance",
+            "source": "xero",
+            "asOf": "2026-11-02T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT11"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "journals.lines_no_tax_rate_in_month",
+            "period": "2026-10"
+          },
+          "response": {
+            "ok": true,
+            "value": 0,
+            "asOf": "2026-11-02T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "lines_without_gst_code",
+            "definitionId": "DEF-lines_without_gst_code",
+            "source": "xero",
+            "asOf": "2026-11-02T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT12"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "practice",
+            "queryRef": "close_job.steps_open",
+            "period": "2026-10"
+          },
+          "response": {
+            "ok": true,
+            "value": 0,
+            "asOf": "2026-11-02T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "close_steps_open",
+            "definitionId": "DEF-close_steps_open",
+            "source": "practice",
+            "asOf": "2026-11-02T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT13"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-10",
+            "audienceId": "practice",
+            "figures": [
+              {
+                "measure": "bank_lines_unreconciled",
+                "value": 0,
+                "unavailable": null,
+                "definition": "DEF-bank_lines_unreconciled",
+                "source": "xero",
+                "asOf": "2026-11-02T22:06:00.000Z"
+              },
+              {
+                "measure": "sales_invoices_in_draft",
+                "value": 0,
+                "unavailable": null,
+                "definition": "DEF-sales_invoices_in_draft",
+                "source": "xero",
+                "asOf": "2026-11-02T22:06:00.000Z"
+              },
+              {
+                "measure": "bills_awaiting_approval",
+                "value": 0,
+                "unavailable": null,
+                "definition": "DEF-bills_awaiting_approval",
+                "source": "xero",
+                "asOf": "2026-11-02T22:06:00.000Z"
+              },
+              {
+                "measure": "suspense_balance",
+                "value": 0,
+                "unavailable": null,
+                "definition": "DEF-suspense_balance",
+                "source": "xero",
+                "asOf": "2026-11-02T22:06:00.000Z"
+              },
+              {
+                "measure": "lines_without_gst_code",
+                "value": 0,
+                "unavailable": null,
+                "definition": "DEF-lines_without_gst_code",
+                "source": "xero",
+                "asOf": "2026-11-02T22:06:00.000Z"
+              },
+              {
+                "measure": "close_steps_open",
+                "value": 0,
+                "unavailable": null,
+                "definition": "DEF-close_steps_open",
+                "source": "practice",
+                "asOf": "2026-11-02T22:06:00.000Z"
+              }
+            ],
+            "narrative": "Month-end close check for 2026-10: Ready to close. Every item reads zero. Clear: Bank statement lines not reconciled; Sales invoices still in draft; Bills awaiting approval; Suspense account balance (AUD); Transaction lines with no GST code; Close job steps still open.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT14",
+            "version": 1,
+            "publishedAt": "2026-11-02T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-10"
+          },
+          "response": {
+            "ids": [
+              "RPT14@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": [
+              "RPT7@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "cannot-compute-says-so",
+      "n": 5,
+      "title": "A figure whose source could not be read publishes as unavailable, with the reason",
+      "verdict": "pass",
+      "held": true,
+      "expected": "In the second period the figure over the broken source has no value and a reason naming the failure, and an escalation names the figure. Its first-period value appearing in the second period, or a null value with no reason, fails.",
+      "actual": "Oct open steps: null (source_unreadable: source_unreachable); 1 escalation(s); 1 notification(s); narrative: Month-end close check for 2026-10: Not ready. At least one item could not be read, so this file cannot be called ready. Clear: Bank statement lines not reconciled; Sales invoices still in draft; Bills awaiting approval; Suspense account balance (AUD); Transaction lines with no GST code. Not available this month: Close job steps still open (source_unreadable: source_unreachable).",
+      "stimulus": {
+        "description": "Two periods over two sources, with one source made unreadable before the second period's run.",
+        "now": "2026-10-01T21:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "cannot-compute-says-so"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-09",
+              "2026-10"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "practice"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "bank.statement_lines_unreconciled",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 14,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bank_lines_unreconciled",
+            "definitionId": "DEF-bank_lines_unreconciled",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT1"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.accrec_draft_in_month",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 3,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "sales_invoices_in_draft",
+            "definitionId": "DEF-sales_invoices_in_draft",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT2"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.accpay_unapproved_in_month",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 6,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bills_awaiting_approval",
+            "definitionId": "DEF-bills_awaiting_approval",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT3"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "accounts.suspense_balance_at_month_end",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 1250,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "suspense_balance",
+            "definitionId": "DEF-suspense_balance",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT4"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "journals.lines_no_tax_rate_in_month",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 2,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "lines_without_gst_code",
+            "definitionId": "DEF-lines_without_gst_code",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT5"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "practice",
+            "queryRef": "close_job.steps_open",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 4,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "close_steps_open",
+            "definitionId": "DEF-close_steps_open",
+            "source": "practice",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT6"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-09",
+            "audienceId": "practice",
+            "figures": [
+              {
+                "measure": "bank_lines_unreconciled",
+                "value": 14,
+                "unavailable": null,
+                "definition": "DEF-bank_lines_unreconciled",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "sales_invoices_in_draft",
+                "value": 3,
+                "unavailable": null,
+                "definition": "DEF-sales_invoices_in_draft",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "bills_awaiting_approval",
+                "value": 6,
+                "unavailable": null,
+                "definition": "DEF-bills_awaiting_approval",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "suspense_balance",
+                "value": 1250,
+                "unavailable": null,
+                "definition": "DEF-suspense_balance",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "lines_without_gst_code",
+                "value": 2,
+                "unavailable": null,
+                "definition": "DEF-lines_without_gst_code",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "close_steps_open",
+                "value": 4,
+                "unavailable": null,
+                "definition": "DEF-close_steps_open",
+                "source": "practice",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              }
+            ],
+            "narrative": "Month-end close check for 2026-09: Not ready. Items to fix are listed below. To fix: Bank statement lines not reconciled: 14; Sales invoices still in draft: 3; Bills awaiting approval: 6; Suspense account balance (AUD): 1250; Transaction lines with no GST code: 2; Close job steps still open: 4.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT7",
+            "version": 1,
+            "publishedAt": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": [
+              "RPT7@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-09",
+              "2026-10"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "practice"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": [
+              "RPT7@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-10"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "bank.statement_lines_unreconciled",
+            "period": "2026-10"
+          },
+          "response": {
+            "ok": true,
+            "value": 0,
+            "asOf": "2026-11-02T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bank_lines_unreconciled",
+            "definitionId": "DEF-bank_lines_unreconciled",
+            "source": "xero",
+            "asOf": "2026-11-02T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT8"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.accrec_draft_in_month",
+            "period": "2026-10"
+          },
+          "response": {
+            "ok": true,
+            "value": 0,
+            "asOf": "2026-11-02T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "sales_invoices_in_draft",
+            "definitionId": "DEF-sales_invoices_in_draft",
+            "source": "xero",
+            "asOf": "2026-11-02T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT9"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.accpay_unapproved_in_month",
+            "period": "2026-10"
+          },
+          "response": {
+            "ok": true,
+            "value": 0,
+            "asOf": "2026-11-02T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bills_awaiting_approval",
+            "definitionId": "DEF-bills_awaiting_approval",
+            "source": "xero",
+            "asOf": "2026-11-02T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT10"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "accounts.suspense_balance_at_month_end",
+            "period": "2026-10"
+          },
+          "response": {
+            "ok": true,
+            "value": 0,
+            "asOf": "2026-11-02T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "suspense_balance",
+            "definitionId": "DEF-suspense_balance",
+            "source": "xero",
+            "asOf": "2026-11-02T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT11"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "journals.lines_no_tax_rate_in_month",
+            "period": "2026-10"
+          },
+          "response": {
+            "ok": true,
+            "value": 0,
+            "asOf": "2026-11-02T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "lines_without_gst_code",
+            "definitionId": "DEF-lines_without_gst_code",
+            "source": "xero",
+            "asOf": "2026-11-02T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT12"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "practice",
+            "queryRef": "close_job.steps_open",
+            "period": "2026-10"
+          },
+          "response": {
+            "ok": false,
+            "reason": "source_unreachable"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "person": "Sam Okafor (practice manager)",
+            "measure": "close_steps_open",
+            "period": "2026-10",
+            "detail": "practice could not be read: source_unreachable"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "report.source_unreadable",
+            "detail": "close_steps_open for 2026-10: practice source_unreachable; owner Sam Okafor (practice manager)"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-10",
+            "audienceId": "practice",
+            "figures": [
+              {
+                "measure": "bank_lines_unreconciled",
+                "value": 0,
+                "unavailable": null,
+                "definition": "DEF-bank_lines_unreconciled",
+                "source": "xero",
+                "asOf": "2026-11-02T22:06:00.000Z"
+              },
+              {
+                "measure": "sales_invoices_in_draft",
+                "value": 0,
+                "unavailable": null,
+                "definition": "DEF-sales_invoices_in_draft",
+                "source": "xero",
+                "asOf": "2026-11-02T22:06:00.000Z"
+              },
+              {
+                "measure": "bills_awaiting_approval",
+                "value": 0,
+                "unavailable": null,
+                "definition": "DEF-bills_awaiting_approval",
+                "source": "xero",
+                "asOf": "2026-11-02T22:06:00.000Z"
+              },
+              {
+                "measure": "suspense_balance",
+                "value": 0,
+                "unavailable": null,
+                "definition": "DEF-suspense_balance",
+                "source": "xero",
+                "asOf": "2026-11-02T22:06:00.000Z"
+              },
+              {
+                "measure": "lines_without_gst_code",
+                "value": 0,
+                "unavailable": null,
+                "definition": "DEF-lines_without_gst_code",
+                "source": "xero",
+                "asOf": "2026-11-02T22:06:00.000Z"
+              },
+              {
+                "measure": "close_steps_open",
+                "value": null,
+                "unavailable": "source_unreadable: source_unreachable",
+                "definition": null,
+                "source": null,
+                "asOf": null
+              }
+            ],
+            "narrative": "Month-end close check for 2026-10: Not ready. At least one item could not be read, so this file cannot be called ready. Clear: Bank statement lines not reconciled; Sales invoices still in draft; Bills awaiting approval; Suspense account balance (AUD); Transaction lines with no GST code. Not available this month: Close job steps still open (source_unreadable: source_unreachable).",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT13",
+            "version": 1,
+            "publishedAt": "2026-11-02T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-10"
+          },
+          "response": {
+            "ids": [
+              "RPT13@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": [
+              "RPT7@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "no-narrative-invents-a-number",
+      "n": 6,
+      "title": "Prose on the report describes figures that exist and never states a number they do not carry",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every number in every published narrative equals a value on that report's figure list, or is the period label. A percentage or a difference the figures do not carry fails, whether or not it happens to be arithmetically right.",
+      "actual": "2026-09/practice: invented []; 2026-09/client: invented []; 2026-10/practice: invented []; 2026-10/client: invented []",
+      "stimulus": {
+        "description": "Two periods where the second's figures move against the first, so a comparison is tempting to write.",
+        "now": "2026-10-01T21:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "no-narrative-invents-a-number"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-09",
+              "2026-10"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "practice",
+              "client"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "bank.statement_lines_unreconciled",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 14,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bank_lines_unreconciled",
+            "definitionId": "DEF-bank_lines_unreconciled",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT1"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.accrec_draft_in_month",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 3,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "sales_invoices_in_draft",
+            "definitionId": "DEF-sales_invoices_in_draft",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT2"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.accpay_unapproved_in_month",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 6,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bills_awaiting_approval",
+            "definitionId": "DEF-bills_awaiting_approval",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT3"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "accounts.suspense_balance_at_month_end",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 1250,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "suspense_balance",
+            "definitionId": "DEF-suspense_balance",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT4"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "journals.lines_no_tax_rate_in_month",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 2,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "lines_without_gst_code",
+            "definitionId": "DEF-lines_without_gst_code",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT5"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "practice",
+            "queryRef": "close_job.steps_open",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 4,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "close_steps_open",
+            "definitionId": "DEF-close_steps_open",
+            "source": "practice",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT6"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-09",
+            "audienceId": "practice",
+            "figures": [
+              {
+                "measure": "bank_lines_unreconciled",
+                "value": 14,
+                "unavailable": null,
+                "definition": "DEF-bank_lines_unreconciled",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "sales_invoices_in_draft",
+                "value": 3,
+                "unavailable": null,
+                "definition": "DEF-sales_invoices_in_draft",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "bills_awaiting_approval",
+                "value": 6,
+                "unavailable": null,
+                "definition": "DEF-bills_awaiting_approval",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "suspense_balance",
+                "value": 1250,
+                "unavailable": null,
+                "definition": "DEF-suspense_balance",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "lines_without_gst_code",
+                "value": 2,
+                "unavailable": null,
+                "definition": "DEF-lines_without_gst_code",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "close_steps_open",
+                "value": 4,
+                "unavailable": null,
+                "definition": "DEF-close_steps_open",
+                "source": "practice",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              }
+            ],
+            "narrative": "Month-end close check for 2026-09: Not ready. Items to fix are listed below. To fix: Bank statement lines not reconciled: 14; Sales invoices still in draft: 3; Bills awaiting approval: 6; Suspense account balance (AUD): 1250; Transaction lines with no GST code: 2; Close job steps still open: 4.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT7",
+            "version": 1,
+            "publishedAt": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-09",
+            "audienceId": "client",
+            "figures": [
+              {
+                "measure": "bank_lines_unreconciled",
+                "value": 14,
+                "unavailable": null,
+                "definition": "DEF-bank_lines_unreconciled",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "bills_awaiting_approval",
+                "value": 6,
+                "unavailable": null,
+                "definition": "DEF-bills_awaiting_approval",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "suspense_balance",
+                "value": 1250,
+                "unavailable": null,
+                "definition": "DEF-suspense_balance",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              }
+            ],
+            "narrative": "Month-end close check for 2026-09: Not ready. Items to fix are listed below. To fix: Bank statement lines not reconciled: 14; Bills awaiting approval: 6; Suspense account balance (AUD): 1250.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT8",
+            "version": 1,
+            "publishedAt": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": [
+              "RPT7@v1",
+              "RPT8@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-09",
+              "2026-10"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "practice",
+              "client"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": [
+              "RPT7@v1",
+              "RPT8@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-10"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "bank.statement_lines_unreconciled",
+            "period": "2026-10"
+          },
+          "response": {
+            "ok": true,
+            "value": 41,
+            "asOf": "2026-11-02T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bank_lines_unreconciled",
+            "definitionId": "DEF-bank_lines_unreconciled",
+            "source": "xero",
+            "asOf": "2026-11-02T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT9"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.accrec_draft_in_month",
+            "period": "2026-10"
+          },
+          "response": {
+            "ok": true,
+            "value": 1,
+            "asOf": "2026-11-02T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "sales_invoices_in_draft",
+            "definitionId": "DEF-sales_invoices_in_draft",
+            "source": "xero",
+            "asOf": "2026-11-02T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT10"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.accpay_unapproved_in_month",
+            "period": "2026-10"
+          },
+          "response": {
+            "ok": true,
+            "value": 9,
+            "asOf": "2026-11-02T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bills_awaiting_approval",
+            "definitionId": "DEF-bills_awaiting_approval",
+            "source": "xero",
+            "asOf": "2026-11-02T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT11"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "accounts.suspense_balance_at_month_end",
+            "period": "2026-10"
+          },
+          "response": {
+            "ok": true,
+            "value": 380,
+            "asOf": "2026-11-02T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "suspense_balance",
+            "definitionId": "DEF-suspense_balance",
+            "source": "xero",
+            "asOf": "2026-11-02T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT12"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "journals.lines_no_tax_rate_in_month",
+            "period": "2026-10"
+          },
+          "response": {
+            "ok": true,
+            "value": 5,
+            "asOf": "2026-11-02T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "lines_without_gst_code",
+            "definitionId": "DEF-lines_without_gst_code",
+            "source": "xero",
+            "asOf": "2026-11-02T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT13"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "practice",
+            "queryRef": "close_job.steps_open",
+            "period": "2026-10"
+          },
+          "response": {
+            "ok": true,
+            "value": 2,
+            "asOf": "2026-11-02T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "close_steps_open",
+            "definitionId": "DEF-close_steps_open",
+            "source": "practice",
+            "asOf": "2026-11-02T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT14"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-10",
+            "audienceId": "practice",
+            "figures": [
+              {
+                "measure": "bank_lines_unreconciled",
+                "value": 41,
+                "unavailable": null,
+                "definition": "DEF-bank_lines_unreconciled",
+                "source": "xero",
+                "asOf": "2026-11-02T22:06:00.000Z"
+              },
+              {
+                "measure": "sales_invoices_in_draft",
+                "value": 1,
+                "unavailable": null,
+                "definition": "DEF-sales_invoices_in_draft",
+                "source": "xero",
+                "asOf": "2026-11-02T22:06:00.000Z"
+              },
+              {
+                "measure": "bills_awaiting_approval",
+                "value": 9,
+                "unavailable": null,
+                "definition": "DEF-bills_awaiting_approval",
+                "source": "xero",
+                "asOf": "2026-11-02T22:06:00.000Z"
+              },
+              {
+                "measure": "suspense_balance",
+                "value": 380,
+                "unavailable": null,
+                "definition": "DEF-suspense_balance",
+                "source": "xero",
+                "asOf": "2026-11-02T22:06:00.000Z"
+              },
+              {
+                "measure": "lines_without_gst_code",
+                "value": 5,
+                "unavailable": null,
+                "definition": "DEF-lines_without_gst_code",
+                "source": "xero",
+                "asOf": "2026-11-02T22:06:00.000Z"
+              },
+              {
+                "measure": "close_steps_open",
+                "value": 2,
+                "unavailable": null,
+                "definition": "DEF-close_steps_open",
+                "source": "practice",
+                "asOf": "2026-11-02T22:06:00.000Z"
+              }
+            ],
+            "narrative": "Month-end close check for 2026-10: Not ready. Items to fix are listed below. To fix: Bank statement lines not reconciled: 41; Sales invoices still in draft: 1; Bills awaiting approval: 9; Suspense account balance (AUD): 380; Transaction lines with no GST code: 5; Close job steps still open: 2.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT15",
+            "version": 1,
+            "publishedAt": "2026-11-02T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-10",
+            "audienceId": "client",
+            "figures": [
+              {
+                "measure": "bank_lines_unreconciled",
+                "value": 41,
+                "unavailable": null,
+                "definition": "DEF-bank_lines_unreconciled",
+                "source": "xero",
+                "asOf": "2026-11-02T22:06:00.000Z"
+              },
+              {
+                "measure": "bills_awaiting_approval",
+                "value": 9,
+                "unavailable": null,
+                "definition": "DEF-bills_awaiting_approval",
+                "source": "xero",
+                "asOf": "2026-11-02T22:06:00.000Z"
+              },
+              {
+                "measure": "suspense_balance",
+                "value": 380,
+                "unavailable": null,
+                "definition": "DEF-suspense_balance",
+                "source": "xero",
+                "asOf": "2026-11-02T22:06:00.000Z"
+              }
+            ],
+            "narrative": "Month-end close check for 2026-10: Not ready. Items to fix are listed below. To fix: Bank statement lines not reconciled: 41; Bills awaiting approval: 9; Suspense account balance (AUD): 380.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT16",
+            "version": 1,
+            "publishedAt": "2026-11-02T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-10"
+          },
+          "response": {
+            "ids": [
+              "RPT15@v1",
+              "RPT16@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": [
+              "RPT7@v1",
+              "RPT8@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "variance-thresholds-route-to-a-person",
+      "n": 7,
+      "title": "A figure past its declared threshold against the prior period notifies a named person that run",
+      "verdict": "pass",
+      "held": true,
+      "expected": "In the second period's run a notification names that person and that measure. No notification in the first period, where there is nothing to compare. A crossing with no notification, or one sent to nobody in particular, fails.",
+      "actual": "Rachel Byrne (client manager) / bank_lines_unreconciled / 2026-10 at 2026-11-02T22:06:00.000Z",
+      "stimulus": {
+        "description": "A threshold on one measure with a named person, and two periods whose second value moves past it.",
+        "now": "2026-10-01T21:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "variance-thresholds-route-to-a-person"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-09",
+              "2026-10"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "practice"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "bank.statement_lines_unreconciled",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 14,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bank_lines_unreconciled",
+            "definitionId": "DEF-bank_lines_unreconciled",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT1"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.accrec_draft_in_month",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 3,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "sales_invoices_in_draft",
+            "definitionId": "DEF-sales_invoices_in_draft",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT2"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.accpay_unapproved_in_month",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 6,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bills_awaiting_approval",
+            "definitionId": "DEF-bills_awaiting_approval",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT3"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "accounts.suspense_balance_at_month_end",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 1250,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "suspense_balance",
+            "definitionId": "DEF-suspense_balance",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT4"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "journals.lines_no_tax_rate_in_month",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 2,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "lines_without_gst_code",
+            "definitionId": "DEF-lines_without_gst_code",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT5"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "practice",
+            "queryRef": "close_job.steps_open",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 4,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "close_steps_open",
+            "definitionId": "DEF-close_steps_open",
+            "source": "practice",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT6"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-09",
+            "audienceId": "practice",
+            "figures": [
+              {
+                "measure": "bank_lines_unreconciled",
+                "value": 14,
+                "unavailable": null,
+                "definition": "DEF-bank_lines_unreconciled",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "sales_invoices_in_draft",
+                "value": 3,
+                "unavailable": null,
+                "definition": "DEF-sales_invoices_in_draft",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "bills_awaiting_approval",
+                "value": 6,
+                "unavailable": null,
+                "definition": "DEF-bills_awaiting_approval",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "suspense_balance",
+                "value": 1250,
+                "unavailable": null,
+                "definition": "DEF-suspense_balance",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "lines_without_gst_code",
+                "value": 2,
+                "unavailable": null,
+                "definition": "DEF-lines_without_gst_code",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "close_steps_open",
+                "value": 4,
+                "unavailable": null,
+                "definition": "DEF-close_steps_open",
+                "source": "practice",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              }
+            ],
+            "narrative": "Month-end close check for 2026-09: Not ready. Items to fix are listed below. To fix: Bank statement lines not reconciled: 14; Sales invoices still in draft: 3; Bills awaiting approval: 6; Suspense account balance (AUD): 1250; Transaction lines with no GST code: 2; Close job steps still open: 4.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT7",
+            "version": 1,
+            "publishedAt": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": [
+              "RPT7@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-09",
+              "2026-10"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "practice"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": [
+              "RPT7@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-10"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "bank.statement_lines_unreconciled",
+            "period": "2026-10"
+          },
+          "response": {
+            "ok": true,
+            "value": 41,
+            "asOf": "2026-11-02T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bank_lines_unreconciled",
+            "definitionId": "DEF-bank_lines_unreconciled",
+            "source": "xero",
+            "asOf": "2026-11-02T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT8"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.accrec_draft_in_month",
+            "period": "2026-10"
+          },
+          "response": {
+            "ok": true,
+            "value": 1,
+            "asOf": "2026-11-02T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "sales_invoices_in_draft",
+            "definitionId": "DEF-sales_invoices_in_draft",
+            "source": "xero",
+            "asOf": "2026-11-02T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT9"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.accpay_unapproved_in_month",
+            "period": "2026-10"
+          },
+          "response": {
+            "ok": true,
+            "value": 9,
+            "asOf": "2026-11-02T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bills_awaiting_approval",
+            "definitionId": "DEF-bills_awaiting_approval",
+            "source": "xero",
+            "asOf": "2026-11-02T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT10"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "accounts.suspense_balance_at_month_end",
+            "period": "2026-10"
+          },
+          "response": {
+            "ok": true,
+            "value": 380,
+            "asOf": "2026-11-02T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "suspense_balance",
+            "definitionId": "DEF-suspense_balance",
+            "source": "xero",
+            "asOf": "2026-11-02T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT11"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "journals.lines_no_tax_rate_in_month",
+            "period": "2026-10"
+          },
+          "response": {
+            "ok": true,
+            "value": 5,
+            "asOf": "2026-11-02T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "lines_without_gst_code",
+            "definitionId": "DEF-lines_without_gst_code",
+            "source": "xero",
+            "asOf": "2026-11-02T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT12"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "practice",
+            "queryRef": "close_job.steps_open",
+            "period": "2026-10"
+          },
+          "response": {
+            "ok": true,
+            "value": 2,
+            "asOf": "2026-11-02T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "close_steps_open",
+            "definitionId": "DEF-close_steps_open",
+            "source": "practice",
+            "asOf": "2026-11-02T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT13"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-10",
+            "audienceId": "practice",
+            "figures": [
+              {
+                "measure": "bank_lines_unreconciled",
+                "value": 41,
+                "unavailable": null,
+                "definition": "DEF-bank_lines_unreconciled",
+                "source": "xero",
+                "asOf": "2026-11-02T22:06:00.000Z"
+              },
+              {
+                "measure": "sales_invoices_in_draft",
+                "value": 1,
+                "unavailable": null,
+                "definition": "DEF-sales_invoices_in_draft",
+                "source": "xero",
+                "asOf": "2026-11-02T22:06:00.000Z"
+              },
+              {
+                "measure": "bills_awaiting_approval",
+                "value": 9,
+                "unavailable": null,
+                "definition": "DEF-bills_awaiting_approval",
+                "source": "xero",
+                "asOf": "2026-11-02T22:06:00.000Z"
+              },
+              {
+                "measure": "suspense_balance",
+                "value": 380,
+                "unavailable": null,
+                "definition": "DEF-suspense_balance",
+                "source": "xero",
+                "asOf": "2026-11-02T22:06:00.000Z"
+              },
+              {
+                "measure": "lines_without_gst_code",
+                "value": 5,
+                "unavailable": null,
+                "definition": "DEF-lines_without_gst_code",
+                "source": "xero",
+                "asOf": "2026-11-02T22:06:00.000Z"
+              },
+              {
+                "measure": "close_steps_open",
+                "value": 2,
+                "unavailable": null,
+                "definition": "DEF-close_steps_open",
+                "source": "practice",
+                "asOf": "2026-11-02T22:06:00.000Z"
+              }
+            ],
+            "narrative": "Month-end close check for 2026-10: Not ready. Items to fix are listed below. To fix: Bank statement lines not reconciled: 41; Sales invoices still in draft: 1; Bills awaiting approval: 9; Suspense account balance (AUD): 380; Transaction lines with no GST code: 5; Close job steps still open: 2.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT14",
+            "version": 1,
+            "publishedAt": "2026-11-02T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-10"
+          },
+          "response": {
+            "ids": [
+              "RPT14@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": [
+              "RPT7@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "person": "Rachel Byrne (client manager)",
+            "measure": "bank_lines_unreconciled",
+            "period": "2026-10",
+            "detail": "moved up past the threshold against 2026-09"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "audience-gets-its-own-view",
+      "n": 8,
+      "title": "Each audience sees the figures declared for it and nothing else",
+      "verdict": "pass",
+      "held": true,
+      "expected": "For each audience a report exists whose figure measures are exactly the audience's declared measures. A figure outside the declaration, or a declared measure absent, fails.",
+      "actual": "practice: [bank_lines_unreconciled, sales_invoices_in_draft, bills_awaiting_approval, suspense_balance, lines_without_gst_code, close_steps_open]; client: [bank_lines_unreconciled, bills_awaiting_approval, suspense_balance]",
+      "stimulus": {
+        "description": "Two audiences: one declared for every measure, one declared for a subset.",
+        "now": "2026-10-01T21:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "audience-gets-its-own-view"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-09"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "practice",
+              "client"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "bank.statement_lines_unreconciled",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 14,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bank_lines_unreconciled",
+            "definitionId": "DEF-bank_lines_unreconciled",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT1"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.accrec_draft_in_month",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 3,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "sales_invoices_in_draft",
+            "definitionId": "DEF-sales_invoices_in_draft",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT2"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.accpay_unapproved_in_month",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 6,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bills_awaiting_approval",
+            "definitionId": "DEF-bills_awaiting_approval",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT3"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "accounts.suspense_balance_at_month_end",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 1250,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "suspense_balance",
+            "definitionId": "DEF-suspense_balance",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT4"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "journals.lines_no_tax_rate_in_month",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 2,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "lines_without_gst_code",
+            "definitionId": "DEF-lines_without_gst_code",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT5"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "practice",
+            "queryRef": "close_job.steps_open",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 4,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "close_steps_open",
+            "definitionId": "DEF-close_steps_open",
+            "source": "practice",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT6"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-09",
+            "audienceId": "practice",
+            "figures": [
+              {
+                "measure": "bank_lines_unreconciled",
+                "value": 14,
+                "unavailable": null,
+                "definition": "DEF-bank_lines_unreconciled",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "sales_invoices_in_draft",
+                "value": 3,
+                "unavailable": null,
+                "definition": "DEF-sales_invoices_in_draft",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "bills_awaiting_approval",
+                "value": 6,
+                "unavailable": null,
+                "definition": "DEF-bills_awaiting_approval",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "suspense_balance",
+                "value": 1250,
+                "unavailable": null,
+                "definition": "DEF-suspense_balance",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "lines_without_gst_code",
+                "value": 2,
+                "unavailable": null,
+                "definition": "DEF-lines_without_gst_code",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "close_steps_open",
+                "value": 4,
+                "unavailable": null,
+                "definition": "DEF-close_steps_open",
+                "source": "practice",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              }
+            ],
+            "narrative": "Month-end close check for 2026-09: Not ready. Items to fix are listed below. To fix: Bank statement lines not reconciled: 14; Sales invoices still in draft: 3; Bills awaiting approval: 6; Suspense account balance (AUD): 1250; Transaction lines with no GST code: 2; Close job steps still open: 4.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT7",
+            "version": 1,
+            "publishedAt": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-09",
+            "audienceId": "client",
+            "figures": [
+              {
+                "measure": "bank_lines_unreconciled",
+                "value": 14,
+                "unavailable": null,
+                "definition": "DEF-bank_lines_unreconciled",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "bills_awaiting_approval",
+                "value": 6,
+                "unavailable": null,
+                "definition": "DEF-bills_awaiting_approval",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "suspense_balance",
+                "value": 1250,
+                "unavailable": null,
+                "definition": "DEF-suspense_balance",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              }
+            ],
+            "narrative": "Month-end close check for 2026-09: Not ready. Items to fix are listed below. To fix: Bank statement lines not reconciled: 14; Bills awaiting approval: 6; Suspense account balance (AUD): 1250.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT8",
+            "version": 1,
+            "publishedAt": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": [
+              "RPT7@v1",
+              "RPT8@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "corrections-are-a-new-version",
+      "n": 9,
+      "title": "A published figure changes only by a named person publishing a new version with the reason",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "A gate call names the person and the reason before a new version is published. The new version supersedes the first and carries the person and the reason; the first version is unchanged and marked superseded. An in-place amendment of a published report fails.",
+      "actual": "RPT7 v1 superseded by schedule; RPT15 v2 published by Mei Lin (bookkeeper); 0 in-place amendment(s)",
+      "stimulus": {
+        "description": "One period published, then a named person asks for one figure to be corrected, with a reason.",
+        "now": "2026-10-01T21:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "corrections-are-a-new-version"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-09"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "practice"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "bank.statement_lines_unreconciled",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 14,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bank_lines_unreconciled",
+            "definitionId": "DEF-bank_lines_unreconciled",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT1"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.accrec_draft_in_month",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 3,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "sales_invoices_in_draft",
+            "definitionId": "DEF-sales_invoices_in_draft",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT2"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.accpay_unapproved_in_month",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 6,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bills_awaiting_approval",
+            "definitionId": "DEF-bills_awaiting_approval",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT3"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "accounts.suspense_balance_at_month_end",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 1250,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "suspense_balance",
+            "definitionId": "DEF-suspense_balance",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT4"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "journals.lines_no_tax_rate_in_month",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 2,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "lines_without_gst_code",
+            "definitionId": "DEF-lines_without_gst_code",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT5"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "practice",
+            "queryRef": "close_job.steps_open",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 4,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "close_steps_open",
+            "definitionId": "DEF-close_steps_open",
+            "source": "practice",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT6"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-09",
+            "audienceId": "practice",
+            "figures": [
+              {
+                "measure": "bank_lines_unreconciled",
+                "value": 14,
+                "unavailable": null,
+                "definition": "DEF-bank_lines_unreconciled",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "sales_invoices_in_draft",
+                "value": 3,
+                "unavailable": null,
+                "definition": "DEF-sales_invoices_in_draft",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "bills_awaiting_approval",
+                "value": 6,
+                "unavailable": null,
+                "definition": "DEF-bills_awaiting_approval",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "suspense_balance",
+                "value": 1250,
+                "unavailable": null,
+                "definition": "DEF-suspense_balance",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "lines_without_gst_code",
+                "value": 2,
+                "unavailable": null,
+                "definition": "DEF-lines_without_gst_code",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "close_steps_open",
+                "value": 4,
+                "unavailable": null,
+                "definition": "DEF-close_steps_open",
+                "source": "practice",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              }
+            ],
+            "narrative": "Month-end close check for 2026-09: Not ready. Items to fix are listed below. To fix: Bank statement lines not reconciled: 14; Sales invoices still in draft: 3; Bills awaiting approval: 6; Suspense account balance (AUD): 1250; Transaction lines with no GST code: 2; Close job steps still open: 4.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT7",
+            "version": 1,
+            "publishedAt": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": [
+              "RPT7@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-09"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "practice"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": [
+              "RPT7@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": [
+              "RPT7@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "correction": "RPT7",
+            "person": "Mei Lin (bookkeeper)",
+            "reason": "transfer TRF-0921 between the client's own accounts was recoded out of suspense"
+          },
+          "response": {
+            "approved": true
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bank_lines_unreconciled",
+            "definitionId": "DEF-bank_lines_unreconciled",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT9"
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "sales_invoices_in_draft",
+            "definitionId": "DEF-sales_invoices_in_draft",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT10"
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bills_awaiting_approval",
+            "definitionId": "DEF-bills_awaiting_approval",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT11"
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "suspense_balance",
+            "definitionId": "DEF-suspense_balance",
+            "source": "correction COR8 by Mei Lin (bookkeeper)",
+            "asOf": "2026-10-01T23:36:00.000Z"
+          },
+          "response": {
+            "id": "CIT12"
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "lines_without_gst_code",
+            "definitionId": "DEF-lines_without_gst_code",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT13"
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "close_steps_open",
+            "definitionId": "DEF-close_steps_open",
+            "source": "practice",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT14"
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-09",
+            "audienceId": "practice",
+            "figures": [
+              {
+                "measure": "bank_lines_unreconciled",
+                "value": 14,
+                "unavailable": null,
+                "definition": "DEF-bank_lines_unreconciled",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "sales_invoices_in_draft",
+                "value": 3,
+                "unavailable": null,
+                "definition": "DEF-sales_invoices_in_draft",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "bills_awaiting_approval",
+                "value": 6,
+                "unavailable": null,
+                "definition": "DEF-bills_awaiting_approval",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "suspense_balance",
+                "value": 0,
+                "unavailable": null,
+                "definition": "DEF-suspense_balance",
+                "source": "correction COR8 by Mei Lin (bookkeeper)",
+                "asOf": "2026-10-01T23:36:00.000Z"
+              },
+              {
+                "measure": "lines_without_gst_code",
+                "value": 2,
+                "unavailable": null,
+                "definition": "DEF-lines_without_gst_code",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "close_steps_open",
+                "value": 4,
+                "unavailable": null,
+                "definition": "DEF-close_steps_open",
+                "source": "practice",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              }
+            ],
+            "narrative": "Month-end close check for 2026-09: Not ready. Items to fix are listed below. To fix: Bank statement lines not reconciled: 14; Sales invoices still in draft: 3; Bills awaiting approval: 6; Transaction lines with no GST code: 2; Close job steps still open: 4. Clear: Suspense account balance (AUD).",
+            "supersedes": "RPT7",
+            "by": "Mei Lin (bookkeeper)",
+            "reason": "transfer TRF-0921 between the client's own accounts was recoded out of suspense"
+          },
+          "response": {
+            "id": "RPT15",
+            "version": 2,
+            "publishedAt": "2026-10-01T23:36:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": [
+              "RPT7@v1",
+              "RPT15@v2"
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "the-record-by-period",
+      "n": 10,
+      "title": "For any period: the figures, definitions, sources, as-of times, versions and who published, retrievable",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A read by period returns every version of every view. Each valued figure carries a definition id, a source and an as-of time. Each version carries who published it and, for a correction, the reason. A record missing any of those fails.",
+      "actual": "practice v1 superseded by schedule; client v1 superseded by schedule; practice v2 published by Mei Lin (bookkeeper); client v2 published by Mei Lin (bookkeeper)",
+      "stimulus": {
+        "description": "One period published to two audiences, then corrected once.",
+        "now": "2026-10-01T21:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "the-record-by-period"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-09"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "practice",
+              "client"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "bank.statement_lines_unreconciled",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 14,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bank_lines_unreconciled",
+            "definitionId": "DEF-bank_lines_unreconciled",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT1"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.accrec_draft_in_month",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 3,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "sales_invoices_in_draft",
+            "definitionId": "DEF-sales_invoices_in_draft",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT2"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.accpay_unapproved_in_month",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 6,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bills_awaiting_approval",
+            "definitionId": "DEF-bills_awaiting_approval",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT3"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "accounts.suspense_balance_at_month_end",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 1250,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "suspense_balance",
+            "definitionId": "DEF-suspense_balance",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT4"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "journals.lines_no_tax_rate_in_month",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 2,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "lines_without_gst_code",
+            "definitionId": "DEF-lines_without_gst_code",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT5"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "practice",
+            "queryRef": "close_job.steps_open",
+            "period": "2026-09"
+          },
+          "response": {
+            "ok": true,
+            "value": 4,
+            "asOf": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "close_steps_open",
+            "definitionId": "DEF-close_steps_open",
+            "source": "practice",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT6"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-09",
+            "audienceId": "practice",
+            "figures": [
+              {
+                "measure": "bank_lines_unreconciled",
+                "value": 14,
+                "unavailable": null,
+                "definition": "DEF-bank_lines_unreconciled",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "sales_invoices_in_draft",
+                "value": 3,
+                "unavailable": null,
+                "definition": "DEF-sales_invoices_in_draft",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "bills_awaiting_approval",
+                "value": 6,
+                "unavailable": null,
+                "definition": "DEF-bills_awaiting_approval",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "suspense_balance",
+                "value": 1250,
+                "unavailable": null,
+                "definition": "DEF-suspense_balance",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "lines_without_gst_code",
+                "value": 2,
+                "unavailable": null,
+                "definition": "DEF-lines_without_gst_code",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "close_steps_open",
+                "value": 4,
+                "unavailable": null,
+                "definition": "DEF-close_steps_open",
+                "source": "practice",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              }
+            ],
+            "narrative": "Month-end close check for 2026-09: Not ready. Items to fix are listed below. To fix: Bank statement lines not reconciled: 14; Sales invoices still in draft: 3; Bills awaiting approval: 6; Suspense account balance (AUD): 1250; Transaction lines with no GST code: 2; Close job steps still open: 4.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT7",
+            "version": 1,
+            "publishedAt": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-09",
+            "audienceId": "client",
+            "figures": [
+              {
+                "measure": "bank_lines_unreconciled",
+                "value": 14,
+                "unavailable": null,
+                "definition": "DEF-bank_lines_unreconciled",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "bills_awaiting_approval",
+                "value": 6,
+                "unavailable": null,
+                "definition": "DEF-bills_awaiting_approval",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "suspense_balance",
+                "value": 1250,
+                "unavailable": null,
+                "definition": "DEF-suspense_balance",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              }
+            ],
+            "narrative": "Month-end close check for 2026-09: Not ready. Items to fix are listed below. To fix: Bank statement lines not reconciled: 14; Bills awaiting approval: 6; Suspense account balance (AUD): 1250.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT8",
+            "version": 1,
+            "publishedAt": "2026-10-01T22:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": [
+              "RPT7@v1",
+              "RPT8@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T22:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-09"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "practice",
+              "client"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": [
+              "RPT7@v1",
+              "RPT8@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": [
+              "RPT7@v1",
+              "RPT8@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "correction": "RPT8",
+            "person": "Mei Lin (bookkeeper)",
+            "reason": "three lines on the closed savings account were duplicates from the feed"
+          },
+          "response": {
+            "approved": true
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bank_lines_unreconciled",
+            "definitionId": "DEF-bank_lines_unreconciled",
+            "source": "correction COR9 by Mei Lin (bookkeeper)",
+            "asOf": "2026-10-01T23:36:00.000Z"
+          },
+          "response": {
+            "id": "CIT10"
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "sales_invoices_in_draft",
+            "definitionId": "DEF-sales_invoices_in_draft",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT11"
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bills_awaiting_approval",
+            "definitionId": "DEF-bills_awaiting_approval",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT12"
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "suspense_balance",
+            "definitionId": "DEF-suspense_balance",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT13"
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "lines_without_gst_code",
+            "definitionId": "DEF-lines_without_gst_code",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT14"
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "close_steps_open",
+            "definitionId": "DEF-close_steps_open",
+            "source": "practice",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT15"
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-09",
+            "audienceId": "practice",
+            "figures": [
+              {
+                "measure": "bank_lines_unreconciled",
+                "value": 11,
+                "unavailable": null,
+                "definition": "DEF-bank_lines_unreconciled",
+                "source": "correction COR9 by Mei Lin (bookkeeper)",
+                "asOf": "2026-10-01T23:36:00.000Z"
+              },
+              {
+                "measure": "sales_invoices_in_draft",
+                "value": 3,
+                "unavailable": null,
+                "definition": "DEF-sales_invoices_in_draft",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "bills_awaiting_approval",
+                "value": 6,
+                "unavailable": null,
+                "definition": "DEF-bills_awaiting_approval",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "suspense_balance",
+                "value": 1250,
+                "unavailable": null,
+                "definition": "DEF-suspense_balance",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "lines_without_gst_code",
+                "value": 2,
+                "unavailable": null,
+                "definition": "DEF-lines_without_gst_code",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "close_steps_open",
+                "value": 4,
+                "unavailable": null,
+                "definition": "DEF-close_steps_open",
+                "source": "practice",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              }
+            ],
+            "narrative": "Month-end close check for 2026-09: Not ready. Items to fix are listed below. To fix: Bank statement lines not reconciled: 11; Sales invoices still in draft: 3; Bills awaiting approval: 6; Suspense account balance (AUD): 1250; Transaction lines with no GST code: 2; Close job steps still open: 4.",
+            "supersedes": "RPT7",
+            "by": "Mei Lin (bookkeeper)",
+            "reason": "three lines on the closed savings account were duplicates from the feed"
+          },
+          "response": {
+            "id": "RPT16",
+            "version": 2,
+            "publishedAt": "2026-10-01T23:36:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bank_lines_unreconciled",
+            "definitionId": "DEF-bank_lines_unreconciled",
+            "source": "correction COR9 by Mei Lin (bookkeeper)",
+            "asOf": "2026-10-01T23:36:00.000Z"
+          },
+          "response": {
+            "id": "CIT17"
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "bills_awaiting_approval",
+            "definitionId": "DEF-bills_awaiting_approval",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT18"
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "suspense_balance",
+            "definitionId": "DEF-suspense_balance",
+            "source": "xero",
+            "asOf": "2026-10-01T22:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT19"
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-09",
+            "audienceId": "client",
+            "figures": [
+              {
+                "measure": "bank_lines_unreconciled",
+                "value": 11,
+                "unavailable": null,
+                "definition": "DEF-bank_lines_unreconciled",
+                "source": "correction COR9 by Mei Lin (bookkeeper)",
+                "asOf": "2026-10-01T23:36:00.000Z"
+              },
+              {
+                "measure": "bills_awaiting_approval",
+                "value": 6,
+                "unavailable": null,
+                "definition": "DEF-bills_awaiting_approval",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              },
+              {
+                "measure": "suspense_balance",
+                "value": 1250,
+                "unavailable": null,
+                "definition": "DEF-suspense_balance",
+                "source": "xero",
+                "asOf": "2026-10-01T22:06:00.000Z"
+              }
+            ],
+            "narrative": "Month-end close check for 2026-09: Not ready. Items to fix are listed below. To fix: Bank statement lines not reconciled: 11; Bills awaiting approval: 6; Suspense account balance (AUD): 1250.",
+            "supersedes": "RPT8",
+            "by": "Mei Lin (bookkeeper)",
+            "reason": "three lines on the closed savings account were duplicates from the feed"
+          },
+          "response": {
+            "id": "RPT20",
+            "version": 2,
+            "publishedAt": "2026-10-01T23:36:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-01T23:36:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-09"
+          },
+          "response": {
+            "ids": [
+              "RPT7@v1",
+              "RPT8@v1",
+              "RPT16@v2",
+              "RPT20@v2"
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 11,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the definitions and the schedule runs on.",
+        "now": "2026-11-03T14:00:17.615Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 12,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "Both periods published at their scheduled time. The figure over the offline source is unavailable with the reason and its owner told. The crossed threshold notified its person. The correction exists as a new version with a name and a reason, and the first version is still readable.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "Two real scheduled periods on the business's own sources, with one source taken offline before the second run and one correction requested by a named person.",
+        "now": "2026-11-03T14:00:17.615Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 12,
+    "pass": 9,
+    "fail": 0,
+    "shapeOnly": 1,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
