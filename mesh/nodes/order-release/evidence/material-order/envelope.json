@@ -1,0 +1,3755 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793714450871",
+  "standard": "material-order-build-standard",
+  "spec": "AIP-BS-MATERIAL-ORDER",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-03T14:00:50.861Z",
+  "finishedAt": "2026-11-03T14:00:50.871Z",
+  "results": [
+    {
+      "checkId": "lines-come-from-the-job",
+      "n": 1,
+      "title": "Every ordered line traces to a material line on the job",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The job is read before any order is written. The ordered lines, plus any line reserved from stock, match the job's codes and quantities exactly. An order line with no job line fails.",
+      "actual": "13 port call(s); 1 order(s) PO1:SUP-NORTHSIDE:sent; 0 escalation(s) ",
+      "stimulus": {
+        "description": "One job with four material lines, each with a catalogue code and a quantity.",
+        "now": "2026-09-28T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "lines-come-from-the-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "JOB-1041"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NORTHSIDE",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-BAYSIDE",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "SUP-NEWCO",
+              "approved": false,
+              "leadDays": 1
+            }
+          ]
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NORTHSIDE",
+            "at": "2026-09-28T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "NTS-2026-09",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-BAYSIDE",
+            "at": "2026-09-28T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "BBW-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NEWCO",
+            "at": "2026-09-28T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "CH-0926",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Under $2,000 to an approved supplier",
+            "threshold": 2000,
+            "owner": "Priya Shah"
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1041"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1041"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1041",
+            "supplierId": "SUP-NORTHSIDE",
+            "lines": [
+              "PVC-DWV-100x6@38.5",
+              "PVC-BEND-100x4@9.2",
+              "CU-15-6Mx3@64",
+              "SOLV-CEM-500x2@21.75"
+            ],
+            "edition": "NTS-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO1",
+            "externalId": "sys-PO1"
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO1",
+            "person": null,
+            "rule": "Under $2,000 to an approved supplier"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "stock-checked-before-ordering",
+      "n": 2,
+      "title": "Stock on hand is read before the order, and a line stock covers is reserved rather than ordered",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The stock read precedes the first order write. The covered line is reserved against the job and appears on no order. The other three lines are ordered. Ordering the covered line fails.",
+      "actual": "14 port call(s); 1 order(s) PO1:SUP-NORTHSIDE:sent; 0 escalation(s) ",
+      "stimulus": {
+        "description": "The same job, with stock on hand covering one of its four lines in full.",
+        "now": "2026-09-28T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "stock-checked-before-ordering"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "JOB-1042"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": [
+            "CU-15-6M:5",
+            "PVC-DWV-100:0"
+          ]
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NORTHSIDE",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-BAYSIDE",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "SUP-NEWCO",
+              "approved": false,
+              "leadDays": 1
+            }
+          ]
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NORTHSIDE",
+            "at": "2026-09-28T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "NTS-2026-09",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-BAYSIDE",
+            "at": "2026-09-28T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "BBW-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NEWCO",
+            "at": "2026-09-28T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "CH-0926",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Under $2,000 to an approved supplier",
+            "threshold": 2000,
+            "owner": "Priya Shah"
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1042"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1042"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "reserve": {
+              "jobId": "JOB-1042",
+              "code": "CU-15-6M",
+              "qty": 3
+            }
+          },
+          "response": {
+            "reserved": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1042",
+            "supplierId": "SUP-NORTHSIDE",
+            "lines": [
+              "PVC-DWV-100x6@38.5",
+              "PVC-BEND-100x4@9.2",
+              "SOLV-CEM-500x2@21.75"
+            ],
+            "edition": "NTS-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO1",
+            "externalId": "sys-PO1"
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO1",
+            "person": null,
+            "rule": "Under $2,000 to an approved supplier"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "supplier-catalogue-is-the-only-source",
+      "n": 3,
+      "title": "Every line carries the supplier's catalogue code and price, read at order time, and a line no catalogue holds parks the order",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Each catalogue is read before the first order write. Every priced line's price equals that supplier's catalogue price for its code. The unknown code sits on a parked order with reason not_in_catalogue and no price. A typed price fails.",
+      "actual": "18 port call(s); 3 order(s) PO1:SUP-NORTHSIDE:sent PO2:SUP-BAYSIDE:sent PO3:null:parked; 1 escalation(s) not_in_catalogue",
+      "stimulus": {
+        "description": "A job whose lines include one code that no supplier's catalogue holds.",
+        "now": "2026-09-28T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "supplier-catalogue-is-the-only-source"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "JOB-1043"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NORTHSIDE",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-BAYSIDE",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "SUP-NEWCO",
+              "approved": false,
+              "leadDays": 1
+            }
+          ]
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NORTHSIDE",
+            "at": "2026-09-28T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "NTS-2026-09",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-BAYSIDE",
+            "at": "2026-09-28T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "BBW-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NEWCO",
+            "at": "2026-09-28T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "CH-0926",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Under $2,000 to an approved supplier",
+            "threshold": 2000,
+            "owner": "Priya Shah"
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1043"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1043"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1043",
+            "supplierId": "SUP-NORTHSIDE",
+            "lines": [
+              "PVC-DWV-100x2@38.5"
+            ],
+            "edition": "NTS-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO1",
+            "externalId": "sys-PO1"
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1043",
+            "supplierId": "SUP-BAYSIDE",
+            "lines": [
+              "PINE-90-45x10@14.6"
+            ],
+            "edition": "BBW-2026-Q3",
+            "park": null
+          },
+          "response": {
+            "id": "PO2",
+            "externalId": "sys-PO2"
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1043",
+            "supplierId": null,
+            "lines": [
+              "TAPWARE-CUSTOM-7x1@none"
+            ],
+            "edition": null,
+            "park": "not_in_catalogue"
+          },
+          "response": {
+            "id": "PO3",
+            "externalId": "sys-PO3"
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "not_in_catalogue",
+            "orderId": "PO3",
+            "owner": "Sam Nguyen",
+            "detail": "No supplier catalogue holds TAPWARE-CUSTOM-7 for job JOB-1043. Parked unpriced until a person prices it."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO1",
+            "person": null,
+            "rule": "Under $2,000 to an approved supplier"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO2",
+            "person": null,
+            "rule": "Under $2,000 to an approved supplier"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO2"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-order-per-job-and-supplier",
+      "n": 4,
+      "title": "One order per job and supplier, written once, updated on a second run",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Exactly one order exists per job and supplier, each with an external id from the ordering system, and the second run produced an update or no write. A second order for the same pair, or a null id treated as success, fails.",
+      "actual": "28 port call(s); 2 order(s) PO1:SUP-BAYSIDE:sent PO2:SUP-NORTHSIDE:sent; 1 escalation(s) write_failed; first run 15 call(s)",
+      "stimulus": {
+        "description": "The same job run through the build twice, an hour apart.",
+        "now": "2026-09-28T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-order-per-job-and-supplier"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "JOB-1044"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NORTHSIDE",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-BAYSIDE",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "SUP-NEWCO",
+              "approved": false,
+              "leadDays": 1
+            }
+          ]
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NORTHSIDE",
+            "at": "2026-09-28T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "NTS-2026-09",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-BAYSIDE",
+            "at": "2026-09-28T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "BBW-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NEWCO",
+            "at": "2026-09-28T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "CH-0926",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Under $2,000 to an approved supplier",
+            "threshold": 2000,
+            "owner": "Priya Shah"
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1044"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1044"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1044",
+            "supplierId": "SUP-NORTHSIDE",
+            "lines": 2
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "write_failed",
+            "orderId": "JOB-1044::SUP-NORTHSIDE",
+            "owner": "Priya Shah",
+            "detail": "No id came back writing the order for job JOB-1044 to supplier SUP-NORTHSIDE. Nothing was sent."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1044",
+            "supplierId": "SUP-BAYSIDE",
+            "lines": [
+              "PINE-90-45x20@14.6"
+            ],
+            "edition": "BBW-2026-Q3",
+            "park": null
+          },
+          "response": {
+            "id": "PO1",
+            "externalId": "sys-PO1"
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO1",
+            "person": null,
+            "rule": "Under $2,000 to an approved supplier"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-28T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "JOB-1044"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T23:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-28T23:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NORTHSIDE",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-BAYSIDE",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "SUP-NEWCO",
+              "approved": false,
+              "leadDays": 1
+            }
+          ]
+        },
+        {
+          "at": "2026-09-28T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NORTHSIDE",
+            "at": "2026-09-28T23:00:00.000Z"
+          },
+          "response": {
+            "edition": "NTS-2026-09",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-28T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-BAYSIDE",
+            "at": "2026-09-28T23:00:00.000Z"
+          },
+          "response": {
+            "edition": "BBW-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-28T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NEWCO",
+            "at": "2026-09-28T23:00:00.000Z"
+          },
+          "response": {
+            "edition": "CH-0926",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-28T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Under $2,000 to an approved supplier",
+            "threshold": 2000,
+            "owner": "Priya Shah"
+          }
+        },
+        {
+          "at": "2026-09-28T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1044"
+          },
+          "response": [
+            {
+              "orderId": "PO1",
+              "supplierId": "SUP-BAYSIDE",
+              "externalId": "sys-PO1"
+            }
+          ]
+        },
+        {
+          "at": "2026-09-28T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1044"
+          },
+          "response": {
+            "orders": 1,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-28T23:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1044",
+            "supplierId": "SUP-NORTHSIDE",
+            "lines": [
+              "PVC-DWV-100x6@38.5",
+              "SCREW-BUGLE-1Kx1@32"
+            ],
+            "edition": "NTS-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO2",
+            "externalId": "sys-PO2"
+          }
+        },
+        {
+          "at": "2026-09-28T23:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO2",
+            "person": null,
+            "rule": "Under $2,000 to an approved supplier"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T23:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO2"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "threshold-needs-a-person",
+      "n": 5,
+      "title": "An order over the threshold, or to a supplier not on the approved list, is released only by a named person",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The first carries the rule's name on its release. The second and third are released only by a person's name or still wait, and each was routed to a person. A release by rule over the threshold or to an unapproved supplier fails, and a send with no release fails.",
+      "actual": "37 port call(s); 3 order(s) PO1:SUP-NORTHSIDE:sent PO2:SUP-BAYSIDE:sent PO3:SUP-NEWCO:draft; 2 escalation(s) needs_person,needs_person",
+      "stimulus": {
+        "description": "Three orders: one under the threshold to an approved supplier, one over it, one to a supplier not on the approved list.",
+        "now": "2026-09-28T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "threshold-needs-a-person"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "JOB-1051",
+              "JOB-1052",
+              "JOB-1053"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NORTHSIDE",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-BAYSIDE",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "SUP-NEWCO",
+              "approved": false,
+              "leadDays": 1
+            }
+          ]
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NORTHSIDE",
+            "at": "2026-09-28T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "NTS-2026-09",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-BAYSIDE",
+            "at": "2026-09-28T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "BBW-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NEWCO",
+            "at": "2026-09-28T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "CH-0926",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Under $2,000 to an approved supplier",
+            "threshold": 2000,
+            "owner": "Priya Shah"
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1051"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1051"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1051",
+            "supplierId": "SUP-NORTHSIDE",
+            "lines": [
+              "PVC-DWV-100x10@38.5"
+            ],
+            "edition": "NTS-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO1",
+            "externalId": "sys-PO1"
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO1",
+            "person": null,
+            "rule": "Under $2,000 to an approved supplier"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1052"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1052"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1052",
+            "supplierId": "SUP-BAYSIDE",
+            "lines": [
+              "LVL-240-6Mx8@312"
+            ],
+            "edition": "BBW-2026-Q3",
+            "park": null
+          },
+          "response": {
+            "id": "PO2",
+            "externalId": "sys-PO2"
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "needs_person",
+            "orderId": "PO2",
+            "owner": "Priya Shah",
+            "detail": "Order PO2 for job JOB-1052 waits for a named person's release: the order total $2496.00 is over the $2000.00 limit."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1053"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1053"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1053",
+            "supplierId": "SUP-NEWCO",
+            "lines": [
+              "SILICONE-CLRx12@11.9"
+            ],
+            "edition": "CH-0926",
+            "park": null
+          },
+          "response": {
+            "id": "PO3",
+            "externalId": "sys-PO3"
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "needs_person",
+            "orderId": "PO3",
+            "owner": "Priya Shah",
+            "detail": "Order PO3 for job JOB-1053 waits for a named person's release: Coastline Hardware is not on the approved supplier list."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-28T23:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO2",
+            "person": "Priya Shah",
+            "rule": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "JOB-1051",
+              "JOB-1052",
+              "JOB-1053"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T23:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-28T23:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NORTHSIDE",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-BAYSIDE",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "SUP-NEWCO",
+              "approved": false,
+              "leadDays": 1
+            }
+          ]
+        },
+        {
+          "at": "2026-09-28T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NORTHSIDE",
+            "at": "2026-09-28T23:00:00.000Z"
+          },
+          "response": {
+            "edition": "NTS-2026-09",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-28T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-BAYSIDE",
+            "at": "2026-09-28T23:00:00.000Z"
+          },
+          "response": {
+            "edition": "BBW-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-28T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NEWCO",
+            "at": "2026-09-28T23:00:00.000Z"
+          },
+          "response": {
+            "edition": "CH-0926",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-28T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Under $2,000 to an approved supplier",
+            "threshold": 2000,
+            "owner": "Priya Shah"
+          }
+        },
+        {
+          "at": "2026-09-28T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1051"
+          },
+          "response": [
+            {
+              "orderId": "PO1",
+              "supplierId": "SUP-NORTHSIDE",
+              "externalId": "sys-PO1"
+            }
+          ]
+        },
+        {
+          "at": "2026-09-28T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1051"
+          },
+          "response": {
+            "orders": 1,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-28T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1052"
+          },
+          "response": [
+            {
+              "orderId": "PO2",
+              "supplierId": "SUP-BAYSIDE",
+              "externalId": "sys-PO2"
+            }
+          ]
+        },
+        {
+          "at": "2026-09-28T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1052"
+          },
+          "response": {
+            "orders": 1,
+            "deliveries": 0,
+            "escalations": 1
+          }
+        },
+        {
+          "at": "2026-09-28T23:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO2"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1053"
+          },
+          "response": [
+            {
+              "orderId": "PO3",
+              "supplierId": "SUP-NEWCO",
+              "externalId": "sys-PO3"
+            }
+          ]
+        },
+        {
+          "at": "2026-09-28T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1053"
+          },
+          "response": {
+            "orders": 1,
+            "deliveries": 0,
+            "escalations": 1
+          }
+        },
+        {
+          "at": "2026-09-28T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "lead-time-is-data",
+      "n": 6,
+      "title": "Each supplier carries a lead time, and an order that would miss the job's start tells the job owner",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The supplier list is read. One notification names the job owner, the slow supplier's order and the arrival date. No notification is raised for the order that arrives in time. A late order with no notification fails.",
+      "actual": "17 port call(s); 2 order(s) PO1:SUP-BAYSIDE:sent PO2:SUP-NORTHSIDE:sent; 0 escalation(s) ; 1 notification(s)",
+      "stimulus": {
+        "description": "A job starting in three days, with one line from a supplier whose lead time is ten days and the rest from a supplier at two.",
+        "now": "2026-09-28T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "lead-time-is-data"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "JOB-1061"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NORTHSIDE",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-BAYSIDE",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "SUP-NEWCO",
+              "approved": false,
+              "leadDays": 1
+            }
+          ]
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NORTHSIDE",
+            "at": "2026-09-28T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "NTS-2026-09",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-BAYSIDE",
+            "at": "2026-09-28T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "BBW-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NEWCO",
+            "at": "2026-09-28T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "CH-0926",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Under $2,000 to an approved supplier",
+            "threshold": 2000,
+            "owner": "Priya Shah"
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1061"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1061"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1061",
+            "supplierId": "SUP-BAYSIDE",
+            "lines": [
+              "PINE-90-45x30@14.6"
+            ],
+            "edition": "BBW-2026-Q3",
+            "park": null
+          },
+          "response": {
+            "id": "PO1",
+            "externalId": "sys-PO1"
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1061",
+            "supplierId": "SUP-NORTHSIDE",
+            "lines": [
+              "GYP-10-2400x20@18.4",
+              "SCREW-BUGLE-1Kx1@32"
+            ],
+            "edition": "NTS-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO2",
+            "externalId": "sys-PO2"
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO1",
+            "person": null,
+            "rule": "Under $2,000 to an approved supplier"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "Sam Nguyen",
+            "jobId": "JOB-1061",
+            "orderId": "PO1",
+            "supplierId": "SUP-BAYSIDE",
+            "arrives": "2026-10-08"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO2",
+            "person": null,
+            "rule": "Under $2,000 to an approved supplier"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO2"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "delivery-matches-back",
+      "n": 7,
+      "title": "A delivery is recorded against the order line by line, and a delivery with no order is refused",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The first docket produces a delivery record on its order with a line per ordered line, the short line carrying its received quantity and reason short. The second produces no delivery record and an escalation naming the docket. A delivery attached to no order fails.",
+      "actual": "26 port call(s); 1 order(s) PO1:SUP-NORTHSIDE:delivered; 2 escalation(s) short,no_order; 1 deliver(ies)",
+      "stimulus": {
+        "description": "Two dockets: one against a sent order with one line short, one against an order number that does not exist.",
+        "now": "2026-09-28T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "delivery-matches-back"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "JOB-1071"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NORTHSIDE",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-BAYSIDE",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "SUP-NEWCO",
+              "approved": false,
+              "leadDays": 1
+            }
+          ]
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NORTHSIDE",
+            "at": "2026-09-28T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "NTS-2026-09",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-BAYSIDE",
+            "at": "2026-09-28T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "BBW-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NEWCO",
+            "at": "2026-09-28T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "CH-0926",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Under $2,000 to an approved supplier",
+            "threshold": 2000,
+            "owner": "Priya Shah"
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1071"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1071"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1071",
+            "supplierId": "SUP-NORTHSIDE",
+            "lines": [
+              "PVC-DWV-100x6@38.5",
+              "PVC-BEND-100x4@9.2",
+              "SOLV-CEM-500x2@21.75"
+            ],
+            "edition": "NTS-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO1",
+            "externalId": "sys-PO1"
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO1",
+            "person": null,
+            "rule": "Under $2,000 to an approved supplier"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "JOB-1071"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NORTHSIDE",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-BAYSIDE",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "SUP-NEWCO",
+              "approved": false,
+              "leadDays": 1
+            }
+          ]
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NORTHSIDE",
+            "at": "2026-09-30T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "NTS-2026-09",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-BAYSIDE",
+            "at": "2026-09-30T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "BBW-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NEWCO",
+            "at": "2026-09-30T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "CH-0926",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Under $2,000 to an approved supplier",
+            "threshold": 2000,
+            "owner": "Priya Shah"
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1071"
+          },
+          "response": [
+            {
+              "orderId": "PO1",
+              "supplierId": "SUP-NORTHSIDE",
+              "externalId": "sys-PO1"
+            }
+          ]
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1071"
+          },
+          "response": {
+            "orders": 1,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": [
+            {
+              "docketId": "DKT1",
+              "orderId": "PO1",
+              "lines": 3
+            },
+            {
+              "docketId": "DKT2",
+              "orderId": "PO-9917",
+              "lines": 1
+            }
+          ]
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "short",
+            "orderId": "PO1",
+            "owner": "Sam Nguyen",
+            "detail": "PVC-BEND-100: ordered 4, received 1."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "delivery": "PO1",
+            "docketId": "DKT1",
+            "lines": [
+              "PVC-DWV-100:6",
+              "PVC-BEND-100:1/short",
+              "SOLV-CEM-500:2"
+            ]
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "no_order",
+            "orderId": "PO-9917",
+            "owner": "Priya Shah",
+            "detail": "Docket DKT2 names order PO-9917, which is not a sent order. Not recorded as a delivery."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "variance-is-a-queue",
+      "n": 8,
+      "title": "Short, over, wrong item and a changed price are escalated with the order id and an owner, never absorbed",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Four escalations exist, one per kind: short, over, wrong_item and price_changed. Each names the order id and a person as owner. A variance with no escalation, or one with no owner, fails.",
+      "actual": "28 port call(s); 1 order(s) PO1:SUP-NORTHSIDE:delivered; 4 escalation(s) short,over,price_changed,wrong_item",
+      "stimulus": {
+        "description": "One delivery carrying a short line, an over-supplied line, a line the order does not hold, and a line whose docket price differs from the order.",
+        "now": "2026-09-28T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "variance-is-a-queue"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "JOB-1081"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NORTHSIDE",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-BAYSIDE",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "SUP-NEWCO",
+              "approved": false,
+              "leadDays": 1
+            }
+          ]
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NORTHSIDE",
+            "at": "2026-09-28T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "NTS-2026-09",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-BAYSIDE",
+            "at": "2026-09-28T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "BBW-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NEWCO",
+            "at": "2026-09-28T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "CH-0926",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Under $2,000 to an approved supplier",
+            "threshold": 2000,
+            "owner": "Priya Shah"
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1081"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1081"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1081",
+            "supplierId": "SUP-NORTHSIDE",
+            "lines": [
+              "PVC-DWV-100x6@38.5",
+              "PVC-BEND-100x4@9.2",
+              "CU-15-6Mx3@64",
+              "SOLV-CEM-500x2@21.75"
+            ],
+            "edition": "NTS-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO1",
+            "externalId": "sys-PO1"
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO1",
+            "person": null,
+            "rule": "Under $2,000 to an approved supplier"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "JOB-1081"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NORTHSIDE",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-BAYSIDE",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "SUP-NEWCO",
+              "approved": false,
+              "leadDays": 1
+            }
+          ]
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NORTHSIDE",
+            "at": "2026-09-30T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "NTS-2026-09",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-BAYSIDE",
+            "at": "2026-09-30T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "BBW-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NEWCO",
+            "at": "2026-09-30T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "CH-0926",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Under $2,000 to an approved supplier",
+            "threshold": 2000,
+            "owner": "Priya Shah"
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1081"
+          },
+          "response": [
+            {
+              "orderId": "PO1",
+              "supplierId": "SUP-NORTHSIDE",
+              "externalId": "sys-PO1"
+            }
+          ]
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1081"
+          },
+          "response": {
+            "orders": 1,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": [
+            {
+              "docketId": "DKT1",
+              "orderId": "PO1",
+              "lines": 5
+            }
+          ]
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "short",
+            "orderId": "PO1",
+            "owner": "Sam Nguyen",
+            "detail": "PVC-DWV-100: ordered 6, received 4."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "over",
+            "orderId": "PO1",
+            "owner": "Sam Nguyen",
+            "detail": "PVC-BEND-100: ordered 4, received 7."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "price_changed",
+            "orderId": "PO1",
+            "owner": "Sam Nguyen",
+            "detail": "CU-15-6M: ordered at $64, docket says $71.5."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "wrong_item",
+            "orderId": "PO1",
+            "owner": "Sam Nguyen",
+            "detail": "GYP-10-2400 x5 arrived and is not on the order."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "delivery": "PO1",
+            "docketId": "DKT1",
+            "lines": [
+              "PVC-DWV-100:4/short",
+              "PVC-BEND-100:7",
+              "CU-15-6M:3",
+              "SOLV-CEM-500:2"
+            ]
+          },
+          "response": {
+            "attached": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "nothing-is-substituted-silently",
+      "n": 9,
+      "title": "A supplier's substitution is accepted only by a named person",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The signed line carries an acceptance naming the supervisor. The other is escalated as a substitution and is not counted as received. An acceptance with no person's name fails.",
+      "actual": "26 port call(s); 1 order(s) PO1:SUP-NORTHSIDE:delivered; 1 escalation(s) substitution; 1 acceptance(s)",
+      "stimulus": {
+        "description": "One delivery with two substituted lines: one the site supervisor signed for on the docket by name, one nobody accepted.",
+        "now": "2026-09-28T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "nothing-is-substituted-silently"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "JOB-1091"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NORTHSIDE",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-BAYSIDE",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "SUP-NEWCO",
+              "approved": false,
+              "leadDays": 1
+            }
+          ]
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NORTHSIDE",
+            "at": "2026-09-28T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "NTS-2026-09",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-BAYSIDE",
+            "at": "2026-09-28T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "BBW-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NEWCO",
+            "at": "2026-09-28T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "CH-0926",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Under $2,000 to an approved supplier",
+            "threshold": 2000,
+            "owner": "Priya Shah"
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1091"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1091"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1091",
+            "supplierId": "SUP-NORTHSIDE",
+            "lines": [
+              "PVC-DWV-100x6@38.5",
+              "PVC-BEND-100x4@9.2",
+              "SOLV-CEM-500x2@21.75"
+            ],
+            "edition": "NTS-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO1",
+            "externalId": "sys-PO1"
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO1",
+            "person": null,
+            "rule": "Under $2,000 to an approved supplier"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "JOB-1091"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NORTHSIDE",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-BAYSIDE",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "SUP-NEWCO",
+              "approved": false,
+              "leadDays": 1
+            }
+          ]
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NORTHSIDE",
+            "at": "2026-09-30T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "NTS-2026-09",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-BAYSIDE",
+            "at": "2026-09-30T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "BBW-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NEWCO",
+            "at": "2026-09-30T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "CH-0926",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Under $2,000 to an approved supplier",
+            "threshold": 2000,
+            "owner": "Priya Shah"
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1091"
+          },
+          "response": [
+            {
+              "orderId": "PO1",
+              "supplierId": "SUP-NORTHSIDE",
+              "externalId": "sys-PO1"
+            }
+          ]
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1091"
+          },
+          "response": {
+            "orders": 1,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": [
+            {
+              "docketId": "DKT1",
+              "orderId": "PO1",
+              "lines": 3
+            }
+          ]
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "accept": {
+              "orderId": "PO1",
+              "code": "PVC-DWV-100"
+            },
+            "person": "Tom Reilly",
+            "rule": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "substitution",
+            "orderId": "PO1",
+            "owner": "Sam Nguyen",
+            "detail": "PVC-BEND-88 arrived in place of PVC-BEND-100 and nobody accepted it. Held, not received."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "delivery": "PO1",
+            "docketId": "DKT1",
+            "lines": [
+              "PVC-DWV-100:6/substituted",
+              "PVC-BEND-100:0/substituted",
+              "SOLV-CEM-500:2"
+            ]
+          },
+          "response": {
+            "attached": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "the-record-by-job",
+      "n": 10,
+      "title": "Every order, release, delivery and variance is retrievable by job",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A read by job id returns the orders with external ids and catalogue editions, the release with a name or a rule, the delivery lines and the variance. A record missing the release or the delivery fails.",
+      "actual": "28 port call(s); 2 order(s) PO1:SUP-NORTHSIDE:delivered PO2:SUP-BAYSIDE:draft; 2 escalation(s) needs_person,short; read by job: 2 order(s), 1 deliver(ies), 2 escalation(s)",
+      "stimulus": {
+        "description": "One job ordered, released, delivered short and escalated.",
+        "now": "2026-09-28T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "the-record-by-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "JOB-1101"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NORTHSIDE",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-BAYSIDE",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "SUP-NEWCO",
+              "approved": false,
+              "leadDays": 1
+            }
+          ]
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NORTHSIDE",
+            "at": "2026-09-28T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "NTS-2026-09",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-BAYSIDE",
+            "at": "2026-09-28T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "BBW-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NEWCO",
+            "at": "2026-09-28T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "CH-0926",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Under $2,000 to an approved supplier",
+            "threshold": 2000,
+            "owner": "Priya Shah"
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1101"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1101"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1101",
+            "supplierId": "SUP-NORTHSIDE",
+            "lines": [
+              "PVC-DWV-100x6@38.5",
+              "SOLV-CEM-500x2@21.75"
+            ],
+            "edition": "NTS-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO1",
+            "externalId": "sys-PO1"
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1101",
+            "supplierId": "SUP-BAYSIDE",
+            "lines": [
+              "LVL-240-6Mx8@312"
+            ],
+            "edition": "BBW-2026-Q3",
+            "park": null
+          },
+          "response": {
+            "id": "PO2",
+            "externalId": "sys-PO2"
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO1",
+            "person": null,
+            "rule": "Under $2,000 to an approved supplier"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "needs_person",
+            "orderId": "PO2",
+            "owner": "Priya Shah",
+            "detail": "Order PO2 for job JOB-1101 waits for a named person's release: the order total $2496.00 is over the $2000.00 limit."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "JOB-1101"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NORTHSIDE",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-BAYSIDE",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "SUP-NEWCO",
+              "approved": false,
+              "leadDays": 1
+            }
+          ]
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NORTHSIDE",
+            "at": "2026-09-30T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "NTS-2026-09",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-BAYSIDE",
+            "at": "2026-09-30T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "BBW-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NEWCO",
+            "at": "2026-09-30T22:00:00.000Z"
+          },
+          "response": {
+            "edition": "CH-0926",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Under $2,000 to an approved supplier",
+            "threshold": 2000,
+            "owner": "Priya Shah"
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1101"
+          },
+          "response": [
+            {
+              "orderId": "PO1",
+              "supplierId": "SUP-NORTHSIDE",
+              "externalId": "sys-PO1"
+            },
+            {
+              "orderId": "PO2",
+              "supplierId": "SUP-BAYSIDE",
+              "externalId": "sys-PO2"
+            }
+          ]
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1101"
+          },
+          "response": {
+            "orders": 2,
+            "deliveries": 0,
+            "escalations": 1
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": [
+            {
+              "docketId": "DKT1",
+              "orderId": "PO1",
+              "lines": 2
+            }
+          ]
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "short",
+            "orderId": "PO1",
+            "owner": "Sam Nguyen",
+            "detail": "PVC-DWV-100: ordered 6, received 5."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "delivery": "PO1",
+            "docketId": "DKT1",
+            "lines": [
+              "PVC-DWV-100:5/short",
+              "SOLV-CEM-500:2"
+            ]
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-30T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1101"
+          },
+          "response": {
+            "orders": 2,
+            "deliveries": 1,
+            "escalations": 2
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 11,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the catalogue and the release rule runs on.",
+        "now": "2026-11-03T14:00:50.871Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 12,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "One order per supplier in the ordering system with its own id after two runs, the stock line reserved and not ordered, the unknown code parked and unpriced, the over-threshold order waiting for a named person, and the short delivery recorded line by line with a variance owned by someone.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "A real job on the business's own job system, real stock, a real supplier account with its catalogue, and a real delivery docket.",
+        "now": "2026-11-03T14:00:50.871Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 12,
+    "pass": 9,
+    "fail": 0,
+    "shapeOnly": 1,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "slug": "order-release",
+  "name": "Order Release",
+  "office_task": "Turn each job's material list into one purchase order per supplier, and hold any order over the spending limit, or to an unapproved supplier, until a named person releases it.",
+  "verticals": ["b2b-office", "trades-building"],
+  "standards": ["material-order"],
+  "systems_of_record": [
+    "the job system that issues the job_id and holds its material list (ServiceM8, Simpro, Tradify, Fergus or a job sheet)",
+    "the supplier portal or job-system purchasing that issues each order's external id"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/order-release" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "job.updated", "wake": "webhook" },
+    { "event": "document.received", "wake": "webhook" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "order.sent",
+      "write": "one purchase order per job and supplier, priced from that supplier's catalogue, released by the release rule under the limit to an approved supplier or by a named person otherwise, and sent against the job",
+      "readback": "the ordering system returns the order's external id, and reading the job's orders back by job_id returns that id with the supplier, the catalogue edition and who or which rule released it; no id back is a failed write, raised to a person, and nothing is sent"
+    },
+    {
+      "event": "delivery.recorded",
+      "write": "the supplier's docket matched to its sent order by order id, line by line, with the quantity received and a reason (short, damaged, substituted) on any line that differs",
+      "readback": "reading the job's record by job_id returns the delivery on that order with one line per ordered line; a docket that names no sent order is never recorded and is raised instead"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the order naming the person who owns it: an order waiting for a named release (over the limit, or to a supplier not on the approved list), a code no catalogue holds, an order write with no id back, a docket with no sent order, and every delivery variance (short, over, wrong item, changed price, unaccepted substitution)",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the job_id, the order id, the kind and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "material.release_needed",
+      "material.not_in_catalogue",
+      "material.write_failed",
+      "material.no_order_for_docket",
+      "material.short",
+      "material.over",
+      "material.wrong_item",
+      "material.price_changed",
+      "material.substitution_unaccepted"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.job_id",
+      "seam.order_external_id",
+      "seam.supplier_id",
+      "seam.catalogue_edition",
+      "seam.released_by",
+      "seam.order_status",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
