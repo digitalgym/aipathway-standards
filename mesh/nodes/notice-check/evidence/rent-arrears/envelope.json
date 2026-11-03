@@ -1,0 +1,2004 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793714765381",
+  "standard": "rent-arrears-build-standard",
+  "spec": "AIP-BS-RENT-ARREARS",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-03T14:06:05.346Z",
+  "finishedAt": "2026-11-03T14:06:05.381Z",
+  "results": [
+    {
+      "checkId": "derived-every-run",
+      "n": 1,
+      "title": "The arrears position is derived every run",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The second run reads the ledger again and reflects the credit. A cached position surviving into the second run fails.",
+      "actual": "balances by run: 96000 then 58000",
+      "stimulus": {
+        "description": "A tenancy in arrears, run once, then the ledger credited, then run again in the same session.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "derived-every-run"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancies": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1101"
+          },
+          "response": {
+            "balance": 96000,
+            "paidToDate": "2026-09-16T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "messagesFor": "TEN-1101"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "state": "QLD"
+          },
+          "response": {
+            "state": "QLD",
+            "effectiveFrom": "2026-01-01T00:00:00.000Z",
+            "thresholdDays": 8,
+            "noticeDays": 7
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "TEN-1101"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1101"
+          },
+          "response": {
+            "balance": 96000,
+            "paidToDate": "2026-09-16T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "tenancyId": "TEN-1101",
+            "body": "Hi, this is an automated message from your property manager about rent on TEN-1101. Our records show rent paid up to 2026-09-16. If you have paid since then, please disregard this. If something has changed for you, reply and someone from the office will call."
+          },
+          "response": {
+            "sent": true,
+            "at": "2026-09-21T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:05:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancies": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T04:05:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1101"
+          },
+          "response": {
+            "balance": 58000,
+            "paidToDate": "2026-09-16T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:05:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "messagesFor": "TEN-1101"
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T04:05:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "state": "QLD"
+          },
+          "response": {
+            "state": "QLD",
+            "effectiveFrom": "2026-01-01T00:00:00.000Z",
+            "thresholdDays": 8,
+            "noticeDays": 7
+          }
+        },
+        {
+          "at": "2026-09-21T04:05:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "TEN-1101"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:05:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1101"
+          },
+          "response": {
+            "balance": 58000,
+            "paidToDate": "2026-09-16T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:05:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "tenancyId": "TEN-1101",
+            "body": "Automated reminder about rent on TEN-1101: paid up to 2026-09-16 on our records. If paying is difficult right now, reply and a person will get in touch."
+          },
+          "response": {
+            "sent": true,
+            "at": "2026-09-21T04:05:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "paid-to-date-drives-timing",
+      "n": 2,
+      "title": "Paid-to date drives escalation timing",
+      "verdict": "pass",
+      "held": true,
+      "expected": "They escalate at different times, and both carry the paid-to date beside the balance. A balance alone fails.",
+      "actual": "ranked: TEN-1202 paid-to 2026-09-03 next 2026-09-11; TEN-1201 paid-to 2026-09-17 next 2026-09-25",
+      "stimulus": {
+        "description": "Two tenancies with identical balances but paid-to dates a fortnight apart.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "paid-to-date-drives-timing"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancies": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1201"
+          },
+          "response": {
+            "balance": 112000,
+            "paidToDate": "2026-09-17T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "messagesFor": "TEN-1201"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "state": "QLD"
+          },
+          "response": {
+            "state": "QLD",
+            "effectiveFrom": "2026-01-01T00:00:00.000Z",
+            "thresholdDays": 8,
+            "noticeDays": 7
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1202"
+          },
+          "response": {
+            "balance": 112000,
+            "paidToDate": "2026-09-03T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "messagesFor": "TEN-1202"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "state": "QLD"
+          },
+          "response": {
+            "state": "QLD",
+            "effectiveFrom": "2026-01-01T00:00:00.000Z",
+            "thresholdDays": 8,
+            "noticeDays": 7
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "prepare": "TEN-1202"
+          },
+          "response": {
+            "issued": false,
+            "awaiting": "a named release"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "tenancyId": "TEN-1202",
+            "reason": "notice_drafted_awaiting_release: notice to remedy breach (Form 11), QLD@2026-01-01T00:00:00.000Z, paid to 2026-09-03, 18 days past, threshold met 2026-09-11, 7 days to remedy, remedy by 2026-09-28 at the earliest; a named person serves it"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "TEN-1202",
+              "TEN-1201"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1201"
+          },
+          "response": {
+            "balance": 112000,
+            "paidToDate": "2026-09-17T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "tenancyId": "TEN-1201",
+            "body": "Hi, this is an automated message from your property manager about rent on TEN-1201. Our records show rent paid up to 2026-09-17. If you have paid since then, please disregard this. If something has changed for you, reply and someone from the office will call."
+          },
+          "response": {
+            "sent": true,
+            "at": "2026-09-21T04:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "thresholds-are-dated-rules",
+      "n": 3,
+      "title": "Statutory thresholds are dated rules",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The threshold and the notice period differ between them, from a dated rule store. A single constant is wrong in at least one state by construction.",
+      "actual": "rules read: {\"state\":\"QLD\",\"effectiveFrom\":\"2026-01-01T00:00:00.000Z\",\"thresholdDays\":8,\"noticeDays\":7} {\"state\":\"VIC\",\"effectiveFrom\":\"2026-01-01T00:00:00.000Z\",\"thresholdDays\":14,\"noticeDays\":14}",
+      "stimulus": {
+        "description": "The same arrears position on a Queensland tenancy and a Victorian one.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "thresholds-are-dated-rules"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancies": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1301"
+          },
+          "response": {
+            "balance": 88000,
+            "paidToDate": "2026-09-11T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "messagesFor": "TEN-1301"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "state": "QLD"
+          },
+          "response": {
+            "state": "QLD",
+            "effectiveFrom": "2026-01-01T00:00:00.000Z",
+            "thresholdDays": 8,
+            "noticeDays": 7
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "prepare": "TEN-1301"
+          },
+          "response": {
+            "issued": false,
+            "awaiting": "a named release"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "tenancyId": "TEN-1301",
+            "reason": "notice_drafted_awaiting_release: notice to remedy breach (Form 11), QLD@2026-01-01T00:00:00.000Z, paid to 2026-09-11, 10 days past, threshold met 2026-09-19, 7 days to remedy, remedy by 2026-09-28 at the earliest; a named person serves it"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1302"
+          },
+          "response": {
+            "balance": 88000,
+            "paidToDate": "2026-09-11T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "messagesFor": "TEN-1302"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "state": "VIC"
+          },
+          "response": {
+            "state": "VIC",
+            "effectiveFrom": "2026-01-01T00:00:00.000Z",
+            "thresholdDays": 14,
+            "noticeDays": 14
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "TEN-1301",
+              "TEN-1302"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1302"
+          },
+          "response": {
+            "balance": 88000,
+            "paidToDate": "2026-09-11T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "tenancyId": "TEN-1302",
+            "body": "Hi, this is an automated message from your property manager about rent on TEN-1302. Our records show rent paid up to 2026-09-11. If you have paid since then, please disregard this. If something has changed for you, reply and someone from the office will call."
+          },
+          "response": {
+            "sent": true,
+            "at": "2026-09-21T04:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "stops-checked-per-message",
+      "n": 4,
+      "title": "Stop conditions are checked per message",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The second and third do not send. A build that evaluated stops once at the top of the sequence sends them, which is the failure this exists to catch.",
+      "actual": "sent 1, refused 0; TEN-1401 stop:payment_received after 1 message(s); no more will send | TEN-1401 stop:payment_received after 1 message(s); no more will send",
+      "stimulus": {
+        "description": "A sequence of three messages, with the tenancy paid in full between the first and the second.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "stops-checked-per-message"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancies": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1401"
+          },
+          "response": {
+            "balance": 61000,
+            "paidToDate": "2026-09-17T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "messagesFor": "TEN-1401"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "state": "NSW"
+          },
+          "response": {
+            "state": "NSW",
+            "effectiveFrom": "2026-01-01T00:00:00.000Z",
+            "thresholdDays": 14,
+            "noticeDays": 14
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1402"
+          },
+          "response": {
+            "balance": 61000,
+            "paidToDate": "2026-09-17T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "messagesFor": "TEN-1402"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "state": "NSW"
+          },
+          "response": {
+            "state": "NSW",
+            "effectiveFrom": "2026-01-01T00:00:00.000Z",
+            "thresholdDays": 14,
+            "noticeDays": 14
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "TEN-1401",
+              "TEN-1402"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1401"
+          },
+          "response": {
+            "balance": 61000,
+            "paidToDate": "2026-09-17T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "tenancyId": "TEN-1401",
+            "body": "Hi, this is an automated message from your property manager about rent on TEN-1401. Our records show rent paid up to 2026-09-17. If you have paid since then, please disregard this. If something has changed for you, reply and someone from the office will call."
+          },
+          "response": {
+            "sent": true,
+            "at": "2026-09-21T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1402"
+          },
+          "response": {
+            "balance": 61000,
+            "paidToDate": "2026-09-17T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancies": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1401"
+          },
+          "response": {
+            "balance": 0,
+            "paidToDate": "2026-09-21T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "messagesFor": "TEN-1401"
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "tenancyId": "TEN-1401",
+            "reason": "stop:payment_received after 1 message(s); no more will send"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1402"
+          },
+          "response": {
+            "balance": 61000,
+            "paidToDate": "2026-09-17T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "messagesFor": "TEN-1402"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "state": "NSW"
+          },
+          "response": {
+            "state": "NSW",
+            "effectiveFrom": "2026-01-01T00:00:00.000Z",
+            "thresholdDays": 14,
+            "noticeDays": 14
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "TEN-1402"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1402"
+          },
+          "response": {
+            "balance": 61000,
+            "paidToDate": "2026-09-17T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancies": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1401"
+          },
+          "response": {
+            "balance": 0,
+            "paidToDate": "2026-09-21T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "messagesFor": "TEN-1401"
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "tenancyId": "TEN-1401",
+            "reason": "stop:payment_received after 1 message(s); no more will send"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1402"
+          },
+          "response": {
+            "balance": 61000,
+            "paidToDate": "2026-09-17T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "messagesFor": "TEN-1402"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "state": "NSW"
+          },
+          "response": {
+            "state": "NSW",
+            "effectiveFrom": "2026-01-01T00:00:00.000Z",
+            "thresholdDays": 14,
+            "noticeDays": 14
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "TEN-1402"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1402"
+          },
+          "response": {
+            "balance": 61000,
+            "paidToDate": "2026-09-17T04:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "stale-ledger-escalates",
+      "n": 5,
+      "title": "An unmatched or stale ledger escalates",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Neither is messaged. Both escalate with the reason. Chasing on a stale read fails even if the balance happens to be right.",
+      "actual": "sends 0, notices 0; TEN-1501 ledger_read_failed: ledger read at 2026-09-21T04:00:00.000Z; nothing sent, no notice checked | TEN-1502 ledger_stale: ledger read at 2026-09-19T04:00:00.000Z; nothing sent, no notice checked",
+      "stimulus": {
+        "description": "A tenancy whose ledger read fails, and one whose last read is well out of date.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "stale-ledger-escalates"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancies": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1501"
+          },
+          "response": {
+            "failed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "tenancyId": "TEN-1501",
+            "reason": "ledger_read_failed: ledger read at 2026-09-21T04:00:00.000Z; nothing sent, no notice checked"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1502"
+          },
+          "response": {
+            "balance": 74000,
+            "paidToDate": "2026-09-17T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "tenancyId": "TEN-1502",
+            "reason": "ledger_stale: ledger read at 2026-09-19T04:00:00.000Z; nothing sent, no notice checked"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "notices-need-a-person",
+      "n": 6,
+      "title": "Notices are never served without a person",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "A notice is drafted and held. Nothing is served until a named person releases it.",
+      "actual": "notice calls: {\"prepare\":\"TEN-1601\"}=>{\"issued\":false,\"awaiting\":\"a named release\"} {\"prepare\":\"TEN-1602\"}=>{\"issued\":false,\"awaiting\":\"a named release\"} {\"release\":\"TEN-1601\",\"person\":\"Megan Doyle, senior property manager\"}=>{\"issued\":true}",
+      "stimulus": {
+        "description": "An arrears position that has crossed the statutory threshold.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "notices-need-a-person"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancies": true
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1601"
+          },
+          "response": {
+            "balance": 140000,
+            "paidToDate": "2026-09-09T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "messagesFor": "TEN-1601"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "state": "QLD"
+          },
+          "response": {
+            "state": "QLD",
+            "effectiveFrom": "2026-01-01T00:00:00.000Z",
+            "thresholdDays": 8,
+            "noticeDays": 7
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "prepare": "TEN-1601"
+          },
+          "response": {
+            "issued": false,
+            "awaiting": "a named release"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "tenancyId": "TEN-1601",
+            "reason": "notice_drafted_awaiting_release: notice to remedy breach (Form 11), QLD@2026-01-01T00:00:00.000Z, paid to 2026-09-09, 12 days past, threshold met 2026-09-17, 7 days to remedy, remedy by 2026-09-28 at the earliest; a named person serves it"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1602"
+          },
+          "response": {
+            "balance": 98000,
+            "paidToDate": "2026-09-12T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "messagesFor": "TEN-1602"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "state": "QLD"
+          },
+          "response": {
+            "state": "QLD",
+            "effectiveFrom": "2026-01-01T00:00:00.000Z",
+            "thresholdDays": 8,
+            "noticeDays": 7
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "prepare": "TEN-1602"
+          },
+          "response": {
+            "issued": false,
+            "awaiting": "a named release"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "tenancyId": "TEN-1602",
+            "reason": "notice_drafted_awaiting_release: notice to remedy breach (Form 11), QLD@2026-01-01T00:00:00.000Z, paid to 2026-09-12, 9 days past, threshold met 2026-09-20, 7 days to remedy, remedy by 2026-09-28 at the earliest; a named person serves it"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1603"
+          },
+          "response": {
+            "balance": 98000,
+            "paidToDate": "2026-09-15T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "messagesFor": "TEN-1603"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "state": "QLD"
+          },
+          "response": {
+            "state": "QLD",
+            "effectiveFrom": "2026-01-01T00:00:00.000Z",
+            "thresholdDays": 8,
+            "noticeDays": 7
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 3
+          },
+          "response": {
+            "order": [
+              "TEN-1601",
+              "TEN-1602",
+              "TEN-1603"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1603"
+          },
+          "response": {
+            "balance": 98000,
+            "paidToDate": "2026-09-15T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "tenancyId": "TEN-1603",
+            "body": "Hi, this is an automated message from your property manager about rent on TEN-1603. Our records show rent paid up to 2026-09-15. If you have paid since then, please disregard this. If something has changed for you, reply and someone from the office will call."
+          },
+          "response": {
+            "sent": true,
+            "at": "2026-09-21T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancies": true
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1601"
+          },
+          "response": {
+            "balance": 140000,
+            "paidToDate": "2026-09-09T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "state": "QLD"
+          },
+          "response": {
+            "state": "QLD",
+            "effectiveFrom": "2026-01-01T00:00:00.000Z",
+            "thresholdDays": 8,
+            "noticeDays": 7
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "release": "TEN-1601",
+            "person": "Megan Doyle, senior property manager"
+          },
+          "response": {
+            "issued": true
+          }
+        },
+        {
+          "at": "2026-09-21T05:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancies": true
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-09-21T05:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1602"
+          },
+          "response": {
+            "balance": 0,
+            "paidToDate": "2026-09-21T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T05:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "state": "QLD"
+          },
+          "response": {
+            "state": "QLD",
+            "effectiveFrom": "2026-01-01T00:00:00.000Z",
+            "thresholdDays": 8,
+            "noticeDays": 7
+          }
+        },
+        {
+          "at": "2026-09-21T05:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "tenancyId": "TEN-1602",
+            "reason": "notice_check_failed at release by Megan Doyle, senior property manager: ledger shows nothing owing; 0 days past paid-to is short of the QLD threshold of 8; not released"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "no-automatic-fee",
+      "n": 7,
+      "title": "No fee is applied automatically",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "No ledger write occurs. Any charge requires a named person, and the absence of one is not a silent skip but a held item.",
+      "actual": "ledger writes 0, held fees 1",
+      "stimulus": {
+        "description": "An arrears position that a fee rule would otherwise attach a charge to.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "no-automatic-fee"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancies": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1701"
+          },
+          "response": {
+            "balance": 66000,
+            "paidToDate": "2026-09-15T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "messagesFor": "TEN-1701"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "state": "VIC"
+          },
+          "response": {
+            "state": "VIC",
+            "effectiveFrom": "2026-01-01T00:00:00.000Z",
+            "thresholdDays": 14,
+            "noticeDays": 14
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "fee": "TEN-1701",
+            "cents": 3000
+          },
+          "response": {
+            "applied": false,
+            "held": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "tenancyId": "TEN-1701",
+            "reason": "fee_held_for_person: landlord late-fee instruction would add 3000 cents; a named person decides"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "TEN-1701"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1701"
+          },
+          "response": {
+            "balance": 66000,
+            "paidToDate": "2026-09-15T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "tenancyId": "TEN-1701",
+            "body": "Hi, this is an automated message from your property manager about rent on TEN-1701. Our records show rent paid up to 2026-09-15. If you have paid since then, please disregard this. If something has changed for you, reply and someone from the office will call."
+          },
+          "response": {
+            "sent": true,
+            "at": "2026-09-21T04:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "messages-retained",
+      "n": 8,
+      "title": "Every message is retained",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "Every message is retrievable with its timestamp and recipient. A count without the content fails.",
+      "actual": "sent 3; queried 2026-09-21T04:00:00.000Z to TEN-1801, 2026-09-22T04:00:00.000Z to TEN-1801, 2026-09-23T04:00:00.000Z to TEN-1801",
+      "stimulus": {
+        "description": "A full sequence sent, then a query for what was sent to whom and when.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "messages-retained"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancies": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1801"
+          },
+          "response": {
+            "balance": 52000,
+            "paidToDate": "2026-09-18T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "messagesFor": "TEN-1801"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "state": "NSW"
+          },
+          "response": {
+            "state": "NSW",
+            "effectiveFrom": "2026-01-01T00:00:00.000Z",
+            "thresholdDays": 14,
+            "noticeDays": 14
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "TEN-1801"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1801"
+          },
+          "response": {
+            "balance": 52000,
+            "paidToDate": "2026-09-18T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "tenancyId": "TEN-1801",
+            "body": "Hi, this is an automated message from your property manager about rent on TEN-1801. Our records show rent paid up to 2026-09-18. If you have paid since then, please disregard this. If something has changed for you, reply and someone from the office will call."
+          },
+          "response": {
+            "sent": true,
+            "at": "2026-09-21T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancies": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1801"
+          },
+          "response": {
+            "balance": 52000,
+            "paidToDate": "2026-09-18T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "messagesFor": "TEN-1801"
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "state": "NSW"
+          },
+          "response": {
+            "state": "NSW",
+            "effectiveFrom": "2026-01-01T00:00:00.000Z",
+            "thresholdDays": 14,
+            "noticeDays": 14
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "TEN-1801"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1801"
+          },
+          "response": {
+            "balance": 52000,
+            "paidToDate": "2026-09-18T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "tenancyId": "TEN-1801",
+            "body": "Automated reminder about rent on TEN-1801: paid up to 2026-09-18 on our records. If paying is difficult right now, reply and a person will get in touch."
+          },
+          "response": {
+            "sent": true,
+            "at": "2026-09-22T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancies": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1801"
+          },
+          "response": {
+            "balance": 52000,
+            "paidToDate": "2026-09-18T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "messagesFor": "TEN-1801"
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "state": "NSW"
+          },
+          "response": {
+            "state": "NSW",
+            "effectiveFrom": "2026-01-01T00:00:00.000Z",
+            "thresholdDays": 14,
+            "noticeDays": 14
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "TEN-1801"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancyId": "TEN-1801"
+          },
+          "response": {
+            "balance": 52000,
+            "paidToDate": "2026-09-18T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "tenancyId": "TEN-1801",
+            "body": "Automated message about rent on TEN-1801: our records still show paid up to 2026-09-18. Your property manager will contact you. Reply any time if you have paid or want to talk."
+          },
+          "response": {
+            "sent": true,
+            "at": "2026-09-23T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "messagesFor": "TEN-1801"
+          },
+          "response": {
+            "count": 3
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "automation-discloses",
+      "n": 9,
+      "title": "Automation discloses itself and stops on hardship",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The first does not open. The second discloses, then stops and routes to a person on the hardship statement rather than continuing the sequence.",
+      "actual": "first {\"opened\":false,\"why\":\"outside_permitted_hours\"}, second {\"opened\":true,\"stopped\":\"hardship_stated\"}",
+      "stimulus": {
+        "description": "An automated conversation opened at 8:30pm, and a second where the tenant states hardship.",
+        "now": "2026-09-21T10:30:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "automation-discloses"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancies": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-22T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "tenancies": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-22T00:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "tenancyId": "TEN-1902",
+            "text": "This is an automated assistant for your property manager, about rent. You can ask for a person at any time."
+          },
+          "response": {
+            "opened": true
+          }
+        },
+        {
+          "at": "2026-09-22T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "tenancyId": "TEN-1902",
+            "reason": "stop:hardship_stated in conversation (\"Sorry, I lost my job three weeks ago and I can't afford it this fortnight\"); handed to a person"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 10,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the rule store runs on.",
+        "now": "2026-11-03T14:06:05.381Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 11,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "The remaining messages do not send, and the notice is still waiting on a person.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "A real sequence against a live ledger, with a real payment landing mid-way.",
+        "now": "2026-11-03T14:06:05.381Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 11,
+    "pass": 5,
+    "fail": 0,
+    "shapeOnly": 4,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
