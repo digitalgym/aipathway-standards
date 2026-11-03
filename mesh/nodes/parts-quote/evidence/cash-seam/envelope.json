@@ -1,0 +1,2724 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793711015285",
+  "standard": "cash-seam-build-standard",
+  "spec": "AIP-BS-CASH-SEAM",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-03T13:03:35.278Z",
+  "finishedAt": "2026-11-03T13:03:35.285Z",
+  "results": [
+    {
+      "checkId": "identity-from-the-system-of-record",
+      "n": 1,
+      "title": "Every downstream step takes its id from the system of record, never from a name or a phone number",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The quote carries its job's id from the job system and the invoice carries that quote's id and that job's id. No search by name or phone runs while a downstream event is handled. An invoice on the other customer's job, or any reference that is not an id the system issued, fails.",
+      "actual": "21 port call(s); jobs 2, quotes 2, invoices 1, chases 0, escalations none",
+      "stimulus": {
+        "description": "Two open jobs for two different customers who share a name. One of them has a quote accepted, and the job is completed.",
+        "now": "2026-10-03T08:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "identity-from-the-system-of-record"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-03T08:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-4401",
+            "event": "EV-1",
+            "eventName": "job_created"
+          },
+          "response": {
+            "id": "JS-4401",
+            "status": "open",
+            "quotes": [],
+            "exception": null
+          }
+        },
+        {
+          "at": "2026-10-03T08:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "owners": true
+          },
+          "response": {
+            "job": "Priya Nair",
+            "quote": "Sam Okafor",
+            "invoice": "Lee Tran",
+            "chase": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-10-03T08:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JS-4401",
+            "trigger": "EV-1"
+          },
+          "response": {
+            "externalId": "Q-2001"
+          }
+        },
+        {
+          "at": "2026-10-03T08:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "quote": "Q-2001",
+            "event": "EV-1",
+            "eventName": "job_created"
+          },
+          "response": {
+            "id": "Q-2001",
+            "jobId": "JS-4401",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-10-03T08:01:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-4402",
+            "event": "EV-2",
+            "eventName": "job_created"
+          },
+          "response": {
+            "id": "JS-4402",
+            "status": "open",
+            "quotes": [],
+            "exception": null
+          }
+        },
+        {
+          "at": "2026-10-03T08:01:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "owners": true
+          },
+          "response": {
+            "job": "Priya Nair",
+            "quote": "Sam Okafor",
+            "invoice": "Lee Tran",
+            "chase": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-10-03T08:01:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JS-4402",
+            "trigger": "EV-2"
+          },
+          "response": {
+            "externalId": "Q-2002"
+          }
+        },
+        {
+          "at": "2026-10-03T08:01:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "quote": "Q-2002",
+            "event": "EV-2",
+            "eventName": "job_created"
+          },
+          "response": {
+            "id": "Q-2002",
+            "jobId": "JS-4402",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-10-03T08:02:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-4401",
+            "event": null,
+            "eventName": null
+          },
+          "response": {
+            "id": "JS-4401",
+            "status": "open",
+            "quotes": [
+              {
+                "id": "Q-2001",
+                "status": "draft"
+              }
+            ],
+            "exception": null
+          }
+        },
+        {
+          "at": "2026-10-03T08:02:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "quote": "Q-2001",
+            "event": null,
+            "eventName": null
+          },
+          "response": {
+            "id": "Q-2001",
+            "jobId": "JS-4401",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-10-03T08:02:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "quote",
+            "id": "Q-2001",
+            "person": "Sam Okafor",
+            "rule": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-03T08:02:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "send": "quote",
+            "id": "Q-2001",
+            "trigger": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-03T08:02:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "owners": true
+          },
+          "response": {
+            "job": "Priya Nair",
+            "quote": "Sam Okafor",
+            "invoice": "Lee Tran",
+            "chase": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-10-03T08:02:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-4401",
+            "event": "EV-3",
+            "eventName": "job_completed"
+          },
+          "response": {
+            "id": "JS-4401",
+            "status": "complete",
+            "quotes": [
+              {
+                "id": "Q-2001",
+                "status": "accepted"
+              }
+            ],
+            "exception": null
+          }
+        },
+        {
+          "at": "2026-10-03T08:02:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "ledger": true,
+            "event": "EV-3",
+            "eventName": "job_completed"
+          },
+          "response": {
+            "ids": [],
+            "overdue": []
+          }
+        },
+        {
+          "at": "2026-10-03T08:02:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "quote": "Q-2001",
+            "event": "EV-3",
+            "eventName": "job_completed"
+          },
+          "response": {
+            "id": "Q-2001",
+            "jobId": "JS-4401",
+            "status": "accepted"
+          }
+        },
+        {
+          "at": "2026-10-03T08:02:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JS-4401",
+            "quoteId": "Q-2001",
+            "trigger": "EV-3"
+          },
+          "response": {
+            "externalId": "INV-3001"
+          }
+        },
+        {
+          "at": "2026-10-03T08:02:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "invoice": "INV-3001",
+            "event": "EV-3",
+            "eventName": "job_completed"
+          },
+          "response": {
+            "id": "INV-3001",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-10-03T08:02:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "send-on-draft"
+          }
+        },
+        {
+          "at": "2026-10-03T08:02:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "invoice",
+            "id": "INV-3001",
+            "person": null,
+            "rule": "send-on-draft"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-03T08:02:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "send": "invoice",
+            "id": "INV-3001",
+            "trigger": "EV-3"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-job-per-enquiry",
+      "n": 2,
+      "title": "One job per enquiry: a repeat call or a second door attaches to the open job",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Exactly one job exists for that number. The second enquiry carries duplicate_of with the first job's id. A read for open jobs on that number preceded every job write. A second job, or a job write with no read before it, fails.",
+      "actual": "7 port call(s); jobs 1, quotes 0, invoices 0, chases 0, escalations none",
+      "stimulus": {
+        "description": "The same caller rings twice in one evening: once on the phone line, then again through the web form, from the same number.",
+        "now": "2026-10-03T08:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-job-per-enquiry"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-03T08:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "owners": true
+          },
+          "response": {
+            "job": "Priya Nair",
+            "quote": "Sam Okafor",
+            "invoice": "Lee Tran",
+            "chase": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-10-03T08:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "search": {
+              "phone": "+61733330201",
+              "status": "open"
+            },
+            "event": "EV-1",
+            "eventName": "call_received"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-03T08:00:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "enquiryId": "ENQ-1",
+            "customerName": "Ridgeway Mining Services",
+            "phone": "+61733330201",
+            "trigger": "EV-1"
+          },
+          "response": {
+            "externalId": "JS-1001"
+          }
+        },
+        {
+          "at": "2026-10-03T08:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-1001",
+            "event": "EV-1",
+            "eventName": "call_received"
+          },
+          "response": {
+            "id": "JS-1001",
+            "status": "open",
+            "quotes": [],
+            "exception": null
+          }
+        },
+        {
+          "at": "2026-10-03T11:01:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "owners": true
+          },
+          "response": {
+            "job": "Priya Nair",
+            "quote": "Sam Okafor",
+            "invoice": "Lee Tran",
+            "chase": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-10-03T11:01:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "search": {
+              "phone": "+61733330201",
+              "status": "open"
+            },
+            "event": "EV-2",
+            "eventName": "call_received"
+          },
+          "response": {
+            "ids": [
+              "JS-1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-03T11:01:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "attach": "ENQ-2",
+            "jobId": "JS-1001",
+            "trigger": "EV-2"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "no-external-id-no-write",
+      "n": 3,
+      "title": "A write that comes back without an external id is treated as not written",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "Each null write is escalated with reason write_failed. Nothing is released, sent or chased for either job, and no later record carries a null or invented reference in its place. Treating the null as a success fails.",
+      "actual": "31 port call(s); jobs 2, quotes 1, invoices 0, chases 0, escalations quote:write_failed@JS-1001/Sam Okafor invoice:held_open_exception@JS-1001/Sam Okafor invoice:write_failed@JS-1002/Lee Tran",
+      "stimulus": {
+        "description": "The full chain, with the runner injecting a null external_id on the quote write for one job and on the invoice write for another.",
+        "now": "2026-10-03T08:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "no-external-id-no-write"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-03T08:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "owners": true
+          },
+          "response": {
+            "job": "Priya Nair",
+            "quote": "Sam Okafor",
+            "invoice": "Lee Tran",
+            "chase": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-10-03T08:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "search": {
+              "phone": "+61733330301",
+              "status": "open"
+            },
+            "event": "EV-1",
+            "eventName": "call_received"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-03T08:00:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "enquiryId": "ENQ-1",
+            "customerName": "Bayside Conveyors",
+            "phone": "+61733330301",
+            "trigger": "EV-1"
+          },
+          "response": {
+            "externalId": "JS-1001"
+          }
+        },
+        {
+          "at": "2026-10-03T08:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-1001",
+            "event": "EV-1",
+            "eventName": "call_received"
+          },
+          "response": {
+            "id": "JS-1001",
+            "status": "open",
+            "quotes": [],
+            "exception": null
+          }
+        },
+        {
+          "at": "2026-10-03T08:01:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-1001",
+            "event": "EV-2",
+            "eventName": "job_created"
+          },
+          "response": {
+            "id": "JS-1001",
+            "status": "open",
+            "quotes": [],
+            "exception": null
+          }
+        },
+        {
+          "at": "2026-10-03T08:01:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "owners": true
+          },
+          "response": {
+            "job": "Priya Nair",
+            "quote": "Sam Okafor",
+            "invoice": "Lee Tran",
+            "chase": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-10-03T08:01:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JS-1001",
+            "trigger": "EV-2"
+          },
+          "response": {
+            "externalId": null
+          }
+        },
+        {
+          "at": "2026-10-03T08:01:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "stage": "quote",
+            "ref": "JS-1001",
+            "reason": "write_failed",
+            "owner": "Sam Okafor",
+            "detail": "draft_quote came back with no external id"
+          },
+          "response": {
+            "ok": true,
+            "onJob": true
+          }
+        },
+        {
+          "at": "2026-10-03T08:02:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-1001",
+            "event": null,
+            "eventName": null
+          },
+          "response": {
+            "id": "JS-1001",
+            "status": "open",
+            "quotes": [],
+            "exception": {
+              "reason": "write_failed",
+              "owner": "Sam Okafor"
+            }
+          }
+        },
+        {
+          "at": "2026-10-03T08:02:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "owners": true
+          },
+          "response": {
+            "job": "Priya Nair",
+            "quote": "Sam Okafor",
+            "invoice": "Lee Tran",
+            "chase": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-10-03T08:02:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-1001",
+            "event": "EV-3",
+            "eventName": "job_completed"
+          },
+          "response": {
+            "id": "JS-1001",
+            "status": "complete",
+            "quotes": [],
+            "exception": {
+              "reason": "write_failed",
+              "owner": "Sam Okafor"
+            }
+          }
+        },
+        {
+          "at": "2026-10-03T08:02:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "stage": "invoice",
+            "ref": "JS-1001",
+            "reason": "held_open_exception",
+            "owner": "Sam Okafor",
+            "detail": "open exception: write_failed"
+          },
+          "response": {
+            "ok": true,
+            "onJob": true
+          }
+        },
+        {
+          "at": "2026-10-03T08:03:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "owners": true
+          },
+          "response": {
+            "job": "Priya Nair",
+            "quote": "Sam Okafor",
+            "invoice": "Lee Tran",
+            "chase": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-10-03T08:03:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "search": {
+              "phone": "+61733330302",
+              "status": "open"
+            },
+            "event": "EV-4",
+            "eventName": "call_received"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-03T08:03:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "enquiryId": "ENQ-2",
+            "customerName": "Inland Pump Hire",
+            "phone": "+61733330302",
+            "trigger": "EV-4"
+          },
+          "response": {
+            "externalId": "JS-1002"
+          }
+        },
+        {
+          "at": "2026-10-03T08:03:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-1002",
+            "event": "EV-4",
+            "eventName": "call_received"
+          },
+          "response": {
+            "id": "JS-1002",
+            "status": "open",
+            "quotes": [],
+            "exception": null
+          }
+        },
+        {
+          "at": "2026-10-03T08:04:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-1002",
+            "event": "EV-5",
+            "eventName": "job_created"
+          },
+          "response": {
+            "id": "JS-1002",
+            "status": "open",
+            "quotes": [],
+            "exception": null
+          }
+        },
+        {
+          "at": "2026-10-03T08:04:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "owners": true
+          },
+          "response": {
+            "job": "Priya Nair",
+            "quote": "Sam Okafor",
+            "invoice": "Lee Tran",
+            "chase": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-10-03T08:04:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JS-1002",
+            "trigger": "EV-5"
+          },
+          "response": {
+            "externalId": "Q-2001"
+          }
+        },
+        {
+          "at": "2026-10-03T08:04:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "quote": "Q-2001",
+            "event": "EV-5",
+            "eventName": "job_created"
+          },
+          "response": {
+            "id": "Q-2001",
+            "jobId": "JS-1002",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-10-03T08:05:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-1002",
+            "event": null,
+            "eventName": null
+          },
+          "response": {
+            "id": "JS-1002",
+            "status": "open",
+            "quotes": [
+              {
+                "id": "Q-2001",
+                "status": "draft"
+              }
+            ],
+            "exception": null
+          }
+        },
+        {
+          "at": "2026-10-03T08:05:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "quote": "Q-2001",
+            "event": null,
+            "eventName": null
+          },
+          "response": {
+            "id": "Q-2001",
+            "jobId": "JS-1002",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-10-03T08:05:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "quote",
+            "id": "Q-2001",
+            "person": "Sam Okafor",
+            "rule": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-03T08:05:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "send": "quote",
+            "id": "Q-2001",
+            "trigger": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-03T08:06:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "owners": true
+          },
+          "response": {
+            "job": "Priya Nair",
+            "quote": "Sam Okafor",
+            "invoice": "Lee Tran",
+            "chase": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-10-03T08:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-1002",
+            "event": "EV-7",
+            "eventName": "job_completed"
+          },
+          "response": {
+            "id": "JS-1002",
+            "status": "complete",
+            "quotes": [
+              {
+                "id": "Q-2001",
+                "status": "accepted"
+              }
+            ],
+            "exception": null
+          }
+        },
+        {
+          "at": "2026-10-03T08:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "ledger": true,
+            "event": "EV-7",
+            "eventName": "job_completed"
+          },
+          "response": {
+            "ids": [],
+            "overdue": []
+          }
+        },
+        {
+          "at": "2026-10-03T08:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "quote": "Q-2001",
+            "event": "EV-7",
+            "eventName": "job_completed"
+          },
+          "response": {
+            "id": "Q-2001",
+            "jobId": "JS-1002",
+            "status": "accepted"
+          }
+        },
+        {
+          "at": "2026-10-03T08:06:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JS-1002",
+            "quoteId": "Q-2001",
+            "trigger": "EV-7"
+          },
+          "response": {
+            "externalId": null
+          }
+        },
+        {
+          "at": "2026-10-03T08:06:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "stage": "invoice",
+            "ref": "JS-1002",
+            "reason": "write_failed",
+            "owner": "Lee Tran",
+            "detail": "write_invoice came back with no external id"
+          },
+          "response": {
+            "ok": true,
+            "onJob": true
+          }
+        },
+        {
+          "at": "2026-11-03T08:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "ledger": true,
+            "event": "EV-8",
+            "eventName": "invoice_overdue"
+          },
+          "response": {
+            "ids": [],
+            "overdue": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "the-chain-carries-the-id",
+      "n": 4,
+      "title": "The quote carries the job id, the invoice carries the quote or job id, and the chase reads the invoice id off the live ledger",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Exactly one job, one quote, one invoice and one chase exist. The quote's job id is the job's id, the invoice's quote id and job id are those records' ids, and the chase's invoice id appeared in a ledger read made before it. Any missing or mismatched link fails.",
+      "actual": "26 port call(s); jobs 1, quotes 1, invoices 1, chases 1, escalations none",
+      "stimulus": {
+        "description": "One enquiry through the whole path: the job is created, the quote is accepted, the job is completed and the invoice goes overdue.",
+        "now": "2026-10-03T08:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "the-chain-carries-the-id"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-03T08:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "owners": true
+          },
+          "response": {
+            "job": "Priya Nair",
+            "quote": "Sam Okafor",
+            "invoice": "Lee Tran",
+            "chase": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-10-03T08:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "search": {
+              "phone": "+61733330401",
+              "status": "open"
+            },
+            "event": "EV-1",
+            "eventName": "call_received"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-03T08:00:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "enquiryId": "ENQ-1",
+            "customerName": "Northgate Packaging",
+            "phone": "+61733330401",
+            "trigger": "EV-1"
+          },
+          "response": {
+            "externalId": "JS-1001"
+          }
+        },
+        {
+          "at": "2026-10-03T08:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-1001",
+            "event": "EV-1",
+            "eventName": "call_received"
+          },
+          "response": {
+            "id": "JS-1001",
+            "status": "open",
+            "quotes": [],
+            "exception": null
+          }
+        },
+        {
+          "at": "2026-10-03T08:01:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-1001",
+            "event": "EV-2",
+            "eventName": "job_created"
+          },
+          "response": {
+            "id": "JS-1001",
+            "status": "open",
+            "quotes": [],
+            "exception": null
+          }
+        },
+        {
+          "at": "2026-10-03T08:01:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "owners": true
+          },
+          "response": {
+            "job": "Priya Nair",
+            "quote": "Sam Okafor",
+            "invoice": "Lee Tran",
+            "chase": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-10-03T08:01:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JS-1001",
+            "trigger": "EV-2"
+          },
+          "response": {
+            "externalId": "Q-2001"
+          }
+        },
+        {
+          "at": "2026-10-03T08:01:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "quote": "Q-2001",
+            "event": "EV-2",
+            "eventName": "job_created"
+          },
+          "response": {
+            "id": "Q-2001",
+            "jobId": "JS-1001",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-10-03T08:02:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-1001",
+            "event": null,
+            "eventName": null
+          },
+          "response": {
+            "id": "JS-1001",
+            "status": "open",
+            "quotes": [
+              {
+                "id": "Q-2001",
+                "status": "draft"
+              }
+            ],
+            "exception": null
+          }
+        },
+        {
+          "at": "2026-10-03T08:02:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "quote": "Q-2001",
+            "event": null,
+            "eventName": null
+          },
+          "response": {
+            "id": "Q-2001",
+            "jobId": "JS-1001",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-10-03T08:02:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "quote",
+            "id": "Q-2001",
+            "person": "Sam Okafor",
+            "rule": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-03T08:02:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "send": "quote",
+            "id": "Q-2001",
+            "trigger": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-03T08:03:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "owners": true
+          },
+          "response": {
+            "job": "Priya Nair",
+            "quote": "Sam Okafor",
+            "invoice": "Lee Tran",
+            "chase": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-10-03T08:03:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-1001",
+            "event": "EV-4",
+            "eventName": "job_completed"
+          },
+          "response": {
+            "id": "JS-1001",
+            "status": "complete",
+            "quotes": [
+              {
+                "id": "Q-2001",
+                "status": "accepted"
+              }
+            ],
+            "exception": null
+          }
+        },
+        {
+          "at": "2026-10-03T08:03:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "ledger": true,
+            "event": "EV-4",
+            "eventName": "job_completed"
+          },
+          "response": {
+            "ids": [],
+            "overdue": []
+          }
+        },
+        {
+          "at": "2026-10-03T08:03:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "quote": "Q-2001",
+            "event": "EV-4",
+            "eventName": "job_completed"
+          },
+          "response": {
+            "id": "Q-2001",
+            "jobId": "JS-1001",
+            "status": "accepted"
+          }
+        },
+        {
+          "at": "2026-10-03T08:03:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JS-1001",
+            "quoteId": "Q-2001",
+            "trigger": "EV-4"
+          },
+          "response": {
+            "externalId": "INV-3001"
+          }
+        },
+        {
+          "at": "2026-10-03T08:03:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "invoice": "INV-3001",
+            "event": "EV-4",
+            "eventName": "job_completed"
+          },
+          "response": {
+            "id": "INV-3001",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-10-03T08:03:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "send-on-draft"
+          }
+        },
+        {
+          "at": "2026-10-03T08:03:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "invoice",
+            "id": "INV-3001",
+            "person": null,
+            "rule": "send-on-draft"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-03T08:03:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "send": "invoice",
+            "id": "INV-3001",
+            "trigger": "EV-4"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-03T08:04:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "ledger": true,
+            "event": "EV-5",
+            "eventName": "invoice_overdue"
+          },
+          "response": {
+            "ids": [
+              "INV-3001"
+            ],
+            "overdue": [
+              "INV-3001"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-03T08:04:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "send-on-draft"
+          }
+        },
+        {
+          "at": "2026-11-03T08:04:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-1001",
+            "event": "EV-5",
+            "eventName": "invoice_overdue"
+          },
+          "response": {
+            "id": "JS-1001",
+            "status": "complete",
+            "quotes": [
+              {
+                "id": "Q-2001",
+                "status": "accepted"
+              }
+            ],
+            "exception": null
+          }
+        },
+        {
+          "at": "2026-11-03T08:04:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "chase",
+            "id": "INV-3001",
+            "person": null,
+            "rule": "send-on-draft"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-03T08:04:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "send": "chase",
+            "id": "INV-3001",
+            "trigger": "EV-5"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "confirmation-is-not-a-write",
+      "n": 5,
+      "title": "A chat or connector confirmation is not a write and not a release",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "That quote is escalated and never released or sent. Every send was preceded by a read through the port that returned the record, and by a release naming a person or a rule the business set. A send with no read-back, or a release with neither a person nor a rule, fails.",
+      "actual": "39 port call(s); jobs 2, quotes 1, invoices 1, chases 1, escalations quote:write_failed@JS-1001/Sam Okafor invoice:held_open_exception@JS-1001/Sam Okafor",
+      "stimulus": {
+        "description": "The full chain, with the runner making one quote write return an id and a success message while storing nothing, as a connector that answered before the record existed would.",
+        "now": "2026-10-03T08:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "confirmation-is-not-a-write"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-03T08:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "owners": true
+          },
+          "response": {
+            "job": "Priya Nair",
+            "quote": "Sam Okafor",
+            "invoice": "Lee Tran",
+            "chase": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-10-03T08:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "search": {
+              "phone": "+61733330501",
+              "status": "open"
+            },
+            "event": "EV-1",
+            "eventName": "call_received"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-03T08:00:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "enquiryId": "ENQ-1",
+            "customerName": "Coastal Cold Stores",
+            "phone": "+61733330501",
+            "trigger": "EV-1"
+          },
+          "response": {
+            "externalId": "JS-1001"
+          }
+        },
+        {
+          "at": "2026-10-03T08:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-1001",
+            "event": "EV-1",
+            "eventName": "call_received"
+          },
+          "response": {
+            "id": "JS-1001",
+            "status": "open",
+            "quotes": [],
+            "exception": null
+          }
+        },
+        {
+          "at": "2026-10-03T08:01:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-1001",
+            "event": "EV-2",
+            "eventName": "job_created"
+          },
+          "response": {
+            "id": "JS-1001",
+            "status": "open",
+            "quotes": [],
+            "exception": null
+          }
+        },
+        {
+          "at": "2026-10-03T08:01:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "owners": true
+          },
+          "response": {
+            "job": "Priya Nair",
+            "quote": "Sam Okafor",
+            "invoice": "Lee Tran",
+            "chase": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-10-03T08:01:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JS-1001",
+            "trigger": "EV-2"
+          },
+          "response": {
+            "externalId": "Q-2001",
+            "message": "Quote created"
+          }
+        },
+        {
+          "at": "2026-10-03T08:01:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "quote": "Q-2001",
+            "event": "EV-2",
+            "eventName": "job_created"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-10-03T08:01:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "stage": "quote",
+            "ref": "JS-1001",
+            "reason": "write_failed",
+            "owner": "Sam Okafor",
+            "detail": "quote Q-2001 did not read back on JS-1001"
+          },
+          "response": {
+            "ok": true,
+            "onJob": true
+          }
+        },
+        {
+          "at": "2026-10-03T08:02:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-1001",
+            "event": null,
+            "eventName": null
+          },
+          "response": {
+            "id": "JS-1001",
+            "status": "open",
+            "quotes": [],
+            "exception": {
+              "reason": "write_failed",
+              "owner": "Sam Okafor"
+            }
+          }
+        },
+        {
+          "at": "2026-10-03T08:02:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "owners": true
+          },
+          "response": {
+            "job": "Priya Nair",
+            "quote": "Sam Okafor",
+            "invoice": "Lee Tran",
+            "chase": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-10-03T08:02:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-1001",
+            "event": "EV-3",
+            "eventName": "job_completed"
+          },
+          "response": {
+            "id": "JS-1001",
+            "status": "complete",
+            "quotes": [],
+            "exception": {
+              "reason": "write_failed",
+              "owner": "Sam Okafor"
+            }
+          }
+        },
+        {
+          "at": "2026-10-03T08:02:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "stage": "invoice",
+            "ref": "JS-1001",
+            "reason": "held_open_exception",
+            "owner": "Sam Okafor",
+            "detail": "open exception: write_failed"
+          },
+          "response": {
+            "ok": true,
+            "onJob": true
+          }
+        },
+        {
+          "at": "2026-10-03T08:03:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "owners": true
+          },
+          "response": {
+            "job": "Priya Nair",
+            "quote": "Sam Okafor",
+            "invoice": "Lee Tran",
+            "chase": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-10-03T08:03:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "search": {
+              "phone": "+61733330502",
+              "status": "open"
+            },
+            "event": "EV-4",
+            "eventName": "call_received"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-03T08:03:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "enquiryId": "ENQ-2",
+            "customerName": "Westside Fabrication",
+            "phone": "+61733330502",
+            "trigger": "EV-4"
+          },
+          "response": {
+            "externalId": "JS-1002"
+          }
+        },
+        {
+          "at": "2026-10-03T08:03:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-1002",
+            "event": "EV-4",
+            "eventName": "call_received"
+          },
+          "response": {
+            "id": "JS-1002",
+            "status": "open",
+            "quotes": [],
+            "exception": null
+          }
+        },
+        {
+          "at": "2026-10-03T08:04:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-1002",
+            "event": "EV-5",
+            "eventName": "job_created"
+          },
+          "response": {
+            "id": "JS-1002",
+            "status": "open",
+            "quotes": [],
+            "exception": null
+          }
+        },
+        {
+          "at": "2026-10-03T08:04:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "owners": true
+          },
+          "response": {
+            "job": "Priya Nair",
+            "quote": "Sam Okafor",
+            "invoice": "Lee Tran",
+            "chase": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-10-03T08:04:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JS-1002",
+            "trigger": "EV-5"
+          },
+          "response": {
+            "externalId": "Q-2002"
+          }
+        },
+        {
+          "at": "2026-10-03T08:04:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "quote": "Q-2002",
+            "event": "EV-5",
+            "eventName": "job_created"
+          },
+          "response": {
+            "id": "Q-2002",
+            "jobId": "JS-1002",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-10-03T08:05:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-1002",
+            "event": null,
+            "eventName": null
+          },
+          "response": {
+            "id": "JS-1002",
+            "status": "open",
+            "quotes": [
+              {
+                "id": "Q-2002",
+                "status": "draft"
+              }
+            ],
+            "exception": null
+          }
+        },
+        {
+          "at": "2026-10-03T08:05:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "quote": "Q-2002",
+            "event": null,
+            "eventName": null
+          },
+          "response": {
+            "id": "Q-2002",
+            "jobId": "JS-1002",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-10-03T08:05:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "quote",
+            "id": "Q-2002",
+            "person": "Sam Okafor",
+            "rule": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-03T08:05:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "send": "quote",
+            "id": "Q-2002",
+            "trigger": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-03T08:06:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "owners": true
+          },
+          "response": {
+            "job": "Priya Nair",
+            "quote": "Sam Okafor",
+            "invoice": "Lee Tran",
+            "chase": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-10-03T08:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-1002",
+            "event": "EV-7",
+            "eventName": "job_completed"
+          },
+          "response": {
+            "id": "JS-1002",
+            "status": "complete",
+            "quotes": [
+              {
+                "id": "Q-2002",
+                "status": "accepted"
+              }
+            ],
+            "exception": null
+          }
+        },
+        {
+          "at": "2026-10-03T08:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "ledger": true,
+            "event": "EV-7",
+            "eventName": "job_completed"
+          },
+          "response": {
+            "ids": [],
+            "overdue": []
+          }
+        },
+        {
+          "at": "2026-10-03T08:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "quote": "Q-2002",
+            "event": "EV-7",
+            "eventName": "job_completed"
+          },
+          "response": {
+            "id": "Q-2002",
+            "jobId": "JS-1002",
+            "status": "accepted"
+          }
+        },
+        {
+          "at": "2026-10-03T08:06:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JS-1002",
+            "quoteId": "Q-2002",
+            "trigger": "EV-7"
+          },
+          "response": {
+            "externalId": "INV-3001"
+          }
+        },
+        {
+          "at": "2026-10-03T08:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "invoice": "INV-3001",
+            "event": "EV-7",
+            "eventName": "job_completed"
+          },
+          "response": {
+            "id": "INV-3001",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-10-03T08:06:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "send-on-draft"
+          }
+        },
+        {
+          "at": "2026-10-03T08:06:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "invoice",
+            "id": "INV-3001",
+            "person": null,
+            "rule": "send-on-draft"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-03T08:06:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "send": "invoice",
+            "id": "INV-3001",
+            "trigger": "EV-7"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-03T08:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "ledger": true,
+            "event": "EV-8",
+            "eventName": "invoice_overdue"
+          },
+          "response": {
+            "ids": [
+              "INV-3001"
+            ],
+            "overdue": [
+              "INV-3001"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-03T08:07:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "send-on-draft"
+          }
+        },
+        {
+          "at": "2026-11-03T08:07:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-1002",
+            "event": "EV-8",
+            "eventName": "invoice_overdue"
+          },
+          "response": {
+            "id": "JS-1002",
+            "status": "complete",
+            "quotes": [
+              {
+                "id": "Q-2002",
+                "status": "accepted"
+              }
+            ],
+            "exception": null
+          }
+        },
+        {
+          "at": "2026-11-03T08:07:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "chase",
+            "id": "INV-3001",
+            "person": null,
+            "rule": "send-on-draft"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-03T08:07:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "send": "chase",
+            "id": "INV-3001",
+            "trigger": "EV-8"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "named-unattended-trigger",
+      "n": 6,
+      "title": "Every hop starts from a named event, and none waits for a chat session",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "Every write and every chase names the event that woke it, the event is one the runner delivered by webhook, schedule or polling, and each hop's event is the right kind for that hop. All four hops happen. A hop missing, or a write woken by the chat message, fails.",
+      "actual": "26 port call(s); jobs 1, quotes 1, invoices 1, chases 1, escalations none",
+      "stimulus": {
+        "description": "The full chain delivered as events with nobody in a session, plus one chat message asking for an invoice to be raised.",
+        "now": "2026-10-03T08:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "named-unattended-trigger"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-03T08:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "owners": true
+          },
+          "response": {
+            "job": "Priya Nair",
+            "quote": "Sam Okafor",
+            "invoice": "Lee Tran",
+            "chase": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-10-03T08:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "search": {
+              "phone": "+61733330601",
+              "status": "open"
+            },
+            "event": "EV-1",
+            "eventName": "call_received"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-03T08:00:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "enquiryId": "ENQ-1",
+            "customerName": "Harbourline Marine",
+            "phone": "+61733330601",
+            "trigger": "EV-1"
+          },
+          "response": {
+            "externalId": "JS-1001"
+          }
+        },
+        {
+          "at": "2026-10-03T08:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-1001",
+            "event": "EV-1",
+            "eventName": "call_received"
+          },
+          "response": {
+            "id": "JS-1001",
+            "status": "open",
+            "quotes": [],
+            "exception": null
+          }
+        },
+        {
+          "at": "2026-10-03T08:01:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-1001",
+            "event": "EV-2",
+            "eventName": "job_created"
+          },
+          "response": {
+            "id": "JS-1001",
+            "status": "open",
+            "quotes": [],
+            "exception": null
+          }
+        },
+        {
+          "at": "2026-10-03T08:01:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "owners": true
+          },
+          "response": {
+            "job": "Priya Nair",
+            "quote": "Sam Okafor",
+            "invoice": "Lee Tran",
+            "chase": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-10-03T08:01:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JS-1001",
+            "trigger": "EV-2"
+          },
+          "response": {
+            "externalId": "Q-2001"
+          }
+        },
+        {
+          "at": "2026-10-03T08:01:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "quote": "Q-2001",
+            "event": "EV-2",
+            "eventName": "job_created"
+          },
+          "response": {
+            "id": "Q-2001",
+            "jobId": "JS-1001",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-10-03T08:03:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-1001",
+            "event": null,
+            "eventName": null
+          },
+          "response": {
+            "id": "JS-1001",
+            "status": "open",
+            "quotes": [
+              {
+                "id": "Q-2001",
+                "status": "draft"
+              }
+            ],
+            "exception": null
+          }
+        },
+        {
+          "at": "2026-10-03T08:03:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "quote": "Q-2001",
+            "event": null,
+            "eventName": null
+          },
+          "response": {
+            "id": "Q-2001",
+            "jobId": "JS-1001",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-10-03T08:03:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "quote",
+            "id": "Q-2001",
+            "person": "Sam Okafor",
+            "rule": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-03T08:03:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "send": "quote",
+            "id": "Q-2001",
+            "trigger": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-03T08:03:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "owners": true
+          },
+          "response": {
+            "job": "Priya Nair",
+            "quote": "Sam Okafor",
+            "invoice": "Lee Tran",
+            "chase": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-10-03T08:03:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-1001",
+            "event": "EV-4",
+            "eventName": "job_completed"
+          },
+          "response": {
+            "id": "JS-1001",
+            "status": "complete",
+            "quotes": [
+              {
+                "id": "Q-2001",
+                "status": "accepted"
+              }
+            ],
+            "exception": null
+          }
+        },
+        {
+          "at": "2026-10-03T08:03:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "ledger": true,
+            "event": "EV-4",
+            "eventName": "job_completed"
+          },
+          "response": {
+            "ids": [],
+            "overdue": []
+          }
+        },
+        {
+          "at": "2026-10-03T08:03:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "quote": "Q-2001",
+            "event": "EV-4",
+            "eventName": "job_completed"
+          },
+          "response": {
+            "id": "Q-2001",
+            "jobId": "JS-1001",
+            "status": "accepted"
+          }
+        },
+        {
+          "at": "2026-10-03T08:03:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JS-1001",
+            "quoteId": "Q-2001",
+            "trigger": "EV-4"
+          },
+          "response": {
+            "externalId": "INV-3001"
+          }
+        },
+        {
+          "at": "2026-10-03T08:03:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "invoice": "INV-3001",
+            "event": "EV-4",
+            "eventName": "job_completed"
+          },
+          "response": {
+            "id": "INV-3001",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-10-03T08:03:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "send-on-draft"
+          }
+        },
+        {
+          "at": "2026-10-03T08:03:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "invoice",
+            "id": "INV-3001",
+            "person": null,
+            "rule": "send-on-draft"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-03T08:03:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "send": "invoice",
+            "id": "INV-3001",
+            "trigger": "EV-4"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-03T08:04:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "ledger": true,
+            "event": "EV-5",
+            "eventName": "invoice_overdue"
+          },
+          "response": {
+            "ids": [
+              "INV-3001"
+            ],
+            "overdue": [
+              "INV-3001"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-03T08:04:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "send-on-draft"
+          }
+        },
+        {
+          "at": "2026-11-03T08:04:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-1001",
+            "event": "EV-5",
+            "eventName": "invoice_overdue"
+          },
+          "response": {
+            "id": "JS-1001",
+            "status": "complete",
+            "quotes": [
+              {
+                "id": "Q-2001",
+                "status": "accepted"
+              }
+            ],
+            "exception": null
+          }
+        },
+        {
+          "at": "2026-11-03T08:04:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "chase",
+            "id": "INV-3001",
+            "person": null,
+            "rule": "send-on-draft"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-03T08:04:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "send": "chase",
+            "id": "INV-3001",
+            "trigger": "EV-5"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "exception-owner-travels",
+      "n": 7,
+      "title": "An exception names its owner, travels with the record, and the next step does not pass it",
+      "verdict": "pass",
+      "held": true,
+      "expected": "No invoice is raised for the job carrying the exception, and a hold names that exception's owner. The failed write is escalated naming the owner the business set for invoices. An escalation with no owner, an owner the business never named, or an invoice raised past the exception, fails.",
+      "actual": "8 port call(s); jobs 2, quotes 0, invoices 0, chases 0, escalations invoice:held_open_exception@JS-4701/Sam Okafor invoice:write_failed@JS-4702/Lee Tran",
+      "stimulus": {
+        "description": "Two jobs complete. One already carries an open exception a person set on it. The invoice write for the other comes back with no external id.",
+        "now": "2026-10-03T08:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "exception-owner-travels"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-03T08:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "owners": true
+          },
+          "response": {
+            "job": "Priya Nair",
+            "quote": "Sam Okafor",
+            "invoice": "Lee Tran",
+            "chase": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-10-03T08:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-4701",
+            "event": "EV-1",
+            "eventName": "job_completed"
+          },
+          "response": {
+            "id": "JS-4701",
+            "status": "complete",
+            "quotes": [],
+            "exception": {
+              "reason": "wrong_part_supplied",
+              "owner": "Sam Okafor"
+            }
+          }
+        },
+        {
+          "at": "2026-10-03T08:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "stage": "invoice",
+            "ref": "JS-4701",
+            "reason": "held_open_exception",
+            "owner": "Sam Okafor",
+            "detail": "open exception: wrong_part_supplied"
+          },
+          "response": {
+            "ok": true,
+            "onJob": true
+          }
+        },
+        {
+          "at": "2026-10-03T08:01:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "owners": true
+          },
+          "response": {
+            "job": "Priya Nair",
+            "quote": "Sam Okafor",
+            "invoice": "Lee Tran",
+            "chase": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-10-03T08:01:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job": "JS-4702",
+            "event": "EV-2",
+            "eventName": "job_completed"
+          },
+          "response": {
+            "id": "JS-4702",
+            "status": "complete",
+            "quotes": [],
+            "exception": null
+          }
+        },
+        {
+          "at": "2026-10-03T08:01:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "ledger": true,
+            "event": "EV-2",
+            "eventName": "job_completed"
+          },
+          "response": {
+            "ids": [],
+            "overdue": []
+          }
+        },
+        {
+          "at": "2026-10-03T08:01:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JS-4702",
+            "quoteId": null,
+            "trigger": "EV-2"
+          },
+          "response": {
+            "externalId": null
+          }
+        },
+        {
+          "at": "2026-10-03T08:01:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "stage": "invoice",
+            "ref": "JS-4702",
+            "reason": "write_failed",
+            "owner": "Lee Tran",
+            "detail": "write_invoice came back with no external id"
+          },
+          "response": {
+            "ok": true,
+            "onJob": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 8,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account each hop's trigger and the writes into the job system and the ledger runs on.",
+        "now": "2026-11-03T13:03:35.285Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 9,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "Each record in the job system and the ledger holds the id of the one before it, as issued by those systems. The second call attached to the first job. The forced null produced an escalation with an owner and nothing downstream of it.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "Real events on the real tenant: two real calls from one number, a real acceptance, a real completion, a real due date passing, then the same run again with one write forced to return no id.",
+        "now": "2026-11-03T13:03:35.285Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 9,
+    "pass": 4,
+    "fail": 0,
+    "shapeOnly": 3,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}

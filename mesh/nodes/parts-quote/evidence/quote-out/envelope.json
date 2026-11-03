@@ -1,0 +1,1030 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793711059027",
+  "standard": "quote-out-build-standard",
+  "spec": "AIP-BS-QUOTE-OUT",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-03T13:04:19.021Z",
+  "finishedAt": "2026-11-03T13:04:19.027Z",
+  "results": [
+    {
+      "checkId": "job-is-the-trigger",
+      "n": 1,
+      "title": "A job is the only trigger",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Each draft is preceded by a read of the job it came from and carries that job's id. No draft appears without one.",
+      "actual": "8 port call(s): read_job, read_pricebook, draft_quote, notify, read_job, read_pricebook, draft_quote, notify; 2 quote(s), 0 escalation(s), 2 alert(s)",
+      "stimulus": {
+        "description": "A job created by an after-hours call, and a second job created from an overnight web form.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "job-is-the-trigger"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-7101"
+          },
+          "response": {
+            "id": "JOB-7101",
+            "source": "call",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JOB-7101",
+            "lines": [
+              {
+                "catalogueId": "BRG-6204-2RS",
+                "description": "Deep groove ball bearing 6204-2RS",
+                "rate": 1450
+              },
+              {
+                "catalogueId": "BLT-SPA-1250",
+                "description": "V-belt SPA 1250",
+                "rate": 2290
+              }
+            ],
+            "intentId": "JOB-7101:quote-out:parts-quote"
+          },
+          "response": {
+            "id": "Q1",
+            "total": 3740
+          },
+          "intentId": "JOB-7101:quote-out:parts-quote"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "parts-quotes-owner",
+            "jobId": "JOB-7101",
+            "reason": "ready_to_release:Q1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-7102"
+          },
+          "response": {
+            "id": "JOB-7102",
+            "source": "form",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JOB-7102",
+            "lines": [
+              {
+                "catalogueId": "FLT-HYD-10M",
+                "description": "Hydraulic return filter, 10 micron",
+                "rate": 6800
+              }
+            ],
+            "intentId": "JOB-7102:quote-out:parts-quote"
+          },
+          "response": {
+            "id": "Q2",
+            "total": 6800
+          },
+          "intentId": "JOB-7102:quote-out:parts-quote"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "parts-quotes-owner",
+            "jobId": "JOB-7102",
+            "reason": "ready_to_release:Q2"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "pricebook-is-the-only-source",
+      "n": 2,
+      "title": "The price list is the only source of a rate",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A read of the price list precedes the draft, and every priced line carries the catalogue id it came from.",
+      "actual": "4 port call(s): read_job, read_pricebook, draft_quote, notify; 1 quote(s), 0 escalation(s), 1 alert(s)",
+      "stimulus": {
+        "description": "A job whose work maps cleanly to three catalogue items.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "pricebook-is-the-only-source"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-7201"
+          },
+          "response": {
+            "id": "JOB-7201",
+            "source": "email",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JOB-7201",
+            "lines": [
+              {
+                "catalogueId": "SEAL-CYL-63",
+                "description": "Cylinder seal kit, 63 mm bore",
+                "rate": 11900
+              },
+              {
+                "catalogueId": "PMP-GEAR-12",
+                "description": "Gear pump 12 cc/rev",
+                "rate": 48500
+              },
+              {
+                "catalogueId": "BRG-6204-2RS",
+                "description": "Deep groove ball bearing 6204-2RS",
+                "rate": 1450
+              }
+            ],
+            "intentId": "JOB-7201:quote-out:parts-quote"
+          },
+          "response": {
+            "id": "Q1",
+            "total": 61850
+          },
+          "intentId": "JOB-7201:quote-out:parts-quote"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "parts-quotes-owner",
+            "jobId": "JOB-7201",
+            "reason": "ready_to_release:Q1"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "unpriceable-is-parked",
+      "n": 3,
+      "title": "What cannot be priced is parked",
+      "verdict": "pass",
+      "held": true,
+      "expected": "No draft is created. An escalate call carries a park reason from the fixed list and the unmatched line, and no invented rate appears anywhere in the trace.",
+      "actual": "3 port call(s): read_job, read_pricebook, escalate; 0 quote(s), 1 escalation(s), 0 alert(s)",
+      "stimulus": {
+        "description": "A job needing one catalogue item and one thing the price list does not cover.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "unpriceable-is-parked"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-7301"
+          },
+          "response": {
+            "id": "JOB-7301",
+            "source": "email",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "not_in_pricebook",
+            "detail": "{\"job_id\":\"JOB-7301\",\"exception_owner\":\"parts-quotes-owner\",\"lines\":[{\"catalogueId\":\"FLT-HYD-10M\",\"description\":\"Hydraulic return filter, 10 micron\",\"rate\":6800}],\"unmatched\":[{\"description\":\"Hydraulic return filter, 25 micron\",\"park_reason\":\"not_in_pricebook\"}],\"total_ex_gst\":null}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "no-variation-pricing",
+      "n": 4,
+      "title": "Variations and discounts stay with a person",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Both escalate with a typed reason. Neither produces a draft.",
+      "actual": "4 port call(s): read_job, escalate, read_job, escalate; 0 quote(s), 2 escalation(s), 0 alert(s)",
+      "stimulus": {
+        "description": "A job flagged as a variation to an accepted quote, then a job carrying a request for a discount.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "no-variation-pricing"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-7401"
+          },
+          "response": {
+            "id": "JOB-7401",
+            "source": "email",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "variation_to_accepted_quote",
+            "detail": "{\"job_id\":\"JOB-7401\",\"exception_owner\":\"parts-quotes-owner\",\"lines\":[],\"unmatched\":[],\"total_ex_gst\":null}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-7402"
+          },
+          "response": {
+            "id": "JOB-7402",
+            "source": "email",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "discount_requested",
+            "detail": "{\"job_id\":\"JOB-7402\",\"exception_owner\":\"parts-quotes-owner\",\"lines\":[],\"unmatched\":[],\"total_ex_gst\":null}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-quote-per-job",
+      "n": 5,
+      "title": "One quote per job",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Exactly one quote exists in the world the runner owns. The second pass returned the same quote carrying duplicate_of, not a create.",
+      "actual": "6 port call(s): read_job, read_pricebook, draft_quote, notify, read_job, draft_quote; 1 quote(s), 0 escalation(s), 1 alert(s)",
+      "stimulus": {
+        "description": "The same job reaching the standard twice: once from the call, once from the follow-up email minutes later.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-quote-per-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-7501"
+          },
+          "response": {
+            "id": "JOB-7501",
+            "source": "email",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JOB-7501",
+            "lines": [
+              {
+                "catalogueId": "BRG-6204-2RS",
+                "description": "Deep groove ball bearing 6204-2RS",
+                "rate": 1450
+              },
+              {
+                "catalogueId": "SEAL-CYL-63",
+                "description": "Cylinder seal kit, 63 mm bore",
+                "rate": 11900
+              }
+            ],
+            "intentId": "JOB-7501:quote-out:parts-quote"
+          },
+          "response": {
+            "id": "Q1",
+            "total": 13350
+          },
+          "intentId": "JOB-7501:quote-out:parts-quote"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "parts-quotes-owner",
+            "jobId": "JOB-7501",
+            "reason": "ready_to_release:Q1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T23:09:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-7501"
+          },
+          "response": {
+            "id": "JOB-7501",
+            "source": "email",
+            "quoteId": "Q1"
+          }
+        },
+        {
+          "at": "2026-09-21T23:09:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "update": "Q1",
+            "intentId": "JOB-7501:quote-out:parts-quote"
+          },
+          "response": {
+            "id": "Q1"
+          },
+          "intentId": "JOB-7501:quote-out:parts-quote"
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "draft-quote-verified",
+      "n": 6,
+      "title": "The write is verified",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A notify call follows the failed write, and the job is not reported as quoted.",
+      "actual": "4 port call(s): read_job, read_pricebook, draft_quote, notify; 0 quote(s), 0 escalation(s), 1 alert(s)",
+      "stimulus": {
+        "description": "The runner seeds the stub to return a null external_id on the quote write.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "draft-quote-verified"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-7601"
+          },
+          "response": {
+            "id": "JOB-7601",
+            "source": "email",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JOB-7601",
+            "lines": [
+              {
+                "catalogueId": "PMP-GEAR-12",
+                "description": "Gear pump 12 cc/rev",
+                "rate": 48500
+              }
+            ],
+            "intentId": "JOB-7601:quote-out:parts-quote"
+          },
+          "response": {
+            "id": null
+          },
+          "intentId": "JOB-7601:quote-out:parts-quote"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "parts-quotes-owner",
+            "jobId": "JOB-7601",
+            "reason": "write_failed"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "draft-never-sends",
+      "n": 7,
+      "title": "The draft does not send itself",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The quote is written in a draft state and surfaced for a person to release. No send port appears in the trace at all.",
+      "actual": "4 port call(s): read_job, read_pricebook, draft_quote, notify; 1 quote(s), 0 escalation(s), 1 alert(s)",
+      "stimulus": {
+        "description": "A job that prices cleanly from the price list.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "draft-never-sends"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-7701"
+          },
+          "response": {
+            "id": "JOB-7701",
+            "source": "email",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JOB-7701",
+            "lines": [
+              {
+                "catalogueId": "BLT-SPA-1250",
+                "description": "V-belt SPA 1250",
+                "rate": 2290
+              },
+              {
+                "catalogueId": "BLT-SPA-1250",
+                "description": "V-belt SPA 1250",
+                "rate": 2290
+              }
+            ],
+            "intentId": "JOB-7701:quote-out:parts-quote"
+          },
+          "response": {
+            "id": "Q1",
+            "total": 4580
+          },
+          "intentId": "JOB-7701:quote-out:parts-quote"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "parts-quotes-owner",
+            "jobId": "JOB-7701",
+            "reason": "ready_to_release:Q1"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "quote-is-not-ours",
+      "n": 8,
+      "title": "The quote lives in their system",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The quote is retrievable from the system of record by its own id, carrying the lines and total that were drafted.",
+      "actual": "4 port call(s): read_job, read_pricebook, draft_quote, notify; 1 quote(s), 0 escalation(s), 1 alert(s)",
+      "stimulus": {
+        "description": "A priced job, then a retrieval of the quote from the system of record.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "quote-is-not-ours"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-7801"
+          },
+          "response": {
+            "id": "JOB-7801",
+            "source": "email",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JOB-7801",
+            "lines": [
+              {
+                "catalogueId": "FLT-HYD-10M",
+                "description": "Hydraulic return filter, 10 micron",
+                "rate": 6800
+              },
+              {
+                "catalogueId": "SEAL-CYL-63",
+                "description": "Cylinder seal kit, 63 mm bore",
+                "rate": 11900
+              }
+            ],
+            "intentId": "JOB-7801:quote-out:parts-quote"
+          },
+          "response": {
+            "id": "Q1",
+            "total": 18700
+          },
+          "intentId": "JOB-7801:quote-out:parts-quote"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "parts-quotes-owner",
+            "jobId": "JOB-7801",
+            "reason": "ready_to_release:Q1"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "log-survives",
+      "n": 9,
+      "title": "The log survives",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "One quote_id returns the source job, the ordered port calls, the catalogue ids used and the outcome as one object.",
+      "actual": "4 port call(s): read_job, read_pricebook, draft_quote, notify; 1 quote(s), 0 escalation(s), 1 alert(s)",
+      "stimulus": {
+        "description": "Any completed draft, then a retrieval by quote_id.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "log-survives"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-7901"
+          },
+          "response": {
+            "id": "JOB-7901",
+            "source": "email",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JOB-7901",
+            "lines": [
+              {
+                "catalogueId": "PMP-GEAR-12",
+                "description": "Gear pump 12 cc/rev",
+                "rate": 48500
+              },
+              {
+                "catalogueId": "BRG-6204-2RS",
+                "description": "Deep groove ball bearing 6204-2RS",
+                "rate": 1450
+              }
+            ],
+            "intentId": "JOB-7901:quote-out:parts-quote"
+          },
+          "response": {
+            "id": "Q1",
+            "total": 49950
+          },
+          "intentId": "JOB-7901:quote-out:parts-quote"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "parts-quotes-owner",
+            "jobId": "JOB-7901",
+            "reason": "ready_to_release:Q1"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "pricebook-is-current",
+      "n": 10,
+      "title": "The price list was read, not remembered",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The read returns the changed rate and the draft carries it, or the quote parks. The superseded rate appears nowhere on the draft.",
+      "actual": "8 port call(s): read_job, read_pricebook, draft_quote, notify, read_job, read_pricebook, draft_quote, notify; 2 quote(s), 0 escalation(s), 2 alert(s)",
+      "stimulus": {
+        "description": "A draft raised after the price list has changed in the system of record.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "pricebook-is-current"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-8001"
+          },
+          "response": {
+            "id": "JOB-8001",
+            "source": "email",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JOB-8001",
+            "lines": [
+              {
+                "catalogueId": "BRG-6204-2RS",
+                "description": "Deep groove ball bearing 6204-2RS",
+                "rate": 1450
+              }
+            ],
+            "intentId": "JOB-8001:quote-out:parts-quote"
+          },
+          "response": {
+            "id": "Q1",
+            "total": 1450
+          },
+          "intentId": "JOB-8001:quote-out:parts-quote"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "parts-quotes-owner",
+            "jobId": "JOB-8001",
+            "reason": "ready_to_release:Q1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-22T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-8002"
+          },
+          "response": {
+            "id": "JOB-8002",
+            "source": "email",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-22T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-22T01:00:00.000Z"
+          },
+          "response": {
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-22T01:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JOB-8002",
+            "lines": [
+              {
+                "catalogueId": "BRG-6204-2RS",
+                "description": "Deep groove ball bearing 6204-2RS",
+                "rate": 1690
+              }
+            ],
+            "intentId": "JOB-8002:quote-out:parts-quote"
+          },
+          "response": {
+            "id": "Q2",
+            "total": 1690
+          },
+          "intentId": "JOB-8002:quote-out:parts-quote"
+        },
+        {
+          "at": "2026-09-22T01:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "parts-quotes-owner",
+            "jobId": "JOB-8002",
+            "reason": "ready_to_release:Q2"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 11,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "Run 1 wrote nothing and parked with not_in_pricebook, carrying the priced lines, no total and no invented rate. Run 2 left one real draft quote in that tenant against real catalogue ids. Run 3 kept that quote rather than creating a second, carrying duplicate_of.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "A real job, from a ServiceM8 or Simpro tenant or held by the build when the books are in Xero alone, run once with a line not in the price list and then twice without it.",
+        "now": "2026-11-03T13:04:19.027Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 11,
+    "pass": 7,
+    "fail": 0,
+    "shapeOnly": 3,
+    "withUs": 1,
+    "evidenceRequired": 0
+  }
+}
