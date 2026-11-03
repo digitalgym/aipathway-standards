@@ -1,0 +1,57 @@
+{
+  "slug": "renewal-watch",
+  "name": "Renewal Watch",
+  "office_task": "Keep our licences, insurances and site services on a calendar worked out from each state's rules, file the certificates when they come in, and put anything late in front of a named person.",
+  "verticals": ["b2b-office"],
+  "standards": ["compliance-calendar"],
+  "systems_of_record": ["the business's obligation register (its compliance calendar, rule set and the document store certificates are filed in)"],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/renewal-watch" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "email.received", "wake": "webhook" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "evidence.filed",
+      "write": "a certificate, policy schedule or service report from an email, filed as evidence of completion on the obligation it names by obligation id; a message with no obligation id is never matched by name and is raised instead",
+      "readback": "the obligation is read back by its id and must return the same evidence reference (the message_id and attachment) and a completion date; if it does not, nothing was filed and renewal.evidence_not_read_back is raised"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the obligation naming the person who owns it: an unknown anchor date, no rule in force, a past date no retained rule version explains, a completion claimed without a document, a dated refusal, a breach, a drafted booking or renewal awaiting a named release, a release with no named person, silence past the next chase date, or an email with no obligation id",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the obligation id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "renewal.anchor_unknown",
+      "renewal.no_rule_in_force",
+      "renewal.history_unexplained",
+      "renewal.completion_without_evidence",
+      "renewal.evidence_not_read_back",
+      "renewal.refusal_recorded",
+      "renewal.breached",
+      "renewal.notice_drafted_awaiting_release",
+      "renewal.release_refused",
+      "renewal.chase_due",
+      "renewal.attachment_unmatched"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.obligation_ref", "seam.rule_version", "seam.anchor_status", "seam.state", "seam.evidence", "seam.refused_at", "seam.breached_at", "seam.next_chase", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Duly",
+    "original_author": "Logan Brown",
+    "share_link": "https://x.ai/bot/5TEr6ycYq_ijQBd9XEj95",
+    "licence_or_permission": "reimplementation"
+  }
+}
