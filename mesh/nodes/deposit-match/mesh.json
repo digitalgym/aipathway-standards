@@ -1,0 +1,71 @@
+{
+  "slug": "deposit-match",
+  "name": "Deposit Match",
+  "office_task": "Every morning, match each customer deposit in the bank feed to the Xero invoice it paid, by the invoice id, and put every one that does not clearly match in front of the bookkeeper.",
+  "verticals": ["accounting-bookkeeping"],
+  "standards": ["two-records"],
+  "systems_of_record": [
+    "Xero (the ledger that issues the invoice_id and records the payment applied to each sales invoice)",
+    "the business's bank feed into Xero (customer deposits carrying the invoice_id in their reference)"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/deposit-match" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "payment.received",
+      "write": "a deposit applied as a payment on the Xero sales invoice its reference names, written once and only after the bookkeeper accepted that correction, with the bank-feed value, the Xero value before the fix and the person who accepted kept in history",
+      "readback": "Xero returns a PaymentID, and GET /api.xro/2.0/Payments/{PaymentID} returns the payment with the Invoice.InvoiceID, amount and date; no PaymentID back means it was not written and the owner is told"
+    },
+    {
+      "event": "report.published",
+      "write": "the run's reconciliation report where the bookkeeper opens it: the pair contract it ran under, the join key (invoice_id), the master per field, and the counts matched, within tolerance, mismatched, orphaned and corrected, published every run including the all-clear",
+      "readback": "the report store returns a report_id, and reading that id back returns the contract id, the five counts and the published time; no id back means the run did not publish and the owner is told"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the invoice naming the person who owns it: an open difference with the bank-feed value, the Xero value and the master's value side by side, an orphan (a deposit whose invoice id is not in Xero, or an invoice Xero shows paid with no deposit), a difference over the threshold amount, a mismatch rate over the declared rate, or an accepted correction whose write returned no id",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the invoice_id, the reason, both values and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "two-records.contract_missing",
+      "two-records.difference_open",
+      "two-records.orphan_deposit",
+      "two-records.orphan_paid_invoice",
+      "two-records.over_threshold_amount",
+      "two-records.mismatch_rate_exceeded",
+      "two-records.write_not_read_back"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "seam-mirror",
+    "fields": [
+      "seam.invoice_id",
+      "seam.contract_id",
+      "seam.run_id",
+      "seam.difference_status",
+      "seam.value_bank_feed",
+      "seam.value_xero",
+      "seam.master_value",
+      "seam.accepted_by",
+      "seam.written_id",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "InvoiceMatch Recon Bot",
+    "original_author": "Robert Schiff",
+    "share_link": "https://x.ai/bot/mK8oApOw3a0zG0m00Ec_h",
+    "licence_or_permission": "reimplementation"
+  }
+}
