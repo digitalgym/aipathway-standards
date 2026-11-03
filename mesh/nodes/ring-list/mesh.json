@@ -1,0 +1,63 @@
+{
+  "slug": "ring-list",
+  "name": "Ring List",
+  "office_task": "Every weekday morning, tell me who to ring today from my own database, why each one, with a short opener drafted, and nothing past the do-not-call flags.",
+  "verticals": ["property"],
+  "standards": ["database-reactivation"],
+  "systems_of_record": [
+    "the agency CRM, or the copied Contacts sheet, that holds each contact row, its last outcome and the do-not-contact register",
+    "the place the agent opens each morning (CRM tasks, the Today tab or a morning email), which issues the report_id for each day's list"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/ring-list" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "report.published",
+      "write": "the day's call list for the agent: at most the cap they set, in rank order, each row with its play, the trigger that qualified it, a drafted opener under 40 words and the last outcome. Drafts only: nothing is dialled or sent",
+      "readback": "the list store returns a report_id for the day's list, and reading that id back returns the same rows in the same order; no id back means no list was published and the run raises an exception"
+    },
+    {
+      "event": "exception.raised",
+      "write": "a thing to sort out, on top of the list and naming the agent who owns it: a contact missing name, mobile or address, a reply waiting that asks for a price, makes a complaint or asks something the play was not built for",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the contact, the typed reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "reactivation.not_ready",
+      "reactivation.price_question",
+      "reactivation.complaint",
+      "reactivation.reply_outside_play",
+      "reactivation.list_not_published"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.report_id",
+      "seam.play",
+      "seam.trigger",
+      "seam.rank_reason",
+      "seam.last_outcome",
+      "seam.last_outcome_at",
+      "seam.sequence_started_at",
+      "seam.do_not_contact",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Realtor Morning Brief",
+    "original_author": "Bryan Dunleavy",
+    "share_link": "https://x.ai/bot/uxg9lUIEGbftXKwMN4COQ",
+    "licence_or_permission": "reimplementation"
+  }
+}
