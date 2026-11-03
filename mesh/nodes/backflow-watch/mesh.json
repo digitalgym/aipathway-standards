@@ -1,0 +1,56 @@
+{
+  "slug": "backflow-watch",
+  "name": "Backflow Watch",
+  "office_task": "Every morning, check our backflow device register against each state's rule, draft bookings for tests due soon, and put anything overdue or unclear in front of a named person.",
+  "verticals": ["fire-electrical"],
+  "standards": ["compliance-calendar"],
+  "systems_of_record": ["the contractor's asset register of testable backflow prevention devices (its dated rule store per state, and the document store the signed test reports are filed in)"],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/backflow-watch" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "document.received", "wake": "webhook" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "asset.service_due",
+      "write": "the device's test obligation, classed Due Soon from the rule version in force for its state, with the test booking request drafted on it and held for a named person to release",
+      "readback": "reading the device back by its asset_id returns the derived due date, the rule version that produced it and the drafted booking awaiting release; no draft on the read means nothing was written and the run raises an exception"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the device naming the person who owns it: Critical Overdue, a last-test date nobody knows, no rule for the device's state, a test reported passed with no report attached, a site owner's dated refusal, a notice drafted and awaiting release, or a past due date its rule version can no longer explain",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the device's asset_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "backflow.critical_overdue",
+      "backflow.test_due_soon",
+      "backflow.anchor_unknown",
+      "backflow.no_rule_for_state",
+      "backflow.test_without_report",
+      "backflow.test_declined",
+      "backflow.notice_drafted_awaiting_release",
+      "backflow.release_refused",
+      "backflow.history_unexplained",
+      "backflow.report_unmatched"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.asset_id", "seam.rule_version", "seam.anchor_status", "seam.class", "seam.evidence", "seam.refused_at", "seam.breached_at", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Triage backflow compliance notices with Google Sheets, Gmail, Slack, OpenAI, and a state API",
+    "original_author": "Swapnil Mandloi",
+    "share_link": "https://n8n.io/workflows/19760",
+    "licence_or_permission": "reimplementation"
+  }
+}
