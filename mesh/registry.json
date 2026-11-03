@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-03T14:19:59.632Z",
+  "generated_at": "2026-11-03T14:20:16.330Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -604,6 +604,121 @@
       ]
     },
     {
+      "slug": "buy-desk",
+      "name": "Buy Desk",
+      "office_task": "Buy the materials for one job from stock first and the supplier's own prices, release only under the money rules, and check every delivery docket back.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "material-order"
+      ],
+      "systems_of_record": [
+        "the job system that issues the job_id and holds its material list and stock",
+        "the supplier portal or job-system purchasing that issues each order's external id"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "job.updated",
+          "wake": "webhook"
+        },
+        {
+          "event": "document.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "order.sent",
+          "write": "one purchase order per job and supplier, released by the named rule under its threshold to an approved supplier (or by a named person), carrying the job_id, the catalogue edition and the release",
+          "readback": "the ordering system returns the order's external id, and reading the job's orders back by job_id returns that external id with the supplier, the lines and the release; no external id back is a failed write, raised to a person, and nothing is sent"
+        },
+        {
+          "event": "delivery.recorded",
+          "write": "the delivery docket matched to its sent order line by line, with the quantity received and a reason (short, damaged, substituted) on any line that differs",
+          "readback": "reading the job's record back by job_id returns the delivery on the order's id with one line per ordered line; a docket naming no sent order is never recorded and is raised instead"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the job or the order naming the person who owns it: an order waiting for a named release (over the threshold, or to a supplier not on the approved list), a code no catalogue holds, an order write with no id back, a docket that matches no sent order, and every delivery variance (short, over, wrong item, changed price, unaccepted substitution)",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the job_id, the order's external id where one exists, the kind and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "material.release_needed",
+          "material.not_in_catalogue",
+          "material.write_failed",
+          "material.no_order_for_docket",
+          "material.short",
+          "material.over",
+          "material.wrong_item",
+          "material.price_changed",
+          "material.substitution_unaccepted",
+          "material.changed_after_release"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.order_external_id",
+          "seam.supplier_id",
+          "seam.catalogue_edition",
+          "seam.released_by",
+          "seam.order_status",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/buy-desk"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Home Remodel Job Desk",
+        "original_author": "Howie",
+        "share_link": "https://x.ai/bot/5hnU4GX1pgNj_VcmFcZQJ",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "material-order",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T14:00:00.717Z",
+          "run_id": "run-1793714400714",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        }
+      ]
+    },
+    {
       "slug": "chase-book",
       "name": "Chase Book",
       "office_task": "Every morning, read who owes us from Xero, send one reminder per customer pitched to how late they are, log it on the invoice, and hand disputes and big accounts to a named person.",
@@ -1066,6 +1181,100 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 11
+        }
+      ]
+    },
+    {
+      "slug": "close-check",
+      "name": "Close Check",
+      "office_task": "Each month, check whether a client's Xero file is ready to close and publish Ready or Not ready with the items to fix.",
+      "verticals": [
+        "accounting-bookkeeping"
+      ],
+      "standards": [
+        "recurring-report"
+      ],
+      "systems_of_record": [
+        "the ledger (Xero): bank statement lines, draft invoices and bills, the suspense account and tax rates for the month",
+        "the practice management system (such as Xero Practice Manager or Karbon): the client's month-end close job and its open steps",
+        "the system the report is published into, which issues the report_id"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "one view of the month's close check per audience (practice, client owner): Ready to close or Not ready with the items to fix, each item carrying its definition id, source and as-of time, or published as unavailable with the reason; a correction is a new version superseding the old, with the named person and the reason",
+          "readback": "reading the month's reports back returns each report_id with its version, published_at and published_by; no id back means it was not published and report.publish_failed is raised"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception naming the definition's owner or the threshold's person: a source that could not be read, an item with no definition or two, a threshold that could not be compared, a correction missing a person or reason, or a view that did not read back",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the month, the item, the reason and the exception_owner"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "report.source_unreadable",
+          "report.no_definition",
+          "report.conflicting_definitions",
+          "report.threshold_not_comparable",
+          "report.correction_incomplete",
+          "report.correction_unknown_measure",
+          "report.publish_failed"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.report_id",
+          "seam.period",
+          "seam.version",
+          "seam.supersedes",
+          "seam.published_by",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/close-check"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Bookkeeping Ninja Month-End",
+        "original_author": "Tim Armstrong",
+        "share_link": "https://x.ai/bot/nhZHK5Xx-HqvK03fWw3iO",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "recurring-report",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T14:00:17.617Z",
+          "run_id": "run-1793714417615",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
         }
       ]
     },
@@ -2393,6 +2602,112 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 13
+        }
+      ]
+    },
+    {
+      "slug": "estimate-desk",
+      "name": "Estimate Desk",
+      "office_task": "When a price request from our website form is logged as a job, draft the estimate from our own price list, or park it with a reason, and tell me it is ready for me to send.",
+      "verticals": [
+        "b2b-office"
+      ],
+      "standards": [
+        "quote-out"
+      ],
+      "systems_of_record": [
+        "Xero (Items as the price list, Quotes)",
+        "ServiceM8",
+        "Simpro (parts only)"
+      ],
+      "consumes": [
+        {
+          "event": "job.created",
+          "wake": "webhook"
+        },
+        {
+          "event": "job.updated",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "quote.drafted",
+          "write": "A draft quote on the job the form request was logged as, one line per unit of each service asked for, every line carrying its catalogue id and its rate as read from the price list at draft time, ex GST. The owner is alerted that it is ready; this node has no way to send it to the customer.",
+          "readback": "The quote is read back by the id the system returned (Xero GET /api.xro/2.0/Quotes/{QuoteID}, ServiceM8 GET /api_1.0/jobquote/{uuid}.json, Simpro GET /api/v1.0/companies/{companyID}/quotes/{quoteID}) and must carry the job id. No id back is not a write: it raises quote.write_failed."
+        },
+        {
+          "event": "exception.raised",
+          "write": "A parked estimate as an exception on the job: the park reason from the standard's fixed list, the services that did price with their catalogue ids, the ones that did not, no total, and exception_owner set to the person the business named for estimates.",
+          "readback": "The exception desk returns an exception_id; reading the job by its id shows the open exception with its exception_owner, and the next hop reads it there and stops."
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "quote.not_in_pricebook",
+          "quote.variation_to_accepted_quote",
+          "quote.discount_requested",
+          "quote.pricebook_unreadable",
+          "quote.write_failed"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.quote_id",
+          "seam.status",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/estimate-desk"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Send instant price quotes from forms with Data Tables, Telegram and Gmail",
+        "original_author": "Tomasz Kaczyński",
+        "share_link": "https://n8n.io/workflows/21305",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "quote-out",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:56:36.960Z",
+          "run_id": "run-1793714196959",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 0,
+          "total": 11
+        },
+        {
+          "standard": "cash-seam",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:58:20.185Z",
+          "run_id": "run-1793714300184",
+          "green": 4,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 9
         }
       ]
     },
@@ -7443,10 +7758,12 @@
     "backflow-watch",
     "bill-check",
     "billing-match",
+    "buy-desk",
     "chase-book",
     "chase-desk",
     "chase-list",
     "claim-check",
+    "close-check",
     "comp-check",
     "comp-report",
     "consultant-hours",
@@ -7460,6 +7777,7 @@
     "draw-match",
     "drawing-register",
     "dropped-ball",
+    "estimate-desk",
     "fact-library",
     "feed-match",
     "fire-code-desk",
@@ -7517,6 +7835,12 @@
     },
     {
       "from": "after-hours-desk",
+      "to": "estimate-desk",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "after-hours-desk",
       "to": "parts-quote",
       "event": "job.created",
       "id": "job_id"
@@ -7549,6 +7873,18 @@
       "from": "after-hours-desk",
       "to": "visit-offer",
       "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "crew-board",
+      "to": "buy-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "crew-board",
+      "to": "estimate-desk",
+      "event": "job.updated",
       "id": "job_id"
     },
     {
@@ -7637,7 +7973,19 @@
     },
     {
       "from": "practice-desk",
+      "to": "buy-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "practice-desk",
       "to": "crew-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "practice-desk",
+      "to": "estimate-desk",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -7703,7 +8051,19 @@
     },
     {
       "from": "repair-board",
+      "to": "buy-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "repair-board",
       "to": "crew-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "repair-board",
+      "to": "estimate-desk",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -7751,7 +8111,19 @@
     },
     {
       "from": "van-board",
+      "to": "buy-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "van-board",
       "to": "crew-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "van-board",
+      "to": "estimate-desk",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -7799,7 +8171,19 @@
     },
     {
       "from": "visit-offer",
+      "to": "buy-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-offer",
       "to": "crew-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-offer",
+      "to": "estimate-desk",
       "event": "job.updated",
       "id": "job_id"
     },
