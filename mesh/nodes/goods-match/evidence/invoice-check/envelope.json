@@ -1,0 +1,1777 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793709447124",
+  "standard": "invoice-check-build-standard",
+  "spec": "AIP-BS-INVOICE-CHECK",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-03T12:37:27.115Z",
+  "finishedAt": "2026-11-03T12:37:27.124Z",
+  "results": [
+    {
+      "checkId": "checks-in-order-stop-first-failure",
+      "n": 1,
+      "title": "The four checks run in order and stop at the first failure",
+      "verdict": "pass",
+      "held": true,
+      "expected": "It is reported against the second. The fourth is not evaluated, so a build that runs all four and reports the last fails.",
+      "actual": "checks run: rate=true, quantity=false; exceptions: quantity; queues: needs_decision",
+      "stimulus": {
+        "description": "An invoice seeded to fail the second check and also the fourth.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "checks-in-order-stop-first-failure"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": [
+              {
+                "check": "rate",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "quantity",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "variation",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "contract_sum",
+                "withinCents": 100,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-7101"
+          },
+          "response": {
+            "id": "PO-7101",
+            "amount": 850000,
+            "unitRateCents": 4250,
+            "contractSumCents": 850000,
+            "approvedVariationsCents": 60000
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5501",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-7101 rate $42.50; invoice rates $42.50; tolerance $0.00 from 2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5501",
+            "check": "quantity",
+            "passed": false
+          },
+          "response": {
+            "saw": "received 40, invoiced before 0, this invoice 50; tolerance $0.00 from 2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "exception": "INV-5501"
+          },
+          "response": {
+            "differenceCents": 42500,
+            "source": "gmail://finance-inbox/INV-5501.pdf"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5501",
+            "queue": "needs_decision",
+            "reason": "quantity: claims 50 with 40 received and not yet invoiced; difference $425.00; never ran: variation, contract_sum; source gmail://finance-inbox/INV-5501.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "no-po-escalates",
+      "n": 2,
+      "title": "No matching purchase order escalates",
+      "verdict": "pass",
+      "held": true,
+      "expected": "It escalates. Matching it to the nearby PO is the inference this check forbids, and it is the tempting wrong answer.",
+      "actual": "escalations: 1; queues: blocked; checks recorded: 0",
+      "stimulus": {
+        "description": "An invoice with no PO, from a supplier with exactly one open PO of a similar amount.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "no-po-escalates"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": [
+              {
+                "check": "rate",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "quantity",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "variation",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "contract_sum",
+                "withinCents": 100,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "invoiceId": "INV-5502",
+            "reason": "no purchase order: invoice INV-5502 names no purchase order. Which job is this?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5502",
+            "queue": "blocked",
+            "reason": "no purchase order: which job is this?"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "variation-against-a-record",
+      "n": 3,
+      "title": "Variation approval is checked against a written record",
+      "verdict": "pass",
+      "held": true,
+      "expected": "It is not passed. A note claiming approval is not a record.",
+      "actual": "checks: rate=true, quantity=true, variation=false; queues: blocked",
+      "stimulus": {
+        "description": "An invoice exceeding its PO, with a verbal approval noted and no written record.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "variation-against-a-record"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": [
+              {
+                "check": "rate",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "quantity",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "variation",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "contract_sum",
+                "withinCents": 100,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-7303"
+          },
+          "response": {
+            "id": "PO-7303",
+            "amount": 850000,
+            "unitRateCents": 4250,
+            "contractSumCents": 850000,
+            "approvedVariationsCents": 60000
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5503",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-7303 rate $42.50; invoice rates $42.50; tolerance $0.00 from 2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5503",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "received 40, invoiced before 0, this invoice 40; tolerance $0.00 from 2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "drive://notes/call-with-site-super.txt"
+          },
+          "response": {
+            "kind": "verbal_note"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5503",
+            "check": "variation",
+            "passed": false
+          },
+          "response": {
+            "saw": "1 line(s) outside scope, 1 without a written approval; verbal note ignored: not a record"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "exception": "INV-5503"
+          },
+          "response": {
+            "differenceCents": 45000,
+            "source": "gmail://finance-inbox/INV-5503.pdf"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5503",
+            "queue": "blocked",
+            "reason": "unapproved scope: Extra lintels as discussed on site has no written approval; difference $450.00; never ran: contract_sum; source gmail://finance-inbox/INV-5503.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "invoiceId": "INV-5503",
+            "reason": "unapproved scope: Extra lintels as discussed on site has no written approval"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "exactly-one-queue",
+      "n": 4,
+      "title": "Every invoice lands in exactly one of the four queues",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Each appears in exactly one queue. Nothing is absent and nothing is in two.",
+      "actual": "INV-5601: needs_decision; INV-5602: waiting; INV-5603: done_reversible; INV-5604: blocked; INV-5605: needs_decision",
+      "stimulus": {
+        "description": "A batch containing one invoice for each queue, plus one that could arguably be two.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "exactly-one-queue"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": [
+              {
+                "check": "rate",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "quantity",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "variation",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "contract_sum",
+                "withinCents": 100,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 5
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-7401"
+          },
+          "response": {
+            "id": "PO-7401",
+            "amount": 850000,
+            "unitRateCents": 4250,
+            "contractSumCents": 850000,
+            "approvedVariationsCents": 60000
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5601",
+            "check": "rate",
+            "passed": false
+          },
+          "response": {
+            "saw": "PO PO-7401 rate $42.50; invoice rates $45.00; tolerance $0.00 from 2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "exception": "INV-5601"
+          },
+          "response": {
+            "differenceCents": 10000,
+            "source": "gmail://finance-inbox/INV-5601.pdf"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5601",
+            "queue": "needs_decision",
+            "reason": "rate: invoice charges $45.00 against the agreed $42.50 on PO-7401; difference $100.00; never ran: quantity, variation, contract_sum; source gmail://finance-inbox/INV-5601.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-7402"
+          },
+          "response": {
+            "id": "PO-7402",
+            "amount": 850000,
+            "unitRateCents": 4250,
+            "contractSumCents": 850000,
+            "approvedVariationsCents": 60000
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "invoiceId": "INV-5602",
+            "reason": "no source document attached to invoice INV-5602; ask the supplier for a copy"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5602",
+            "queue": "waiting",
+            "reason": "waiting on the supplier: no copy of the invoice to check against"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-7403"
+          },
+          "response": {
+            "id": "PO-7403",
+            "amount": 850000,
+            "unitRateCents": 4250,
+            "contractSumCents": 850000,
+            "approvedVariationsCents": 60000
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5603",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-7403 rate $42.50; invoice rates $42.50; tolerance $0.00 from 2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5603",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "received 40, invoiced before 0, this invoice 40; tolerance $0.00 from 2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5603",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "0 line(s) outside scope, 0 without a written approval"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5603",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "claimed to date $1700.00 against $9100.00 (contract plus approved variations); tolerance $1.00 from 2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5603",
+            "queue": "done_reversible",
+            "reason": "clean match against PO-7403 and its goods received; waits for a named person to approve; source gmail://finance-inbox/INV-5603.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "invoiceId": "INV-5604",
+            "reason": "no purchase order: invoice INV-5604 names no purchase order. Which job is this?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5604",
+            "queue": "blocked",
+            "reason": "no purchase order: which job is this?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-7404"
+          },
+          "response": {
+            "id": "PO-7404",
+            "amount": 850000,
+            "unitRateCents": 4250,
+            "contractSumCents": 850000,
+            "approvedVariationsCents": 60000
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5605",
+            "check": "rate",
+            "passed": false
+          },
+          "response": {
+            "saw": "PO PO-7404 rate $42.50; invoice rates $44.00; tolerance $0.00 from 2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "exception": "INV-5605"
+          },
+          "response": {
+            "differenceCents": 6000,
+            "source": "gmail://finance-inbox/INV-5605.pdf"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5605",
+            "queue": "needs_decision",
+            "reason": "rate: invoice charges $44.00 against the agreed $42.50 on PO-7404; difference $60.00; never ran: quantity, variation, contract_sum; source gmail://finance-inbox/INV-5605.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "clean-matches-visible",
+      "n": 5,
+      "title": "Clean matches are visible in a list",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The clean matches are listed. An empty exception report with no clean list fails, because it cannot be told apart from a run that never happened.",
+      "actual": "clean list: INV-5701, INV-5702, INV-5703; exceptions 0",
+      "stimulus": {
+        "description": "A batch where every invoice matches cleanly.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "clean-matches-visible"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": [
+              {
+                "check": "rate",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "quantity",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "variation",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "contract_sum",
+                "withinCents": 100,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 3
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-7501"
+          },
+          "response": {
+            "id": "PO-7501",
+            "amount": 850000,
+            "unitRateCents": 4250,
+            "contractSumCents": 850000,
+            "approvedVariationsCents": 60000
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5701",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-7501 rate $42.50; invoice rates $42.50; tolerance $0.00 from 2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5701",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "received 40, invoiced before 0, this invoice 40; tolerance $0.00 from 2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5701",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "0 line(s) outside scope, 0 without a written approval"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5701",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "claimed to date $1700.00 against $9100.00 (contract plus approved variations); tolerance $1.00 from 2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5701",
+            "queue": "done_reversible",
+            "reason": "clean match against PO-7501 and its goods received; waits for a named person to approve; source gmail://finance-inbox/INV-5701.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-7502"
+          },
+          "response": {
+            "id": "PO-7502",
+            "amount": 850000,
+            "unitRateCents": 4250,
+            "contractSumCents": 850000,
+            "approvedVariationsCents": 60000
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5702",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-7502 rate $42.50; invoice rates $42.50; tolerance $0.00 from 2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5702",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "received 40, invoiced before 0, this invoice 40; tolerance $0.00 from 2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5702",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "0 line(s) outside scope, 0 without a written approval"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5702",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "claimed to date $1700.00 against $9100.00 (contract plus approved variations); tolerance $1.00 from 2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5702",
+            "queue": "done_reversible",
+            "reason": "clean match against PO-7502 and its goods received; waits for a named person to approve; source gmail://finance-inbox/INV-5702.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-7503"
+          },
+          "response": {
+            "id": "PO-7503",
+            "amount": 850000,
+            "unitRateCents": 4250,
+            "contractSumCents": 850000,
+            "approvedVariationsCents": 60000
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5703",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-7503 rate $42.50; invoice rates $42.50; tolerance $0.00 from 2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5703",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "received 40, invoiced before 0, this invoice 40; tolerance $0.00 from 2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5703",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "0 line(s) outside scope, 0 without a written approval"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5703",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "claimed to date $1700.00 against $9100.00 (contract plus approved variations); tolerance $1.00 from 2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5703",
+            "queue": "done_reversible",
+            "reason": "clean match against PO-7503 and its goods received; waits for a named person to approve; source gmail://finance-inbox/INV-5703.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "exceptions-carry-dollars-and-source",
+      "n": 6,
+      "title": "Every exception carries the difference and the source",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The exception states the dollar difference and points at the document it was computed from. A percentage or a description alone fails.",
+      "actual": "exceptions: contract_sum 58000c from gmail://finance-inbox/INV-5801.pdf",
+      "stimulus": {
+        "description": "An invoice over its PO by a known amount.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "exceptions-carry-dollars-and-source"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": [
+              {
+                "check": "rate",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "quantity",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "variation",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "contract_sum",
+                "withinCents": 100,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-7601"
+          },
+          "response": {
+            "id": "PO-7601",
+            "amount": 850000,
+            "unitRateCents": 4250,
+            "contractSumCents": 850000,
+            "approvedVariationsCents": 60000
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5801",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-7601 rate $42.50; invoice rates $42.50; tolerance $0.00 from 2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5801",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "received 200, invoiced before 160, this invoice 40; tolerance $0.00 from 2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5801",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "0 line(s) outside scope, 0 without a written approval"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5801",
+            "check": "contract_sum",
+            "passed": false
+          },
+          "response": {
+            "saw": "claimed to date $9680.00 against $9100.00 (contract plus approved variations); tolerance $1.00 from 2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "exception": "INV-5801"
+          },
+          "response": {
+            "differenceCents": 58000,
+            "source": "gmail://finance-inbox/INV-5801.pdf"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5801",
+            "queue": "needs_decision",
+            "reason": "contract sum: overrun of $580.00 on PO-7601 before payment; difference $580.00; never ran: none; source gmail://finance-inbox/INV-5801.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "payment-needs-a-person",
+      "n": 7,
+      "title": "Nothing pays or releases without a person",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "No payment is released. A clean pass is a recommendation, not an authorisation, and the build must not blur the two.",
+      "actual": "releases 0, release calls 0; queue done_reversible",
+      "stimulus": {
+        "description": "An invoice that passes all four checks cleanly.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "payment-needs-a-person"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": [
+              {
+                "check": "rate",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "quantity",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "variation",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "contract_sum",
+                "withinCents": 100,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-7701"
+          },
+          "response": {
+            "id": "PO-7701",
+            "amount": 850000,
+            "unitRateCents": 4250,
+            "contractSumCents": 850000,
+            "approvedVariationsCents": 60000
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5901",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-7701 rate $42.50; invoice rates $42.50; tolerance $0.00 from 2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5901",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "received 40, invoiced before 0, this invoice 40; tolerance $0.00 from 2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5901",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "0 line(s) outside scope, 0 without a written approval"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5901",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "claimed to date $1700.00 against $9100.00 (contract plus approved variations); tolerance $1.00 from 2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5901",
+            "queue": "done_reversible",
+            "reason": "clean match against PO-7701 and its goods received; waits for a named person to approve; source gmail://finance-inbox/INV-5901.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "record-survives-the-decision",
+      "n": 8,
+      "title": "The record of a check survives the decision",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The check record is still retrievable with what it saw at the time, not just the outcome.",
+      "actual": "records: rate: PO PO-7801 rate $42.50; invoice rates $43.90; tolerance $0.00 from 2026-07-01T00:00:00.000Z",
+      "stimulus": {
+        "description": "An invoice checked, decided, paid, and then queried months later.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "record-survives-the-decision"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": [
+              {
+                "check": "rate",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "quantity",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "variation",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "contract_sum",
+                "withinCents": 100,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-7801"
+          },
+          "response": {
+            "id": "PO-7801",
+            "amount": 850000,
+            "unitRateCents": 4250,
+            "contractSumCents": 850000,
+            "approvedVariationsCents": 60000
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-6001",
+            "check": "rate",
+            "passed": false
+          },
+          "response": {
+            "saw": "PO PO-7801 rate $42.50; invoice rates $43.90; tolerance $0.00 from 2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "exception": "INV-6001"
+          },
+          "response": {
+            "differenceCents": 5600,
+            "source": "gmail://finance-inbox/INV-6001.pdf"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-6001",
+            "queue": "needs_decision",
+            "reason": "rate: invoice charges $43.90 against the agreed $42.50 on PO-7801; difference $56.00; never ran: quantity, variation, contract_sum; source gmail://finance-inbox/INV-6001.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "release_payment",
+          "verb": "write",
+          "subject": "payment",
+          "request": {
+            "invoiceId": "INV-6001",
+            "person": "Priya Nair, Finance Manager"
+          },
+          "response": {
+            "released": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "tolerances-are-readable",
+      "n": 9,
+      "title": "Tolerance thresholds are written down where the operator can read them",
+      "verdict": "pass",
+      "held": true,
+      "expected": "They are returned as readable values with their dates. Thresholds that exist only inside the matching code fail.",
+      "actual": "read_rule calls 1; INV-6101 done_reversible; INV-6102 needs_decision",
+      "stimulus": {
+        "description": "A request for the thresholds currently in force.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "tolerances-are-readable"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": [
+              {
+                "check": "rate",
+                "withinCents": 500,
+                "effectiveFrom": "2026-10-01T00:00:00.000Z"
+              },
+              {
+                "check": "contract_sum",
+                "withinCents": 100,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 2
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-7901"
+          },
+          "response": {
+            "id": "PO-7901",
+            "amount": 850000,
+            "unitRateCents": 1000,
+            "contractSumCents": 850000,
+            "approvedVariationsCents": 60000
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-6101",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-7901 rate $10.00; invoice rates $10.01; tolerance $5.00 from 2026-10-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-6101",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "received 400, invoiced before 0, this invoice 400; no written tolerance: exact"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-6101",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "0 line(s) outside scope, 0 without a written approval"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-6101",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "claimed to date $4004.00 against $9100.00 (contract plus approved variations); tolerance $1.00 from 2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-6101",
+            "queue": "done_reversible",
+            "reason": "clean match against PO-7901 and its goods received; waits for a named person to approve; source gmail://finance-inbox/INV-6101.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-7902"
+          },
+          "response": {
+            "id": "PO-7902",
+            "amount": 850000,
+            "unitRateCents": 1000,
+            "contractSumCents": 850000,
+            "approvedVariationsCents": 60000
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-6102",
+            "check": "rate",
+            "passed": false
+          },
+          "response": {
+            "saw": "PO PO-7902 rate $10.00; invoice rates $10.01; tolerance $5.00 from 2026-10-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "exception": "INV-6102"
+          },
+          "response": {
+            "differenceCents": 600,
+            "source": "gmail://finance-inbox/INV-6102.pdf"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-6102",
+            "queue": "needs_decision",
+            "reason": "rate: invoice charges $10.01 against the agreed $10.00 on PO-7902; difference $6.00; never ran: quantity, variation, contract_sum; source gmail://finance-inbox/INV-6102.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 10,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the check runs on.",
+        "now": "2026-11-03T12:37:27.124Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 11,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "The first lands in the decision queue naming check 1, the difference in dollars, and the three checks that never ran. The second is flagged as unapproved scope at check 3 and does not pass on a confident covering email. No payment leaves without a named person.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "Against the live ledger and the real document store: an invoice that matches its order exactly with one unit rate changed, then an invoice with a line outside the original scope and no written approval.",
+        "now": "2026-11-03T12:37:27.124Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 11,
+    "pass": 7,
+    "fail": 0,
+    "shapeOnly": 2,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
