@@ -1,0 +1,121 @@
+{
+  "spec": "AIP-BS-MATERIAL-ORDER",
+  "standard": "material-order-build-standard",
+  "edition": "2026-10-03",
+  "source": "https://aipathway.com.au/explore-ai/material-order-build-standard",
+  "ran_at": "2026-11-03T14:00:00.717Z",
+  "environment": "stub",
+  "provider": "local.mock_supplier",
+  "provider_block": {
+    "boundary": {
+      "never": [
+        "order a line the job does not carry",
+        "order what stock already covers",
+        "type a price; the supplier catalogue is the only source",
+        "order twice for one job and supplier",
+        "release over threshold or accept a substitution without a person"
+      ],
+      "stays_with_person": [
+        "the release over threshold",
+        "approving a supplier",
+        "accepting a substitution",
+        "every variance"
+      ]
+    },
+    "job": "the materials are ordered from the job, from the catalogue, once",
+    "skill": "material-order",
+    "stub": "local.mock_supplier",
+    "production": null,
+    "product": null,
+    "insert": null,
+    "with_us": {
+      "kind": "scoped_build",
+      "note": "No hosted step. The idempotent write of the order into the system the business orders from is quoted as a scoped build."
+    }
+  },
+  "tally": {
+    "green": 9,
+    "red": 0,
+    "with_us": 1,
+    "evidence_required": 1,
+    "total": 12
+  },
+  "checks": [
+    {
+      "id": "lines-come-from-the-job",
+      "n": 1,
+      "title": "Every ordered line traces to a material line on the job",
+      "verdict": "pass"
+    },
+    {
+      "id": "stock-checked-before-ordering",
+      "n": 2,
+      "title": "Stock on hand is read before the order, and a line stock covers is reserved rather than ordered",
+      "verdict": "pass"
+    },
+    {
+      "id": "supplier-catalogue-is-the-only-source",
+      "n": 3,
+      "title": "Every line carries the supplier's catalogue code and price, read at order time, and a line no catalogue holds parks the order",
+      "verdict": "pass"
+    },
+    {
+      "id": "one-order-per-job-and-supplier",
+      "n": 4,
+      "title": "One order per job and supplier, written once, updated on a second run",
+      "verdict": "pass"
+    },
+    {
+      "id": "threshold-needs-a-person",
+      "n": 5,
+      "title": "An order over the threshold, or to a supplier not on the approved list, is released only by a named person",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "lead-time-is-data",
+      "n": 6,
+      "title": "Each supplier carries a lead time, and an order that would miss the job's start tells the job owner",
+      "verdict": "pass"
+    },
+    {
+      "id": "delivery-matches-back",
+      "n": 7,
+      "title": "A delivery is recorded against the order line by line, and a delivery with no order is refused",
+      "verdict": "pass"
+    },
+    {
+      "id": "variance-is-a-queue",
+      "n": 8,
+      "title": "Short, over, wrong item and a changed price are escalated with the order id and an owner, never absorbed",
+      "verdict": "pass"
+    },
+    {
+      "id": "nothing-is-substituted-silently",
+      "n": 9,
+      "title": "A supplier's substitution is accepted only by a named person",
+      "verdict": "pass"
+    },
+    {
+      "id": "the-record-by-job",
+      "n": 10,
+      "title": "Every order, release, delivery and variance is retrievable by job",
+      "verdict": "pass"
+    },
+    {
+      "id": "survives-the-builder",
+      "n": 11,
+      "title": "It survives the builder",
+      "verdict": "evidence_required"
+    },
+    {
+      "id": "pass-test",
+      "n": 12,
+      "title": "The pass test passes",
+      "verdict": "with_us"
+    }
+  ],
+  "next": {
+    "with_us": "No hosted step. The idempotent write of the order into the system the business orders from is quoted as a scoped build. Send the failing check id for a fixed price; do not build the live step yourself.",
+    "evidence_required": "attach what proves each one; not a software check"
+  }
+}
