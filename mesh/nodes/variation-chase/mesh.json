@@ -1,0 +1,47 @@
+{
+  "slug": "variation-chase",
+  "name": "Variation Chase",
+  "office_task": "Each weekday, chase the signature on every variation the office has approved, stop the day it comes back signed, and hand a no or a silent party to a named person.",
+  "verticals": ["trades-building"],
+  "standards": ["follow-up"],
+  "systems_of_record": [
+    "the job system's variation register, one open item per approved variation awaiting signature on the job (Simpro, ServiceM8 or a Google Sheet kept beside the job system), which issues the job_id and the item id",
+    "the office mailbox (Gmail or Outlook) the signed variation comes back to, which issues the message_id"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/variation-chase" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "evidence.filed",
+      "write": "the signed variation (or the certificate, PO number or form the job waited on) filed as evidence against its open item on the job, which marks the item arrived so the variation can go on the next progress claim",
+      "readback": "reading the item back by its id returns status arrived with the arrival's evidence reference, which names the message_id of the email that carried the signed copy and the job_id it belongs to; no evidence reference back means it was not filed, and the item gets no touch until a person looks"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an escalation on the item naming the cadence's person: the other side said no, disputed the variation or asked us to stop, or the item reached its cap with nothing back, carrying every touch so far",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the item id, the job_id, the reason, the touch history and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": ["followup.declined", "followup.dispute", "followup.cap_reached"],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.job_id", "seam.item_id", "seam.item_status", "seam.touches", "seam.outcome", "seam.evidence_ref", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Review, approve, and chase subcontractor change orders with forms, DeepSeek, Gmail, and Google Sheets",
+    "original_author": "Khaisa Studio",
+    "share_link": "https://n8n.io/workflows/21993",
+    "licence_or_permission": "reimplementation"
+  }
+}
