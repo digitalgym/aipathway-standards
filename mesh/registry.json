@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-03T13:34:53.672Z",
+  "generated_at": "2026-11-03T13:35:13.677Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -100,6 +100,100 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 9
+        }
+      ]
+    },
+    {
+      "slug": "ageing-monday",
+      "name": "Ageing Monday",
+      "office_task": "Every Monday, publish the accounts receivable ageing report from the ledger, every figure with its definition, source and as-of time, and say so when one cannot be read.",
+      "verticals": [
+        "accounting-bookkeeping"
+      ],
+      "standards": [
+        "recurring-report"
+      ],
+      "systems_of_record": [
+        "the ledger (Xero or MYOB): aged receivables by due date",
+        "the job system (ServiceM8 or Simpro): completed jobs not yet invoiced",
+        "the system the report is published into, which issues the report_id"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "one view of the week's ageing report per audience (owner, lender), each figure carrying its definition id, source and as-of time, or published as unavailable with the reason; a correction is a new version superseding the old, with the named person and the reason",
+          "readback": "reading the period's reports back returns each report_id with its version, published_at and published_by; no id back means it was not published and report.publish_failed is raised"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception naming the definition's owner or the threshold's person: a source that could not be read, a measure with no definition or two, a threshold that could not be compared, a correction missing a person or reason, or a view that did not read back",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the period, the measure, the reason and the exception_owner"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "report.source_unreadable",
+          "report.no_definition",
+          "report.conflicting_definitions",
+          "report.threshold_not_comparable",
+          "report.correction_incomplete",
+          "report.correction_unknown_measure",
+          "report.publish_failed"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.report_id",
+          "seam.period",
+          "seam.version",
+          "seam.supersedes",
+          "seam.published_by",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/ageing-monday"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Send weekly AR ageing reports with Invoice Ninja, PDFMint and Gmail",
+        "original_author": "Florian Standhartinger",
+        "share_link": "https://n8n.io/workflows/19112",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "recurring-report",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:05:20.739Z",
+          "run_id": "run-1793711120737",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
         }
       ]
     },
@@ -2641,6 +2735,112 @@
       ]
     },
     {
+      "slug": "parts-quote",
+      "name": "Parts Quote",
+      "office_task": "When a customer's spare-parts enquiry is logged as a job, draft its quote from our own parts price list, or park it with a reason, and leave it for us to send.",
+      "verticals": [
+        "b2b-office"
+      ],
+      "standards": [
+        "quote-out"
+      ],
+      "systems_of_record": [
+        "Xero (Items as the parts price list, Quotes)",
+        "ServiceM8",
+        "Simpro (parts only)"
+      ],
+      "consumes": [
+        {
+          "event": "job.created",
+          "wake": "webhook"
+        },
+        {
+          "event": "job.updated",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "quote.drafted",
+          "write": "A draft quote on the job the parts enquiry was logged as, every line carrying the part's catalogue id and its rate as read from the price list at draft time, ex GST. It is left in draft for the person who owns parts quotes; this node has no way to send it.",
+          "readback": "The quote is read back by the id the system returned (Xero GET /api.xro/2.0/Quotes/{QuoteID}, ServiceM8 GET /api_1.0/jobquote/{uuid}.json, Simpro GET /api/v1.0/companies/{companyID}/quotes/{quoteID}) and must carry the job id. No id back is not a write: it raises quote.write_failed."
+        },
+        {
+          "event": "exception.raised",
+          "write": "A parked quote as an exception on the job: the park reason from the standard's fixed list, the parts that did price with their catalogue ids, the parts that did not, no total, and exception_owner set to the person the business named for parts quotes.",
+          "readback": "The exception desk returns an exception_id; reading the job by its id shows the open exception with its exception_owner, and the next hop reads it there and stops."
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "quote.not_in_pricebook",
+          "quote.variation_to_accepted_quote",
+          "quote.discount_requested",
+          "quote.pricebook_unreadable",
+          "quote.write_failed"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.quote_id",
+          "seam.status",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/parts-quote"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Generate & Send Spare Parts Price Quotes with Gmail, Sheets and Gemini AI",
+        "original_author": "berke",
+        "share_link": "https://n8n.io/workflows/5492",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "quote-out",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:04:19.029Z",
+          "run_id": "run-1793711059027",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 0,
+          "total": 11
+        },
+        {
+          "standard": "cash-seam",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:03:35.286Z",
+          "run_id": "run-1793711015285",
+          "green": 4,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 9
+        }
+      ]
+    },
+    {
       "slug": "permit-answers",
       "name": "Permit Answers",
       "office_task": "Answer the office's permit, inspection, zoning and building code questions from the council and state rules we hold, citing the clause, or hand them to a named person.",
@@ -3270,6 +3470,117 @@
       ]
     },
     {
+      "slug": "quote-nudge",
+      "name": "Quote Nudge",
+      "office_task": "Each morning, find the flooring quotes customers have not answered, draft a low-pressure nudge for the rep to send within the cap, and hand any no or dead quote to a named person.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "follow-up"
+      ],
+      "systems_of_record": [
+        "the job system that issues the quote_id and job_id (ServiceM8, Simpro, or a quote register kept beside Tradify, which has no public API)",
+        "Gmail or Outlook (the rep's outbox for the drafted nudge, and the customer's reply by message_id)",
+        "the exception desk the business runs (a sheet or a task list that issues the exception_id)"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "quote.sent",
+          "wake": "webhook"
+        },
+        {
+          "event": "quote.accepted",
+          "wake": "webhook"
+        },
+        {
+          "event": "quote.declined",
+          "wake": "webhook"
+        },
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "evidence.filed",
+          "write": "the customer's decision on the quote (their acceptance or reply, by message_id) filed as an attachment on the job the quote belongs to, which marks the open item arrived and ends the chase before any further nudge",
+          "readback": "the job system returns the attachment's id, and reading it back (for ServiceM8, GET /api_1.0/attachment/{uuid}.json) returns the job_id it is related to and the message_id it came from; no id back means it was not filed, and the next run files it again before anything else"
+        },
+        {
+          "event": "exception.raised",
+          "write": "a hand-off on the quote naming the person who now owns it, for a no, a dispute, a stop-contacting-me, or the cadence cap reached with no decision, carrying every nudge and call so far",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the quote_id, the reason, the exception_owner and the touch history; no id back means nothing was raised and the quote is not touched again that run"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "follow_up.declined",
+          "follow_up.disputed",
+          "follow_up.cap_reached"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "item.status",
+          "item.touches",
+          "item.outcome",
+          "item.arrival_evidence_ref",
+          "item.we_owe",
+          "item.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/quote-nudge"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Quote Closer",
+        "original_author": "Mark G",
+        "share_link": "https://x.ai/bot/lnEBRA4mvuYRbZC003NdY",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "follow-up",
+          "edition": "2026-10-05",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:58:46.185Z",
+          "run_id": "run-1793710726184",
+          "green": 10,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 13
+        }
+      ]
+    },
+    {
       "slug": "rent-watch",
       "name": "Rent Watch",
       "office_task": "Every day, work out which tenancies are really behind on rent, chase only those, and hand anything past a reminder to a named person.",
@@ -3364,6 +3675,112 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 11
+        }
+      ]
+    },
+    {
+      "slug": "repair-board",
+      "name": "Repair Board",
+      "office_task": "Send each triaged repair to a licensed trade at a time inside the resident's window, text the resident once, and hand what cannot be placed to the property manager.",
+      "verticals": [
+        "property"
+      ],
+      "standards": [
+        "dispatch-board"
+      ],
+      "systems_of_record": [
+        "the property management system that issues the maintenance job_id (its work orders, trade panel and licence records)"
+      ],
+      "consumes": [
+        {
+          "event": "job.created",
+          "wake": "webhook"
+        },
+        {
+          "event": "job.updated",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "job.updated",
+          "write": "one slot on the maintenance job: the licensed trade, the start and end inside the resident's window, the resolved address, who or which rule set it, and the job version it was made for; updated in place on a change or a displacement, never written twice",
+          "readback": "the work order returns the slot's external id, and reading the job back by job_id returns that one slot with its trade, times and author; a write with no id back is a failed write, escalated as write_failed, and nothing is sent about it"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the job naming the property manager who owns it: an address that will not resolve, no trade with a current licence for the work, a window the job cannot fit, no capacity, no consent to text the resident, a failed slot write, or a routine visit an urgent repair displaced and could not be re-slotted",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the job_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "dispatch.address_unresolved",
+          "dispatch.no_licensed_tech",
+          "dispatch.window_impossible",
+          "dispatch.no_capacity",
+          "dispatch.no_consent",
+          "dispatch.write_failed",
+          "dispatch.displaced"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.slot_external_id",
+          "seam.job_version",
+          "seam.updated_by",
+          "seam.displaced_by",
+          "seam.resident_message_id",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/repair-board"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Miffy - Maintenance Triage",
+        "original_author": "Miffy",
+        "share_link": "https://x.ai/bot/gKgo-_MM29kfcD9qiZf2A",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "dispatch-board",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:49:42.714Z",
+          "run_id": "run-1793710182712",
+          "green": 8,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
         }
       ]
     },
@@ -3574,6 +3991,7 @@
   ],
   "routable": [
     "after-hours-desk",
+    "ageing-monday",
     "backflow-watch",
     "bill-check",
     "chase-book",
@@ -3598,13 +4016,16 @@
     "matter-billing",
     "nudge-desk",
     "open-home-desk",
+    "parts-quote",
     "permit-answers",
     "po-match",
     "practice-desk",
     "price-sheet",
     "promise-watch",
     "quote-desk",
+    "quote-nudge",
     "rent-watch",
+    "repair-board",
     "ring-list",
     "site-orders"
   ],
@@ -3617,7 +4038,19 @@
     },
     {
       "from": "after-hours-desk",
+      "to": "parts-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "after-hours-desk",
       "to": "quote-desk",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "after-hours-desk",
+      "to": "repair-board",
       "event": "job.created",
       "id": "job_id"
     },
@@ -3629,7 +4062,19 @@
     },
     {
       "from": "crew-board",
+      "to": "parts-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "crew-board",
       "to": "quote-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "crew-board",
+      "to": "repair-board",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -3653,12 +4098,60 @@
     },
     {
       "from": "practice-desk",
+      "to": "parts-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "practice-desk",
       "to": "quote-desk",
       "event": "job.updated",
       "id": "job_id"
     },
     {
       "from": "practice-desk",
+      "to": "repair-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "practice-desk",
+      "to": "site-orders",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "quote-desk",
+      "to": "quote-nudge",
+      "event": "quote.sent",
+      "id": "quote_id"
+    },
+    {
+      "from": "repair-board",
+      "to": "crew-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "repair-board",
+      "to": "hours-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "repair-board",
+      "to": "parts-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "repair-board",
+      "to": "quote-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "repair-board",
       "to": "site-orders",
       "event": "job.updated",
       "id": "job_id"
