@@ -1,0 +1,2729 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793708384801",
+  "standard": "invoice-out-build-standard",
+  "spec": "AIP-BS-INVOICE-OUT",
+  "specVersion": "2026-10-05",
+  "environment": "stub",
+  "startedAt": "2026-11-03T12:19:44.794Z",
+  "finishedAt": "2026-11-03T12:19:44.801Z",
+  "results": [
+    {
+      "checkId": "completion-is-the-trigger",
+      "n": 1,
+      "title": "The job's completion is the only trigger",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Two invoices exist and each traces to a job read that showed it complete. An invoice for the open job, or one written before any job was read, fails.",
+      "actual": "22 port call(s): read_job, read_job, read_pricebook, write_invoice, read_job, read_job, escalate, read_job, read_job, read_pricebook, write_invoice, read_job, read_job, escalate, read_job, read_job, read_job, read_job, read_job, read_job, read_job, read_job; invoices INV1/JOB-101/draft INV2/JOB-102/draft; escalations over_threshold over_threshold; sends 0",
+      "stimulus": {
+        "description": "Three jobs in the system: two marked complete today, one still open.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "completion-is-the-trigger"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "JOB-101",
+              "JOB-102",
+              "JOB-104"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-101"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-101",
+            "lines": [
+              "CALLOUTx1@12000",
+              "LAB-HRx2@9800"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": null
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-101"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "{\"node\":\"invoice-desk\",\"job_id\":\"JOB-101\",\"invoice_id\":\"INV1\",\"reason\":\"awaiting_release\",\"exception_owner\":\"Priya Shah (accounts)\",\"total\":31600,\"rule\":null}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "JOB-101",
+              "JOB-102",
+              "JOB-104"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-102"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-102",
+            "lines": [
+              "CALLOUTx1@12000",
+              "TMV-15x1@16500"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": null
+          },
+          "response": {
+            "id": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-102"
+          },
+          "response": {
+            "invoiceId": "INV2",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "{\"node\":\"invoice-desk\",\"job_id\":\"JOB-102\",\"invoice_id\":\"INV2\",\"reason\":\"awaiting_release\",\"exception_owner\":\"Priya Shah (accounts)\",\"total\":28500,\"rule\":null}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "JOB-101",
+              "JOB-102",
+              "JOB-104"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "JOB-101",
+              "JOB-102",
+              "JOB-104"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "JOB-101",
+              "JOB-102",
+              "JOB-104"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "JOB-101",
+              "JOB-102",
+              "JOB-104"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-101"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "JOB-101",
+              "JOB-102",
+              "JOB-104"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-102"
+          },
+          "response": {
+            "invoiceId": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "JOB-101",
+              "JOB-102",
+              "JOB-104"
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "lines-come-from-the-job",
+      "n": 2,
+      "title": "Every invoice line traces to a line on the job",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The invoice carries those three codes and quantities and no others. An extra line, or a missing one with no parked reason, fails.",
+      "actual": "7 port call(s): read_job, read_job, read_pricebook, write_invoice, read_job, read_job, escalate; invoices INV1/JOB-201/draft; escalations over_threshold; sends 0",
+      "stimulus": {
+        "description": "A complete job with three lines: a callout, two hours of labour and a material.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "lines-come-from-the-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "complete": [
+              "JOB-201"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-201"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-201",
+            "lines": [
+              "CALLOUTx1@12000",
+              "LAB-HRx2@9800",
+              "TMV-15x1@16500"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": null
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-201"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "{\"node\":\"invoice-desk\",\"job_id\":\"JOB-201\",\"invoice_id\":\"INV1\",\"reason\":\"awaiting_release\",\"exception_owner\":\"Priya Shah (accounts)\",\"total\":48100,\"rule\":null}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "rates-only-from-the-book",
+      "n": 3,
+      "title": "Every line is priced from the price book, and a line the book does not cover parks the invoice",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The book is read before the write. Every priced line's rate equals the book's rate for its code. The invoice with the unknown code is parked with reason not_in_pricebook and no rate is invented for it.",
+      "actual": "13 port call(s): read_job, read_job, read_pricebook, write_invoice, read_job, escalate, read_job, read_job, read_pricebook, write_invoice, read_job, read_job, escalate; invoices INV1/JOB-301/parked:not_in_pricebook INV2/JOB-302/draft; escalations not_in_pricebook over_threshold; sends 0",
+      "stimulus": {
+        "description": "A complete job whose lines include one code the price book does not hold.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "rates-only-from-the-book"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "JOB-301",
+              "JOB-302"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-301"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-301",
+            "lines": [
+              "CALLOUTx1@12000",
+              "LAB-HRx2@9800"
+            ],
+            "stage": null,
+            "park": "not_in_pricebook",
+            "notes": null
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-301"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "status": "parked"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "not_in_pricebook",
+            "detail": "{\"node\":\"invoice-desk\",\"job_id\":\"JOB-301\",\"invoice_id\":\"INV1\",\"reason\":\"not_in_pricebook\",\"exception_owner\":\"Priya Shah (accounts)\",\"reasons\":[\"not_in_pricebook\"],\"unpriced\":[{\"code\":\"VALVE-NEW\",\"qty\":1}],\"unsigned\":[],\"book_edition\":\"2026-10 Xero Items\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "JOB-301",
+              "JOB-302"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-302"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-302",
+            "lines": [
+              "CALLOUTx1@12000",
+              "TMV-15x1@16500"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": null
+          },
+          "response": {
+            "id": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-302"
+          },
+          "response": {
+            "invoiceId": "INV2",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "{\"node\":\"invoice-desk\",\"job_id\":\"JOB-302\",\"invoice_id\":\"INV2\",\"reason\":\"awaiting_release\",\"exception_owner\":\"Priya Shah (accounts)\",\"total\":28500,\"rule\":null}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "variation-needs-a-signature",
+      "n": 4,
+      "title": "A variation is billed only with a signed acceptance attached",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The signed one is invoiced with the acceptance attached as evidence. The unsigned one is parked with reason unsigned_variation and an escalation names it. Billing an unsigned variation fails.",
+      "actual": "15 port call(s): read_job, read_job, read_pricebook, write_invoice, read_job, evidence, read_job, gate, issue_notice, read_job, read_job, read_pricebook, write_invoice, read_job, escalate; invoices INV1/JOB-402/sent INV2/JOB-403/parked:unsigned_variation; escalations unsigned_variation; sends 1",
+      "stimulus": {
+        "description": "Two complete jobs each carrying a variation line: one with a signed acceptance on file, one without.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "variation-needs-a-signature"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "JOB-402",
+              "JOB-403"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-402"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-402",
+            "lines": [
+              "CALLOUTx1@12000",
+              "VAR-REROUTEx1@22000"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": null
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-402"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "invoiceId": "INV1",
+            "ref": "doc:acceptance/JOB-402/signed.pdf"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Priya's rule: release under $5,000 ex GST",
+            "threshold": 500000
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "INV1",
+            "person": null,
+            "rule": "Priya's rule: release under $5,000 ex GST"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "send": "INV1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "JOB-402",
+              "JOB-403"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-403"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-403",
+            "lines": [
+              "CALLOUTx1@12000"
+            ],
+            "stage": null,
+            "park": "unsigned_variation",
+            "notes": null
+          },
+          "response": {
+            "id": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-403"
+          },
+          "response": {
+            "invoiceId": "INV2",
+            "status": "parked"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "unsigned_variation",
+            "detail": "{\"node\":\"invoice-desk\",\"job_id\":\"JOB-403\",\"invoice_id\":\"INV2\",\"reason\":\"unsigned_variation\",\"exception_owner\":\"Priya Shah (accounts)\",\"reasons\":[\"unsigned_variation\"],\"unpriced\":[],\"unsigned\":[\"VAR-REROUTE\"],\"book_edition\":\"2026-10 Xero Items\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "stage-invoice-never-claim",
+      "n": 5,
+      "title": "A job under a building contract is invoiced as a stage invoice, and the claim stays with the builder",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The invoice carries the stage name. No invoice, line or note contains the phrase progress claim. An invoice on a staged job with no stage fails.",
+      "actual": "13 port call(s): read_job, read_job, read_pricebook, write_invoice, read_job, read_job, escalate, read_job, read_job, read_pricebook, write_invoice, read_job, escalate; invoices INV1/JOB-501/draft INV2/JOB-502/parked:no_stage; escalations over_threshold no_stage; sends 0",
+      "stimulus": {
+        "description": "A complete job carrying a contract stage name.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "stage-invoice-never-claim"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "JOB-501",
+              "JOB-502"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-501"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-501",
+            "lines": [
+              "LAB-HRx2@9800",
+              "HWS-315x1@185000"
+            ],
+            "stage": "Stage 3: Lock-up",
+            "park": null,
+            "notes": "Stage invoice: Stage 3: Lock-up"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-501"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "{\"node\":\"invoice-desk\",\"job_id\":\"JOB-501\",\"invoice_id\":\"INV1\",\"reason\":\"awaiting_release\",\"exception_owner\":\"Priya Shah (accounts)\",\"total\":204600,\"rule\":null}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "JOB-501",
+              "JOB-502"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-502"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-502",
+            "lines": [
+              "LAB-HRx2@9800"
+            ],
+            "stage": null,
+            "park": "no_stage",
+            "notes": null
+          },
+          "response": {
+            "id": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-502"
+          },
+          "response": {
+            "invoiceId": "INV2",
+            "status": "parked"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "no_stage",
+            "detail": "{\"node\":\"invoice-desk\",\"job_id\":\"JOB-502\",\"invoice_id\":\"INV2\",\"reason\":\"no_stage\",\"exception_owner\":\"Priya Shah (accounts)\",\"reasons\":[\"no_stage\"],\"unpriced\":[],\"unsigned\":[],\"book_edition\":\"2026-10 Xero Items\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-invoice-per-job",
+      "n": 6,
+      "title": "One invoice per job, written once, updated on a second event",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Exactly one invoice exists for the job, with an external id, and the second event produced an update or no write. A second invoice, or a null id treated as success, fails.",
+      "actual": "14 port call(s): read_job, read_job, read_pricebook, write_invoice, escalate, read_job, read_job, read_pricebook, write_invoice, read_job, read_job, escalate, read_job, read_job; invoices INV1/JOB-601/draft; escalations write_failed over_threshold; sends 0",
+      "stimulus": {
+        "description": "The same job's completion event delivered twice.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-invoice-per-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "JOB-600",
+              "JOB-601"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-600"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-600",
+            "lines": 1
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "write_failed",
+            "detail": "{\"node\":\"invoice-desk\",\"job_id\":\"JOB-600\",\"invoice_id\":null,\"reason\":\"write_failed\",\"exception_owner\":\"Priya Shah (accounts)\",\"key\":\"JOB-600:job.completed:invoice-desk\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "JOB-600",
+              "JOB-601"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-601"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-601",
+            "lines": [
+              "CALLOUTx1@12000",
+              "LAB-HRx2@9800"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": null
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-601"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "{\"node\":\"invoice-desk\",\"job_id\":\"JOB-601\",\"invoice_id\":\"INV1\",\"reason\":\"awaiting_release\",\"exception_owner\":\"Priya Shah (accounts)\",\"total\":31600,\"rule\":null}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "JOB-600",
+              "JOB-601"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-601"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "externalId": "xero-INV1"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "written-into-the-ledger",
+      "n": 7,
+      "title": "The invoice exists in the ledger the business runs, with an external id back",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The write returns an external id and the id is stored against the job. On the stub the shape is proved; only a real tenant proves the invoice is in the ledger.",
+      "actual": "7 port call(s): read_job, read_job, read_pricebook, write_invoice, read_job, read_job, escalate; invoices INV1/JOB-701/draft; escalations over_threshold; sends 0",
+      "stimulus": {
+        "description": "A complete, fully priced job.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "written-into-the-ledger"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "complete": [
+              "JOB-701"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-701"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-701",
+            "lines": [
+              "CALLOUTx1@12000",
+              "TMV-15x1@16500"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": null
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-701"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "{\"node\":\"invoice-desk\",\"job_id\":\"JOB-701\",\"invoice_id\":\"INV1\",\"reason\":\"awaiting_release\",\"exception_owner\":\"Priya Shah (accounts)\",\"total\":28500,\"rule\":null}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "send-is-a-gate",
+      "n": 8,
+      "title": "Nothing is sent without a release by a person, or by a rule a person set with a threshold",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The first is released by the rule and sent. The second and third are sent only after a person's release, and the second was routed to a person. A send with no release fails.",
+      "actual": "20 port call(s): read_job, read_job, read_pricebook, write_invoice, read_job, read_job, gate, issue_notice, read_job, read_job, read_pricebook, write_invoice, read_job, read_job, escalate, read_job, read_job, read_pricebook, gate, issue_notice; invoices INV1/JOB-801/sent INV2/JOB-802/sent; escalations over_threshold; sends 2 | no-rule business: 12 port call(s): read_job, read_job, read_pricebook, write_invoice, read_job, read_job, escalate, read_job, read_job, read_pricebook, gate, issue_notice; invoices INV1/JOB-803/sent; escalations over_threshold; sends 1",
+      "stimulus": {
+        "description": "Three drafts: one under an auto-release threshold, one over it, one with no rule set.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "send-is-a-gate"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "JOB-801",
+              "JOB-802"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-801"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-801",
+            "lines": [
+              "CALLOUTx1@12000",
+              "LAB-HRx2@9800"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": null
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-801"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Priya's rule: release under $500 ex GST",
+            "threshold": 50000
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "INV1",
+            "person": null,
+            "rule": "Priya's rule: release under $500 ex GST"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "send": "INV1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "JOB-801",
+              "JOB-802"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-802"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-802",
+            "lines": [
+              "LAB-HRx2@9800",
+              "HWS-315x1@185000"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": null
+          },
+          "response": {
+            "id": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-802"
+          },
+          "response": {
+            "invoiceId": "INV2",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Priya's rule: release under $500 ex GST",
+            "threshold": 50000
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "{\"node\":\"invoice-desk\",\"job_id\":\"JOB-802\",\"invoice_id\":\"INV2\",\"reason\":\"awaiting_release\",\"exception_owner\":\"Priya Shah (accounts)\",\"total\":204600,\"rule\":{\"name\":\"Priya's rule: release under $500 ex GST\",\"threshold\":50000}}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "JOB-801",
+              "JOB-802"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-802"
+          },
+          "response": {
+            "invoiceId": "INV2",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T04:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "INV2",
+            "person": "Priya Shah (accounts)",
+            "rule": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "send": "INV2"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "parked-is-a-queue",
+      "n": 9,
+      "title": "A parked invoice is a queue with a reason and an owner, and nothing parked is sent",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every parked invoice carries a reason and an escalation names it to a person. No parked invoice has a send event.",
+      "actual": "53 port call(s): read_job, read_job, read_pricebook, write_invoice, escalate, read_job, read_job, read_pricebook, write_invoice, read_job, escalate, read_job, read_job, read_pricebook, write_invoice, read_job, escalate, read_job, read_job, read_pricebook, write_invoice, read_job, escalate, read_job, read_job, read_job, read_pricebook, write_invoice, read_job, read_job, gate, issue_notice, read_job, read_job, read_pricebook, write_invoice, read_job, escalate, read_job, read_job, read_pricebook, write_invoice, read_job, escalate, read_job, read_job, read_pricebook, write_invoice, read_job, escalate, read_job, read_job, read_pricebook; invoices INV1/JOB-901/parked:not_in_pricebook INV2/JOB-902/parked:unsigned_variation INV3/JOB-903/parked:no_stage INV4/JOB-900/sent; escalations write_failed not_in_pricebook unsigned_variation no_stage not_in_pricebook unsigned_variation no_stage; sends 1",
+      "stimulus": {
+        "description": "The parked invoices from the checks above.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "parked-is-a-queue"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "JOB-900",
+              "JOB-901",
+              "JOB-902",
+              "JOB-903"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-900"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-900",
+            "lines": 1
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "write_failed",
+            "detail": "{\"node\":\"invoice-desk\",\"job_id\":\"JOB-900\",\"invoice_id\":null,\"reason\":\"write_failed\",\"exception_owner\":\"Priya Shah (accounts)\",\"key\":\"JOB-900:job.completed:invoice-desk\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "JOB-900",
+              "JOB-901",
+              "JOB-902",
+              "JOB-903"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-901"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-901",
+            "lines": [
+              "CALLOUTx1@12000"
+            ],
+            "stage": null,
+            "park": "not_in_pricebook",
+            "notes": null
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-901"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "status": "parked"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "not_in_pricebook",
+            "detail": "{\"node\":\"invoice-desk\",\"job_id\":\"JOB-901\",\"invoice_id\":\"INV1\",\"reason\":\"not_in_pricebook\",\"exception_owner\":\"Priya Shah (accounts)\",\"reasons\":[\"not_in_pricebook\"],\"unpriced\":[{\"code\":\"VALVE-NEW\",\"qty\":1}],\"unsigned\":[],\"book_edition\":\"2026-10 Xero Items\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "JOB-900",
+              "JOB-901",
+              "JOB-902",
+              "JOB-903"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-902"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-902",
+            "lines": [
+              "CALLOUTx1@12000"
+            ],
+            "stage": null,
+            "park": "unsigned_variation",
+            "notes": null
+          },
+          "response": {
+            "id": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-902"
+          },
+          "response": {
+            "invoiceId": "INV2",
+            "status": "parked"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "unsigned_variation",
+            "detail": "{\"node\":\"invoice-desk\",\"job_id\":\"JOB-902\",\"invoice_id\":\"INV2\",\"reason\":\"unsigned_variation\",\"exception_owner\":\"Priya Shah (accounts)\",\"reasons\":[\"unsigned_variation\"],\"unpriced\":[],\"unsigned\":[\"VAR-REROUTE\"],\"book_edition\":\"2026-10 Xero Items\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "JOB-900",
+              "JOB-901",
+              "JOB-902",
+              "JOB-903"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-903"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-903",
+            "lines": [
+              "LAB-HRx2@9800"
+            ],
+            "stage": null,
+            "park": "no_stage",
+            "notes": null
+          },
+          "response": {
+            "id": "INV3",
+            "externalId": "xero-INV3"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-903"
+          },
+          "response": {
+            "invoiceId": "INV3",
+            "status": "parked"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "no_stage",
+            "detail": "{\"node\":\"invoice-desk\",\"job_id\":\"JOB-903\",\"invoice_id\":\"INV3\",\"reason\":\"no_stage\",\"exception_owner\":\"Priya Shah (accounts)\",\"reasons\":[\"no_stage\"],\"unpriced\":[],\"unsigned\":[],\"book_edition\":\"2026-10 Xero Items\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "JOB-900",
+              "JOB-901",
+              "JOB-902",
+              "JOB-903"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "JOB-900",
+              "JOB-901",
+              "JOB-902",
+              "JOB-903"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-900"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-900",
+            "lines": [
+              "CALLOUTx1@12000"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": null
+          },
+          "response": {
+            "id": "INV4",
+            "externalId": "xero-INV4"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-900"
+          },
+          "response": {
+            "invoiceId": "INV4",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Priya's rule: release under $50,000 ex GST",
+            "threshold": 5000000
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "INV4",
+            "person": null,
+            "rule": "Priya's rule: release under $50,000 ex GST"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "send": "INV4"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "JOB-900",
+              "JOB-901",
+              "JOB-902",
+              "JOB-903"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-901"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "update": "INV1",
+            "jobId": "JOB-901",
+            "lines": 1,
+            "park": "not_in_pricebook"
+          },
+          "response": {
+            "externalId": "xero-INV1",
+            "updates": 1
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-901"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "status": "parked"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "not_in_pricebook",
+            "detail": "{\"node\":\"invoice-desk\",\"job_id\":\"JOB-901\",\"invoice_id\":\"INV1\",\"reason\":\"not_in_pricebook\",\"exception_owner\":\"Priya Shah (accounts)\",\"reasons\":[\"not_in_pricebook\"],\"unpriced\":[{\"code\":\"VALVE-NEW\",\"qty\":1}],\"unsigned\":[],\"book_edition\":\"2026-10 Xero Items\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "JOB-900",
+              "JOB-901",
+              "JOB-902",
+              "JOB-903"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-902"
+          },
+          "response": {
+            "invoiceId": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "update": "INV2",
+            "jobId": "JOB-902",
+            "lines": 1,
+            "park": "unsigned_variation"
+          },
+          "response": {
+            "externalId": "xero-INV2",
+            "updates": 1
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-902"
+          },
+          "response": {
+            "invoiceId": "INV2",
+            "status": "parked"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "unsigned_variation",
+            "detail": "{\"node\":\"invoice-desk\",\"job_id\":\"JOB-902\",\"invoice_id\":\"INV2\",\"reason\":\"unsigned_variation\",\"exception_owner\":\"Priya Shah (accounts)\",\"reasons\":[\"unsigned_variation\"],\"unpriced\":[],\"unsigned\":[\"VAR-REROUTE\"],\"book_edition\":\"2026-10 Xero Items\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "JOB-900",
+              "JOB-901",
+              "JOB-902",
+              "JOB-903"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-903"
+          },
+          "response": {
+            "invoiceId": "INV3",
+            "externalId": "xero-INV3"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "update": "INV3",
+            "jobId": "JOB-903",
+            "lines": 1,
+            "park": "no_stage"
+          },
+          "response": {
+            "externalId": "xero-INV3",
+            "updates": 1
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-903"
+          },
+          "response": {
+            "invoiceId": "INV3",
+            "status": "parked"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "no_stage",
+            "detail": "{\"node\":\"invoice-desk\",\"job_id\":\"JOB-903\",\"invoice_id\":\"INV3\",\"reason\":\"no_stage\",\"exception_owner\":\"Priya Shah (accounts)\",\"reasons\":[\"no_stage\"],\"unpriced\":[],\"unsigned\":[],\"book_edition\":\"2026-10 Xero Items\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "JOB-900",
+              "JOB-901",
+              "JOB-902",
+              "JOB-903"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-901"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "status": "parked"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items",
+            "items": 5
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "the-record-by-job",
+      "n": 10,
+      "title": "Job id, invoice id, the lines, the rates read, who released and when it was sent are retrievable by job",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A read by job id returns the invoice, its lines with the rates and the book edition, the release with a name or rule, and the send time. A record missing the release fails.",
+      "actual": "12 port call(s): read_job, read_job, read_pricebook, write_invoice, read_job, read_job, escalate, read_job, read_job, read_pricebook, gate, issue_notice; invoices INV1/JOB-1001/sent; escalations over_threshold; sends 1",
+      "stimulus": {
+        "description": "One job invoiced, released and sent.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "the-record-by-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "complete": [
+              "JOB-1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JOB-1001"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JOB-1001",
+            "lines": [
+              "LAB-HRx2@9800",
+              "HWS-315x1@185000"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": null
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1001"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Priya's rule: release under $500 ex GST",
+            "threshold": 50000
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "{\"node\":\"invoice-desk\",\"job_id\":\"JOB-1001\",\"invoice_id\":\"INV1\",\"reason\":\"awaiting_release\",\"exception_owner\":\"Priya Shah (accounts)\",\"total\":204600,\"rule\":{\"name\":\"Priya's rule: release under $500 ex GST\",\"threshold\":50000}}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T03:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "complete": [
+              "JOB-1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T03:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1001"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-09-26T03:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T03:00:00.000Z"
+          },
+          "response": {
+            "edition": "2026-10 Xero Items",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T03:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "INV1",
+            "person": "Priya Shah (accounts)",
+            "rule": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T03:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "send": "INV1"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 11,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the ledger write and the release rule runs on.",
+        "now": "2026-11-03T12:19:44.801Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 12,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "One invoice per job in the ledger with the ledger's id, the variation parked and named, the unknown code parked and not priced, the over-threshold draft waiting for a person, and every sent invoice carrying a release.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "Real completion events on the business's own tenant, driven by marking real jobs complete.",
+        "now": "2026-11-03T12:19:44.801Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 12,
+    "pass": 7,
+    "fail": 0,
+    "shapeOnly": 3,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
