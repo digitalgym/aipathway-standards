@@ -1,0 +1,54 @@
+{
+  "slug": "terms-watch",
+  "name": "Terms Watch",
+  "office_task": "Each business day, chase the customers whose invoices are past their due date, biggest risk first, inside the calling rules, and turn each reply with a date into a promise.",
+  "verticals": ["b2b-office"],
+  "standards": ["debtor-chasing"],
+  "systems_of_record": [
+    "the ledger that issues the invoice_id (Xero, MYOB or QuickBooks): its invoices, contacts and invoice history",
+    "the mail system that issues the message_id of a debtor's reply (Gmail, Outlook)"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/terms-watch" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "invoice.overdue", "wake": "webhook" },
+    { "event": "email.received", "wake": "webhook" },
+    { "event": "payment.received", "wake": "webhook" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "promise.recorded",
+      "write": "a dated promise to pay on the invoice in the ledger, from a debtor's reply: the date (required), the amount (empty when none was given) and when it was captured; the promised date becomes the follow-up date, and a logged dispute is never overwritten",
+      "readback": "the promise is read back from the ledger by invoice_id (Xero: GET /api.xro/2.0/Invoices/{InvoiceID} returns ExpectedPaymentDate, and GET .../Invoices/{InvoiceID}/History returns the promise note); no read-back means debtor.promise_write_failed is raised and no promise.recorded is emitted"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the invoice naming the person who owns it: a dispute, a relationship-sized balance, hardship stated, a reply with no date, an override with no named approver, a promise that did not read back, or late-payment interest worked out from a rate the invoice's own terms cite and held for a person to decide",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the invoice_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "debtor.dispute_open",
+      "debtor.relationship_account",
+      "debtor.hardship_stated",
+      "debtor.no_date_given",
+      "debtor.override_refused",
+      "debtor.promise_write_failed",
+      "debtor.interest_held_for_person",
+      "debtor.customer_unreadable"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.invoice_id", "seam.bucket", "seam.promise_date", "seam.promise_captured_at", "seam.gate_reason", "seam.interest_basis", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": null
+}

@@ -1,0 +1,83 @@
+# Build debtor-chasing-build-standard
+
+You are implementing a published build standard. The standard is the
+specification; this folder is the harness that proves you met it.
+
+Source: https://aipathway.com.au/explore-ai/debtor-chasing-build-standard
+Markdown: https://aipathway.com.au/explore-ai/debtor-chasing-build-standard.md
+
+## Do this in order
+
+1. Read the standard at the Markdown URL above. It is the whole specification.
+2. Implement `build.mjs`. It receives the ports and does the job.
+3. Fill in `holds` in `scenarios.mjs`, one per check. Each carries the
+   check's own conformance statement, what to inject, and what to assert.
+4. Run `node run.mjs`. Every check starts red. Go green.
+5. There is no production run for this standard yet: its live port map is not
+   published, so the stub run is the finished build. The live step itself runs on
+   Office Voice / Recover (Get Paid). Enable Get Paid on Office Voice / Recover; npx @aipathway/conformance connect gets the owner a key and the links to connect their systems. There is no production run of these checks yet: AIPATHWAY_PROVIDER=office_voice.recover needs a live port map that is not published, so the stub run is the finished build. Do not hand-roll the live step.
+
+## Await every port call
+
+Write `await ports.writeJob(...)`, never `ports.writeJob(...)`. A real
+write is asynchronous and the stub's is not; awaiting a plain value yields the
+value, so one build written this way runs against both. A build that does not
+await works on the stub and then silently drops its writes against a real
+system.
+
+## Assert on the trace, not on stub memory
+
+`holds` should read `world.calls`, the recorded port calls. Reaching into
+stub-only state such as `world.jobs` makes the scenario stub-only: in
+production that job lives in the operator's own system. To assert on it there,
+read it back through a port, which puts the read in the trace where it belongs.
+
+## The one rule
+
+Everything the build does to the outside world goes through the ports it is
+handed. Do not import a vendor SDK, open a socket, or reach for the network.
+The runner owns the world the build writes into: a build that goes around the
+ports leaves it empty, and the run reports that rather than passing.
+
+## Verdicts, and what each one means
+
+| verdict | meaning | what you do |
+|---|---|---|
+| `pass` | asserted green here | nothing |
+| `fail` | asserted red here | fix the build, or the assertion |
+| `shape_only` | shape holds on the stub, truth needs the live provider | re-runs when the provider flips |
+| `with_us` | cannot be proved here at all | do what the run prints beside it: point the number, enable the insert, or send the check id. Never build it |
+| `evidence_required` | not a software check | the operator does it, then attaches proof |
+
+## What you cannot build, and should not try
+
+Some checks are `with_us`. They need the live provider, which carries what a
+stub cannot hold: for a call, a phone number with AI disclosure, Do Not Call
+Register washing and calling hours by state; for a write, the authenticated
+write into the real ledger or job system, landed once with an id back. Do not
+implement those, and do not stand up telephony. The standard names the
+production provider for that step, and the run reports `with_us` rather than
+failing the build for not having one.
+
+Getting every other check green is the finished job.
+
+## If you run Spec Kit
+
+`specs/<standard>/spec.md`, `plan.md` and `tasks.md` and
+`.specify/memory/constitution.md` are here in the shape Specify expects.
+spec.md points at the standard rather than copying it; tasks.md is one task per
+check. `/speckit-implement` and `node run.mjs` converge on the same build.
+Load the constitution first.
+
+## The manifest
+
+Every run writes `manifest.json`: spec, edition, provider, one verdict per
+check, and the next action for anything not green. Hand that over. It is the
+record of the build, and the thing to send with a failing check id for a fixed
+price.
+
+## When the standard moves
+
+The run prints the edition it asserted against. If the site's edition is newer
+than the one in your last manifest, rebuild from the standard; do not patch the
+generated board. The spec is the source of truth and this folder is disposable.

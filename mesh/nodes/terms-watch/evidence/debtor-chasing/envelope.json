@@ -1,0 +1,1796 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793712132876",
+  "standard": "debtor-chasing-build-standard",
+  "spec": "AIP-BS-DEBTOR-CHASING",
+  "specVersion": "2026-10-06",
+  "environment": "stub",
+  "startedAt": "2026-11-03T13:22:12.863Z",
+  "finishedAt": "2026-11-03T13:22:12.876Z",
+  "results": [
+    {
+      "checkId": "coverage-measured",
+      "n": 1,
+      "title": "Mobile coverage was checked first",
+      "verdict": "evidence_required",
+      "expected": "A coverage figure is present and dated. The runner reports it, and never scores it as passed on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The build declares the measured share, and the builder attaches how it was measured.",
+        "now": "2026-11-03T13:22:12.864Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "overdue-off-due-date",
+      "n": 2,
+      "title": "Overdue is measured off the due date",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The not-yet-due invoice is absent from the run. Every row in the run is past its due date, not its issue date.",
+      "actual": "1 run(s); last run [[\"C3\",\"drifting\",250000,null],[\"C2\",\"just_late\",80000,null]]; 2 dial(s); 0 escalation(s)",
+      "stimulus": {
+        "description": "A seeded book with invoices whose issue and due dates differ, including one issued long ago but not yet due.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "overdue-off-due-date"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 4
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 3
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "C3",
+              "C2"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C3",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "C3",
+            "text": "Hi, this is an AI assistant calling for the accounts team. It's about invoice INV-LATE-2, $2500.00 in total, 20 days past the due date. When can we expect payment?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C2",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "C2",
+            "text": "Hi, this is an AI assistant calling for the accounts team. It's about invoice INV-LATE-1, $800.00 in total, 3 days past the due date. When can we expect payment?"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "four-buckets",
+      "n": 3,
+      "title": "Four buckets, not one list",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Each seeded row lands in its expected bucket, and no row carries a free-text bucket.",
+      "actual": "1 run(s); last run [[\"BP\",\"broken_promise\",100000,null],[\"HD\",\"hard\",100000,null],[\"DR\",\"drifting\",100000,null],[\"JL\",\"just_late\",100000,null]]; 4 dial(s); 0 escalation(s)",
+      "stimulus": {
+        "description": "A seeded book with one row belonging in each bucket.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "four-buckets"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 4
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 4
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 4
+          },
+          "response": {
+            "order": [
+              "BP",
+              "HD",
+              "DR",
+              "JL"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "BP",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "BP",
+            "text": "Hi, this is an AI assistant calling for the accounts team. It's about invoice I-BP, $1000.00 in total, 10 days past the due date. When can we expect payment?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "HD",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "HD",
+            "text": "Hi, this is an AI assistant calling for the accounts team. It's about invoice I-HD, $1000.00 in total, 60 days past the due date. When can we expect payment?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "DR",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "DR",
+            "text": "Hi, this is an AI assistant calling for the accounts team. It's about invoice I-DR, $1000.00 in total, 25 days past the due date. When can we expect payment?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "JL",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "JL",
+            "text": "Hi, this is an AI assistant calling for the accounts team. It's about invoice I-JL, $1000.00 in total, 5 days past the due date. When can we expect payment?"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "broken-promise-outranks",
+      "n": 4,
+      "title": "Broken promise outranks everything",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The broken promise ranks above the larger row despite the smaller amount.",
+      "actual": "1 run(s); last run [[\"SMALL\",\"broken_promise\",30000,null],[\"BIG\",\"drifting\",2000000,null]]; 2 dial(s); 0 escalation(s)",
+      "stimulus": {
+        "description": "A small broken promise seeded alongside a much larger invoice that is merely late.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "broken-promise-outranks"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "SMALL",
+              "BIG"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "SMALL",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "SMALL",
+            "text": "Hi, this is an AI assistant calling for the accounts team. It's about invoice I-S, $300.00 in total, 8 days past the due date. When can we expect payment?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "BIG",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "BIG",
+            "text": "Hi, this is an AI assistant calling for the accounts team. It's about invoice I-B, $20000.00 in total, 30 days past the due date. When can we expect payment?"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "rank-by-amount-at-risk",
+      "n": 5,
+      "title": "Ranking is by amount at risk",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The larger amount ranks first. Age decides only when amounts are equal.",
+      "actual": "1 run(s); last run [[\"NEWLARGE\",\"drifting\",900000,null],[\"TIE-OLD\",\"drifting\",200000,null],[\"TIE-NEW\",\"drifting\",200000,null],[\"OLDSMALL\",\"drifting\",50000,null]]; 4 dial(s); 0 escalation(s)",
+      "stimulus": {
+        "description": "Two rows in the same bucket: one older and small, one newer and large.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "rank-by-amount-at-risk"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 4
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 4
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 4
+          },
+          "response": {
+            "order": [
+              "NEWLARGE",
+              "TIE-OLD",
+              "TIE-NEW",
+              "OLDSMALL"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "NEWLARGE",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "NEWLARGE",
+            "text": "Hi, this is an AI assistant calling for the accounts team. It's about invoice I-NL, $9000.00 in total, 16 days past the due date. When can we expect payment?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "TIE-OLD",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "TIE-OLD",
+            "text": "Hi, this is an AI assistant calling for the accounts team. It's about invoice I-TO, $2000.00 in total, 35 days past the due date. When can we expect payment?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "TIE-NEW",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "TIE-NEW",
+            "text": "Hi, this is an AI assistant calling for the accounts team. It's about invoice I-TN, $2000.00 in total, 18 days past the due date. When can we expect payment?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "OLDSMALL",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "OLDSMALL",
+            "text": "Hi, this is an AI assistant calling for the accounts team. It's about invoice I-OS, $500.00 in total, 40 days past the due date. When can we expect payment?"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-customer-one-conversation",
+      "n": 6,
+      "title": "One customer is one conversation",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The run contains exactly one entry for that customer, carrying the summed amount and all six invoice references.",
+      "actual": "1 run(s); last run [[\"SIX\",\"drifting\",210000,null],[\"ONE\",\"just_late\",70000,null]]; 2 dial(s); 0 escalation(s)",
+      "stimulus": {
+        "description": "One customer seeded with six overdue invoices.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-customer-one-conversation"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 7
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "SIX",
+              "ONE"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "SIX",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "SIX",
+            "text": "Hi, this is an AI assistant calling for the accounts team. It's about invoices I-6-1, I-6-2, I-6-3, I-6-4, I-6-5, I-6-6, $2100.00 in total, 29 days past the due date. When can we expect payment?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "ONE",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "ONE",
+            "text": "Hi, this is an AI assistant calling for the accounts team. It's about invoice I-1, $700.00 in total, 12 days past the due date. When can we expect payment?"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "relationship-balances-excluded",
+      "n": 7,
+      "title": "Relationship-sized balances are out of the run",
+      "verdict": "pass",
+      "held": true,
+      "expected": "That customer is absent from the dial list, carries an exclusion reason, and an escalate names who it went to.",
+      "actual": "1 run(s); last run [[\"SMALL\",\"drifting\",120000,null],[\"ANCHOR\",\"hard\",38000000,\"relationship_account\"]]; 1 dial(s); 1 escalation(s)",
+      "stimulus": {
+        "description": "A debtor seeded far above the configured relationship threshold.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "relationship-balances-excluded"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 3
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.relationship_account",
+            "detail": "{\"customerId\":\"ANCHOR\",\"amount\":38000000,\"owner\":\"Dana Whitlock\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "SMALL",
+              "ANCHOR"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "SMALL",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "SMALL",
+            "text": "Hi, this is an AI assistant calling for the accounts team. It's about invoice I-S, $1200.00 in total, 20 days past the due date. When can we expect payment?"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "promise-is-an-object",
+      "n": 8,
+      "title": "A promise is an object with a date",
+      "verdict": "pass",
+      "held": true,
+      "expected": "record_promise carries a date and a capture timestamp, a null amount is accepted, and the dispute is still present afterwards.",
+      "actual": "1 promise(s): [{\"customerId\":\"DISP\",\"date\":\"2026-09-25\",\"amount\":null,\"capturedAt\":\"2026-09-21T04:00:00.000Z\"}]; 1 escalation(s)",
+      "stimulus": {
+        "description": "A call where the debtor says they will pay Friday without naming a figure, on an invoice already carrying a dispute.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "promise-is-an-object"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "record_promise",
+          "verb": "write",
+          "subject": "promise",
+          "request": {
+            "customerId": "DISP",
+            "date": "2026-09-25",
+            "amount": null
+          },
+          "response": {
+            "capturedAt": "2026-09-21T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.dispute_open",
+            "detail": "{\"customerId\":\"DISP\",\"invoiceId\":\"I-D\",\"owner\":\"Lee Tran\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 1
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "promised-date-is-followup",
+      "n": 9,
+      "title": "The promised date is the follow-up date",
+      "verdict": "pass",
+      "held": true,
+      "expected": "That customer appears in no run before the promised date.",
+      "actual": "4 run(s) after the promise: [[\"OTHER\"],[\"OTHER\"],[\"OTHER\"],[\"OTHER\"]]; dials [\"OTHER\",\"OTHER\",\"OTHER\",\"OTHER\"]",
+      "stimulus": {
+        "description": "A promise for a date five days out, then a run on each of the next four days.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "promised-date-is-followup"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "record_promise",
+          "verb": "write",
+          "subject": "promise",
+          "request": {
+            "customerId": "PROM",
+            "date": "2026-09-26",
+            "amount": null
+          },
+          "response": {
+            "capturedAt": "2026-09-21T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-22T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "OTHER"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "OTHER",
+            "localHour": 14,
+            "date": "2026-09-22"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "OTHER",
+            "text": "Hi, this is an AI assistant calling for the accounts team. It's about invoice I-O, $900.00 in total, 21 days past the due date. When can we expect payment?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-23T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "OTHER"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "OTHER",
+            "localHour": 14,
+            "date": "2026-09-23"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "OTHER",
+            "text": "Hi, this is an AI assistant calling for the accounts team. It's about invoice I-O, $900.00 in total, 22 days past the due date. When can we expect payment?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-24T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "OTHER"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "OTHER",
+            "localHour": 14,
+            "date": "2026-09-24"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "OTHER",
+            "text": "Hi, this is an AI assistant calling for the accounts team. It's about invoice I-O, $900.00 in total, 23 days past the due date. When can we expect payment?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-25T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "OTHER"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "OTHER",
+            "localHour": 14,
+            "date": "2026-09-25"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "OTHER",
+            "text": "Hi, this is an AI assistant calling for the accounts team. It's about invoice I-O, $900.00 in total, 24 days past the due date. When can we expect payment?"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "gate-under-ranking",
+      "n": 10,
+      "title": "The gate sits underneath the ranking",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "No dial in any of the three. Each is held with a reason, and the highest score in the book does not override it.",
+      "actual": "gate [[\"TOP\",{\"allowed\":false,\"reason\":\"outside_hours\"}],[\"LOW\",{\"allowed\":false,\"reason\":\"outside_hours\"}],[\"TOP\",{\"allowed\":false,\"reason\":\"public_holiday\"}],[\"LOW\",{\"allowed\":false,\"reason\":\"public_holiday\"}],[\"TOP\",{\"allowed\":false,\"reason\":\"already_paid\"}],[\"LOW\",{\"allowed\":true}]]; dials [\"LOW\"]",
+      "stimulus": {
+        "description": "The top-ranked row, run at 8:30pm in the debtor's timezone; then the same row on a state public holiday; then the same row after the ledger shows it paid.",
+        "now": "2026-09-21T10:30:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "gate-under-ranking"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T10:30:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "TOP",
+              "LOW"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "TOP",
+            "localHour": 20.5,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": false,
+            "reason": "outside_hours"
+          }
+        },
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "LOW",
+            "localHour": 20.5,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": false,
+            "reason": "outside_hours"
+          }
+        },
+        {
+          "at": "2026-10-05T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-10-05T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-10-05T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-10-05T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-10-05T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "TOP",
+              "LOW"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-05T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "TOP",
+            "localHour": 14,
+            "date": "2026-10-05"
+          },
+          "response": {
+            "allowed": false,
+            "reason": "public_holiday"
+          }
+        },
+        {
+          "at": "2026-10-05T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "LOW",
+            "localHour": 14,
+            "date": "2026-10-05"
+          },
+          "response": {
+            "allowed": false,
+            "reason": "public_holiday"
+          }
+        },
+        {
+          "at": "2026-10-06T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-10-06T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-10-06T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-10-06T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-10-06T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "TOP",
+              "LOW"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-06T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "TOP",
+            "localHour": 14,
+            "date": "2026-10-06"
+          },
+          "response": {
+            "allowed": false,
+            "reason": "already_paid"
+          }
+        },
+        {
+          "at": "2026-10-06T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "LOW",
+            "localHour": 14,
+            "date": "2026-10-06"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-10-06T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "LOW",
+            "text": "Hi, this is an AI assistant calling for the accounts team. It's about invoice I-LOW, $600.00 in total, 55 days past the due date. When can we expect payment?"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "exceptions-attributable",
+      "n": 11,
+      "title": "Exceptions are named and attributable",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The override records the reason, the timestamp and the approving person. An override with no named approver is refused.",
+      "actual": "overrides [{\"customerId\":\"ASKED\",\"reason\":\"Debtor asked for a call back after 8pm tonight\",\"approver\":\"Dana Whitlock\",\"at\":\"2026-09-21T10:15:00.000Z\"}]; refused [{\"customerId\":\"NOBODY\",\"why\":\"no named approver\"}]; dials [\"ASKED\"]",
+      "stimulus": {
+        "description": "An override applied to a held row.",
+        "now": "2026-09-21T10:15:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "exceptions-attributable"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T10:15:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T10:15:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T10:15:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T10:15:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-21T10:15:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "ASKED",
+              "NOBODY"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T10:15:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "ASKED",
+            "localHour": 20.25,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": false,
+            "reason": "outside_hours"
+          }
+        },
+        {
+          "at": "2026-09-21T10:15:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "override": "ASKED",
+            "reason": "Debtor asked for a call back after 8pm tonight",
+            "approver": "Dana Whitlock"
+          },
+          "response": {
+            "accepted": true
+          }
+        },
+        {
+          "at": "2026-09-21T10:15:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "ASKED",
+            "text": "Hi, this is an AI assistant calling for the accounts team. It's about invoice I-AS, $3000.00 in total, 25 days past the due date. When can we expect payment?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T10:15:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "NOBODY",
+            "localHour": 20.25,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": false,
+            "reason": "outside_hours"
+          }
+        },
+        {
+          "at": "2026-09-21T10:15:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "override": "NOBODY",
+            "reason": "Keen to clear it before month end"
+          },
+          "response": {
+            "accepted": false
+          }
+        },
+        {
+          "at": "2026-09-21T10:15:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.override_refused",
+            "detail": "{\"customerId\":\"NOBODY\",\"why\":\"no named approver\",\"owner\":\"Dana Whitlock\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 12,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "The paid invoice is not dialled and the audit row says which ledger read stopped it; the late run holds until morning.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "A real run against a live ledger, at a real time of day, on a real number.",
+        "now": "2026-11-03T13:22:12.876Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 12,
+    "pass": 9,
+    "fail": 0,
+    "shapeOnly": 1,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
