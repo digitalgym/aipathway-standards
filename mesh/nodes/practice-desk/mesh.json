@@ -1,0 +1,55 @@
+{
+  "slug": "practice-desk",
+  "name": "Practice Desk",
+  "office_task": "Sort everything that lands in the practice inbox onto the right client job or supplier, give each one an owner and a deadline, and hold every reply for the owner to release.",
+  "verticals": ["accounting-bookkeeping"],
+  "standards": ["inbox-triage"],
+  "systems_of_record": [
+    "the practice's shared mailbox (Microsoft 365 or Google Workspace), which issues the message_id",
+    "the practice manager that issues the client engagement job_id (for example Xero Practice Manager)",
+    "the practice's own ledger, for supplier records (for example Xero)"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/practice-desk" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "webhook", "schedule"],
+  "consumes": [
+    { "event": "email.received", "wake": "webhook" },
+    { "event": "schedule.tick", "wake": "schedule" }
+  ],
+  "emits": [
+    {
+      "event": "job.updated",
+      "write": "the client's message and its attachments filed against the client engagement job by the job's own id, never copied into a folder",
+      "readback": "reading the record by message_id returns the filing with record_ref job:<job_id>; no record_ref back means it was not filed, and the message stays an unfiled item for a named person"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an item on the exception desk naming the person who owns it: a message that matched no record or was classified other, a complaint handed over whole, a client reply drafted and awaiting the owner's release, or an item past its kind's clock escalated to the queue manager",
+      "readback": "raising the item returns an item id, and reading the record by message_id returns that item with its kind, record_ref, owner and due date; no item id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "inbox.unmatched_record",
+      "inbox.classified_other",
+      "inbox.complaint_escalated",
+      "inbox.no_queue_for_kind",
+      "inbox.awaiting_release",
+      "inbox.past_clock"
+    ],
+    "owner_field": "owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.message_id", "seam.kind", "seam.record_ref", "seam.item_id", "seam.owner", "seam.due", "seam.released_by"]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Tax Firm OS",
+    "original_author": "Amervim Bonano",
+    "share_link": "https://x.ai/bot/vMr8x1Lm8mpo-jKBrdxCh",
+    "licence_or_permission": "reimplementation"
+  }
+}
