@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-03T12:41:04.834Z",
+  "generated_at": "2026-11-03T12:41:23.909Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -298,6 +298,368 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 11
+        }
+      ]
+    },
+    {
+      "slug": "chase-book",
+      "name": "Chase Book",
+      "office_task": "Every morning, read who owes us from Xero, send one reminder per customer pitched to how late they are, log it on the invoice, and hand disputes and big accounts to a named person.",
+      "verticals": [
+        "accounting-bookkeeping"
+      ],
+      "standards": [
+        "debtor-chasing"
+      ],
+      "systems_of_record": [
+        "Xero (invoices, contacts and invoice history)",
+        "Gmail or Outlook (the reminder thread and the debtor's reply)"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "invoice.overdue",
+          "wake": "poll"
+        },
+        {
+          "event": "payment.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "promise.recorded",
+          "write": "A dated promise to pay on the invoice in Xero, taken from the debtor's reply: date (required), amount (may be empty), method if offered and the capture time, as a history note on each invoice it covers. It never overwrites a logged dispute, and the next reminder moves to the promised date.",
+          "readback": "GET /api.xro/2.0/Invoices/{InvoiceID}/History returns the note with the promised date and capture time on the invoice_id it was written to. No note back means no promise was recorded: it raises debtor.promise_write_failed."
+        },
+        {
+          "event": "exception.raised",
+          "write": "An exception on the invoice naming the person who owns it: a dispute, a relationship-sized balance lifted out of the run, a reply with no date, an override with no named approver, or a failed ledger read.",
+          "readback": "The exception desk returns an exception_id, and reading it back returns the invoice_id, the reason and the exception_owner. No id back means nothing was raised and the run stops."
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "debtor.ledger_read_failed",
+          "debtor.dispute_open",
+          "debtor.relationship_account",
+          "debtor.no_date_given",
+          "debtor.promise_write_failed",
+          "debtor.override_refused",
+          "debtor.override_not_liftable"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.invoice_id",
+          "seam.bucket",
+          "seam.last_reminder_at",
+          "seam.promise_date",
+          "seam.promise_captured_at",
+          "seam.status",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/chase-book"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Send tiered overdue invoice reminders with Xero, Gmail, Slack, and Google Sheets",
+        "original_author": "Intuz",
+        "share_link": "https://n8n.io/workflows/20015",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "debtor-chasing",
+          "edition": "2026-10-06",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:31:54.240Z",
+          "run_id": "run-1793709114238",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        },
+        {
+          "standard": "cash-seam",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:31:01.065Z",
+          "run_id": "run-1793709061063",
+          "green": 4,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 9
+        }
+      ]
+    },
+    {
+      "slug": "chase-desk",
+      "name": "Chase Desk",
+      "office_task": "Every morning, rank who owes us by what is at risk, chase only those the rules allow, record each promise as a date, and hand disputes to a named person.",
+      "verticals": [
+        "accounting-bookkeeping"
+      ],
+      "standards": [
+        "debtor-chasing"
+      ],
+      "systems_of_record": [
+        "Xero (the ledger that issues the invoice_id, its contacts and its invoice history)",
+        "the job system named on the invoice (ServiceM8, Simpro), read by job_id only"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "invoice.overdue",
+          "wake": "webhook"
+        },
+        {
+          "event": "payment.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "promise.recorded",
+          "write": "a dated promise to pay on the invoice in the ledger: the date (required), the amount (empty when none was said), the method if offered and when it was captured; the promised date becomes the invoice's follow-up date, and a logged dispute is never overwritten",
+          "readback": "the promise is read back from the ledger by invoice_id (Xero: GET /api.xro/2.0/Invoices/{InvoiceID} returns ExpectedPaymentDate, and GET .../Invoices/{InvoiceID}/History returns the promise note); no read-back means promise_write_failed is raised and no promise.recorded"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the invoice's record naming the person who owns it: a dispute named on a call or already logged, a relationship-sized balance, hardship stated, no date given, an override with no named approver, or a promise that did not read back",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the invoice_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "debtor.dispute_open",
+          "debtor.relationship_account",
+          "debtor.hardship_stated",
+          "debtor.no_date_given",
+          "debtor.override_refused",
+          "debtor.promise_write_failed",
+          "debtor.job_unreadable"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.invoice_id",
+          "seam.bucket",
+          "seam.promise_date",
+          "seam.promise_captured_at",
+          "seam.gate_reason",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/chase-desk"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Accounts Receivable",
+        "original_author": "Thomas Matteson",
+        "share_link": "https://x.ai/bot/OZn5dOvIhkqsG5CG-Ow2D",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "debtor-chasing",
+          "edition": "2026-10-06",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:31:54.062Z",
+          "run_id": "run-1793709114060",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        },
+        {
+          "standard": "cash-seam",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:31:01.894Z",
+          "run_id": "run-1793709061892",
+          "green": 4,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 9
+        }
+      ]
+    },
+    {
+      "slug": "chase-list",
+      "name": "Chase List",
+      "office_task": "Each morning, rank who owes us money by what it is worth chasing, draft a friendly, firm or final reminder for each, and leave them for us to send.",
+      "verticals": [
+        "b2b-office"
+      ],
+      "standards": [
+        "debtor-chasing"
+      ],
+      "systems_of_record": [
+        "Xero",
+        "MYOB",
+        "the exception desk the business runs"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "invoice.overdue",
+          "wake": "schedule"
+        },
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "promise.recorded",
+          "write": "A dated promise to pay, from a debtor's reply on a reminder thread that carries the invoice id: the date, the amount or none, and when it was captured, written onto the invoice in the ledger. The promised date becomes that customer's follow-up date. It never clears a logged dispute.",
+          "readback": "The invoice is read back by its id (Xero GET /api.xro/2.0/Invoices/{InvoiceID}/History, MYOB GET /accountright/{company_file_id}/Sale/Invoice/{UID}) and must show the promise with its date. No promise on the read-back is not a write: it raises debtor.promise_write_failed."
+        },
+        {
+          "event": "exception.raised",
+          "write": "An exception naming exception_owner, the person the business set for receivables: a drafted reminder ready for that person to send (its tone, the invoice ids and the text), a relationship-sized balance or an open dispute lifted out of the run, hardship or a dispute named in a reply, a reply with no date, or a promise that did not write.",
+          "readback": "The exception desk returns an exception_id, and reading that id back returns the customer, the invoice ids, the reason and the exception_owner; no id back means nothing was raised and the run stops."
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "debtor.reminder_ready_for_release",
+          "debtor.relationship_account",
+          "debtor.dispute_open",
+          "debtor.hardship",
+          "debtor.dispute_named",
+          "debtor.reply_without_date",
+          "debtor.reply_unmatched",
+          "debtor.promise_write_failed"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.invoice_id",
+          "seam.chase_bucket",
+          "seam.chase_tone",
+          "seam.promise_date",
+          "seam.next_touch",
+          "seam.gate_hold_reason",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/chase-list"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Invoice Chaser",
+        "original_author": "Thuong P. Nguyen",
+        "share_link": "https://x.ai/bot/5ts0OJhTjZ7Ouse9xdMqr",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "debtor-chasing",
+          "edition": "2026-10-06",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:32:13.973Z",
+          "run_id": "run-1793709133972",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        },
+        {
+          "standard": "cash-seam",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:32:15.355Z",
+          "run_id": "run-1793709135354",
+          "green": 4,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 9
         }
       ]
     },
@@ -2200,6 +2562,9 @@
     "after-hours-desk",
     "backflow-watch",
     "bill-check",
+    "chase-book",
+    "chase-desk",
+    "chase-list",
     "claim-check",
     "comp-report",
     "deadline-desk",
