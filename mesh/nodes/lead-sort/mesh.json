@@ -1,0 +1,57 @@
+{
+  "slug": "lead-sort",
+  "name": "Lead Sort",
+  "office_task": "Sort the trade office inbox, voicemails and web-form leads included, onto the job or supplier by id, and hold every real reply for a named person.",
+  "verticals": ["trades-building"],
+  "standards": ["inbox-triage"],
+  "systems_of_record": [
+    "the shared office mailbox (Microsoft 365 or Google Workspace) that issues the message_id, where voicemail and website enquiry-form notifications land",
+    "the job system that issues the job_id messages are filed against (ServiceM8 or Simpro)",
+    "the ledger that holds supplier records (Xero)",
+    "the exception desk the business runs, holding the queue table and its items"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/lead-sort" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "webhook", "schedule"],
+  "consumes": [
+    { "event": "email.received", "wake": "webhook" },
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "evidence.filed",
+      "write": "the message filed against the job or supplier record by that record's own id, and for a supplier invoice its attachment filed as evidence with its hash and the message id, where Invoice Check reads it",
+      "readback": "reading the record by message_id returns the filing with record_ref job:<job_id> or supplier:<id>, and the evidence with the attachment hash; no record_ref back means it was not filed, and the message stays an unfiled task for a named person"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an item on the exception desk naming the person who owns it, one per thread: a new lead waiting on the office to book and quote, an unmatched or other message left as a task, a complaint handed whole to the owner, or an item past its kind's clock handed to the owner's manager",
+      "readback": "raising the item returns an item id, and reading the record by message_id returns that item with its kind, record_ref, owner, due date and every outbound with who released it; no item id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "inbox.lead_awaiting_booking",
+      "inbox.unmatched_task",
+      "inbox.classified_other",
+      "inbox.complaint",
+      "inbox.awaiting_release",
+      "inbox.past_clock"
+    ],
+    "owner_field": "owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.message_id", "seam.thread_id", "seam.kind", "seam.record_ref", "seam.item_id", "seam.owner", "seam.due", "seam.status", "seam.released_by"]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Contractor Front Desk",
+    "original_author": "Thuong P. Nguyen",
+    "share_link": "https://x.ai/bot/A1t0gfd8P4hbldi8swcem",
+    "licence_or_permission": "reimplementation"
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "spec": "AIP-BS-INBOX-TRIAGE",
+  "standard": "inbox-triage-build-standard",
+  "edition": "2026-10-03",
+  "source": "https://aipathway.com.au/explore-ai/inbox-triage-build-standard",
+  "ran_at": "2026-11-03T13:06:35.936Z",
+  "environment": "stub",
+  "provider": "local.mock_inbox",
+  "provider_block": {
+    "boundary": {
+      "never": [
+        "classify onto a kind the list does not hold",
+        "file a copy in a folder instead of against the record",
+        "reply with a price, a date or a decision without a release",
+        "touch a complaint",
+        "delete spam"
+      ],
+      "stays_with_person": [
+        "every substantive reply",
+        "the complaint",
+        "deciding a supplier invoice is genuine"
+      ]
+    },
+    "job": "nothing in the inbox is lost, and nothing is answered that a person should answer",
+    "skill": "inbox-triage",
+    "stub": "local.mock_inbox",
+    "production": null,
+    "product": null,
+    "insert": null,
+    "with_us": {
+      "kind": "scoped_build",
+      "note": "No hosted step. The filing write against the record and the release gate are quoted as a scoped build on the mailbox the business already runs."
+    }
+  },
+  "tally": {
+    "green": 9,
+    "red": 0,
+    "with_us": 1,
+    "evidence_required": 1,
+    "total": 12
+  },
+  "checks": [
+    {
+      "id": "classified-onto-a-closed-list",
+      "n": 1,
+      "title": "Every message gets exactly one kind from a closed list",
+      "verdict": "pass"
+    },
+    {
+      "id": "filed-against-the-record",
+      "n": 2,
+      "title": "A message about a job or a supplier is filed against that record by id",
+      "verdict": "pass"
+    },
+    {
+      "id": "attachment-becomes-the-artefact",
+      "n": 3,
+      "title": "A supplier invoice attachment is filed as evidence with its hash and the message id",
+      "verdict": "pass"
+    },
+    {
+      "id": "every-kind-has-a-queue-and-an-owner",
+      "n": 4,
+      "title": "Every classified message lands in the queue for its kind, with a named owner and a due date",
+      "verdict": "pass"
+    },
+    {
+      "id": "complaints-go-to-a-person-untouched",
+      "n": 5,
+      "title": "A complaint is escalated to a named person with the full message, and nothing is sent to the customer",
+      "verdict": "pass"
+    },
+    {
+      "id": "no-reply-without-a-release",
+      "n": 6,
+      "title": "The only automatic outbound is an acknowledgement, and any substantive reply carries a named person's release",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "the-clock-is-on-the-kind",
+      "n": 7,
+      "title": "Each kind carries a response clock, and an item past its clock escalates to the owner's manager",
+      "verdict": "pass"
+    },
+    {
+      "id": "duplicates-thread-not-multiply",
+      "n": 8,
+      "title": "A follow-up in the same thread updates the existing item",
+      "verdict": "pass"
+    },
+    {
+      "id": "spam-is-quarantined-not-deleted",
+      "n": 9,
+      "title": "Spam is filed to quarantine with its hash, retrievable, and never deleted by the machine",
+      "verdict": "pass"
+    },
+    {
+      "id": "the-record-by-message",
+      "n": 10,
+      "title": "Message id, kind, record, owner, clock, what was sent and by whom are retrievable by message",
+      "verdict": "pass"
+    },
+    {
+      "id": "survives-the-builder",
+      "n": 11,
+      "title": "It survives the builder",
+      "verdict": "evidence_required"
+    },
+    {
+      "id": "pass-test",
+      "n": 12,
+      "title": "The pass test passes",
+      "verdict": "with_us"
+    }
+  ],
+  "next": {
+    "with_us": "No hosted step. The filing write against the record and the release gate are quoted as a scoped build on the mailbox the business already runs. Send the failing check id for a fixed price; do not build the live step yourself.",
+    "evidence_required": "attach what proves each one; not a software check"
+  }
+}
