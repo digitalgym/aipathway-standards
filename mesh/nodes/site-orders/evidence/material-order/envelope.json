@@ -1,0 +1,3583 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793703895204",
+  "standard": "material-order-build-standard",
+  "spec": "AIP-BS-MATERIAL-ORDER",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-03T11:04:55.195Z",
+  "finishedAt": "2026-11-03T11:04:55.204Z",
+  "results": [
+    {
+      "checkId": "lines-come-from-the-job",
+      "n": 1,
+      "title": "Every ordered line traces to a material line on the job",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The job is read before any order is written. The ordered lines, plus any line reserved from stock, match the job's codes and quantities exactly. An order line with no job line fails.",
+      "actual": "ordered PIPE20x40, ELB20x12, TAP15x2, VALVE20x4; reserved none",
+      "stimulus": {
+        "description": "One job with four material lines, each with a catalogue code and a quantity.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "lines-come-from-the-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J-1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "approved-under-2000",
+            "threshold": 2000,
+            "owner": "Dana Whitlock"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "S1",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "S2",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "S3",
+              "approved": false,
+              "leadDays": 3
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S1",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "S1-2026-09",
+            "items": 4
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S2",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "S2-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S3",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "S3-list-7",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "J-1001"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "J-1001"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "J-1001",
+            "supplierId": "S1",
+            "lines": [
+              "PIPE20x40@12",
+              "ELB20x12@3",
+              "TAP15x2@45",
+              "VALVE20x4@30"
+            ],
+            "edition": "S1-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO1",
+            "externalId": "sys-PO1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO1",
+            "person": null,
+            "rule": "approved-under-2000"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "stock-checked-before-ordering",
+      "n": 2,
+      "title": "Stock on hand is read before the order, and a line stock covers is reserved rather than ordered",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The stock read precedes the first order write. The covered line is reserved against the job and appears on no order. The other three lines are ordered. Ordering the covered line fails.",
+      "actual": "ordered PIPE20, TAP15, VALVE20; reserved ELB20x12",
+      "stimulus": {
+        "description": "The same job, with stock on hand covering one of its four lines in full.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "stock-checked-before-ordering"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J-1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "approved-under-2000",
+            "threshold": 2000,
+            "owner": "Dana Whitlock"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "S1",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "S2",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "S3",
+              "approved": false,
+              "leadDays": 3
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": [
+            "ELB20:20"
+          ]
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S1",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "S1-2026-09",
+            "items": 4
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S2",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "S2-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S3",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "S3-list-7",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "J-1001"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "J-1001"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "reserve": {
+              "jobId": "J-1001",
+              "code": "ELB20",
+              "qty": 12
+            }
+          },
+          "response": {
+            "reserved": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "J-1001",
+            "supplierId": "S1",
+            "lines": [
+              "PIPE20x40@12",
+              "TAP15x2@45",
+              "VALVE20x4@30"
+            ],
+            "edition": "S1-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO1",
+            "externalId": "sys-PO1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO1",
+            "person": null,
+            "rule": "approved-under-2000"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "supplier-catalogue-is-the-only-source",
+      "n": 3,
+      "title": "Every line carries the supplier's catalogue code and price, read at order time, and a line no catalogue holds parks the order",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Each catalogue is read before the first order write. Every priced line's price equals that supplier's catalogue price for its code. The unknown code sits on a parked order with reason not_in_catalogue and no price. A typed price fails.",
+      "actual": "PIPE20@12, STUD90@9, MYSTERY-9@none/not_in_catalogue",
+      "stimulus": {
+        "description": "A job whose lines include one code that no supplier's catalogue holds.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "supplier-catalogue-is-the-only-source"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J-1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "approved-under-2000",
+            "threshold": 2000,
+            "owner": "Dana Whitlock"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "S1",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "S2",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "S3",
+              "approved": false,
+              "leadDays": 3
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S1",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "S1-2026-09",
+            "items": 4
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S2",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "S2-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S3",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "S3-list-7",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "J-1001"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "J-1001"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "J-1001",
+            "supplierId": "S1",
+            "lines": [
+              "PIPE20x10@12"
+            ],
+            "edition": "S1-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO1",
+            "externalId": "sys-PO1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO1",
+            "person": null,
+            "rule": "approved-under-2000"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "J-1001",
+            "supplierId": "S2",
+            "lines": [
+              "STUD90x40@9"
+            ],
+            "edition": "S2-2026-Q3",
+            "park": null
+          },
+          "response": {
+            "id": "PO2",
+            "externalId": "sys-PO2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO2",
+            "person": null,
+            "rule": "approved-under-2000"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO2"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "J-1001",
+            "supplierId": null,
+            "lines": [
+              "MYSTERY-9x1@none"
+            ],
+            "edition": null,
+            "park": "not_in_catalogue"
+          },
+          "response": {
+            "id": "PO3",
+            "externalId": "sys-PO3"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "not_in_catalogue",
+            "orderId": "PO3",
+            "owner": "Jordan Pike",
+            "detail": "codes no catalogue holds: MYSTERY-9"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-order-per-job-and-supplier",
+      "n": 4,
+      "title": "One order per job and supplier, written once, updated on a second run",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Exactly one order exists per job and supplier, each with an external id from the ordering system, and the second run produced an update or no write. A second order for the same pair, or a null id treated as success, fails.",
+      "actual": "2 order(s) created; second run made 0 write(s)",
+      "stimulus": {
+        "description": "The same job run through the build twice, an hour apart.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-order-per-job-and-supplier"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J-1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "approved-under-2000",
+            "threshold": 2000,
+            "owner": "Dana Whitlock"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "S1",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "S2",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "S3",
+              "approved": false,
+              "leadDays": 3
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S1",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "S1-2026-09",
+            "items": 4
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S2",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "S2-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S3",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "S3-list-7",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "J-1001"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "J-1001"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "J-1001",
+            "supplierId": "S1",
+            "lines": [
+              "PIPE20x40@12"
+            ],
+            "edition": "S1-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO1",
+            "externalId": "sys-PO1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO1",
+            "person": null,
+            "rule": "approved-under-2000"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "J-1001",
+            "supplierId": "S2",
+            "lines": [
+              "STUD90x40@9"
+            ],
+            "edition": "S2-2026-Q3",
+            "park": null
+          },
+          "response": {
+            "id": "PO2",
+            "externalId": "sys-PO2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO2",
+            "person": null,
+            "rule": "approved-under-2000"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO2"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J-1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "approved-under-2000",
+            "threshold": 2000,
+            "owner": "Dana Whitlock"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "S1",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "S2",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "S3",
+              "approved": false,
+              "leadDays": 3
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S1",
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "S1-2026-09",
+            "items": 4
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S2",
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "S2-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S3",
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "S3-list-7",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "J-1001"
+          },
+          "response": [
+            {
+              "orderId": "PO1",
+              "supplierId": "S1",
+              "externalId": "sys-PO1"
+            },
+            {
+              "orderId": "PO2",
+              "supplierId": "S2",
+              "externalId": "sys-PO2"
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "J-1001"
+          },
+          "response": {
+            "orders": 2,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "threshold-needs-a-person",
+      "n": 5,
+      "title": "An order over the threshold, or to a supplier not on the approved list, is released only by a named person",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The first carries the rule's name on its release. The second and third are released only by a person's name or still wait, and each was routed to a person. A release by rule over the threshold or to an unapproved supplier fails, and a send with no release fails.",
+      "actual": "PO1 by approved-under-2000; PO2 by Dana Whitlock | sent PO1, PO2",
+      "stimulus": {
+        "description": "Three orders: one under the threshold to an approved supplier, one over it, one to a supplier not on the approved list.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "threshold-needs-a-person"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J-1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "approved-under-2000",
+            "threshold": 2000,
+            "owner": "Dana Whitlock"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "S1",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "S2",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "S3",
+              "approved": false,
+              "leadDays": 3
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S1",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "S1-2026-09",
+            "items": 4
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S2",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "S2-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S3",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "S3-list-7",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "J-1001"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "J-1001"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "J-1001",
+            "supplierId": "S1",
+            "lines": [
+              "PIPE20x10@12"
+            ],
+            "edition": "S1-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO1",
+            "externalId": "sys-PO1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO1",
+            "person": null,
+            "rule": "approved-under-2000"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "J-1001",
+            "supplierId": "S2",
+            "lines": [
+              "BEAM240x5@900"
+            ],
+            "edition": "S2-2026-Q3",
+            "park": null
+          },
+          "response": {
+            "id": "PO2",
+            "externalId": "sys-PO2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "needs_person",
+            "orderId": "PO2",
+            "owner": "Dana Whitlock",
+            "detail": "release needed: total 4500 is over the approved-under-2000 threshold of 2000"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "J-1001",
+            "supplierId": "S3",
+            "lines": [
+              "GRAVELx2@50"
+            ],
+            "edition": "S3-list-7",
+            "park": null
+          },
+          "response": {
+            "id": "PO3",
+            "externalId": "sys-PO3"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "needs_person",
+            "orderId": "PO3",
+            "owner": "Dana Whitlock",
+            "detail": "release needed: supplier S3 is not on the approved list"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO2",
+            "person": "Dana Whitlock",
+            "rule": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J-1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "approved-under-2000",
+            "threshold": 2000,
+            "owner": "Dana Whitlock"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "S1",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "S2",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "S3",
+              "approved": false,
+              "leadDays": 3
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S1",
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "S1-2026-09",
+            "items": 4
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S2",
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "S2-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S3",
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "S3-list-7",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "J-1001"
+          },
+          "response": [
+            {
+              "orderId": "PO1",
+              "supplierId": "S1",
+              "externalId": "sys-PO1"
+            },
+            {
+              "orderId": "PO2",
+              "supplierId": "S2",
+              "externalId": "sys-PO2"
+            },
+            {
+              "orderId": "PO3",
+              "supplierId": "S3",
+              "externalId": "sys-PO3"
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "J-1001"
+          },
+          "response": {
+            "orders": 3,
+            "deliveries": 0,
+            "escalations": 2
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO2"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "lead-time-is-data",
+      "n": 6,
+      "title": "Each supplier carries a lead time, and an order that would miss the job's start tells the job owner",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The supplier list is read. One notification names the job owner, the slow supplier's order and the arrival date. No notification is raised for the order that arrives in time. A late order with no notification fails.",
+      "actual": "Jordan Pike: PO2/S2 arrives 2026-10-06T00:00:00.000Z",
+      "stimulus": {
+        "description": "A job starting in three days, with one line from a supplier whose lead time is ten days and the rest from a supplier at two.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "lead-time-is-data"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J-1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "approved-under-2000",
+            "threshold": 100000,
+            "owner": "Dana Whitlock"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "S1",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "S2",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "S3",
+              "approved": false,
+              "leadDays": 3
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S1",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "S1-2026-09",
+            "items": 4
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S2",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "S2-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S3",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "S3-list-7",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "J-1001"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "J-1001"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "J-1001",
+            "supplierId": "S1",
+            "lines": [
+              "PIPE20x10@12"
+            ],
+            "edition": "S1-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO1",
+            "externalId": "sys-PO1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO1",
+            "person": null,
+            "rule": "approved-under-2000"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "J-1001",
+            "supplierId": "S2",
+            "lines": [
+              "STUD90x40@9"
+            ],
+            "edition": "S2-2026-Q3",
+            "park": null
+          },
+          "response": {
+            "id": "PO2",
+            "externalId": "sys-PO2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "Jordan Pike",
+            "jobId": "J-1001",
+            "orderId": "PO2",
+            "supplierId": "S2",
+            "arrives": "2026-10-06T00:00:00.000Z"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO2",
+            "person": null,
+            "rule": "approved-under-2000"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO2"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "delivery-matches-back",
+      "n": 7,
+      "title": "A delivery is recorded against the order line by line, and a delivery with no order is refused",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The first docket produces a delivery record on its order with a line per ordered line, the short line carrying its received quantity and reason short. The second produces no delivery record and an escalation naming the docket. A delivery attached to no order fails.",
+      "actual": "PO1/DKT1: PIPE20:30/short ELB20:12 | escalated short, no_order",
+      "stimulus": {
+        "description": "Two dockets: one against a sent order with one line short, one against an order number that does not exist.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "delivery-matches-back"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J-1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "approved-under-2000",
+            "threshold": 2000,
+            "owner": "Dana Whitlock"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "S1",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "S2",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "S3",
+              "approved": false,
+              "leadDays": 3
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S1",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "S1-2026-09",
+            "items": 4
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S2",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "S2-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S3",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "S3-list-7",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "J-1001"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "J-1001"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "J-1001",
+            "supplierId": "S1",
+            "lines": [
+              "PIPE20x40@12",
+              "ELB20x12@3"
+            ],
+            "edition": "S1-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO1",
+            "externalId": "sys-PO1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO1",
+            "person": null,
+            "rule": "approved-under-2000"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J-1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "approved-under-2000",
+            "threshold": 2000,
+            "owner": "Dana Whitlock"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "S1",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "S2",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "S3",
+              "approved": false,
+              "leadDays": 3
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S1",
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "S1-2026-09",
+            "items": 4
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S2",
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "S2-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S3",
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "S3-list-7",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "J-1001"
+          },
+          "response": [
+            {
+              "orderId": "PO1",
+              "supplierId": "S1",
+              "externalId": "sys-PO1"
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "J-1001"
+          },
+          "response": {
+            "orders": 1,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": [
+            {
+              "docketId": "DKT1",
+              "orderId": "PO1",
+              "lines": 2
+            },
+            {
+              "docketId": "DKT2",
+              "orderId": "PO999",
+              "lines": 1
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "short",
+            "orderId": "PO1",
+            "owner": "Jordan Pike",
+            "detail": "docket DKT1: PIPE20: ordered 40, received 30"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "delivery": "PO1",
+            "docketId": "DKT1",
+            "lines": [
+              "PIPE20:30/short",
+              "ELB20:12"
+            ]
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "no_order",
+            "orderId": "PO999",
+            "owner": "Dana Whitlock",
+            "detail": "docket DKT2 names order PO999, which does not exist; not recorded as a delivery"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "variance-is-a-queue",
+      "n": 8,
+      "title": "Short, over, wrong item and a changed price are escalated with the order id and an owner, never absorbed",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Four escalations exist, one per kind: short, over, wrong_item and price_changed. Each names the order id and a person as owner. A variance with no escalation, or one with no owner, fails.",
+      "actual": "short:PO1:Jordan Pike, over:PO1:Jordan Pike, price_changed:PO1:Jordan Pike, wrong_item:PO1:Jordan Pike",
+      "stimulus": {
+        "description": "One delivery carrying a short line, an over-supplied line, a line the order does not hold, and a line whose docket price differs from the order.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "variance-is-a-queue"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J-1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "approved-under-2000",
+            "threshold": 2000,
+            "owner": "Dana Whitlock"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "S1",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "S2",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "S3",
+              "approved": false,
+              "leadDays": 3
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S1",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "S1-2026-09",
+            "items": 4
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S2",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "S2-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S3",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "S3-list-7",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "J-1001"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "J-1001"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "J-1001",
+            "supplierId": "S1",
+            "lines": [
+              "PIPE20x10@12",
+              "ELB20x10@3",
+              "VALVE20x10@30"
+            ],
+            "edition": "S1-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO1",
+            "externalId": "sys-PO1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO1",
+            "person": null,
+            "rule": "approved-under-2000"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J-1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "approved-under-2000",
+            "threshold": 2000,
+            "owner": "Dana Whitlock"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "S1",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "S2",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "S3",
+              "approved": false,
+              "leadDays": 3
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S1",
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "S1-2026-09",
+            "items": 4
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S2",
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "S2-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S3",
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "S3-list-7",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "J-1001"
+          },
+          "response": [
+            {
+              "orderId": "PO1",
+              "supplierId": "S1",
+              "externalId": "sys-PO1"
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "J-1001"
+          },
+          "response": {
+            "orders": 1,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": [
+            {
+              "docketId": "DKT1",
+              "orderId": "PO1",
+              "lines": 4
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "short",
+            "orderId": "PO1",
+            "owner": "Jordan Pike",
+            "detail": "docket DKT1: PIPE20: ordered 10, received 6"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "over",
+            "orderId": "PO1",
+            "owner": "Jordan Pike",
+            "detail": "docket DKT1: ELB20: ordered 10, received 14"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "price_changed",
+            "orderId": "PO1",
+            "owner": "Jordan Pike",
+            "detail": "docket DKT1: VALVE20: ordered at 30, docket says 35"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "wrong_item",
+            "orderId": "PO1",
+            "owner": "Jordan Pike",
+            "detail": "docket DKT1: TAP15 x3 is not on the order"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "delivery": "PO1",
+            "docketId": "DKT1",
+            "lines": [
+              "PIPE20:6/short",
+              "ELB20:14",
+              "VALVE20:10"
+            ]
+          },
+          "response": {
+            "attached": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "nothing-is-substituted-silently",
+      "n": 9,
+      "title": "A supplier's substitution is accepted only by a named person",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The signed line carries an acceptance naming the supervisor. The other is escalated as a substitution and is not counted as received. An acceptance with no person's name fails.",
+      "actual": "accepted TAP15 by Sam Kerr; escalated substitution",
+      "stimulus": {
+        "description": "One delivery with two substituted lines: one the site supervisor signed for on the docket by name, one nobody accepted.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "nothing-is-substituted-silently"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J-1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "approved-under-2000",
+            "threshold": 2000,
+            "owner": "Dana Whitlock"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "S1",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "S2",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "S3",
+              "approved": false,
+              "leadDays": 3
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S1",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "S1-2026-09",
+            "items": 4
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S2",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "S2-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S3",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "S3-list-7",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "J-1001"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "J-1001"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "J-1001",
+            "supplierId": "S1",
+            "lines": [
+              "TAP15x2@45",
+              "VALVE20x4@30"
+            ],
+            "edition": "S1-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO1",
+            "externalId": "sys-PO1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO1",
+            "person": null,
+            "rule": "approved-under-2000"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J-1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "approved-under-2000",
+            "threshold": 2000,
+            "owner": "Dana Whitlock"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "S1",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "S2",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "S3",
+              "approved": false,
+              "leadDays": 3
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S1",
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "S1-2026-09",
+            "items": 4
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S2",
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "S2-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S3",
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "S3-list-7",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "J-1001"
+          },
+          "response": [
+            {
+              "orderId": "PO1",
+              "supplierId": "S1",
+              "externalId": "sys-PO1"
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "J-1001"
+          },
+          "response": {
+            "orders": 1,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": [
+            {
+              "docketId": "DKT1",
+              "orderId": "PO1",
+              "lines": 2
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "accept": {
+              "orderId": "PO1",
+              "code": "TAP15"
+            },
+            "person": "Sam Kerr",
+            "rule": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "substitution",
+            "orderId": "PO1",
+            "owner": "Jordan Pike",
+            "detail": "docket DKT1: VALVE20-BRASS delivered in place of VALVE20, accepted by nobody; held, not received"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "delivery": "PO1",
+            "docketId": "DKT1",
+            "lines": [
+              "TAP15:2/substituted",
+              "VALVE20:0/substituted"
+            ]
+          },
+          "response": {
+            "attached": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "the-record-by-job",
+      "n": 10,
+      "title": "Every order, release, delivery and variance is retrievable by job",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A read by job id returns the orders with external ids and catalogue editions, the release with a name or a rule, the delivery lines and the variance. A record missing the release or the delivery fails.",
+      "actual": "orders 1, deliveries 1, escalations 1",
+      "stimulus": {
+        "description": "One job ordered, released, delivered short and escalated.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "the-record-by-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J-1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "approved-under-2000",
+            "threshold": 2000,
+            "owner": "Dana Whitlock"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "S1",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "S2",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "S3",
+              "approved": false,
+              "leadDays": 3
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S1",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "S1-2026-09",
+            "items": 4
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S2",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "S2-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S3",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "S3-list-7",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "J-1001"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "J-1001"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "J-1001",
+            "supplierId": "S1",
+            "lines": [
+              "PIPE20x40@12",
+              "ELB20x12@3"
+            ],
+            "edition": "S1-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO1",
+            "externalId": "sys-PO1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO1",
+            "person": null,
+            "rule": "approved-under-2000"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J-1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "approved-under-2000",
+            "threshold": 2000,
+            "owner": "Dana Whitlock"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "S1",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "S2",
+              "approved": true,
+              "leadDays": 10
+            },
+            {
+              "id": "S3",
+              "approved": false,
+              "leadDays": 3
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S1",
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "S1-2026-09",
+            "items": 4
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S2",
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "S2-2026-Q3",
+            "items": 2
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "S3",
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "S3-list-7",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "J-1001"
+          },
+          "response": [
+            {
+              "orderId": "PO1",
+              "supplierId": "S1",
+              "externalId": "sys-PO1"
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "J-1001"
+          },
+          "response": {
+            "orders": 1,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": [
+            {
+              "docketId": "DKT1",
+              "orderId": "PO1",
+              "lines": 2
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "short",
+            "orderId": "PO1",
+            "owner": "Jordan Pike",
+            "detail": "docket DKT1: ELB20: ordered 12, received 8"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "delivery": "PO1",
+            "docketId": "DKT1",
+            "lines": [
+              "PIPE20:40",
+              "ELB20:8/short"
+            ]
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "J-1001"
+          },
+          "response": {
+            "orders": 1,
+            "deliveries": 1,
+            "escalations": 1
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 11,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the catalogue and the release rule runs on.",
+        "now": "2026-11-03T11:04:55.204Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 12,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "One order per supplier in the ordering system with its own id after two runs, the stock line reserved and not ordered, the unknown code parked and unpriced, the over-threshold order waiting for a named person, and the short delivery recorded line by line with a variance owned by someone.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "A real job on the business's own job system, real stock, a real supplier account with its catalogue, and a real delivery docket.",
+        "now": "2026-11-03T11:04:55.204Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 12,
+    "pass": 9,
+    "fail": 0,
+    "shapeOnly": 1,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
