@@ -3,10 +3,10 @@
  * AIP-BS-INVOICE-CHECK 2026-10-03.
  * https://aipathway.com.au/explore-ai/invoice-check-build-standard
  *
- * A port of "Buchhaltung Sevdesk/Datev" by Michael Fischer, reimplemented from
- * the standard. Only the "check the incoming supplier invoice before it is
- * booked" job is ported. Nothing here is taken from the original bot's prompt
- * or instructions.
+ * An original AI Pathway build. The idea of a bot that handles incoming
+ * supplier invoices came from public bookkeeping bots, but this one checks
+ * bills against Xero or MYOB and never books or pays, so it credits no one.
+ * Nothing here is taken from any other bot's prompt or instructions.
  *
  * What one run does, every time it is woken (schedule.tick for the batch, or
  * bill.received / exception.closed for one bill_id):
