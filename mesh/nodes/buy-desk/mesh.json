@@ -1,0 +1,62 @@
+{
+  "slug": "buy-desk",
+  "name": "Buy Desk",
+  "office_task": "Buy the materials for one job from stock first and the supplier's own prices, release only under the money rules, and check every delivery docket back.",
+  "verticals": ["trades-building"],
+  "standards": ["material-order"],
+  "systems_of_record": ["the job system that issues the job_id and holds its material list and stock", "the supplier portal or job-system purchasing that issues each order's external id"],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/buy-desk" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "job.updated", "wake": "webhook" },
+    { "event": "document.received", "wake": "webhook" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "order.sent",
+      "write": "one purchase order per job and supplier, released by the named rule under its threshold to an approved supplier (or by a named person), carrying the job_id, the catalogue edition and the release",
+      "readback": "the ordering system returns the order's external id, and reading the job's orders back by job_id returns that external id with the supplier, the lines and the release; no external id back is a failed write, raised to a person, and nothing is sent"
+    },
+    {
+      "event": "delivery.recorded",
+      "write": "the delivery docket matched to its sent order line by line, with the quantity received and a reason (short, damaged, substituted) on any line that differs",
+      "readback": "reading the job's record back by job_id returns the delivery on the order's id with one line per ordered line; a docket naming no sent order is never recorded and is raised instead"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the job or the order naming the person who owns it: an order waiting for a named release (over the threshold, or to a supplier not on the approved list), a code no catalogue holds, an order write with no id back, a docket that matches no sent order, and every delivery variance (short, over, wrong item, changed price, unaccepted substitution)",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the job_id, the order's external id where one exists, the kind and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "material.release_needed",
+      "material.not_in_catalogue",
+      "material.write_failed",
+      "material.no_order_for_docket",
+      "material.short",
+      "material.over",
+      "material.wrong_item",
+      "material.price_changed",
+      "material.substitution_unaccepted",
+      "material.changed_after_release"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.job_id", "seam.order_external_id", "seam.supplier_id", "seam.catalogue_edition", "seam.released_by", "seam.order_status", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Home Remodel Job Desk",
+    "original_author": "Howie",
+    "share_link": "https://x.ai/bot/5hnU4GX1pgNj_VcmFcZQJ",
+    "licence_or_permission": "reimplementation"
+  }
+}

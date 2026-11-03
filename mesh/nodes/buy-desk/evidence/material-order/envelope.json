@@ -1,0 +1,3442 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793714400714",
+  "standard": "material-order-build-standard",
+  "spec": "AIP-BS-MATERIAL-ORDER",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-03T14:00:00.704Z",
+  "finishedAt": "2026-11-03T14:00:00.714Z",
+  "results": [
+    {
+      "checkId": "lines-come-from-the-job",
+      "n": 1,
+      "title": "Every ordered line traces to a material line on the job",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The job is read before any order is written. The ordered lines, plus any line reserved from stock, match the job's codes and quantities exactly. An order line with no job line fails.",
+      "actual": "2 order(s), 0 reservation(s), 15 port call(s)",
+      "stimulus": {
+        "description": "One job with four material lines, each with a catalogue code and a quantity.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "lines-come-from-the-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "JOB-1042"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NPS",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-CTW",
+              "approved": true,
+              "leadDays": 2
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "under-1500-approved",
+            "threshold": 1500,
+            "owner": "Dale Murray"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NPS",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "NPS-2026-09",
+            "items": 3
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-CTW",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "CTW-2026-Q3",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1042"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1042"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1042",
+            "supplierId": "SUP-NPS",
+            "lines": [
+              "PIPE20x40@4.5",
+              "ELBOW20x12@1.2",
+              "GLUEx3@9.9"
+            ],
+            "edition": "NPS-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO1",
+            "externalId": "sys-PO1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO1",
+            "person": null,
+            "rule": "under-1500-approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1042",
+            "supplierId": "SUP-CTW",
+            "lines": [
+              "TAP-MIXx2@189"
+            ],
+            "edition": "CTW-2026-Q3",
+            "park": null
+          },
+          "response": {
+            "id": "PO2",
+            "externalId": "sys-PO2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO2",
+            "person": null,
+            "rule": "under-1500-approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO2"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "stock-checked-before-ordering",
+      "n": 2,
+      "title": "Stock on hand is read before the order, and a line stock covers is reserved rather than ordered",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The stock read precedes the first order write. The covered line is reserved against the job and appears on no order. The other three lines are ordered. Ordering the covered line fails.",
+      "actual": "reservations [{\"jobId\":\"JOB-1042\",\"code\":\"GLUE\",\"qty\":3}]; ordered [[\"PIPE20\",40],[\"ELBOW20\",12],[\"TAP-MIX\",2]]",
+      "stimulus": {
+        "description": "The same job, with stock on hand covering one of its four lines in full.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "stock-checked-before-ordering"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "JOB-1042"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": [
+            "GLUE:5"
+          ]
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NPS",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-CTW",
+              "approved": true,
+              "leadDays": 2
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "under-1500-approved",
+            "threshold": 1500,
+            "owner": "Dale Murray"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NPS",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "NPS-2026-09",
+            "items": 3
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-CTW",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "CTW-2026-Q3",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1042"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1042"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "reserve": {
+              "jobId": "JOB-1042",
+              "code": "GLUE",
+              "qty": 3
+            }
+          },
+          "response": {
+            "reserved": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1042",
+            "supplierId": "SUP-NPS",
+            "lines": [
+              "PIPE20x40@4.5",
+              "ELBOW20x12@1.2"
+            ],
+            "edition": "NPS-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO1",
+            "externalId": "sys-PO1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO1",
+            "person": null,
+            "rule": "under-1500-approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1042",
+            "supplierId": "SUP-CTW",
+            "lines": [
+              "TAP-MIXx2@189"
+            ],
+            "edition": "CTW-2026-Q3",
+            "park": null
+          },
+          "response": {
+            "id": "PO2",
+            "externalId": "sys-PO2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO2",
+            "person": null,
+            "rule": "under-1500-approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO2"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "supplier-catalogue-is-the-only-source",
+      "n": 3,
+      "title": "Every line carries the supplier's catalogue code and price, read at order time, and a line no catalogue holds parks the order",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Each catalogue is read before the first order write. Every priced line's price equals that supplier's catalogue price for its code. The unknown code sits on a parked order with reason not_in_catalogue and no price. A typed price fails.",
+      "actual": "PO1 sent PIPE20@4.5,ELBOW20@1.2,GLUE@9.9; PO2 sent TAP-MIX@189; PO3 parked/not_in_catalogue VALVE-SHR9@null",
+      "stimulus": {
+        "description": "A job whose lines include one code that no supplier's catalogue holds.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "supplier-catalogue-is-the-only-source"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "JOB-1042"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NPS",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-CTW",
+              "approved": true,
+              "leadDays": 2
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "under-1500-approved",
+            "threshold": 1500,
+            "owner": "Dale Murray"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NPS",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "NPS-2026-09",
+            "items": 3
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-CTW",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "CTW-2026-Q3",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1042"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1042"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1042",
+            "supplierId": "SUP-NPS",
+            "lines": [
+              "PIPE20x40@4.5",
+              "ELBOW20x12@1.2",
+              "GLUEx3@9.9"
+            ],
+            "edition": "NPS-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO1",
+            "externalId": "sys-PO1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO1",
+            "person": null,
+            "rule": "under-1500-approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1042",
+            "supplierId": "SUP-CTW",
+            "lines": [
+              "TAP-MIXx2@189"
+            ],
+            "edition": "CTW-2026-Q3",
+            "park": null
+          },
+          "response": {
+            "id": "PO2",
+            "externalId": "sys-PO2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO2",
+            "person": null,
+            "rule": "under-1500-approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO2"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1042",
+            "supplierId": null,
+            "lines": [
+              "VALVE-SHR9x1@none"
+            ],
+            "edition": null,
+            "park": "not_in_catalogue"
+          },
+          "response": {
+            "id": "PO3",
+            "externalId": "sys-PO3"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "not_in_catalogue",
+            "orderId": "PO3",
+            "owner": "Priya Shah",
+            "detail": "no supplier catalogue holds VALVE-SHR9"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-order-per-job-and-supplier",
+      "n": 4,
+      "title": "One order per job and supplier, written once, updated on a second run",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Exactly one order exists per job and supplier, each with an external id from the ordering system, and the second run produced an update or no write. A second order for the same pair, or a null id treated as success, fails.",
+      "actual": "2 order(s): PO1/SUP-CTW/sys-PO1/u0, PO2/SUP-NPS/sys-PO2/u0; escalations write_failed",
+      "stimulus": {
+        "description": "The same job run through the build twice, an hour apart.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-order-per-job-and-supplier"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "JOB-1042"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NPS",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-CTW",
+              "approved": true,
+              "leadDays": 2
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "under-1500-approved",
+            "threshold": 1500,
+            "owner": "Dale Murray"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NPS",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "NPS-2026-09",
+            "items": 3
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-CTW",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "CTW-2026-Q3",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1042"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1042"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1042",
+            "supplierId": "SUP-NPS",
+            "lines": 3
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "write_failed",
+            "orderId": "JOB-1042:SUP-NPS",
+            "owner": "Dale Murray",
+            "detail": "job JOB-1042, supplier SUP-NPS: no external id back"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1042",
+            "supplierId": "SUP-CTW",
+            "lines": [
+              "TAP-MIXx2@189"
+            ],
+            "edition": "CTW-2026-Q3",
+            "park": null
+          },
+          "response": {
+            "id": "PO1",
+            "externalId": "sys-PO1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO1",
+            "person": null,
+            "rule": "under-1500-approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "JOB-1042"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NPS",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-CTW",
+              "approved": true,
+              "leadDays": 2
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "under-1500-approved",
+            "threshold": 1500,
+            "owner": "Dale Murray"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NPS",
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "NPS-2026-09",
+            "items": 3
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-CTW",
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "CTW-2026-Q3",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1042"
+          },
+          "response": {
+            "orders": 1,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1042"
+          },
+          "response": [
+            {
+              "orderId": "PO1",
+              "supplierId": "SUP-CTW",
+              "externalId": "sys-PO1"
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1042",
+            "supplierId": "SUP-NPS",
+            "lines": [
+              "PIPE20x40@4.5",
+              "ELBOW20x12@1.2",
+              "GLUEx3@9.9"
+            ],
+            "edition": "NPS-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO2",
+            "externalId": "sys-PO2"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO2",
+            "person": null,
+            "rule": "under-1500-approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO2"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "threshold-needs-a-person",
+      "n": 5,
+      "title": "An order over the threshold, or to a supplier not on the approved list, is released only by a named person",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The first carries the rule's name on its release. The second and third are released only by a person's name or still wait, and each was routed to a person. A release by rule over the threshold or to an unapproved supplier fails, and a send with no release fails.",
+      "actual": "SUP-NPS:sent rule=under-1500-approved person=-; SUP-CTW:draft rule=- person=-; SUP-BTS:draft rule=- person=-",
+      "stimulus": {
+        "description": "Three orders: one under the threshold to an approved supplier, one over it, one to a supplier not on the approved list.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "threshold-needs-a-person"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "JOB-1042"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NPS",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-CTW",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-BTS",
+              "approved": false,
+              "leadDays": 2
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "under-1500-approved",
+            "threshold": 1500,
+            "owner": "Dale Murray"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NPS",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "NPS-2026-09",
+            "items": 3
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-CTW",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "CTW-2026-Q3",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-BTS",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "BTS-2026-09",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1042"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1042"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1042",
+            "supplierId": "SUP-NPS",
+            "lines": [
+              "PIPE20x40@4.5"
+            ],
+            "edition": "NPS-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO1",
+            "externalId": "sys-PO1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO1",
+            "person": null,
+            "rule": "under-1500-approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1042",
+            "supplierId": "SUP-CTW",
+            "lines": [
+              "TAP-MIXx10@189"
+            ],
+            "edition": "CTW-2026-Q3",
+            "park": null
+          },
+          "response": {
+            "id": "PO2",
+            "externalId": "sys-PO2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "needs_person",
+            "orderId": "PO2",
+            "owner": "Dale Murray",
+            "detail": "waiting for a named release: total 1890.00 is not under under-1500-approved (1500)"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1042",
+            "supplierId": "SUP-BTS",
+            "lines": [
+              "TILE-W300x60@2.75"
+            ],
+            "edition": "BTS-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO3",
+            "externalId": "sys-PO3"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "needs_person",
+            "orderId": "PO3",
+            "owner": "Dale Murray",
+            "detail": "waiting for a named release: Bayside Tile Supplies is not on the approved list"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "lead-time-is-data",
+      "n": 6,
+      "title": "Each supplier carries a lead time, and an order that would miss the job's start tells the job owner",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The supplier list is read. One notification names the job owner, the slow supplier's order and the arrival date. No notification is raised for the order that arrives in time. A late order with no notification fails.",
+      "actual": "notifications [{\"to\":\"Priya Shah\",\"jobId\":\"JOB-1042\",\"orderId\":\"PO2\",\"supplierId\":\"SUP-CTW\",\"arrives\":\"2026-10-06\"}]",
+      "stimulus": {
+        "description": "A job starting in three days, with one line from a supplier whose lead time is ten days and the rest from a supplier at two.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "lead-time-is-data"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "JOB-1042"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NPS",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-CTW",
+              "approved": true,
+              "leadDays": 10
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "under-1500-approved",
+            "threshold": 1500,
+            "owner": "Dale Murray"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NPS",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "NPS-2026-09",
+            "items": 3
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-CTW",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "CTW-2026-Q3",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1042"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1042"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1042",
+            "supplierId": "SUP-NPS",
+            "lines": [
+              "PIPE20x40@4.5",
+              "ELBOW20x12@1.2",
+              "GLUEx3@9.9"
+            ],
+            "edition": "NPS-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO1",
+            "externalId": "sys-PO1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO1",
+            "person": null,
+            "rule": "under-1500-approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1042",
+            "supplierId": "SUP-CTW",
+            "lines": [
+              "TAP-MIXx2@189"
+            ],
+            "edition": "CTW-2026-Q3",
+            "park": null
+          },
+          "response": {
+            "id": "PO2",
+            "externalId": "sys-PO2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "Priya Shah",
+            "jobId": "JOB-1042",
+            "orderId": "PO2",
+            "supplierId": "SUP-CTW",
+            "arrives": "2026-10-06"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO2",
+            "person": null,
+            "rule": "under-1500-approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO2"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "delivery-matches-back",
+      "n": 7,
+      "title": "A delivery is recorded against the order line by line, and a delivery with no order is refused",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The first docket produces a delivery record on its order with a line per ordered line, the short line carrying its received quantity and reason short. The second produces no delivery record and an escalation naming the docket. A delivery attached to no order fails.",
+      "actual": "deliveries [{\"orderId\":\"PO1\",\"docketId\":\"DKT1\",\"lines\":[{\"code\":\"PIPE20\",\"qtyReceived\":30,\"reason\":\"short\"},{\"code\":\"ELBOW20\",\"qtyReceived\":12},{\"code\":\"GLUE\",\"qtyReceived\":3}],\"at\":\"2026-09-26T01:00:00.000Z\"}]; escalations short:PO1,no_order:PO-7781",
+      "stimulus": {
+        "description": "Two dockets: one against a sent order with one line short, one against an order number that does not exist.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "delivery-matches-back"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "JOB-1042"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NPS",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-CTW",
+              "approved": true,
+              "leadDays": 2
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "under-1500-approved",
+            "threshold": 1500,
+            "owner": "Dale Murray"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NPS",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "NPS-2026-09",
+            "items": 3
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-CTW",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "CTW-2026-Q3",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1042"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1042"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1042",
+            "supplierId": "SUP-NPS",
+            "lines": [
+              "PIPE20x40@4.5",
+              "ELBOW20x12@1.2",
+              "GLUEx3@9.9"
+            ],
+            "edition": "NPS-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO1",
+            "externalId": "sys-PO1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO1",
+            "person": null,
+            "rule": "under-1500-approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1042",
+            "supplierId": "SUP-CTW",
+            "lines": [
+              "TAP-MIXx2@189"
+            ],
+            "edition": "CTW-2026-Q3",
+            "park": null
+          },
+          "response": {
+            "id": "PO2",
+            "externalId": "sys-PO2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO2",
+            "person": null,
+            "rule": "under-1500-approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO2"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "JOB-1042"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NPS",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-CTW",
+              "approved": true,
+              "leadDays": 2
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "under-1500-approved",
+            "threshold": 1500,
+            "owner": "Dale Murray"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NPS",
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "NPS-2026-09",
+            "items": 3
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-CTW",
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "CTW-2026-Q3",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1042"
+          },
+          "response": {
+            "orders": 2,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1042"
+          },
+          "response": [
+            {
+              "orderId": "PO1",
+              "supplierId": "SUP-NPS",
+              "externalId": "sys-PO1"
+            },
+            {
+              "orderId": "PO2",
+              "supplierId": "SUP-CTW",
+              "externalId": "sys-PO2"
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": [
+            {
+              "docketId": "DKT1",
+              "orderId": "PO1",
+              "lines": 3
+            },
+            {
+              "docketId": "DKT2",
+              "orderId": "PO-7781",
+              "lines": 1
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "short",
+            "orderId": "PO1",
+            "owner": "Priya Shah",
+            "detail": "docket DKT1: PIPE20 30 of 40"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "delivery": "PO1",
+            "docketId": "DKT1",
+            "lines": [
+              "PIPE20:30/short",
+              "ELBOW20:12",
+              "GLUE:3"
+            ]
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "no_order",
+            "orderId": "PO-7781",
+            "owner": "Dale Murray",
+            "detail": "docket DKT2 names PO-7781, which is not a sent order; not recorded as a delivery"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "variance-is-a-queue",
+      "n": 8,
+      "title": "Short, over, wrong item and a changed price are escalated with the order id and an owner, never absorbed",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Four escalations exist, one per kind: short, over, wrong_item and price_changed. Each names the order id and a person as owner. A variance with no escalation, or one with no owner, fails.",
+      "actual": "escalations short:PO1:Priya Shah, over:PO1:Priya Shah, price_changed:PO1:Priya Shah, wrong_item:PO1:Priya Shah",
+      "stimulus": {
+        "description": "One delivery carrying a short line, an over-supplied line, a line the order does not hold, and a line whose docket price differs from the order.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "variance-is-a-queue"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "JOB-1042"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NPS",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-CTW",
+              "approved": true,
+              "leadDays": 2
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "under-1500-approved",
+            "threshold": 1500,
+            "owner": "Dale Murray"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NPS",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "NPS-2026-09",
+            "items": 3
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-CTW",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "CTW-2026-Q3",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1042"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1042"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1042",
+            "supplierId": "SUP-NPS",
+            "lines": [
+              "PIPE20x40@4.5",
+              "ELBOW20x12@1.2",
+              "GLUEx3@9.9"
+            ],
+            "edition": "NPS-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO1",
+            "externalId": "sys-PO1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO1",
+            "person": null,
+            "rule": "under-1500-approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1042",
+            "supplierId": "SUP-CTW",
+            "lines": [
+              "TAP-MIXx2@189"
+            ],
+            "edition": "CTW-2026-Q3",
+            "park": null
+          },
+          "response": {
+            "id": "PO2",
+            "externalId": "sys-PO2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO2",
+            "person": null,
+            "rule": "under-1500-approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO2"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "JOB-1042"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NPS",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-CTW",
+              "approved": true,
+              "leadDays": 2
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "under-1500-approved",
+            "threshold": 1500,
+            "owner": "Dale Murray"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NPS",
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "NPS-2026-09",
+            "items": 3
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-CTW",
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "CTW-2026-Q3",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1042"
+          },
+          "response": {
+            "orders": 2,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1042"
+          },
+          "response": [
+            {
+              "orderId": "PO1",
+              "supplierId": "SUP-NPS",
+              "externalId": "sys-PO1"
+            },
+            {
+              "orderId": "PO2",
+              "supplierId": "SUP-CTW",
+              "externalId": "sys-PO2"
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": [
+            {
+              "docketId": "DKT1",
+              "orderId": "PO1",
+              "lines": 4
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "short",
+            "orderId": "PO1",
+            "owner": "Priya Shah",
+            "detail": "docket DKT1: PIPE20 30 of 40"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "over",
+            "orderId": "PO1",
+            "owner": "Priya Shah",
+            "detail": "docket DKT1: ELBOW20 15 against 12 ordered"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "price_changed",
+            "orderId": "PO1",
+            "owner": "Priya Shah",
+            "detail": "docket DKT1: GLUE docket 11.5 against order 9.9"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "wrong_item",
+            "orderId": "PO1",
+            "owner": "Priya Shah",
+            "detail": "docket DKT1: SCREW-B8 x200 is not on PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "delivery": "PO1",
+            "docketId": "DKT1",
+            "lines": [
+              "PIPE20:30/short",
+              "ELBOW20:15",
+              "GLUE:3"
+            ]
+          },
+          "response": {
+            "attached": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "nothing-is-substituted-silently",
+      "n": 9,
+      "title": "A supplier's substitution is accepted only by a named person",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The signed line carries an acceptance naming the supervisor. The other is escalated as a substitution and is not counted as received. An acceptance with no person's name fails.",
+      "actual": "acceptances [{\"orderId\":\"PO1\",\"code\":\"ELBOW20\",\"person\":\"Mick Doyle\",\"rule\":null}]; deliveries [{\"orderId\":\"PO1\",\"docketId\":\"DKT1\",\"lines\":[{\"code\":\"PIPE20\",\"qtyReceived\":40},{\"code\":\"ELBOW20\",\"qtyReceived\":12,\"reason\":\"substituted\"},{\"code\":\"GLUE\",\"qtyReceived\":0,\"reason\":\"substituted\"}],\"at\":\"2026-09-26T01:00:00.000Z\"}]",
+      "stimulus": {
+        "description": "One delivery with two substituted lines: one the site supervisor signed for on the docket by name, one nobody accepted.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "nothing-is-substituted-silently"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "JOB-1042"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NPS",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-CTW",
+              "approved": true,
+              "leadDays": 2
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "under-1500-approved",
+            "threshold": 1500,
+            "owner": "Dale Murray"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NPS",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "NPS-2026-09",
+            "items": 3
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-CTW",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "CTW-2026-Q3",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1042"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1042"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1042",
+            "supplierId": "SUP-NPS",
+            "lines": [
+              "PIPE20x40@4.5",
+              "ELBOW20x12@1.2",
+              "GLUEx3@9.9"
+            ],
+            "edition": "NPS-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO1",
+            "externalId": "sys-PO1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO1",
+            "person": null,
+            "rule": "under-1500-approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1042",
+            "supplierId": "SUP-CTW",
+            "lines": [
+              "TAP-MIXx2@189"
+            ],
+            "edition": "CTW-2026-Q3",
+            "park": null
+          },
+          "response": {
+            "id": "PO2",
+            "externalId": "sys-PO2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO2",
+            "person": null,
+            "rule": "under-1500-approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO2"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "JOB-1042"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NPS",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-CTW",
+              "approved": true,
+              "leadDays": 2
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "under-1500-approved",
+            "threshold": 1500,
+            "owner": "Dale Murray"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NPS",
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "NPS-2026-09",
+            "items": 3
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-CTW",
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "CTW-2026-Q3",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1042"
+          },
+          "response": {
+            "orders": 2,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1042"
+          },
+          "response": [
+            {
+              "orderId": "PO1",
+              "supplierId": "SUP-NPS",
+              "externalId": "sys-PO1"
+            },
+            {
+              "orderId": "PO2",
+              "supplierId": "SUP-CTW",
+              "externalId": "sys-PO2"
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": [
+            {
+              "docketId": "DKT1",
+              "orderId": "PO1",
+              "lines": 3
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "accept": {
+              "orderId": "PO1",
+              "code": "ELBOW20"
+            },
+            "person": "Mick Doyle",
+            "rule": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "substitution",
+            "orderId": "PO1",
+            "owner": "Priya Shah",
+            "detail": "docket DKT1: GLUE-HD sent in place of GLUE; nobody accepted it"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "delivery": "PO1",
+            "docketId": "DKT1",
+            "lines": [
+              "PIPE20:40",
+              "ELBOW20:12/substituted",
+              "GLUE:0/substituted"
+            ]
+          },
+          "response": {
+            "attached": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "the-record-by-job",
+      "n": 10,
+      "title": "Every order, release, delivery and variance is retrievable by job",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A read by job id returns the orders with external ids and catalogue editions, the release with a name or a rule, the delivery lines and the variance. A record missing the release or the delivery fails.",
+      "actual": "orders 2, deliveries 1, escalations 1",
+      "stimulus": {
+        "description": "One job ordered, released, delivered short and escalated.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "the-record-by-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "JOB-1042"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NPS",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-CTW",
+              "approved": true,
+              "leadDays": 2
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "under-1500-approved",
+            "threshold": 1500,
+            "owner": "Dale Murray"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NPS",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "NPS-2026-09",
+            "items": 3
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-CTW",
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "CTW-2026-Q3",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1042"
+          },
+          "response": {
+            "orders": 0,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1042"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1042",
+            "supplierId": "SUP-NPS",
+            "lines": [
+              "PIPE20x40@4.5",
+              "ELBOW20x12@1.2",
+              "GLUEx3@9.9"
+            ],
+            "edition": "NPS-2026-09",
+            "park": null
+          },
+          "response": {
+            "id": "PO1",
+            "externalId": "sys-PO1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO1",
+            "person": null,
+            "rule": "under-1500-approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "jobId": "JOB-1042",
+            "supplierId": "SUP-CTW",
+            "lines": [
+              "TAP-MIXx2@189"
+            ],
+            "edition": "CTW-2026-Q3",
+            "park": null
+          },
+          "response": {
+            "id": "PO2",
+            "externalId": "sys-PO2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "PO2",
+            "person": null,
+            "rule": "under-1500-approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "send": "PO2"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "JOB-1042"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "stock": true
+          },
+          "response": []
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "suppliers": true
+          },
+          "response": [
+            {
+              "id": "SUP-NPS",
+              "approved": true,
+              "leadDays": 2
+            },
+            {
+              "id": "SUP-CTW",
+              "approved": true,
+              "leadDays": 2
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "under-1500-approved",
+            "threshold": 1500,
+            "owner": "Dale Murray"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-NPS",
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "NPS-2026-09",
+            "items": 3
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "supplierId": "SUP-CTW",
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "CTW-2026-Q3",
+            "items": 1
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JOB-1042"
+          },
+          "response": {
+            "orders": 2,
+            "deliveries": 0,
+            "escalations": 0
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "ordersFor": "JOB-1042"
+          },
+          "response": [
+            {
+              "orderId": "PO1",
+              "supplierId": "SUP-NPS",
+              "externalId": "sys-PO1"
+            },
+            {
+              "orderId": "PO2",
+              "supplierId": "SUP-CTW",
+              "externalId": "sys-PO2"
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "dockets": true
+          },
+          "response": [
+            {
+              "docketId": "DKT1",
+              "orderId": "PO1",
+              "lines": 3
+            }
+          ]
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "kind": "short",
+            "orderId": "PO1",
+            "owner": "Priya Shah",
+            "detail": "docket DKT1: PIPE20 34 of 40"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "delivery": "PO1",
+            "docketId": "DKT1",
+            "lines": [
+              "PIPE20:34/short",
+              "ELBOW20:12",
+              "GLUE:3"
+            ]
+          },
+          "response": {
+            "attached": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 11,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the catalogue and the release rule runs on.",
+        "now": "2026-11-03T14:00:00.714Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 12,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "One order per supplier in the ordering system with its own id after two runs, the stock line reserved and not ordered, the unknown code parked and unpriced, the over-threshold order waiting for a named person, and the short delivery recorded line by line with a variance owned by someone.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "A real job on the business's own job system, real stock, a real supplier account with its catalogue, and a real delivery docket.",
+        "now": "2026-11-03T14:00:00.714Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 12,
+    "pass": 9,
+    "fail": 0,
+    "shapeOnly": 1,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
