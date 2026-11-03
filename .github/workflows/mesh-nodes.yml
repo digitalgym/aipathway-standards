@@ -19,6 +19,12 @@ on:
 permissions:
   contents: read
 
+# A newer run re-checks every node, so a run already going on the same ref is
+# superseded. Without this a burst of merges queues one full re-run per merge.
+concurrency:
+  group: mesh-nodes-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   list:
     runs-on: ubuntu-latest
