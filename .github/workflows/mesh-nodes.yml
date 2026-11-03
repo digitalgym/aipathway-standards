@@ -1,0 +1,60 @@
+name: mesh-nodes
+
+# Re-runs every changed node's conformance projects (any folder under
+# mesh/nodes/<slug>/ with a run.mjs) on the runner in packages/conformance, so
+# a listing is re-checked in CI, not only on the machine that made its
+# evidence. Committed evidence is what the gate reads; this never rewrites it.
+# Pull requests re-run the nodes they touch; main and the weekly run re-run all.
+
+on:
+  pull_request:
+    paths: ["mesh/nodes/**", "packages/conformance/**", ".github/workflows/mesh-nodes.yml"]
+  push:
+    branches: [main]
+    paths: ["mesh/nodes/**", "packages/conformance/**", ".github/workflows/mesh-nodes.yml"]
+  schedule:
+    - cron: "30 20 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  list:
+    runs-on: ubuntu-latest
+    outputs:
+      projects: ${{ steps.find.outputs.projects }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: find
+        run: |
+          all=$(find mesh/nodes -mindepth 3 -maxdepth 3 -name run.mjs -printf '%h\n' | sort)
+          if [ "${{ github.event_name }}" = "pull_request" ] && ! git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -q -E '^(packages/conformance/|\.github/workflows/mesh-nodes\.yml)'; then
+            changed=$(git diff --name-only origin/${{ github.base_ref }}...HEAD -- mesh/nodes | cut -d/ -f1-3 | sort -u)
+            all=$(for p in $all; do for c in $changed; do case "$p/" in "$c"/*) echo "$p";; esac; done; done | sort -u)
+          fi
+          echo "projects=$(printf '%s\n' $all | jq -R . | jq -cs 'map(select(length>0))')" >> "$GITHUB_OUTPUT"
+  run:
+    needs: list
+    if: needs.list.outputs.projects != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project: ${{ fromJson(needs.list.outputs.projects) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build the runner from this repo
+        working-directory: packages/conformance
+        run: npm install --no-audit --no-fund && npm run build
+      - name: Install the project on that runner
+        working-directory: ${{ matrix.project }}
+        run: npm ci --no-audit --no-fund && npm install --no-save --no-audit --no-fund "$GITHUB_WORKSPACE/packages/conformance"
+      - name: Run the checks (exits 1 on any red)
+        working-directory: ${{ matrix.project }}
+        run: node run.mjs

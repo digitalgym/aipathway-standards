@@ -1,5 +1,5 @@
 {
-  "version": "1.0",
+  "version": "1.1",
   "verticals": [
     { "id": "trades-building", "name": "Trades and building", "note": "Plumbers, electricians, HVAC, builders, any business that runs jobs out of ServiceM8, Simpro, Tradify, Fergus or similar." },
     { "id": "fire-electrical", "name": "Fire and electrical compliance", "note": "Asset registers, service cycles, defect quotes, compliance packs." },
@@ -19,7 +19,9 @@
     { "id": "document_id", "issued_by": "the document store (Drive, SharePoint)" },
     { "id": "tenancy_id", "issued_by": "the property management system" },
     { "id": "asset_id", "issued_by": "the asset register" },
-    { "id": "report_id", "issued_by": "the system the report is published into" }
+    { "id": "report_id", "issued_by": "the system the report is published into" },
+    { "id": "listing_id", "issued_by": "the agency's listing system" },
+    { "id": "order_id", "issued_by": "the job system or the ledger (a purchase order)" }
   ],
   "events": [
     { "name": "call.received", "id": "call_id", "entry": true, "means": "A call or voicemail landed. The only hop allowed to match on a phone number, because no job exists yet." },
@@ -29,6 +31,7 @@
     { "name": "job.created", "id": "job_id", "means": "The job system issued a job id." },
     { "name": "job.updated", "id": "job_id", "means": "A field the mesh reads changed on the job." },
     { "name": "job.completed", "id": "job_id", "means": "The job was marked complete in the job system." },
+    { "name": "quote.drafted", "id": "quote_id", "carries": ["job_id"], "means": "A quote draft was written onto the job and waits for a named person to send it." },
     { "name": "quote.sent", "id": "quote_id", "carries": ["job_id"], "means": "A quote left the business, with the job id it was drafted from." },
     { "name": "quote.accepted", "id": "quote_id", "carries": ["job_id"], "means": "The customer accepted the quote in the system of record." },
     { "name": "quote.declined", "id": "quote_id", "carries": ["job_id"], "means": "The customer declined, or the quote expired." },
@@ -38,6 +41,12 @@
     { "name": "promise.recorded", "id": "invoice_id", "means": "A dated promise to pay was written onto the invoice in the ledger." },
     { "name": "payment.received", "id": "payment_id", "carries": ["invoice_id"], "means": "Money arrived and was applied in the ledger." },
     { "name": "bill.received", "id": "bill_id", "means": "A supplier bill was entered in the ledger." },
+    { "name": "bill.checked", "id": "bill_id", "means": "A bill passed every check and waits for a named person to approve it. Nothing is paid." },
+    { "name": "order.sent", "id": "order_id", "carries": ["job_id"], "means": "A purchase order a named person released went to the supplier, against the job." },
+    { "name": "delivery.recorded", "id": "order_id", "carries": ["job_id"], "means": "A delivery docket was matched to its purchase order on the job." },
+    { "name": "evidence.filed", "id": "message_id", "carries": ["job_id", "bill_id", "tenancy_id"], "means": "A message or attachment was filed against the record it belongs to, by that record's id." },
+    { "name": "answer.sent", "id": "message_id", "means": "A cited answer a named person released was sent in reply to the question." },
+    { "name": "listing.feedback_due", "id": "listing_id", "means": "An open home or inspection finished and its feedback is due to the vendor." },
     { "name": "rent.overdue", "id": "tenancy_id", "means": "Rent on a tenancy fell into arrears in the property system." },
     { "name": "asset.service_due", "id": "asset_id", "means": "An asset in the register came due for its service or test." },
     { "name": "report.published", "id": "report_id", "means": "A report was written into the system the reader opens." },
