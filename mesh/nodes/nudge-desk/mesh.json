@@ -1,0 +1,50 @@
+{
+  "slug": "nudge-desk",
+  "name": "Nudge Desk",
+  "office_task": "Every weekday, find our overdue invoices, chase each customer once in the right order, never past the do-not-chase list or the gate, and turn a reply with a date into a promise.",
+  "verticals": ["accounting-bookkeeping"],
+  "standards": ["debtor-chasing"],
+  "systems_of_record": [
+    "QuickBooks Online (the ledger that issues the invoice_id)",
+    "Gmail (the reminder and the reply, by message_id)",
+    "the exception desk the business runs (a sheet or a task list that issues the exception_id)"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/nudge-desk" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "invoice.overdue", "wake": "poll" },
+    { "event": "email.received", "wake": "webhook" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "promise.recorded",
+      "write": "a dated promise to pay, from the debtor's reply, written as a note on the invoice in the ledger: the date, an amount that may be empty, the method if offered, and when it was captured; it sits beside any open dispute and never closes it",
+      "readback": "GET /v3/company/{realmId}/invoice/{invoice_id} returns the invoice carrying the promise date and capture time; no promise on the read-back means it was not written, and a promise_not_recorded exception is raised"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the customer's invoices naming the person who owns it: an open dispute, a relationship-sized balance, a reply with no date, a promise that did not read back, or an override refused for want of a named approver",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the invoice_ids, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": ["dispute_open", "relationship_account", "reply_without_date", "promise_not_recorded", "override_refused"],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.invoice_id", "seam.chase_bucket", "seam.gate_reason", "seam.promise_date", "seam.promise_captured_at", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Chase overdue QuickBooks invoices with Claude, Gmail, Slack and Google Sheets",
+    "original_author": "Amplence",
+    "share_link": "https://n8n.io/workflows/20684",
+    "licence_or_permission": "reimplementation"
+  }
+}
