@@ -1,0 +1,1075 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793703837093",
+  "standard": "compliance-calendar-build-standard",
+  "spec": "AIP-BS-COMPLIANCE-CALENDAR",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-03T11:03:57.074Z",
+  "finishedAt": "2026-11-03T11:03:57.093Z",
+  "results": [
+    {
+      "checkId": "dates-derived-not-stored",
+      "n": 1,
+      "title": "Due dates are derived",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The due date changes on its own. A stored value that survives the rule change fails, which is the whole point of the check.",
+      "actual": "O-101 due: 2027-08-17 (v1) then 2027-02-18 (v2)",
+      "stimulus": {
+        "description": "An obligation with a due date, then a new rule version that changes the interval, effective from a date the runner's clock passes.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "dates-derived-not-stored"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "O-101"
+          },
+          "response": {
+            "date": "2027-08-17T00:00:00.000Z",
+            "version": "v1"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "payroll_tax_reconciliation",
+            "jurisdiction": "QLD"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "v1",
+                "effectiveFrom": "2020-01-01T00:00:00.000Z"
+              },
+              {
+                "version": "v2",
+                "effectiveFrom": "2026-10-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "breached": []
+          }
+        },
+        {
+          "at": "2026-10-11T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-10-11T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "O-101"
+          },
+          "response": {
+            "date": "2027-02-18T00:00:00.000Z",
+            "version": "v2"
+          }
+        },
+        {
+          "at": "2026-10-11T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "payroll_tax_reconciliation",
+            "jurisdiction": "QLD"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "v1",
+                "effectiveFrom": "2020-01-01T00:00:00.000Z"
+              },
+              {
+                "version": "v2",
+                "effectiveFrom": "2026-10-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-10-11T00:00:00.000Z"
+          },
+          "response": {
+            "breached": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "superseded-versions-retained",
+      "n": 2,
+      "title": "Superseded rule versions are retained",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The old version is still readable with its effective dates, and the historic due date can be explained by the rule that produced it.",
+      "actual": "versions read: [{\"versions\":[{\"version\":\"v1\",\"effectiveFrom\":\"2020-01-01T00:00:00.000Z\"},{\"version\":\"v2\",\"effectiveFrom\":\"2026-07-01T00:00:00.000Z\"}]}]",
+      "stimulus": {
+        "description": "Two rule versions, and a query about an obligation that fell due under the old one.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "superseded-versions-retained"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "O-201"
+          },
+          "response": {
+            "date": "2026-11-10T00:00:00.000Z",
+            "version": "v2"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "ato_notice_response",
+            "jurisdiction": "NSW"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "v1",
+                "effectiveFrom": "2020-01-01T00:00:00.000Z"
+              },
+              {
+                "version": "v2",
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "breached": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "rules-per-jurisdiction",
+      "n": 3,
+      "title": "Rules are held per jurisdiction",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The two due dates differ where the rule differs, from one rule store rather than two builds.",
+      "actual": "QLD {\"date\":\"2027-07-18T00:00:00.000Z\",\"version\":\"QLD-v1\"}, VIC {\"date\":\"2027-08-17T00:00:00.000Z\",\"version\":\"VIC-v1\"}",
+      "stimulus": {
+        "description": "The same obligation on two properties in different states.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "rules-per-jurisdiction"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "O-301"
+          },
+          "response": {
+            "date": "2027-07-18T00:00:00.000Z",
+            "version": "QLD-v1"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "payroll_tax_reconciliation",
+            "jurisdiction": "QLD"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "QLD-v1",
+                "effectiveFrom": "2020-01-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "O-302"
+          },
+          "response": {
+            "date": "2027-08-17T00:00:00.000Z",
+            "version": "VIC-v1"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "payroll_tax_reconciliation",
+            "jurisdiction": "VIC"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "VIC-v1",
+                "effectiveFrom": "2020-01-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "breached": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "unknown-anchor-surfaces",
+      "n": 4,
+      "title": "An unknown anchor surfaces",
+      "verdict": "pass",
+      "held": true,
+      "expected": "It appears in an explicit unknown-anchor state. A silently defaulted date, including today, fails: a wrong due date that looks confident is worse than a visible gap.",
+      "actual": "unknown anchors surfaced: 1; due reads []",
+      "stimulus": {
+        "description": "An obligation whose anchor date is missing.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "unknown-anchor-surfaces"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "unknownAnchor": "O-401"
+          },
+          "response": {
+            "surfaced": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "deadline.anchor_unknown",
+            "detail": "O-401"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "breached": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "evidence-of-completion",
+      "n": 5,
+      "title": "Completion carries evidence",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The completion is not accepted as evidence on its own, and the obligation is not counted as covered.",
+      "actual": "completion attempts: [{\"accepted\":false,\"why\":\"no document attached\"}]",
+      "stimulus": {
+        "description": "An obligation marked complete with no document attached.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "evidence-of-completion"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "complete": "O-501"
+          },
+          "response": {
+            "accepted": false,
+            "why": "no document attached"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "deadline.completion_without_evidence",
+            "detail": "O-501"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "O-501"
+          },
+          "response": {
+            "date": "2026-11-20T00:00:00.000Z",
+            "version": "v1"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "bas_lodgement",
+            "jurisdiction": "QLD"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "v1",
+                "effectiveFrom": "2020-01-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "breached": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "refusal-is-dated-outcome",
+      "n": 6,
+      "title": "A refusal is a dated outcome",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The refusal is stored with its date, and the obligation is still live and now overdue. A refusal that closes the obligation fails.",
+      "actual": "sweeps: [[],[\"O-601\"]]",
+      "stimulus": {
+        "description": "An owner declines the work. The runner then advances the clock past the due date.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "refusal-is-dated-outcome"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "refusal": "O-601",
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "stillLive": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "deadline.refusal_recorded",
+            "detail": "O-601 declined by client director"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "O-601"
+          },
+          "response": {
+            "date": "2026-10-11T00:00:00.000Z",
+            "version": "v1"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "ato_notice_response",
+            "jurisdiction": "VIC"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "v1",
+                "effectiveFrom": "2020-01-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "breached": []
+          }
+        },
+        {
+          "at": "2026-10-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-10-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "O-601"
+          },
+          "response": {
+            "date": "2026-10-11T00:00:00.000Z",
+            "version": "v1"
+          }
+        },
+        {
+          "at": "2026-10-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "ato_notice_response",
+            "jurisdiction": "VIC"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "v1",
+                "effectiveFrom": "2020-01-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-10-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-10-21T00:00:00.000Z"
+          },
+          "response": {
+            "breached": [
+              "O-601"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "deadline.breached",
+            "detail": "O-601"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "notice-needs-a-person",
+      "n": 7,
+      "title": "Nothing sends a legal notice unreleased",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "No notice is issued. The notice sits awaiting a named release.",
+      "actual": "notice calls: [{\"issued\":false,\"awaiting\":\"a named release\"}]",
+      "stimulus": {
+        "description": "A breached obligation whose rule names a notice, with no release recorded.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "notice-needs-a-person"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "O-701"
+          },
+          "response": {
+            "date": "2026-08-22T00:00:00.000Z",
+            "version": "v1"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "bas_lodgement",
+            "jurisdiction": "NSW"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "v1",
+                "effectiveFrom": "2020-01-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "breached": [
+              "O-701"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "deadline.breached",
+            "detail": "O-701"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "prepare": "O-701"
+          },
+          "response": {
+            "issued": false,
+            "awaiting": "a named release"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "deadline.notice_drafted_awaiting_release",
+            "detail": "O-701"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "breach-does-not-self-clear",
+      "n": 8,
+      "title": "A breach does not clear itself",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The breach remains on the record after completion. The next cycle starts clean; the breach does not disappear from the history.",
+      "actual": "breached on each sweep: [[\"O-801\"],[\"O-801\"],[\"O-801\"]]",
+      "stimulus": {
+        "description": "An obligation allowed to breach, then completed late, then the clock advanced again.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "breach-does-not-self-clear"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "O-801"
+          },
+          "response": {
+            "date": "2026-09-11T00:00:00.000Z",
+            "version": "v1"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "bas_lodgement",
+            "jurisdiction": "QLD"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "v1",
+                "effectiveFrom": "2020-01-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "breached": [
+              "O-801"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "deadline.breached",
+            "detail": "O-801"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "complete": "O-801",
+            "evidenceRef": "doc:lodgement-receipt-O-801.pdf"
+          },
+          "response": {
+            "accepted": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "O-801"
+          },
+          "response": {
+            "date": "2026-09-11T00:00:00.000Z",
+            "version": "v1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "bas_lodgement",
+            "jurisdiction": "QLD"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "v1",
+                "effectiveFrom": "2020-01-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "breached": [
+              "O-801"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-05T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-11-05T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "O-801"
+          },
+          "response": {
+            "date": "2026-09-11T00:00:00.000Z",
+            "version": "v1"
+          }
+        },
+        {
+          "at": "2026-11-05T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "bas_lodgement",
+            "jurisdiction": "QLD"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "v1",
+                "effectiveFrom": "2020-01-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-11-05T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-11-05T00:00:00.000Z"
+          },
+          "response": {
+            "breached": [
+              "O-801"
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 9,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the rule store runs on.",
+        "now": "2026-11-03T11:03:57.093Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 10,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "Every affected obligation re-derives, and nothing that was breached reads clean afterwards.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "A real rule change against the live register, then a real late completion.",
+        "now": "2026-11-03T11:03:57.093Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 10,
+    "pass": 7,
+    "fail": 0,
+    "shapeOnly": 1,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
