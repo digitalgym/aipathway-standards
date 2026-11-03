@@ -1,0 +1,58 @@
+{
+  "slug": "vendor-pack",
+  "name": "Vendor Pack",
+  "office_task": "Read each vendor's licence and insurance papers as they land, log the key fields and expiry dates, and hold anything unsure, missing or expired for a named person.",
+  "verticals": ["b2b-office"],
+  "standards": ["rejected-pack"],
+  "systems_of_record": [
+    "the document store that issues the document_id (Google Drive or SharePoint)",
+    "the vendor register that holds the graph and the pack queues, issuing the report_id and exception_id"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/vendor-pack" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "document.received", "wake": "webhook" },
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "report.published",
+      "write": "the vendor's pack: one handover artefact derived from the graph (ABN, legal name, address, each document's class, number and expiry), every clause citing its dated rule, an as-of date and the named person's version record, released only after that person accepted this exact version",
+      "readback": "the vendor register returns a report_id for the pack, and reading that id back returns the pack's queue, its as-of date and the version record naming the person; a refused handover returns no id and nothing was published"
+    },
+    {
+      "event": "exception.raised",
+      "write": "the pack moved to Yellow (a field read below the confidence gate), Hold (an applicable document missing) or Fail (ABN not active, a name or ABN mismatch, an expired document, no rule in force), with the reason and the vendor's exception_owner",
+      "readback": "the vendor register returns an exception_id, and reading it back returns the pack id, the queue, the first check that stopped it with the reason, and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "pack.low_confidence_field",
+      "pack.identity_failed",
+      "pack.document_expired",
+      "pack.applicability_unknown",
+      "pack.document_missing",
+      "pack.abn_mismatch",
+      "pack.no_rule_in_force",
+      "pack.awaiting_release",
+      "pack.handover_refused"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.document_id", "seam.queue", "seam.failed_check", "seam.yellow_fields", "seam.rule_version", "seam.as_of", "seam.accepted_by", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Monitor vendor compliance documents and expiries with Google Drive, OpenAI, Sheets, Gmail, and Slack",
+    "original_author": "Javed Iqbal",
+    "share_link": "https://n8n.io/workflows/20324",
+    "licence_or_permission": "reimplementation"
+  }
+}
