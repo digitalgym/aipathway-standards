@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-03T14:20:16.330Z",
+  "generated_at": "2026-11-03T14:22:04.981Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -194,6 +194,116 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 12
+        }
+      ]
+    },
+    {
+      "slug": "agent-rules-desk",
+      "name": "Agent Rules Desk",
+      "office_task": "Answer our agents on the state agent rules we are licensed under, only from the rules we hold, citing the clause and edition, or hand the question to the licensee in charge.",
+      "verticals": [
+        "property"
+      ],
+      "standards": [
+        "cited-answer"
+      ],
+      "systems_of_record": [
+        "the mail system that issues the message_id an agent's question arrived on and the reply went out on (Gmail, Outlook)",
+        "the agency's own rule library: the state agent legislation and regulations for each state it is licensed in (NSW, QLD, VIC and the rest) and its compliance manual, held as clauses with editions, state or territory and effective dates, with its answer register",
+        "the exception desk the agency runs, which issues the exception_id"
+      ],
+      "consumes": [
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "answer.sent",
+          "write": "a stored answer with its source cards (instrument, clause, edition, state or territory, effective date), sent as a reply on the agent's question thread only after the licensee in charge released it on the answer register",
+          "readback": "the mail system returns the reply's message_id, and reading that id back returns the thread it replies in and the answer register id; no id back means it was not sent, and cited.send_unconfirmed is raised to the licensee in charge"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the question's message naming the licensee in charge: no licence state given, nothing in the rule library covers it, a compliance finding, breach call or sign-off, a source conflict between two live instruments, or an instrument that moved and waits for a named person to accept it (listing every stored answer that relied on it)",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the message_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "cited.no_jurisdiction",
+          "cited.not_in_library",
+          "cited.decision_for_person",
+          "cited.source_conflict",
+          "cited.change_pending",
+          "cited.acceptance_without_person",
+          "cited.release_refused",
+          "cited.release_without_person",
+          "cited.send_unconfirmed"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "answer.message_id",
+          "answer.queue",
+          "answer.policy",
+          "answer.source_card_ids",
+          "answer.released_by",
+          "source_card.edition",
+          "source_card.jurisdiction",
+          "source_card.effective_from",
+          "change_delta.accepted_by",
+          "change_delta.accepted_on",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/agent-rules-desk"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "CA Brokerage Compliance",
+        "original_author": "Joe Foxx",
+        "share_link": "https://x.ai/bot/OtCWbWeEWyNiFCV3qLxYU",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "cited-answer",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T14:12:03.949Z",
+          "run_id": "run-1793715123948",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 10
         }
       ]
     },
@@ -3247,6 +3357,116 @@
       ]
     },
     {
+      "slug": "handbook-desk",
+      "name": "Handbook Desk",
+      "office_task": "Answer staff and manager questions about our employee handbook, HR policies and work rules by quoting the clause and its edition, or hand the question to the HR owner.",
+      "verticals": [
+        "b2b-office"
+      ],
+      "standards": [
+        "cited-answer"
+      ],
+      "systems_of_record": [
+        "the mail system that issues the message_id the HR question arrived on and the reply went out on (Gmail, Outlook)",
+        "the business's own rules library: the employee handbook, HR policies and work rules, and any award or National Employment Standards extract it has loaded, held as clauses with an edition, an Australian state or territory (or AU) and an effective date, with its answer register",
+        "the exception desk the business runs, which issues the exception_id"
+      ],
+      "consumes": [
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "answer.sent",
+          "write": "a stored answer quoting the handbook, policy or work-rule clause it came from, with its source cards (instrument, clause, edition, state or territory, effective date), sent as a reply on the question's thread only after a named person released it on the answer register",
+          "readback": "the mail system returns the reply's message_id, and reading that id back returns the thread it replies in and the answer register id; no id back means it was not sent, and hr.send_unconfirmed is raised to the HR owner"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the question's message naming the HR owner: no state or territory of work given, nothing in the rules held covers it, a ruling on one person's entitlement, discipline or dismissal, a compliance statement, legal reading or safety call, a source conflict between two live instruments, or a rule that moved and waits for a named person to accept it (listing every stored answer that relied on it)",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the message_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "hr.no_work_state",
+          "hr.not_in_rules",
+          "hr.decision_for_person",
+          "hr.source_conflict",
+          "hr.change_pending",
+          "hr.acceptance_without_person",
+          "hr.release_refused",
+          "hr.release_without_person",
+          "hr.send_unconfirmed"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "answer.message_id",
+          "answer.queue",
+          "answer.policy",
+          "answer.source_card_ids",
+          "answer.released_by",
+          "source_card.edition",
+          "source_card.jurisdiction",
+          "source_card.effective_from",
+          "change_delta.accepted_by",
+          "change_delta.accepted_on",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/handbook-desk"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "HR Bot",
+        "original_author": "Goose",
+        "share_link": "https://x.ai/bot/jiXiI3f9iR5qNB-Frc0eT",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "cited-answer",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T14:10:36.140Z",
+          "run_id": "run-1793715036139",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 10
+        }
+      ]
+    },
+    {
       "slug": "hours-audit",
       "name": "Hours Audit",
       "office_task": "Every week before the pay run, check the Square timecards against the roster and the award edition, put anything odd in front of its owner, and export only what a person released.",
@@ -4098,6 +4318,118 @@
       ]
     },
     {
+      "slug": "late-rent-desk",
+      "name": "Late Rent Desk",
+      "office_task": "For a landlord with 1 to 50 doors: each day, find who is really behind on rent, text only them, and hand notices, fees and hardship to a person.",
+      "verticals": [
+        "property"
+      ],
+      "standards": [
+        "rent-arrears"
+      ],
+      "systems_of_record": [
+        "the property management system or rent ledger that issues the tenancy_id (its tenancy ledger, rule store and message log)"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "rent.overdue",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "evidence.filed",
+          "write": "the sent copy of each released arrears SMS (body, recipient tenancy, timestamp), filed in the message log against the tenancy_id, after every stop condition was checked against a fresh ledger read",
+          "readback": "reading the message log by tenancy_id returns the message with its tenancy_id, body and sent time; if the new copy does not read back, the desk raises rent.message_not_filed and the sequence goes no further"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the tenancy naming the person who owns it: a stop condition that matched, a failed or stale ledger read, no dated rule for the state, a notice drafted and held for a named release, a fee held for a person, hardship stated, or a sequence that went unanswered",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the tenancy_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "rent.ledger_read_failed",
+          "rent.ledger_stale",
+          "rent.no_rule_for_state",
+          "rent.unmatched_receipt",
+          "rent.payment_received",
+          "rent.payment_in_transit",
+          "rent.payment_arrangement",
+          "rent.hardship_on_file",
+          "rent.hardship_stated",
+          "rent.dispute_or_advocacy_on_file",
+          "rent.on_formal_path",
+          "rent.paused_by_person",
+          "rent.notice_drafted_awaiting_release",
+          "rent.fee_held_for_person",
+          "rent.sequence_unanswered",
+          "rent.send_refused",
+          "rent.message_not_filed"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.tenancy_id",
+          "seam.triage_outcome",
+          "seam.stop_check",
+          "seam.rule_version",
+          "seam.next_lawful_date",
+          "seam.notice_status",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/late-rent-desk"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "LeaseLord",
+        "original_author": "Jonah",
+        "share_link": "https://x.ai/bot/cMtHljXnkIqtyUf20XbIE",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "rent-arrears",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T14:07:00.891Z",
+          "run_id": "run-1793714820890",
+          "green": 5,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 11
+        }
+      ]
+    },
+    {
       "slug": "lead-sort",
       "name": "Lead Sort",
       "office_task": "Sort the trade office inbox, voicemails and web-form leads included, onto the job or supplier by id, and hold every real reply for a named person.",
@@ -4204,6 +4536,115 @@
       ]
     },
     {
+      "slug": "licence-watch",
+      "name": "Licence Watch",
+      "office_task": "Each morning, work out when our licences and insurance policies run out from each state's rule, remind the named person with a Done link, and count it renewed only when the new certificate is filed.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "compliance-calendar"
+      ],
+      "systems_of_record": [
+        "the business's licence register (each contractor licence, worker trade licence and insurance policy with its issue or renewal date, the dated rule set per state, and the document store renewed licences and certificates of currency are filed in)"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "evidence.filed",
+          "write": "the renewed licence or certificate of currency attached to a Done reply, filed as evidence of renewal on the licence obligation the Done link names by obligation id; a reply with no obligation id is never matched on a name or a phone number and is raised instead",
+          "readback": "the obligation is read back by its id and must return the same document reference (the message_id and attachment) and a completion date; if it does not, nothing was filed and licence.evidence_not_read_back is raised"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the licence obligation naming the person who owns it, which the exception desk texts to them with the Done link: a renewal coming due, a lapse, a Done with no document, no issue date on the licence record, no rule for that licence type in that state, a past expiry no retained rule version explains, a dated decision not to renew, a drafted renewal request awaiting a named release, a release with no named person, silence past the next chase date, or a reply with no obligation id",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the obligation id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "licence.renewal_due",
+          "licence.overdue",
+          "licence.done_without_document",
+          "licence.evidence_not_read_back",
+          "licence.done_unmatched",
+          "licence.anchor_unknown",
+          "licence.no_rule_in_force",
+          "licence.history_unexplained",
+          "licence.renewal_declined",
+          "licence.renewal_drafted_awaiting_release",
+          "licence.release_refused",
+          "licence.chase_due"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.obligation_ref",
+          "seam.rule_version",
+          "seam.anchor_status",
+          "seam.state",
+          "seam.evidence",
+          "seam.refused_at",
+          "seam.breached_at",
+          "seam.next_chase",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/licence-watch"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Send license and insurance renewal reminders by SMS with Twilio",
+        "original_author": "Michael Matthews",
+        "share_link": "https://n8n.io/workflows/20108",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "compliance-calendar",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T14:06:49.750Z",
+          "run_id": "run-1793714809749",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 10
+        }
+      ]
+    },
+    {
       "slug": "loan-intake",
       "name": "Loan Intake",
       "office_task": "Turn every lead and client call into the one client file in our CRM, chase each missing figure or document as an owned task, and hold the file for a broker to approve.",
@@ -4302,6 +4743,108 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 14
+        }
+      ]
+    },
+    {
+      "slug": "lodgement-watch",
+      "name": "Lodgement Watch",
+      "office_task": "Keep every client's BAS, IAS and payroll tax due dates worked out from the ATO and state rules, file the lodgement receipts, and put anything late in front of a named person.",
+      "verticals": [
+        "accounting-bookkeeping"
+      ],
+      "standards": [
+        "compliance-calendar"
+      ],
+      "systems_of_record": [
+        "the practice's obligation register (its client lodgement calendar, dated rule set and the document store lodgement receipts are filed in)"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "evidence.filed",
+          "write": "a lodgement receipt attached to an email, filed as evidence of completion on the client obligation it names by obligation id; an email with no obligation id is never matched on a client name and is raised instead",
+          "readback": "the obligation is read back by its id and must return the same evidence reference (the message_id and attachment) and a completion date; if it does not, nothing was filed and lodgement.evidence_not_read_back is raised"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the client obligation naming the person who owns it: an unknown anchor, no rule in force, a past date no retained rule version explains, a 'lodged' email with no receipt, a client's dated refusal to supply records, a breach, a drafted records request awaiting a named release, a release with no named person, silence past the next chase date, or an email with no obligation id",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the obligation id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "lodgement.anchor_unknown",
+          "lodgement.no_rule_in_force",
+          "lodgement.history_unexplained",
+          "lodgement.completion_without_evidence",
+          "lodgement.evidence_not_read_back",
+          "lodgement.refusal_recorded",
+          "lodgement.breached",
+          "lodgement.request_drafted_awaiting_release",
+          "lodgement.release_refused",
+          "lodgement.chase_due",
+          "lodgement.email_unmatched"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.obligation_ref",
+          "seam.rule_version",
+          "seam.anchor_status",
+          "seam.state",
+          "seam.evidence",
+          "seam.refused_at",
+          "seam.breached_at",
+          "seam.next_chase",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/lodgement-watch"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "compliance-calendar",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T14:05:52.141Z",
+          "run_id": "run-1793714752139",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 10
         }
       ]
     },
@@ -4418,6 +4961,107 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 9
+        }
+      ]
+    },
+    {
+      "slug": "notice-check",
+      "name": "Notice Check",
+      "office_task": "Before a breach notice for unpaid rent goes to a tenant, check it against the ledger and the state's dated rule, hold it for a named person with its dates, and check it again when they release it.",
+      "verticals": [
+        "property"
+      ],
+      "standards": [
+        "rent-arrears"
+      ],
+      "systems_of_record": [
+        "the property management system that issues the tenancy_id (PropertyMe, Console Cloud or similar): its tenancy ledger, dated rule store, notice drafts and message log"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "rent.overdue",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the day's arrears short list, written into the property system's task view: one row per tenancy_id with its paid-to date, days past it, balance, triage outcome, the dated rule version applied and the date the state threshold is met",
+          "readback": "the property system returns a report_id for the list, and reading that id back returns the same tenancy_ids with their paid-to dates and rule versions; no id back means the list was not published and an exception is raised"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the tenancy naming the person who owns it: a drafted notice awaiting a named release with its paid-to date, rule version, threshold date and earliest remedy date; a notice that failed its check at draft or release; a stop condition caught before a message; a failed or stale ledger read; a fee held for a person; or an unanswered sequence",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the tenancy_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "rent.ledger_read_failed",
+          "rent.ledger_stale",
+          "rent.no_rule_for_state",
+          "rent.notice_drafted_awaiting_release",
+          "rent.notice_check_failed",
+          "rent.payment_received",
+          "rent.hardship_on_file",
+          "rent.arrangement_in_place",
+          "rent.on_formal_path",
+          "rent.fee_held_for_person",
+          "rent.sequence_unanswered",
+          "rent.send_refused"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.tenancy_id",
+          "seam.triage_outcome",
+          "seam.stop_check",
+          "seam.rule_version",
+          "seam.notice_status",
+          "seam.remedy_by",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/notice-check"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "rent-arrears",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T14:06:05.383Z",
+          "run_id": "run-1793714765381",
+          "green": 5,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 11
         }
       ]
     },
@@ -4749,6 +5393,115 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 13
+        }
+      ]
+    },
+    {
+      "slug": "order-release",
+      "name": "Order Release",
+      "office_task": "Turn each job's material list into one purchase order per supplier, and hold any order over the spending limit, or to an unapproved supplier, until a named person releases it.",
+      "verticals": [
+        "b2b-office",
+        "trades-building"
+      ],
+      "standards": [
+        "material-order"
+      ],
+      "systems_of_record": [
+        "the job system that issues the job_id and holds its material list (ServiceM8, Simpro, Tradify, Fergus or a job sheet)",
+        "the supplier portal or job-system purchasing that issues each order's external id"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "job.updated",
+          "wake": "webhook"
+        },
+        {
+          "event": "document.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "order.sent",
+          "write": "one purchase order per job and supplier, priced from that supplier's catalogue, released by the release rule under the limit to an approved supplier or by a named person otherwise, and sent against the job",
+          "readback": "the ordering system returns the order's external id, and reading the job's orders back by job_id returns that id with the supplier, the catalogue edition and who or which rule released it; no id back is a failed write, raised to a person, and nothing is sent"
+        },
+        {
+          "event": "delivery.recorded",
+          "write": "the supplier's docket matched to its sent order by order id, line by line, with the quantity received and a reason (short, damaged, substituted) on any line that differs",
+          "readback": "reading the job's record by job_id returns the delivery on that order with one line per ordered line; a docket that names no sent order is never recorded and is raised instead"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the order naming the person who owns it: an order waiting for a named release (over the limit, or to a supplier not on the approved list), a code no catalogue holds, an order write with no id back, a docket with no sent order, and every delivery variance (short, over, wrong item, changed price, unaccepted substitution)",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the job_id, the order id, the kind and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "material.release_needed",
+          "material.not_in_catalogue",
+          "material.write_failed",
+          "material.no_order_for_docket",
+          "material.short",
+          "material.over",
+          "material.wrong_item",
+          "material.price_changed",
+          "material.substitution_unaccepted"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.order_external_id",
+          "seam.supplier_id",
+          "seam.catalogue_edition",
+          "seam.released_by",
+          "seam.order_status",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/order-release"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "material-order",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T14:00:50.873Z",
+          "run_id": "run-1793714450871",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
         }
       ]
     },
@@ -6479,6 +7232,110 @@
       ]
     },
     {
+      "slug": "roof-desk",
+      "name": "Roof Desk",
+      "office_task": "Answers roofing calls we miss after hours, checks the address is in our area, books one inspection or repair job, and wakes the on-call roofer only when water is coming in.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "booked-after-hours"
+      ],
+      "systems_of_record": [
+        "ServiceM8",
+        "Simpro"
+      ],
+      "consumes": [
+        {
+          "event": "call.received",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "job.created",
+          "write": "one job in the job system per caller, with the resolved address, the fixed type (emergency, routine or quote) and the caller's own words, booked for the next working slot; a repeat call from the same number updates the open job and sets duplicate_of instead",
+          "readback": "the job system returns the job id (ServiceM8 job uuid, Simpro job ID) and the open job for that number is read back with the same id before the caller is told it is booked; no id that reads back means write_failed, an alert to the office, and no job.created"
+        },
+        {
+          "event": "exception.raised",
+          "write": "a hand-off to the office with a reason from the fixed list (a price question, a complaint, an address it could not confirm, a job outside the taxonomy, a failed write) and the call transcript attached",
+          "readback": "the exception desk returns an exception_id, and reading it back returns the call_id, the reason and the exception_owner; no id back means nothing was raised and the call is logged as not completed"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "unclassified",
+          "address_unresolved",
+          "out_of_scope_request",
+          "caller_distressed",
+          "price_requested",
+          "complaint",
+          "write_failed"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.duplicate_of",
+          "seam.call_id",
+          "seam.status",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "office-voice-front-desk",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/roof-desk"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Route missed roofing calls to a Retell AI agent with Twilio and Google Workspace",
+        "original_author": "Khadija Naeem",
+        "share_link": "https://n8n.io/workflows/18949",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "booked-after-hours",
+          "edition": "2026-10-06",
+          "environment": "stub",
+          "ran_at": "2026-11-03T14:11:15.253Z",
+          "run_id": "run-1793715075253",
+          "green": 8,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 0,
+          "total": 12
+        },
+        {
+          "standard": "cash-seam",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T14:11:15.588Z",
+          "run_id": "run-1793715075587",
+          "green": 4,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 9
+        }
+      ]
+    },
+    {
       "slug": "seller-book",
       "name": "Seller Book",
       "office_task": "Each morning, show me which past sellers and appraisals in my own database to text today and why, drafted for my OK, and keep every outcome and follow-up on the contact.",
@@ -6565,6 +7422,219 @@
           "ran_at": "2026-11-03T13:55:04.368Z",
           "run_id": "run-1793714104365",
           "green": 8,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 14
+        }
+      ]
+    },
+    {
+      "slug": "seller-weekly",
+      "name": "Seller Weekly",
+      "office_task": "Every Monday, publish each seller a report on their listing: buyer enquiries, inspections and online views, every figure traced to its source, for the listing agent to send.",
+      "verticals": [
+        "property"
+      ],
+      "standards": [
+        "recurring-report"
+      ],
+      "systems_of_record": [
+        "the agency's sales CRM (such as Rex, VaultRE or Agentbox) that holds buyer enquiries and online listing views, issuing the listing_id",
+        "the inspection register the agency keeps for open homes and private inspections",
+        "the agency's report store or vendor portal the report is published into, which issues the report_id"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "one view of the week's report per audience: each seller sees only their own listing's figures, the agency principal sees every listing; each figure carries its definition id, source and as-of time, and a correction is a new version superseding the old with the named person and the reason. Sending a seller's view to the seller stays with the listing agent",
+          "readback": "reading the week's reports back from the report store returns each report_id with its version, audience, published_at and published_by; no id back means it was not published and an exception is raised"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception naming the definition's owner or the threshold's person: a source that could not be read, a measure with no definition or two, a threshold that could not be compared, or an incomplete correction",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the week, the measure, the reason and the exception_owner"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "report.source_unreadable",
+          "report.no_definition",
+          "report.conflicting_definitions",
+          "report.threshold_not_comparable",
+          "report.correction_incomplete",
+          "report.correction_unknown_measure",
+          "report.publish_failed"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.report_id",
+          "seam.listing_id",
+          "seam.period",
+          "seam.version",
+          "seam.supersedes",
+          "seam.published_by",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/seller-weekly"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Send weekly seller property reports from Google Sheets via Gmail",
+        "original_author": "Christophe REVOIRE",
+        "share_link": "https://n8n.io/workflows/20542",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "recurring-report",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T14:04:51.829Z",
+          "run_id": "run-1793714691828",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        }
+      ]
+    },
+    {
+      "slug": "sign-in-follow-up",
+      "name": "Sign-In Follow-Up",
+      "office_task": "Take the open-home sign-in sheet, follow up only the people who said yes with a message I approved, sort their replies, and draft the vendor's report from them.",
+      "verticals": [
+        "property"
+      ],
+      "standards": [
+        "open-home-feedback"
+      ],
+      "systems_of_record": [
+        "the open-home sign-in register, exported from the sign-in app or the agency CRM, or the paper sheet typed up, which issues the document_id and the listing_id each row belongs to",
+        "the agent's mail and SMS sender, which holds the approved drafts, the sends and the replies (message_id)",
+        "the report store the agent and the vendor open, which issues the report_id per version"
+      ],
+      "consumes": [
+        {
+          "event": "listing.feedback_due",
+          "wake": "webhook"
+        },
+        {
+          "event": "document.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the week's vendor report for one listing (attendee, follow-up, reply and class counts, price comments word for word, themes citing their replies, no names or contact details), drafted to the agent as a new version and sent to the vendor only once the agent approved that version",
+          "readback": "the report store returns a version for the listing, and reading the listing's latest report back returns that version, its counts and verbatim comments, and whether it reached the vendor; no version back means nothing was written"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception naming the agent who owns it: a register row with no name, no way to reach them or no open, a row with no consent at sign-in, the same person at two opens of one listing, an offer, a complaint, or a reply that fits no class, each with the row or the reply word for word",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the register row or reply it is about, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "open_home.incomplete_row",
+          "open_home.no_consent",
+          "open_home.duplicate_attendee",
+          "open_home.offer",
+          "open_home.complaint",
+          "open_home.unclear_reply"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.document_id",
+          "seam.listing_id",
+          "seam.consent_as_written",
+          "seam.draft_status",
+          "seam.approved_by",
+          "seam.consent_withdrawn",
+          "seam.reply_classes",
+          "seam.report_version",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/sign-in-follow-up"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Automate Real Estate Open House Follow-ups with SignSnapHome, HubSpot, and Twilio",
+        "original_author": "Kaden Reese",
+        "share_link": "https://n8n.io/workflows/9256",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "open-home-feedback",
+          "edition": "2026-10-24",
+          "environment": "stub",
+          "ran_at": "2026-11-03T14:13:16.029Z",
+          "run_id": "run-1793715196028",
+          "green": 9,
           "red": 0,
           "with_us": 1,
           "evidence_required": 1,
@@ -6669,6 +7739,105 @@
           "environment": "stub",
           "ran_at": "2026-11-03T11:04:55.206Z",
           "run_id": "run-1793703895204",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        }
+      ]
+    },
+    {
+      "slug": "spend-watch",
+      "name": "Spend Watch",
+      "office_task": "Every Monday, publish the builder's spend report from the job system and the ledger, every figure with its definition, source and as-of time, and say so when one cannot be read.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "recurring-report"
+      ],
+      "systems_of_record": [
+        "the job system (Buildertrend, or Simpro and the like): supplier bills, subcontractor invoices, variations and bills awaiting approval, against each job",
+        "the ledger (Xero or MYOB): bills posted with a job tracking category",
+        "the system the report is published into, which issues the report_id"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "one view of the week's spend report per audience (owner, external accountant), each figure carrying its definition id, source and as-of time, or published as unavailable with the reason; a correction is a new version superseding the old, with the named person and the reason",
+          "readback": "reading the period's reports back returns each report_id with its version, published_at and published_by; no id back means it was not published and report.publish_failed is raised"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception naming the definition's owner or the threshold's person: a source that could not be read, a measure with no definition or two, a threshold that could not be compared, a correction missing a person or reason, or a view that did not read back",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the period, the measure, the reason and the exception_owner"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "report.source_unreadable",
+          "report.no_definition",
+          "report.conflicting_definitions",
+          "report.threshold_not_comparable",
+          "report.correction_incomplete",
+          "report.correction_unknown_measure",
+          "report.publish_failed"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.report_id",
+          "seam.period",
+          "seam.version",
+          "seam.supersedes",
+          "seam.published_by",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/spend-watch"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Buildertrend Invoice Desk",
+        "original_author": "Brian Payton",
+        "share_link": "https://x.ai/bot/igyfOAUWRXvTZbDj2J__S",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "recurring-report",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T14:00:38.052Z",
+          "run_id": "run-1793714438051",
           "green": 9,
           "red": 0,
           "with_us": 1,
@@ -7337,6 +8506,116 @@
       ]
     },
     {
+      "slug": "van-stock",
+      "name": "Van Stock",
+      "office_task": "Reserve what the van and store already hold for each job, order only the shortfall from the approved wholesaler at catalogue price, and match every docket back.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "material-order"
+      ],
+      "systems_of_record": [
+        "the job system that issues the job_id, holds its material list and its van and store stock (ServiceM8, Simpro, Tradify, Fergus or similar)",
+        "the wholesaler portal or job-system purchasing that issues each order's external id"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "job.updated",
+          "wake": "webhook"
+        },
+        {
+          "event": "document.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "order.sent",
+          "write": "one purchase order per job and supplier, for the lines van and store stock do not cover, priced from that supplier's catalogue read at order time, released by the threshold rule or a named person and sent against the job",
+          "readback": "the ordering system returns the order's external id, and reading that id back returns the job_id, the supplier, the lines, the catalogue edition and the release; no id back means it was not written and it is parked with a person named"
+        },
+        {
+          "event": "delivery.recorded",
+          "write": "the delivery docket matched to its sent order on the job, line by line, with the quantity received and a reason (short, damaged, substituted) on any line that differs",
+          "readback": "reading the job's record by job_id returns the delivery against the order's id with its docket id and every line; a docket that matches no sent order is not recorded and is raised instead"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the job or the order naming the person who owns it: an order waiting for a named release (over the threshold, or to a supplier not on the approved list), a code no catalogue holds, an order write with no id back, a docket that matches no sent order, and every delivery variance (short, over, wrong item, changed price, damage, unaccepted substitution)",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the job_id, the order id where one exists, the kind and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "material.release_needed",
+          "material.not_in_catalogue",
+          "material.write_failed",
+          "material.no_order_for_docket",
+          "material.short",
+          "material.over",
+          "material.wrong_item",
+          "material.price_changed",
+          "material.damaged",
+          "material.substitution_unaccepted"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.stock_reserved",
+          "seam.order_external_id",
+          "seam.supplier_id",
+          "seam.catalogue_edition",
+          "seam.released_by",
+          "seam.order_status",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/van-stock"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "material-order",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T14:00:58.649Z",
+          "run_id": "run-1793714458647",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        }
+      ]
+    },
+    {
       "slug": "variation-chase",
       "name": "Variation Chase",
       "office_task": "Each weekday, chase the signature on every variation the office has approved, stop the day it comes back signed, and hand a no or a silent party to a named person.",
@@ -7754,6 +9033,7 @@
   "routable": [
     "after-hours-desk",
     "ageing-monday",
+    "agent-rules-desk",
     "arrears-desk",
     "backflow-watch",
     "bill-check",
@@ -7783,6 +9063,7 @@
     "fire-code-desk",
     "folder-brief",
     "goods-match",
+    "handbook-desk",
     "hours-audit",
     "hours-check",
     "inbox-desk",
@@ -7791,12 +9072,17 @@
     "invoice-pair",
     "job-files",
     "job-hours",
+    "late-rent-desk",
     "lead-sort",
+    "licence-watch",
     "loan-intake",
+    "lodgement-watch",
     "matter-billing",
+    "notice-check",
     "nudge-desk",
     "open-home-desk",
     "ops-map",
+    "order-release",
     "owing-today",
     "parts-quote",
     "payment-watch",
@@ -7813,14 +9099,19 @@
     "rent-watch",
     "repair-board",
     "ring-list",
+    "roof-desk",
     "seller-book",
+    "seller-weekly",
+    "sign-in-follow-up",
     "site-orders",
+    "spend-watch",
     "sub-pay-check",
     "tenant-inbox",
     "terms-watch",
     "timesheet-billing",
     "trim-quote",
     "van-board",
+    "van-stock",
     "variation-chase",
     "vendor-actuals",
     "vendor-pack",
@@ -7895,6 +9186,12 @@
     },
     {
       "from": "crew-board",
+      "to": "order-release",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "crew-board",
       "to": "parts-quote",
       "event": "job.updated",
       "id": "job_id"
@@ -7926,6 +9223,12 @@
     {
       "from": "crew-board",
       "to": "van-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "crew-board",
+      "to": "van-stock",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -7997,6 +9300,12 @@
     },
     {
       "from": "practice-desk",
+      "to": "order-release",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "practice-desk",
       "to": "parts-quote",
       "event": "job.updated",
       "id": "job_id"
@@ -8028,6 +9337,12 @@
     {
       "from": "practice-desk",
       "to": "van-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "practice-desk",
+      "to": "van-stock",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -8075,6 +9390,12 @@
     },
     {
       "from": "repair-board",
+      "to": "order-release",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "repair-board",
       "to": "parts-quote",
       "event": "job.updated",
       "id": "job_id"
@@ -8105,8 +9426,62 @@
     },
     {
       "from": "repair-board",
+      "to": "van-stock",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "repair-board",
       "to": "visit-offer",
       "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "roof-desk",
+      "to": "crew-board",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "roof-desk",
+      "to": "estimate-desk",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "roof-desk",
+      "to": "parts-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "roof-desk",
+      "to": "quote-desk",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "roof-desk",
+      "to": "repair-board",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "roof-desk",
+      "to": "trim-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "roof-desk",
+      "to": "van-board",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "roof-desk",
+      "to": "visit-offer",
+      "event": "job.created",
       "id": "job_id"
     },
     {
@@ -8130,6 +9505,12 @@
     {
       "from": "van-board",
       "to": "hours-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "van-board",
+      "to": "order-release",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -8165,6 +9546,12 @@
     },
     {
       "from": "van-board",
+      "to": "van-stock",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "van-board",
       "to": "visit-offer",
       "event": "job.updated",
       "id": "job_id"
@@ -8190,6 +9577,12 @@
     {
       "from": "visit-offer",
       "to": "hours-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-offer",
+      "to": "order-release",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -8226,6 +9619,12 @@
     {
       "from": "visit-offer",
       "to": "van-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-offer",
+      "to": "van-stock",
       "event": "job.updated",
       "id": "job_id"
     }
