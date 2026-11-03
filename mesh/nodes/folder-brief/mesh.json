@@ -1,0 +1,69 @@
+{
+  "slug": "folder-brief",
+  "name": "Folder Brief",
+  "office_task": "Put every file in our messy shared folder on one register with an owner, catch the week one changes, and give me a one-screen brief of what's current, stale, open and changed.",
+  "verticals": ["b2b-office"],
+  "standards": ["knowledge-base"],
+  "systems_of_record": [
+    "the shared drive that holds the folder and issues the document_id (Google Drive or SharePoint), left where it is",
+    "the register on that tenant (one Sheet or SharePoint list: a row per source, owner a person, kind, edition and checksum)",
+    "the task list the office runs (Google Tasks, Planner or a sheet), which issues the exception_id for each open question"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/folder-brief" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "document.received", "wake": "webhook" },
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "report.published",
+      "write": "the one-screen brief, written as one Doc into the folder it covers after each run: current sources with owner and edition, stale ones (superseded editions, copies, files gone), the open questions as task ids with owners, and what changed this run, every line by register id and location and nothing composed from the files",
+      "readback": "the drive returns the brief's file id as the report_id, and reading that id back returns the Doc with the run time and the register ids it lists; no id back means no brief was published and the run raises an exception to the register keeper"
+    },
+    {
+      "event": "exception.raised",
+      "write": "a task on the office's task list naming the person who owns it, with a due date: an edition the office expects and the folder does not hold, a file whose only owner is a team, two copies waiting for a person to pick the one the office works from, client material waiting for someone to set who may read it and for how long, an instrument with no edition printed, or a registered file gone from the folder",
+      "readback": "the task list returns an exception_id, and reading that id back returns what is expected, the owner and the due date; no id back means nothing was raised, and the file stays off the index"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "kb.expected_edition_missing",
+      "kb.owner_not_a_person",
+      "kb.canonical_copy_undecided",
+      "kb.customer_access_undecided",
+      "kb.instrument_without_edition",
+      "kb.source_gone_from_drive"
+    ],
+    "owner_field": "owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "register.id",
+      "register.kind",
+      "register.owner",
+      "register.location",
+      "register.edition",
+      "register.checksum",
+      "register.retrieved_at",
+      "register.status",
+      "register.duplicate_of",
+      "register.access_list",
+      "register.expires_on",
+      "register.superseded_checksums"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Drive Docs Memory",
+    "original_author": "Markus",
+    "share_link": "https://x.ai/bot/tH467e0VuoKeME1YdDD_m",
+    "licence_or_permission": "reimplementation"
+  }
+}
