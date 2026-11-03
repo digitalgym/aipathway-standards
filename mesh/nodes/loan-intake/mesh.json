@@ -1,0 +1,55 @@
+{
+  "slug": "loan-intake",
+  "name": "Loan Intake",
+  "office_task": "Turn every lead and client call into the one client file in our CRM, chase each missing figure or document as an owned task, and hold the file for a broker to approve.",
+  "verticals": ["accounting-bookkeeping"],
+  "standards": ["advice-file"],
+  "systems_of_record": [
+    "the broker's CRM that issues the client file id (the client file, its deal record and its tasks)",
+    "the network's dated lender-panel library, where a named person accepts each clause"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/loan-intake" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "webhook", "schedule"],
+  "consumes": [
+    { "event": "call.received", "wake": "webhook" },
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "evidence.filed",
+      "write": "the interview's consent record, transcript and verbatim lines with their spans, filed on the client's one file in the broker CRM (its deal record, carried as job_id) with the resolved fields and the computed gaps, by that file's own id",
+      "readback": "the CRM returns the file's external id, and reading the client's file by id returns that id with the interview id appended; a read by interview id lists the verbatim, the file, the tasks and the coaching together. A null external id is a failed interview and raises an exception"
+    },
+    {
+      "event": "exception.raised",
+      "write": "a task on the client file naming the person who owns it: one per blocking gap (a missing figure or document) with a due date, raised once; a refused recording notice for a person to take notes; a lender-policy question declined to the Head of Credit; a breach_suspect coaching finding for the compliance officer",
+      "readback": "the CRM returns a task id, and reading the file's tasks back returns it with the field key, the owner and the due date; a gap that already has a task is not raised again"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "advice.consent_not_recorded",
+      "advice.file_write_failed",
+      "advice.file_readback_failed",
+      "advice.blocking_gap",
+      "advice.policy_declined",
+      "advice.breach_suspect"
+    ],
+    "owner_field": "owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["file.external_id", "file.interview_ids", "file.missing", "interview.consent", "task.owner", "task.due", "draft.queue"]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Qualify mortgage leads and collect documents with Gemini, Gmail, Drive, Telegram, and Supabase",
+    "original_author": "Shashwat Singh",
+    "share_link": "https://n8n.io/workflows/13387",
+    "licence_or_permission": "reimplementation"
+  }
+}
