@@ -1,0 +1,58 @@
+{
+  "slug": "promise-watch",
+  "name": "Promise Watch",
+  "office_task": "Turn every client's \"I'll pay by\" reply into a dated promise on the invoice, and when that date passes unpaid, draft the next chase for the owner to approve.",
+  "verticals": ["b2b-office"],
+  "standards": ["debtor-chasing"],
+  "systems_of_record": [
+    "Xero (the ledger that issues the invoice_id; the promise is written onto the invoice)",
+    "Gmail (the watched inbox that issues the message_id of each client reply and holds the chase drafts)"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/promise-watch" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "invoice.overdue", "wake": "schedule" },
+    { "event": "email.received", "wake": "webhook" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "promise.recorded",
+      "write": "a dated promise to pay on the invoice the client's reply names by its invoice number: date (never empty), amount (may be empty), method if offered, and when it was captured; the follow-up moves to that date",
+      "readback": "GET /api.xro/2.0/Invoices/{InvoiceID}/History returns the promise note with its date and capture time; no note back means it was not written and an exception is raised instead"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the invoice naming the person who owns it: a chase drafted and waiting for approval, a broken promise, a dispute, a relationship-sized balance lifted out of the run, a reply with no single invoice id, a reply with no date, or an override refused for want of a named approver",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the invoice_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "chase_drafted_awaiting_approval",
+      "dispute_open",
+      "relationship_sized_balance",
+      "promise.no_invoice_ref",
+      "promise.no_date",
+      "promise.write_failed",
+      "override.refused_no_approver",
+      "held_open_exception"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.invoice_id", "seam.promise_date", "seam.promise_amount", "seam.promise_captured_at", "seam.chase_status", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "PayDate Chase",
+    "original_author": "Skip Rogers",
+    "share_link": "https://x.ai/bot/QKd4byLZMI9Amf9dRlDP1",
+    "licence_or_permission": "reimplementation"
+  }
+}
