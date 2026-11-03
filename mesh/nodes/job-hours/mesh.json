@@ -1,0 +1,65 @@
+{
+  "slug": "job-hours",
+  "name": "Job Hours",
+  "office_task": "When a tech closes a job or the pay week ends, check every hour against the job it was booked to, put the odd ones in front of their owner, and export to payroll only what a person released.",
+  "verticals": ["trades-building"],
+  "standards": ["timesheet-check"],
+  "systems_of_record": [
+    "the job system that issues the job_id and holds the allocations, the roster and the techs' time entries (ServiceM8, Simpro, Tradify, Fergus or similar)",
+    "the business's rule store holding each award edition as a dated row",
+    "the Australian payroll system that takes one export per pay period and returns its id (Xero Payroll, Employment Hero, KeyPay or MYOB)",
+    "the exception desk the business runs, for the anomaly queue"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/job-hours" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "job.completed", "wake": "webhook" },
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "report.published",
+      "write": "the pay period's hours report into the system the payroll officer opens: hours by tech and day with daily and weekly totals that list the entry ids they sum, each line's job_id, anomalies found and resolved, the award edition on every card, who released the period or that nobody has, and the payroll export id once one exists. Published every run, a clean period included",
+      "readback": "the report store returns a report_id, and reading that id back returns the period id, the totals with their entry ids and the release field; the payroll export is read back by period before any write, and a null external id is reported as a failed export, never a success"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an anomaly on the time entry, one of the six closed kinds (over_hours, overlap, missing_break, not_rostered, not_allocated, rule_unclear), naming its owner: the tech's supervisor, whoever keeps the roster, the job's owner, or whoever answers for the award",
+      "readback": "the exception desk returns an exception_id, and reading the period's queue back returns that id with the entry id, the kind and the owner; one anomaly per entry and kind, so a retried wake raises none twice"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "timesheet.over_hours",
+      "timesheet.overlap",
+      "timesheet.missing_break",
+      "timesheet.not_rostered",
+      "timesheet.not_allocated",
+      "timesheet.rule_unclear"
+    ],
+    "owner_field": "owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.period_id",
+      "seam.job_id",
+      "seam.anomaly_owner",
+      "seam.card_rule_edition",
+      "seam.released_by",
+      "seam.export_external_id",
+      "seam.report_id"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Kairos · Timesheet Manager",
+    "original_author": "ᑕᕼIᑕᗩᘜO MAGA",
+    "share_link": "https://x.ai/bot/KvPsNsHBQIkadJ9HBZ6D0",
+    "licence_or_permission": "reimplementation"
+  }
+}

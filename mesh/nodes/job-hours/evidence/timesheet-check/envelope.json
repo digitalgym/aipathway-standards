@@ -1,0 +1,4083 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793713541445",
+  "standard": "timesheet-check-build-standard",
+  "spec": "AIP-BS-TIMESHEET-CHECK",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-03T13:45:41.432Z",
+  "finishedAt": "2026-11-03T13:45:41.445Z",
+  "results": [
+    {
+      "checkId": "entry-traces-to-person-day-job",
+      "n": 1,
+      "title": "Every entry traces to a person, a day and a job",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The contact list and the allocations are read before any anomaly is raised. Every line on the sheet names a person, a date and an allocated job. The unallocated entry is an anomaly of kind not_allocated and is not a line.",
+      "actual": "1 anomaly(ies): E8:not_allocated; lines 7",
+      "stimulus": {
+        "description": "Eight entries across three people, one of them on a job the person was never allocated, with the roster and the allocations in the system.",
+        "now": "2026-09-28T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "entry-traces-to-person-day-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": null,
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 8
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 8
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-28T00:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "BCGOA-2025:2025-07-01",
+              "BCGOA-2026:2026-10-01"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 8,
+            "ids": [
+              "E1",
+              "E2",
+              "E3",
+              "E4",
+              "E5",
+              "E6",
+              "E7",
+              "E8"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 0,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "E8",
+            "kind": "not_allocated",
+            "owner": "Operations manager"
+          },
+          "response": {
+            "id": "A1"
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P3",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 2,
+            "anomalies": 1,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "exportFor": "2026-W39"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 7,
+            "totals": 10,
+            "anomaliesFound": 1,
+            "anomaliesResolved": 0,
+            "release": null,
+            "exportExternalId": null
+          },
+          "response": {
+            "id": "R2"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "totals-computed-never-typed",
+      "n": 2,
+      "title": "Daily and weekly totals are computed from entries, never typed",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every published total lists the entry ids it derives from and its hours equal the sum of those entries' hours after breaks. A total with no entry ids, or with hours that do not add up, fails.",
+      "actual": "totals: P1:2026-09-21=8[C1+C2], P1:week=16[C1+C2+C3], P1:2026-09-22=8[C3], P2:2026-09-21=7.5[C4], P2:week=13.5[C4+C5], P2:2026-09-23=6[C5]",
+      "stimulus": {
+        "description": "A period of clean entries for two people, with a daily and a weekly total expected for each.",
+        "now": "2026-09-28T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "totals-computed-never-typed"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": null,
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 5
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-28T00:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "BCGOA-2025:2025-07-01",
+              "BCGOA-2026:2026-10-01"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 5,
+            "ids": [
+              "C1",
+              "C2",
+              "C3",
+              "C4",
+              "C5"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 0,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 2,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "exportFor": "2026-W39"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 5,
+            "totals": 6,
+            "anomaliesFound": 0,
+            "anomaliesResolved": 0,
+            "release": null,
+            "exportExternalId": null
+          },
+          "response": {
+            "id": "R1"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "anomalies-are-a-closed-list",
+      "n": 3,
+      "title": "An anomaly is one of a closed list of kinds, and it has an owner",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The overlap, the over-hours day and the unallocated job are each raised as an anomaly with a kind from the list and an owner's name. No anomaly carries a kind outside the list or an empty owner.",
+      "actual": "S1:overlap->Sam Hart, S2:overlap->Sam Hart, S4:over_hours->Sam Hart, S6:not_allocated->Operations manager",
+      "stimulus": {
+        "description": "The eight seeded entries, which include one overlapping pair, one twelve-hour day and one unallocated job.",
+        "now": "2026-09-28T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "anomalies-are-a-closed-list"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": null,
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 8
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 8
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-28T00:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "BCGOA-2025:2025-07-01",
+              "BCGOA-2026:2026-10-01"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 8,
+            "ids": [
+              "S1",
+              "S2",
+              "S3",
+              "S4",
+              "S5",
+              "S6",
+              "S7",
+              "S8"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 0,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "S1",
+            "kind": "overlap",
+            "owner": "Sam Hart"
+          },
+          "response": {
+            "id": "A1"
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "S2",
+            "kind": "overlap",
+            "owner": "Sam Hart"
+          },
+          "response": {
+            "id": "A2"
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "S4",
+            "kind": "over_hours",
+            "owner": "Sam Hart"
+          },
+          "response": {
+            "id": "A3"
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "S6",
+            "kind": "not_allocated",
+            "owner": "Operations manager"
+          },
+          "response": {
+            "id": "A4"
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 2,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 2,
+            "anomalies": 1,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P3",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 1,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "exportFor": "2026-W39"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 4,
+            "totals": 7,
+            "anomaliesFound": 4,
+            "anomaliesResolved": 0,
+            "release": null,
+            "exportExternalId": null
+          },
+          "response": {
+            "id": "R5"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "award-rule-is-cited-with-an-edition",
+      "n": 4,
+      "title": "Any penalty, overtime or allowance applied cites the rule, its edition and its effective date",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The rule store is read before any card is written. Both entries carry a card with a rule id the store holds, an edition and an effective date. A line that applies a rule and has no card fails.",
+      "actual": "cards: W1:BCGOA-2025@2025-07-01, W2:BCGOA-2025@2025-07-01",
+      "stimulus": {
+        "description": "One entry over eight hours on a weekday and one entry on a Saturday, with two rule editions in the store.",
+        "now": "2026-09-28T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "award-rule-is-cited-with-an-edition"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": null,
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-28T00:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "BCGOA-2025:2025-07-01",
+              "BCGOA-2026:2026-10-01"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "W1",
+              "W2",
+              "W3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 0,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 2,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 1,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "entryId": "W1",
+            "ruleId": "BCGOA-2025",
+            "edition": "2025-07-01",
+            "effectiveFrom": "2025-07-01"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "entryId": "W2",
+            "ruleId": "BCGOA-2025",
+            "edition": "2025-07-01",
+            "effectiveFrom": "2025-07-01"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "exportFor": "2026-W39"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 3,
+            "totals": 5,
+            "anomaliesFound": 0,
+            "anomaliesResolved": 0,
+            "release": null,
+            "exportExternalId": null
+          },
+          "response": {
+            "id": "R1"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "superseded-rule-cannot-apply",
+      "n": 5,
+      "title": "A retired rule edition cannot apply to the next period",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Cards in the first period cite the first edition. Cards in the later period cite the second edition only. A card in the later period citing the retired edition fails.",
+      "actual": "cards: W1:2025-07-01, W2:2025-07-01, L1:2026-10-01, L2:2026-10-01",
+      "stimulus": {
+        "description": "A period run under the first edition, then the first edition retired and a later period run with the second edition in force.",
+        "now": "2026-09-28T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "superseded-rule-cannot-apply"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": null,
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 5
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-28T00:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "BCGOA-2025:2025-07-01",
+              "BCGOA-2026:2026-10-01"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "W1",
+              "W2",
+              "W3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 0,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 2,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 1,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "entryId": "W1",
+            "ruleId": "BCGOA-2025",
+            "edition": "2025-07-01",
+            "effectiveFrom": "2025-07-01"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "entryId": "W2",
+            "ruleId": "BCGOA-2025",
+            "edition": "2025-07-01",
+            "effectiveFrom": "2025-07-01"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "exportFor": "2026-W39"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 3,
+            "totals": 5,
+            "anomaliesFound": 0,
+            "anomaliesResolved": 0,
+            "release": null,
+            "exportExternalId": null
+          },
+          "response": {
+            "id": "R1"
+          }
+        },
+        {
+          "at": "2026-10-12T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W41",
+            "releaseRequested": null,
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-10-12T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-12T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-10-12T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 5
+          }
+        },
+        {
+          "at": "2026-10-12T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-10-12T00:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "BCGOA-2025:2025-07-01:retired",
+              "BCGOA-2026:2026-10-01"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-12T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W41"
+          },
+          "response": {
+            "count": 2,
+            "ids": [
+              "L1",
+              "L2"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-12T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W41"
+          },
+          "response": {
+            "count": 0,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-10-12T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W41"
+          },
+          "response": {
+            "entries": 1,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-10-12T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W41"
+          },
+          "response": {
+            "entries": 1,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-10-12T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "entryId": "L1",
+            "ruleId": "BCGOA-2026",
+            "edition": "2026-10-01",
+            "effectiveFrom": "2026-10-01"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-12T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "entryId": "L2",
+            "ruleId": "BCGOA-2026",
+            "edition": "2026-10-01",
+            "effectiveFrom": "2026-10-01"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-12T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "exportFor": "2026-W41"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-10-12T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W41",
+            "lines": 2,
+            "totals": 4,
+            "anomaliesFound": 0,
+            "anomaliesResolved": 0,
+            "release": null,
+            "exportExternalId": null
+          },
+          "response": {
+            "id": "R2"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "no-interpretation",
+      "n": 6,
+      "title": "An entry the dated rule does not plainly cover is parked for a person",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The entry is an anomaly of kind rule_unclear with an owner, carries no card, and is not a line on the sheet. A card written for it, from any edition, fails.",
+      "actual": "D1 anomalies: rule_unclear->Award owner; D1 cards 0",
+      "stimulus": {
+        "description": "One entry flagged as a disputed break, which no rule edition in the store plainly covers.",
+        "now": "2026-09-28T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "no-interpretation"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": null,
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-28T00:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "BCGOA-2025:2025-07-01",
+              "BCGOA-2026:2026-10-01"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 2,
+            "ids": [
+              "D1",
+              "D2"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 0,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "D1",
+            "kind": "rule_unclear",
+            "owner": "Award owner"
+          },
+          "response": {
+            "id": "A1"
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 2,
+            "anomalies": 1,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "exportFor": "2026-W39"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 1,
+            "totals": 2,
+            "anomaliesFound": 1,
+            "anomaliesResolved": 0,
+            "release": null,
+            "exportExternalId": null
+          },
+          "response": {
+            "id": "R2"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "anomaly-is-resolved-by-a-person-with-a-reason",
+      "n": 7,
+      "title": "An anomaly leaves the queue only with a person's name and a reason",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every anomaly is resolved with the name and reason the person gave, with the decision attached as evidence. An anomaly cleared with no person, or cleared before any person decided, fails.",
+      "actual": "A1:overlap decided Sam Hart resolved Sam Hart/approved ev 1; A2:overlap decided Sam Hart resolved Sam Hart/corrected ev 1; A3:over_hours decided Sam Hart resolved Sam Hart/approved ev 1; A4:not_allocated decided Operations manager resolved Operations manager/rejected ev 1",
+      "stimulus": {
+        "description": "The seeded anomalies raised on a first run, then a named person decides each one in the queue, then a second run.",
+        "now": "2026-09-28T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "anomaly-is-resolved-by-a-person-with-a-reason"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": null,
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 8
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 8
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-28T00:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "BCGOA-2025:2025-07-01",
+              "BCGOA-2026:2026-10-01"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 8,
+            "ids": [
+              "S1",
+              "S2",
+              "S3",
+              "S4",
+              "S5",
+              "S6",
+              "S7",
+              "S8"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 0,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "S1",
+            "kind": "overlap",
+            "owner": "Sam Hart"
+          },
+          "response": {
+            "id": "A1"
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "S2",
+            "kind": "overlap",
+            "owner": "Sam Hart"
+          },
+          "response": {
+            "id": "A2"
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "S4",
+            "kind": "over_hours",
+            "owner": "Sam Hart"
+          },
+          "response": {
+            "id": "A3"
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "S6",
+            "kind": "not_allocated",
+            "owner": "Operations manager"
+          },
+          "response": {
+            "id": "A4"
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 2,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 2,
+            "anomalies": 1,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P3",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 1,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "exportFor": "2026-W39"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 4,
+            "totals": 7,
+            "anomaliesFound": 4,
+            "anomaliesResolved": 0,
+            "release": null,
+            "exportExternalId": null
+          },
+          "response": {
+            "id": "R5"
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": null,
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 8
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 8
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-28T02:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "BCGOA-2025:2025-07-01",
+              "BCGOA-2026:2026-10-01"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 8,
+            "ids": [
+              "S1",
+              "S2",
+              "S3",
+              "S4",
+              "S5",
+              "S6",
+              "S7",
+              "S8"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 4,
+            "open": [
+              "A1",
+              "A2",
+              "A3",
+              "A4"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "resolve": "A1",
+            "by": "Sam Hart",
+            "reason": "approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "anomalyId": "A1",
+            "ref": "decision by Sam Hart: approved at 2026-09-28T01:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "resolve": "A2",
+            "by": "Sam Hart",
+            "reason": "corrected"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "anomalyId": "A2",
+            "ref": "decision by Sam Hart: corrected at 2026-09-28T01:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "resolve": "A3",
+            "by": "Sam Hart",
+            "reason": "approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "anomalyId": "A3",
+            "ref": "decision by Sam Hart: approved at 2026-09-28T01:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "resolve": "A4",
+            "by": "Operations manager",
+            "reason": "rejected"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "anomalyId": "A4",
+            "ref": "decision by Operations manager: rejected at 2026-09-28T01:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 2,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 2,
+            "anomalies": 1,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P3",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 1,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "entryId": "S4",
+            "ruleId": "BCGOA-2025",
+            "edition": "2025-07-01",
+            "effectiveFrom": "2025-07-01"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "exportFor": "2026-W39"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 7,
+            "totals": 9,
+            "anomaliesFound": 4,
+            "anomaliesResolved": 4,
+            "release": null,
+            "exportExternalId": null
+          },
+          "response": {
+            "id": "R6"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "nothing-reaches-payroll-without-a-release",
+      "n": 8,
+      "title": "Nothing reaches payroll without a release by a named person",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "No export exists after the first run. After the second, one export exists, its write comes after a release carrying the person's name, and no anomaly was open when it was written.",
+      "actual": "writes: 2026-09-28T04:00:00.000Z open=0 by=Pat Nguyen",
+      "stimulus": {
+        "description": "A first run with anomalies open and nobody having released, then the anomalies decided, a named person releasing, and a second run.",
+        "now": "2026-09-28T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "nothing-reaches-payroll-without-a-release"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": null,
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 8
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 8
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-28T00:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "BCGOA-2025:2025-07-01",
+              "BCGOA-2026:2026-10-01"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 8,
+            "ids": [
+              "S1",
+              "S2",
+              "S3",
+              "S4",
+              "S5",
+              "S6",
+              "S7",
+              "S8"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 0,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "S1",
+            "kind": "overlap",
+            "owner": "Sam Hart"
+          },
+          "response": {
+            "id": "A1"
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "S2",
+            "kind": "overlap",
+            "owner": "Sam Hart"
+          },
+          "response": {
+            "id": "A2"
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "S4",
+            "kind": "over_hours",
+            "owner": "Sam Hart"
+          },
+          "response": {
+            "id": "A3"
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "S6",
+            "kind": "not_allocated",
+            "owner": "Operations manager"
+          },
+          "response": {
+            "id": "A4"
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 2,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 2,
+            "anomalies": 1,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P3",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 1,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "exportFor": "2026-W39"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 4,
+            "totals": 7,
+            "anomaliesFound": 4,
+            "anomaliesResolved": 0,
+            "release": null,
+            "exportExternalId": null
+          },
+          "response": {
+            "id": "R5"
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": "Pat Nguyen",
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 8
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 8
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-28T02:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "BCGOA-2025:2025-07-01",
+              "BCGOA-2026:2026-10-01"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 8,
+            "ids": [
+              "S1",
+              "S2",
+              "S3",
+              "S4",
+              "S5",
+              "S6",
+              "S7",
+              "S8"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 4,
+            "open": [
+              "A1",
+              "A2",
+              "A3",
+              "A4"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 2,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 2,
+            "anomalies": 1,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P3",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 1,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "exportFor": "2026-W39"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 4,
+            "totals": 7,
+            "anomaliesFound": 4,
+            "anomaliesResolved": 0,
+            "release": null,
+            "exportExternalId": null
+          },
+          "response": {
+            "id": "R6"
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": "Pat Nguyen",
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 8
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 8
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-28T04:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "BCGOA-2025:2025-07-01",
+              "BCGOA-2026:2026-10-01"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 8,
+            "ids": [
+              "S1",
+              "S2",
+              "S3",
+              "S4",
+              "S5",
+              "S6",
+              "S7",
+              "S8"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 4,
+            "open": [
+              "A1",
+              "A2",
+              "A3",
+              "A4"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "resolve": "A1",
+            "by": "Sam Hart",
+            "reason": "approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "anomalyId": "A1",
+            "ref": "decision by Sam Hart: approved at 2026-09-28T03:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "resolve": "A2",
+            "by": "Sam Hart",
+            "reason": "approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "anomalyId": "A2",
+            "ref": "decision by Sam Hart: approved at 2026-09-28T03:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "resolve": "A3",
+            "by": "Sam Hart",
+            "reason": "approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "anomalyId": "A3",
+            "ref": "decision by Sam Hart: approved at 2026-09-28T03:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "resolve": "A4",
+            "by": "Operations manager",
+            "reason": "approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "anomalyId": "A4",
+            "ref": "decision by Operations manager: approved at 2026-09-28T03:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 2,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 2,
+            "anomalies": 1,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P3",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 1,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "entryId": "S4",
+            "ruleId": "BCGOA-2025",
+            "edition": "2025-07-01",
+            "effectiveFrom": "2025-07-01"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "exportFor": "2026-W39"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "2026-W39",
+            "person": "Pat Nguyen"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 8,
+            "totals": [
+              "P1:2026-09-21=9.5",
+              "P1:week=17.5",
+              "P1:2026-09-22=8",
+              "P2:2026-09-22=12",
+              "P2:week=20",
+              "P2:2026-09-23=8",
+              "P3:2026-09-23=8",
+              "P3:week=24",
+              "P3:2026-09-24=8",
+              "P3:2026-09-25=8"
+            ],
+            "releasedBy": "Pat Nguyen",
+            "openAtWrite": 0
+          },
+          "response": {
+            "id": "EXP7",
+            "externalId": "payroll-EXP7"
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 8,
+            "totals": 10,
+            "anomaliesFound": 4,
+            "anomaliesResolved": 4,
+            "release": "Pat Nguyen",
+            "exportExternalId": "payroll-EXP7"
+          },
+          "response": {
+            "id": "R8"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-export-per-period",
+      "n": 9,
+      "title": "One export per period, written once, updated on a second release",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Exactly one export exists for the period, it carries the payroll system's external id, and the second run produced an update or no write. A second export, or a null id treated as success, fails.",
+      "actual": "1 export(s); writes 1; report ids payroll-EXP1,payroll-EXP1",
+      "stimulus": {
+        "description": "The same released period run twice, an hour apart.",
+        "now": "2026-09-28T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-export-per-period"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": "Pat Nguyen",
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 5
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-28T00:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "BCGOA-2025:2025-07-01",
+              "BCGOA-2026:2026-10-01"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 4,
+            "ids": [
+              "K1",
+              "K2",
+              "K3",
+              "K4"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 0,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 2,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 1,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P3",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 1,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "exportFor": "2026-W39"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "2026-W39",
+            "person": "Pat Nguyen"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 4,
+            "totals": [
+              "P1:2026-09-21=8",
+              "P1:week=16",
+              "P1:2026-09-22=8",
+              "P2:2026-09-21=8",
+              "P2:week=8",
+              "P3:2026-09-24=8",
+              "P3:week=8"
+            ],
+            "releasedBy": "Pat Nguyen",
+            "openAtWrite": 0
+          },
+          "response": {
+            "id": "EXP1",
+            "externalId": "payroll-EXP1"
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 4,
+            "totals": 7,
+            "anomaliesFound": 0,
+            "anomaliesResolved": 0,
+            "release": "Pat Nguyen",
+            "exportExternalId": "payroll-EXP1"
+          },
+          "response": {
+            "id": "R2"
+          }
+        },
+        {
+          "at": "2026-09-28T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": "Pat Nguyen",
+            "exportExternalId": "payroll-EXP1"
+          }
+        },
+        {
+          "at": "2026-09-28T01:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 5
+          }
+        },
+        {
+          "at": "2026-09-28T01:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-09-28T01:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-28T01:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "BCGOA-2025:2025-07-01",
+              "BCGOA-2026:2026-10-01"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 4,
+            "ids": [
+              "K1",
+              "K2",
+              "K3",
+              "K4"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 0,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-28T01:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 2,
+            "anomalies": 0,
+            "cards": 0,
+            "release": "Pat Nguyen"
+          }
+        },
+        {
+          "at": "2026-09-28T01:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 1,
+            "anomalies": 0,
+            "cards": 0,
+            "release": "Pat Nguyen"
+          }
+        },
+        {
+          "at": "2026-09-28T01:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P3",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 1,
+            "anomalies": 0,
+            "cards": 0,
+            "release": "Pat Nguyen"
+          }
+        },
+        {
+          "at": "2026-09-28T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "exportFor": "2026-W39"
+          },
+          "response": {
+            "exportId": "EXP1",
+            "externalId": "payroll-EXP1"
+          }
+        },
+        {
+          "at": "2026-09-28T01:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 4,
+            "totals": 7,
+            "anomaliesFound": 0,
+            "anomaliesResolved": 0,
+            "release": "Pat Nguyen",
+            "exportExternalId": "payroll-EXP1"
+          },
+          "response": {
+            "id": "R3"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "the-run-publishes-regardless",
+      "n": 10,
+      "title": "Every period publishes hours, anomalies found and resolved, and the release, including a clean one",
+      "verdict": "pass",
+      "held": true,
+      "expected": "One report exists for the period with hours by person, anomalies found and resolved both zero, and the release field present. A clean period with no report fails.",
+      "actual": "1 report(s); [{\"found\":0,\"resolved\":0,\"release\":null}]",
+      "stimulus": {
+        "description": "A period with only clean entries and nothing to raise.",
+        "now": "2026-09-28T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "the-run-publishes-regardless"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": null,
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 5
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-28T00:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "BCGOA-2025:2025-07-01",
+              "BCGOA-2026:2026-10-01"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 4,
+            "ids": [
+              "K1",
+              "K2",
+              "K3",
+              "K4"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 0,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 2,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 1,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P3",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 1,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "exportFor": "2026-W39"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 4,
+            "totals": 7,
+            "anomaliesFound": 0,
+            "anomaliesResolved": 0,
+            "release": null,
+            "exportExternalId": null
+          },
+          "response": {
+            "id": "R1"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "the-record-by-person-and-period",
+      "n": 11,
+      "title": "Entries, anomalies, resolutions, rules cited and the release are retrievable by person and period",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A read by person and period returns the entries, each anomaly with its resolution and evidence, the cards with rule id and edition, and the release with a name. A record missing the release or a resolution fails.",
+      "actual": "P1: 3 entries, 2 anomalies, 1 cards, release Pat Nguyen; P2: 1 entries, 1 anomalies, 1 cards, release Pat Nguyen; P3: 2 entries, 1 anomalies, 0 cards, release Pat Nguyen",
+      "stimulus": {
+        "description": "One period run through anomalies, decisions, release and export for three people.",
+        "now": "2026-09-28T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "the-record-by-person-and-period"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": null,
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-28T00:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "BCGOA-2025:2025-07-01",
+              "BCGOA-2026:2026-10-01"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 6,
+            "ids": [
+              "M1",
+              "M2",
+              "M3",
+              "M4",
+              "M5",
+              "M6"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 0,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "M1",
+            "kind": "overlap",
+            "owner": "Sam Hart"
+          },
+          "response": {
+            "id": "A1"
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "M2",
+            "kind": "overlap",
+            "owner": "Sam Hart"
+          },
+          "response": {
+            "id": "A2"
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "M4",
+            "kind": "over_hours",
+            "owner": "Sam Hart"
+          },
+          "response": {
+            "id": "A3"
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "M5",
+            "kind": "not_allocated",
+            "owner": "Operations manager"
+          },
+          "response": {
+            "id": "A4"
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 2,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P3",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 2,
+            "anomalies": 1,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "entryId": "M3",
+            "ruleId": "BCGOA-2025",
+            "edition": "2025-07-01",
+            "effectiveFrom": "2025-07-01"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "exportFor": "2026-W39"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 2,
+            "totals": 4,
+            "anomaliesFound": 4,
+            "anomaliesResolved": 0,
+            "release": null,
+            "exportExternalId": null
+          },
+          "response": {
+            "id": "R5"
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": "Pat Nguyen",
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-28T02:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "BCGOA-2025:2025-07-01",
+              "BCGOA-2026:2026-10-01"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 6,
+            "ids": [
+              "M1",
+              "M2",
+              "M3",
+              "M4",
+              "M5",
+              "M6"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 4,
+            "open": [
+              "A1",
+              "A2",
+              "A3",
+              "A4"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "resolve": "A1",
+            "by": "Sam Hart",
+            "reason": "approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "anomalyId": "A1",
+            "ref": "decision by Sam Hart: approved at 2026-09-28T01:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "resolve": "A2",
+            "by": "Sam Hart",
+            "reason": "approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "anomalyId": "A2",
+            "ref": "decision by Sam Hart: approved at 2026-09-28T01:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "resolve": "A3",
+            "by": "Sam Hart",
+            "reason": "approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "anomalyId": "A3",
+            "ref": "decision by Sam Hart: approved at 2026-09-28T01:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "resolve": "A4",
+            "by": "Operations manager",
+            "reason": "approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "anomalyId": "A4",
+            "ref": "decision by Operations manager: approved at 2026-09-28T01:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 2,
+            "cards": 1,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 1,
+            "anomalies": 1,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P3",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 2,
+            "anomalies": 1,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "entryId": "M4",
+            "ruleId": "BCGOA-2025",
+            "edition": "2025-07-01",
+            "effectiveFrom": "2025-07-01"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "exportFor": "2026-W39"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "2026-W39",
+            "person": "Pat Nguyen"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 6,
+            "totals": [
+              "P1:2026-09-21=9.5",
+              "P1:week=15",
+              "P1:2026-09-26=5.5",
+              "P2:2026-09-22=12",
+              "P2:week=12",
+              "P3:2026-09-23=8",
+              "P3:week=16",
+              "P3:2026-09-24=8"
+            ],
+            "releasedBy": "Pat Nguyen",
+            "openAtWrite": 0
+          },
+          "response": {
+            "id": "EXP6",
+            "externalId": "payroll-EXP6"
+          }
+        },
+        {
+          "at": "2026-09-28T02:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 6,
+            "totals": 8,
+            "anomaliesFound": 4,
+            "anomaliesResolved": 4,
+            "release": "Pat Nguyen",
+            "exportExternalId": "payroll-EXP6"
+          },
+          "response": {
+            "id": "R7"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 12,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the rules, the roster and the release runs on.",
+        "now": "2026-11-03T13:45:41.445Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 13,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "The overlap and the unallocated job are in the anomaly queue with owners, the entry the new edition does not plainly cover is parked, the export exists in payroll with its id, and the release names the person who gave it.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "A real period of entries captured on site or in the app, on the business's own job system and payroll.",
+        "now": "2026-11-03T13:45:41.445Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 13,
+    "pass": 10,
+    "fail": 0,
+    "shapeOnly": 1,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
