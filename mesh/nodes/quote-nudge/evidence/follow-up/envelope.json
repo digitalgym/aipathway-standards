@@ -1,0 +1,3527 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793710726184",
+  "standard": "follow-up-build-standard",
+  "spec": "AIP-BS-FOLLOW-UP",
+  "specVersion": "2026-10-05",
+  "environment": "stub",
+  "startedAt": "2026-11-03T12:58:46.176Z",
+  "finishedAt": "2026-11-03T12:58:46.184Z",
+  "results": [
+    {
+      "checkId": "open-item-is-an-object",
+      "n": 1,
+      "title": "Every thing owed is an open item with a kind, a record, a person and a due date",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every touch traces to an item carrying all four fields. The note receives no touch. A touch on anything that is not an open item fails.",
+      "actual": "touches: 1001/sms, 1002/sms",
+      "stimulus": {
+        "description": "Five well-formed open items of mixed kinds, plus one note somebody typed with no kind, no record and no due date.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "open-item-is-an-object"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 6,
+            "open": [
+              "1001",
+              "1002",
+              "V1",
+              "C1",
+              "P1",
+              "NOTE"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "1001",
+              "1002"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "1001"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "1001",
+            "channel": "sms",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "1001",
+            "channel": "sms",
+            "text": "Hi, just checking the flooring quote Q-1001 came through all right. No rush at all: when you have had a chance to look, a yes or a no either way helps us plan the install calendar. If you have questions about the quote, reply here and I will answer them."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "1002"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "1002",
+            "channel": "sms",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "1002",
+            "channel": "sms",
+            "text": "Hi, just checking the flooring quote Q-1002 came through all right. No rush at all: when you have had a chance to look, a yes or a no either way helps us plan the install calendar. If you have questions about the quote, reply here and I will answer them."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "ranked-by-value-and-age-not-age-alone",
+      "n": 2,
+      "title": "The chase order is value at risk, then days open, never age alone",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The submitted order is by value at risk descending, then by days open. An order that puts the oldest small item first fails.",
+      "actual": "submitted order: D(18500/3d), B(3800/12d), C(3800/6d), E(1200/1d), A(450/20d)",
+      "stimulus": {
+        "description": "Five open items where the oldest carries the smallest value and the newest but one carries the largest.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "ranked-by-value-and-age-not-age-alone"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 5,
+            "open": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 5
+          },
+          "response": {
+            "order": [
+              "D",
+              "B",
+              "C",
+              "E",
+              "A"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "D"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "D",
+            "channel": "sms",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "D",
+            "channel": "sms",
+            "text": "Hi, just checking the flooring quote Q-D came through all right. No rush at all: when you have had a chance to look, a yes or a no either way helps us plan the install calendar. If you have questions about the quote, reply here and I will answer them."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "B"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "B",
+            "channel": "sms",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "B",
+            "channel": "sms",
+            "text": "Hi, just checking the flooring quote Q-B came through all right. No rush at all: when you have had a chance to look, a yes or a no either way helps us plan the install calendar. If you have questions about the quote, reply here and I will answer them."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "C"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "C",
+            "channel": "sms",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "C",
+            "channel": "sms",
+            "text": "Hi, just checking the flooring quote Q-C came through all right. No rush at all: when you have had a chance to look, a yes or a no either way helps us plan the install calendar. If you have questions about the quote, reply here and I will answer them."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "E"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "E",
+            "channel": "sms",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "E",
+            "channel": "sms",
+            "text": "Hi, just checking the flooring quote Q-E came through all right. No rush at all: when you have had a chance to look, a yes or a no either way helps us plan the install calendar. If you have questions about the quote, reply here and I will answer them."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "A"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "A",
+            "channel": "sms",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "A",
+            "channel": "sms",
+            "text": "Hi, just checking the flooring quote Q-A came through all right. No rush at all: when you have had a chance to look, a yes or a no either way helps us plan the install calendar. If you have questions about the quote, reply here and I will answer them."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "cadence-has-a-cap",
+      "n": 3,
+      "title": "Touches per item are capped and spaced, on a written cadence",
+      "verdict": "pass",
+      "held": true,
+      "expected": "No item carries more touches than its cap, no two touches on one item are closer than the gap, and every touch follows a gate decision that allowed it. A touch with no gate decision fails.",
+      "actual": "touches at: 2026-09-26, 2026-09-28, 2026-09-30",
+      "stimulus": {
+        "description": "A cadence of three touches, two days apart. The run driven every day for eight days on the same open item.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "cadence-has-a-cap"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "2001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "2001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "2001"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "2001",
+            "channel": "sms",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "2001",
+            "channel": "sms",
+            "text": "Hi, just checking the flooring quote Q-2001 came through all right. No rush at all: when you have had a chance to look, a yes or a no either way helps us plan the install calendar. If you have questions about the quote, reply here and I will answer them."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "2001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "2001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "2001"
+          },
+          "response": {
+            "touches": 1,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "2001",
+            "channel": "sms",
+            "touchesSoFar": 1
+          },
+          "response": {
+            "allowed": false,
+            "reason": "too_soon"
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "2001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "2001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "2001"
+          },
+          "response": {
+            "touches": 1,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "2001",
+            "channel": "sms",
+            "touchesSoFar": 1
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "2001",
+            "channel": "sms",
+            "text": "Hi, a quick follow-up on the flooring quote Q-2001. No rush at all: when you have had a chance to look, a yes or a no either way helps us plan the install calendar. If you have questions about the quote, reply here and I will answer them."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-29T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "2001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-29T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-29T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "2001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-29T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "2001"
+          },
+          "response": {
+            "touches": 2,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-29T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-29T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "2001",
+            "channel": "sms",
+            "touchesSoFar": 2
+          },
+          "response": {
+            "allowed": false,
+            "reason": "too_soon"
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "2001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "2001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "2001"
+          },
+          "response": {
+            "touches": 2,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "2001",
+            "channel": "sms",
+            "touchesSoFar": 2
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "2001",
+            "channel": "sms",
+            "text": "Hi, a quick follow-up on the flooring quote Q-2001. No rush at all: when you have had a chance to look, a yes or a no either way helps us plan the install calendar. If you have questions about the quote, reply here and I will answer them."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-01T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "2001"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-10-01T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "2001"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "2001"
+          },
+          "response": {
+            "touches": 3,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-10-01T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "itemId": "2001",
+            "reason": "cap_reached",
+            "to": "Sam Ortiz, sales manager",
+            "history": 3
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-01T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "person": "Sam Ortiz, sales manager",
+            "text": "Quote Q-2001 (5400 at risk) reached the cadence cap with no decision. 3 touch(es): sms 2026-09-26 sent; sms 2026-09-28 sent; sms 2026-09-30 sent. It is yours now."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-10-03T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "channel-follows-consent",
+      "n": 4,
+      "title": "A message goes only on a channel the contact has consented to",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every SMS or email touch has a consent row for that contact and that channel. The email-only contact receives email. A text to them fails.",
+      "actual": "touches: 3001/email, 3002/sms",
+      "stimulus": {
+        "description": "A cadence whose first channel is SMS, and a contact whose only recorded consent is email.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "channel-follows-consent"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 2,
+            "open": [
+              "3001",
+              "3002"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 3
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "3001",
+              "3002"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "3001"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms",
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "3001",
+            "channel": "email",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "3001",
+            "channel": "email",
+            "text": "Hi, just checking the flooring quote Q-3001 came through all right. No rush at all: when you have had a chance to look, a yes or a no either way helps us plan the install calendar. If you have questions about the quote, reply here and I will answer them."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "3002"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms",
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "3002",
+            "channel": "sms",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "3002",
+            "channel": "sms",
+            "text": "Hi, just checking the flooring quote Q-3002 came through all right. No rush at all: when you have had a chance to look, a yes or a no either way helps us plan the install calendar. If you have questions about the quote, reply here and I will answer them."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "the-call-discloses-first",
+      "n": 5,
+      "title": "A follow-up call opens with the AI identification and the recording notice",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "For every call, the first turn spoken is the disclosure and it carries both the identification and the recording notice. A call whose first turn is the ask fails.",
+      "actual": "4001 agent: Hi, this is an AI assistant calling on behalf of the showroom. This call is recorded. | 4001 agent: I'm calling about flooring quote Q-4001. Have you had a chance to decide on it? | 4001 contact: Should have it back to you in a few days | 4002 agent: Hi, this is an AI assistant calling on behalf of the showroom. This call is recorded. | 4002 agent: I'm calling about flooring quote Q-4002. Have you had a chance to decide on it? | 4002 contact: Should have it back to you in a few days",
+      "stimulus": {
+        "description": "A cadence whose channel is the call, on two open items.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "the-call-discloses-first"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 2,
+            "open": [
+              "4001",
+              "4002"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "4001",
+              "4002"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "4001"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "call"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "4001",
+            "channel": "call",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "itemId": "4001",
+            "text": "Hi, this is an AI assistant calling on behalf of the showroom. This call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "4001",
+            "text": "I'm calling about flooring quote Q-4001. Have you had a chance to decide on it?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "4001",
+            "listen": true
+          },
+          "response": {
+            "text": "Should have it back to you in a few days",
+            "heard": "date",
+            "value": "2026-10-02"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "record_promise",
+          "verb": "write",
+          "subject": "promise",
+          "request": {
+            "itemId": "4001",
+            "kind": "date",
+            "value": "2026-10-02"
+          },
+          "response": {
+            "id": "OUT1",
+            "recordedAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "4002"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "call"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "4002",
+            "channel": "call",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "itemId": "4002",
+            "text": "Hi, this is an AI assistant calling on behalf of the showroom. This call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "4002",
+            "text": "I'm calling about flooring quote Q-4002. Have you had a chance to decide on it?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "4002",
+            "listen": true
+          },
+          "response": {
+            "text": "Should have it back to you in a few days",
+            "heard": "date",
+            "value": "2026-10-02"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "record_promise",
+          "verb": "write",
+          "subject": "promise",
+          "request": {
+            "itemId": "4002",
+            "kind": "date",
+            "value": "2026-10-02"
+          },
+          "response": {
+            "id": "OUT2",
+            "recordedAt": "2026-09-26T00:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-ask-one-answer",
+      "n": 6,
+      "title": "The call asks for the one thing owed and records the answer as a date or a decision",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Each call has one ask and one recorded outcome for its item, the first with kind date and a real date as its value, the second with kind decision. A call with no outcome, or an outcome whose value is free text, fails.",
+      "actual": "outcomes: 5001 date=2026-10-02, 5002 decision=approved",
+      "stimulus": {
+        "description": "Two calls: one where the contact gives a day, one where the contact says the quote is approved.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-ask-one-answer"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 2,
+            "open": [
+              "5001",
+              "5002"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "5001",
+              "5002"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "5001"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "call"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "5001",
+            "channel": "call",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "itemId": "5001",
+            "text": "Hi, this is an AI assistant calling on behalf of the showroom. This call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "5001",
+            "text": "I'm calling about flooring quote Q-5001. Have you had a chance to decide on it?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "5001",
+            "listen": true
+          },
+          "response": {
+            "text": "We'll have decided by 2026-10-02",
+            "heard": "date",
+            "value": "2026-10-02"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "record_promise",
+          "verb": "write",
+          "subject": "promise",
+          "request": {
+            "itemId": "5001",
+            "kind": "date",
+            "value": "2026-10-02"
+          },
+          "response": {
+            "id": "OUT1",
+            "recordedAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "5002"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "call"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "5002",
+            "channel": "call",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "itemId": "5002",
+            "text": "Hi, this is an AI assistant calling on behalf of the showroom. This call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "5002",
+            "text": "I'm calling about flooring quote Q-5002. Have you had a chance to decide on it?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "5002",
+            "listen": true
+          },
+          "response": {
+            "text": "Approved, go ahead with the hybrid",
+            "heard": "decision",
+            "value": "approved"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "record_promise",
+          "verb": "write",
+          "subject": "promise",
+          "request": {
+            "itemId": "5002",
+            "kind": "decision",
+            "value": "approved"
+          },
+          "response": {
+            "id": "OUT2",
+            "recordedAt": "2026-09-26T00:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "stops-the-moment-it-arrives",
+      "n": 7,
+      "title": "When the item arrives, the chase stops that run",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The arrival is attached as evidence on the item, the item's status is arrived, and no touch on it carries a time after the arrival. A reminder sent after the document came back fails.",
+      "actual": "arrival: {\"itemId\":\"6001\",\"evidenceRef\":\"msg:acceptance-6001\",\"at\":\"2026-09-27T00:00:00.000Z\"}; touches: 2026-09-26T00:00:00.000Z",
+      "stimulus": {
+        "description": "One touch goes out, then the signed variation arrives between runs, then two more runs.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "stops-the-moment-it-arrives"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "6001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "6001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "6001"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "6001",
+            "channel": "sms",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "6001",
+            "channel": "sms",
+            "text": "Hi, just checking the flooring quote Q-6001 came through all right. No rush at all: when you have had a chance to look, a yes or a no either way helps us plan the install calendar. If you have questions about the quote, reply here and I will answer them."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "6001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "itemId": "6001",
+            "ref": "msg:acceptance-6001"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-29T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-10-01T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "disputed-or-declined-stops-and-escalates",
+      "n": 8,
+      "title": "A no, a dispute, or stop contacting me ends the chase and goes to a person",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Both items carry a declined or dispute outcome, an escalation naming a person, and no touch after the outcome. A second touch on either fails.",
+      "actual": "7001: 1 touch(es), outcomes declined, escalations 1; 7002: 1 touch(es), outcomes declined, escalations 1",
+      "stimulus": {
+        "description": "One contact says no on the call; another says stop contacting me. Then two more runs.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "disputed-or-declined-stops-and-escalates"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 2,
+            "open": [
+              "7001",
+              "7002"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "7001",
+              "7002"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "7001"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "call",
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "7001",
+            "channel": "call",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "itemId": "7001",
+            "text": "Hi, this is an AI assistant calling on behalf of the showroom. This call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "7001",
+            "text": "I'm calling about flooring quote Q-7001. Have you had a chance to decide on it?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "7001",
+            "listen": true
+          },
+          "response": {
+            "text": "No, we're not going ahead with it",
+            "heard": "declined"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "record_promise",
+          "verb": "write",
+          "subject": "promise",
+          "request": {
+            "itemId": "7001",
+            "kind": "declined",
+            "value": "declined"
+          },
+          "response": {
+            "id": "OUT1",
+            "recordedAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "7001"
+          },
+          "response": {
+            "touches": 1,
+            "outcomes": 1,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "itemId": "7001",
+            "reason": "declined",
+            "to": "Sam Ortiz, sales manager",
+            "history": 1
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "person": "Sam Ortiz, sales manager",
+            "text": "Quote Q-7001 (5200 at risk) ended the chase: \"No, we're not going ahead with it\". 1 touch(es): call 2026-09-26 declined. It is yours now."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "7002"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "call",
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "7002",
+            "channel": "call",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "itemId": "7002",
+            "text": "Hi, this is an AI assistant calling on behalf of the showroom. This call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "7002",
+            "text": "I'm calling about flooring quote Q-7002. Have you had a chance to decide on it?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "7002",
+            "listen": true
+          },
+          "response": {
+            "text": "Please stop contacting me about this",
+            "heard": "stop"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "record_promise",
+          "verb": "write",
+          "subject": "promise",
+          "request": {
+            "itemId": "7002",
+            "kind": "declined",
+            "value": "stop_contacting"
+          },
+          "response": {
+            "id": "OUT2",
+            "recordedAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "7002"
+          },
+          "response": {
+            "touches": 1,
+            "outcomes": 1,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "itemId": "7002",
+            "reason": "declined",
+            "to": "Sam Ortiz, sales manager",
+            "history": 1
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "person": "Sam Ortiz, sales manager",
+            "text": "Quote Q-7002 (2900 at risk) ended the chase: \"Please stop contacting me about this\". 1 touch(es): call 2026-09-26 declined. It is yours now."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 2,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 2,
+            "open": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "never-nags-a-person-who-is-waiting-on-us",
+      "n": 9,
+      "title": "No touch goes out while the ball is with the business",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The items were read, the gate was asked, and that item has no touch. Any touch on it fails.",
+      "actual": "8001 gate: we_owe_them, we_owe_them; 8001 touches 0, 8002 touches 2",
+      "stimulus": {
+        "description": "An open item whose record says the business still owes the contact a revised drawing. Two runs.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "never-nags-a-person-who-is-waiting-on-us"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 2,
+            "open": [
+              "8001",
+              "8002"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "8001",
+              "8002"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "8001"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "8001",
+            "channel": "sms",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": false,
+            "reason": "we_owe_them"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "8002"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "8002",
+            "channel": "sms",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "8002",
+            "channel": "sms",
+            "text": "Hi, just checking the flooring quote Q-8002 came through all right. No rush at all: when you have had a chance to look, a yes or a no either way helps us plan the install calendar. If you have questions about the quote, reply here and I will answer them."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 2,
+            "open": [
+              "8001",
+              "8002"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "8001",
+              "8002"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "8001"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "8001",
+            "channel": "sms",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": false,
+            "reason": "we_owe_them"
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "8002"
+          },
+          "response": {
+            "touches": 1,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "8002",
+            "channel": "sms",
+            "touchesSoFar": 1
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "8002",
+            "channel": "sms",
+            "text": "Hi, a quick follow-up on the flooring quote Q-8002. No rush at all: when you have had a chance to look, a yes or a no either way helps us plan the install calendar. If you have questions about the quote, reply here and I will answer them."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "escalates-after-the-cap",
+      "n": 10,
+      "title": "An item still open at the cap goes to a named person with its history, not into a longer loop",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Exactly three touches, then one escalation naming a person and carrying three touches of history, and a notification to that person. A fourth touch, a second escalation, or an escalation with no name fails.",
+      "actual": "3 touch(es), 1 escalation(s), alerts to Sam Ortiz, sales manager",
+      "stimulus": {
+        "description": "A cadence of three, driven past the cap: five runs at the gap on one item that never arrives.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "escalates-after-the-cap"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "9001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "9001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "9001"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "9001",
+            "channel": "email",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "9001",
+            "channel": "email",
+            "text": "Hi, just checking the flooring quote Q-9001 came through all right. No rush at all: when you have had a chance to look, a yes or a no either way helps us plan the install calendar. If you have questions about the quote, reply here and I will answer them."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "9001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "9001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "9001"
+          },
+          "response": {
+            "touches": 1,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "9001",
+            "channel": "email",
+            "touchesSoFar": 1
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "9001",
+            "channel": "email",
+            "text": "Hi, a quick follow-up on the flooring quote Q-9001. No rush at all: when you have had a chance to look, a yes or a no either way helps us plan the install calendar. If you have questions about the quote, reply here and I will answer them."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "9001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "9001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "9001"
+          },
+          "response": {
+            "touches": 2,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "9001",
+            "channel": "email",
+            "touchesSoFar": 2
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "9001",
+            "channel": "email",
+            "text": "Hi, a quick follow-up on the flooring quote Q-9001. No rush at all: when you have had a chance to look, a yes or a no either way helps us plan the install calendar. If you have questions about the quote, reply here and I will answer them."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "9001"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "9001"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "9001"
+          },
+          "response": {
+            "touches": 3,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "itemId": "9001",
+            "reason": "cap_reached",
+            "to": "Sam Ortiz, sales manager",
+            "history": 3
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "person": "Sam Ortiz, sales manager",
+            "text": "Quote Q-9001 (7700 at risk) reached the cadence cap with no decision. 3 touch(es): email 2026-09-26 sent; email 2026-09-28 sent; email 2026-09-30 sent. It is yours now."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-04T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "the-record-by-item",
+      "n": 11,
+      "title": "Every touch, its channel, its outcome and the arrival are retrievable by item",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A read by item id returns two touches with their channels and outcomes, the date outcome, and the arrival with its evidence reference. A touch with no outcome, or an arrival with no evidence, fails.",
+      "actual": "{\"item\":{\"id\":\"1101\",\"kind\":\"quote_decision\",\"recordRef\":\"Q-1101\",\"owedBy\":\"c1\",\"valueAtRisk\":6400,\"openedAt\":\"2026-09-24T00:00:00.000Z\",\"due\":\"2026-10-01T00:00:00.000Z\",\"status\":\"arrived\",\"received\":{\"ref\":\"msg:acceptance-1101\",\"at\":\"2026-09-29T10:00:00.000Z\"}},\"touches\":[{\"itemId\":\"1101\",\"channel\":\"call\",\"at\":\"2026-09-26T00:00:00.000Z\",\"outcome\":\"date\"},{\"itemId\":\"1101\",\"channel\":\"sms\",\"at\":\"2026-09-28T10:00:00.000Z\",\"outcome\":\"sent\"}],\"outcomes\":[{\"id\":\"OUT1\",\"itemId\":\"1101\",\"kind\":\"date\",\"value\":\"2026-09-27\",\"recordedAt\":\"2026-09-26T00:00:00.000Z\"}],\"escalations\":[],\"arrival\":{\"itemId\":\"1101\",\"evidenceRef\":\"msg:acceptance-1101\",\"at\":\"2026-09-29T10:00:00.000Z\"}}",
+      "stimulus": {
+        "description": "One item: a call that gets a date, a text two days later, then the document arrives.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "the-record-by-item"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "1101"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "1101"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "1101"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "call",
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "1101",
+            "channel": "call",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "itemId": "1101",
+            "text": "Hi, this is an AI assistant calling on behalf of the showroom. This call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "1101",
+            "text": "I'm calling about flooring quote Q-1101. Have you had a chance to decide on it?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "1101",
+            "listen": true
+          },
+          "response": {
+            "text": "We'll know by 2026-09-27",
+            "heard": "date",
+            "value": "2026-09-27"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "record_promise",
+          "verb": "write",
+          "subject": "promise",
+          "request": {
+            "itemId": "1101",
+            "kind": "date",
+            "value": "2026-09-27"
+          },
+          "response": {
+            "id": "OUT1",
+            "recordedAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-28T10:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "1101"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T10:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-28T10:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "1101"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T10:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "1101"
+          },
+          "response": {
+            "touches": 1,
+            "outcomes": 1,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-28T10:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "call",
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T10:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "1101",
+            "channel": "call",
+            "touchesSoFar": 1
+          },
+          "response": {
+            "allowed": false,
+            "reason": "outside_hours"
+          }
+        },
+        {
+          "at": "2026-09-28T10:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "1101",
+            "channel": "sms",
+            "touchesSoFar": 1
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-28T10:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "1101",
+            "channel": "sms",
+            "text": "Hi, a quick follow-up on the flooring quote Q-1101. No rush at all: when you have had a chance to look, a yes or a no either way helps us plan the install calendar. If you have questions about the quote, reply here and I will answer them."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-29T10:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "1101"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-29T10:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "itemId": "1101",
+            "ref": "msg:acceptance-1101"
+          },
+          "response": {
+            "attached": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 12,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the open items and the cadence runs on.",
+        "now": "2026-11-03T12:58:46.184Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 13,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "The arrived item has no touch after its arrival. The no is recorded and with a person. The capped item is escalated once with its history. Each call's recording opens with the disclosure and ends with a recorded outcome.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "Real open items on the business's own records, real contacts on real numbers, the cadence the business wrote down, run over its own days.",
+        "now": "2026-11-03T12:58:46.184Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 13,
+    "pass": 10,
+    "fail": 0,
+    "shapeOnly": 1,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
