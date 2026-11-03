@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-03T13:35:25.280Z",
+  "generated_at": "2026-11-03T13:36:56.315Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -498,6 +498,108 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 11
+        }
+      ]
+    },
+    {
+      "slug": "billing-match",
+      "name": "Billing Match",
+      "office_task": "Every morning, check each customer's CRM billing details against Xero by account id, show each difference with both values and the owning system, and fix one only once a named person accepts it.",
+      "verticals": [
+        "b2b-office"
+      ],
+      "standards": [
+        "two-records"
+      ],
+      "systems_of_record": [
+        "the CRM (issues the customer account id; owns billing email, billing address and ABN)",
+        "Xero (the invoicing ledger; carries the CRM account id on the contact and owns the invoiced total, last invoice date and payment terms)"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the run's reconciliation report where accounts open it: the field-ownership contract it ran under, the key it joined on (crm_account_id), the owner per field, and the counts matched, within tolerance, mismatched, orphaned and corrected, published every run including the all-clear",
+          "readback": "the report store returns a report_id, and reading that id back returns the contract id, the five counts and the published time; no id back means the run did not publish and the owner is told"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the customer account naming the person who owns it: an open difference with the CRM value, the Xero value and the owning system's value side by side awaiting acceptance, an orphan on one side, a gap over the threshold amount, a run over the mismatch rate, or an accepted correction whose write returned no id",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the crm_account_id, the field, both values and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "billing_match.contract_missing",
+          "billing_match.owner_missing",
+          "billing_match.difference_open",
+          "billing_match.orphan",
+          "billing_match.over_threshold",
+          "billing_match.mismatch_rate",
+          "billing_match.write_not_read_back"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "seam-mirror",
+        "fields": [
+          "seam.crm_account_id",
+          "seam.contract_id",
+          "seam.run_id",
+          "seam.difference_status",
+          "seam.value_crm",
+          "seam.value_xero",
+          "seam.owner_value",
+          "seam.correction_accepted_by",
+          "seam.correction_written_id",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/billing-match"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Reconcile CRM and invoicing owner fields with HTTPS APIs and Data Tables",
+        "original_author": "Kuliberda Labs",
+        "share_link": "https://n8n.io/workflows/19412",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "two-records",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:25:27.393Z",
+          "run_id": "run-1793712327391",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
         }
       ]
     },
@@ -1067,6 +1169,114 @@
       ]
     },
     {
+      "slug": "cover-check",
+      "name": "Cover Check",
+      "office_task": "File each contractor insurance certificate against their record, check it is current and right for the work, track its expiry, and clear no one with an item missing until a person releases it.",
+      "verticals": [
+        "property"
+      ],
+      "standards": [
+        "rejected-pack"
+      ],
+      "systems_of_record": [
+        "the mail system that issues the message_id (the agency's Gmail or Outlook mailbox the certificates arrive in)",
+        "the property management system's contractor record (PropertyMe, Console Cloud or PropertyTree) that each certificate is bound to",
+        "the document store that holds the filed original (SharePoint, OneDrive or Google Drive)",
+        "the exception desk the agency runs, holding each stopped pack with its named owner"
+      ],
+      "consumes": [
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "evidence.filed",
+          "write": "the certificate of insurance from the message, filed against the contractor's record by its id, with the extracted policy details (insurer, policy number, cover amount, expiry, insured name and ABN) as graph fields carrying their confidence, the pack's queue after the eight checks in order, every written not-applicable with its rule, the renewal request date derived from the dated rule, and the as-of date",
+          "readback": "reading the contractor record by its id from the property system returns the filed document with the message_id and seam.queue, seam.failed_check, seam.as_of and seam.renewal_due; no document back with that message_id means it was not filed and the run raises an exception instead"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the contractor's pack naming the person who owns it: the first check that failed (identity, an expired certificate or licence, no rule loaded, a missing item, cover under the minimum, or two ABNs in one pack), Yellow fields waiting for a person to confirm, or a pack waiting for a named release before it can be handed over",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the contractor record id, the message_id, the failed check with its reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "cover.identity_failed",
+          "cover.certificate_expired",
+          "cover.no_rule_for_state",
+          "cover.item_missing",
+          "cover.below_minimum",
+          "cover.two_abns",
+          "cover.yellow_fields",
+          "cover.awaiting_release"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.message_id",
+          "seam.contractor_ref",
+          "seam.queue",
+          "seam.failed_check",
+          "seam.rule_version",
+          "seam.renewal_due",
+          "seam.as_of",
+          "seam.accepted_by",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/cover-check"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Track vendor insurance COIs and renewals with Gmail, DeepSeek, Sheets, Discord, and Telegram",
+        "original_author": "Khaisa Studio",
+        "share_link": "https://n8n.io/workflows/18553",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "rejected-pack",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:21:59.954Z",
+          "run_id": "run-1793712119953",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 0,
+          "total": 13
+        }
+      ]
+    },
+    {
       "slug": "crew-board",
       "name": "Crew Board",
       "office_task": "Put each lawn or field-service job on the right licensed crew member at a time that fits, tell the customer and the tech once, and hand anything it cannot place to the dispatcher.",
@@ -1383,6 +1593,232 @@
       ]
     },
     {
+      "slug": "delivery-billing",
+      "name": "Delivery Billing",
+      "office_task": "When a delivery job is marked done, put its draft invoice in Xero at our own item prices, park what it cannot price, and send only once our rule or accounts person releases it.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "invoice-out"
+      ],
+      "systems_of_record": [
+        "the job or dispatch system that issues the job_id (ServiceM8, Simpro, or a job sheet)",
+        "Xero, which issues the invoice_id"
+      ],
+      "consumes": [
+        {
+          "event": "job.completed",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "invoice.raised",
+          "write": "One draft invoice in Xero per completed delivery job, reference job:<id> (and the stage under a building contract), every line a job line at the Xero Items rate read at draft time, with the book edition, the accepted quote id where there is one, and any signed variation acceptance attached.",
+          "readback": "The invoice is read back from the ledger by the job id and must return the same invoice id and external id (Xero GET /api.xro/2.0/Invoices/{InvoiceID}). No id back is not a write: it raises invoice.write_failed to the named owner and the run stops."
+        },
+        {
+          "event": "invoice.sent",
+          "write": "The release on the invoice record, naming the owner who closed the awaiting-release exception or the rule (with its threshold) that owner set, then the send from Xero. Nothing parked is ever released or sent.",
+          "readback": "The invoice read back by job id shows status sent, the sent time, and released_by or released_by_rule, with the release before the send."
+        },
+        {
+          "event": "exception.raised",
+          "write": "A parked or waiting invoice as an exception on the job: the reason (not_in_pricebook, unsigned_variation, no_stage, write_failed) or awaiting_release, the job id, the invoice id, the codes with no rate, and exception_owner set to the person the business named for invoices.",
+          "readback": "The invoice read back by job id shows status parked with its park reason, and the exception desk returns the exception against the job id with its exception_owner; the next run reads it there and stops."
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "invoice.not_in_pricebook",
+          "invoice.unsigned_variation",
+          "invoice.no_stage",
+          "invoice.write_failed",
+          "invoice.awaiting_release"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.invoice_id",
+          "seam.quote_id",
+          "seam.book_edition",
+          "seam.status",
+          "seam.park_reason",
+          "seam.released_by",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/delivery-billing"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Create a QuickBooks invoice on a new Onfleet Task creation",
+        "original_author": "James Li",
+        "share_link": "https://n8n.io/workflows/1546",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "invoice-out",
+          "edition": "2026-10-05",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:16:02.977Z",
+          "run_id": "run-1793711762976",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        },
+        {
+          "standard": "cash-seam",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:16:03.363Z",
+          "run_id": "run-1793711763361",
+          "green": 4,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 9
+        }
+      ]
+    },
+    {
+      "slug": "deposit-match",
+      "name": "Deposit Match",
+      "office_task": "Every morning, match each customer deposit in the bank feed to the Xero invoice it paid, by the invoice id, and put every one that does not clearly match in front of the bookkeeper.",
+      "verticals": [
+        "accounting-bookkeeping"
+      ],
+      "standards": [
+        "two-records"
+      ],
+      "systems_of_record": [
+        "Xero (the ledger that issues the invoice_id and records the payment applied to each sales invoice)",
+        "the business's bank feed into Xero (customer deposits carrying the invoice_id in their reference)"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "payment.received",
+          "write": "a deposit applied as a payment on the Xero sales invoice its reference names, written once and only after the bookkeeper accepted that correction, with the bank-feed value, the Xero value before the fix and the person who accepted kept in history",
+          "readback": "Xero returns a PaymentID, and GET /api.xro/2.0/Payments/{PaymentID} returns the payment with the Invoice.InvoiceID, amount and date; no PaymentID back means it was not written and the owner is told"
+        },
+        {
+          "event": "report.published",
+          "write": "the run's reconciliation report where the bookkeeper opens it: the pair contract it ran under, the join key (invoice_id), the master per field, and the counts matched, within tolerance, mismatched, orphaned and corrected, published every run including the all-clear",
+          "readback": "the report store returns a report_id, and reading that id back returns the contract id, the five counts and the published time; no id back means the run did not publish and the owner is told"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the invoice naming the person who owns it: an open difference with the bank-feed value, the Xero value and the master's value side by side, an orphan (a deposit whose invoice id is not in Xero, or an invoice Xero shows paid with no deposit), a difference over the threshold amount, a mismatch rate over the declared rate, or an accepted correction whose write returned no id",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the invoice_id, the reason, both values and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "two-records.contract_missing",
+          "two-records.difference_open",
+          "two-records.orphan_deposit",
+          "two-records.orphan_paid_invoice",
+          "two-records.over_threshold_amount",
+          "two-records.mismatch_rate_exceeded",
+          "two-records.write_not_read_back"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "seam-mirror",
+        "fields": [
+          "seam.invoice_id",
+          "seam.contract_id",
+          "seam.run_id",
+          "seam.difference_status",
+          "seam.value_bank_feed",
+          "seam.value_xero",
+          "seam.master_value",
+          "seam.accepted_by",
+          "seam.written_id",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/deposit-match"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "InvoiceMatch Recon Bot",
+        "original_author": "Robert Schiff",
+        "share_link": "https://x.ai/bot/mK8oApOw3a0zG0m00Ec_h",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "two-records",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:26:19.036Z",
+          "run_id": "run-1793712379034",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        }
+      ]
+    },
+    {
       "slug": "docs-due",
       "name": "Docs Due",
       "office_task": "Each weekday, chase clients for the documents the practice still needs from them, stop when each one arrives, and hand a no or a silent client to a named person.",
@@ -1467,6 +1903,109 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 13
+        }
+      ]
+    },
+    {
+      "slug": "draw-match",
+      "name": "Draw Match",
+      "office_task": "Each morning, match every payment the managing agent sent against what landed in the landlord's books, by payment id, and put each short-pay, wrong fee or missing payment to the bookkeeper.",
+      "verticals": [
+        "property"
+      ],
+      "standards": [
+        "two-records"
+      ],
+      "systems_of_record": [
+        "the managing agency's trust accounting system (PropertyMe, Console Cloud or similar), which issues the payment_id for each owner disbursement and its owner statement",
+        "the landlord's own ledger and bank feed (Xero or similar), where each agency deposit lands carrying that payment_id in the EFT reference"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the run's reconciliation report, written where the landlord's bookkeeper opens it: the pair contract it ran under, the join key (payment_id), the master per field, and the counts matched, within tolerance, mismatched, orphaned and corrected, published every run including the all-clear",
+          "readback": "the report store returns a report_id, and reading that id back returns the contract id, the five counts and the published time; no id back means the run did not publish and the owner is told"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the payment naming the person who owns it: an open difference with the books' value, the agency statement's value and the master's value side by side, an orphan (a deposit whose payment id is on no statement, or a statement line with no deposit), a difference over the threshold amount, a mismatch rate over the declared rate, or an accepted correction whose write returned no id",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the payment_id, the reason, both values and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "two-records.contract_missing",
+          "two-records.difference_open",
+          "two-records.orphan_deposit",
+          "two-records.orphan_statement_line",
+          "two-records.over_threshold_amount",
+          "two-records.mismatch_rate_exceeded",
+          "two-records.write_not_read_back"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "seam-mirror",
+        "fields": [
+          "seam.payment_id",
+          "seam.tenancy_id",
+          "seam.contract_id",
+          "seam.run_id",
+          "seam.difference_status",
+          "seam.value_books",
+          "seam.value_statement",
+          "seam.master_value",
+          "seam.accepted_by",
+          "seam.written_id",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/draw-match"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Doorfolio",
+        "original_author": "Cameron Powell",
+        "share_link": "https://x.ai/bot/v_18B-B-J3sFAGkZ9aNDD",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "two-records",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:28:42.957Z",
+          "run_id": "run-1793712522956",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
         }
       ]
     },
@@ -2082,6 +2621,106 @@
       ]
     },
     {
+      "slug": "hours-audit",
+      "name": "Hours Audit",
+      "office_task": "Every week before the pay run, check the Square timecards against the roster and the award edition, put anything odd in front of its owner, and export only what a person released.",
+      "verticals": [
+        "b2b-office"
+      ],
+      "standards": [
+        "timesheet-check"
+      ],
+      "systems_of_record": [
+        "Square Team (team members, scheduled shifts with the job each is for, and timecards)",
+        "the business's rule store holding each award edition as a dated row",
+        "the business's Australian payroll system, which issues the export batch id",
+        "the exception desk the business runs (the anomaly queue)"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the period report: hours by person and day, daily and weekly totals each naming the entries they sum, anomalies found and resolved, who released the period or that nobody has, and the payroll batch id when there is one. Published every run, a clean period included",
+          "readback": "the report store returns a report_id, and reading that id back returns the period id, the totals with their entry ids and the release field; no id back means nothing was published and the run stops"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an anomaly on the timecard entry, one of the six kinds (over_hours, overlap, missing_break, not_rostered, not_allocated, rule_unclear), naming the person who owns it",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the entry id, the kind and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "timesheet.over_hours",
+          "timesheet.overlap",
+          "timesheet.missing_break",
+          "timesheet.not_rostered",
+          "timesheet.not_allocated",
+          "timesheet.rule_unclear"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "seam-mirror",
+        "fields": [
+          "seam.period_id",
+          "seam.anomalies_open",
+          "seam.rule_edition",
+          "seam.released_by",
+          "seam.export_external_id",
+          "seam.report_id",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/hours-audit"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Square Crew, Payroll & HR Helper",
+        "original_author": "Anatoliy Belyshev",
+        "share_link": "https://x.ai/bot/OQZaBnEMi7H_0En2qys0a",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "timesheet-check",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:28:58.533Z",
+          "run_id": "run-1793712538532",
+          "green": 10,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 13
+        }
+      ]
+    },
+    {
       "slug": "hours-check",
       "name": "Hours Check",
       "office_task": "When the pay week closes, check the crew's hours against the roster, their jobs and the dated award, put the odd ones in front of a named person, and send nothing to payroll until someone releases it.",
@@ -2386,6 +3025,126 @@
           "environment": "stub",
           "ran_at": "2026-11-03T12:19:45.183Z",
           "run_id": "run-1793708385181",
+          "green": 4,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 9
+        }
+      ]
+    },
+    {
+      "slug": "invoice-hold",
+      "name": "Invoice Hold",
+      "office_task": "When a renovation job is marked complete, draft its one invoice in Xero at our own prices and hold it until a named person, or their rule, releases it.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "invoice-out"
+      ],
+      "systems_of_record": [
+        "the job system that issues the job_id (ServiceM8, Simpro, or a job sheet)",
+        "Xero, which issues the invoice_id"
+      ],
+      "consumes": [
+        {
+          "event": "job.completed",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "invoice.raised",
+          "write": "One draft invoice in Xero per completed job, keyed to the job id (reference job:<id>, and the stage under a building contract), every line a job line priced from the Xero Items read at draft time, carrying the book edition and any signed variation acceptance as evidence.",
+          "readback": "The invoice is read back from the ledger by the job id and must return the same invoice id, its Xero InvoiceID and the job id. No id back is not a write: it raises invoice.write_failed with the named owner and the run stops."
+        },
+        {
+          "event": "invoice.sent",
+          "write": "The release on the invoice, naming the person who closed the awaiting-release exception or the rule (with its threshold) that person set, then the send from the ledger. Nothing parked is ever sent.",
+          "readback": "The invoice read back by its id shows status sent, the sent time, and released_by or released_by_rule, with the release recorded before the send."
+        },
+        {
+          "event": "exception.raised",
+          "write": "A parked or held invoice as an exception on the job: the reason (not_in_pricebook, unsigned_variation, no_stage, write_failed or awaiting_release), the job id, the invoice id, any codes left without a rate, and exception_owner set to the person the business named for invoices.",
+          "readback": "The exception desk returns the exception against the job id, and reading it back returns the job_id, invoice_id, reason and exception_owner; the next hop reads it there and stops."
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "invoice.not_in_pricebook",
+          "invoice.unsigned_variation",
+          "invoice.no_stage",
+          "invoice.write_failed",
+          "invoice.awaiting_release"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.invoice_id",
+          "seam.quote_id",
+          "seam.book_edition",
+          "seam.stage",
+          "seam.status",
+          "seam.park_reason",
+          "seam.released_by",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/invoice-hold"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Chief of Staff",
+        "original_author": "Amine",
+        "share_link": "https://x.ai/bot/WMLSz9eCswzYR8nPmmxsJ",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "invoice-out",
+          "edition": "2026-10-05",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:14:19.605Z",
+          "run_id": "run-1793711659603",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        },
+        {
+          "standard": "cash-seam",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:14:21.036Z",
+          "run_id": "run-1793711661035",
           "green": 4,
           "red": 0,
           "with_us": 1,
@@ -2947,6 +3706,130 @@
       ]
     },
     {
+      "slug": "owing-today",
+      "name": "Owing Today",
+      "office_task": "Every morning, show me who owes us money, biggest first, with a polite or firmer reminder already written for each one, and I send them.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "debtor-chasing"
+      ],
+      "systems_of_record": [
+        "Xero",
+        "MYOB",
+        "ServiceM8",
+        "the exception desk the business runs"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "payment.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "promise.recorded",
+          "write": "A dated promise to pay, taken from a debtor's reply on a reminder thread that carries the invoice id: the date, the amount or none, and when it was captured, written onto the invoice in the ledger. That date becomes the customer's next follow-up, and no reminder is queued for them before it. It never clears a logged dispute.",
+          "readback": "The invoice is read back by its id (Xero GET /api.xro/2.0/Invoices/{InvoiceID}/History, MYOB GET /accountright/{company_file_id}/Sale/Invoice/{UID}) and must show the promise with its date. No promise on the read-back is not a write: it raises debtor.promise_write_failed."
+        },
+        {
+          "event": "exception.raised",
+          "write": "An exception naming exception_owner, the person the business set for receivables: today's queue of reminder drafts for that person to send (customer, invoice ids, total, tone and text), a relationship-sized balance or open dispute lifted out of the run, hardship or a dispute named in a reply, a reply with no date, a refused override, or a promise that did not write.",
+          "readback": "The exception desk returns an exception_id, and reading that id back returns the customer, the invoice ids, the reason and the exception_owner; no id back means nothing was raised and the run stops."
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "debtor.queue_ready",
+          "debtor.relationship_account",
+          "debtor.dispute_open",
+          "debtor.hardship",
+          "debtor.dispute_named",
+          "debtor.reply_without_date",
+          "debtor.reply_unmatched",
+          "debtor.override_refused",
+          "debtor.promise_write_failed"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.invoice_id",
+          "seam.job_id",
+          "seam.chase_bucket",
+          "seam.reminder_tone",
+          "seam.promise_date",
+          "seam.next_touch",
+          "seam.gate_hold_reason",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/owing-today"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Invoice Chaser",
+        "original_author": "Mark G",
+        "share_link": "https://x.ai/bot/90sITfSWBOYbcnx6uyfun",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "debtor-chasing",
+          "edition": "2026-10-06",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:19:35.372Z",
+          "run_id": "run-1793711975370",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        },
+        {
+          "standard": "cash-seam",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:19:35.848Z",
+          "run_id": "run-1793711975846",
+          "green": 4,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 9
+        }
+      ]
+    },
+    {
       "slug": "parts-quote",
       "name": "Parts Quote",
       "office_task": "When a customer's spare-parts enquiry is logged as a job, draft its quote from our own parts price list, or park it with a reason, and leave it for us to send.",
@@ -3044,6 +3927,135 @@
           "environment": "stub",
           "ran_at": "2026-11-03T13:03:35.286Z",
           "run_id": "run-1793711015285",
+          "green": 4,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 9
+        }
+      ]
+    },
+    {
+      "slug": "payment-watch",
+      "name": "Payment Watch",
+      "office_task": "Keep track of what each client owes, check the ledger and the inbox for a payment before every reminder, and draft one calm reminder per client for me to say yes to.",
+      "verticals": [
+        "b2b-office"
+      ],
+      "standards": [
+        "debtor-chasing"
+      ],
+      "systems_of_record": [
+        "Xero",
+        "MYOB",
+        "Gmail (the reminder threads, each carrying its invoice id)",
+        "the exception desk the business runs"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "invoice.overdue",
+          "wake": "schedule"
+        },
+        {
+          "event": "payment.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "promise.recorded",
+          "write": "A dated promise to pay from a client's reply on a reminder thread, read by the invoice id the thread carries: the date, the amount or none, and when it was captured, written onto the invoice in the ledger. The promised date becomes that client's next touch. It never clears a logged dispute.",
+          "readback": "The invoice is read back by its id (Xero GET /api.xro/2.0/Invoices/{InvoiceID}/History, MYOB GET /accountright/{company_file_id}/Sale/Invoice/{UID}) and must show the promise with its date. No promise on the read-back is not a write: it raises debtor.promise_write_failed."
+        },
+        {
+          "event": "exception.raised",
+          "write": "An exception naming exception_owner, the person who owns receivables: a drafted reminder waiting for that person's yes (the invoice ids, the bucket and the text), a payment the client says they made that the ledger has not applied, a relationship-sized balance or an open dispute lifted out of the run, hardship or a dispute named in a reply, a reply with no date, or a promise that did not write.",
+          "readback": "The exception desk returns an exception_id, and reading that id back returns the client, the invoice ids, the reason and the exception_owner; no id back means nothing was raised and the run stops."
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "debtor.reminder_ready_for_release",
+          "debtor.payment_claimed_unapplied",
+          "debtor.relationship_account",
+          "debtor.dispute_open",
+          "debtor.dispute_named",
+          "debtor.hardship",
+          "debtor.reply_without_date",
+          "debtor.reply_unmatched",
+          "debtor.reply_needs_person",
+          "debtor.promise_write_failed",
+          "debtor.override_refused"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.invoice_id",
+          "seam.chase_bucket",
+          "seam.payment_check",
+          "seam.promise_date",
+          "seam.next_touch",
+          "seam.gate_hold_reason",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/payment-watch"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Freelance Invoice Chaser",
+        "original_author": "Cristopher Guido",
+        "share_link": "https://x.ai/bot/6XWo6nhodL0bZnP1MnRz5",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "debtor-chasing",
+          "edition": "2026-10-06",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:19:46.724Z",
+          "run_id": "run-1793711986723",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        },
+        {
+          "standard": "cash-seam",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:19:47.076Z",
+          "run_id": "run-1793711987075",
           "green": 4,
           "red": 0,
           "with_us": 1,
@@ -3257,6 +4269,116 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 11
+        }
+      ]
+    },
+    {
+      "slug": "policy-desk",
+      "name": "Policy Desk",
+      "office_task": "Answer staff and customer support, HR and compliance questions only from the policy pack we have approved, citing the clause and its edition, or hand the question to a named person.",
+      "verticals": [
+        "b2b-office"
+      ],
+      "standards": [
+        "cited-answer"
+      ],
+      "systems_of_record": [
+        "the mail system that issues the message_id the question arrived on and the reply went out on (Gmail, Outlook)",
+        "the business's own approved policy pack (staff handbook, leave, refunds and returns, privacy, complaints) held as a clause library with editions, state or territory and effective dates, and its answer register",
+        "the exception desk the business runs, which issues the exception_id"
+      ],
+      "consumes": [
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "answer.sent",
+          "write": "a stored answer with its source cards (policy, clause, edition, state or territory, effective date), sent as a reply on the question's thread only after a named person released it on the answer register",
+          "readback": "the mail system returns the reply's message_id, and reading that id back returns the thread it replies in and the answer register id; no id back means it was not sent, and cited.send_unconfirmed is raised to the named owner"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the question's message naming the person who owns it: no state or territory given, nothing in the approved pack covers it, a compliance statement, legal reading or ruling on one case, a source conflict between two live policies, or a policy that moved and waits for a named person to accept it (listing every stored answer that relied on it)",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the message_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "cited.no_jurisdiction",
+          "cited.not_in_pack",
+          "cited.decision_for_person",
+          "cited.source_conflict",
+          "cited.change_pending",
+          "cited.acceptance_without_person",
+          "cited.release_refused",
+          "cited.release_without_person",
+          "cited.send_unconfirmed"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "answer.message_id",
+          "answer.queue",
+          "answer.policy",
+          "answer.source_card_ids",
+          "answer.released_by",
+          "source_card.edition",
+          "source_card.jurisdiction",
+          "source_card.effective_from",
+          "change_delta.accepted_by",
+          "change_delta.accepted_on",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/policy-desk"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Claim Cage",
+        "original_author": "Andy Mccutcheon",
+        "share_link": "https://x.ai/bot/iZv6S7_mFwfpA2veP7mOH",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "cited-answer",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:11:41.218Z",
+          "run_id": "run-1793711501216",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 10
         }
       ]
     },
@@ -3682,6 +4804,112 @@
       ]
     },
     {
+      "slug": "quote-keeper",
+      "name": "Quote Keeper",
+      "office_task": "Keep every quote we send on the register and follow each quiet customer up on our cadence and in our wording until they decide, then hand a no, a dispute or the cap to a person.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "follow-up"
+      ],
+      "systems_of_record": [
+        "the job system that issues the quote_id and job_id (ServiceM8, Simpro, or for Tradify a register kept beside it)",
+        "the exception desk the business runs (a sheet or a task list that issues the exception_id)"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "quote.sent",
+          "wake": "webhook"
+        },
+        {
+          "event": "quote.accepted",
+          "wake": "webhook"
+        },
+        {
+          "event": "quote.declined",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "evidence.filed",
+          "write": "the arrival that ends the chase, filed against the job the quote belongs to by its job_id: the customer's signed acceptance or reply by message_id, or the decision recorded on the call; the open item moves to arrived and is never touched again",
+          "readback": "reading the job by its job_id returns the filed attachment or note with its message_id or outcome id and the quote_id; nothing on the read-back means it was not filed, and the item stays open for a person rather than being chased"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the quote naming the person who owns it, with every touch so far: a no on the call, a dispute or a stop request, or the cadence's cap reached with no decision",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the quote_id, the reason, the touch history and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "followup.declined",
+          "followup.dispute",
+          "followup.cap_reached"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.quote_id",
+          "seam.job_id",
+          "seam.followup_touches",
+          "seam.followup_outcome",
+          "seam.arrival_ref",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/quote-keeper"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "The Follow-Up Machine — Quotes Don't Die in the Inbox Anymore",
+        "original_author": "News Gurus",
+        "share_link": "https://x.ai/bot/iXXRYul0WYgEQeFBSxba_",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "follow-up",
+          "edition": "2026-10-05",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:59:09.118Z",
+          "run_id": "run-1793710749116",
+          "green": 10,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 13
+        }
+      ]
+    },
+    {
       "slug": "quote-nudge",
       "name": "Quote Nudge",
       "office_task": "Each morning, find the flooring quotes customers have not answered, draft a low-pressure nudge for the rep to send within the cap, and hand any no or dead quote to a named person.",
@@ -3789,6 +5017,114 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 13
+        }
+      ]
+    },
+    {
+      "slug": "renewal-watch",
+      "name": "Renewal Watch",
+      "office_task": "Keep our licences, insurances and site services on a calendar worked out from each state's rules, file the certificates when they come in, and put anything late in front of a named person.",
+      "verticals": [
+        "b2b-office"
+      ],
+      "standards": [
+        "compliance-calendar"
+      ],
+      "systems_of_record": [
+        "the business's obligation register (its compliance calendar, rule set and the document store certificates are filed in)"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "evidence.filed",
+          "write": "a certificate, policy schedule or service report from an email, filed as evidence of completion on the obligation it names by obligation id; a message with no obligation id is never matched by name and is raised instead",
+          "readback": "the obligation is read back by its id and must return the same evidence reference (the message_id and attachment) and a completion date; if it does not, nothing was filed and renewal.evidence_not_read_back is raised"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the obligation naming the person who owns it: an unknown anchor date, no rule in force, a past date no retained rule version explains, a completion claimed without a document, a dated refusal, a breach, a drafted booking or renewal awaiting a named release, a release with no named person, silence past the next chase date, or an email with no obligation id",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the obligation id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "renewal.anchor_unknown",
+          "renewal.no_rule_in_force",
+          "renewal.history_unexplained",
+          "renewal.completion_without_evidence",
+          "renewal.evidence_not_read_back",
+          "renewal.refusal_recorded",
+          "renewal.breached",
+          "renewal.notice_drafted_awaiting_release",
+          "renewal.release_refused",
+          "renewal.chase_due",
+          "renewal.attachment_unmatched"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.obligation_ref",
+          "seam.rule_version",
+          "seam.anchor_status",
+          "seam.state",
+          "seam.evidence",
+          "seam.refused_at",
+          "seam.breached_at",
+          "seam.next_chase",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/renewal-watch"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Duly",
+        "original_author": "Logan Brown",
+        "share_link": "https://x.ai/bot/5TEr6ycYq_ijQBd9XEj95",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "compliance-calendar",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:10:44.110Z",
+          "run_id": "run-1793711444108",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 10
         }
       ]
     },
@@ -4199,6 +5535,663 @@
           "total": 12
         }
       ]
+    },
+    {
+      "slug": "sub-pay-check",
+      "name": "Sub Pay Check",
+      "office_task": "Before a subbie's payment claim is approved, check their licence, insurance, cover and statements are on file and current, file each one, and hold the payment for a named person.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "rejected-pack"
+      ],
+      "systems_of_record": [
+        "Xero (the subcontractor's bill, which issues the bill_id)",
+        "Gmail (the message each statement or certificate arrived on)",
+        "Google Drive (the document store that issues each document_id)",
+        "a Google Sheet as the exception desk (exception_id, exception_owner)"
+      ],
+      "consumes": [
+        {
+          "event": "bill.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "email.received",
+          "wake": "poll"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "evidence.filed",
+          "write": "each statement, licence and certificate of currency filed against the bill_id it supports, by reference to the subbie's facts in the graph",
+          "readback": "the document store returns the document_id, and reading that id back returns the bill_id and the message_id it arrived on; no id back means it was not filed and the pack stays on Hold"
+        },
+        {
+          "event": "bill.checked",
+          "write": "the bill marked as pack checked, with the as-of, the rule versions cited and the named person who accepted the pack; nothing is paid",
+          "readback": "GET the bill by bill_id from the ledger returns the pack-checked status, as-of and accepted_by; the status is only stamped after the handover returned ok"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the bill naming its owner: a check failed (do not pay), paperwork missing (Hold), a release with no name, or a pack waiting for a named person to accept it",
+          "readback": "the exception desk returns an exception_id, and reading it back returns the bill_id, the check it stopped at and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "pack.fail",
+          "pack.hold",
+          "pack.awaiting_release",
+          "pack.release_unnamed",
+          "pack.handover_refused"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.bill_id",
+          "seam.pack_queue",
+          "seam.stopped_at",
+          "seam.as_of",
+          "seam.rule_versions",
+          "seam.accepted_by",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/sub-pay-check"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "rejected-pack",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:24:13.844Z",
+          "run_id": "run-1793712253842",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 0,
+          "total": 13
+        }
+      ]
+    },
+    {
+      "slug": "tenant-inbox",
+      "name": "Tenant Inbox",
+      "office_task": "Read the agency's shared inbox, file every tenant, landlord and tradie message against its tenancy, work order or creditor, and hand each tenant complaint whole to its property manager.",
+      "verticals": [
+        "property"
+      ],
+      "standards": [
+        "inbox-triage"
+      ],
+      "systems_of_record": [
+        "the mail system that issues the message_id (the agency's shared Gmail or Outlook mailbox)",
+        "the property management system that issues the tenancy_id and holds the maintenance work orders and creditor records messages are filed against (PropertyMe, Console Cloud or similar)",
+        "the exception desk the agency runs, holding the queue table and its items"
+      ],
+      "consumes": [
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "evidence.filed",
+          "write": "the message filed against the tenancy, maintenance work order or creditor it belongs to, by that record's own id; for a tradie's invoice, each attachment filed as evidence on the creditor record with its hash and the message_id, where a bill check reads it next",
+          "readback": "reading the record back by message_id returns the filing with its record_ref (tenancy:<tenancy_id>, job:<work order id> or supplier:<creditor id>) and every evidence row with its hash; no record_ref back means nothing was filed and the message stays an open task for the other queue's owner"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an item on the exception desk naming the person who owns it, one per thread: a message waiting on its queue owner's reply, an unmatched message left as a task, a tenant complaint handed whole to its property manager with nothing sent to the tenant, or an item past its kind's clock handed to the owner's manager",
+          "readback": "the exception desk returns an exception_id (the item id), and reading the record back by message_id returns the item with its kind, record_ref, owner, due date and every outbound with who released it; no item back means nothing was raised and the message is escalated to the other queue's owner"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "inbox.awaiting_release",
+          "inbox.unmatched_task",
+          "inbox.complaint",
+          "inbox.past_clock",
+          "inbox.readback_failed"
+        ],
+        "owner_field": "owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.message_id",
+          "seam.thread_id",
+          "seam.kind",
+          "seam.record_ref",
+          "seam.owner",
+          "seam.due",
+          "seam.status",
+          "seam.released_by"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/tenant-inbox"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Triage tenant complaints with GPT-4.1, Slack, email and Google Sheets",
+        "original_author": "Hyrum Hurst",
+        "share_link": "https://n8n.io/workflows/12428",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "inbox-triage",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:07:19.068Z",
+          "run_id": "run-1793711239066",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        }
+      ]
+    },
+    {
+      "slug": "terms-watch",
+      "name": "Terms Watch",
+      "office_task": "Each business day, chase the customers whose invoices are past their due date, biggest risk first, inside the calling rules, and turn each reply with a date into a promise.",
+      "verticals": [
+        "b2b-office"
+      ],
+      "standards": [
+        "debtor-chasing"
+      ],
+      "systems_of_record": [
+        "the ledger that issues the invoice_id (Xero, MYOB or QuickBooks): its invoices, contacts and invoice history",
+        "the mail system that issues the message_id of a debtor's reply (Gmail, Outlook)"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "invoice.overdue",
+          "wake": "webhook"
+        },
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "payment.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "promise.recorded",
+          "write": "a dated promise to pay on the invoice in the ledger, from a debtor's reply: the date (required), the amount (empty when none was given) and when it was captured; the promised date becomes the follow-up date, and a logged dispute is never overwritten",
+          "readback": "the promise is read back from the ledger by invoice_id (Xero: GET /api.xro/2.0/Invoices/{InvoiceID} returns ExpectedPaymentDate, and GET .../Invoices/{InvoiceID}/History returns the promise note); no read-back means debtor.promise_write_failed is raised and no promise.recorded is emitted"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the invoice naming the person who owns it: a dispute, a relationship-sized balance, hardship stated, a reply with no date, an override with no named approver, a promise that did not read back, or late-payment interest worked out from a rate the invoice's own terms cite and held for a person to decide",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the invoice_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "debtor.dispute_open",
+          "debtor.relationship_account",
+          "debtor.hardship_stated",
+          "debtor.no_date_given",
+          "debtor.override_refused",
+          "debtor.promise_write_failed",
+          "debtor.interest_held_for_person",
+          "debtor.customer_unreadable"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.invoice_id",
+          "seam.bucket",
+          "seam.promise_date",
+          "seam.promise_captured_at",
+          "seam.gate_reason",
+          "seam.interest_basis",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/terms-watch"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "debtor-chasing",
+          "edition": "2026-10-06",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:22:12.878Z",
+          "run_id": "run-1793712132876",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        },
+        {
+          "standard": "cash-seam",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:21:51.375Z",
+          "run_id": "run-1793712111374",
+          "green": 4,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 9
+        }
+      ]
+    },
+    {
+      "slug": "timesheet-billing",
+      "name": "Timesheet Billing",
+      "office_task": "When a client's timesheet period closes, draft its invoice in Xero from the hours at our rate card, park what it cannot price, and hold it for a named person to release.",
+      "verticals": [
+        "b2b-office"
+      ],
+      "standards": [
+        "invoice-out"
+      ],
+      "systems_of_record": [
+        "the job system that holds each client engagement's billing periods, with the time entries filed from the staff's emailed timesheets, and issues the period's id (carried as job_id)",
+        "Xero, which issues the invoice_id"
+      ],
+      "consumes": [
+        {
+          "event": "job.completed",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "invoice.raised",
+          "write": "One draft invoice in Xero per closed billing period, referenced job:<period id> (and the stage under a fixed-stage contract), every line one of the period's time entries or expenses with its timesheet entry reference in the notes, every rate read from the rate card at draft time, and the client's signed approval attached for out-of-scope hours. A second completion event updates the same draft.",
+          "readback": "Xero returns the InvoiceID; GET /api.xro/2.0/Invoices/{InvoiceID} must return the invoice with Reference job:<period id>, and that id is stamped on the period as seam.invoice_id. No id back is not a write: it raises invoice.write_failed and the run stops."
+        },
+        {
+          "event": "invoice.sent",
+          "write": "The invoice leaves only after a release naming the accounts officer, or naming the rule they set and showing the total is under its threshold; the release and the send time are recorded against the period.",
+          "readback": "GET /api.xro/2.0/Invoices/{InvoiceID} returns it AUTHORISED and sent to the contact, and the period read by its id shows seam.released_by (a person or a rule) before the send time. A send with no release on the record is refused."
+        },
+        {
+          "event": "exception.raised",
+          "write": "A parked or waiting invoice as an exception on the billing period: the reason from the standard's fixed list (not_in_pricebook, unsigned_variation, write_failed) or over_threshold, the period id, the invoice id, the codes left unpriced, and exception_owner set to the person the firm named for billing.",
+          "readback": "The exception desk returns an exception_id, and reading it back returns the job_id, the invoice_id, the reason and the exception_owner; the next run reads it there and stops until exception.closed."
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "invoice.not_in_pricebook",
+          "invoice.unsigned_variation",
+          "invoice.write_failed",
+          "invoice.over_threshold"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.invoice_id",
+          "seam.quote_id",
+          "seam.book_edition",
+          "seam.status",
+          "seam.park_reason",
+          "seam.released_by",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/timesheet-billing"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Convert emailed timesheets into QuickBooks invoices with OCR, AI, Gmail and Sheets",
+        "original_author": "DIGITAL BIZ TECH",
+        "share_link": "https://n8n.io/workflows/13092",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "invoice-out",
+          "edition": "2026-10-05",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:13:58.619Z",
+          "run_id": "run-1793711638617",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        },
+        {
+          "standard": "cash-seam",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:13:44.225Z",
+          "run_id": "run-1793711624224",
+          "green": 4,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 9
+        }
+      ]
+    },
+    {
+      "slug": "vendor-actuals",
+      "name": "Vendor Actuals",
+      "office_task": "Check each supplier invoice against its purchase order and what the supplier has claimed to date, clear what matches for a person to approve, and hand the rest to a named owner.",
+      "verticals": [
+        "b2b-office"
+      ],
+      "standards": [
+        "invoice-check"
+      ],
+      "systems_of_record": [
+        "Xero or MYOB (the ledger that issues the bill_id and holds the purchase orders)",
+        "the record of work marked complete against each purchase order (the job system or schedule of rates)",
+        "the document store where the invoice copies and written variation approvals live (Google Drive or SharePoint)"
+      ],
+      "consumes": [
+        {
+          "event": "bill.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "bill.checked",
+          "write": "a clean match stamped on the bill: the purchase order it names, the four check records with what each saw (agreed and invoiced rate, quantity complete less claimed before, written variation approvals, claimed to date against the contract sum plus approved variations), the dated tolerances used, and queue done_reversible, waiting for a named person to approve. Nothing is approved or paid.",
+          "readback": "the bill read back from the ledger by its bill_id returns seam.order_ref, seam.queue = done_reversible and the four passed check records; no bill back by that id means nothing was stamped, an exception is raised and the run stops"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the bill naming the person who owns supplier invoices: the check that failed and the checks that never ran, the difference in dollars, the cumulative position, the source document, and its queue (needs a decision, sorted by dollars at risk; waiting on the supplier for a copy; or blocked: no purchase order named, or scope with no written approval)",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the bill_id, the failed check, the dollar difference, the source document and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "bill.no_purchase_order",
+          "bill.purchase_order_not_found",
+          "bill.no_source_document",
+          "bill.rate_mismatch",
+          "bill.quantity_over_complete",
+          "bill.unapproved_scope",
+          "bill.contract_sum_overrun"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.bill_id",
+          "seam.order_ref",
+          "seam.queue",
+          "seam.failed_check",
+          "seam.never_ran",
+          "seam.difference",
+          "seam.claimed_to_date",
+          "seam.tolerance_version",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/vendor-actuals"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Invoice Coordinator",
+        "original_author": "SpaceX",
+        "share_link": "https://x.ai/bot/s072bae9387b9fc03cac8",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "invoice-check",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:19:51.162Z",
+          "run_id": "run-1793711991161",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 11
+        }
+      ]
+    },
+    {
+      "slug": "vendor-pack",
+      "name": "Vendor Pack",
+      "office_task": "Read each vendor's licence and insurance papers as they land, log the key fields and expiry dates, and hold anything unsure, missing or expired for a named person.",
+      "verticals": [
+        "b2b-office"
+      ],
+      "standards": [
+        "rejected-pack"
+      ],
+      "systems_of_record": [
+        "the document store that issues the document_id (Google Drive or SharePoint)",
+        "the vendor register that holds the graph and the pack queues, issuing the report_id and exception_id"
+      ],
+      "consumes": [
+        {
+          "event": "document.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the vendor's pack: one handover artefact derived from the graph (ABN, legal name, address, each document's class, number and expiry), every clause citing its dated rule, an as-of date and the named person's version record, released only after that person accepted this exact version",
+          "readback": "the vendor register returns a report_id for the pack, and reading that id back returns the pack's queue, its as-of date and the version record naming the person; a refused handover returns no id and nothing was published"
+        },
+        {
+          "event": "exception.raised",
+          "write": "the pack moved to Yellow (a field read below the confidence gate), Hold (an applicable document missing) or Fail (ABN not active, a name or ABN mismatch, an expired document, no rule in force), with the reason and the vendor's exception_owner",
+          "readback": "the vendor register returns an exception_id, and reading it back returns the pack id, the queue, the first check that stopped it with the reason, and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "pack.low_confidence_field",
+          "pack.identity_failed",
+          "pack.document_expired",
+          "pack.applicability_unknown",
+          "pack.document_missing",
+          "pack.abn_mismatch",
+          "pack.no_rule_in_force",
+          "pack.awaiting_release",
+          "pack.handover_refused"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.document_id",
+          "seam.queue",
+          "seam.failed_check",
+          "seam.yellow_fields",
+          "seam.rule_version",
+          "seam.as_of",
+          "seam.accepted_by",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/vendor-pack"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Monitor vendor compliance documents and expiries with Google Drive, OpenAI, Sheets, Gmail, and Slack",
+        "original_author": "Javed Iqbal",
+        "share_link": "https://n8n.io/workflows/20324",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "rejected-pack",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:28:48.806Z",
+          "run_id": "run-1793712528805",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 0,
+          "total": 13
+        }
+      ]
     }
   ],
   "routable": [
@@ -4207,41 +6200,59 @@
     "arrears-desk",
     "backflow-watch",
     "bill-check",
+    "billing-match",
     "chase-book",
     "chase-desk",
     "chase-list",
     "claim-check",
     "comp-report",
+    "cover-check",
     "crew-board",
     "deadline-desk",
     "defect-desk",
+    "delivery-billing",
+    "deposit-match",
     "docs-due",
+    "draw-match",
     "drawing-register",
     "dropped-ball",
     "feed-match",
     "fire-code-desk",
     "folder-brief",
     "goods-match",
+    "hours-audit",
     "hours-check",
     "inbox-desk",
     "invoice-desk",
+    "invoice-hold",
     "invoice-pair",
     "lead-sort",
     "matter-billing",
     "nudge-desk",
     "open-home-desk",
+    "owing-today",
     "parts-quote",
+    "payment-watch",
     "permit-answers",
     "po-match",
+    "policy-desk",
     "practice-desk",
     "price-sheet",
     "promise-watch",
     "quote-desk",
+    "quote-keeper",
     "quote-nudge",
+    "renewal-watch",
     "rent-watch",
     "repair-board",
     "ring-list",
-    "site-orders"
+    "site-orders",
+    "sub-pay-check",
+    "tenant-inbox",
+    "terms-watch",
+    "timesheet-billing",
+    "vendor-actuals",
+    "vendor-pack"
   ],
   "edges": [
     {
@@ -4299,6 +6310,42 @@
       "id": "job_id"
     },
     {
+      "from": "deposit-match",
+      "to": "chase-book",
+      "event": "payment.received",
+      "id": "payment_id"
+    },
+    {
+      "from": "deposit-match",
+      "to": "chase-desk",
+      "event": "payment.received",
+      "id": "payment_id"
+    },
+    {
+      "from": "deposit-match",
+      "to": "invoice-pair",
+      "event": "payment.received",
+      "id": "payment_id"
+    },
+    {
+      "from": "deposit-match",
+      "to": "owing-today",
+      "event": "payment.received",
+      "id": "payment_id"
+    },
+    {
+      "from": "deposit-match",
+      "to": "payment-watch",
+      "event": "payment.received",
+      "id": "payment_id"
+    },
+    {
+      "from": "deposit-match",
+      "to": "terms-watch",
+      "event": "payment.received",
+      "id": "payment_id"
+    },
+    {
       "from": "practice-desk",
       "to": "crew-board",
       "event": "job.updated",
@@ -4333,6 +6380,12 @@
       "to": "site-orders",
       "event": "job.updated",
       "id": "job_id"
+    },
+    {
+      "from": "quote-desk",
+      "to": "quote-keeper",
+      "event": "quote.sent",
+      "id": "quote_id"
     },
     {
       "from": "quote-desk",
