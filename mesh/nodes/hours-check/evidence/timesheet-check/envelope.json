@@ -1,0 +1,3862 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793710214902",
+  "standard": "timesheet-check-build-standard",
+  "spec": "AIP-BS-TIMESHEET-CHECK",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-03T12:50:14.889Z",
+  "finishedAt": "2026-11-03T12:50:14.902Z",
+  "results": [
+    {
+      "checkId": "entry-traces-to-person-day-job",
+      "n": 1,
+      "title": "Every entry traces to a person, a day and a job",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The contact list and the allocations are read before any anomaly is raised. Every line on the sheet names a person, a date and an allocated job. The unallocated entry is an anomaly of kind not_allocated and is not a line.",
+      "actual": "lines E1,E2,E3,E4,E5,E6,E7; E8 anomalies not_allocated; 12 port call(s)",
+      "stimulus": {
+        "description": "Eight entries across three people, one of them on a job the person was never allocated, with the roster and the allocations in the system.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "entry-traces-to-person-day-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": null,
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 8,
+            "ids": [
+              "E1",
+              "E2",
+              "E3",
+              "E4",
+              "E5",
+              "E6",
+              "E7",
+              "E8"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "MA000020-penalties-2025:2025-07-01",
+              "MA000020-penalties-2026:2026-10-05"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 0,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "E8",
+            "kind": "not_allocated",
+            "owner": "Construction Administrator"
+          },
+          "response": {
+            "id": "A1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 2,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P3",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 1,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 7,
+            "totals": 10,
+            "anomaliesFound": 1,
+            "anomaliesResolved": 0,
+            "release": null,
+            "exportExternalId": null
+          },
+          "response": {
+            "id": "R2"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "totals-computed-never-typed",
+      "n": 2,
+      "title": "Daily and weekly totals are computed from entries, never typed",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every published total lists the entry ids it derives from and its hours equal the sum of those entries' hours after breaks. A total with no entry ids, or with hours that do not add up, fails.",
+      "actual": "totals P1:2026-09-21=8[T1] P1:2026-09-22=8[T2+T3] P1:2026-09-23=7[T4] P2:2026-09-21=7.5[T5] P2:2026-09-22=6[T6] P2:2026-09-23=7.75[T7] P1:week=23[T1+T2+T3+T4] P2:week=21.25[T5+T6+T7]",
+      "stimulus": {
+        "description": "A period of clean entries for two people, with a daily and a weekly total expected for each.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "totals-computed-never-typed"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": null,
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 7,
+            "ids": [
+              "T1",
+              "T2",
+              "T3",
+              "T4",
+              "T5",
+              "T6",
+              "T7"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "MA000020-penalties-2025:2025-07-01",
+              "MA000020-penalties-2026:2026-10-05"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 0,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 4,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 7,
+            "totals": 8,
+            "anomaliesFound": 0,
+            "anomaliesResolved": 0,
+            "release": null,
+            "exportExternalId": null
+          },
+          "response": {
+            "id": "R1"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "anomalies-are-a-closed-list",
+      "n": 3,
+      "title": "An anomaly is one of a closed list of kinds, and it has an owner",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The overlap, the over-hours day and the unallocated job are each raised as an anomaly with a kind from the list and an owner's name. No anomaly carries a kind outside the list or an empty owner.",
+      "actual": "anomalies E2:overlap:Lee Brooks E3:overlap:Lee Brooks E5:over_hours:Lee Brooks E8:not_allocated:Construction Administrator",
+      "stimulus": {
+        "description": "The eight seeded entries, which include one overlapping pair, one twelve-hour day and one unallocated job.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "anomalies-are-a-closed-list"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": null,
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 8,
+            "ids": [
+              "E1",
+              "E2",
+              "E3",
+              "E4",
+              "E5",
+              "E6",
+              "E7",
+              "E8"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "MA000020-penalties-2025:2025-07-01",
+              "MA000020-penalties-2026:2026-10-05"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 0,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "E2",
+            "kind": "overlap",
+            "owner": "Lee Brooks"
+          },
+          "response": {
+            "id": "A1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "E3",
+            "kind": "overlap",
+            "owner": "Lee Brooks"
+          },
+          "response": {
+            "id": "A2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "E5",
+            "kind": "over_hours",
+            "owner": "Lee Brooks"
+          },
+          "response": {
+            "id": "A3"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "E8",
+            "kind": "not_allocated",
+            "owner": "Construction Administrator"
+          },
+          "response": {
+            "id": "A4"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 2,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 2,
+            "anomalies": 1,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P3",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 1,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "entryId": "E5",
+            "ruleId": "MA000020-penalties-2025",
+            "edition": "2025-07-01",
+            "effectiveFrom": "2025-07-01"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 4,
+            "totals": 7,
+            "anomaliesFound": 4,
+            "anomaliesResolved": 0,
+            "release": null,
+            "exportExternalId": null
+          },
+          "response": {
+            "id": "R5"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "award-rule-is-cited-with-an-edition",
+      "n": 4,
+      "title": "Any penalty, overtime or allowance applied cites the rule, its edition and its effective date",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The rule store is read before any card is written. Both entries carry a card with a rule id the store holds, an edition and an effective date. A line that applies a rule and has no card fails.",
+      "actual": "cards R1:MA000020-penalties-2025@2025-07-01 R2:MA000020-penalties-2025@2025-07-01",
+      "stimulus": {
+        "description": "One entry over eight hours on a weekday and one entry on a Saturday, with two rule editions in the store.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "award-rule-is-cited-with-an-edition"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": null,
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "R1",
+              "R2",
+              "R3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "MA000020-penalties-2025:2025-07-01",
+              "MA000020-penalties-2026:2026-10-05"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 0,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 1,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 1,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P3",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 1,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "entryId": "R1",
+            "ruleId": "MA000020-penalties-2025",
+            "edition": "2025-07-01",
+            "effectiveFrom": "2025-07-01"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "entryId": "R2",
+            "ruleId": "MA000020-penalties-2025",
+            "edition": "2025-07-01",
+            "effectiveFrom": "2025-07-01"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 3,
+            "totals": 6,
+            "anomaliesFound": 0,
+            "anomaliesResolved": 0,
+            "release": null,
+            "exportExternalId": null
+          },
+          "response": {
+            "id": "R1"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "superseded-rule-cannot-apply",
+      "n": 5,
+      "title": "A retired rule edition cannot apply to the next period",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Cards in the first period cite the first edition. Cards in the later period cite the second edition only. A card in the later period citing the retired edition fails.",
+      "actual": "cards S1:2025-07-01 S2:2025-07-01 S3:2026-10-05 S4:2026-10-05",
+      "stimulus": {
+        "description": "A period run under the first edition, then the first edition retired and a later period run with the second edition in force.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "superseded-rule-cannot-apply"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": null,
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 2,
+            "ids": [
+              "S1",
+              "S2"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "MA000020-penalties-2025:2025-07-01",
+              "MA000020-penalties-2026:2026-10-05"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 0,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 1,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 1,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "entryId": "S1",
+            "ruleId": "MA000020-penalties-2025",
+            "edition": "2025-07-01",
+            "effectiveFrom": "2025-07-01"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "entryId": "S2",
+            "ruleId": "MA000020-penalties-2025",
+            "edition": "2025-07-01",
+            "effectiveFrom": "2025-07-01"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 2,
+            "totals": 4,
+            "anomaliesFound": 0,
+            "anomaliesResolved": 0,
+            "release": null,
+            "exportExternalId": null
+          },
+          "response": {
+            "id": "R1"
+          }
+        },
+        {
+          "at": "2026-10-03T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W41",
+            "releaseRequested": null,
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-10-03T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-03T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-10-03T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-10-03T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W41"
+          },
+          "response": {
+            "count": 2,
+            "ids": [
+              "S3",
+              "S4"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-03T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-10-03T00:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "MA000020-penalties-2025:2025-07-01:retired",
+              "MA000020-penalties-2026:2026-10-05"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-03T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W41"
+          },
+          "response": {
+            "count": 0,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-10-03T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W41"
+          },
+          "response": {
+            "entries": 1,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-10-03T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W41"
+          },
+          "response": {
+            "entries": 1,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-10-03T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "entryId": "S3",
+            "ruleId": "MA000020-penalties-2026",
+            "edition": "2026-10-05",
+            "effectiveFrom": "2026-10-05"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-03T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "entryId": "S4",
+            "ruleId": "MA000020-penalties-2026",
+            "edition": "2026-10-05",
+            "effectiveFrom": "2026-10-05"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-03T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W41",
+            "lines": 2,
+            "totals": 4,
+            "anomaliesFound": 0,
+            "anomaliesResolved": 0,
+            "release": null,
+            "exportExternalId": null
+          },
+          "response": {
+            "id": "R2"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "no-interpretation",
+      "n": 6,
+      "title": "An entry the dated rule does not plainly cover is parked for a person",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The entry is an anomaly of kind rule_unclear with an owner, carries no card, and is not a line on the sheet. A card written for it, from any edition, fails.",
+      "actual": "U1 anomalies rule_unclear; U1 cards 0; lines U2",
+      "stimulus": {
+        "description": "One entry flagged as a disputed break, which no rule edition in the store plainly covers.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "no-interpretation"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": null,
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 2,
+            "ids": [
+              "U1",
+              "U2"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "MA000020-penalties-2025:2025-07-01",
+              "MA000020-penalties-2026:2026-10-05"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 0,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "U1",
+            "kind": "rule_unclear",
+            "owner": "Payroll Officer"
+          },
+          "response": {
+            "id": "A1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 1,
+            "anomalies": 1,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 1,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 1,
+            "totals": 2,
+            "anomaliesFound": 1,
+            "anomaliesResolved": 0,
+            "release": null,
+            "exportExternalId": null
+          },
+          "response": {
+            "id": "R2"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "anomaly-is-resolved-by-a-person-with-a-reason",
+      "n": 7,
+      "title": "An anomaly leaves the queue only with a person's name and a reason",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every anomaly is resolved with the name and reason the person gave, with the decision attached as evidence. An anomaly cleared with no person, or cleared before any person decided, fails.",
+      "actual": "resolutions A1:Lee Brooks/approved:ev1 A2:Lee Brooks/corrected:ev1 A3:Lee Brooks/rejected:ev1 A4:Lee Brooks/approved:ev1",
+      "stimulus": {
+        "description": "The seeded anomalies raised on a first run, then a named person decides each one in the queue, then a second run.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "anomaly-is-resolved-by-a-person-with-a-reason"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": null,
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 8,
+            "ids": [
+              "E1",
+              "E2",
+              "E3",
+              "E4",
+              "E5",
+              "E6",
+              "E7",
+              "E8"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "MA000020-penalties-2025:2025-07-01",
+              "MA000020-penalties-2026:2026-10-05"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 0,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "E2",
+            "kind": "overlap",
+            "owner": "Lee Brooks"
+          },
+          "response": {
+            "id": "A1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "E3",
+            "kind": "overlap",
+            "owner": "Lee Brooks"
+          },
+          "response": {
+            "id": "A2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "E5",
+            "kind": "over_hours",
+            "owner": "Lee Brooks"
+          },
+          "response": {
+            "id": "A3"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "E8",
+            "kind": "not_allocated",
+            "owner": "Construction Administrator"
+          },
+          "response": {
+            "id": "A4"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 2,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 2,
+            "anomalies": 1,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P3",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 1,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "entryId": "E5",
+            "ruleId": "MA000020-penalties-2025",
+            "edition": "2025-07-01",
+            "effectiveFrom": "2025-07-01"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 4,
+            "totals": 7,
+            "anomaliesFound": 4,
+            "anomaliesResolved": 0,
+            "release": null,
+            "exportExternalId": null
+          },
+          "response": {
+            "id": "R5"
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": null,
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 8,
+            "ids": [
+              "E1",
+              "E2",
+              "E3",
+              "E4",
+              "E5",
+              "E6",
+              "E7",
+              "E8"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-26T02:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "MA000020-penalties-2025:2025-07-01",
+              "MA000020-penalties-2026:2026-10-05"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 4,
+            "open": [
+              "A1",
+              "A2",
+              "A3",
+              "A4"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 2,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 2,
+            "anomalies": 1,
+            "cards": 1,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P3",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 1,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "anomalyId": "A1",
+            "ref": "decision by Lee Brooks: approved at 2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "resolve": "A1",
+            "by": "Lee Brooks",
+            "reason": "approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "anomalyId": "A2",
+            "ref": "decision by Lee Brooks: corrected at 2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "resolve": "A2",
+            "by": "Lee Brooks",
+            "reason": "corrected"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "anomalyId": "A3",
+            "ref": "decision by Lee Brooks: rejected at 2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "resolve": "A3",
+            "by": "Lee Brooks",
+            "reason": "rejected"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "anomalyId": "A4",
+            "ref": "decision by Lee Brooks: approved at 2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "resolve": "A4",
+            "by": "Lee Brooks",
+            "reason": "approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 7,
+            "totals": 9,
+            "anomaliesFound": 4,
+            "anomaliesResolved": 4,
+            "release": null,
+            "exportExternalId": null
+          },
+          "response": {
+            "id": "R6"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "nothing-reaches-payroll-without-a-release",
+      "n": 8,
+      "title": "Nothing reaches payroll without a release by a named person",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "No export exists after the first run. After the second, one export exists, its write comes after a release carrying the person's name, and no anomaly was open when it was written.",
+      "actual": "exports after run one 0, after run two 1; released by Dana Hill",
+      "stimulus": {
+        "description": "A first run with anomalies open and nobody having released, then the anomalies decided, a named person releasing, and a second run.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "nothing-reaches-payroll-without-a-release"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": null,
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 8,
+            "ids": [
+              "E1",
+              "E2",
+              "E3",
+              "E4",
+              "E5",
+              "E6",
+              "E7",
+              "E8"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "MA000020-penalties-2025:2025-07-01",
+              "MA000020-penalties-2026:2026-10-05"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 0,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "E2",
+            "kind": "overlap",
+            "owner": "Lee Brooks"
+          },
+          "response": {
+            "id": "A1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "E3",
+            "kind": "overlap",
+            "owner": "Lee Brooks"
+          },
+          "response": {
+            "id": "A2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "E5",
+            "kind": "over_hours",
+            "owner": "Lee Brooks"
+          },
+          "response": {
+            "id": "A3"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "E8",
+            "kind": "not_allocated",
+            "owner": "Construction Administrator"
+          },
+          "response": {
+            "id": "A4"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 2,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 2,
+            "anomalies": 1,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P3",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 1,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "entryId": "E5",
+            "ruleId": "MA000020-penalties-2025",
+            "edition": "2025-07-01",
+            "effectiveFrom": "2025-07-01"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 4,
+            "totals": 7,
+            "anomaliesFound": 4,
+            "anomaliesResolved": 0,
+            "release": null,
+            "exportExternalId": null
+          },
+          "response": {
+            "id": "R5"
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": "Dana Hill",
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 8,
+            "ids": [
+              "E1",
+              "E2",
+              "E3",
+              "E4",
+              "E5",
+              "E6",
+              "E7",
+              "E8"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-26T02:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "MA000020-penalties-2025:2025-07-01",
+              "MA000020-penalties-2026:2026-10-05"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 4,
+            "open": [
+              "A1",
+              "A2",
+              "A3",
+              "A4"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 2,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 2,
+            "anomalies": 1,
+            "cards": 1,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P3",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 1,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "anomalyId": "A1",
+            "ref": "decision by Lee Brooks: approved at 2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "resolve": "A1",
+            "by": "Lee Brooks",
+            "reason": "approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "anomalyId": "A2",
+            "ref": "decision by Lee Brooks: approved at 2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "resolve": "A2",
+            "by": "Lee Brooks",
+            "reason": "approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "anomalyId": "A3",
+            "ref": "decision by Lee Brooks: approved at 2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "resolve": "A3",
+            "by": "Lee Brooks",
+            "reason": "approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "anomalyId": "A4",
+            "ref": "decision by Lee Brooks: approved at 2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "resolve": "A4",
+            "by": "Lee Brooks",
+            "reason": "approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "2026-W39",
+            "person": "Dana Hill"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "exportFor": "2026-W39"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 8,
+            "totals": [
+              "P1:2026-09-21=8",
+              "P1:2026-09-22=9",
+              "P2:2026-09-21=8",
+              "P2:2026-09-23=12",
+              "P3:2026-09-21=8",
+              "P3:2026-09-22=8",
+              "P3:2026-09-23=8",
+              "P1:week=17",
+              "P2:week=20",
+              "P3:week=24"
+            ],
+            "releasedBy": "Dana Hill",
+            "openAtWrite": 0
+          },
+          "response": {
+            "id": "EXP6",
+            "externalId": "payroll-EXP6"
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 8,
+            "totals": 10,
+            "anomaliesFound": 4,
+            "anomaliesResolved": 4,
+            "release": "Dana Hill",
+            "exportExternalId": "payroll-EXP6"
+          },
+          "response": {
+            "id": "R7"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-export-per-period",
+      "n": 9,
+      "title": "One export per period, written once, updated on a second release",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Exactly one export exists for the period, it carries the payroll system's external id, and the second run produced an update or no write. A second export, or a null id treated as success, fails.",
+      "actual": "exports EXP1->payroll-EXP1 (updates 0)",
+      "stimulus": {
+        "description": "The same released period run twice, an hour apart.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-export-per-period"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": "Dana Hill",
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 7,
+            "ids": [
+              "E1",
+              "E2",
+              "E3",
+              "E4",
+              "E5",
+              "E6",
+              "E7"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "MA000020-penalties-2025:2025-07-01",
+              "MA000020-penalties-2026:2026-10-05"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 0,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 2,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P3",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 2,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "2026-W39",
+            "person": "Dana Hill"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "exportFor": "2026-W39"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 7,
+            "totals": [
+              "P1:2026-09-21=8",
+              "P1:2026-09-22=8",
+              "P1:2026-09-23=7.5",
+              "P2:2026-09-21=7.5",
+              "P2:2026-09-22=6",
+              "P3:2026-09-21=8",
+              "P3:2026-09-22=8",
+              "P1:week=23.5",
+              "P2:week=13.5",
+              "P3:week=16"
+            ],
+            "releasedBy": "Dana Hill",
+            "openAtWrite": 0
+          },
+          "response": {
+            "id": "EXP1",
+            "externalId": "payroll-EXP1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 7,
+            "totals": 10,
+            "anomaliesFound": 0,
+            "anomaliesResolved": 0,
+            "release": "Dana Hill",
+            "exportExternalId": "payroll-EXP1"
+          },
+          "response": {
+            "id": "R2"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": "Dana Hill",
+            "exportExternalId": "payroll-EXP1"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 7,
+            "ids": [
+              "E1",
+              "E2",
+              "E3",
+              "E4",
+              "E5",
+              "E6",
+              "E7"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "MA000020-penalties-2025:2025-07-01",
+              "MA000020-penalties-2026:2026-10-05"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 0,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 0,
+            "cards": 0,
+            "release": "Dana Hill"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 2,
+            "anomalies": 0,
+            "cards": 0,
+            "release": "Dana Hill"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P3",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 2,
+            "anomalies": 0,
+            "cards": 0,
+            "release": "Dana Hill"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "exportFor": "2026-W39"
+          },
+          "response": {
+            "exportId": "EXP1",
+            "externalId": "payroll-EXP1"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 7,
+            "totals": 10,
+            "anomaliesFound": 0,
+            "anomaliesResolved": 0,
+            "release": "Dana Hill",
+            "exportExternalId": "payroll-EXP1"
+          },
+          "response": {
+            "id": "R3"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "the-run-publishes-regardless",
+      "n": 10,
+      "title": "Every period publishes hours, anomalies found and resolved, and the release, including a clean one",
+      "verdict": "pass",
+      "held": true,
+      "expected": "One report exists for the period with hours by person, anomalies found and resolved both zero, and the release field present. A clean period with no report fails.",
+      "actual": "reports found 0 resolved 0 release null",
+      "stimulus": {
+        "description": "A period with only clean entries and nothing to raise.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "the-run-publishes-regardless"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": null,
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 7,
+            "ids": [
+              "E1",
+              "E2",
+              "E3",
+              "E4",
+              "E5",
+              "E6",
+              "E7"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "MA000020-penalties-2025:2025-07-01",
+              "MA000020-penalties-2026:2026-10-05"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 0,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 2,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P3",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 2,
+            "anomalies": 0,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 7,
+            "totals": 10,
+            "anomaliesFound": 0,
+            "anomaliesResolved": 0,
+            "release": null,
+            "exportExternalId": null
+          },
+          "response": {
+            "id": "R1"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "the-record-by-person-and-period",
+      "n": 11,
+      "title": "Entries, anomalies, resolutions, rules cited and the release are retrievable by person and period",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A read by person and period returns the entries, each anomaly with its resolution and evidence, the cards with rule id and edition, and the release with a name. A record missing the release or a resolution fails.",
+      "actual": "P1: 3 entries, 2 anomalies (2 resolved), 0 cards, release Dana Hill; P2: 3 entries, 1 anomalies (1 resolved), 2 cards, release Dana Hill; P3: 3 entries, 1 anomalies (1 resolved), 0 cards, release Dana Hill",
+      "stimulus": {
+        "description": "One period run through anomalies, decisions, release and export for three people.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "the-record-by-person-and-period"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": null,
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 9,
+            "ids": [
+              "E1",
+              "E2",
+              "E3",
+              "E4",
+              "E5",
+              "E6",
+              "E7",
+              "E8",
+              "E9"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "MA000020-penalties-2025:2025-07-01",
+              "MA000020-penalties-2026:2026-10-05"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 0,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "E2",
+            "kind": "overlap",
+            "owner": "Lee Brooks"
+          },
+          "response": {
+            "id": "A1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "E3",
+            "kind": "overlap",
+            "owner": "Lee Brooks"
+          },
+          "response": {
+            "id": "A2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "E5",
+            "kind": "over_hours",
+            "owner": "Lee Brooks"
+          },
+          "response": {
+            "id": "A3"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "entryId": "E8",
+            "kind": "not_allocated",
+            "owner": "Construction Administrator"
+          },
+          "response": {
+            "id": "A4"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 2,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 1,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P3",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 1,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "entryId": "E5",
+            "ruleId": "MA000020-penalties-2025",
+            "edition": "2025-07-01",
+            "effectiveFrom": "2025-07-01"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "entryId": "E9",
+            "ruleId": "MA000020-penalties-2025",
+            "edition": "2025-07-01",
+            "effectiveFrom": "2025-07-01"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 5,
+            "totals": 8,
+            "anomaliesFound": 4,
+            "anomaliesResolved": 0,
+            "release": null,
+            "exportExternalId": null
+          },
+          "response": {
+            "id": "R5"
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "period": true
+          },
+          "response": {
+            "id": "2026-W39",
+            "releaseRequested": "Dana Hill",
+            "exportExternalId": null
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "people": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "allocations": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "roster": true
+          },
+          "response": {
+            "count": 42
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "entries": "2026-W39"
+          },
+          "response": {
+            "count": 9,
+            "ids": [
+              "E1",
+              "E2",
+              "E3",
+              "E4",
+              "E5",
+              "E6",
+              "E7",
+              "E8",
+              "E9"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-26T02:00:00.000Z"
+          },
+          "response": {
+            "editions": [
+              "MA000020-penalties-2025:2025-07-01",
+              "MA000020-penalties-2026:2026-10-05"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "anomalies": "2026-W39"
+          },
+          "response": {
+            "count": 4,
+            "open": [
+              "A1",
+              "A2",
+              "A3",
+              "A4"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P1",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 2,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P2",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 1,
+            "cards": 2,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "record": "P3",
+            "periodId": "2026-W39"
+          },
+          "response": {
+            "entries": 3,
+            "anomalies": 1,
+            "cards": 0,
+            "release": null
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "anomalyId": "A1",
+            "ref": "decision by Lee Brooks: approved at 2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "resolve": "A1",
+            "by": "Lee Brooks",
+            "reason": "approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "anomalyId": "A2",
+            "ref": "decision by Lee Brooks: corrected at 2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "resolve": "A2",
+            "by": "Lee Brooks",
+            "reason": "corrected"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "anomalyId": "A3",
+            "ref": "decision by Lee Brooks: approved at 2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "resolve": "A3",
+            "by": "Lee Brooks",
+            "reason": "approved"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "anomalyId": "A4",
+            "ref": "decision by Lee Brooks: corrected at 2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "resolve": "A4",
+            "by": "Lee Brooks",
+            "reason": "corrected"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "2026-W39",
+            "person": "Dana Hill"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "exportFor": "2026-W39"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 9,
+            "totals": [
+              "P1:2026-09-21=8",
+              "P1:2026-09-22=9",
+              "P2:2026-09-21=8",
+              "P2:2026-09-23=12",
+              "P3:2026-09-21=8",
+              "P3:2026-09-22=8",
+              "P3:2026-09-23=8",
+              "P2:2026-09-26=5.5",
+              "P1:week=17",
+              "P2:week=25.5",
+              "P3:week=24"
+            ],
+            "releasedBy": "Dana Hill",
+            "openAtWrite": 0
+          },
+          "response": {
+            "id": "EXP6",
+            "externalId": "payroll-EXP6"
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "periodId": "2026-W39",
+            "lines": 9,
+            "totals": 11,
+            "anomaliesFound": 4,
+            "anomaliesResolved": 4,
+            "release": "Dana Hill",
+            "exportExternalId": "payroll-EXP6"
+          },
+          "response": {
+            "id": "R7"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 12,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the rules, the roster and the release runs on.",
+        "now": "2026-11-03T12:50:14.902Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 13,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "The overlap and the unallocated job are in the anomaly queue with owners, the entry the new edition does not plainly cover is parked, the export exists in payroll with its id, and the release names the person who gave it.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "A real period of entries captured on site or in the app, on the business's own job system and payroll.",
+        "now": "2026-11-03T12:50:14.902Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 13,
+    "pass": 10,
+    "fail": 0,
+    "shapeOnly": 1,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
