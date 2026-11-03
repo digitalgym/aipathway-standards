@@ -2,16 +2,43 @@
   "slug": "invoice-desk",
   "name": "Invoice Desk",
   "office_task": "When a job is marked complete, put its draft invoice in Xero at our own prices, park what it cannot price, and send only once a named person or their rule releases it.",
-  "verticals": ["b2b-office"],
-  "standards": ["invoice-out"],
-  "systems_of_record": ["the job system that issues the job_id (ServiceM8, Simpro, or a job sheet)", "Xero, which issues the invoice_id"],
-  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/invoice-desk" },
-  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
-  "runtime": ["node", "webhook", "schedule"],
+  "verticals": [
+    "b2b-office"
+  ],
+  "standards": [
+    "invoice-out"
+  ],
+  "systems_of_record": [
+    "the job system that issues the job_id (ServiceM8, Simpro, or a job sheet)",
+    "Xero, which issues the invoice_id"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/invoice-desk",
+    "bot": "https://x.ai/bot/BuX7-5BB-IjFDdBpLKETb"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "webhook",
+    "schedule",
+    "grok-bot-template"
+  ],
   "consumes": [
-    { "event": "job.completed", "wake": "webhook" },
-    { "event": "schedule.tick", "wake": "schedule" },
-    { "event": "exception.closed", "wake": "webhook" }
+    {
+      "event": "job.completed",
+      "wake": "webhook"
+    },
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    },
+    {
+      "event": "exception.closed",
+      "wake": "webhook"
+    }
   ],
   "emits": [
     {
@@ -44,7 +71,16 @@
   },
   "durable_state": {
     "writes_to": "system-of-record",
-    "fields": ["seam.job_id", "seam.invoice_id", "seam.quote_id", "seam.book_edition", "seam.status", "seam.park_reason", "seam.released_by", "seam.exception_owner"]
+    "fields": [
+      "seam.job_id",
+      "seam.invoice_id",
+      "seam.quote_id",
+      "seam.book_edition",
+      "seam.status",
+      "seam.park_reason",
+      "seam.released_by",
+      "seam.exception_owner"
+    ]
   },
   "private_memory": "none",
   "port_of": {
