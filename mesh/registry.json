@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-03T14:19:29.691Z",
+  "generated_at": "2026-11-03T14:19:46.098Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -2388,6 +2388,114 @@
           "environment": "stub",
           "ran_at": "2026-11-03T11:04:06.468Z",
           "run_id": "run-1793703846466",
+          "green": 10,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 13
+        }
+      ]
+    },
+    {
+      "slug": "fact-library",
+      "name": "Fact Library",
+      "office_task": "Keep one read-only company knowledge graph that every bot in the fleet asks, where nothing goes live until a named person accepts it and a replaced document takes its answers with it.",
+      "verticals": [
+        "b2b-office"
+      ],
+      "standards": [
+        "knowledge-graph"
+      ],
+      "systems_of_record": [
+        "the document store that issues the document_id for each source in the watched library folder (Drive, SharePoint)",
+        "the business's own graph store and library register, which hold sources with edition and checksum, nodes, edges, change deltas and the answers given (lists, Postgres or a graph database on the business's account)",
+        "the system of record that issues entity ids (the Xero contact, the CRM id, the ABN)",
+        "the exception desk the business runs, which issues the exception_id"
+      ],
+      "consumes": [
+        {
+          "event": "document.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the change delta for a source whose checksum moved, written into the library register the knowledge owner opens: the source's document_id, the old and new checksum, and the computed list of every node built from it, each moved to change_pending",
+          "readback": "the library register returns a report_id, and reading that id back returns the document_id, both checksums and the affected node ids; no id back means the delta was not written, kg.change_pending is raised to the named owner and no affected node answers"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the source or node naming the person who owns it: a source that is not an instrument, customer material offered as a source, an acceptance with no name or no locator, a type the key contract does not name, an entity with no system-of-record id and no accepted SAME_AS, two live nodes in conflict, a change pending acceptance, or a question no live node covers",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the document_id or node id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "kg.source_not_an_instrument",
+          "kg.customer_material_not_a_source",
+          "kg.acceptance_refused",
+          "kg.type_not_in_contract",
+          "kg.no_registered_source",
+          "kg.identity_unconfirmed",
+          "kg.conflict_needs_person",
+          "kg.promotion_refused",
+          "kg.change_pending",
+          "kg.not_covered"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.document_id",
+          "seam.contract_version",
+          "seam.source_checksum",
+          "seam.node_queue",
+          "seam.accepted_by",
+          "seam.delta_id",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/fact-library"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Ops Knowledge Observer",
+        "original_author": "Stephen Ruhe",
+        "share_link": "https://x.ai/bot/CIgxhKdiPj7KflehWkaEr",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "knowledge-graph",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:52:43.272Z",
+          "run_id": "run-1793713963270",
           "green": 10,
           "red": 0,
           "with_us": 1,
@@ -6611,6 +6719,101 @@
       ]
     },
     {
+      "slug": "variation-chase",
+      "name": "Variation Chase",
+      "office_task": "Each weekday, chase the signature on every variation the office has approved, stop the day it comes back signed, and hand a no or a silent party to a named person.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "follow-up"
+      ],
+      "systems_of_record": [
+        "the job system's variation register, one open item per approved variation awaiting signature on the job (Simpro, ServiceM8 or a Google Sheet kept beside the job system), which issues the job_id and the item id",
+        "the office mailbox (Gmail or Outlook) the signed variation comes back to, which issues the message_id"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "evidence.filed",
+          "write": "the signed variation (or the certificate, PO number or form the job waited on) filed as evidence against its open item on the job, which marks the item arrived so the variation can go on the next progress claim",
+          "readback": "reading the item back by its id returns status arrived with the arrival's evidence reference, which names the message_id of the email that carried the signed copy and the job_id it belongs to; no evidence reference back means it was not filed, and the item gets no touch until a person looks"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an escalation on the item naming the cadence's person: the other side said no, disputed the variation or asked us to stop, or the item reached its cap with nothing back, carrying every touch so far",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the item id, the job_id, the reason, the touch history and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "followup.declined",
+          "followup.dispute",
+          "followup.cap_reached"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.item_id",
+          "seam.item_status",
+          "seam.touches",
+          "seam.outcome",
+          "seam.evidence_ref",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/variation-chase"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Review, approve, and chase subcontractor change orders with forms, DeepSeek, Gmail, and Google Sheets",
+        "original_author": "Khaisa Studio",
+        "share_link": "https://n8n.io/workflows/21993",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "follow-up",
+          "edition": "2026-10-05",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:53:08.721Z",
+          "run_id": "run-1793713988719",
+          "green": 10,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 13
+        }
+      ]
+    },
+    {
       "slug": "vendor-actuals",
       "name": "Vendor Actuals",
       "office_task": "Check each supplier invoice against its purchase order and what the supplier has claimed to date, clear what matches for a person to approve, and hand the rest to a named owner.",
@@ -6954,6 +7157,7 @@
     "draw-match",
     "drawing-register",
     "dropped-ball",
+    "fact-library",
     "feed-match",
     "fire-code-desk",
     "folder-brief",
@@ -6993,6 +7197,7 @@
     "terms-watch",
     "timesheet-billing",
     "van-board",
+    "variation-chase",
     "vendor-actuals",
     "vendor-pack",
     "visit-offer"
