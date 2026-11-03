@@ -1,0 +1,58 @@
+{
+  "slug": "licence-watch",
+  "name": "Licence Watch",
+  "office_task": "Each morning, work out when our licences and insurance policies run out from each state's rule, remind the named person with a Done link, and count it renewed only when the new certificate is filed.",
+  "verticals": ["trades-building"],
+  "standards": ["compliance-calendar"],
+  "systems_of_record": ["the business's licence register (each contractor licence, worker trade licence and insurance policy with its issue or renewal date, the dated rule set per state, and the document store renewed licences and certificates of currency are filed in)"],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/licence-watch" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "email.received", "wake": "webhook" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "evidence.filed",
+      "write": "the renewed licence or certificate of currency attached to a Done reply, filed as evidence of renewal on the licence obligation the Done link names by obligation id; a reply with no obligation id is never matched on a name or a phone number and is raised instead",
+      "readback": "the obligation is read back by its id and must return the same document reference (the message_id and attachment) and a completion date; if it does not, nothing was filed and licence.evidence_not_read_back is raised"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the licence obligation naming the person who owns it, which the exception desk texts to them with the Done link: a renewal coming due, a lapse, a Done with no document, no issue date on the licence record, no rule for that licence type in that state, a past expiry no retained rule version explains, a dated decision not to renew, a drafted renewal request awaiting a named release, a release with no named person, silence past the next chase date, or a reply with no obligation id",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the obligation id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "licence.renewal_due",
+      "licence.overdue",
+      "licence.done_without_document",
+      "licence.evidence_not_read_back",
+      "licence.done_unmatched",
+      "licence.anchor_unknown",
+      "licence.no_rule_in_force",
+      "licence.history_unexplained",
+      "licence.renewal_declined",
+      "licence.renewal_drafted_awaiting_release",
+      "licence.release_refused",
+      "licence.chase_due"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.obligation_ref", "seam.rule_version", "seam.anchor_status", "seam.state", "seam.evidence", "seam.refused_at", "seam.breached_at", "seam.next_chase", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Send license and insurance renewal reminders by SMS with Twilio",
+    "original_author": "Michael Matthews",
+    "share_link": "https://n8n.io/workflows/20108",
+    "licence_or_permission": "reimplementation"
+  }
+}
