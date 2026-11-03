@@ -1,0 +1,1818 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793711986723",
+  "standard": "debtor-chasing-build-standard",
+  "spec": "AIP-BS-DEBTOR-CHASING",
+  "specVersion": "2026-10-06",
+  "environment": "stub",
+  "startedAt": "2026-11-03T13:19:46.675Z",
+  "finishedAt": "2026-11-03T13:19:46.723Z",
+  "results": [
+    {
+      "checkId": "coverage-measured",
+      "n": 1,
+      "title": "Mobile coverage was checked first",
+      "verdict": "evidence_required",
+      "expected": "A coverage figure is present and dated. The runner reports it, and never scores it as passed on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The build declares the measured share, and the builder attaches how it was measured.",
+        "now": "2026-11-03T13:19:46.676Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "overdue-off-due-date",
+      "n": 2,
+      "title": "Overdue is measured off the due date",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The not-yet-due invoice is absent from the run. Every row in the run is past its due date, not its issue date.",
+      "actual": "run: [[\"INV-B1\"],[\"INV-C1\"]]",
+      "stimulus": {
+        "description": "A seeded book with invoices whose issue and due dates differ, including one issued long ago but not yet due.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "overdue-off-due-date"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 3
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 3
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "B",
+              "C"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "B",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "B [just_late] INV-B1. Draft for Sam Okafor (owner, receivables) to say yes to:\nHi Client B, a quick note on what is still open.\nINV-B1: $1,200.00, 7 days past its due date\nTotal $1,200.00.\nWhen can I expect payment?\nIf something on these is not right, reply and tell me, and I will look at it before anything else."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "C [hard] INV-C1. Draft for Sam Okafor (owner, receivables) to say yes to:\nHi Client C, a quick note on what is still open.\nINV-C1: $800.00, 51 days past its due date\nTotal $800.00.\nWhen can I expect payment?\nIf something on these is not right, reply and tell me, and I will look at it before anything else."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "four-buckets",
+      "n": 3,
+      "title": "Four buckets, not one list",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Each seeded row lands in its expected bucket, and no row carries a free-text bucket.",
+      "actual": "buckets: [[\"BP\",\"broken_promise\"],[\"HD\",\"hard\"],[\"DR\",\"drifting\"],[\"JL\",\"just_late\"]]",
+      "stimulus": {
+        "description": "A seeded book with one row belonging in each bucket.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "four-buckets"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 4
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 4
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 4
+          },
+          "response": {
+            "order": [
+              "BP",
+              "HD",
+              "DR",
+              "JL"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "BP",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "BP [broken_promise] INV-BP. Draft for Sam Okafor (owner, receivables) to say yes to:\nHi Client BP, you mentioned payment by 2026-09-15, and I can't see it yet.\nINV-BP: $500.00, 11 days past its due date\nTotal $500.00.\nWhen can I expect payment?\nIf something on these is not right, reply and tell me, and I will look at it before anything else."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "HD",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "HD [hard] INV-HD. Draft for Sam Okafor (owner, receivables) to say yes to:\nHi Client HD, a quick note on what is still open.\nINV-HD: $500.00, 82 days past its due date\nTotal $500.00.\nWhen can I expect payment?\nIf something on these is not right, reply and tell me, and I will look at it before anything else."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "DR",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "DR [drifting] INV-DR. Draft for Sam Okafor (owner, receivables) to say yes to:\nHi Client DR, a quick note on what is still open.\nINV-DR: $500.00, 25 days past its due date\nTotal $500.00.\nWhen can I expect payment?\nIf something on these is not right, reply and tell me, and I will look at it before anything else."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "JL",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "JL [just_late] INV-JL. Draft for Sam Okafor (owner, receivables) to say yes to:\nHi Client JL, a quick note on what is still open.\nINV-JL: $500.00, 5 days past its due date\nTotal $500.00.\nWhen can I expect payment?\nIf something on these is not right, reply and tell me, and I will look at it before anything else."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "broken-promise-outranks",
+      "n": 4,
+      "title": "Broken promise outranks everything",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The broken promise ranks above the larger row despite the smaller amount.",
+      "actual": "order: SMALL:broken_promise:30000, BIG:drifting:2000000",
+      "stimulus": {
+        "description": "A small broken promise seeded alongside a much larger invoice that is merely late.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "broken-promise-outranks"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "SMALL",
+              "BIG"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "SMALL",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "SMALL [broken_promise] INV-S. Draft for Sam Okafor (owner, receivables) to say yes to:\nHi Client SMALL, you mentioned payment by 2026-09-18, and I can't see it yet.\nINV-S: $300.00, 16 days past its due date\nTotal $300.00.\nWhen can I expect payment?\nIf something on these is not right, reply and tell me, and I will look at it before anything else."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "BIG",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "BIG [drifting] INV-L. Draft for Sam Okafor (owner, receivables) to say yes to:\nHi Client BIG, a quick note on what is still open.\nINV-L: $20,000.00, 32 days past its due date\nTotal $20,000.00.\nWhen can I expect payment?\nIf something on these is not right, reply and tell me, and I will look at it before anything else."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "rank-by-amount-at-risk",
+      "n": 5,
+      "title": "Ranking is by amount at risk",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The larger amount ranks first. Age decides only when amounts are equal.",
+      "actual": "order: NEW:800000, TIE-OLD:100000, TIE-NEW:100000, OLD:50000",
+      "stimulus": {
+        "description": "Two rows in the same bucket: one older and small, one newer and large.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "rank-by-amount-at-risk"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 4
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 4
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 4
+          },
+          "response": {
+            "order": [
+              "NEW",
+              "TIE-OLD",
+              "TIE-NEW",
+              "OLD"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "NEW",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "NEW [drifting] INV-N. Draft for Sam Okafor (owner, receivables) to say yes to:\nHi Client NEW, a quick note on what is still open.\nINV-N: $8,000.00, 20 days past its due date\nTotal $8,000.00.\nWhen can I expect payment?\nIf something on these is not right, reply and tell me, and I will look at it before anything else."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "TIE-OLD",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "TIE-OLD [drifting] INV-TO. Draft for Sam Okafor (owner, receivables) to say yes to:\nHi Client TIE-OLD, a quick note on what is still open.\nINV-TO: $1,000.00, 40 days past its due date\nTotal $1,000.00.\nWhen can I expect payment?\nIf something on these is not right, reply and tell me, and I will look at it before anything else."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "TIE-NEW",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "TIE-NEW [drifting] INV-TN. Draft for Sam Okafor (owner, receivables) to say yes to:\nHi Client TIE-NEW, a quick note on what is still open.\nINV-TN: $1,000.00, 19 days past its due date\nTotal $1,000.00.\nWhen can I expect payment?\nIf something on these is not right, reply and tell me, and I will look at it before anything else."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "OLD",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "OLD [drifting] INV-O. Draft for Sam Okafor (owner, receivables) to say yes to:\nHi Client OLD, a quick note on what is still open.\nINV-O: $500.00, 42 days past its due date\nTotal $500.00.\nWhen can I expect payment?\nIf something on these is not right, reply and tell me, and I will look at it before anything else."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-customer-one-conversation",
+      "n": 6,
+      "title": "One customer is one conversation",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The run contains exactly one entry for that customer, carrying the summed amount and all six invoice references.",
+      "actual": "SIX entries: [{\"customerId\":\"SIX\",\"amount\":210000,\"bucket\":\"drifting\",\"invoiceIds\":[\"INV-61\",\"INV-62\",\"INV-63\",\"INV-64\",\"INV-65\",\"INV-66\"]}]",
+      "stimulus": {
+        "description": "One customer seeded with six overdue invoices.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-customer-one-conversation"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 7
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "SIX",
+              "ONE"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "SIX",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "SIX [drifting] INV-61, INV-62, INV-63, INV-64, INV-65, INV-66. Draft for Sam Okafor (owner, receivables) to say yes to:\nHi Client SIX, a quick note on what is still open.\nINV-61: $100.00, 20 days past its due date\nINV-62: $200.00, 19 days past its due date\nINV-63: $300.00, 18 days past its due date\nINV-64: $400.00, 17 days past its due date\nINV-65: $500.00, 16 days past its due date\nINV-66: $600.00, 15 days past its due date\nTotal $2,100.00.\nWhen can I expect payment?\nIf something on these is not right, reply and tell me, and I will look at it before anything else."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "ONE",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "ONE [drifting] INV-ONE. Draft for Sam Okafor (owner, receivables) to say yes to:\nHi Client ONE, a quick note on what is still open.\nINV-ONE: $700.00, 18 days past its due date\nTotal $700.00.\nWhen can I expect payment?\nIf something on these is not right, reply and tell me, and I will look at it before anything else."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "relationship-balances-excluded",
+      "n": 7,
+      "title": "Relationship-sized balances are out of the run",
+      "verdict": "pass",
+      "held": true,
+      "expected": "That customer is absent from the dial list, carries an exclusion reason, and an escalate names who it went to.",
+      "actual": "ANCHOR: [{\"customerId\":\"ANCHOR\",\"amount\":9000000,\"bucket\":\"drifting\",\"invoiceIds\":[\"INV-AN\"],\"excludedReason\":\"relationship_account\"}]; escalations: debtor.relationship_account, debtor.reminder_ready_for_release",
+      "stimulus": {
+        "description": "A debtor seeded far above the configured relationship threshold.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "relationship-balances-excluded"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.relationship_account",
+            "detail": "ANCHOR: $90,000.00 across INV-AN. Not chased. Owner: Sam Okafor (owner, receivables)"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "SMALLER",
+              "ANCHOR"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "SMALLER",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "SMALLER [drifting] INV-SM. Draft for Sam Okafor (owner, receivables) to say yes to:\nHi Client SMALLER, a quick note on what is still open.\nINV-SM: $600.00, 16 days past its due date\nTotal $600.00.\nWhen can I expect payment?\nIf something on these is not right, reply and tell me, and I will look at it before anything else."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "promise-is-an-object",
+      "n": 8,
+      "title": "A promise is an object with a date",
+      "verdict": "pass",
+      "held": true,
+      "expected": "record_promise carries a date and a capture timestamp, a null amount is accepted, and the dispute is still present afterwards.",
+      "actual": "record_promise: [{\"at\":\"2026-09-21T04:00:00.000Z\",\"port\":\"record_promise\",\"verb\":\"write\",\"subject\":\"promise\",\"request\":{\"customerId\":\"FRI\",\"date\":\"2026-09-25\",\"amount\":null},\"response\":{\"capturedAt\":\"2026-09-21T04:00:00.000Z\"}}]",
+      "stimulus": {
+        "description": "A call where the debtor says they will pay Friday without naming a figure, on an invoice already carrying a dispute.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "promise-is-an-object"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "record_promise",
+          "verb": "write",
+          "subject": "promise",
+          "request": {
+            "customerId": "FRI",
+            "date": "2026-09-25",
+            "amount": null
+          },
+          "response": {
+            "capturedAt": "2026-09-21T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 1
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "promised-date-is-followup",
+      "n": 9,
+      "title": "The promised date is the follow-up date",
+      "verdict": "pass",
+      "held": true,
+      "expected": "That customer appears in no run before the promised date.",
+      "actual": "runs: [[\"OTHER\"],[\"OTHER\"],[\"OTHER\"],[\"OTHER\"]]",
+      "stimulus": {
+        "description": "A promise for a date five days out, then a run on each of the next four days.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "promised-date-is-followup"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-22T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "OTHER"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "OTHER",
+            "localHour": 14,
+            "date": "2026-09-22"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "OTHER [drifting] INV-OT. Draft for Sam Okafor (owner, receivables) to say yes to:\nHi Client OTHER, a quick note on what is still open.\nINV-OT: $400.00, 21 days past its due date\nTotal $400.00.\nWhen can I expect payment?\nIf something on these is not right, reply and tell me, and I will look at it before anything else."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-23T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "OTHER"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "OTHER",
+            "localHour": 14,
+            "date": "2026-09-23"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "OTHER [drifting] INV-OT. Draft for Sam Okafor (owner, receivables) to say yes to:\nHi Client OTHER, a quick note on what is still open.\nINV-OT: $400.00, 22 days past its due date\nTotal $400.00.\nWhen can I expect payment?\nIf something on these is not right, reply and tell me, and I will look at it before anything else."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-24T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "OTHER"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "OTHER",
+            "localHour": 14,
+            "date": "2026-09-24"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "OTHER [drifting] INV-OT. Draft for Sam Okafor (owner, receivables) to say yes to:\nHi Client OTHER, a quick note on what is still open.\nINV-OT: $400.00, 23 days past its due date\nTotal $400.00.\nWhen can I expect payment?\nIf something on these is not right, reply and tell me, and I will look at it before anything else."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-25T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "OTHER"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "OTHER",
+            "localHour": 14,
+            "date": "2026-09-25"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "OTHER [drifting] INV-OT. Draft for Sam Okafor (owner, receivables) to say yes to:\nHi Client OTHER, a quick note on what is still open.\nINV-OT: $400.00, 24 days past its due date\nTotal $400.00.\nWhen can I expect payment?\nIf something on these is not right, reply and tell me, and I will look at it before anything else."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "gate-under-ranking",
+      "n": 10,
+      "title": "The gate sits underneath the ranking",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "No dial in any of the three. Each is held with a reason, and the highest score in the book does not override it.",
+      "actual": "gate: [{\"customerId\":\"TOP\",\"decision\":{\"allowed\":false,\"reason\":\"outside_hours\"},\"at\":\"2026-10-02T10:30:00.000Z\"},{\"customerId\":\"LOW\",\"decision\":{\"allowed\":false,\"reason\":\"outside_hours\"},\"at\":\"2026-10-02T10:30:00.000Z\"},{\"customerId\":\"TOP\",\"decision\":{\"allowed\":false,\"reason\":\"public_holiday\"},\"at\":\"2026-10-05T04:00:00.000Z\"},{\"customerId\":\"LOW\",\"decision\":{\"allowed\":false,\"reason\":\"public_holiday\"},\"at\":\"2026-10-05T04:00:00.000Z\"},{\"customerId\":\"TOP\",\"decision\":{\"allowed\":false,\"reason\":\"already_paid\"},\"at\":\"2026-10-06T04:00:00.000Z\"},{\"customerId\":\"LOW\",\"decision\":{\"allowed\":true},\"at\":\"2026-10-06T04:00:00.000Z\"}]",
+      "stimulus": {
+        "description": "The top-ranked row, run at 8:30pm in the debtor's timezone; then the same row on a state public holiday; then the same row after the ledger shows it paid.",
+        "now": "2026-10-02T10:30:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "gate-under-ranking"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-02T10:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-10-02T10:30:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-10-02T10:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-10-02T10:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-10-02T10:30:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "TOP",
+              "LOW"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-02T10:30:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "TOP",
+            "localHour": 20.5,
+            "date": "2026-10-02"
+          },
+          "response": {
+            "allowed": false,
+            "reason": "outside_hours"
+          }
+        },
+        {
+          "at": "2026-10-02T10:30:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "LOW",
+            "localHour": 20.5,
+            "date": "2026-10-02"
+          },
+          "response": {
+            "allowed": false,
+            "reason": "outside_hours"
+          }
+        },
+        {
+          "at": "2026-10-05T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-10-05T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-10-05T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-10-05T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-10-05T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "TOP",
+              "LOW"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-05T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "TOP",
+            "localHour": 14,
+            "date": "2026-10-05"
+          },
+          "response": {
+            "allowed": false,
+            "reason": "public_holiday"
+          }
+        },
+        {
+          "at": "2026-10-05T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "LOW",
+            "localHour": 14,
+            "date": "2026-10-05"
+          },
+          "response": {
+            "allowed": false,
+            "reason": "public_holiday"
+          }
+        },
+        {
+          "at": "2026-10-06T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-10-06T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-10-06T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-10-06T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-10-06T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "TOP",
+              "LOW"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-06T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "TOP",
+            "localHour": 14,
+            "date": "2026-10-06"
+          },
+          "response": {
+            "allowed": false,
+            "reason": "already_paid"
+          }
+        },
+        {
+          "at": "2026-10-06T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "LOW",
+            "localHour": 14,
+            "date": "2026-10-06"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-10-06T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "LOW [drifting] INV-L1. Draft for Sam Okafor (owner, receivables) to say yes to:\nHi Client LOW, a quick note on what is still open.\nINV-L1: $200.00, 16 days past its due date\nTotal $200.00.\nWhen can I expect payment?\nIf something on these is not right, reply and tell me, and I will look at it before anything else."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "exceptions-attributable",
+      "n": 11,
+      "title": "Exceptions are named and attributable",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The override records the reason, the timestamp and the approving person. An override with no named approver is refused.",
+      "actual": "overrides: [{\"customerId\":\"HELD\",\"reason\":\"client asked for the statement tonight\",\"approver\":\"Sam Okafor\",\"at\":\"2026-09-21T10:35:00.000Z\"}]; refused: [{\"customerId\":\"HELD\",\"why\":\"no named approver\"}]",
+      "stimulus": {
+        "description": "An override applied to a held row.",
+        "now": "2026-09-21T10:30:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "exceptions-attributable"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T10:30:00.000Z"
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "HELD"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "HELD",
+            "localHour": 20.5,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": false,
+            "reason": "outside_hours"
+          }
+        },
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "override": "HELD",
+            "reason": "client asked for the statement tonight"
+          },
+          "response": {
+            "accepted": false
+          }
+        },
+        {
+          "at": "2026-09-21T10:30:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.override_refused",
+            "detail": "HELD: an override with no named approver. Held: outside_hours."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T10:35:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T10:35:00.000Z"
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-21T10:35:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-21T10:35:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-21T10:35:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "HELD"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T10:35:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "HELD",
+            "localHour": 20.58,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": false,
+            "reason": "outside_hours"
+          }
+        },
+        {
+          "at": "2026-09-21T10:35:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "override": "HELD",
+            "reason": "client asked for the statement tonight",
+            "approver": "Sam Okafor"
+          },
+          "response": {
+            "accepted": true
+          }
+        },
+        {
+          "at": "2026-09-21T10:35:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.reminder_ready_for_release",
+            "detail": "HELD [drifting] INV-H1. Draft for Sam Okafor (owner, receivables) to say yes to: Released early on Sam Okafor's authority: client asked for the statement tonight.\nHi Client HELD, a quick note on what is still open.\nINV-H1: $2,500.00, 27 days past its due date\nTotal $2,500.00.\nWhen can I expect payment?\nIf something on these is not right, reply and tell me, and I will look at it before anything else."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 12,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "The paid invoice is not dialled and the audit row says which ledger read stopped it; the late run holds until morning.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "A real run against a live ledger, at a real time of day, on a real number.",
+        "now": "2026-11-03T13:19:46.723Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 12,
+    "pass": 9,
+    "fail": 0,
+    "shapeOnly": 1,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
