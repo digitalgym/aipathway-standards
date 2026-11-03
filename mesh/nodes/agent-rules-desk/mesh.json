@@ -1,0 +1,71 @@
+{
+  "slug": "agent-rules-desk",
+  "name": "Agent Rules Desk",
+  "office_task": "Answer our agents on the state agent rules we are licensed under, only from the rules we hold, citing the clause and edition, or hand the question to the licensee in charge.",
+  "verticals": ["property"],
+  "standards": ["cited-answer"],
+  "systems_of_record": [
+    "the mail system that issues the message_id an agent's question arrived on and the reply went out on (Gmail, Outlook)",
+    "the agency's own rule library: the state agent legislation and regulations for each state it is licensed in (NSW, QLD, VIC and the rest) and its compliance manual, held as clauses with editions, state or territory and effective dates, with its answer register",
+    "the exception desk the agency runs, which issues the exception_id"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/agent-rules-desk" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "webhook", "schedule"],
+  "consumes": [
+    { "event": "email.received", "wake": "webhook" },
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "answer.sent",
+      "write": "a stored answer with its source cards (instrument, clause, edition, state or territory, effective date), sent as a reply on the agent's question thread only after the licensee in charge released it on the answer register",
+      "readback": "the mail system returns the reply's message_id, and reading that id back returns the thread it replies in and the answer register id; no id back means it was not sent, and cited.send_unconfirmed is raised to the licensee in charge"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the question's message naming the licensee in charge: no licence state given, nothing in the rule library covers it, a compliance finding, breach call or sign-off, a source conflict between two live instruments, or an instrument that moved and waits for a named person to accept it (listing every stored answer that relied on it)",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the message_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "cited.no_jurisdiction",
+      "cited.not_in_library",
+      "cited.decision_for_person",
+      "cited.source_conflict",
+      "cited.change_pending",
+      "cited.acceptance_without_person",
+      "cited.release_refused",
+      "cited.release_without_person",
+      "cited.send_unconfirmed"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "answer.message_id",
+      "answer.queue",
+      "answer.policy",
+      "answer.source_card_ids",
+      "answer.released_by",
+      "source_card.edition",
+      "source_card.jurisdiction",
+      "source_card.effective_from",
+      "change_delta.accepted_by",
+      "change_delta.accepted_on",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "CA Brokerage Compliance",
+    "original_author": "Joe Foxx",
+    "share_link": "https://x.ai/bot/OtCWbWeEWyNiFCV3qLxYU",
+    "licence_or_permission": "reimplementation"
+  }
+}
