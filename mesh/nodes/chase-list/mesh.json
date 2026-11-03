@@ -2,17 +2,48 @@
   "slug": "chase-list",
   "name": "Chase List",
   "office_task": "Each morning, rank who owes us money by what it is worth chasing, draft a friendly, firm or final reminder for each, and leave them for us to send.",
-  "verticals": ["b2b-office"],
-  "standards": ["debtor-chasing"],
-  "systems_of_record": ["Xero", "MYOB", "the exception desk the business runs"],
-  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/chase-list" },
-  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
-  "runtime": ["node", "schedule", "webhook"],
+  "verticals": [
+    "b2b-office"
+  ],
+  "standards": [
+    "debtor-chasing"
+  ],
+  "systems_of_record": [
+    "Xero",
+    "MYOB",
+    "the exception desk the business runs"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/chase-list",
+    "bot": "https://x.ai/bot/u5aNrJFF-HEvnif2BaO17"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "schedule",
+    "webhook",
+    "grok-bot-template"
+  ],
   "consumes": [
-    { "event": "schedule.tick", "wake": "schedule" },
-    { "event": "invoice.overdue", "wake": "schedule" },
-    { "event": "email.received", "wake": "webhook" },
-    { "event": "exception.closed", "wake": "webhook" }
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    },
+    {
+      "event": "invoice.overdue",
+      "wake": "schedule"
+    },
+    {
+      "event": "email.received",
+      "wake": "webhook"
+    },
+    {
+      "event": "exception.closed",
+      "wake": "webhook"
+    }
   ],
   "emits": [
     {
@@ -43,7 +74,15 @@
   },
   "durable_state": {
     "writes_to": "system-of-record",
-    "fields": ["seam.invoice_id", "seam.chase_bucket", "seam.chase_tone", "seam.promise_date", "seam.next_touch", "seam.gate_hold_reason", "seam.exception_owner"]
+    "fields": [
+      "seam.invoice_id",
+      "seam.chase_bucket",
+      "seam.chase_tone",
+      "seam.promise_date",
+      "seam.next_touch",
+      "seam.gate_hold_reason",
+      "seam.exception_owner"
+    ]
   },
   "private_memory": "none",
   "port_of": {

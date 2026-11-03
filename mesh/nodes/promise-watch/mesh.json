@@ -2,20 +2,47 @@
   "slug": "promise-watch",
   "name": "Promise Watch",
   "office_task": "Turn every client's \"I'll pay by\" reply into a dated promise on the invoice, and when that date passes unpaid, draft the next chase for the owner to approve.",
-  "verticals": ["b2b-office"],
-  "standards": ["debtor-chasing"],
+  "verticals": [
+    "b2b-office"
+  ],
+  "standards": [
+    "debtor-chasing"
+  ],
   "systems_of_record": [
     "Xero (the ledger that issues the invoice_id; the promise is written onto the invoice)",
     "Gmail (the watched inbox that issues the message_id of each client reply and holds the chase drafts)"
   ],
-  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/promise-watch" },
-  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
-  "runtime": ["node", "schedule", "webhook"],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/promise-watch",
+    "bot": "https://x.ai/bot/iWjwoISqtZKb0lHxeZ1Et"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "schedule",
+    "webhook",
+    "grok-bot-template"
+  ],
   "consumes": [
-    { "event": "schedule.tick", "wake": "schedule" },
-    { "event": "invoice.overdue", "wake": "schedule" },
-    { "event": "email.received", "wake": "webhook" },
-    { "event": "exception.closed", "wake": "webhook" }
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    },
+    {
+      "event": "invoice.overdue",
+      "wake": "schedule"
+    },
+    {
+      "event": "email.received",
+      "wake": "webhook"
+    },
+    {
+      "event": "exception.closed",
+      "wake": "webhook"
+    }
   ],
   "emits": [
     {
@@ -46,7 +73,14 @@
   },
   "durable_state": {
     "writes_to": "system-of-record",
-    "fields": ["seam.invoice_id", "seam.promise_date", "seam.promise_amount", "seam.promise_captured_at", "seam.chase_status", "seam.exception_owner"]
+    "fields": [
+      "seam.invoice_id",
+      "seam.promise_date",
+      "seam.promise_amount",
+      "seam.promise_captured_at",
+      "seam.chase_status",
+      "seam.exception_owner"
+    ]
   },
   "private_memory": "none",
   "port_of": {
