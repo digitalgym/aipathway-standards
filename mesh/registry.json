@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-03T12:08:23.233Z",
+  "generated_at": "2026-11-03T12:23:25.670Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -100,6 +100,112 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 9
+        }
+      ]
+    },
+    {
+      "slug": "backflow-watch",
+      "name": "Backflow Watch",
+      "office_task": "Every morning, check our backflow device register against each state's rule, draft bookings for tests due soon, and put anything overdue or unclear in front of a named person.",
+      "verticals": [
+        "fire-electrical"
+      ],
+      "standards": [
+        "compliance-calendar"
+      ],
+      "systems_of_record": [
+        "the contractor's asset register of testable backflow prevention devices (its dated rule store per state, and the document store the signed test reports are filed in)"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "document.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "asset.service_due",
+          "write": "the device's test obligation, classed Due Soon from the rule version in force for its state, with the test booking request drafted on it and held for a named person to release",
+          "readback": "reading the device back by its asset_id returns the derived due date, the rule version that produced it and the drafted booking awaiting release; no draft on the read means nothing was written and the run raises an exception"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the device naming the person who owns it: Critical Overdue, a last-test date nobody knows, no rule for the device's state, a test reported passed with no report attached, a site owner's dated refusal, a notice drafted and awaiting release, or a past due date its rule version can no longer explain",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the device's asset_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "backflow.critical_overdue",
+          "backflow.test_due_soon",
+          "backflow.anchor_unknown",
+          "backflow.no_rule_for_state",
+          "backflow.test_without_report",
+          "backflow.test_declined",
+          "backflow.notice_drafted_awaiting_release",
+          "backflow.release_refused",
+          "backflow.history_unexplained",
+          "backflow.report_unmatched"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.asset_id",
+          "seam.rule_version",
+          "seam.anchor_status",
+          "seam.class",
+          "seam.evidence",
+          "seam.refused_at",
+          "seam.breached_at",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/backflow-watch"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Triage backflow compliance notices with Google Sheets, Gmail, Slack, OpenAI, and a state API",
+        "original_author": "Swapnil Mandloi",
+        "share_link": "https://n8n.io/workflows/19760",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "compliance-calendar",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:14:32.716Z",
+          "run_id": "run-1793708072715",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 10
         }
       ]
     },
@@ -395,6 +501,218 @@
       ]
     },
     {
+      "slug": "defect-desk",
+      "name": "Defect Desk",
+      "office_task": "When a sprinkler inspection report lands in the inbox, file each deficiency against its tagged asset, send critical ones to a named person now, and queue the rest.",
+      "verticals": [
+        "fire-electrical"
+      ],
+      "standards": [
+        "fire-service-pack-standard"
+      ],
+      "systems_of_record": [
+        "the asset register that issues the asset_id (where the tags are already recorded)",
+        "Gmail or Outlook (the watched inbox that issues the message_id)",
+        "the exception desk the business runs (a sheet, a task list or a ticket queue)"
+      ],
+      "consumes": [
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "evidence.filed",
+          "write": "Each deficiency line from the report email, filed as a service record on the one asset its tag resolves to, naming the obligation the visit discharges, the result and severity the technician recorded, the coded defect with its owner, and the email's attachments by message_id. A line with no tag photograph is filed into the unbound queue, never the pass count.",
+          "readback": "The asset register returns a service record id; reading that id back returns the asset_id, the obligation_id, the message_id and the queue (pass, defect or unbound). No id back is not a write: the line is raised as record.held and the run stops."
+        },
+        {
+          "event": "exception.raised",
+          "write": "An exception on the asset naming the person who owns it: a critical defect or an isolation for the Fire Safety Advisor at once, or a line that could not be bound or recorded (unresolved tag, no obligation named, wrong evidence for the class, uncoded defect, electrical close with no certificate, lapsed isolation) for the Service Coordinator.",
+          "readback": "The exception desk returns an exception_id; reading it back returns the asset_id, the reason and the exception_owner. No id back means nothing was raised and the run stops."
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "identity.unresolved",
+          "record.no_obligation",
+          "record.no_result",
+          "record.held",
+          "record.unbound",
+          "defect.no_severity",
+          "defect.critical",
+          "isolation.no_revisit_date",
+          "isolation.recorded",
+          "isolation.lapsed",
+          "close.refused"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.asset_id",
+          "seam.obligation_id",
+          "seam.message_id",
+          "seam.service_record_id",
+          "seam.queue",
+          "seam.defect_code",
+          "seam.severity",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/defect-desk"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Route fire sprinkler deficiencies with Gmail, OpenAI, Telegram and Sheets",
+        "original_author": "Swapnil Mandloi",
+        "share_link": "https://n8n.io/workflows/19181",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "fire-service-pack-standard",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:15:36.268Z",
+          "run_id": "run-1793708136266",
+          "green": 11,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 0,
+          "total": 12
+        }
+      ]
+    },
+    {
+      "slug": "drawing-register",
+      "name": "Drawing Register",
+      "office_task": "Keep every machine drawing on our drive on one register with an owner and its current revision, find the page an electrician needs, and tell the owner when a drawing changes.",
+      "verticals": [
+        "fire-electrical"
+      ],
+      "standards": [
+        "knowledge-base"
+      ],
+      "systems_of_record": [
+        "the shared drive that holds the drawings and issues the document_id (Google Drive or SharePoint), left where it is",
+        "the drawing register on that tenant (one Sheet or SharePoint list: a row per source, owner a person, kind, revision and checksum)",
+        "the task list the business runs (Google Tasks, Planner or a sheet), which issues the exception_id for each gap"
+      ],
+      "consumes": [
+        {
+          "event": "document.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "exception.raised",
+          "write": "a task on the business's task list naming the person who owns it, with a due date: a drawing revision the register expects and the drive does not hold, a file whose only owner is a team, two copies of one drawing waiting for a person to pick the canonical one, customer material waiting for someone to set who may read it and for how long, an instrument with no revision on its title block, or a registered file gone from the drive",
+          "readback": "the task list returns an exception_id, and reading that id back returns what is expected, the owner and the due date; no id back means nothing was raised, and the file stays off the index"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "kb.expected_edition_missing",
+          "kb.owner_not_a_person",
+          "kb.canonical_copy_undecided",
+          "kb.customer_access_undecided",
+          "kb.instrument_without_edition",
+          "kb.source_gone_from_drive"
+        ],
+        "owner_field": "owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "register.id",
+          "register.kind",
+          "register.owner",
+          "register.location",
+          "register.edition",
+          "register.checksum",
+          "register.retrieved_at",
+          "register.status",
+          "register.duplicate_of",
+          "register.access_list",
+          "register.expires_on",
+          "register.superseded_checksums"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/drawing-register"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Sparky",
+        "original_author": "Zack Edwards",
+        "share_link": "https://x.ai/bot/mpJi3Xiu2w4FAN7y5P5jd",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "knowledge-base",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:17:22.994Z",
+          "run_id": "run-1793708242991",
+          "green": 11,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 13
+        }
+      ]
+    },
+    {
       "slug": "dropped-ball",
       "name": "Follow-Up Sweep",
       "office_task": "Every evening, find what customers and suppliers still owe us that nobody chased, send the next capped follow-up on a consented channel, and hand any no or dead end to a named person.",
@@ -472,6 +790,118 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 13
+        }
+      ]
+    },
+    {
+      "slug": "fire-code-desk",
+      "name": "Fire Code Desk",
+      "office_task": "Answer our engineers' fire and electrical code questions from the Standards we hold, citing the clause and the edition the state adopted, or hand them to a named person.",
+      "verticals": [
+        "fire-electrical"
+      ],
+      "standards": [
+        "cited-answer"
+      ],
+      "systems_of_record": [
+        "the mail system that issues the message_id the question arrived on (Gmail, Outlook)",
+        "the office's own clause library of the NCC, the Australian Standards it calls up (AS 1851, AS 1670.1, AS 2118.1, AS 2419.1, AS/NZS 3000) and each state's adoption records, with its answer register",
+        "the exception desk the business runs, which issues the exception_id"
+      ],
+      "consumes": [
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "answer.sent",
+          "write": "a stored answer with its source cards (the clause, and the state adoption record that calls up its edition), sent as a reply on the question's thread only after a named person released it on the answer register",
+          "readback": "the mail system returns the reply's message_id, and reading that id back returns the thread it replies in and the answer register id; no id back means it was not sent, and cited.send_unconfirmed is raised to the named owner"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the question's message naming the person who owns it: no state given, nothing in the library covers it, no adoption record says which edition applies in that state, a compliance or certificate question for the licensed practitioner, a source conflict between two live instruments, or an instrument that moved and waits for a named person to accept it (listing every stored answer that relied on it)",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the message_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "cited.no_jurisdiction",
+          "cited.not_in_library",
+          "cited.no_adoption_record",
+          "cited.certificate_question",
+          "cited.source_conflict",
+          "cited.change_pending",
+          "cited.acceptance_without_person",
+          "cited.release_refused",
+          "cited.release_without_person",
+          "cited.send_unconfirmed"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "answer.message_id",
+          "answer.queue",
+          "answer.policy",
+          "answer.source_card_ids",
+          "answer.released_by",
+          "source_card.edition",
+          "source_card.jurisdiction",
+          "source_card.effective_from",
+          "adoption.calls_up_edition",
+          "change_delta.accepted_by",
+          "change_delta.accepted_on",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/fire-code-desk"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "NFPA Research Assistant",
+        "original_author": "Michal Sullivan",
+        "share_link": "https://x.ai/bot/m80whfWBZ-sHVLjHbtBg1",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "cited-answer",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:16:01.512Z",
+          "run_id": "run-1793708161510",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 10
         }
       ]
     },
@@ -1193,10 +1623,14 @@
   ],
   "routable": [
     "after-hours-desk",
+    "backflow-watch",
     "bill-check",
     "comp-report",
     "deadline-desk",
+    "defect-desk",
+    "drawing-register",
     "dropped-ball",
+    "fire-code-desk",
     "inbox-desk",
     "open-home-desk",
     "permit-answers",
