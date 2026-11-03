@@ -1,0 +1,36 @@
+{
+  "slug": "after-hours-desk",
+  "name": "After-Hours Desk",
+  "office_task": "Answers the phone when we're closed, books one job per caller in our job system, and wakes the on-call only for a real emergency.",
+  "verticals": ["trades-building"],
+  "standards": ["booked-after-hours"],
+  "systems_of_record": ["ServiceM8", "Simpro"],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/after-hours-desk" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["office-voice-front-desk", "webhook"],
+  "consumes": [{ "event": "call.received", "wake": "webhook" }],
+  "emits": [
+    {
+      "event": "job.created",
+      "write": "one job in the job system per enquiry, with the resolved address, the fixed type (emergency, routine or quote) and the caller's words; a repeat call updates the open job and sets duplicate_of instead",
+      "readback": "the job system returns the job id (ServiceM8 job uuid, Simpro job ID) and the job is read back by that id before the call is reported as booked; no id that reads back means write_failed, an alert, and no job.created"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": ["unclassified", "address_unresolved", "out_of_scope_request", "caller_distressed", "price_requested", "complaint", "write_failed"],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.job_id", "seam.duplicate_of", "seam.call_id", "seam.status", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "After-Hours Front Desk",
+    "original_author": "John Shetler",
+    "share_link": "https://x.ai/bot/vPREznXsecJi_51MeJNRQ",
+    "licence_or_permission": "reimplementation"
+  }
+}

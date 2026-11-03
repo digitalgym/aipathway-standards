@@ -1,0 +1,106 @@
+{
+  "spec": "AIP-BS-CASH-SEAM",
+  "standard": "cash-seam-build-standard",
+  "edition": "2026-10-03",
+  "source": "https://aipathway.com.au/explore-ai/cash-seam-build-standard",
+  "ran_at": "2026-11-03T10:58:07.300Z",
+  "environment": "stub",
+  "provider": "local.mock_cash_path",
+  "provider_block": {
+    "boundary": {
+      "never": [
+        "mint a key, or match a record on a customer name or a phone number, once an upstream id exists",
+        "make a second job for an enquiry that already has an open one",
+        "treat a write with no external id, or a chat or connector confirmation, as a write",
+        "send a quote, an invoice or a chase without a release naming a person or a rule",
+        "move a hop only while a chat session is open",
+        "proceed past an open exception"
+      ],
+      "stays_with_person": [
+        "every exception, by the owner named for its stage",
+        "the release, or the rule that stands in for it",
+        "deciding two enquiries are the same job when the number does not say so",
+        "anything the four standards it binds keep with a person"
+      ]
+    },
+    "job": "one record survives from the call to the chase",
+    "skill": "cash-seam",
+    "stub": "local.mock_cash_path",
+    "production": "office_voice.recover",
+    "product": "Office Voice / Recover",
+    "insert": "Get Paid",
+    "with_us": {
+      "kind": "enable_insert",
+      "provider": "office_voice.recover",
+      "product": "Office Voice / Recover",
+      "insert": "Get Paid"
+    }
+  },
+  "tally": {
+    "green": 4,
+    "red": 0,
+    "with_us": 1,
+    "evidence_required": 1,
+    "total": 9
+  },
+  "checks": [
+    {
+      "id": "identity-from-the-system-of-record",
+      "n": 1,
+      "title": "Every downstream step takes its id from the system of record, never from a name or a phone number",
+      "verdict": "pass"
+    },
+    {
+      "id": "one-job-per-enquiry",
+      "n": 2,
+      "title": "One job per enquiry: a repeat call or a second door attaches to the open job",
+      "verdict": "pass"
+    },
+    {
+      "id": "no-external-id-no-write",
+      "n": 3,
+      "title": "A write that comes back without an external id is treated as not written",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "the-chain-carries-the-id",
+      "n": 4,
+      "title": "The quote carries the job id, the invoice carries the quote or job id, and the chase reads the invoice id off the live ledger",
+      "verdict": "pass"
+    },
+    {
+      "id": "confirmation-is-not-a-write",
+      "n": 5,
+      "title": "A chat or connector confirmation is not a write and not a release",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "named-unattended-trigger",
+      "n": 6,
+      "title": "Every hop starts from a named event, and none waits for a chat session",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "exception-owner-travels",
+      "n": 7,
+      "title": "An exception names its owner, travels with the record, and the next step does not pass it",
+      "verdict": "pass"
+    },
+    {
+      "id": "survives-the-builder",
+      "n": 8,
+      "title": "It survives the builder",
+      "verdict": "evidence_required"
+    },
+    {
+      "id": "pass-test",
+      "n": 9,
+      "title": "The pass test passes",
+      "verdict": "with_us"
+    }
+  ],
+  "next": {
+    "with_us": "Enable Get Paid on Office Voice / Recover; npx @aipathway/conformance connect gets the owner a key and the links to connect their systems. There is no production run of these checks yet: AIPATHWAY_PROVIDER=office_voice.recover needs a live port map that is not published, so the stub run is the finished build. Do not hand-roll the live step.",
+    "evidence_required": "attach what proves each one; not a software check"
+  }
+}
