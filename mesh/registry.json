@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-03T12:41:23.909Z",
+  "generated_at": "2026-11-03T12:41:36.244Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -1372,6 +1372,111 @@
       ]
     },
     {
+      "slug": "goods-match",
+      "name": "Goods Match",
+      "office_task": "Hold every supplier invoice against its purchase order and what was actually received, catch duplicates, and tell finance which queue each one is in.",
+      "verticals": [
+        "b2b-office"
+      ],
+      "standards": [
+        "invoice-check"
+      ],
+      "systems_of_record": [
+        "Xero or MYOB (the ledger that issues the bill_id for each supplier invoice)",
+        "the purchase order and goods-received register, keyed by order_id (Xero purchase orders, or a Google Sheets register)",
+        "the document store holding the invoice copies and written variation approvals (Google Drive, or the Gmail attachment)"
+      ],
+      "consumes": [
+        {
+          "event": "bill.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "bill.checked",
+          "write": "a clean match stamped on the bill: the order_id it was matched to by the number the invoice names, the four check records with what each saw (rate, received quantity less earlier invoices, written variation approvals, cumulative position), the dated tolerances used, and queue done_reversible, waiting for a named person in finance to approve. Nothing is paid.",
+          "readback": "the bill read back from the ledger by its bill_id returns seam.order_ref, seam.queue = done_reversible and the four passed check records; no bill back by that id means nothing was stamped and the run stops"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the bill naming the person in finance who owns it: the check that failed and the checks that never ran, the difference in dollars, the cumulative position, the source document, and its queue (needs a decision; waiting on the supplier for a copy; or blocked: no purchase order, or scope with no written approval). Finance is told by a Gmail notice that links the exception.",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the bill_id, the failed check, the dollar difference, the source document and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "bill.no_purchase_order",
+          "bill.no_source_document",
+          "bill.rate_mismatch",
+          "bill.quantity_not_received",
+          "bill.possible_duplicate",
+          "bill.unapproved_scope",
+          "bill.contract_sum_overrun"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.bill_id",
+          "seam.order_ref",
+          "seam.queue",
+          "seam.failed_check",
+          "seam.never_ran",
+          "seam.difference",
+          "seam.tolerance_version",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/goods-match"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Match vendor invoices with POs and GRNs in Google Sheets and notify Finance via Gmail",
+        "original_author": "Fahim Jilani",
+        "share_link": "https://n8n.io/workflows/19446",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "invoice-check",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:37:27.125Z",
+          "run_id": "run-1793709447124",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 11
+        }
+      ]
+    },
+    {
       "slug": "inbox-desk",
       "name": "Inbox Desk",
       "office_task": "Each weekday, read the shared business inbox, file every message against its job or supplier, and hold every real reply for a named person.",
@@ -2031,6 +2136,113 @@
       ]
     },
     {
+      "slug": "po-match",
+      "name": "PO Match",
+      "office_task": "Match each emailed supplier invoice against its purchase order and what was received, leave clean ones as draft bills for a person, and raise every mismatch in dollars.",
+      "verticals": [
+        "accounting-bookkeeping"
+      ],
+      "standards": [
+        "invoice-check"
+      ],
+      "systems_of_record": [
+        "Xero (the ledger that issues the bill_id and holds the purchase orders)",
+        "Gmail (the inbox the invoice arrives in, which issues the message_id)",
+        "the receipt record against each purchase order (delivery dockets or quantities marked complete)",
+        "the document store where written variation approvals live"
+      ],
+      "consumes": [
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "bill.checked",
+          "write": "the supplier bill in Xero, kept as a DRAFT bill (ACCPAY) against the purchase order number printed on the invoice, with the four check results, the receipt it matched and the source PDF in its history; nothing is approved or paid",
+          "readback": "GET /api.xro/2.0/Invoices/{InvoiceID} returns Type ACCPAY, Status DRAFT, the PO reference and the history note; no InvoiceID back means it was not written, an exception is raised and the run stops"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the bill naming the person who owns it: the check that failed and the checks that never ran, the difference in dollars, the cumulative position, the source document from the email, and its queue (needs a decision, waiting on the supplier or a receipt, or blocked: no purchase order, or scope with no written approval)",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the bill_id or message_id, the failed check, the dollar difference, the source document and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "invoice.no_source_document",
+          "invoice.no_purchase_order",
+          "invoice.rate_mismatch",
+          "invoice.not_received",
+          "invoice.quantity_over_received",
+          "invoice.unapproved_scope",
+          "invoice.contract_sum_overrun"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.bill_id",
+          "seam.message_id",
+          "seam.order_ref",
+          "seam.queue",
+          "seam.failed_check",
+          "seam.never_ran",
+          "seam.difference",
+          "seam.tolerance_version",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/po-match"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Automate 3-way invoice matching from Gmail to Xero with Slack and Teams alerts",
+        "original_author": "Jitesh Dugar",
+        "share_link": "https://n8n.io/workflows/12662",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "invoice-check",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:33:24.124Z",
+          "run_id": "run-1793709204123",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 11
+        }
+      ]
+    },
+    {
       "slug": "practice-desk",
       "name": "Practice Desk",
       "office_task": "Sort everything that lands in the practice inbox onto the right client job or supplier, give each one an owner and a deadline, and hold every reply for the owner to release.",
@@ -2572,12 +2784,14 @@
     "drawing-register",
     "dropped-ball",
     "fire-code-desk",
+    "goods-match",
     "inbox-desk",
     "invoice-desk",
     "matter-billing",
     "nudge-desk",
     "open-home-desk",
     "permit-answers",
+    "po-match",
     "practice-desk",
     "promise-watch",
     "quote-desk",
