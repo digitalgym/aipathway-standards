@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-03T14:19:14.056Z",
+  "generated_at": "2026-11-03T14:19:29.691Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -1066,6 +1066,104 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 11
+        }
+      ]
+    },
+    {
+      "slug": "comp-check",
+      "name": "Comp Check",
+      "office_task": "For each appraisal, check the price against comparable sales chosen by written rules, each sourced and dated, and hold the one-page evidence for the agent to approve.",
+      "verticals": [
+        "property"
+      ],
+      "standards": [
+        "price-one-pager"
+      ],
+      "systems_of_record": [
+        "the agency's listing system, which issues the listing_id for the appraisal and holds the subject property and the agent's appraisal",
+        "the recorded sales source the agency already licenses (for example a state valuer-general sales record)",
+        "the document store the approved one-pager and its record of what was shown are published into, which issues the report_id"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the exact one-pager version the agent approved, released to the vendor on the listing, with an append-only record of what was shown: the rules, every comparable with its source, sale date and read date, the range, the agent's estimate apart, who approved it, who it went to and the date",
+          "readback": "reading the listing's records back by listing_id and date returns each report_id with its version, released_on and approved_by, matching the approved version comparable for comparable; no id back means nothing was released and an exception is raised"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the listing naming the agent: a quoted figure below the evidence (held, with the sales above it), sales still stale after a re-read (held), too few comparables for a range, or a version the agent has not approved",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the listing_id, the version, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "price.underquote_held",
+          "price.sales_stale_held",
+          "price.too_few_comparables",
+          "price.awaiting_approval",
+          "price.release_refused"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.listing_id",
+          "seam.version",
+          "seam.sales_read_on",
+          "seam.report_id",
+          "seam.approved_by",
+          "seam.released_on",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/comp-check"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Listing Agent Desk LITE",
+        "original_author": "Balaci Claudiu",
+        "share_link": "https://x.ai/bot/8JiqD02tWEQRGcVqPsswi",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "price-one-pager",
+          "edition": "2026-10-24",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:50:58.068Z",
+          "run_id": "run-1793713858066",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 14
         }
       ]
     },
@@ -4024,6 +4122,112 @@
       ]
     },
     {
+      "slug": "ops-map",
+      "name": "Ops Map",
+      "office_task": "Keep one accepted map of how the business runs, step by step, from its own procedures, and name a person when two procedures disagree or one is replaced.",
+      "verticals": [
+        "b2b-office"
+      ],
+      "standards": [
+        "knowledge-graph"
+      ],
+      "systems_of_record": [
+        "the document store that issues the document_id for each procedure and edition (SharePoint or Drive)",
+        "Xero, for the contact id of each supplier the procedures name",
+        "the exception desk the business runs, which issues the exception_id"
+      ],
+      "consumes": [
+        {
+          "event": "document.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the change delta for a replaced procedure, written into the ops map store: the source's document_id, its old and new checksum, and the computed list of every step node built from it, which wait for a named person to accept the delta",
+          "readback": "the store returns the delta's report_id, and reading that id back returns the document_id, both checksums and the affected node ids; no id back means no delta was written and the affected nodes stay out of live"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception naming the person who owns the map: two live procedures answering one step differently, a source that is not an instrument, a refused acceptance, a SAME_AS a person has not decided, or a delta awaiting acceptance",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the node or document ids, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "graph.conflict_open",
+          "change.delta_awaiting_person",
+          "source.not_an_instrument",
+          "source.customer_material_held",
+          "source.acceptance_refused",
+          "extract.type_not_in_contract",
+          "extract.source_not_accepted",
+          "node.acceptance_refused",
+          "identity.same_as_needed",
+          "claim.promotion_refused"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "node.queue",
+          "node.accepted_by",
+          "node.provenance",
+          "source.checksum",
+          "delta.affected_node_ids",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/ops-map"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "OS: Ontology Stack",
+        "original_author": "Damiano Redemagni",
+        "share_link": "https://x.ai/bot/9Uh8RaBqp6PrcOcZjMHbD",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "knowledge-graph",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:45:55.742Z",
+          "run_id": "run-1793713555741",
+          "green": 10,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 13
+        }
+      ]
+    },
+    {
       "slug": "owing-today",
       "name": "Owing Today",
       "office_task": "Every morning, show me who owes us money, biggest first, with a polite or firmer reminder already written for each one, and I send them.",
@@ -6617,6 +6821,113 @@
           "total": 13
         }
       ]
+    },
+    {
+      "slug": "visit-offer",
+      "name": "Visit Offer",
+      "office_task": "Offer the customer real visit times off the licensed tech's calendar, book the one they pick as the job's single slot, and tell the customer and the tech once.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "dispatch-board"
+      ],
+      "systems_of_record": [
+        "the job system that issues the job_id and holds its schedule (ServiceM8, Simpro or Jobber)",
+        "the tech licence register the business keeps"
+      ],
+      "consumes": [
+        {
+          "event": "job.created",
+          "wake": "webhook"
+        },
+        {
+          "event": "job.updated",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "job.updated",
+          "write": "the visit the customer picked, as one slot on the job's schedule in the job system (tech, start, end, resolved address, the rule or person that set it, the job version it was made for), moved in place on a change and never written twice",
+          "readback": "the job system returns the slot's external id, and reading the job's slot back by job_id returns that external id and job version; no id back is a failed write, escalated as write_failed, and nothing is sent to the customer or the tech"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an escalation on the job naming the dispatcher as owner: an address that will not resolve, no tech with a current licence, a window shorter than the visit, no free time to offer, no consent to message the customer, a failed slot write, or a displaced job that could not be re-slotted",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the job_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "dispatch.address_unresolved",
+          "dispatch.no_licensed_tech",
+          "dispatch.window_impossible",
+          "dispatch.no_capacity",
+          "dispatch.no_consent",
+          "dispatch.write_failed",
+          "dispatch.displaced"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.slot_external_id",
+          "seam.job_version",
+          "seam.updated_by",
+          "seam.displaced_by",
+          "seam.customer_message_ref",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/visit-offer"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Offer and confirm technician visit slots with Google Calendar, Gmail, Sheets, and Telegram",
+        "original_author": "Dmytro",
+        "share_link": "https://n8n.io/workflows/18092",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "dispatch-board",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:45:18.060Z",
+          "run_id": "run-1793713518058",
+          "green": 8,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        }
+      ]
     }
   ],
   "routable": [
@@ -6630,6 +6941,7 @@
     "chase-desk",
     "chase-list",
     "claim-check",
+    "comp-check",
     "comp-report",
     "consultant-hours",
     "cover-check",
@@ -6658,6 +6970,7 @@
     "matter-billing",
     "nudge-desk",
     "open-home-desk",
+    "ops-map",
     "owing-today",
     "parts-quote",
     "payment-watch",
@@ -6681,7 +6994,8 @@
     "timesheet-billing",
     "van-board",
     "vendor-actuals",
-    "vendor-pack"
+    "vendor-pack",
+    "visit-offer"
   ],
   "edges": [
     {
@@ -6711,6 +7025,12 @@
     {
       "from": "after-hours-desk",
       "to": "van-board",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "after-hours-desk",
+      "to": "visit-offer",
       "event": "job.created",
       "id": "job_id"
     },
@@ -6747,6 +7067,12 @@
     {
       "from": "crew-board",
       "to": "van-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "crew-board",
+      "to": "visit-offer",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -6829,6 +7155,12 @@
       "id": "job_id"
     },
     {
+      "from": "practice-desk",
+      "to": "visit-offer",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
       "from": "quote-desk",
       "to": "quote-keeper",
       "event": "quote.sent",
@@ -6877,6 +7209,12 @@
       "id": "job_id"
     },
     {
+      "from": "repair-board",
+      "to": "visit-offer",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
       "from": "van-board",
       "to": "crew-board",
       "event": "job.updated",
@@ -6909,6 +7247,54 @@
     {
       "from": "van-board",
       "to": "site-orders",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "van-board",
+      "to": "visit-offer",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-offer",
+      "to": "crew-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-offer",
+      "to": "hours-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-offer",
+      "to": "parts-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-offer",
+      "to": "quote-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-offer",
+      "to": "repair-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-offer",
+      "to": "site-orders",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-offer",
+      "to": "van-board",
       "event": "job.updated",
       "id": "job_id"
     }
