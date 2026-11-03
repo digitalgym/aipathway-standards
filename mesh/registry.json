@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-03T12:41:36.244Z",
+  "generated_at": "2026-11-03T12:41:49.224Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -1260,6 +1260,108 @@
       ]
     },
     {
+      "slug": "feed-match",
+      "name": "Feed Match",
+      "office_task": "Every morning, match each bank-feed payment to the bill in Xero it paid, by the bill id, and put every one that does not clearly match in front of the bookkeeper.",
+      "verticals": [
+        "accounting-bookkeeping"
+      ],
+      "standards": [
+        "two-records"
+      ],
+      "systems_of_record": [
+        "Xero (the ledger that issues the bill_id and records each bill's payment)",
+        "the business's bank feed into Xero (statement lines carrying the bill_id in the payment reference)"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the run's reconciliation report, written where the bookkeeper opens it: the pair contract it ran under, the join key (bill_id), the master per field, and the counts matched, within tolerance, mismatched, orphaned and corrected, published every run including the all-clear",
+          "readback": "the report store returns a report_id, and reading that id back returns the contract id, the five counts and the published time; no id back means the run did not publish and the owner is told"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the bill naming the person who owns it: an open difference with the bank-feed value, the Xero value and the master's value side by side, an orphan (a bank line whose bill id is not in Xero, or a paid bill with no bank line), a difference over the threshold amount, a mismatch rate over the declared rate, or an accepted correction whose write returned no id",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the bill_id, the reason, both values and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "two-records.contract_missing",
+          "two-records.difference_open",
+          "two-records.orphan_bank_line",
+          "two-records.orphan_paid_bill",
+          "two-records.over_threshold_amount",
+          "two-records.mismatch_rate_exceeded",
+          "two-records.write_not_read_back"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "seam-mirror",
+        "fields": [
+          "seam.bill_id",
+          "seam.contract_id",
+          "seam.run_id",
+          "seam.difference_status",
+          "seam.value_bank_feed",
+          "seam.value_xero",
+          "seam.master_value",
+          "seam.accepted_by",
+          "seam.written_id",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/feed-match"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Bookkeeping Ninja Bank Rec",
+        "original_author": "Tim Armstrong",
+        "share_link": "https://x.ai/bot/ISrPfEtK0OFbjbokNK9Xw",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "two-records",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:37:52.704Z",
+          "run_id": "run-1793709472702",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        }
+      ]
+    },
+    {
       "slug": "fire-code-desk",
       "name": "Fire Code Desk",
       "office_task": "Answer our engineers' fire and electrical code questions from the Standards we hold, citing the clause and the edition the state adopted, or hand them to a named person.",
@@ -1690,6 +1792,111 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 9
+        }
+      ]
+    },
+    {
+      "slug": "invoice-pair",
+      "name": "Invoice Pair",
+      "office_task": "Every morning, check our Harvest invoices against the ledger by invoice id, show each difference with both values, and fix one only once a named person accepts it.",
+      "verticals": [
+        "b2b-office"
+      ],
+      "standards": [
+        "two-records"
+      ],
+      "systems_of_record": [
+        "Harvest (issues the invoice and its id)",
+        "Balances (the ledger that records payment against the Harvest invoice id)"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "payment.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the run's report into the shared reconciliation log: contract id, the key it joined on, the master per field, and the five counts (matched, within tolerance, mismatched, orphaned, corrected), the all-clear included",
+          "readback": "the log returns a report_id, and reading that id back returns the run with its contract id and counts; no id back means the run did not publish and the owner is told"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the Harvest invoice id naming the contract owner: an open difference with both values and the master's value awaiting acceptance, an orphan on one side, a difference over the threshold amount, a run over the mismatch rate, or a correction whose write returned no id",
+          "readback": "the exception desk returns an exception_id, and reading it back returns the Harvest invoice id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "two_records.no_contract",
+          "two_records.no_master",
+          "two_records.no_master_for_field",
+          "two_records.difference_open",
+          "two_records.orphan",
+          "two_records.over_threshold",
+          "two_records.mismatch_rate",
+          "two_records.write_not_read_back"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "seam-mirror",
+        "fields": [
+          "seam.harvest_invoice_id",
+          "seam.contract_id",
+          "seam.difference_status",
+          "seam.value_harvest",
+          "seam.value_ledger",
+          "seam.correction_accepted_by",
+          "seam.correction_written_id",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/invoice-pair"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Invoice Mirror",
+        "original_author": "Jerrod Tuck",
+        "share_link": "https://x.ai/bot/HwckXN5Yd1uxRu86msyfj",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "two-records",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:38:10.892Z",
+          "run_id": "run-1793709490890",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
         }
       ]
     },
@@ -2783,10 +2990,12 @@
     "defect-desk",
     "drawing-register",
     "dropped-ball",
+    "feed-match",
     "fire-code-desk",
     "goods-match",
     "inbox-desk",
     "invoice-desk",
+    "invoice-pair",
     "matter-billing",
     "nudge-desk",
     "open-home-desk",
