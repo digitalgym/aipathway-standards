@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-03T12:23:25.670Z",
+  "generated_at": "2026-11-03T12:23:36.845Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -1004,6 +1004,241 @@
       ]
     },
     {
+      "slug": "invoice-desk",
+      "name": "Invoice Desk",
+      "office_task": "When a job is marked complete, put its draft invoice in Xero at our own prices, park what it cannot price, and send only once a named person or their rule releases it.",
+      "verticals": [
+        "b2b-office"
+      ],
+      "standards": [
+        "invoice-out"
+      ],
+      "systems_of_record": [
+        "the job system that issues the job_id (ServiceM8, Simpro, or a job sheet)",
+        "Xero, which issues the invoice_id"
+      ],
+      "consumes": [
+        {
+          "event": "job.completed",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "invoice.raised",
+          "write": "One draft invoice in Xero per completed job, keyed to the job id (reference job:<id>, and the stage under a building contract), every line a job line priced from the Xero Items read at draft time, carrying the book edition and any signed variation acceptance.",
+          "readback": "The invoice is read back from the ledger by the job id (Xero GET /api.xro/2.0/Invoices/{InvoiceID}) and must return the same invoice id, its external id and the job id. No id back is not a write: it raises invoice.write_failed and the run stops."
+        },
+        {
+          "event": "invoice.sent",
+          "write": "The release on the invoice record, naming the person who closed the awaiting-release exception or the rule (with its threshold) that person set, then the send from the ledger. Nothing parked is ever sent.",
+          "readback": "The invoice read back by its id shows status sent, the sent time, and released_by or released_by_rule, with the release before the send."
+        },
+        {
+          "event": "exception.raised",
+          "write": "A parked or waiting invoice as an exception on the job: the reason from the standard's fixed list (not_in_pricebook, unsigned_variation, no_stage, write_failed) or awaiting_release, the job id, the invoice id, the unpriced codes with no rate, and exception_owner set to the person the business named for invoices.",
+          "readback": "The exception desk returns the exception against the job id, and reading it back returns the job_id, invoice_id, reason and exception_owner; the next hop reads it there and stops."
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "invoice.not_in_pricebook",
+          "invoice.unsigned_variation",
+          "invoice.no_stage",
+          "invoice.write_failed",
+          "invoice.awaiting_release"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.invoice_id",
+          "seam.quote_id",
+          "seam.book_edition",
+          "seam.status",
+          "seam.park_reason",
+          "seam.released_by",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/invoice-desk"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Create and approve Xero invoices from Pipedrive Closed Won deals with Slack",
+        "original_author": "Intuz",
+        "share_link": "https://n8n.io/workflows/20013",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "invoice-out",
+          "edition": "2026-10-05",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:19:44.802Z",
+          "run_id": "run-1793708384801",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        },
+        {
+          "standard": "cash-seam",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:19:45.183Z",
+          "run_id": "run-1793708385181",
+          "green": 4,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 9
+        }
+      ]
+    },
+    {
+      "slug": "matter-billing",
+      "name": "Matter Billing",
+      "office_task": "When our practice system marks an appearance or signed draft done, draft its invoice in Xero at our rate card, or park it with a reason, and hold it for the solicitor's release.",
+      "verticals": [
+        "b2b-office"
+      ],
+      "standards": [
+        "invoice-out"
+      ],
+      "systems_of_record": [
+        "the firm's practice management system, which issues the id of each billable task on a matter (carried as job_id)",
+        "Xero"
+      ],
+      "consumes": [
+        {
+          "event": "job.completed",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "invoice.raised",
+          "write": "One draft tax invoice in Xero per completed billable task, referenced to the task id (and the stage under a staged costs agreement), every line a line on the task and every rate read from the firm's rate card at draft time, with any signed variation attached as evidence. A second completion event updates the same draft.",
+          "readback": "Xero returns the InvoiceID; GET /api.xro/2.0/Invoices/{InvoiceID} must return the invoice with Reference job:<task id>, and that id is stamped on the task as seam.invoice_id. No id back is not a write: it raises invoice.write_failed."
+        },
+        {
+          "event": "invoice.sent",
+          "write": "The invoice leaves only after a release that names the responsible solicitor, or names the rule they set and shows the total is under its threshold; the release and the send time are recorded against the task.",
+          "readback": "GET /api.xro/2.0/Invoices/{InvoiceID} returns it AUTHORISED and sent to the contact, and the task's record read by its id shows seam.release (a person or a rule) and the send time. A send with no release on the record is refused."
+        },
+        {
+          "event": "exception.raised",
+          "write": "A parked invoice as an exception on the task: the reason from the standard's fixed list (a code the rate card does not hold, a variation with no signed acceptance, a failed write, or a draft over the release threshold), with exception_owner set to the person the firm named for billing.",
+          "readback": "The task read by its id shows the open exception with its exception_owner, and the parked draft in Xero carries no rate for the unpriced line; the next run reads it there and stops until exception.closed."
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "invoice.not_in_pricebook",
+          "invoice.unsigned_variation",
+          "invoice.write_failed",
+          "invoice.over_threshold"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.invoice_id",
+          "seam.book_edition",
+          "seam.status",
+          "seam.release",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/matter-billing"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Fee Note and Invoice Clerk",
+        "original_author": "Suyash Verma",
+        "share_link": "https://x.ai/bot/Q84GaJdxDWIKrC6CN8vXt",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "invoice-out",
+          "edition": "2026-10-05",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:18:47.235Z",
+          "run_id": "run-1793708327231",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        },
+        {
+          "standard": "cash-seam",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:18:47.684Z",
+          "run_id": "run-1793708327683",
+          "green": 4,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 9
+        }
+      ]
+    },
+    {
       "slug": "open-home-desk",
       "name": "Open Home Desk",
       "office_task": "After each open home, follow up everyone who said yes at sign-in with a message I approved, sort their replies, and draft the vendor's report from what buyers actually said.",
@@ -1632,6 +1867,8 @@
     "dropped-ball",
     "fire-code-desk",
     "inbox-desk",
+    "invoice-desk",
+    "matter-billing",
     "open-home-desk",
     "permit-answers",
     "practice-desk",
