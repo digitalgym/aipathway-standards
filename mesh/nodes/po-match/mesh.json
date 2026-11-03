@@ -1,0 +1,68 @@
+{
+  "slug": "po-match",
+  "name": "PO Match",
+  "office_task": "Match each emailed supplier invoice against its purchase order and what was received, leave clean ones as draft bills for a person, and raise every mismatch in dollars.",
+  "verticals": ["accounting-bookkeeping"],
+  "standards": ["invoice-check"],
+  "systems_of_record": [
+    "Xero (the ledger that issues the bill_id and holds the purchase orders)",
+    "Gmail (the inbox the invoice arrives in, which issues the message_id)",
+    "the receipt record against each purchase order (delivery dockets or quantities marked complete)",
+    "the document store where written variation approvals live"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/po-match" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "webhook", "schedule"],
+  "consumes": [
+    { "event": "email.received", "wake": "webhook" },
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "bill.checked",
+      "write": "the supplier bill in Xero, kept as a DRAFT bill (ACCPAY) against the purchase order number printed on the invoice, with the four check results, the receipt it matched and the source PDF in its history; nothing is approved or paid",
+      "readback": "GET /api.xro/2.0/Invoices/{InvoiceID} returns Type ACCPAY, Status DRAFT, the PO reference and the history note; no InvoiceID back means it was not written, an exception is raised and the run stops"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the bill naming the person who owns it: the check that failed and the checks that never ran, the difference in dollars, the cumulative position, the source document from the email, and its queue (needs a decision, waiting on the supplier or a receipt, or blocked: no purchase order, or scope with no written approval)",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the bill_id or message_id, the failed check, the dollar difference, the source document and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "invoice.no_source_document",
+      "invoice.no_purchase_order",
+      "invoice.rate_mismatch",
+      "invoice.not_received",
+      "invoice.quantity_over_received",
+      "invoice.unapproved_scope",
+      "invoice.contract_sum_overrun"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.bill_id",
+      "seam.message_id",
+      "seam.order_ref",
+      "seam.queue",
+      "seam.failed_check",
+      "seam.never_ran",
+      "seam.difference",
+      "seam.tolerance_version",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Automate 3-way invoice matching from Gmail to Xero with Slack and Teams alerts",
+    "original_author": "Jitesh Dugar",
+    "share_link": "https://n8n.io/workflows/12662",
+    "licence_or_permission": "reimplementation"
+  }
+}

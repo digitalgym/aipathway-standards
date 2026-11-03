@@ -1,0 +1,1495 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793709204123",
+  "standard": "invoice-check-build-standard",
+  "spec": "AIP-BS-INVOICE-CHECK",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-03T12:33:24.114Z",
+  "finishedAt": "2026-11-03T12:33:24.123Z",
+  "results": [
+    {
+      "checkId": "checks-in-order-stop-first-failure",
+      "n": 1,
+      "title": "The four checks run in order and stop at the first failure",
+      "verdict": "pass",
+      "held": true,
+      "expected": "It is reported against the second. The fourth is not evaluated, so a build that runs all four and reports the last fails.",
+      "actual": "checks recorded: rate=true, quantity=false; queues: needs_decision",
+      "stimulus": {
+        "description": "An invoice seeded to fail the second check and also the fourth.",
+        "now": "2026-10-20T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "checks-in-order-stop-first-failure"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": []
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-4411"
+          },
+          "response": {
+            "id": "PO-4411",
+            "amount": 50000,
+            "unitRateCents": 4500,
+            "contractSumCents": 50000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-7720",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-4411 agreed $45.00 a unit; every in-scope line charged at the agreed rate; difference $0.00; no tolerance written down, so exact"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-7720",
+            "check": "quantity",
+            "passed": false
+          },
+          "response": {
+            "saw": "received or complete 8; claimed before 0, on this invoice 12, to date 12; 4 not received, $180.00 at the PO rate; no tolerance written down, so exact"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "exception": "INV-7720"
+          },
+          "response": {
+            "differenceCents": 18000,
+            "source": "gmail:INV-7720.pdf"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-7720",
+            "queue": "needs_decision",
+            "reason": "quantity failed: claimed 12 to date against 8 received, $180.00 over; never ran: variation, contract_sum; source gmail:INV-7720.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "no-po-escalates",
+      "n": 2,
+      "title": "No matching purchase order escalates",
+      "verdict": "pass",
+      "held": true,
+      "expected": "It escalates. Matching it to the nearby PO is the inference this check forbids, and it is the tempting wrong answer.",
+      "actual": "escalations 1; queues blocked; checks run 0",
+      "stimulus": {
+        "description": "An invoice with no PO, from a supplier with exactly one open PO of a similar amount.",
+        "now": "2026-10-20T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "no-po-escalates"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": []
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "invoiceId": "INV-0931",
+            "reason": "which job is this? INV-0931 from SUP-BORAL quotes no PO number; not matched to any other PO"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-0931",
+            "queue": "blocked",
+            "reason": "no purchase order to match against: INV-0931 quotes no PO number; source gmail:INV-0931.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "variation-against-a-record",
+      "n": 3,
+      "title": "Variation approval is checked against a written record",
+      "verdict": "pass",
+      "held": true,
+      "expected": "It is not passed. A note claiming approval is not a record.",
+      "actual": "variation record: {\"invoiceId\":\"INV-3310\",\"check\":\"variation\",\"passed\":false}; queues blocked",
+      "stimulus": {
+        "description": "An invoice exceeding its PO, with a verbal approval noted and no written record.",
+        "now": "2026-10-20T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "variation-against-a-record"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": []
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-6230"
+          },
+          "response": {
+            "id": "PO-6230",
+            "amount": 95000,
+            "unitRateCents": 9500,
+            "contractSumCents": 95000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-3310",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-6230 agreed $95.00 a unit; every in-scope line charged at the agreed rate; difference $0.00; no tolerance written down, so exact"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-3310",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "received or complete 10; claimed before 0, on this invoice 10, to date 10; 0 not received, $0.00 at the PO rate; no tolerance written down, so exact"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "docs:SI-099"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-3310",
+            "check": "variation",
+            "passed": false
+          },
+          "response": {
+            "saw": "1 line(s) outside PO PO-6230 scope; written approval read back for: none; none found for: \"Additional works as discussed\" $640.00 (cites docs:SI-099, not on file); a note says \"Site super OK'd it on the phone, all good\", which is not a written approval; no tolerance written down, so exact, though no tolerance excuses a missing approval"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "exception": "INV-3310"
+          },
+          "response": {
+            "differenceCents": 64000,
+            "source": "gmail:INV-3310.pdf"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-3310",
+            "queue": "blocked",
+            "reason": "variation failed: unapproved scope, $640.00 with no written approval on file; never ran: contract_sum; source gmail:INV-3310.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "exactly-one-queue",
+      "n": 4,
+      "title": "Every invoice lands in exactly one of the four queues",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Each appears in exactly one queue. Nothing is absent and nothing is in two.",
+      "actual": "INV-A1: needs_decision; INV-A2: waiting; INV-A3: done_reversible; INV-A4: blocked; INV-A5: needs_decision",
+      "stimulus": {
+        "description": "A batch containing one invoice for each queue, plus one that could arguably be two.",
+        "now": "2026-10-20T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "exactly-one-queue"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": []
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 5
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-1"
+          },
+          "response": {
+            "id": "PO-1",
+            "amount": 1000000,
+            "unitRateCents": 10000,
+            "contractSumCents": 1000000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-A1",
+            "check": "rate",
+            "passed": false
+          },
+          "response": {
+            "saw": "PO PO-1 agreed $100.00 a unit; \"Supply per PO\" charged $110.00 x 5; difference $50.00; no tolerance written down, so exact"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "exception": "INV-A1"
+          },
+          "response": {
+            "differenceCents": 5000,
+            "source": "gmail:INV-A1.pdf"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-A1",
+            "queue": "needs_decision",
+            "reason": "rate failed: unit rate differs from PO PO-1 by $50.00; never ran: quantity, variation, contract_sum; source gmail:INV-A1.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-A2",
+            "queue": "waiting",
+            "reason": "no invoice document attached to INV-A2; drafted a request to supplier SUP-A for the PDF; chase again 2026-10-23"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-2"
+          },
+          "response": {
+            "id": "PO-2",
+            "amount": 1000000,
+            "unitRateCents": 5000,
+            "contractSumCents": 1000000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-A3",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-2 agreed $50.00 a unit; every in-scope line charged at the agreed rate; difference $0.00; no tolerance written down, so exact"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-A3",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "received or complete 4; claimed before 0, on this invoice 4, to date 4; 0 not received, $0.00 at the PO rate; no tolerance written down, so exact"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-A3",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "0 line(s) outside PO PO-2 scope; written approval read back for: none; none found for: none; no tolerance written down, so exact, though no tolerance excuses a missing approval"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-A3",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "claimed to date $200.00; PO PO-2 total $10000.00 plus approved variations $0.00 is $10000.00; no tolerance written down, so exact"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-A3",
+            "queue": "done_reversible",
+            "reason": "three-way match clean against PO PO-2 and its receipt; left as a draft bill for a named person to approve; source gmail:INV-A3.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "invoiceId": "INV-A4",
+            "reason": "which job is this? INV-A4 from SUP-B quotes no PO number; not matched to any other PO"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-A4",
+            "queue": "blocked",
+            "reason": "no purchase order to match against: INV-A4 quotes no PO number; source gmail:INV-A4.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-1"
+          },
+          "response": {
+            "id": "PO-1",
+            "amount": 1000000,
+            "unitRateCents": 10000,
+            "contractSumCents": 1000000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-A5",
+            "check": "rate",
+            "passed": false
+          },
+          "response": {
+            "saw": "PO PO-1 agreed $100.00 a unit; \"Supply per PO\" charged $105.00 x 5; difference $25.00; no tolerance written down, so exact"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "exception": "INV-A5"
+          },
+          "response": {
+            "differenceCents": 2500,
+            "source": "gmail:INV-A5.pdf"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-A5",
+            "queue": "needs_decision",
+            "reason": "rate failed: unit rate differs from PO PO-1 by $25.00; never ran: quantity, variation, contract_sum; source gmail:INV-A5.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "clean-matches-visible",
+      "n": 5,
+      "title": "Clean matches are visible in a list",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The clean matches are listed. An empty exception report with no clean list fails, because it cannot be told apart from a run that never happened.",
+      "actual": "INV-C1: done_reversible; INV-C2: done_reversible; INV-C3: done_reversible",
+      "stimulus": {
+        "description": "A batch where every invoice matches cleanly.",
+        "now": "2026-10-20T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "clean-matches-visible"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": []
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 3
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-71"
+          },
+          "response": {
+            "id": "PO-71",
+            "amount": 400000,
+            "unitRateCents": 3800,
+            "contractSumCents": 400000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-C1",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-71 agreed $38.00 a unit; every in-scope line charged at the agreed rate; difference $0.00; no tolerance written down, so exact"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-C1",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "received or complete 30; claimed before 0, on this invoice 30, to date 30; 0 not received, $0.00 at the PO rate; no tolerance written down, so exact"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-C1",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "0 line(s) outside PO PO-71 scope; written approval read back for: none; none found for: none; no tolerance written down, so exact, though no tolerance excuses a missing approval"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-C1",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "claimed to date $1140.00; PO PO-71 total $4000.00 plus approved variations $0.00 is $4000.00; no tolerance written down, so exact"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-C1",
+            "queue": "done_reversible",
+            "reason": "three-way match clean against PO PO-71 and its receipt; left as a draft bill for a named person to approve; source gmail:INV-C1.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-71"
+          },
+          "response": {
+            "id": "PO-71",
+            "amount": 400000,
+            "unitRateCents": 3800,
+            "contractSumCents": 400000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-C2",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-71 agreed $38.00 a unit; every in-scope line charged at the agreed rate; difference $0.00; no tolerance written down, so exact"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-C2",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "received or complete 40; claimed before 30, on this invoice 10, to date 40; 0 not received, $0.00 at the PO rate; no tolerance written down, so exact"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-C2",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "0 line(s) outside PO PO-71 scope; written approval read back for: none; none found for: none; no tolerance written down, so exact, though no tolerance excuses a missing approval"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-C2",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "claimed to date $1520.00; PO PO-71 total $4000.00 plus approved variations $0.00 is $4000.00; no tolerance written down, so exact"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-C2",
+            "queue": "done_reversible",
+            "reason": "three-way match clean against PO PO-71 and its receipt; left as a draft bill for a named person to approve; source gmail:INV-C2.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-72"
+          },
+          "response": {
+            "id": "PO-72",
+            "amount": 300000,
+            "unitRateCents": 15000,
+            "contractSumCents": 300000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-C3",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-72 agreed $150.00 a unit; every in-scope line charged at the agreed rate; difference $0.00; no tolerance written down, so exact"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-C3",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "received or complete 6; claimed before 0, on this invoice 6, to date 6; 0 not received, $0.00 at the PO rate; no tolerance written down, so exact"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-C3",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "0 line(s) outside PO PO-72 scope; written approval read back for: none; none found for: none; no tolerance written down, so exact, though no tolerance excuses a missing approval"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-C3",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "claimed to date $900.00; PO PO-72 total $3000.00 plus approved variations $0.00 is $3000.00; no tolerance written down, so exact"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-C3",
+            "queue": "done_reversible",
+            "reason": "three-way match clean against PO PO-72 and its receipt; left as a draft bill for a named person to approve; source gmail:INV-C3.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "exceptions-carry-dollars-and-source",
+      "n": 6,
+      "title": "Every exception carries the difference and the source",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The exception states the dollar difference and points at the document it was computed from. A percentage or a description alone fails.",
+      "actual": "exception: [{\"differenceCents\":5000,\"source\":\"gmail:msg-18c2/INV-5150.pdf\"}]",
+      "stimulus": {
+        "description": "An invoice over its PO by a known amount.",
+        "now": "2026-10-20T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "exceptions-carry-dollars-and-source"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": []
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-8800"
+          },
+          "response": {
+            "id": "PO-8800",
+            "amount": 900000,
+            "unitRateCents": 9000,
+            "contractSumCents": 900000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5150",
+            "check": "rate",
+            "passed": false
+          },
+          "response": {
+            "saw": "PO PO-8800 agreed $90.00 a unit; \"Supply per PO\" charged $95.00 x 10; difference $50.00; no tolerance written down, so exact"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "exception": "INV-5150"
+          },
+          "response": {
+            "differenceCents": 5000,
+            "source": "gmail:msg-18c2/INV-5150.pdf"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-5150",
+            "queue": "needs_decision",
+            "reason": "rate failed: unit rate differs from PO PO-8800 by $50.00; never ran: quantity, variation, contract_sum; source gmail:msg-18c2/INV-5150.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "payment-needs-a-person",
+      "n": 7,
+      "title": "Nothing pays or releases without a person",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "No payment is released. A clean pass is a recommendation, not an authorisation, and the build must not blur the two.",
+      "actual": "queues done_reversible; release calls 0",
+      "stimulus": {
+        "description": "An invoice that passes all four checks cleanly.",
+        "now": "2026-10-20T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "payment-needs-a-person"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": []
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-9001"
+          },
+          "response": {
+            "id": "PO-9001",
+            "amount": 240000,
+            "unitRateCents": 12000,
+            "contractSumCents": 240000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-9901",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-9001 agreed $120.00 a unit; every in-scope line charged at the agreed rate; difference $0.00; no tolerance written down, so exact"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-9901",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "received or complete 8; claimed before 0, on this invoice 8, to date 8; 0 not received, $0.00 at the PO rate; no tolerance written down, so exact"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-9901",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "0 line(s) outside PO PO-9001 scope; written approval read back for: none; none found for: none; no tolerance written down, so exact, though no tolerance excuses a missing approval"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-9901",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "claimed to date $960.00; PO PO-9001 total $2400.00 plus approved variations $0.00 is $2400.00; no tolerance written down, so exact"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-9901",
+            "queue": "done_reversible",
+            "reason": "three-way match clean against PO PO-9001 and its receipt; left as a draft bill for a named person to approve; source gmail:INV-9901.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "record-survives-the-decision",
+      "n": 8,
+      "title": "The record of a check survives the decision",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The check record is still retrievable with what it saw at the time, not just the outcome.",
+      "actual": "rate: PO PO-3030 agreed $72.50 a unit; every in-scope line charged at the agreed rate; difference $0.00; no tolerance written down, so exact | quantity: received or complete 6; claimed before 0, on this invoice 6, to date 6; 0 not received, $0.00 at the PO rate; no tolerance written down, so exact | variation: 0 line(s) outside PO PO-3030 scope; written approval read back for: none; none found for: none; no tolerance written down, so exact, though no tolerance excuses a missing approval | contract_sum: claimed to date $435.00; PO PO-3030 total $1450.00 plus approved variations $0.00 is $1450.00; no tolerance written down, so exact",
+      "stimulus": {
+        "description": "An invoice checked, decided, paid, and then queried months later.",
+        "now": "2026-10-20T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "record-survives-the-decision"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": []
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-3030"
+          },
+          "response": {
+            "id": "PO-3030",
+            "amount": 145000,
+            "unitRateCents": 7250,
+            "contractSumCents": 145000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-3031",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-3030 agreed $72.50 a unit; every in-scope line charged at the agreed rate; difference $0.00; no tolerance written down, so exact"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-3031",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "received or complete 6; claimed before 0, on this invoice 6, to date 6; 0 not received, $0.00 at the PO rate; no tolerance written down, so exact"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-3031",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "0 line(s) outside PO PO-3030 scope; written approval read back for: none; none found for: none; no tolerance written down, so exact, though no tolerance excuses a missing approval"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-3031",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "claimed to date $435.00; PO PO-3030 total $1450.00 plus approved variations $0.00 is $1450.00; no tolerance written down, so exact"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-3031",
+            "queue": "done_reversible",
+            "reason": "three-way match clean against PO PO-3030 and its receipt; left as a draft bill for a named person to approve; source gmail:INV-3031.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "release_payment",
+          "verb": "write",
+          "subject": "payment",
+          "request": {
+            "invoiceId": "INV-3031",
+            "person": "Priya Nair, accounts payable"
+          },
+          "response": {
+            "released": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "tolerances-are-readable",
+      "n": 9,
+      "title": "Tolerance thresholds are written down where the operator can read them",
+      "verdict": "pass",
+      "held": true,
+      "expected": "They are returned as readable values with their dates. Thresholds that exist only inside the matching code fail.",
+      "actual": "rate record: PO PO-2020 agreed $10.00 a unit; \"Supply per PO\" charged $10.15 x 10; difference $1.50; tolerance $2.00 in force from 2026-07-01; queues done_reversible",
+      "stimulus": {
+        "description": "A request for the thresholds currently in force.",
+        "now": "2026-10-20T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "tolerances-are-readable"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": [
+              {
+                "check": "rate",
+                "withinCents": 200,
+                "effectiveFrom": "2026-07-01"
+              },
+              {
+                "check": "rate",
+                "withinCents": 0,
+                "effectiveFrom": "2026-12-01"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PO-2020"
+          },
+          "response": {
+            "id": "PO-2020",
+            "amount": 100000,
+            "unitRateCents": 1000,
+            "contractSumCents": 100000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-2021",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "PO PO-2020 agreed $10.00 a unit; \"Supply per PO\" charged $10.15 x 10; difference $1.50; tolerance $2.00 in force from 2026-07-01"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-2021",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "received or complete 10; claimed before 0, on this invoice 10, to date 10; 0 not received, $0.00 at the PO rate; no tolerance written down, so exact"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-2021",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "0 line(s) outside PO PO-2020 scope; written approval read back for: none; none found for: none; no tolerance written down, so exact, though no tolerance excuses a missing approval"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-2021",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "claimed to date $101.50; PO PO-2020 total $1000.00 plus approved variations $0.00 is $1000.00; no tolerance written down, so exact"
+          }
+        },
+        {
+          "at": "2026-10-20T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "INV-2021",
+            "queue": "done_reversible",
+            "reason": "three-way match clean against PO PO-2020 and its receipt; left as a draft bill for a named person to approve; source gmail:INV-2021.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 10,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the check runs on.",
+        "now": "2026-11-03T12:33:24.123Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 11,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "The first lands in the decision queue naming check 1, the difference in dollars, and the three checks that never ran. The second is flagged as unapproved scope at check 3 and does not pass on a confident covering email. No payment leaves without a named person.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "Against the live ledger and the real document store: an invoice that matches its order exactly with one unit rate changed, then an invoice with a line outside the original scope and no written approval.",
+        "now": "2026-11-03T12:33:24.123Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 11,
+    "pass": 7,
+    "fail": 0,
+    "shapeOnly": 2,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
