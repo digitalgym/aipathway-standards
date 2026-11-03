@@ -1,0 +1,124 @@
+{
+  "spec": "AIP-BS-INVOICE-OUT",
+  "standard": "invoice-out-build-standard",
+  "edition": "2026-10-05",
+  "source": "https://aipathway.com.au/explore-ai/invoice-out-build-standard",
+  "ran_at": "2026-11-03T13:13:58.619Z",
+  "environment": "stub",
+  "provider": "local.mock_ledger",
+  "provider_block": {
+    "boundary": {
+      "never": [
+        "invoice a job the system has not marked complete",
+        "type, average or recall a rate; the price book is the only source",
+        "bill a variation with no signed acceptance attached",
+        "make a second invoice for one job",
+        "send without a release",
+        "serve, certify or argue a claim"
+      ],
+      "stays_with_person": [
+        "the release, or the rule and threshold that stands in for it",
+        "pricing a parked line",
+        "the variation, and arguments about what was agreed",
+        "the claim under security of payment law, with the builder and their advisor"
+      ]
+    },
+    "job": "the invoice is out the day the job finishes",
+    "skill": "invoice-out",
+    "stub": "local.mock_ledger",
+    "production": "office_voice.draft_invoice",
+    "product": "Office Voice / Recover",
+    "insert": "Get Paid",
+    "with_us": {
+      "kind": "enable_insert",
+      "provider": "office_voice.draft_invoice",
+      "product": "Office Voice / Recover",
+      "insert": "Get Paid"
+    }
+  },
+  "tally": {
+    "green": 7,
+    "red": 0,
+    "with_us": 1,
+    "evidence_required": 1,
+    "total": 12
+  },
+  "checks": [
+    {
+      "id": "completion-is-the-trigger",
+      "n": 1,
+      "title": "The job's completion is the only trigger",
+      "verdict": "pass"
+    },
+    {
+      "id": "lines-come-from-the-job",
+      "n": 2,
+      "title": "Every invoice line traces to a line on the job",
+      "verdict": "pass"
+    },
+    {
+      "id": "rates-only-from-the-book",
+      "n": 3,
+      "title": "Every line is priced from the price book, and a line the book does not cover parks the invoice",
+      "verdict": "pass"
+    },
+    {
+      "id": "variation-needs-a-signature",
+      "n": 4,
+      "title": "A variation is billed only with a signed acceptance attached",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "stage-invoice-never-claim",
+      "n": 5,
+      "title": "A job under a building contract is invoiced as a stage invoice, and the claim stays with the builder",
+      "verdict": "pass"
+    },
+    {
+      "id": "one-invoice-per-job",
+      "n": 6,
+      "title": "One invoice per job, written once, updated on a second event",
+      "verdict": "pass"
+    },
+    {
+      "id": "written-into-the-ledger",
+      "n": 7,
+      "title": "The invoice exists in the ledger the business runs, with an external id back",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "send-is-a-gate",
+      "n": 8,
+      "title": "Nothing is sent without a release by a person, or by a rule a person set with a threshold",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "parked-is-a-queue",
+      "n": 9,
+      "title": "A parked invoice is a queue with a reason and an owner, and nothing parked is sent",
+      "verdict": "pass"
+    },
+    {
+      "id": "the-record-by-job",
+      "n": 10,
+      "title": "Job id, invoice id, the lines, the rates read, who released and when it was sent are retrievable by job",
+      "verdict": "pass"
+    },
+    {
+      "id": "survives-the-builder",
+      "n": 11,
+      "title": "It survives the builder",
+      "verdict": "evidence_required"
+    },
+    {
+      "id": "pass-test",
+      "n": 12,
+      "title": "The pass test passes",
+      "verdict": "with_us"
+    }
+  ],
+  "next": {
+    "with_us": "Enable Get Paid on Office Voice / Recover. Then run the same checks against us: mint a key at office-voice.com/app/keys and OFFICE_VOICE_API_KEY=<key> AIPATHWAY_ENV=production AIPATHWAY_PROVIDER=office_voice.draft_invoice node run.mjs. Do not hand-roll the live step.",
+    "evidence_required": "attach what proves each one; not a software check"
+  }
+}
