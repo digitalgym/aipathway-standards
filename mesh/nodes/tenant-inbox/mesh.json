@@ -1,0 +1,64 @@
+{
+  "slug": "tenant-inbox",
+  "name": "Tenant Inbox",
+  "office_task": "Read the agency's shared inbox, file every tenant, landlord and tradie message against its tenancy, work order or creditor, and hand each tenant complaint whole to its property manager.",
+  "verticals": ["property"],
+  "standards": ["inbox-triage"],
+  "systems_of_record": [
+    "the mail system that issues the message_id (the agency's shared Gmail or Outlook mailbox)",
+    "the property management system that issues the tenancy_id and holds the maintenance work orders and creditor records messages are filed against (PropertyMe, Console Cloud or similar)",
+    "the exception desk the agency runs, holding the queue table and its items"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/tenant-inbox" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "webhook", "schedule"],
+  "consumes": [
+    { "event": "email.received", "wake": "webhook" },
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "evidence.filed",
+      "write": "the message filed against the tenancy, maintenance work order or creditor it belongs to, by that record's own id; for a tradie's invoice, each attachment filed as evidence on the creditor record with its hash and the message_id, where a bill check reads it next",
+      "readback": "reading the record back by message_id returns the filing with its record_ref (tenancy:<tenancy_id>, job:<work order id> or supplier:<creditor id>) and every evidence row with its hash; no record_ref back means nothing was filed and the message stays an open task for the other queue's owner"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an item on the exception desk naming the person who owns it, one per thread: a message waiting on its queue owner's reply, an unmatched message left as a task, a tenant complaint handed whole to its property manager with nothing sent to the tenant, or an item past its kind's clock handed to the owner's manager",
+      "readback": "the exception desk returns an exception_id (the item id), and reading the record back by message_id returns the item with its kind, record_ref, owner, due date and every outbound with who released it; no item back means nothing was raised and the message is escalated to the other queue's owner"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "inbox.awaiting_release",
+      "inbox.unmatched_task",
+      "inbox.complaint",
+      "inbox.past_clock",
+      "inbox.readback_failed"
+    ],
+    "owner_field": "owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.message_id",
+      "seam.thread_id",
+      "seam.kind",
+      "seam.record_ref",
+      "seam.owner",
+      "seam.due",
+      "seam.status",
+      "seam.released_by"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Triage tenant complaints with GPT-4.1, Slack, email and Google Sheets",
+    "original_author": "Hyrum Hurst",
+    "share_link": "https://n8n.io/workflows/12428",
+    "licence_or_permission": "reimplementation"
+  }
+}
