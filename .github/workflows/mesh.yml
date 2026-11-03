@@ -18,6 +18,12 @@ on:
 permissions:
   contents: write
 
+# Merges land minutes apart, and each run commits the registry. One run at a
+# time, never cancelled, so no rebuild is lost and none races another's push.
+concurrency:
+  group: ${{ github.event_name == 'pull_request' && format('mesh-pr-{0}', github.ref) || 'mesh-registry' }}
+  cancel-in-progress: false
+
 jobs:
   gate:
     runs-on: ubuntu-latest
@@ -38,4 +44,13 @@ jobs:
           git config user.email "hello@aipathway.com.au"
           git add mesh/registry.json
           git commit -m "mesh: regenerate the registry"
-          git push
+          # main may have moved while this ran. Rebase onto it and rebuild, so
+          # the registry pushed is always the one for the newest main.
+          for i in 1 2 3; do
+            git push && exit 0
+            git fetch -q origin main && git reset -q --hard origin/main
+            node mesh/validate.mjs --write
+            if git diff --quiet -- mesh/registry.json; then exit 0; fi
+            git add mesh/registry.json && git commit -q -m "mesh: regenerate the registry"
+          done
+          exit 1
