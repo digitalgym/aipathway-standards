@@ -1,0 +1,56 @@
+{
+  "slug": "owing-today",
+  "name": "Owing Today",
+  "office_task": "Every morning, show me who owes us money, biggest first, with a polite or firmer reminder already written for each one, and I send them.",
+  "verticals": ["trades-building"],
+  "standards": ["debtor-chasing"],
+  "systems_of_record": ["Xero", "MYOB", "ServiceM8", "the exception desk the business runs"],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/owing-today" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "payment.received", "wake": "webhook" },
+    { "event": "email.received", "wake": "webhook" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "promise.recorded",
+      "write": "A dated promise to pay, taken from a debtor's reply on a reminder thread that carries the invoice id: the date, the amount or none, and when it was captured, written onto the invoice in the ledger. That date becomes the customer's next follow-up, and no reminder is queued for them before it. It never clears a logged dispute.",
+      "readback": "The invoice is read back by its id (Xero GET /api.xro/2.0/Invoices/{InvoiceID}/History, MYOB GET /accountright/{company_file_id}/Sale/Invoice/{UID}) and must show the promise with its date. No promise on the read-back is not a write: it raises debtor.promise_write_failed."
+    },
+    {
+      "event": "exception.raised",
+      "write": "An exception naming exception_owner, the person the business set for receivables: today's queue of reminder drafts for that person to send (customer, invoice ids, total, tone and text), a relationship-sized balance or open dispute lifted out of the run, hardship or a dispute named in a reply, a reply with no date, a refused override, or a promise that did not write.",
+      "readback": "The exception desk returns an exception_id, and reading that id back returns the customer, the invoice ids, the reason and the exception_owner; no id back means nothing was raised and the run stops."
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "debtor.queue_ready",
+      "debtor.relationship_account",
+      "debtor.dispute_open",
+      "debtor.hardship",
+      "debtor.dispute_named",
+      "debtor.reply_without_date",
+      "debtor.reply_unmatched",
+      "debtor.override_refused",
+      "debtor.promise_write_failed"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.invoice_id", "seam.job_id", "seam.chase_bucket", "seam.reminder_tone", "seam.promise_date", "seam.next_touch", "seam.gate_hold_reason", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Invoice Chaser",
+    "original_author": "Mark G",
+    "share_link": "https://x.ai/bot/90sITfSWBOYbcnx6uyfun",
+    "licence_or_permission": "reimplementation"
+  }
+}
