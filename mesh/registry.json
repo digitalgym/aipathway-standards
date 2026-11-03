@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-03T12:23:48.624Z",
+  "generated_at": "2026-11-03T12:41:04.834Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -293,6 +293,110 @@
           "environment": "stub",
           "ran_at": "2026-11-03T11:03:40.022Z",
           "run_id": "run-1793703820021",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 11
+        }
+      ]
+    },
+    {
+      "slug": "claim-check",
+      "name": "Claim Check",
+      "office_task": "Check every subbie's claim, line by line, against the agreed contract rate before anyone pays it, keep the record, and put any mismatch in front of a named person.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "invoice-check"
+      ],
+      "systems_of_record": [
+        "Xero or MYOB (the ledger that issues the bill_id and holds the subcontract or purchase order with its agreed rates)",
+        "the job system (Simpro, ServiceM8 or similar) for the quantity marked complete",
+        "the document store where the signed variation approvals live"
+      ],
+      "consumes": [
+        {
+          "event": "bill.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "bill.checked",
+          "write": "a check note on the subcontractor's bill in the ledger: each of the four checks (rate, quantity, variation, contract sum) with what it compared, the subcontract it was read against and the tolerance in force with its date, and the bill placed in the done-and-reversible list for a named person to approve. Nothing is approved or paid",
+          "readback": "reading the bill by its bill_id from the ledger (Xero GET /api.xro/2.0/Invoices/{bill_id}/History, or the MYOB bill's journal memo) returns the check note with the four results and seam.queue = done_reversible; no note back means it was not written and the bill is raised as an exception instead"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the bill naming the person who owns it: the first check that failed and the checks that never ran, the difference in dollars, the cumulative position, the claim document, and its queue (needs a decision; waiting on the subbie for a missing claim document; or blocked: no subcontract named, or scope with no written approval)",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the bill_id, the failed check, the dollar difference, the source document and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "claim.no_source_document",
+          "claim.no_subcontract",
+          "claim.rate_mismatch",
+          "claim.quantity_over_complete",
+          "claim.unapproved_scope",
+          "claim.contract_sum_overrun"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.bill_id",
+          "seam.order_ref",
+          "seam.queue",
+          "seam.failed_check",
+          "seam.never_ran",
+          "seam.difference",
+          "seam.tolerance_version",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/claim-check"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Check invoice contract price compliance with Google Sheets and Telegram alerts",
+        "original_author": "Abdullah Latif",
+        "share_link": "https://n8n.io/workflows/19445",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "invoice-check",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:27:05.817Z",
+          "run_id": "run-1793708825816",
           "green": 7,
           "red": 0,
           "with_us": 1,
@@ -1239,6 +1343,123 @@
       ]
     },
     {
+      "slug": "nudge-desk",
+      "name": "Nudge Desk",
+      "office_task": "Every weekday, find our overdue invoices, chase each customer once in the right order, never past the do-not-chase list or the gate, and turn a reply with a date into a promise.",
+      "verticals": [
+        "accounting-bookkeeping"
+      ],
+      "standards": [
+        "debtor-chasing"
+      ],
+      "systems_of_record": [
+        "QuickBooks Online (the ledger that issues the invoice_id)",
+        "Gmail (the reminder and the reply, by message_id)",
+        "the exception desk the business runs (a sheet or a task list that issues the exception_id)"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "invoice.overdue",
+          "wake": "poll"
+        },
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "promise.recorded",
+          "write": "a dated promise to pay, from the debtor's reply, written as a note on the invoice in the ledger: the date, an amount that may be empty, the method if offered, and when it was captured; it sits beside any open dispute and never closes it",
+          "readback": "GET /v3/company/{realmId}/invoice/{invoice_id} returns the invoice carrying the promise date and capture time; no promise on the read-back means it was not written, and a promise_not_recorded exception is raised"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the customer's invoices naming the person who owns it: an open dispute, a relationship-sized balance, a reply with no date, a promise that did not read back, or an override refused for want of a named approver",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the invoice_ids, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "dispute_open",
+          "relationship_account",
+          "reply_without_date",
+          "promise_not_recorded",
+          "override_refused"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.invoice_id",
+          "seam.chase_bucket",
+          "seam.gate_reason",
+          "seam.promise_date",
+          "seam.promise_captured_at",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/nudge-desk"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Chase overdue QuickBooks invoices with Claude, Gmail, Slack and Google Sheets",
+        "original_author": "Amplence",
+        "share_link": "https://n8n.io/workflows/20684",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "debtor-chasing",
+          "edition": "2026-10-06",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:30:34.243Z",
+          "run_id": "run-1793709034242",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        },
+        {
+          "standard": "cash-seam",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:30:34.689Z",
+          "run_id": "run-1793709034687",
+          "green": 4,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 9
+        }
+      ]
+    },
+    {
       "slug": "open-home-desk",
       "name": "Open Home Desk",
       "office_task": "After each open home, follow up everyone who said yes at sign-in with a message I approved, sort their replies, and draft the vendor's report from what buyers actually said.",
@@ -1543,6 +1764,125 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 12
+        }
+      ]
+    },
+    {
+      "slug": "promise-watch",
+      "name": "Promise Watch",
+      "office_task": "Turn every client's \"I'll pay by\" reply into a dated promise on the invoice, and when that date passes unpaid, draft the next chase for the owner to approve.",
+      "verticals": [
+        "b2b-office"
+      ],
+      "standards": [
+        "debtor-chasing"
+      ],
+      "systems_of_record": [
+        "Xero (the ledger that issues the invoice_id; the promise is written onto the invoice)",
+        "Gmail (the watched inbox that issues the message_id of each client reply and holds the chase drafts)"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "invoice.overdue",
+          "wake": "schedule"
+        },
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "promise.recorded",
+          "write": "a dated promise to pay on the invoice the client's reply names by its invoice number: date (never empty), amount (may be empty), method if offered, and when it was captured; the follow-up moves to that date",
+          "readback": "GET /api.xro/2.0/Invoices/{InvoiceID}/History returns the promise note with its date and capture time; no note back means it was not written and an exception is raised instead"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the invoice naming the person who owns it: a chase drafted and waiting for approval, a broken promise, a dispute, a relationship-sized balance lifted out of the run, a reply with no single invoice id, a reply with no date, or an override refused for want of a named approver",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the invoice_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "chase_drafted_awaiting_approval",
+          "dispute_open",
+          "relationship_sized_balance",
+          "promise.no_invoice_ref",
+          "promise.no_date",
+          "promise.write_failed",
+          "override.refused_no_approver",
+          "held_open_exception"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.invoice_id",
+          "seam.promise_date",
+          "seam.promise_amount",
+          "seam.promise_captured_at",
+          "seam.chase_status",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/promise-watch"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "PayDate Chase",
+        "original_author": "Skip Rogers",
+        "share_link": "https://x.ai/bot/QKd4byLZMI9Amf9dRlDP1",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "debtor-chasing",
+          "edition": "2026-10-06",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:30:58.315Z",
+          "run_id": "run-1793709058313",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        },
+        {
+          "standard": "cash-seam",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:30:59.671Z",
+          "run_id": "run-1793709059669",
+          "green": 4,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 9
         }
       ]
     },
@@ -1860,6 +2200,7 @@
     "after-hours-desk",
     "backflow-watch",
     "bill-check",
+    "claim-check",
     "comp-report",
     "deadline-desk",
     "defect-desk",
@@ -1869,9 +2210,11 @@
     "inbox-desk",
     "invoice-desk",
     "matter-billing",
+    "nudge-desk",
     "open-home-desk",
     "permit-answers",
     "practice-desk",
+    "promise-watch",
     "quote-desk",
     "rent-watch",
     "site-orders"
