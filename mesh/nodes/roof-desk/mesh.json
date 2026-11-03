@@ -1,0 +1,41 @@
+{
+  "slug": "roof-desk",
+  "name": "Roof Desk",
+  "office_task": "Answers roofing calls we miss after hours, checks the address is in our area, books one inspection or repair job, and wakes the on-call roofer only when water is coming in.",
+  "verticals": ["trades-building"],
+  "standards": ["booked-after-hours"],
+  "systems_of_record": ["ServiceM8", "Simpro"],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/roof-desk" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["office-voice-front-desk", "webhook"],
+  "consumes": [{ "event": "call.received", "wake": "webhook" }],
+  "emits": [
+    {
+      "event": "job.created",
+      "write": "one job in the job system per caller, with the resolved address, the fixed type (emergency, routine or quote) and the caller's own words, booked for the next working slot; a repeat call from the same number updates the open job and sets duplicate_of instead",
+      "readback": "the job system returns the job id (ServiceM8 job uuid, Simpro job ID) and the open job for that number is read back with the same id before the caller is told it is booked; no id that reads back means write_failed, an alert to the office, and no job.created"
+    },
+    {
+      "event": "exception.raised",
+      "write": "a hand-off to the office with a reason from the fixed list (a price question, a complaint, an address it could not confirm, a job outside the taxonomy, a failed write) and the call transcript attached",
+      "readback": "the exception desk returns an exception_id, and reading it back returns the call_id, the reason and the exception_owner; no id back means nothing was raised and the call is logged as not completed"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": ["unclassified", "address_unresolved", "out_of_scope_request", "caller_distressed", "price_requested", "complaint", "write_failed"],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.job_id", "seam.duplicate_of", "seam.call_id", "seam.status", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Route missed roofing calls to a Retell AI agent with Twilio and Google Workspace",
+    "original_author": "Khadija Naeem",
+    "share_link": "https://n8n.io/workflows/18949",
+    "licence_or_permission": "reimplementation"
+  }
+}
