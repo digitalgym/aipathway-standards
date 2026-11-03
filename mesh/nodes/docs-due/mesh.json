@@ -1,0 +1,42 @@
+{
+  "slug": "docs-due",
+  "name": "Docs Due",
+  "office_task": "Each weekday, chase clients for the documents the practice still needs from them, stop when each one arrives, and hand a no or a silent client to a named person.",
+  "verticals": ["accounting-bookkeeping"],
+  "standards": ["follow-up"],
+  "systems_of_record": [
+    "the practice's client document checklist, one open item per document owed on the client job (a practice management system such as Xero Practice Manager or FYI, or a register kept beside it)",
+    "the practice's document store, where a returned document is filed against the client job"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/docs-due" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "evidence.filed",
+      "write": "the returned document (a signed engagement letter, a tax return authority, a fund or bank certificate) filed as evidence against its open item on the client job, which marks the item arrived and lets the job move",
+      "readback": "reading the item back by its id returns status arrived with the arrival's evidence reference, which names the message_id of the client email that carried it (or the document_id where it landed in a watched folder); no evidence reference back means it was not filed, and the item stays on the chase with no touch until a person looks"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an escalation on the item naming the cadence's person: the client said no, disputed it or asked us to stop, or the item reached its cap with nothing back, carrying every touch so far",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the item id, the reason, the touch history and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": ["followup.declined", "followup.dispute", "followup.cap_reached"],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.item_id", "seam.item_status", "seam.touches", "seam.outcome", "seam.evidence_ref", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
