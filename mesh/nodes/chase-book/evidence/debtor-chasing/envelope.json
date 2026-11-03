@@ -1,0 +1,2034 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793709114238",
+  "standard": "debtor-chasing-build-standard",
+  "spec": "AIP-BS-DEBTOR-CHASING",
+  "specVersion": "2026-10-06",
+  "environment": "stub",
+  "startedAt": "2026-11-03T12:31:54.192Z",
+  "finishedAt": "2026-11-03T12:31:54.238Z",
+  "results": [
+    {
+      "checkId": "coverage-measured",
+      "n": 1,
+      "title": "Mobile coverage was checked first",
+      "verdict": "evidence_required",
+      "expected": "A coverage figure is present and dated. The runner reports it, and never scores it as passed on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The build declares the measured share, and the builder attaches how it was measured.",
+        "now": "2026-11-03T12:31:54.193Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "overdue-off-due-date",
+      "n": 2,
+      "title": "Overdue is measured off the due date",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The not-yet-due invoice is absent from the run. Every row in the run is past its due date, not its issue date.",
+      "actual": "run: [[\"C-LATE\",[\"INV-202\"]],[\"C-JUST\",[\"INV-203\"]]]",
+      "stimulus": {
+        "description": "A seeded book with invoices whose issue and due dates differ, including one issued long ago but not yet due.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "overdue-off-due-date"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 4
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 3
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "C-LATE",
+              "C-JUST"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-LATE",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "C-LATE",
+            "text": "This is an automated accounts reminder, not a person. Hi Customer C-LATE, Our ledger shows INV-202: $1,200.00, 20 days past its due date, $1,200.00 in all. When can we expect payment? If you have paid since, please ignore this."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-JUST",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "C-JUST",
+            "text": "This is an automated accounts reminder, not a person. Hi Customer C-JUST, Our ledger shows INV-203: $450.00, 2 days past its due date. It may simply be sitting in an inbox. When can we expect payment? If you have paid since, please ignore this."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "four-buckets",
+      "n": 3,
+      "title": "Four buckets, not one list",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Each seeded row lands in its expected bucket, and no row carries a free-text bucket.",
+      "actual": "buckets: [[\"C-BP\",\"broken_promise\"],[\"C-HD\",\"hard\"],[\"C-DR\",\"drifting\"],[\"C-JL\",\"just_late\"]]",
+      "stimulus": {
+        "description": "A seeded book with one row belonging in each bucket.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "four-buckets"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 4
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 4
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 4
+          },
+          "response": {
+            "order": [
+              "C-BP",
+              "C-HD",
+              "C-DR",
+              "C-JL"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-BP",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "C-BP",
+            "text": "This is an automated accounts reminder, not a person. Hi Customer C-BP, We had a payment date from you that has now passed. Our ledger shows INV-304: $700.00, 20 days past its due date, $700.00 in all. When can we expect payment? If you have paid since, please ignore this."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-HD",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "C-HD",
+            "text": "This is an automated accounts reminder, not a person. Hi Customer C-HD, Our ledger shows INV-303: $1,000.00, 60 days past its due date, $1,000.00 in all. If something is holding it up, such as a missing purchase order or a problem with the work, reply and a person will pick it up. When can we expect payment? If you have paid since, please ignore this."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-DR",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "C-DR",
+            "text": "This is an automated accounts reminder, not a person. Hi Customer C-DR, Our ledger shows INV-302: $900.00, 25 days past its due date, $900.00 in all. When can we expect payment? If you have paid since, please ignore this."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-JL",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "C-JL",
+            "text": "This is an automated accounts reminder, not a person. Hi Customer C-JL, Our ledger shows INV-301: $800.00, 5 days past its due date. It may simply be sitting in an inbox. When can we expect payment? If you have paid since, please ignore this."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "broken-promise-outranks",
+      "n": 4,
+      "title": "Broken promise outranks everything",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The broken promise ranks above the larger row despite the smaller amount.",
+      "actual": "order: C-SMALL > C-BIG",
+      "stimulus": {
+        "description": "A small broken promise seeded alongside a much larger invoice that is merely late.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "broken-promise-outranks"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "C-SMALL",
+              "C-BIG"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-SMALL",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "C-SMALL",
+            "text": "This is an automated accounts reminder, not a person. Hi Customer C-SMALL, We had a payment date from you that has now passed. Our ledger shows INV-401: $300.00, 12 days past its due date, $300.00 in all. When can we expect payment? If you have paid since, please ignore this."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-BIG",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "C-BIG",
+            "text": "This is an automated accounts reminder, not a person. Hi Customer C-BIG, Our ledger shows INV-402: $9,000.00, 10 days past its due date. It may simply be sitting in an inbox. When can we expect payment? If you have paid since, please ignore this."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "rank-by-amount-at-risk",
+      "n": 5,
+      "title": "Ranking is by amount at risk",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The larger amount ranks first. Age decides only when amounts are equal.",
+      "actual": "order: C-NEWLARGE > C-TIE-OLD > C-TIE-NEW > C-OLDSMALL",
+      "stimulus": {
+        "description": "Two rows in the same bucket: one older and small, one newer and large.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "rank-by-amount-at-risk"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 4
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 4
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 4
+          },
+          "response": {
+            "order": [
+              "C-NEWLARGE",
+              "C-TIE-OLD",
+              "C-TIE-NEW",
+              "C-OLDSMALL"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-NEWLARGE",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "C-NEWLARGE",
+            "text": "This is an automated accounts reminder, not a person. Hi Customer C-NEWLARGE, Our ledger shows INV-502: $8,000.00, 16 days past its due date, $8,000.00 in all. When can we expect payment? If you have paid since, please ignore this."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-TIE-OLD",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "C-TIE-OLD",
+            "text": "This is an automated accounts reminder, not a person. Hi Customer C-TIE-OLD, Our ledger shows INV-504: $2,000.00, 30 days past its due date, $2,000.00 in all. When can we expect payment? If you have paid since, please ignore this."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-TIE-NEW",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "C-TIE-NEW",
+            "text": "This is an automated accounts reminder, not a person. Hi Customer C-TIE-NEW, Our ledger shows INV-503: $2,000.00, 20 days past its due date, $2,000.00 in all. When can we expect payment? If you have paid since, please ignore this."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-OLDSMALL",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "C-OLDSMALL",
+            "text": "This is an automated accounts reminder, not a person. Hi Customer C-OLDSMALL, Our ledger shows INV-501: $500.00, 40 days past its due date, $500.00 in all. When can we expect payment? If you have paid since, please ignore this."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-customer-one-conversation",
+      "n": 6,
+      "title": "One customer is one conversation",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The run contains exactly one entry for that customer, carrying the summed amount and all six invoice references.",
+      "actual": "C-SIX entries: [{\"customerId\":\"C-SIX\",\"amount\":411000,\"bucket\":\"drifting\",\"invoiceIds\":[\"INV-601\",\"INV-602\",\"INV-603\",\"INV-604\",\"INV-605\",\"INV-606\"]}]; reminders to C-SIX: 1",
+      "stimulus": {
+        "description": "One customer seeded with six overdue invoices.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-customer-one-conversation"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 7
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "C-SIX",
+              "C-ONE"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-SIX",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "C-SIX",
+            "text": "This is an automated accounts reminder, not a person. Hi Customer C-SIX, Our ledger shows INV-601: $410.00, 5 days past its due date; INV-602: $520.00, 9 days past its due date; INV-603: $630.00, 16 days past its due date; INV-604: $740.00, 22 days past its due date; INV-605: $850.00, 31 days past its due date; INV-606: $960.00, 38 days past its due date, $4,110.00 in all. When can we expect payment? If you have paid since, please ignore this."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-ONE",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "C-ONE",
+            "text": "This is an automated accounts reminder, not a person. Hi Customer C-ONE, Our ledger shows INV-607: $1,200.00, 8 days past its due date. It may simply be sitting in an inbox. When can we expect payment? If you have paid since, please ignore this."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "relationship-balances-excluded",
+      "n": 7,
+      "title": "Relationship-sized balances are out of the run",
+      "verdict": "pass",
+      "held": true,
+      "expected": "That customer is absent from the dial list, carries an exclusion reason, and an escalate names who it went to.",
+      "actual": "anchor: {\"customerId\":\"C-ANCHOR\",\"amount\":40000000,\"bucket\":\"hard\",\"invoiceIds\":[\"INV-701\",\"INV-702\"],\"excludedReason\":\"relationship_sized_balance\"}; escalations: [{\"reason\":\"debtor.relationship_account\",\"detail\":\"customer C-ANCHOR: $400,000.00 is over the $25,000.00 threshold; exception_owner: the credit controller named in settings\"}]",
+      "stimulus": {
+        "description": "A debtor seeded far above the configured relationship threshold.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "relationship-balances-excluded"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 3
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.relationship_account",
+            "detail": "customer C-ANCHOR: $400,000.00 is over the $25,000.00 threshold; exception_owner: the credit controller named in settings"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "C-SHOP",
+              "C-ANCHOR"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-SHOP",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "C-SHOP",
+            "text": "This is an automated accounts reminder, not a person. Hi Customer C-SHOP, Our ledger shows INV-703: $2,000.00, 20 days past its due date, $2,000.00 in all. When can we expect payment? If you have paid since, please ignore this."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "promise-is-an-object",
+      "n": 8,
+      "title": "A promise is an object with a date",
+      "verdict": "pass",
+      "held": true,
+      "expected": "record_promise carries a date and a capture timestamp, a null amount is accepted, and the dispute is still present afterwards.",
+      "actual": "record_promise calls: [{\"customerId\":\"C-FRI\",\"date\":\"2026-09-25\",\"amount\":null}]",
+      "stimulus": {
+        "description": "A call where the debtor says they will pay Friday without naming a figure, on an invoice already carrying a dispute.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "promise-is-an-object"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "record_promise",
+          "verb": "write",
+          "subject": "promise",
+          "request": {
+            "customerId": "C-FRI",
+            "date": "2026-09-25",
+            "amount": null
+          },
+          "response": {
+            "capturedAt": "2026-09-21T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.dispute_open",
+            "detail": "customer C-DISP: INV-802; exception_owner: the credit controller named in settings"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "C-DISP"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "promised-date-is-followup",
+      "n": 9,
+      "title": "The promised date is the follow-up date",
+      "verdict": "pass",
+      "held": true,
+      "expected": "That customer appears in no run before the promised date.",
+      "actual": "C-PROM in runs: no,no,no,no,no,yes",
+      "stimulus": {
+        "description": "A promise for a date five days out, then a run on each of the next four days.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "promised-date-is-followup"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "record_promise",
+          "verb": "write",
+          "subject": "promise",
+          "request": {
+            "customerId": "C-PROM",
+            "date": "2026-09-26",
+            "amount": 420000
+          },
+          "response": {
+            "capturedAt": "2026-09-21T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "C-CTRL"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-CTRL",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "C-CTRL",
+            "text": "This is an automated accounts reminder, not a person. Hi Customer C-CTRL, Our ledger shows INV-902: $1,500.00, 20 days past its due date, $1,500.00 in all. When can we expect payment? If you have paid since, please ignore this."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-22T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "C-CTRL"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-CTRL",
+            "localHour": 14,
+            "date": "2026-09-22"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "C-CTRL",
+            "text": "This is an automated accounts reminder, not a person. Hi Customer C-CTRL, Our ledger shows INV-902: $1,500.00, 21 days past its due date, $1,500.00 in all. When can we expect payment? If you have paid since, please ignore this."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-23T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "C-CTRL"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-CTRL",
+            "localHour": 14,
+            "date": "2026-09-23"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "C-CTRL",
+            "text": "This is an automated accounts reminder, not a person. Hi Customer C-CTRL, Our ledger shows INV-902: $1,500.00, 22 days past its due date, $1,500.00 in all. When can we expect payment? If you have paid since, please ignore this."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-24T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "C-CTRL"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-CTRL",
+            "localHour": 14,
+            "date": "2026-09-24"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "C-CTRL",
+            "text": "This is an automated accounts reminder, not a person. Hi Customer C-CTRL, Our ledger shows INV-902: $1,500.00, 23 days past its due date, $1,500.00 in all. When can we expect payment? If you have paid since, please ignore this."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-25T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "C-CTRL"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-CTRL",
+            "localHour": 14,
+            "date": "2026-09-25"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "C-CTRL",
+            "text": "This is an automated accounts reminder, not a person. Hi Customer C-CTRL, Our ledger shows INV-902: $1,500.00, 24 days past its due date, $1,500.00 in all. When can we expect payment? If you have paid since, please ignore this."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-26T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "C-PROM",
+              "C-CTRL"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-PROM",
+            "localHour": 14,
+            "date": "2026-09-26"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "C-PROM",
+            "text": "This is an automated accounts reminder, not a person. Hi Customer C-PROM, Our ledger shows INV-901: $4,200.00, 25 days past its due date, $4,200.00 in all. When can we expect payment? If you have paid since, please ignore this."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-CTRL",
+            "localHour": 14,
+            "date": "2026-09-26"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "C-CTRL",
+            "text": "This is an automated accounts reminder, not a person. Hi Customer C-CTRL, Our ledger shows INV-902: $1,500.00, 25 days past its due date, $1,500.00 in all. When can we expect payment? If you have paid since, please ignore this."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "gate-under-ranking",
+      "n": 10,
+      "title": "The gate sits underneath the ranking",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "No dial in any of the three. Each is held with a reason, and the highest score in the book does not override it.",
+      "actual": "C-TOP gate: [{\"allowed\":false,\"reason\":\"outside_hours\"},{\"allowed\":false,\"reason\":\"public_holiday\"},{\"allowed\":false,\"reason\":\"already_paid\"}]; dials: C-NEXT",
+      "stimulus": {
+        "description": "The top-ranked row, run at 8:30pm in the debtor's timezone; then the same row on a state public holiday; then the same row after the ledger shows it paid.",
+        "now": "2026-09-21T12:30:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "gate-under-ranking"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T12:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T12:30:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T12:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T12:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-21T12:30:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "C-TOP",
+              "C-NEXT"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T12:30:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-TOP",
+            "localHour": 20.5,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": false,
+            "reason": "outside_hours"
+          }
+        },
+        {
+          "at": "2026-09-21T12:30:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.override_not_liftable",
+            "detail": "customer C-TOP: outside_hours is never lifted; exception_owner: the credit controller named in settings"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T12:30:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-NEXT",
+            "localHour": 20.5,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": false,
+            "reason": "outside_hours"
+          }
+        },
+        {
+          "at": "2026-09-28T06:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-28T06:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-28T06:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-28T06:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-28T06:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "C-TOP",
+              "C-NEXT"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T06:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-TOP",
+            "localHour": 14,
+            "date": "2026-09-28"
+          },
+          "response": {
+            "allowed": false,
+            "reason": "public_holiday"
+          }
+        },
+        {
+          "at": "2026-09-28T06:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.override_not_liftable",
+            "detail": "customer C-TOP: public_holiday is never lifted; exception_owner: the credit controller named in settings"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T06:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-NEXT",
+            "localHour": 14,
+            "date": "2026-09-28"
+          },
+          "response": {
+            "allowed": false,
+            "reason": "public_holiday"
+          }
+        },
+        {
+          "at": "2026-09-29T06:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-29T06:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-29T06:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-29T06:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-29T06:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "C-TOP",
+              "C-NEXT"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-29T06:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-TOP",
+            "localHour": 14,
+            "date": "2026-09-29"
+          },
+          "response": {
+            "allowed": false,
+            "reason": "already_paid"
+          }
+        },
+        {
+          "at": "2026-09-29T06:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.override_not_liftable",
+            "detail": "customer C-TOP: already_paid is never lifted; exception_owner: the credit controller named in settings"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-29T06:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-NEXT",
+            "localHour": 14,
+            "date": "2026-09-29"
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-29T06:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "C-NEXT",
+            "text": "This is an automated accounts reminder, not a person. Hi Customer C-NEXT, Our ledger shows INV-1002: $3,000.00, 33 days past its due date, $3,000.00 in all. When can we expect payment? If you have paid since, please ignore this."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "exceptions-attributable",
+      "n": 11,
+      "title": "Exceptions are named and attributable",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The override records the reason, the timestamp and the approving person. An override with no named approver is refused.",
+      "actual": "overrides: [{\"customerId\":\"C-OK\",\"reason\":\"Promised date is outside our 30-day terms; owner asked for a reminder now\",\"approver\":\"Priya Shah\",\"at\":\"2026-09-21T04:00:00.000Z\"}]; refused: [{\"customerId\":\"C-NONAME\",\"why\":\"no named approver\"}]",
+      "stimulus": {
+        "description": "An override applied to a held row.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "exceptions-attributable"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "at": "2026-09-21T04:00:00.000Z"
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "customers": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "promises": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "C-OK",
+              "C-NONAME"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-OK",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": false,
+            "reason": "promise_pending"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "override": "C-OK",
+            "reason": "Promised date is outside our 30-day terms; owner asked for a reminder now",
+            "approver": "Priya Shah"
+          },
+          "response": {
+            "accepted": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-OK",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": false,
+            "reason": "promise_pending"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "customerId": "C-OK",
+            "text": "This is an automated accounts reminder, not a person. Hi Customer C-OK, Our ledger shows INV-1101: $5,200.00, 30 days past its due date, $5,200.00 in all. When can we expect payment? If you have paid since, please ignore this."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "customerId": "C-NONAME",
+            "localHour": 14,
+            "date": "2026-09-21"
+          },
+          "response": {
+            "allowed": false,
+            "reason": "promise_pending"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "override": "C-NONAME",
+            "reason": "chase it anyway"
+          },
+          "response": {
+            "accepted": false
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "debtor.override_refused",
+            "detail": "customer C-NONAME: no named approver; exception_owner: the credit controller named in settings"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 12,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "The paid invoice is not dialled and the audit row says which ledger read stopped it; the late run holds until morning.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "A real run against a live ledger, at a real time of day, on a real number.",
+        "now": "2026-11-03T12:31:54.238Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 12,
+    "pass": 9,
+    "fail": 0,
+    "shapeOnly": 1,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}

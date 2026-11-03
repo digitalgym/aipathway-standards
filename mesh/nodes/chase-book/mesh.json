@@ -1,0 +1,55 @@
+{
+  "slug": "chase-book",
+  "name": "Chase Book",
+  "office_task": "Every morning, read who owes us from Xero, send one reminder per customer pitched to how late they are, log it on the invoice, and hand disputes and big accounts to a named person.",
+  "verticals": ["accounting-bookkeeping"],
+  "standards": ["debtor-chasing"],
+  "systems_of_record": ["Xero (invoices, contacts and invoice history)", "Gmail or Outlook (the reminder thread and the debtor's reply)"],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/chase-book" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "invoice.overdue", "wake": "poll" },
+    { "event": "payment.received", "wake": "webhook" },
+    { "event": "email.received", "wake": "webhook" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "promise.recorded",
+      "write": "A dated promise to pay on the invoice in Xero, taken from the debtor's reply: date (required), amount (may be empty), method if offered and the capture time, as a history note on each invoice it covers. It never overwrites a logged dispute, and the next reminder moves to the promised date.",
+      "readback": "GET /api.xro/2.0/Invoices/{InvoiceID}/History returns the note with the promised date and capture time on the invoice_id it was written to. No note back means no promise was recorded: it raises debtor.promise_write_failed."
+    },
+    {
+      "event": "exception.raised",
+      "write": "An exception on the invoice naming the person who owns it: a dispute, a relationship-sized balance lifted out of the run, a reply with no date, an override with no named approver, or a failed ledger read.",
+      "readback": "The exception desk returns an exception_id, and reading it back returns the invoice_id, the reason and the exception_owner. No id back means nothing was raised and the run stops."
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "debtor.ledger_read_failed",
+      "debtor.dispute_open",
+      "debtor.relationship_account",
+      "debtor.no_date_given",
+      "debtor.promise_write_failed",
+      "debtor.override_refused",
+      "debtor.override_not_liftable"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.invoice_id", "seam.bucket", "seam.last_reminder_at", "seam.promise_date", "seam.promise_captured_at", "seam.status", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Send tiered overdue invoice reminders with Xero, Gmail, Slack, and Google Sheets",
+    "original_author": "Intuz",
+    "share_link": "https://n8n.io/workflows/20015",
+    "licence_or_permission": "reimplementation"
+  }
+}
