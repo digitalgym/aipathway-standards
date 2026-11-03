@@ -2,21 +2,45 @@
   "slug": "lead-sort",
   "name": "Lead Sort",
   "office_task": "Sort the trade office inbox, voicemails and web-form leads included, onto the job or supplier by id, and hold every real reply for a named person.",
-  "verticals": ["trades-building"],
-  "standards": ["inbox-triage"],
+  "verticals": [
+    "trades-building"
+  ],
+  "standards": [
+    "inbox-triage"
+  ],
   "systems_of_record": [
     "the shared office mailbox (Microsoft 365 or Google Workspace) that issues the message_id, where voicemail and website enquiry-form notifications land",
     "the job system that issues the job_id messages are filed against (ServiceM8 or Simpro)",
     "the ledger that holds supplier records (Xero)",
     "the exception desk the business runs, holding the queue table and its items"
   ],
-  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/lead-sort" },
-  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
-  "runtime": ["node", "webhook", "schedule"],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/lead-sort",
+    "bot": "https://x.ai/bot/GRh4pXcHEy_TT9MaUilxp"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "webhook",
+    "schedule",
+    "grok-bot-template"
+  ],
   "consumes": [
-    { "event": "email.received", "wake": "webhook" },
-    { "event": "schedule.tick", "wake": "schedule" },
-    { "event": "exception.closed", "wake": "webhook" }
+    {
+      "event": "email.received",
+      "wake": "webhook"
+    },
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    },
+    {
+      "event": "exception.closed",
+      "wake": "webhook"
+    }
   ],
   "emits": [
     {
@@ -45,7 +69,17 @@
   },
   "durable_state": {
     "writes_to": "system-of-record",
-    "fields": ["seam.message_id", "seam.thread_id", "seam.kind", "seam.record_ref", "seam.item_id", "seam.owner", "seam.due", "seam.status", "seam.released_by"]
+    "fields": [
+      "seam.message_id",
+      "seam.thread_id",
+      "seam.kind",
+      "seam.record_ref",
+      "seam.item_id",
+      "seam.owner",
+      "seam.due",
+      "seam.status",
+      "seam.released_by"
+    ]
   },
   "private_memory": "none",
   "port_of": {

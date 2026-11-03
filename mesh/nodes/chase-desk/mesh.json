@@ -2,17 +2,47 @@
   "slug": "chase-desk",
   "name": "Chase Desk",
   "office_task": "Every morning, rank who owes us by what is at risk, chase only those the rules allow, record each promise as a date, and hand disputes to a named person.",
-  "verticals": ["accounting-bookkeeping"],
-  "standards": ["debtor-chasing"],
-  "systems_of_record": ["Xero (the ledger that issues the invoice_id, its contacts and its invoice history)", "the job system named on the invoice (ServiceM8, Simpro), read by job_id only"],
-  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/chase-desk" },
-  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
-  "runtime": ["node", "schedule", "webhook"],
+  "verticals": [
+    "accounting-bookkeeping"
+  ],
+  "standards": [
+    "debtor-chasing"
+  ],
+  "systems_of_record": [
+    "Xero (the ledger that issues the invoice_id, its contacts and its invoice history)",
+    "the job system named on the invoice (ServiceM8, Simpro), read by job_id only"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/chase-desk",
+    "bot": "https://x.ai/bot/vqL9s8tvWD3dJDN1n52Hi"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "schedule",
+    "webhook",
+    "grok-bot-template"
+  ],
   "consumes": [
-    { "event": "schedule.tick", "wake": "schedule" },
-    { "event": "invoice.overdue", "wake": "webhook" },
-    { "event": "payment.received", "wake": "webhook" },
-    { "event": "exception.closed", "wake": "webhook" }
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    },
+    {
+      "event": "invoice.overdue",
+      "wake": "webhook"
+    },
+    {
+      "event": "payment.received",
+      "wake": "webhook"
+    },
+    {
+      "event": "exception.closed",
+      "wake": "webhook"
+    }
   ],
   "emits": [
     {
@@ -42,7 +72,14 @@
   },
   "durable_state": {
     "writes_to": "system-of-record",
-    "fields": ["seam.invoice_id", "seam.bucket", "seam.promise_date", "seam.promise_captured_at", "seam.gate_reason", "seam.exception_owner"]
+    "fields": [
+      "seam.invoice_id",
+      "seam.bucket",
+      "seam.promise_date",
+      "seam.promise_captured_at",
+      "seam.gate_reason",
+      "seam.exception_owner"
+    ]
   },
   "private_memory": "none",
   "port_of": {
