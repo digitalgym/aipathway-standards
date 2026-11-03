@@ -1,0 +1,3040 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793711195935",
+  "standard": "inbox-triage-build-standard",
+  "spec": "AIP-BS-INBOX-TRIAGE",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-03T13:06:35.926Z",
+  "finishedAt": "2026-11-03T13:06:35.935Z",
+  "results": [
+    {
+      "checkId": "classified-onto-a-closed-list",
+      "n": 1,
+      "title": "Every message gets exactly one kind from a closed list",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every message has exactly one classification and its kind is on the list. A kind the list does not hold, a second classification for one message, or an unclassified message fails.",
+      "actual": "37 port call(s); 7 classification(s), 7 item(s), 4 filing(s), 6 outbound, 0 escalation(s)",
+      "stimulus": {
+        "description": "Six messages in the inbox, one of each kind the seed covers, including one that fits nothing but other.",
+        "now": "2026-11-02T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "classified-onto-a-closed-list"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "queues": true
+          },
+          "response": {
+            "kinds": [
+              "quote_request",
+              "job_update",
+              "supplier_invoice",
+              "statement",
+              "remittance",
+              "complaint",
+              "spam",
+              "other"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "records": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "unclassified": true
+          },
+          "response": {
+            "count": 7,
+            "ids": [
+              "m-voicemail",
+              "m-webform",
+              "m-jobupdate",
+              "m-invoice",
+              "m-spam",
+              "m-statement",
+              "m-other"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "classify": "m-voicemail",
+            "kind": "quote_request",
+            "confidence": 0.8
+          },
+          "response": {
+            "onList": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "thread": "th-m-voicemail"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "messageId": "m-voicemail",
+            "threadId": "th-m-voicemail",
+            "kind": "quote_request",
+            "recordRef": null,
+            "owner": "Priya Nair",
+            "due": "2026-11-03T02:00:00.000Z",
+            "status": "open"
+          },
+          "response": {
+            "itemId": "ITEM1"
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "acknowledge": "ITEM1",
+            "promisedBy": "2026-11-03T02:00:00.000Z"
+          },
+          "response": {
+            "to": "voicemail@phone.example.com.au",
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "classify": "m-webform",
+            "kind": "quote_request",
+            "confidence": 0.8
+          },
+          "response": {
+            "onList": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "thread": "th-m-webform"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "messageId": "m-webform",
+            "threadId": "th-m-webform",
+            "kind": "quote_request",
+            "recordRef": null,
+            "owner": "Priya Nair",
+            "due": "2026-11-03T02:00:00.000Z",
+            "status": "open"
+          },
+          "response": {
+            "itemId": "ITEM3"
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "acknowledge": "ITEM3",
+            "promisedBy": "2026-11-03T02:00:00.000Z"
+          },
+          "response": {
+            "to": "forms@site.example.com.au",
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "classify": "m-jobupdate",
+            "kind": "job_update",
+            "confidence": 0.8
+          },
+          "response": {
+            "onList": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "thread": "th-m-jobupdate"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "messageId": "m-jobupdate",
+            "to": "record",
+            "recordRef": "job:7f3a2c10-servicem8"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "messageId": "m-jobupdate",
+            "threadId": "th-m-jobupdate",
+            "kind": "job_update",
+            "recordRef": "job:7f3a2c10-servicem8",
+            "owner": "Priya Nair",
+            "due": "2026-11-03T22:00:00.000Z",
+            "status": "open"
+          },
+          "response": {
+            "itemId": "ITEM5"
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "acknowledge": "ITEM5",
+            "promisedBy": "2026-11-03T22:00:00.000Z"
+          },
+          "response": {
+            "to": "karen.ellis@mail.example.com",
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "classify": "m-invoice",
+            "kind": "supplier_invoice",
+            "confidence": 0.8
+          },
+          "response": {
+            "onList": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "thread": "th-m-invoice"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "messageId": "m-invoice",
+            "to": "record",
+            "recordRef": "supplier:xero-c1d2-reece"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "hash": "sha256:inv-88231-pdf",
+            "messageId": "m-invoice",
+            "recordRef": "supplier:xero-c1d2-reece"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "messageId": "m-invoice",
+            "threadId": "th-m-invoice",
+            "kind": "supplier_invoice",
+            "recordRef": "supplier:xero-c1d2-reece",
+            "owner": "Megan Lowe",
+            "due": "2026-11-05T22:00:00.000Z",
+            "status": "open"
+          },
+          "response": {
+            "itemId": "ITEM7"
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "acknowledge": "ITEM7",
+            "promisedBy": "2026-11-05T22:00:00.000Z"
+          },
+          "response": {
+            "to": "ar@reece.example.com.au",
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "classify": "m-spam",
+            "kind": "spam",
+            "confidence": 0.8
+          },
+          "response": {
+            "onList": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "thread": "th-m-spam"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "messageId": "m-spam",
+            "to": "quarantine",
+            "hash": "sha256:m-spam-5"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "messageId": "m-spam",
+            "threadId": "th-m-spam",
+            "kind": "spam",
+            "recordRef": null,
+            "owner": "Megan Lowe",
+            "due": "2026-12-02T22:00:00.000Z",
+            "status": "quarantined"
+          },
+          "response": {
+            "itemId": "ITEM9"
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "classify": "m-statement",
+            "kind": "statement",
+            "confidence": 0.8
+          },
+          "response": {
+            "onList": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "thread": "th-m-statement"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "messageId": "m-statement",
+            "to": "record",
+            "recordRef": "supplier:xero-a7b9-tradelink"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "messageId": "m-statement",
+            "threadId": "th-m-statement",
+            "kind": "statement",
+            "recordRef": "supplier:xero-a7b9-tradelink",
+            "owner": "Megan Lowe",
+            "due": "2026-11-09T22:00:00.000Z",
+            "status": "open"
+          },
+          "response": {
+            "itemId": "ITEM10"
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "acknowledge": "ITEM10",
+            "promisedBy": "2026-11-09T22:00:00.000Z"
+          },
+          "response": {
+            "to": "accounts@tradelink.example.com.au",
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "classify": "m-other",
+            "kind": "other",
+            "confidence": 0.8
+          },
+          "response": {
+            "onList": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "thread": "th-m-other"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "messageId": "m-other",
+            "threadId": "th-m-other",
+            "kind": "other",
+            "recordRef": null,
+            "owner": "Priya Nair",
+            "due": "2026-11-03T22:00:00.000Z",
+            "status": "open"
+          },
+          "response": {
+            "itemId": "ITEM12"
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "acknowledge": "ITEM12",
+            "promisedBy": "2026-11-03T22:00:00.000Z"
+          },
+          "response": {
+            "to": "events@chamber.example.org.au",
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "approvals": true
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 6
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "filed-against-the-record",
+      "n": 2,
+      "title": "A message about a job or a supplier is filed against that record by id",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The two that match a record are filed to that record's id and the item carries it. No filing lands in a folder. The unmatched message has an open task with an owner. A filing with no record id fails.",
+      "actual": "19 port call(s); 3 classification(s), 3 item(s), 2 filing(s), 3 outbound, 0 escalation(s)",
+      "stimulus": {
+        "description": "A job update about an existing job, a supplier statement from a known supplier, and one message that matches no record.",
+        "now": "2026-11-02T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "filed-against-the-record"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "queues": true
+          },
+          "response": {
+            "kinds": [
+              "quote_request",
+              "job_update",
+              "supplier_invoice",
+              "statement",
+              "remittance",
+              "complaint",
+              "spam",
+              "other"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "records": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "unclassified": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "m-jobupdate",
+              "m-statement",
+              "m-webform"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "classify": "m-jobupdate",
+            "kind": "job_update",
+            "confidence": 0.8
+          },
+          "response": {
+            "onList": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "thread": "th-m-jobupdate"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "messageId": "m-jobupdate",
+            "to": "record",
+            "recordRef": "job:7f3a2c10-servicem8"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "messageId": "m-jobupdate",
+            "threadId": "th-m-jobupdate",
+            "kind": "job_update",
+            "recordRef": "job:7f3a2c10-servicem8",
+            "owner": "Priya Nair",
+            "due": "2026-11-03T22:00:00.000Z",
+            "status": "open"
+          },
+          "response": {
+            "itemId": "ITEM1"
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "acknowledge": "ITEM1",
+            "promisedBy": "2026-11-03T22:00:00.000Z"
+          },
+          "response": {
+            "to": "karen.ellis@mail.example.com",
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "classify": "m-statement",
+            "kind": "statement",
+            "confidence": 0.8
+          },
+          "response": {
+            "onList": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "thread": "th-m-statement"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "messageId": "m-statement",
+            "to": "record",
+            "recordRef": "supplier:xero-a7b9-tradelink"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "messageId": "m-statement",
+            "threadId": "th-m-statement",
+            "kind": "statement",
+            "recordRef": "supplier:xero-a7b9-tradelink",
+            "owner": "Megan Lowe",
+            "due": "2026-11-09T22:00:00.000Z",
+            "status": "open"
+          },
+          "response": {
+            "itemId": "ITEM3"
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "acknowledge": "ITEM3",
+            "promisedBy": "2026-11-09T22:00:00.000Z"
+          },
+          "response": {
+            "to": "accounts@tradelink.example.com.au",
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "classify": "m-webform",
+            "kind": "quote_request",
+            "confidence": 0.8
+          },
+          "response": {
+            "onList": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "thread": "th-m-webform"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "messageId": "m-webform",
+            "threadId": "th-m-webform",
+            "kind": "quote_request",
+            "recordRef": null,
+            "owner": "Priya Nair",
+            "due": "2026-11-03T02:00:00.000Z",
+            "status": "open"
+          },
+          "response": {
+            "itemId": "ITEM5"
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "acknowledge": "ITEM5",
+            "promisedBy": "2026-11-03T02:00:00.000Z"
+          },
+          "response": {
+            "to": "forms@site.example.com.au",
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "approvals": true
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 3
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "attachment-becomes-the-artefact",
+      "n": 3,
+      "title": "A supplier invoice attachment is filed as evidence with its hash and the message id",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Evidence exists whose hash is the attachment's hash, whose message id is this message, and whose record is the supplier. A build that files the body and attaches nothing fails.",
+      "actual": "11 port call(s); 1 classification(s), 1 item(s), 1 filing(s), 1 outbound, 0 escalation(s)",
+      "stimulus": {
+        "description": "A supplier invoice from a known supplier with one attachment, hashed by the runner.",
+        "now": "2026-11-02T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "attachment-becomes-the-artefact"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "queues": true
+          },
+          "response": {
+            "kinds": [
+              "quote_request",
+              "job_update",
+              "supplier_invoice",
+              "statement",
+              "remittance",
+              "complaint",
+              "spam",
+              "other"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "records": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "unclassified": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "m-invoice"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "classify": "m-invoice",
+            "kind": "supplier_invoice",
+            "confidence": 0.8
+          },
+          "response": {
+            "onList": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "thread": "th-m-invoice"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "messageId": "m-invoice",
+            "to": "record",
+            "recordRef": "supplier:xero-c1d2-reece"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "hash": "sha256:inv-88231-pdf",
+            "messageId": "m-invoice",
+            "recordRef": "supplier:xero-c1d2-reece"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "messageId": "m-invoice",
+            "threadId": "th-m-invoice",
+            "kind": "supplier_invoice",
+            "recordRef": "supplier:xero-c1d2-reece",
+            "owner": "Megan Lowe",
+            "due": "2026-11-05T22:00:00.000Z",
+            "status": "open"
+          },
+          "response": {
+            "itemId": "ITEM1"
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "acknowledge": "ITEM1",
+            "promisedBy": "2026-11-05T22:00:00.000Z"
+          },
+          "response": {
+            "to": "ar@reece.example.com.au",
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "approvals": true
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "every-kind-has-a-queue-and-an-owner",
+      "n": 4,
+      "title": "Every classified message lands in the queue for its kind, with a named owner and a due date",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every message has one item, the item's owner is the queue's owner for its kind, and its due date is when it was raised plus the kind's clock. An item with no owner or a due date from nowhere fails.",
+      "actual": "29 port call(s); 5 classification(s), 5 item(s), 3 filing(s), 5 outbound, 0 escalation(s)",
+      "stimulus": {
+        "description": "Messages of several kinds, and a queue table naming an owner and a clock for each kind.",
+        "now": "2026-11-02T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "every-kind-has-a-queue-and-an-owner"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "queues": true
+          },
+          "response": {
+            "kinds": [
+              "quote_request",
+              "job_update",
+              "supplier_invoice",
+              "statement",
+              "remittance",
+              "complaint",
+              "spam",
+              "other"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "records": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "unclassified": true
+          },
+          "response": {
+            "count": 5,
+            "ids": [
+              "m-voicemail",
+              "m-jobupdate",
+              "m-invoice",
+              "m-statement",
+              "m-other"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "classify": "m-voicemail",
+            "kind": "quote_request",
+            "confidence": 0.8
+          },
+          "response": {
+            "onList": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "thread": "th-m-voicemail"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "messageId": "m-voicemail",
+            "threadId": "th-m-voicemail",
+            "kind": "quote_request",
+            "recordRef": null,
+            "owner": "Priya Nair",
+            "due": "2026-11-03T02:00:00.000Z",
+            "status": "open"
+          },
+          "response": {
+            "itemId": "ITEM1"
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "acknowledge": "ITEM1",
+            "promisedBy": "2026-11-03T02:00:00.000Z"
+          },
+          "response": {
+            "to": "voicemail@phone.example.com.au",
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "classify": "m-jobupdate",
+            "kind": "job_update",
+            "confidence": 0.8
+          },
+          "response": {
+            "onList": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "thread": "th-m-jobupdate"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "messageId": "m-jobupdate",
+            "to": "record",
+            "recordRef": "job:7f3a2c10-servicem8"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "messageId": "m-jobupdate",
+            "threadId": "th-m-jobupdate",
+            "kind": "job_update",
+            "recordRef": "job:7f3a2c10-servicem8",
+            "owner": "Priya Nair",
+            "due": "2026-11-03T22:00:00.000Z",
+            "status": "open"
+          },
+          "response": {
+            "itemId": "ITEM3"
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "acknowledge": "ITEM3",
+            "promisedBy": "2026-11-03T22:00:00.000Z"
+          },
+          "response": {
+            "to": "karen.ellis@mail.example.com",
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "classify": "m-invoice",
+            "kind": "supplier_invoice",
+            "confidence": 0.8
+          },
+          "response": {
+            "onList": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "thread": "th-m-invoice"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "messageId": "m-invoice",
+            "to": "record",
+            "recordRef": "supplier:xero-c1d2-reece"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "hash": "sha256:inv-88231-pdf",
+            "messageId": "m-invoice",
+            "recordRef": "supplier:xero-c1d2-reece"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "messageId": "m-invoice",
+            "threadId": "th-m-invoice",
+            "kind": "supplier_invoice",
+            "recordRef": "supplier:xero-c1d2-reece",
+            "owner": "Megan Lowe",
+            "due": "2026-11-05T22:00:00.000Z",
+            "status": "open"
+          },
+          "response": {
+            "itemId": "ITEM5"
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "acknowledge": "ITEM5",
+            "promisedBy": "2026-11-05T22:00:00.000Z"
+          },
+          "response": {
+            "to": "ar@reece.example.com.au",
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "classify": "m-statement",
+            "kind": "statement",
+            "confidence": 0.8
+          },
+          "response": {
+            "onList": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "thread": "th-m-statement"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "messageId": "m-statement",
+            "to": "record",
+            "recordRef": "supplier:xero-a7b9-tradelink"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "messageId": "m-statement",
+            "threadId": "th-m-statement",
+            "kind": "statement",
+            "recordRef": "supplier:xero-a7b9-tradelink",
+            "owner": "Megan Lowe",
+            "due": "2026-11-09T22:00:00.000Z",
+            "status": "open"
+          },
+          "response": {
+            "itemId": "ITEM7"
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "acknowledge": "ITEM7",
+            "promisedBy": "2026-11-09T22:00:00.000Z"
+          },
+          "response": {
+            "to": "accounts@tradelink.example.com.au",
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "classify": "m-other",
+            "kind": "other",
+            "confidence": 0.8
+          },
+          "response": {
+            "onList": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "thread": "th-m-other"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "messageId": "m-other",
+            "threadId": "th-m-other",
+            "kind": "other",
+            "recordRef": null,
+            "owner": "Priya Nair",
+            "due": "2026-11-03T22:00:00.000Z",
+            "status": "open"
+          },
+          "response": {
+            "itemId": "ITEM9"
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "acknowledge": "ITEM9",
+            "promisedBy": "2026-11-03T22:00:00.000Z"
+          },
+          "response": {
+            "to": "events@chamber.example.org.au",
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "approvals": true
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 5
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "complaints-go-to-a-person-untouched",
+      "n": 5,
+      "title": "A complaint is escalated to a named person with the full message, and nothing is sent to the customer",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The complaint's item is escalated to a named person and the escalation carries the full message. No acknowledgement and no reply exists for that item. The job update beside it may be acknowledged.",
+      "actual": "15 port call(s); 2 classification(s), 2 item(s), 2 filing(s), 1 outbound, 1 escalation(s)",
+      "stimulus": {
+        "description": "One complaint about an existing job, beside one ordinary job update.",
+        "now": "2026-11-02T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "complaints-go-to-a-person-untouched"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "queues": true
+          },
+          "response": {
+            "kinds": [
+              "quote_request",
+              "job_update",
+              "supplier_invoice",
+              "statement",
+              "remittance",
+              "complaint",
+              "spam",
+              "other"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "records": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "unclassified": true
+          },
+          "response": {
+            "count": 2,
+            "ids": [
+              "m-complaint",
+              "m-jobupdate"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "classify": "m-complaint",
+            "kind": "complaint",
+            "confidence": 0.8
+          },
+          "response": {
+            "onList": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "thread": "th-m-complaint"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "messageId": "m-complaint",
+            "to": "record",
+            "recordRef": "job:9b81d4e2-servicem8"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "messageId": "m-complaint",
+            "threadId": "th-m-complaint",
+            "kind": "complaint",
+            "recordRef": "job:9b81d4e2-servicem8",
+            "owner": "Dale Hutchins",
+            "due": "2026-11-03T00:00:00.000Z",
+            "status": "open"
+          },
+          "response": {
+            "itemId": "ITEM1"
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "itemId": "ITEM1",
+            "to": "Dale Hutchins",
+            "reason": "complaint",
+            "withMessage": true
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "classify": "m-jobupdate",
+            "kind": "job_update",
+            "confidence": 0.8
+          },
+          "response": {
+            "onList": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "thread": "th-m-jobupdate"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "messageId": "m-jobupdate",
+            "to": "record",
+            "recordRef": "job:7f3a2c10-servicem8"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "messageId": "m-jobupdate",
+            "threadId": "th-m-jobupdate",
+            "kind": "job_update",
+            "recordRef": "job:7f3a2c10-servicem8",
+            "owner": "Priya Nair",
+            "due": "2026-11-03T22:00:00.000Z",
+            "status": "open"
+          },
+          "response": {
+            "itemId": "ITEM2"
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "acknowledge": "ITEM2",
+            "promisedBy": "2026-11-03T22:00:00.000Z"
+          },
+          "response": {
+            "to": "karen.ellis@mail.example.com",
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "approvals": true
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 2
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "no-reply-without-a-release",
+      "n": 6,
+      "title": "The only automatic outbound is an acknowledgement, and any substantive reply carries a named person's release",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "Both are acknowledged with a promised reply time. The released one is replied to after a gate event naming that person, and the gate precedes the send in the trace. The other has no reply. A reply without a release fails.",
+      "actual": "17 port call(s); 2 classification(s), 2 item(s), 0 filing(s), 3 outbound, 0 escalation(s)",
+      "stimulus": {
+        "description": "Two quote requests: one with a person's release and reply on file, one with nothing.",
+        "now": "2026-11-02T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "no-reply-without-a-release"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "queues": true
+          },
+          "response": {
+            "kinds": [
+              "quote_request",
+              "job_update",
+              "supplier_invoice",
+              "statement",
+              "remittance",
+              "complaint",
+              "spam",
+              "other"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "records": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "unclassified": true
+          },
+          "response": {
+            "count": 2,
+            "ids": [
+              "m-voicemail",
+              "m-webform"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "classify": "m-voicemail",
+            "kind": "quote_request",
+            "confidence": 0.8
+          },
+          "response": {
+            "onList": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "thread": "th-m-voicemail"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "messageId": "m-voicemail",
+            "threadId": "th-m-voicemail",
+            "kind": "quote_request",
+            "recordRef": null,
+            "owner": "Priya Nair",
+            "due": "2026-11-03T02:00:00.000Z",
+            "status": "open"
+          },
+          "response": {
+            "itemId": "ITEM1"
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "acknowledge": "ITEM1",
+            "promisedBy": "2026-11-03T02:00:00.000Z"
+          },
+          "response": {
+            "to": "voicemail@phone.example.com.au",
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "classify": "m-webform",
+            "kind": "quote_request",
+            "confidence": 0.8
+          },
+          "response": {
+            "onList": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "thread": "th-m-webform"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "messageId": "m-webform",
+            "threadId": "th-m-webform",
+            "kind": "quote_request",
+            "recordRef": null,
+            "owner": "Priya Nair",
+            "due": "2026-11-03T02:00:00.000Z",
+            "status": "open"
+          },
+          "response": {
+            "itemId": "ITEM3"
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "acknowledge": "ITEM3",
+            "promisedBy": "2026-11-03T02:00:00.000Z"
+          },
+          "response": {
+            "to": "forms@site.example.com.au",
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "approvals": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "thread": "th-m-voicemail"
+          },
+          "response": {
+            "itemId": "ITEM1"
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "record": "m-voicemail"
+          },
+          "response": {
+            "kind": "quote_request",
+            "recordRef": null,
+            "owner": "Priya Nair",
+            "due": "2026-11-03T02:00:00.000Z",
+            "outbound": [
+              "acknowledgement by machine"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "ITEM1",
+            "person": "Priya Nair"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "reply": "ITEM1",
+            "body": "Hi Karen, Priya here. We can be there Thursday morning; a like-for-like 250L replacement is $2,850 inc GST."
+          },
+          "response": {
+            "to": "voicemail@phone.example.com.au",
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "the-clock-is-on-the-kind",
+      "n": 7,
+      "title": "Each kind carries a response clock, and an item past its clock escalates to the owner's manager",
+      "verdict": "pass",
+      "held": true,
+      "expected": "After the second run the item is escalated to the manager named on its queue, the escalation is dated after the due date, and there is still one item. An item silently older than its clock fails.",
+      "actual": "15 port call(s); 1 classification(s), 1 item(s), 0 filing(s), 1 outbound, 1 escalation(s)",
+      "stimulus": {
+        "description": "A quote request raised with a one-day clock. The runner advances the clock two days and runs the build again.",
+        "now": "2026-11-02T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "the-clock-is-on-the-kind"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "queues": true
+          },
+          "response": {
+            "kinds": [
+              "quote_request",
+              "job_update",
+              "supplier_invoice",
+              "statement",
+              "remittance",
+              "complaint",
+              "spam",
+              "other"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "records": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "unclassified": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "m-webform"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "classify": "m-webform",
+            "kind": "quote_request",
+            "confidence": 0.8
+          },
+          "response": {
+            "onList": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "thread": "th-m-webform"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "messageId": "m-webform",
+            "threadId": "th-m-webform",
+            "kind": "quote_request",
+            "recordRef": null,
+            "owner": "Priya Nair",
+            "due": "2026-11-03T02:00:00.000Z",
+            "status": "open"
+          },
+          "response": {
+            "itemId": "ITEM1"
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "acknowledge": "ITEM1",
+            "promisedBy": "2026-11-03T02:00:00.000Z"
+          },
+          "response": {
+            "to": "forms@site.example.com.au",
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "approvals": true
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-11-04T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "queues": true
+          },
+          "response": {
+            "kinds": [
+              "quote_request",
+              "job_update",
+              "supplier_invoice",
+              "statement",
+              "remittance",
+              "complaint",
+              "spam",
+              "other"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-04T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "records": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-04T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "unclassified": true
+          },
+          "response": {
+            "count": 0,
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-11-04T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "approvals": true
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-04T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-11-04T22:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "itemId": "ITEM1",
+            "to": "Dale Hutchins",
+            "reason": "past_clock",
+            "withMessage": false
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "duplicates-thread-not-multiply",
+      "n": 8,
+      "title": "A follow-up in the same thread updates the existing item",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Exactly one item exists for the thread, it carries both message ids, and the second message was filed to the same record. A second item for the thread fails.",
+      "actual": "19 port call(s); 2 classification(s), 1 item(s), 2 filing(s), 1 outbound, 0 escalation(s)",
+      "stimulus": {
+        "description": "A job update, processed. Then a reply in the same thread arrives and the build runs again.",
+        "now": "2026-11-02T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "duplicates-thread-not-multiply"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "queues": true
+          },
+          "response": {
+            "kinds": [
+              "quote_request",
+              "job_update",
+              "supplier_invoice",
+              "statement",
+              "remittance",
+              "complaint",
+              "spam",
+              "other"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "records": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "unclassified": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "m-jobupdate"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "classify": "m-jobupdate",
+            "kind": "job_update",
+            "confidence": 0.8
+          },
+          "response": {
+            "onList": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "thread": "th-m-jobupdate"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "messageId": "m-jobupdate",
+            "to": "record",
+            "recordRef": "job:7f3a2c10-servicem8"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "messageId": "m-jobupdate",
+            "threadId": "th-m-jobupdate",
+            "kind": "job_update",
+            "recordRef": "job:7f3a2c10-servicem8",
+            "owner": "Priya Nair",
+            "due": "2026-11-03T22:00:00.000Z",
+            "status": "open"
+          },
+          "response": {
+            "itemId": "ITEM1"
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "acknowledge": "ITEM1",
+            "promisedBy": "2026-11-03T22:00:00.000Z"
+          },
+          "response": {
+            "to": "karen.ellis@mail.example.com",
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "approvals": true
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-11-02T23:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "queues": true
+          },
+          "response": {
+            "kinds": [
+              "quote_request",
+              "job_update",
+              "supplier_invoice",
+              "statement",
+              "remittance",
+              "complaint",
+              "spam",
+              "other"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "records": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-02T23:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "unclassified": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "m-jobupdate-2"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T23:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "classify": "m-jobupdate-2",
+            "kind": "job_update",
+            "confidence": 0.8
+          },
+          "response": {
+            "onList": true
+          }
+        },
+        {
+          "at": "2026-11-02T23:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "thread": "th-m-jobupdate"
+          },
+          "response": {
+            "itemId": "ITEM1"
+          }
+        },
+        {
+          "at": "2026-11-02T23:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "messageId": "m-jobupdate-2",
+            "to": "record",
+            "recordRef": "job:7f3a2c10-servicem8"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T23:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "update": "ITEM1",
+            "messageId": "m-jobupdate-2"
+          },
+          "response": {
+            "itemId": "ITEM1",
+            "messages": 2
+          }
+        },
+        {
+          "at": "2026-11-02T23:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "approvals": true
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-02T23:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "spam-is-quarantined-not-deleted",
+      "n": 9,
+      "title": "Spam is filed to quarantine with its hash, retrievable, and never deleted by the machine",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The spam message is filed to quarantine with its hash, its item is quarantined, and the message is still retrievable from the world. Any filing to trash, for any message, fails.",
+      "actual": "14 port call(s); 2 classification(s), 2 item(s), 2 filing(s), 1 outbound, 0 escalation(s)",
+      "stimulus": {
+        "description": "One spam message beside one supplier statement.",
+        "now": "2026-11-02T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "spam-is-quarantined-not-deleted"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "queues": true
+          },
+          "response": {
+            "kinds": [
+              "quote_request",
+              "job_update",
+              "supplier_invoice",
+              "statement",
+              "remittance",
+              "complaint",
+              "spam",
+              "other"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "records": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "unclassified": true
+          },
+          "response": {
+            "count": 2,
+            "ids": [
+              "m-spam",
+              "m-statement"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "classify": "m-spam",
+            "kind": "spam",
+            "confidence": 0.8
+          },
+          "response": {
+            "onList": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "thread": "th-m-spam"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "messageId": "m-spam",
+            "to": "quarantine",
+            "hash": "sha256:m-spam-24"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "messageId": "m-spam",
+            "threadId": "th-m-spam",
+            "kind": "spam",
+            "recordRef": null,
+            "owner": "Megan Lowe",
+            "due": "2026-12-02T22:00:00.000Z",
+            "status": "quarantined"
+          },
+          "response": {
+            "itemId": "ITEM1"
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "classify": "m-statement",
+            "kind": "statement",
+            "confidence": 0.8
+          },
+          "response": {
+            "onList": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "thread": "th-m-statement"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "messageId": "m-statement",
+            "to": "record",
+            "recordRef": "supplier:xero-a7b9-tradelink"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "messageId": "m-statement",
+            "threadId": "th-m-statement",
+            "kind": "statement",
+            "recordRef": "supplier:xero-a7b9-tradelink",
+            "owner": "Megan Lowe",
+            "due": "2026-11-09T22:00:00.000Z",
+            "status": "open"
+          },
+          "response": {
+            "itemId": "ITEM2"
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "acknowledge": "ITEM2",
+            "promisedBy": "2026-11-09T22:00:00.000Z"
+          },
+          "response": {
+            "to": "accounts@tradelink.example.com.au",
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "approvals": true
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "the-record-by-message",
+      "n": 10,
+      "title": "Message id, kind, record, owner, clock, what was sent and by whom are retrievable by message",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A read by message id returns the classification, the item with its owner and due date, the filing, the evidence where there is one, and each outbound with the person who released it. A record missing the release fails.",
+      "actual": "19 port call(s); 2 classification(s), 2 item(s), 1 filing(s), 3 outbound, 0 escalation(s)",
+      "stimulus": {
+        "description": "One supplier invoice filed with evidence, and one quote request acknowledged, released and replied to.",
+        "now": "2026-11-02T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "the-record-by-message"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "queues": true
+          },
+          "response": {
+            "kinds": [
+              "quote_request",
+              "job_update",
+              "supplier_invoice",
+              "statement",
+              "remittance",
+              "complaint",
+              "spam",
+              "other"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "records": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "unclassified": true
+          },
+          "response": {
+            "count": 2,
+            "ids": [
+              "m-invoice",
+              "m-voicemail"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "classify": "m-invoice",
+            "kind": "supplier_invoice",
+            "confidence": 0.8
+          },
+          "response": {
+            "onList": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "thread": "th-m-invoice"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "messageId": "m-invoice",
+            "to": "record",
+            "recordRef": "supplier:xero-c1d2-reece"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "hash": "sha256:inv-88231-pdf",
+            "messageId": "m-invoice",
+            "recordRef": "supplier:xero-c1d2-reece"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "messageId": "m-invoice",
+            "threadId": "th-m-invoice",
+            "kind": "supplier_invoice",
+            "recordRef": "supplier:xero-c1d2-reece",
+            "owner": "Megan Lowe",
+            "due": "2026-11-05T22:00:00.000Z",
+            "status": "open"
+          },
+          "response": {
+            "itemId": "ITEM1"
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "acknowledge": "ITEM1",
+            "promisedBy": "2026-11-05T22:00:00.000Z"
+          },
+          "response": {
+            "to": "ar@reece.example.com.au",
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "file_message",
+          "verb": "attach",
+          "subject": "message",
+          "request": {
+            "classify": "m-voicemail",
+            "kind": "quote_request",
+            "confidence": 0.8
+          },
+          "response": {
+            "onList": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "thread": "th-m-voicemail"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "messageId": "m-voicemail",
+            "threadId": "th-m-voicemail",
+            "kind": "quote_request",
+            "recordRef": null,
+            "owner": "Priya Nair",
+            "due": "2026-11-03T02:00:00.000Z",
+            "status": "open"
+          },
+          "response": {
+            "itemId": "ITEM3"
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "acknowledge": "ITEM3",
+            "promisedBy": "2026-11-03T02:00:00.000Z"
+          },
+          "response": {
+            "to": "voicemail@phone.example.com.au",
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "approvals": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "thread": "th-m-voicemail"
+          },
+          "response": {
+            "itemId": "ITEM3"
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "record": "m-voicemail"
+          },
+          "response": {
+            "kind": "quote_request",
+            "recordRef": null,
+            "owner": "Priya Nair",
+            "due": "2026-11-03T02:00:00.000Z",
+            "outbound": [
+              "acknowledgement by machine"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "ITEM3",
+            "person": "Priya Nair"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "reply": "ITEM3",
+            "body": "Hi Karen, we can come Thursday between 7 and 9; the call-out is $120 inc GST."
+          },
+          "response": {
+            "to": "voicemail@phone.example.com.au",
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-02T22:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 11,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the inbox rules and the queues runs on.",
+        "now": "2026-11-03T13:06:35.935Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 12,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "The invoice's attachment is evidence on the supplier record with its hash, the complaint's item is escalated with no outbound, the three-message thread is one item, and every reply in the sent folder carries a release naming a person.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "A week of real mail on the business's own mailbox, with real suppliers, customers and a real complaint.",
+        "now": "2026-11-03T13:06:35.935Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 12,
+    "pass": 9,
+    "fail": 0,
+    "shapeOnly": 1,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
