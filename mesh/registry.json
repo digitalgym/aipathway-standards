@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-03T14:19:46.098Z",
+  "generated_at": "2026-11-03T14:19:59.632Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -3889,6 +3889,108 @@
       ]
     },
     {
+      "slug": "loan-intake",
+      "name": "Loan Intake",
+      "office_task": "Turn every lead and client call into the one client file in our CRM, chase each missing figure or document as an owned task, and hold the file for a broker to approve.",
+      "verticals": [
+        "accounting-bookkeeping"
+      ],
+      "standards": [
+        "advice-file"
+      ],
+      "systems_of_record": [
+        "the broker's CRM that issues the client file id (the client file, its deal record and its tasks)",
+        "the network's dated lender-panel library, where a named person accepts each clause"
+      ],
+      "consumes": [
+        {
+          "event": "call.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "evidence.filed",
+          "write": "the interview's consent record, transcript and verbatim lines with their spans, filed on the client's one file in the broker CRM (its deal record, carried as job_id) with the resolved fields and the computed gaps, by that file's own id",
+          "readback": "the CRM returns the file's external id, and reading the client's file by id returns that id with the interview id appended; a read by interview id lists the verbatim, the file, the tasks and the coaching together. A null external id is a failed interview and raises an exception"
+        },
+        {
+          "event": "exception.raised",
+          "write": "a task on the client file naming the person who owns it: one per blocking gap (a missing figure or document) with a due date, raised once; a refused recording notice for a person to take notes; a lender-policy question declined to the Head of Credit; a breach_suspect coaching finding for the compliance officer",
+          "readback": "the CRM returns a task id, and reading the file's tasks back returns it with the field key, the owner and the due date; a gap that already has a task is not raised again"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "advice.consent_not_recorded",
+          "advice.file_write_failed",
+          "advice.file_readback_failed",
+          "advice.blocking_gap",
+          "advice.policy_declined",
+          "advice.breach_suspect"
+        ],
+        "owner_field": "owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "file.external_id",
+          "file.interview_ids",
+          "file.missing",
+          "interview.consent",
+          "task.owner",
+          "task.due",
+          "draft.queue"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/loan-intake"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Qualify mortgage leads and collect documents with Gemini, Gmail, Drive, Telegram, and Supabase",
+        "original_author": "Shashwat Singh",
+        "share_link": "https://n8n.io/workflows/13387",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "advice-file",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:54:12.845Z",
+          "run_id": "run-1793714052844",
+          "green": 10,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 14
+        }
+      ]
+    },
+    {
       "slug": "matter-billing",
       "name": "Matter Billing",
       "office_task": "When our practice system marks an appearance or signed draft done, draft its invoice in Xero at our rate card, or park it with a reason, and hold it for the solicitor's release.",
@@ -6062,6 +6164,100 @@
       ]
     },
     {
+      "slug": "seller-book",
+      "name": "Seller Book",
+      "office_task": "Each morning, show me which past sellers and appraisals in my own database to text today and why, drafted for my OK, and keep every outcome and follow-up on the contact.",
+      "verticals": [
+        "property"
+      ],
+      "standards": [
+        "database-reactivation"
+      ],
+      "systems_of_record": [
+        "the agency CRM (Agentbox, VaultRE, Rex or similar), or the copied Contacts sheet, that holds each contact row, its last outcome and date, its texts and the do-not-contact register",
+        "the place the agent opens each morning (CRM tasks or the Today tab), which issues the report_id for each day's list of drafted texts"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the day's list of drafted seller texts for the agent's OK: at most the cap they set, in rank order, each row with its play, the trigger that qualified it, the drafted text naming that trigger, the sender and a STOP opt-out, and the last outcome. Nothing is sent until the agent OKs it",
+          "readback": "the list store returns a report_id for the day's list, and reading that id back returns the same rows in the same order; no id back means no list was published and the run raises an exception"
+        },
+        {
+          "event": "exception.raised",
+          "write": "a thing to sort out, naming the agent who owns it: a seller reply that asks for a price or an offer, a complaint, a reply the play was not built for, or a contact missing name, mobile or address",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the contact, the typed reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "reactivation.not_ready",
+          "reactivation.price_question",
+          "reactivation.complaint",
+          "reactivation.reply_outside_play",
+          "reactivation.list_not_published"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.report_id",
+          "seam.play",
+          "seam.trigger",
+          "seam.rank_reason",
+          "seam.text_step",
+          "seam.sequence_started_at",
+          "seam.last_outcome",
+          "seam.last_outcome_at",
+          "seam.do_not_contact",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/seller-book"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "database-reactivation",
+          "edition": "2026-10-24",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:55:04.368Z",
+          "run_id": "run-1793714104365",
+          "green": 8,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 14
+        }
+      ]
+    },
+    {
       "slug": "site-orders",
       "name": "Site Orders",
       "office_task": "Turn the build's material list into one purchase order per supplier, from stock first and the supplier's own prices, and match every delivery docket back.",
@@ -6603,6 +6799,113 @@
           "environment": "stub",
           "ran_at": "2026-11-03T13:13:44.225Z",
           "run_id": "run-1793711624224",
+          "green": 4,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 9
+        }
+      ]
+    },
+    {
+      "slug": "trim-quote",
+      "name": "Trim Quote",
+      "office_task": "When a finish-carpentry job has its labour hours on it, draft the quote as hours times our own sell-rates, or park it with a reason, and leave it for us to send.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "quote-out"
+      ],
+      "systems_of_record": [
+        "ServiceM8",
+        "Simpro",
+        "Xero (Items as the price list, Quotes)"
+      ],
+      "consumes": [
+        {
+          "event": "job.created",
+          "wake": "webhook"
+        },
+        {
+          "event": "job.updated",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "quote.drafted",
+          "write": "A draft quote on the job it was drafted from, ex GST. Each line carries a catalogue id from the business's own price list, that item's sell-rate as read at draft time, and the quantity from the job: labour hours for an hourly line. The amount is quantity times rate and nothing else. It is left in draft, editable, for the person who owns quotes; this node has no way to send it.",
+          "readback": "The quote is read back by the id the system returned (ServiceM8 GET /api_1.0/jobquote/{uuid}.json, Simpro GET /api/v1.0/companies/{companyID}/quotes/{quoteID}, Xero GET /api.xro/2.0/Quotes/{QuoteID}) and must carry the job id. No id back is not a write: it raises quote.write_failed."
+        },
+        {
+          "event": "exception.raised",
+          "write": "A parked quote, or a job sent back for hours, as an exception on the job: the park reason from the standard's fixed list (or hours_missing), the lines that did price with their catalogue ids, the work that did not, no total, and exception_owner set to the person the business named for quotes.",
+          "readback": "The exception desk returns an exception_id; reading the job by its id shows the open exception with its exception_owner, and the next hop reads it there and stops."
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "quote.not_in_pricebook",
+          "quote.variation_to_accepted_quote",
+          "quote.discount_requested",
+          "quote.pricebook_unreadable",
+          "quote.hours_missing",
+          "quote.write_failed"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.quote_id",
+          "seam.status",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/trim-quote"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Estimator",
+        "original_author": "Mike A",
+        "share_link": "https://x.ai/bot/NOh5kiDUMNc7AJrAJSsI0",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "quote-out",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:52:19.223Z",
+          "run_id": "run-1793713939222",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 0,
+          "total": 11
+        },
+        {
+          "standard": "cash-seam",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T13:53:12.189Z",
+          "run_id": "run-1793713992188",
           "green": 4,
           "red": 0,
           "with_us": 1,
@@ -7171,6 +7474,7 @@
     "job-files",
     "job-hours",
     "lead-sort",
+    "loan-intake",
     "matter-billing",
     "nudge-desk",
     "open-home-desk",
@@ -7191,11 +7495,13 @@
     "rent-watch",
     "repair-board",
     "ring-list",
+    "seller-book",
     "site-orders",
     "sub-pay-check",
     "tenant-inbox",
     "terms-watch",
     "timesheet-billing",
+    "trim-quote",
     "van-board",
     "variation-chase",
     "vendor-actuals",
@@ -7224,6 +7530,12 @@
     {
       "from": "after-hours-desk",
       "to": "repair-board",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "after-hours-desk",
+      "to": "trim-quote",
       "event": "job.created",
       "id": "job_id"
     },
@@ -7266,6 +7578,12 @@
     {
       "from": "crew-board",
       "to": "site-orders",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "crew-board",
+      "to": "trim-quote",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -7355,6 +7673,12 @@
     },
     {
       "from": "practice-desk",
+      "to": "trim-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "practice-desk",
       "to": "van-board",
       "event": "job.updated",
       "id": "job_id"
@@ -7409,6 +7733,12 @@
     },
     {
       "from": "repair-board",
+      "to": "trim-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "repair-board",
       "to": "van-board",
       "event": "job.updated",
       "id": "job_id"
@@ -7457,6 +7787,12 @@
     },
     {
       "from": "van-board",
+      "to": "trim-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "van-board",
       "to": "visit-offer",
       "event": "job.updated",
       "id": "job_id"
@@ -7494,6 +7830,12 @@
     {
       "from": "visit-offer",
       "to": "site-orders",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-offer",
+      "to": "trim-quote",
       "event": "job.updated",
       "id": "job_id"
     },
