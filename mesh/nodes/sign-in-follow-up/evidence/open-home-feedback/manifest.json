@@ -1,0 +1,140 @@
+{
+  "spec": "AIP-BS-OPEN-HOME-FEEDBACK",
+  "standard": "open-home-feedback-build-standard",
+  "edition": "2026-10-24",
+  "source": "https://aipathway.com.au/explore-ai/open-home-feedback-build-standard",
+  "ran_at": "2026-11-03T14:13:16.029Z",
+  "environment": "stub",
+  "provider": "local.mock_open_home",
+  "provider_block": {
+    "boundary": {
+      "never": [
+        "follow up a register row with no consent recorded at sign-in",
+        "fill a missing name, mobile or email from anywhere but the register",
+        "send a follow-up or a vendor report a person has not approved",
+        "message anyone who asked to stop, at any later open or listing",
+        "answer an offer or a complaint",
+        "write a sentiment, a score or a percentage the replies do not give",
+        "put an attendee's name, mobile or email in a vendor report",
+        "call anyone who did not ask for a call, or call at all while the call is off"
+      ],
+      "stays_with_person": [
+        "approving each follow-up before it sends",
+        "approving the vendor report before it goes",
+        "passing an offer to the vendor",
+        "handling a complaint",
+        "any reply the build could not classify",
+        "turning the optional call on"
+      ]
+    },
+    "job": "every open-home attendee followed up, and the vendor told what buyers actually said",
+    "skill": "open-home-feedback",
+    "stub": "local.mock_open_home",
+    "production": "office_voice.create_call",
+    "product": "Office Voice",
+    "insert": null,
+    "with_us": {
+      "kind": "office_voice_call",
+      "provider": "office_voice.create_call",
+      "product": "Office Voice",
+      "note": "The optional call is Office Voice's governed single call: create_call, basis they_asked, only to an attendee who asked to be called, and off unless the agent turns it on. The consent and unsubscribe record at volume, and a record of who said what that survives a vendor dispute, are not a product and are quoted as a scoped build."
+    }
+  },
+  "tally": {
+    "green": 9,
+    "red": 0,
+    "with_us": 1,
+    "evidence_required": 1,
+    "total": 14
+  },
+  "checks": [
+    {
+      "id": "register-read-not-repaired",
+      "n": 1,
+      "title": "The register is read as written, never repaired",
+      "verdict": "pass"
+    },
+    {
+      "id": "no-consent-no-follow-up",
+      "n": 2,
+      "title": "No consent recorded, no follow-up",
+      "verdict": "pass"
+    },
+    {
+      "id": "one-attendee-across-opens",
+      "n": 3,
+      "title": "The same person at two opens is one attendee",
+      "verdict": "pass"
+    },
+    {
+      "id": "one-question-per-draft",
+      "n": 4,
+      "title": "Each draft thanks them and asks one question",
+      "verdict": "pass"
+    },
+    {
+      "id": "person-approves-each-send",
+      "n": 5,
+      "title": "A person approves every follow-up before it sends",
+      "verdict": "pass"
+    },
+    {
+      "id": "opt-out-is-permanent",
+      "n": 6,
+      "title": "An opt-out is honoured across every open and listing",
+      "verdict": "pass"
+    },
+    {
+      "id": "reply-classified",
+      "n": 7,
+      "title": "Every reply is classified, and an unclear one goes to a person",
+      "verdict": "pass"
+    },
+    {
+      "id": "offer-or-complaint-to-agent",
+      "n": 8,
+      "title": "An offer or a complaint goes to the agent, unanswered",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "report-counts-and-verbatim",
+      "n": 9,
+      "title": "The vendor report counts, quotes and invents nothing",
+      "verdict": "pass"
+    },
+    {
+      "id": "person-approves-the-report",
+      "n": 10,
+      "title": "The agent approves the vendor report before it goes",
+      "verdict": "pass"
+    },
+    {
+      "id": "who-said-what-recorded",
+      "n": 11,
+      "title": "Who said what is on the record",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "voice-step-off-by-default",
+      "n": 12,
+      "title": "The call is off by default, and only to someone who asked",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "survives-the-builder",
+      "n": 13,
+      "title": "It survives the builder",
+      "verdict": "evidence_required"
+    },
+    {
+      "id": "pass-test",
+      "n": 14,
+      "title": "The pass test passes",
+      "verdict": "with_us"
+    }
+  ],
+  "next": {
+    "with_us": "The optional call is Office Voice's governed single call: create_call, basis they_asked, only to an attendee who asked to be called, and off unless the agent turns it on. The consent and unsubscribe record at volume, and a record of who said what that survives a vendor dispute, are not a product and are quoted as a scoped build. Queue each call with create_call on the Office Voice MCP (office_voice.create_call): the owner mints the key at office-voice.com/app/keys and ticks \"Allow this to queue calls\", and the dispatcher does the Do Not Call Register check, the calling hours and the one-attempt-a-day limit. There is no production run of these checks yet, so the stub run is the finished build. Do not stand up telephony of your own.",
+    "evidence_required": "attach what proves each one; not a software check"
+  }
+}

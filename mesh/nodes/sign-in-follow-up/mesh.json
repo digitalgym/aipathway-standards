@@ -1,0 +1,68 @@
+{
+  "slug": "sign-in-follow-up",
+  "name": "Sign-In Follow-Up",
+  "office_task": "Take the open-home sign-in sheet, follow up only the people who said yes with a message I approved, sort their replies, and draft the vendor's report from them.",
+  "verticals": ["property"],
+  "standards": ["open-home-feedback"],
+  "systems_of_record": [
+    "the open-home sign-in register, exported from the sign-in app or the agency CRM, or the paper sheet typed up, which issues the document_id and the listing_id each row belongs to",
+    "the agent's mail and SMS sender, which holds the approved drafts, the sends and the replies (message_id)",
+    "the report store the agent and the vendor open, which issues the report_id per version"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/sign-in-follow-up" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "webhook", "schedule"],
+  "consumes": [
+    { "event": "listing.feedback_due", "wake": "webhook" },
+    { "event": "document.received", "wake": "webhook" },
+    { "event": "email.received", "wake": "webhook" },
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "report.published",
+      "write": "the week's vendor report for one listing (attendee, follow-up, reply and class counts, price comments word for word, themes citing their replies, no names or contact details), drafted to the agent as a new version and sent to the vendor only once the agent approved that version",
+      "readback": "the report store returns a version for the listing, and reading the listing's latest report back returns that version, its counts and verbatim comments, and whether it reached the vendor; no version back means nothing was written"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception naming the agent who owns it: a register row with no name, no way to reach them or no open, a row with no consent at sign-in, the same person at two opens of one listing, an offer, a complaint, or a reply that fits no class, each with the row or the reply word for word",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the register row or reply it is about, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "open_home.incomplete_row",
+      "open_home.no_consent",
+      "open_home.duplicate_attendee",
+      "open_home.offer",
+      "open_home.complaint",
+      "open_home.unclear_reply"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.document_id",
+      "seam.listing_id",
+      "seam.consent_as_written",
+      "seam.draft_status",
+      "seam.approved_by",
+      "seam.consent_withdrawn",
+      "seam.reply_classes",
+      "seam.report_version",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Automate Real Estate Open House Follow-ups with SignSnapHome, HubSpot, and Twilio",
+    "original_author": "Kaden Reese",
+    "share_link": "https://n8n.io/workflows/9256",
+    "licence_or_permission": "reimplementation"
+  }
+}
