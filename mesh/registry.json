@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-03T12:42:06.747Z",
+  "generated_at": "2026-11-03T13:34:34.391Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -1474,6 +1474,114 @@
       ]
     },
     {
+      "slug": "folder-brief",
+      "name": "Folder Brief",
+      "office_task": "Put every file in our messy shared folder on one register with an owner, catch the week one changes, and give me a one-screen brief of what's current, stale, open and changed.",
+      "verticals": [
+        "b2b-office"
+      ],
+      "standards": [
+        "knowledge-base"
+      ],
+      "systems_of_record": [
+        "the shared drive that holds the folder and issues the document_id (Google Drive or SharePoint), left where it is",
+        "the register on that tenant (one Sheet or SharePoint list: a row per source, owner a person, kind, edition and checksum)",
+        "the task list the office runs (Google Tasks, Planner or a sheet), which issues the exception_id for each open question"
+      ],
+      "consumes": [
+        {
+          "event": "document.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the one-screen brief, written as one Doc into the folder it covers after each run: current sources with owner and edition, stale ones (superseded editions, copies, files gone), the open questions as task ids with owners, and what changed this run, every line by register id and location and nothing composed from the files",
+          "readback": "the drive returns the brief's file id as the report_id, and reading that id back returns the Doc with the run time and the register ids it lists; no id back means no brief was published and the run raises an exception to the register keeper"
+        },
+        {
+          "event": "exception.raised",
+          "write": "a task on the office's task list naming the person who owns it, with a due date: an edition the office expects and the folder does not hold, a file whose only owner is a team, two copies waiting for a person to pick the one the office works from, client material waiting for someone to set who may read it and for how long, an instrument with no edition printed, or a registered file gone from the folder",
+          "readback": "the task list returns an exception_id, and reading that id back returns what is expected, the owner and the due date; no id back means nothing was raised, and the file stays off the index"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "kb.expected_edition_missing",
+          "kb.owner_not_a_person",
+          "kb.canonical_copy_undecided",
+          "kb.customer_access_undecided",
+          "kb.instrument_without_edition",
+          "kb.source_gone_from_drive"
+        ],
+        "owner_field": "owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "register.id",
+          "register.kind",
+          "register.owner",
+          "register.location",
+          "register.edition",
+          "register.checksum",
+          "register.retrieved_at",
+          "register.status",
+          "register.duplicate_of",
+          "register.access_list",
+          "register.expires_on",
+          "register.superseded_checksums"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/folder-brief"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Drive Docs Memory",
+        "original_author": "Markus",
+        "share_link": "https://x.ai/bot/tH467e0VuoKeME1YdDD_m",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "knowledge-base",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:49:26.672Z",
+          "run_id": "run-1793710166670",
+          "green": 11,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 13
+        }
+      ]
+    },
+    {
       "slug": "goods-match",
       "name": "Goods Match",
       "office_task": "Hold every supplier invoice against its purchase order and what was actually received, catch duplicates, and tell finance which queue each one is in.",
@@ -2549,6 +2657,103 @@
       ]
     },
     {
+      "slug": "price-sheet",
+      "name": "Price Sheet",
+      "office_task": "Before each appraisal, draft the vendor's one-page price evidence from comparable sales chosen by written rules, each sourced, and hold it for the agent to approve.",
+      "verticals": [
+        "property"
+      ],
+      "standards": [
+        "price-one-pager"
+      ],
+      "systems_of_record": [
+        "the agency's listing system, which issues the listing_id for the appraisal and holds the subject property",
+        "the recorded sales source the agency already licenses",
+        "the document store the approved page and its record of what was shown are published into, which issues the report_id"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the one-pager version the agent approved, released to the vendor named on the listing, with an append-only record of what was shown: every comparable with its source, sale date and read date, the range, the agent's estimate apart, the approval and the date",
+          "readback": "reading the listing's records back by listing_id and date returns each report_id with its version, released_on and approved_by, matching the approved version comparable for comparable; no id back means nothing was released and an exception is raised"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the listing naming the agent: a quoted figure below the evidence (held, with the sales above it), stale sales (held), too few comparables for a range, or an approval not given",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the listing_id, the version, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "price.underquote_held",
+          "price.sales_stale_held",
+          "price.too_few_comparables",
+          "price.approval_not_given",
+          "price.release_refused"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.listing_id",
+          "seam.version",
+          "seam.report_id",
+          "seam.approved_by",
+          "seam.released_on",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/price-sheet"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "CMA Specialist Bot",
+        "original_author": "Daniel Ledo",
+        "share_link": "https://x.ai/bot/SxOQ9jNfWOqHFRi5KVTfa",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "price-one-pager",
+          "edition": "2026-10-24",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:49:36.632Z",
+          "run_id": "run-1793710176630",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 14
+        }
+      ]
+    },
+    {
       "slug": "promise-watch",
       "name": "Promise Watch",
       "office_task": "Turn every client's \"I'll pay by\" reply into a dated promise on the invoice, and when that date passes unpaid, draft the next chase for the owner to approve.",
@@ -2872,6 +3077,105 @@
       ]
     },
     {
+      "slug": "ring-list",
+      "name": "Ring List",
+      "office_task": "Every weekday morning, tell me who to ring today from my own database, why each one, with a short opener drafted, and nothing past the do-not-call flags.",
+      "verticals": [
+        "property"
+      ],
+      "standards": [
+        "database-reactivation"
+      ],
+      "systems_of_record": [
+        "the agency CRM, or the copied Contacts sheet, that holds each contact row, its last outcome and the do-not-contact register",
+        "the place the agent opens each morning (CRM tasks, the Today tab or a morning email), which issues the report_id for each day's list"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the day's call list for the agent: at most the cap they set, in rank order, each row with its play, the trigger that qualified it, a drafted opener under 40 words and the last outcome. Drafts only: nothing is dialled or sent",
+          "readback": "the list store returns a report_id for the day's list, and reading that id back returns the same rows in the same order; no id back means no list was published and the run raises an exception"
+        },
+        {
+          "event": "exception.raised",
+          "write": "a thing to sort out, on top of the list and naming the agent who owns it: a contact missing name, mobile or address, a reply waiting that asks for a price, makes a complaint or asks something the play was not built for",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the contact, the typed reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "reactivation.not_ready",
+          "reactivation.price_question",
+          "reactivation.complaint",
+          "reactivation.reply_outside_play",
+          "reactivation.list_not_published"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.report_id",
+          "seam.play",
+          "seam.trigger",
+          "seam.rank_reason",
+          "seam.last_outcome",
+          "seam.last_outcome_at",
+          "seam.sequence_started_at",
+          "seam.do_not_contact",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/ring-list"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Realtor Morning Brief",
+        "original_author": "Bryan Dunleavy",
+        "share_link": "https://x.ai/bot/uxg9lUIEGbftXKwMN4COQ",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "database-reactivation",
+          "edition": "2026-10-24",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:53:44.310Z",
+          "run_id": "run-1793710424308",
+          "green": 8,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 14
+        }
+      ]
+    },
+    {
       "slug": "site-orders",
       "name": "Site Orders",
       "office_task": "Turn the build's material list into one purchase order per supplier, from stock first and the supplier's own prices, and match every delivery docket back.",
@@ -2992,6 +3296,7 @@
     "dropped-ball",
     "feed-match",
     "fire-code-desk",
+    "folder-brief",
     "goods-match",
     "inbox-desk",
     "invoice-desk",
@@ -3002,9 +3307,11 @@
     "permit-answers",
     "po-match",
     "practice-desk",
+    "price-sheet",
     "promise-watch",
     "quote-desk",
     "rent-watch",
+    "ring-list",
     "site-orders"
   ],
   "edges": [
