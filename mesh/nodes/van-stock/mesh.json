@@ -1,0 +1,60 @@
+{
+  "slug": "van-stock",
+  "name": "Van Stock",
+  "office_task": "Reserve what the van and store already hold for each job, order only the shortfall from the approved wholesaler at catalogue price, and match every docket back.",
+  "verticals": ["trades-building"],
+  "standards": ["material-order"],
+  "systems_of_record": [
+    "the job system that issues the job_id, holds its material list and its van and store stock (ServiceM8, Simpro, Tradify, Fergus or similar)",
+    "the wholesaler portal or job-system purchasing that issues each order's external id"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/van-stock" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "job.updated", "wake": "webhook" },
+    { "event": "document.received", "wake": "webhook" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "order.sent",
+      "write": "one purchase order per job and supplier, for the lines van and store stock do not cover, priced from that supplier's catalogue read at order time, released by the threshold rule or a named person and sent against the job",
+      "readback": "the ordering system returns the order's external id, and reading that id back returns the job_id, the supplier, the lines, the catalogue edition and the release; no id back means it was not written and it is parked with a person named"
+    },
+    {
+      "event": "delivery.recorded",
+      "write": "the delivery docket matched to its sent order on the job, line by line, with the quantity received and a reason (short, damaged, substituted) on any line that differs",
+      "readback": "reading the job's record by job_id returns the delivery against the order's id with its docket id and every line; a docket that matches no sent order is not recorded and is raised instead"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the job or the order naming the person who owns it: an order waiting for a named release (over the threshold, or to a supplier not on the approved list), a code no catalogue holds, an order write with no id back, a docket that matches no sent order, and every delivery variance (short, over, wrong item, changed price, damage, unaccepted substitution)",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the job_id, the order id where one exists, the kind and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "material.release_needed",
+      "material.not_in_catalogue",
+      "material.write_failed",
+      "material.no_order_for_docket",
+      "material.short",
+      "material.over",
+      "material.wrong_item",
+      "material.price_changed",
+      "material.damaged",
+      "material.substitution_unaccepted"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.job_id", "seam.stock_reserved", "seam.order_external_id", "seam.supplier_id", "seam.catalogue_edition", "seam.released_by", "seam.order_status", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
