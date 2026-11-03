@@ -1,5 +1,5 @@
 /**
- * One scenario per check of follow-up-build-standard, for Dropped-Ball Scanner.
+ * One scenario per check of follow-up-build-standard, for Follow-Up Sweep.
  *
  * Scaffolded by `npx @aipathway/conformance init follow-up-build-standard`
  * from https://aipathway.com.au/explore-ai/follow-up-build-standard and

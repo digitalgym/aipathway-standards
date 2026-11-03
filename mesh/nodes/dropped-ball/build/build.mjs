@@ -1,13 +1,13 @@
 /**
- * Dropped-Ball Scanner: the evening follow-up sweep, built to
+ * Follow-Up Sweep: the evening follow-up sweep, built to
  * AIP-BS-FOLLOW-UP 2026-10-05.
  * https://aipathway.com.au/explore-ai/follow-up-build-standard
  *
- * A port of "Dropped-Ball Scanner" by Austen Allred, reimplemented from the
- * standard alone. Nothing here is taken from the original bot's prompt or
- * instructions; only its public one-liner set the job: an evening sweep that
- * finds requests nobody answered and promises with no next step, and drafts a
- * recovery touch for each.
+ * An original AI Pathway build, written from the standard alone. The idea of
+ * an evening sweep for dropped balls came from public bots that draft recovery
+ * messages, but this one chases what is owed to the business by text and call
+ * within consent and calling hours, so it credits no one. Nothing here is
+ * taken from any other bot's prompt or instructions.
  *
  * In the standard's words that job is: every thing owed to the business that
  * is not money (a quote decision, a signed variation, a certificate, a PO
