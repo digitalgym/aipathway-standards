@@ -1,0 +1,2318 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793711762976",
+  "standard": "invoice-out-build-standard",
+  "spec": "AIP-BS-INVOICE-OUT",
+  "specVersion": "2026-10-05",
+  "environment": "stub",
+  "startedAt": "2026-11-03T13:16:02.962Z",
+  "finishedAt": "2026-11-03T13:16:02.976Z",
+  "results": [
+    {
+      "checkId": "completion-is-the-trigger",
+      "n": 1,
+      "title": "The job's completion is the only trigger",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Two invoices exist and each traces to a job read that showed it complete. An invoice for the open job, or one written before any job was read, fails.",
+      "actual": "2 invoice(s) [J-101:draft, J-102:draft], 2 escalation(s), 0 send(s), 18 port call(s)",
+      "stimulus": {
+        "description": "Three jobs in the system: two marked complete today, one still open.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "completion-is-the-trigger"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 3,
+            "complete": [
+              "J-101",
+              "J-102"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-101"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "xero-items-2026-10-28",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "J-101",
+            "lines": [
+              "DEL-METROx1@96.5",
+              "SAND-Tx2@87.9"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "job:J-101; key:J-101+job.completed+delivery-billing"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-101"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "awaiting_release",
+            "detail": "{\"node\":\"delivery-billing\",\"job_id\":\"J-101\",\"invoice_id\":\"INV1\",\"reason\":\"awaiting_release\",\"exception_owner\":\"Jess Nguyen (accounts)\",\"total\":272.3,\"rule\":null,\"threshold\":null}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 3,
+            "complete": [
+              "J-101",
+              "J-102"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 3,
+            "complete": [
+              "J-101",
+              "J-102"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-102"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "xero-items-2026-10-28",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "J-102",
+            "lines": [
+              "DEL-METROx1@96.5",
+              "PAVER-PALx3@641.4"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "job:J-102; key:J-102+job.completed+delivery-billing"
+          },
+          "response": {
+            "id": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-102"
+          },
+          "response": {
+            "invoiceId": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "awaiting_release",
+            "detail": "{\"node\":\"delivery-billing\",\"job_id\":\"J-102\",\"invoice_id\":\"INV2\",\"reason\":\"awaiting_release\",\"exception_owner\":\"Jess Nguyen (accounts)\",\"total\":2020.7,\"rule\":null,\"threshold\":null}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 3,
+            "complete": [
+              "J-101",
+              "J-102"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-101"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-102"
+          },
+          "response": {
+            "invoiceId": "INV2",
+            "externalId": "xero-INV2"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "lines-come-from-the-job",
+      "n": 2,
+      "title": "Every invoice line traces to a line on the job",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The invoice carries those three codes and quantities and no others. An extra line, or a missing one with no parked reason, fails.",
+      "actual": "1 invoice(s) [J-201:draft], 1 escalation(s), 0 send(s), 7 port call(s)",
+      "stimulus": {
+        "description": "A complete job with three lines: a callout, two hours of labour and a material.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "lines-come-from-the-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "complete": [
+              "J-201"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-201"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "xero-items-2026-10-28",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "J-201",
+            "lines": [
+              "DEL-METROx1@96.5",
+              "LAB-HRx2@112.25",
+              "PAVER-PALx3@641.4"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "job:J-201; key:J-201+job.completed+delivery-billing"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-201"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "awaiting_release",
+            "detail": "{\"node\":\"delivery-billing\",\"job_id\":\"J-201\",\"invoice_id\":\"INV1\",\"reason\":\"awaiting_release\",\"exception_owner\":\"Jess Nguyen (accounts)\",\"total\":2245.2,\"rule\":null,\"threshold\":null}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "rates-only-from-the-book",
+      "n": 3,
+      "title": "Every line is priced from the price book, and a line the book does not cover parks the invoice",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The book is read before the write. Every priced line's rate equals the book's rate for its code. The invoice with the unknown code is parked with reason not_in_pricebook and no rate is invented for it.",
+      "actual": "2 invoice(s) [J-301:draft, J-302:parked/not_in_pricebook], 2 escalation(s), 0 send(s), 12 port call(s)",
+      "stimulus": {
+        "description": "A complete job whose lines include one code the price book does not hold.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "rates-only-from-the-book"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "J-301",
+              "J-302"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-301"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "xero-items-2026-10-28",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "J-301",
+            "lines": [
+              "DEL-METROx1@96.5",
+              "SAND-Tx2@87.9",
+              "LAB-HRx2@112.25"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "job:J-301; key:J-301+schedule.tick+delivery-billing"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-301"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "awaiting_release",
+            "detail": "{\"node\":\"delivery-billing\",\"job_id\":\"J-301\",\"invoice_id\":\"INV1\",\"reason\":\"awaiting_release\",\"exception_owner\":\"Jess Nguyen (accounts)\",\"total\":496.8,\"rule\":null,\"threshold\":null}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-302"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "xero-items-2026-10-28",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "J-302",
+            "lines": [
+              "DEL-METROx1@96.5",
+              "LAB-HRx2@112.25"
+            ],
+            "stage": null,
+            "park": "not_in_pricebook",
+            "notes": "job:J-302; key:J-302+schedule.tick+delivery-billing"
+          },
+          "response": {
+            "id": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-302"
+          },
+          "response": {
+            "invoiceId": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "not_in_pricebook",
+            "detail": "{\"node\":\"delivery-billing\",\"job_id\":\"J-302\",\"invoice_id\":\"INV2\",\"reason\":\"not_in_pricebook\",\"exception_owner\":\"Jess Nguyen (accounts)\",\"unpriced\":[\"EDGE-KERB\"],\"unsigned\":[]}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "variation-needs-a-signature",
+      "n": 4,
+      "title": "A variation is billed only with a signed acceptance attached",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The signed one is invoiced with the acceptance attached as evidence. The unsigned one is parked with reason unsigned_variation and an escalation names it. Billing an unsigned variation fails.",
+      "actual": "2 invoice(s) [J-402:draft, J-403:parked/unsigned_variation], 2 escalation(s), 0 send(s), 14 port call(s)",
+      "stimulus": {
+        "description": "Two complete jobs each carrying a variation line: one with a signed acceptance on file, one without.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "variation-needs-a-signature"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "J-402",
+              "J-403"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-402"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "xero-items-2026-10-28",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "J-402",
+            "lines": [
+              "DEL-METROx1@96.5",
+              "VAR-TRIPx1@183.6"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "job:J-402; key:J-402+job.completed+delivery-billing"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-402"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "invoiceId": "INV1",
+            "ref": "drive:acceptance/J-402-signed.pdf"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "awaiting_release",
+            "detail": "{\"node\":\"delivery-billing\",\"job_id\":\"J-402\",\"invoice_id\":\"INV1\",\"reason\":\"awaiting_release\",\"exception_owner\":\"Jess Nguyen (accounts)\",\"total\":280.1,\"rule\":null,\"threshold\":null}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "J-402",
+              "J-403"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-403"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "xero-items-2026-10-28",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "J-403",
+            "lines": [
+              "DEL-METROx1@96.5"
+            ],
+            "stage": null,
+            "park": "unsigned_variation",
+            "notes": "job:J-403; key:J-403+job.completed+delivery-billing"
+          },
+          "response": {
+            "id": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-403"
+          },
+          "response": {
+            "invoiceId": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "unsigned_variation",
+            "detail": "{\"node\":\"delivery-billing\",\"job_id\":\"J-403\",\"invoice_id\":\"INV2\",\"reason\":\"unsigned_variation\",\"exception_owner\":\"Jess Nguyen (accounts)\",\"unpriced\":[],\"unsigned\":[\"VAR-TRIP\"]}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "stage-invoice-never-claim",
+      "n": 5,
+      "title": "A job under a building contract is invoiced as a stage invoice, and the claim stays with the builder",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The invoice carries the stage name. No invoice, line or note contains the phrase progress claim. An invoice on a staged job with no stage fails.",
+      "actual": "2 invoice(s) [J-501:draft, J-502:parked/no_stage], 2 escalation(s), 0 send(s), 12 port call(s)",
+      "stimulus": {
+        "description": "A complete job carrying a contract stage name.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "stage-invoice-never-claim"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "J-501",
+              "J-502"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-501"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "xero-items-2026-10-28",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "J-501",
+            "lines": [
+              "PAVER-PALx3@641.4",
+              "LAB-HRx6@112.25"
+            ],
+            "stage": "Stage 3: paving laid",
+            "park": null,
+            "notes": "job:J-501; key:J-501+schedule.tick+delivery-billing; Stage invoice: Stage 3: paving laid"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-501"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "awaiting_release",
+            "detail": "{\"node\":\"delivery-billing\",\"job_id\":\"J-501\",\"invoice_id\":\"INV1\",\"reason\":\"awaiting_release\",\"exception_owner\":\"Jess Nguyen (accounts)\",\"total\":2597.7,\"rule\":null,\"threshold\":null}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-502"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "xero-items-2026-10-28",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "J-502",
+            "lines": [
+              "PAVER-PALx3@641.4"
+            ],
+            "stage": null,
+            "park": "no_stage",
+            "notes": "job:J-502; key:J-502+schedule.tick+delivery-billing"
+          },
+          "response": {
+            "id": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-502"
+          },
+          "response": {
+            "invoiceId": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "no_stage",
+            "detail": "{\"node\":\"delivery-billing\",\"job_id\":\"J-502\",\"invoice_id\":\"INV2\",\"reason\":\"no_stage\",\"exception_owner\":\"Jess Nguyen (accounts)\",\"unpriced\":[],\"unsigned\":[]}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-invoice-per-job",
+      "n": 6,
+      "title": "One invoice per job, written once, updated on a second event",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Exactly one invoice exists for the job, with an external id, and the second event produced an update or no write. A second invoice, or a null id treated as success, fails.",
+      "actual": "1 invoice(s) [J-601:draft], 2 escalation(s), 0 send(s), 16 port call(s)",
+      "stimulus": {
+        "description": "The same job's completion event delivered twice.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-invoice-per-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "complete": [
+              "J-601"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-601"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "xero-items-2026-10-28",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "J-601",
+            "lines": 2
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "write_failed",
+            "detail": "{\"node\":\"delivery-billing\",\"job_id\":\"J-601\",\"invoice_id\":null,\"reason\":\"write_failed\",\"exception_owner\":\"Jess Nguyen (accounts)\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "complete": [
+              "J-601"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-601"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "xero-items-2026-10-28",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "J-601",
+            "lines": [
+              "DEL-METROx1@96.5",
+              "SAND-Tx2@87.9"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "job:J-601; key:J-601+job.completed+delivery-billing"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-601"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "awaiting_release",
+            "detail": "{\"node\":\"delivery-billing\",\"job_id\":\"J-601\",\"invoice_id\":\"INV1\",\"reason\":\"awaiting_release\",\"exception_owner\":\"Jess Nguyen (accounts)\",\"total\":272.3,\"rule\":null,\"threshold\":null}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "complete": [
+              "J-601"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-601"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "complete": [
+              "J-601"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-601"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "externalId": "xero-INV1"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "written-into-the-ledger",
+      "n": 7,
+      "title": "The invoice exists in the ledger the business runs, with an external id back",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The write returns an external id and the id is stored against the job. On the stub the shape is proved; only a real tenant proves the invoice is in the ledger.",
+      "actual": "1 invoice(s) [J-701:draft], 1 escalation(s), 0 send(s), 7 port call(s)",
+      "stimulus": {
+        "description": "A complete, fully priced job.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "written-into-the-ledger"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "complete": [
+              "J-701"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-701"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "xero-items-2026-10-28",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "J-701",
+            "lines": [
+              "DEL-METROx1@96.5",
+              "PAVER-PALx3@641.4",
+              "LAB-HRx2@112.25"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "job:J-701; key:J-701+job.completed+delivery-billing"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-701"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "awaiting_release",
+            "detail": "{\"node\":\"delivery-billing\",\"job_id\":\"J-701\",\"invoice_id\":\"INV1\",\"reason\":\"awaiting_release\",\"exception_owner\":\"Jess Nguyen (accounts)\",\"total\":2245.2,\"rule\":null,\"threshold\":null}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "send-is-a-gate",
+      "n": 8,
+      "title": "Nothing is sent without a release by a person, or by a rule a person set with a threshold",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The first is released by the rule and sent. The second and third are sent only after a person's release, and the second was routed to a person. A send with no release fails.",
+      "actual": "2 invoice(s) [J-801:sent, J-802:sent], 1 escalation(s), 2 send(s), 19 port call(s); no-rule yard: 1 invoice(s) [J-803:sent], 1 escalation(s), 1 send(s), 11 port call(s)",
+      "stimulus": {
+        "description": "Three drafts: one under an auto-release threshold, one over it, one with no rule set.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "send-is-a-gate"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "J-801",
+              "J-802"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-801"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "xero-items-2026-10-28",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "J-801",
+            "lines": [
+              "DEL-METROx1@96.5",
+              "SAND-Tx2@87.9"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "job:J-801; key:J-801+job.completed+delivery-billing"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-801"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Jess: under $1,000 goes out",
+            "threshold": 1000
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "INV1",
+            "person": null,
+            "rule": "Jess: under $1,000 goes out"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "send": "INV1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "J-801",
+              "J-802"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-802"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "xero-items-2026-10-28",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "J-802",
+            "lines": [
+              "DEL-METROx1@96.5",
+              "PAVER-PALx3@641.4",
+              "LAB-HRx6@112.25"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "job:J-802; key:J-802+job.completed+delivery-billing"
+          },
+          "response": {
+            "id": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-802"
+          },
+          "response": {
+            "invoiceId": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Jess: under $1,000 goes out",
+            "threshold": 1000
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "{\"node\":\"delivery-billing\",\"job_id\":\"J-802\",\"invoice_id\":\"INV2\",\"reason\":\"awaiting_release\",\"exception_owner\":\"Jess Nguyen (accounts)\",\"total\":2694.2,\"rule\":\"Jess: under $1,000 goes out\",\"threshold\":1000}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "J-801",
+              "J-802"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "J-802"
+          },
+          "response": {
+            "invoiceId": "INV2",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "INV2",
+            "person": "Jess Nguyen (accounts)",
+            "rule": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "send": "INV2"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "parked-is-a-queue",
+      "n": 9,
+      "title": "A parked invoice is a queue with a reason and an owner, and nothing parked is sent",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every parked invoice carries a reason and an escalation names it to a person. No parked invoice has a send event.",
+      "actual": "4 invoice(s) [J-901:parked/not_in_pricebook, J-902:parked/unsigned_variation, J-903:parked/no_stage, J-900:sent], 4 escalation(s), 1 send(s), 33 port call(s)",
+      "stimulus": {
+        "description": "The parked invoices from the checks above.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "parked-is-a-queue"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "J-900",
+              "J-901",
+              "J-902",
+              "J-903"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-900"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "xero-items-2026-10-28",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "J-900",
+            "lines": 1
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "write_failed",
+            "detail": "{\"node\":\"delivery-billing\",\"job_id\":\"J-900\",\"invoice_id\":null,\"reason\":\"write_failed\",\"exception_owner\":\"Jess Nguyen (accounts)\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-901"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "xero-items-2026-10-28",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "J-901",
+            "lines": [
+              "DEL-METROx1@96.5"
+            ],
+            "stage": null,
+            "park": "not_in_pricebook",
+            "notes": "job:J-901; key:J-901+schedule.tick+delivery-billing"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-901"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "not_in_pricebook",
+            "detail": "{\"node\":\"delivery-billing\",\"job_id\":\"J-901\",\"invoice_id\":\"INV1\",\"reason\":\"not_in_pricebook\",\"exception_owner\":\"Jess Nguyen (accounts)\",\"unpriced\":[\"EDGE-KERB\"],\"unsigned\":[]}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-902"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "xero-items-2026-10-28",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "J-902",
+            "lines": [
+              "DEL-METROx1@96.5"
+            ],
+            "stage": null,
+            "park": "unsigned_variation",
+            "notes": "job:J-902; key:J-902+schedule.tick+delivery-billing"
+          },
+          "response": {
+            "id": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-902"
+          },
+          "response": {
+            "invoiceId": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "unsigned_variation",
+            "detail": "{\"node\":\"delivery-billing\",\"job_id\":\"J-902\",\"invoice_id\":\"INV2\",\"reason\":\"unsigned_variation\",\"exception_owner\":\"Jess Nguyen (accounts)\",\"unpriced\":[],\"unsigned\":[\"VAR-TRIP\"]}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-903"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "xero-items-2026-10-28",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "J-903",
+            "lines": [
+              "PAVER-PALx3@641.4"
+            ],
+            "stage": null,
+            "park": "no_stage",
+            "notes": "job:J-903; key:J-903+schedule.tick+delivery-billing"
+          },
+          "response": {
+            "id": "INV3",
+            "externalId": "xero-INV3"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-903"
+          },
+          "response": {
+            "invoiceId": "INV3",
+            "externalId": "xero-INV3"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "no_stage",
+            "detail": "{\"node\":\"delivery-billing\",\"job_id\":\"J-903\",\"invoice_id\":\"INV3\",\"reason\":\"no_stage\",\"exception_owner\":\"Jess Nguyen (accounts)\",\"unpriced\":[],\"unsigned\":[]}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "J-900",
+              "J-901",
+              "J-902",
+              "J-903"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-900"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "xero-items-2026-10-28",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "J-900",
+            "lines": [
+              "DEL-METROx1@96.5"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "job:J-900; key:J-900+schedule.tick+delivery-billing"
+          },
+          "response": {
+            "id": "INV4",
+            "externalId": "xero-INV4"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-900"
+          },
+          "response": {
+            "invoiceId": "INV4",
+            "externalId": "xero-INV4"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Jess: everything goes out",
+            "threshold": 1000000
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "INV4",
+            "person": null,
+            "rule": "Jess: everything goes out"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "send": "INV4"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-901"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-902"
+          },
+          "response": {
+            "invoiceId": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-903"
+          },
+          "response": {
+            "invoiceId": "INV3",
+            "externalId": "xero-INV3"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 4,
+            "complete": [
+              "J-900",
+              "J-901",
+              "J-902",
+              "J-903"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "J-902"
+          },
+          "response": {
+            "invoiceId": "INV2",
+            "status": "parked"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "the-record-by-job",
+      "n": 10,
+      "title": "Job id, invoice id, the lines, the rates read, who released and when it was sent are retrievable by job",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A read by job id returns the invoice, its lines with the rates and the book edition, the release with a name or rule, and the send time. A record missing the release fails.",
+      "actual": "1 invoice(s) [J-1001:sent], 1 escalation(s), 1 send(s), 12 port call(s)",
+      "stimulus": {
+        "description": "One job invoiced, released and sent.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "the-record-by-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "complete": [
+              "J-1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-1001"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "xero-items-2026-10-28",
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "J-1001",
+            "lines": [
+              "DEL-METROx1@96.5",
+              "PAVER-PALx3@641.4",
+              "LAB-HRx2@112.25"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "job:J-1001; key:J-1001+job.completed+delivery-billing"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "J-1001"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "awaiting_release",
+            "detail": "{\"node\":\"delivery-billing\",\"job_id\":\"J-1001\",\"invoice_id\":\"INV1\",\"reason\":\"awaiting_release\",\"exception_owner\":\"Jess Nguyen (accounts)\",\"total\":2245.2,\"rule\":null,\"threshold\":null}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "complete": [
+              "J-1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "J-1001"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "INV1",
+            "person": "Jess Nguyen (accounts)",
+            "rule": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "send": "INV1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "J-1001"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "status": "sent"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 11,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the ledger write and the release rule runs on.",
+        "now": "2026-11-03T13:16:02.975Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 12,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "One invoice per job in the ledger with the ledger's id, the variation parked and named, the unknown code parked and not priced, the over-threshold draft waiting for a person, and every sent invoice carrying a release.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "Real completion events on the business's own tenant, driven by marking real jobs complete.",
+        "now": "2026-11-03T13:16:02.976Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 12,
+    "pass": 7,
+    "fail": 0,
+    "shapeOnly": 3,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
