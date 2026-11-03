@@ -1,0 +1,66 @@
+{
+  "slug": "goods-match",
+  "name": "Goods Match",
+  "office_task": "Hold every supplier invoice against its purchase order and what was actually received, catch duplicates, and tell finance which queue each one is in.",
+  "verticals": ["b2b-office"],
+  "standards": ["invoice-check"],
+  "systems_of_record": [
+    "Xero or MYOB (the ledger that issues the bill_id for each supplier invoice)",
+    "the purchase order and goods-received register, keyed by order_id (Xero purchase orders, or a Google Sheets register)",
+    "the document store holding the invoice copies and written variation approvals (Google Drive, or the Gmail attachment)"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/goods-match" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "webhook", "schedule"],
+  "consumes": [
+    { "event": "bill.received", "wake": "webhook" },
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "bill.checked",
+      "write": "a clean match stamped on the bill: the order_id it was matched to by the number the invoice names, the four check records with what each saw (rate, received quantity less earlier invoices, written variation approvals, cumulative position), the dated tolerances used, and queue done_reversible, waiting for a named person in finance to approve. Nothing is paid.",
+      "readback": "the bill read back from the ledger by its bill_id returns seam.order_ref, seam.queue = done_reversible and the four passed check records; no bill back by that id means nothing was stamped and the run stops"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the bill naming the person in finance who owns it: the check that failed and the checks that never ran, the difference in dollars, the cumulative position, the source document, and its queue (needs a decision; waiting on the supplier for a copy; or blocked: no purchase order, or scope with no written approval). Finance is told by a Gmail notice that links the exception.",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the bill_id, the failed check, the dollar difference, the source document and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "bill.no_purchase_order",
+      "bill.no_source_document",
+      "bill.rate_mismatch",
+      "bill.quantity_not_received",
+      "bill.possible_duplicate",
+      "bill.unapproved_scope",
+      "bill.contract_sum_overrun"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.bill_id",
+      "seam.order_ref",
+      "seam.queue",
+      "seam.failed_check",
+      "seam.never_ran",
+      "seam.difference",
+      "seam.tolerance_version",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Match vendor invoices with POs and GRNs in Google Sheets and notify Finance via Gmail",
+    "original_author": "Fahim Jilani",
+    "share_link": "https://n8n.io/workflows/19446",
+    "licence_or_permission": "reimplementation"
+  }
+}
