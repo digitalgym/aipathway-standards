@@ -1,0 +1,59 @@
+{
+  "slug": "seller-book",
+  "name": "Seller Book",
+  "office_task": "Each morning, show me which past sellers and appraisals in my own database to text today and why, drafted for my OK, and keep every outcome and follow-up on the contact.",
+  "verticals": ["property"],
+  "standards": ["database-reactivation"],
+  "systems_of_record": [
+    "the agency CRM (Agentbox, VaultRE, Rex or similar), or the copied Contacts sheet, that holds each contact row, its last outcome and date, its texts and the do-not-contact register",
+    "the place the agent opens each morning (CRM tasks or the Today tab), which issues the report_id for each day's list of drafted texts"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/seller-book" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "report.published",
+      "write": "the day's list of drafted seller texts for the agent's OK: at most the cap they set, in rank order, each row with its play, the trigger that qualified it, the drafted text naming that trigger, the sender and a STOP opt-out, and the last outcome. Nothing is sent until the agent OKs it",
+      "readback": "the list store returns a report_id for the day's list, and reading that id back returns the same rows in the same order; no id back means no list was published and the run raises an exception"
+    },
+    {
+      "event": "exception.raised",
+      "write": "a thing to sort out, naming the agent who owns it: a seller reply that asks for a price or an offer, a complaint, a reply the play was not built for, or a contact missing name, mobile or address",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the contact, the typed reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "reactivation.not_ready",
+      "reactivation.price_question",
+      "reactivation.complaint",
+      "reactivation.reply_outside_play",
+      "reactivation.list_not_published"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.report_id",
+      "seam.play",
+      "seam.trigger",
+      "seam.rank_reason",
+      "seam.text_step",
+      "seam.sequence_started_at",
+      "seam.last_outcome",
+      "seam.last_outcome_at",
+      "seam.do_not_contact",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
