@@ -1,0 +1,6474 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793711120737",
+  "standard": "recurring-report-build-standard",
+  "spec": "AIP-BS-RECURRING-REPORT",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-03T13:05:20.726Z",
+  "finishedAt": "2026-11-03T13:05:20.737Z",
+  "results": [
+    {
+      "checkId": "every-figure-has-a-definition",
+      "n": 1,
+      "title": "Every figure on the report names a definition in the register",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every figure with a value cites a definition id the register holds, for the same measure. The undefined measure is published with no value and reason no_definition. A valued figure with no definition, or one citing a definition for a different measure, fails.",
+      "actual": "ar_total_owed=48210 def=DEF-total_owed; ar_overdue_61_90=no_definition def=null; ar_overdue_90_plus=6100 def=DEF-overdue_90_plus; unbilled_completed_jobs=12800 def=DEF-unbilled",
+      "stimulus": {
+        "description": "A register holding three definitions, and an audience whose declared measures include a fourth the register does not define.",
+        "now": "2026-10-11T20:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "every-figure-has-a-definition"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W42"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.total_owed",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 48210,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_total_owed",
+            "definitionId": "DEF-total_owed",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT1"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "report.no_definition",
+            "detail": "ar_overdue_61_90 for 2026-W42: the register holds no definition"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_90_plus",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 6100,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_90_plus",
+            "definitionId": "DEF-overdue_90_plus",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT2"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "servicem8",
+            "queryRef": "jobs.completed_not_invoiced",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 12800,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "unbilled_completed_jobs",
+            "definitionId": "DEF-unbilled",
+            "source": "servicem8",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT3"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W42",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "ar_total_owed",
+                "value": 48210,
+                "unavailable": null,
+                "definition": "DEF-total_owed",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_61_90",
+                "value": null,
+                "unavailable": "no_definition",
+                "definition": null,
+                "source": null,
+                "asOf": null
+              },
+              {
+                "measure": "ar_overdue_90_plus",
+                "value": 6100,
+                "unavailable": null,
+                "definition": "DEF-overdue_90_plus",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "unbilled_completed_jobs",
+                "value": 12800,
+                "unavailable": null,
+                "definition": "DEF-unbilled",
+                "source": "servicem8",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              }
+            ],
+            "narrative": "Accounts receivable ageing for 2026-W42, in Australian dollars. Total owed: 48210. Overdue more than three months: 6100. Completed jobs not yet invoiced: 12800. Not available this week: Overdue two to three months (no_definition).",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT4",
+            "version": 1,
+            "publishedAt": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": [
+              "RPT4@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-definition-per-measure",
+      "n": 2,
+      "title": "One definition of every measure, computed once per period and reused",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The register holds one definition for the measure. The source is read once for that measure and period, and both views carry the same value citing the same definition. A second read of the same query and period fails.",
+      "actual": "1 read(s) of aged_receivables.total_owed; views: owner=48210, lender=48210",
+      "stimulus": {
+        "description": "Two audiences that both carry the same measure over the same period.",
+        "now": "2026-10-11T20:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-definition-per-measure"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W42"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner",
+              "lender"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.total_owed",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 48210,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_total_owed",
+            "definitionId": "DEF-total_owed",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT1"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_90_plus",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 6100,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_90_plus",
+            "definitionId": "DEF-overdue_90_plus",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT2"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W42",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "ar_total_owed",
+                "value": 48210,
+                "unavailable": null,
+                "definition": "DEF-total_owed",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_90_plus",
+                "value": 6100,
+                "unavailable": null,
+                "definition": "DEF-overdue_90_plus",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              }
+            ],
+            "narrative": "Accounts receivable ageing for 2026-W42, in Australian dollars. Total owed: 48210. Overdue more than three months: 6100.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT3",
+            "version": 1,
+            "publishedAt": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W42",
+            "audienceId": "lender",
+            "figures": [
+              {
+                "measure": "ar_total_owed",
+                "value": 48210,
+                "unavailable": null,
+                "definition": "DEF-total_owed",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              }
+            ],
+            "narrative": "Accounts receivable ageing for 2026-W42, in Australian dollars. Total owed: 48210.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT4",
+            "version": 1,
+            "publishedAt": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": [
+              "RPT3@v1",
+              "RPT4@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "source-and-as-of-on-every-figure",
+      "n": 3,
+      "title": "Every figure carries the source it was read from and the time it was read",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every valued figure carries a source and an as-of time, and the as-of time equals the one the recorded read of that source returned for that query and period. A figure with neither, or one whose as-of time matches no read, fails.",
+      "actual": "ar_total_owed@xero/2026-10-11T21:07:00.000Z; ar_current@xero/2026-10-11T21:07:00.000Z; ar_overdue_1_30@xero/2026-10-11T21:07:00.000Z; ar_overdue_31_60@xero/2026-10-11T21:07:00.000Z; ar_overdue_61_90@xero/2026-10-11T21:07:00.000Z; ar_overdue_90_plus@xero/2026-10-11T21:07:00.000Z; unbilled_completed_jobs@servicem8/2026-10-11T21:07:00.000Z",
+      "stimulus": {
+        "description": "Definitions over two sources, a ledger and a job system, for one period.",
+        "now": "2026-10-11T20:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "source-and-as-of-on-every-figure"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 7
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W42"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.total_owed",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 48210,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_total_owed",
+            "definitionId": "DEF-total_owed",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT1"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.current",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 21400,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_current",
+            "definitionId": "DEF-current",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT2"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_1_30",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 11860,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_1_30",
+            "definitionId": "DEF-overdue_1_30",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT3"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_31_60",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 5240,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_31_60",
+            "definitionId": "DEF-overdue_31_60",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT4"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_61_90",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 3610,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_61_90",
+            "definitionId": "DEF-overdue_61_90",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT5"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_90_plus",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 6100,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_90_plus",
+            "definitionId": "DEF-overdue_90_plus",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT6"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "servicem8",
+            "queryRef": "jobs.completed_not_invoiced",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 12800,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "unbilled_completed_jobs",
+            "definitionId": "DEF-unbilled",
+            "source": "servicem8",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT7"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W42",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "ar_total_owed",
+                "value": 48210,
+                "unavailable": null,
+                "definition": "DEF-total_owed",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_current",
+                "value": 21400,
+                "unavailable": null,
+                "definition": "DEF-current",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_1_30",
+                "value": 11860,
+                "unavailable": null,
+                "definition": "DEF-overdue_1_30",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_31_60",
+                "value": 5240,
+                "unavailable": null,
+                "definition": "DEF-overdue_31_60",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_61_90",
+                "value": 3610,
+                "unavailable": null,
+                "definition": "DEF-overdue_61_90",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_90_plus",
+                "value": 6100,
+                "unavailable": null,
+                "definition": "DEF-overdue_90_plus",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "unbilled_completed_jobs",
+                "value": 12800,
+                "unavailable": null,
+                "definition": "DEF-unbilled",
+                "source": "servicem8",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              }
+            ],
+            "narrative": "Accounts receivable ageing for 2026-W42, in Australian dollars. Total owed: 48210. Not yet due: 21400. Overdue up to a month: 11860. Overdue one to two months: 5240. Overdue two to three months: 3610. Overdue more than three months: 6100. Completed jobs not yet invoiced: 12800.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT8",
+            "version": 1,
+            "publishedAt": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": [
+              "RPT8@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "publishes-on-schedule-regardless",
+      "n": 4,
+      "title": "The report publishes at the scheduled time whether or not anything changed",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A report exists for each period, published at or after its scheduled time and not before, and the second is published although nothing changed. A missing period, or a report published before its time, fails.",
+      "actual": "2026-W42: 2026-10-11T21:07:00.000Z (due 2026-10-11T21:00:00.000Z); 2026-W43: 2026-10-18T21:07:00.000Z (due 2026-10-18T21:00:00.000Z)",
+      "stimulus": {
+        "description": "Two scheduled periods with the same source values in both, and the clock advanced to each scheduled time in turn.",
+        "now": "2026-10-11T20:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "publishes-on-schedule-regardless"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-11T20:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 7
+          }
+        },
+        {
+          "at": "2026-10-11T20:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W42",
+              "2026-W43"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T20:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-11T20:30:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T20:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 7
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W42",
+              "2026-W43"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.total_owed",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 48210,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_total_owed",
+            "definitionId": "DEF-total_owed",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT1"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.current",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 21400,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_current",
+            "definitionId": "DEF-current",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT2"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_1_30",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 11860,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_1_30",
+            "definitionId": "DEF-overdue_1_30",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT3"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_31_60",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 5240,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_31_60",
+            "definitionId": "DEF-overdue_31_60",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT4"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_61_90",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 3610,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_61_90",
+            "definitionId": "DEF-overdue_61_90",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT5"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_90_plus",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 6100,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_90_plus",
+            "definitionId": "DEF-overdue_90_plus",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT6"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "servicem8",
+            "queryRef": "jobs.completed_not_invoiced",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 12800,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "unbilled_completed_jobs",
+            "definitionId": "DEF-unbilled",
+            "source": "servicem8",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT7"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W42",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "ar_total_owed",
+                "value": 48210,
+                "unavailable": null,
+                "definition": "DEF-total_owed",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_current",
+                "value": 21400,
+                "unavailable": null,
+                "definition": "DEF-current",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_1_30",
+                "value": 11860,
+                "unavailable": null,
+                "definition": "DEF-overdue_1_30",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_31_60",
+                "value": 5240,
+                "unavailable": null,
+                "definition": "DEF-overdue_31_60",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_61_90",
+                "value": 3610,
+                "unavailable": null,
+                "definition": "DEF-overdue_61_90",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_90_plus",
+                "value": 6100,
+                "unavailable": null,
+                "definition": "DEF-overdue_90_plus",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "unbilled_completed_jobs",
+                "value": 12800,
+                "unavailable": null,
+                "definition": "DEF-unbilled",
+                "source": "servicem8",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              }
+            ],
+            "narrative": "Accounts receivable ageing for 2026-W42, in Australian dollars. Total owed: 48210. Not yet due: 21400. Overdue up to a month: 11860. Overdue one to two months: 5240. Overdue two to three months: 3610. Overdue more than three months: 6100. Completed jobs not yet invoiced: 12800.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT8",
+            "version": 1,
+            "publishedAt": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": [
+              "RPT8@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-18T20:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 7
+          }
+        },
+        {
+          "at": "2026-10-18T20:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W42",
+              "2026-W43"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-18T20:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-18T20:30:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-18T20:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": [
+              "RPT8@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-18T20:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 7
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W42",
+              "2026-W43"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": [
+              "RPT8@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W43"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.total_owed",
+            "period": "2026-W43"
+          },
+          "response": {
+            "ok": true,
+            "value": 48210,
+            "asOf": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_total_owed",
+            "definitionId": "DEF-total_owed",
+            "source": "xero",
+            "asOf": "2026-10-18T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT9"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.current",
+            "period": "2026-W43"
+          },
+          "response": {
+            "ok": true,
+            "value": 21400,
+            "asOf": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_current",
+            "definitionId": "DEF-current",
+            "source": "xero",
+            "asOf": "2026-10-18T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT10"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_1_30",
+            "period": "2026-W43"
+          },
+          "response": {
+            "ok": true,
+            "value": 11860,
+            "asOf": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_1_30",
+            "definitionId": "DEF-overdue_1_30",
+            "source": "xero",
+            "asOf": "2026-10-18T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT11"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_31_60",
+            "period": "2026-W43"
+          },
+          "response": {
+            "ok": true,
+            "value": 5240,
+            "asOf": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_31_60",
+            "definitionId": "DEF-overdue_31_60",
+            "source": "xero",
+            "asOf": "2026-10-18T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT12"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_61_90",
+            "period": "2026-W43"
+          },
+          "response": {
+            "ok": true,
+            "value": 3610,
+            "asOf": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_61_90",
+            "definitionId": "DEF-overdue_61_90",
+            "source": "xero",
+            "asOf": "2026-10-18T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT13"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_90_plus",
+            "period": "2026-W43"
+          },
+          "response": {
+            "ok": true,
+            "value": 6100,
+            "asOf": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_90_plus",
+            "definitionId": "DEF-overdue_90_plus",
+            "source": "xero",
+            "asOf": "2026-10-18T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT14"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "servicem8",
+            "queryRef": "jobs.completed_not_invoiced",
+            "period": "2026-W43"
+          },
+          "response": {
+            "ok": true,
+            "value": 12800,
+            "asOf": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "unbilled_completed_jobs",
+            "definitionId": "DEF-unbilled",
+            "source": "servicem8",
+            "asOf": "2026-10-18T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT15"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W43",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "ar_total_owed",
+                "value": 48210,
+                "unavailable": null,
+                "definition": "DEF-total_owed",
+                "source": "xero",
+                "asOf": "2026-10-18T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_current",
+                "value": 21400,
+                "unavailable": null,
+                "definition": "DEF-current",
+                "source": "xero",
+                "asOf": "2026-10-18T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_1_30",
+                "value": 11860,
+                "unavailable": null,
+                "definition": "DEF-overdue_1_30",
+                "source": "xero",
+                "asOf": "2026-10-18T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_31_60",
+                "value": 5240,
+                "unavailable": null,
+                "definition": "DEF-overdue_31_60",
+                "source": "xero",
+                "asOf": "2026-10-18T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_61_90",
+                "value": 3610,
+                "unavailable": null,
+                "definition": "DEF-overdue_61_90",
+                "source": "xero",
+                "asOf": "2026-10-18T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_90_plus",
+                "value": 6100,
+                "unavailable": null,
+                "definition": "DEF-overdue_90_plus",
+                "source": "xero",
+                "asOf": "2026-10-18T21:07:00.000Z"
+              },
+              {
+                "measure": "unbilled_completed_jobs",
+                "value": 12800,
+                "unavailable": null,
+                "definition": "DEF-unbilled",
+                "source": "servicem8",
+                "asOf": "2026-10-18T21:07:00.000Z"
+              }
+            ],
+            "narrative": "Accounts receivable ageing for 2026-W43, in Australian dollars. Total owed: 48210. Not yet due: 21400. Overdue up to a month: 11860. Overdue one to two months: 5240. Overdue two to three months: 3610. Overdue more than three months: 6100. Completed jobs not yet invoiced: 12800.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT16",
+            "version": 1,
+            "publishedAt": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W43"
+          },
+          "response": {
+            "ids": [
+              "RPT16@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": [
+              "RPT8@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "cannot-compute-says-so",
+      "n": 5,
+      "title": "A figure whose source could not be read publishes as unavailable, with the reason",
+      "verdict": "pass",
+      "held": true,
+      "expected": "In the second period the figure over the broken source has no value and a reason naming the failure, and an escalation names the figure. Its first-period value appearing in the second period, or a null value with no reason, fails.",
+      "actual": "W43 unbilled: null (source_unreadable: source_unreachable); 1 escalation(s); 1 notification(s)",
+      "stimulus": {
+        "description": "Two periods over two sources, with one source made unreadable before the second period's run.",
+        "now": "2026-10-11T20:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "cannot-compute-says-so"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 7
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W42",
+              "2026-W43"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.total_owed",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 48210,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_total_owed",
+            "definitionId": "DEF-total_owed",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT1"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.current",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 21400,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_current",
+            "definitionId": "DEF-current",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT2"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_1_30",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 11860,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_1_30",
+            "definitionId": "DEF-overdue_1_30",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT3"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_31_60",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 5240,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_31_60",
+            "definitionId": "DEF-overdue_31_60",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT4"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_61_90",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 3610,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_61_90",
+            "definitionId": "DEF-overdue_61_90",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT5"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_90_plus",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 6100,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_90_plus",
+            "definitionId": "DEF-overdue_90_plus",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT6"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "servicem8",
+            "queryRef": "jobs.completed_not_invoiced",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 12800,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "unbilled_completed_jobs",
+            "definitionId": "DEF-unbilled",
+            "source": "servicem8",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT7"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W42",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "ar_total_owed",
+                "value": 48210,
+                "unavailable": null,
+                "definition": "DEF-total_owed",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_current",
+                "value": 21400,
+                "unavailable": null,
+                "definition": "DEF-current",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_1_30",
+                "value": 11860,
+                "unavailable": null,
+                "definition": "DEF-overdue_1_30",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_31_60",
+                "value": 5240,
+                "unavailable": null,
+                "definition": "DEF-overdue_31_60",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_61_90",
+                "value": 3610,
+                "unavailable": null,
+                "definition": "DEF-overdue_61_90",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_90_plus",
+                "value": 6100,
+                "unavailable": null,
+                "definition": "DEF-overdue_90_plus",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "unbilled_completed_jobs",
+                "value": 12800,
+                "unavailable": null,
+                "definition": "DEF-unbilled",
+                "source": "servicem8",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              }
+            ],
+            "narrative": "Accounts receivable ageing for 2026-W42, in Australian dollars. Total owed: 48210. Not yet due: 21400. Overdue up to a month: 11860. Overdue one to two months: 5240. Overdue two to three months: 3610. Overdue more than three months: 6100. Completed jobs not yet invoiced: 12800.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT8",
+            "version": 1,
+            "publishedAt": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": [
+              "RPT8@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 7
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W42",
+              "2026-W43"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": [
+              "RPT8@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W43"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.total_owed",
+            "period": "2026-W43"
+          },
+          "response": {
+            "ok": true,
+            "value": 52935,
+            "asOf": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_total_owed",
+            "definitionId": "DEF-total_owed",
+            "source": "xero",
+            "asOf": "2026-10-18T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT9"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.current",
+            "period": "2026-W43"
+          },
+          "response": {
+            "ok": true,
+            "value": 22150,
+            "asOf": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_current",
+            "definitionId": "DEF-current",
+            "source": "xero",
+            "asOf": "2026-10-18T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT10"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_1_30",
+            "period": "2026-W43"
+          },
+          "response": {
+            "ok": true,
+            "value": 10420,
+            "asOf": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_1_30",
+            "definitionId": "DEF-overdue_1_30",
+            "source": "xero",
+            "asOf": "2026-10-18T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT11"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_31_60",
+            "period": "2026-W43"
+          },
+          "response": {
+            "ok": true,
+            "value": 6015,
+            "asOf": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_31_60",
+            "definitionId": "DEF-overdue_31_60",
+            "source": "xero",
+            "asOf": "2026-10-18T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT12"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_61_90",
+            "period": "2026-W43"
+          },
+          "response": {
+            "ok": true,
+            "value": 4950,
+            "asOf": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_61_90",
+            "definitionId": "DEF-overdue_61_90",
+            "source": "xero",
+            "asOf": "2026-10-18T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT13"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_90_plus",
+            "period": "2026-W43"
+          },
+          "response": {
+            "ok": true,
+            "value": 9400,
+            "asOf": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_90_plus",
+            "definitionId": "DEF-overdue_90_plus",
+            "source": "xero",
+            "asOf": "2026-10-18T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT14"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "servicem8",
+            "queryRef": "jobs.completed_not_invoiced",
+            "period": "2026-W43"
+          },
+          "response": {
+            "ok": false,
+            "reason": "source_unreachable"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "person": "Tom Reilly (operations manager)",
+            "measure": "unbilled_completed_jobs",
+            "period": "2026-W43",
+            "detail": "servicem8 could not be read: source_unreachable"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "report.source_unreadable",
+            "detail": "unbilled_completed_jobs for 2026-W43: servicem8 source_unreachable; owner Tom Reilly (operations manager)"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W43",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "ar_total_owed",
+                "value": 52935,
+                "unavailable": null,
+                "definition": "DEF-total_owed",
+                "source": "xero",
+                "asOf": "2026-10-18T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_current",
+                "value": 22150,
+                "unavailable": null,
+                "definition": "DEF-current",
+                "source": "xero",
+                "asOf": "2026-10-18T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_1_30",
+                "value": 10420,
+                "unavailable": null,
+                "definition": "DEF-overdue_1_30",
+                "source": "xero",
+                "asOf": "2026-10-18T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_31_60",
+                "value": 6015,
+                "unavailable": null,
+                "definition": "DEF-overdue_31_60",
+                "source": "xero",
+                "asOf": "2026-10-18T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_61_90",
+                "value": 4950,
+                "unavailable": null,
+                "definition": "DEF-overdue_61_90",
+                "source": "xero",
+                "asOf": "2026-10-18T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_90_plus",
+                "value": 9400,
+                "unavailable": null,
+                "definition": "DEF-overdue_90_plus",
+                "source": "xero",
+                "asOf": "2026-10-18T21:07:00.000Z"
+              },
+              {
+                "measure": "unbilled_completed_jobs",
+                "value": null,
+                "unavailable": "source_unreadable: source_unreachable",
+                "definition": null,
+                "source": null,
+                "asOf": null
+              }
+            ],
+            "narrative": "Accounts receivable ageing for 2026-W43, in Australian dollars. Total owed: 52935. Not yet due: 22150. Overdue up to a month: 10420. Overdue one to two months: 6015. Overdue two to three months: 4950. Overdue more than three months: 9400. Not available this week: Completed jobs not yet invoiced (source_unreadable: source_unreachable).",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT15",
+            "version": 1,
+            "publishedAt": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W43"
+          },
+          "response": {
+            "ids": [
+              "RPT15@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": [
+              "RPT8@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "no-narrative-invents-a-number",
+      "n": 6,
+      "title": "Prose on the report describes figures that exist and never states a number they do not carry",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every number in every published narrative equals a value on that report's figure list, or is the period label. A percentage or a difference the figures do not carry fails, whether or not it happens to be arithmetically right.",
+      "actual": "2026-W42/owner: invented []; 2026-W42/lender: invented []; 2026-W43/owner: invented []; 2026-W43/lender: invented []",
+      "stimulus": {
+        "description": "Two periods where the second's figures move against the first, so a comparison is tempting to write.",
+        "now": "2026-10-11T20:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "no-narrative-invents-a-number"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 7
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W42",
+              "2026-W43"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner",
+              "lender"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.total_owed",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 48210,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_total_owed",
+            "definitionId": "DEF-total_owed",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT1"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.current",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 21400,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_current",
+            "definitionId": "DEF-current",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT2"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_1_30",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 11860,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_1_30",
+            "definitionId": "DEF-overdue_1_30",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT3"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_31_60",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 5240,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_31_60",
+            "definitionId": "DEF-overdue_31_60",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT4"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_61_90",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 3610,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_61_90",
+            "definitionId": "DEF-overdue_61_90",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT5"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_90_plus",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 6100,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_90_plus",
+            "definitionId": "DEF-overdue_90_plus",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT6"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "servicem8",
+            "queryRef": "jobs.completed_not_invoiced",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 12800,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "unbilled_completed_jobs",
+            "definitionId": "DEF-unbilled",
+            "source": "servicem8",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT7"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W42",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "ar_total_owed",
+                "value": 48210,
+                "unavailable": null,
+                "definition": "DEF-total_owed",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_current",
+                "value": 21400,
+                "unavailable": null,
+                "definition": "DEF-current",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_1_30",
+                "value": 11860,
+                "unavailable": null,
+                "definition": "DEF-overdue_1_30",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_31_60",
+                "value": 5240,
+                "unavailable": null,
+                "definition": "DEF-overdue_31_60",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_61_90",
+                "value": 3610,
+                "unavailable": null,
+                "definition": "DEF-overdue_61_90",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_90_plus",
+                "value": 6100,
+                "unavailable": null,
+                "definition": "DEF-overdue_90_plus",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "unbilled_completed_jobs",
+                "value": 12800,
+                "unavailable": null,
+                "definition": "DEF-unbilled",
+                "source": "servicem8",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              }
+            ],
+            "narrative": "Accounts receivable ageing for 2026-W42, in Australian dollars. Total owed: 48210. Not yet due: 21400. Overdue up to a month: 11860. Overdue one to two months: 5240. Overdue two to three months: 3610. Overdue more than three months: 6100. Completed jobs not yet invoiced: 12800.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT8",
+            "version": 1,
+            "publishedAt": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W42",
+            "audienceId": "lender",
+            "figures": [
+              {
+                "measure": "ar_total_owed",
+                "value": 48210,
+                "unavailable": null,
+                "definition": "DEF-total_owed",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_90_plus",
+                "value": 6100,
+                "unavailable": null,
+                "definition": "DEF-overdue_90_plus",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              }
+            ],
+            "narrative": "Accounts receivable ageing for 2026-W42, in Australian dollars. Total owed: 48210. Overdue more than three months: 6100.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT9",
+            "version": 1,
+            "publishedAt": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": [
+              "RPT8@v1",
+              "RPT9@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 7
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W42",
+              "2026-W43"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner",
+              "lender"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": [
+              "RPT8@v1",
+              "RPT9@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W43"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.total_owed",
+            "period": "2026-W43"
+          },
+          "response": {
+            "ok": true,
+            "value": 52935,
+            "asOf": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_total_owed",
+            "definitionId": "DEF-total_owed",
+            "source": "xero",
+            "asOf": "2026-10-18T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT10"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.current",
+            "period": "2026-W43"
+          },
+          "response": {
+            "ok": true,
+            "value": 22150,
+            "asOf": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_current",
+            "definitionId": "DEF-current",
+            "source": "xero",
+            "asOf": "2026-10-18T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT11"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_1_30",
+            "period": "2026-W43"
+          },
+          "response": {
+            "ok": true,
+            "value": 10420,
+            "asOf": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_1_30",
+            "definitionId": "DEF-overdue_1_30",
+            "source": "xero",
+            "asOf": "2026-10-18T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT12"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_31_60",
+            "period": "2026-W43"
+          },
+          "response": {
+            "ok": true,
+            "value": 6015,
+            "asOf": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_31_60",
+            "definitionId": "DEF-overdue_31_60",
+            "source": "xero",
+            "asOf": "2026-10-18T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT13"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_61_90",
+            "period": "2026-W43"
+          },
+          "response": {
+            "ok": true,
+            "value": 4950,
+            "asOf": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_61_90",
+            "definitionId": "DEF-overdue_61_90",
+            "source": "xero",
+            "asOf": "2026-10-18T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT14"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_90_plus",
+            "period": "2026-W43"
+          },
+          "response": {
+            "ok": true,
+            "value": 9400,
+            "asOf": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_90_plus",
+            "definitionId": "DEF-overdue_90_plus",
+            "source": "xero",
+            "asOf": "2026-10-18T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT15"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "servicem8",
+            "queryRef": "jobs.completed_not_invoiced",
+            "period": "2026-W43"
+          },
+          "response": {
+            "ok": true,
+            "value": 9900,
+            "asOf": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "unbilled_completed_jobs",
+            "definitionId": "DEF-unbilled",
+            "source": "servicem8",
+            "asOf": "2026-10-18T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT16"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W43",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "ar_total_owed",
+                "value": 52935,
+                "unavailable": null,
+                "definition": "DEF-total_owed",
+                "source": "xero",
+                "asOf": "2026-10-18T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_current",
+                "value": 22150,
+                "unavailable": null,
+                "definition": "DEF-current",
+                "source": "xero",
+                "asOf": "2026-10-18T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_1_30",
+                "value": 10420,
+                "unavailable": null,
+                "definition": "DEF-overdue_1_30",
+                "source": "xero",
+                "asOf": "2026-10-18T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_31_60",
+                "value": 6015,
+                "unavailable": null,
+                "definition": "DEF-overdue_31_60",
+                "source": "xero",
+                "asOf": "2026-10-18T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_61_90",
+                "value": 4950,
+                "unavailable": null,
+                "definition": "DEF-overdue_61_90",
+                "source": "xero",
+                "asOf": "2026-10-18T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_90_plus",
+                "value": 9400,
+                "unavailable": null,
+                "definition": "DEF-overdue_90_plus",
+                "source": "xero",
+                "asOf": "2026-10-18T21:07:00.000Z"
+              },
+              {
+                "measure": "unbilled_completed_jobs",
+                "value": 9900,
+                "unavailable": null,
+                "definition": "DEF-unbilled",
+                "source": "servicem8",
+                "asOf": "2026-10-18T21:07:00.000Z"
+              }
+            ],
+            "narrative": "Accounts receivable ageing for 2026-W43, in Australian dollars. Total owed: 52935. Not yet due: 22150. Overdue up to a month: 10420. Overdue one to two months: 6015. Overdue two to three months: 4950. Overdue more than three months: 9400. Completed jobs not yet invoiced: 9900.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT17",
+            "version": 1,
+            "publishedAt": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W43",
+            "audienceId": "lender",
+            "figures": [
+              {
+                "measure": "ar_total_owed",
+                "value": 52935,
+                "unavailable": null,
+                "definition": "DEF-total_owed",
+                "source": "xero",
+                "asOf": "2026-10-18T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_90_plus",
+                "value": 9400,
+                "unavailable": null,
+                "definition": "DEF-overdue_90_plus",
+                "source": "xero",
+                "asOf": "2026-10-18T21:07:00.000Z"
+              }
+            ],
+            "narrative": "Accounts receivable ageing for 2026-W43, in Australian dollars. Total owed: 52935. Overdue more than three months: 9400.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT18",
+            "version": 1,
+            "publishedAt": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W43"
+          },
+          "response": {
+            "ids": [
+              "RPT17@v1",
+              "RPT18@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": [
+              "RPT8@v1",
+              "RPT9@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "variance-thresholds-route-to-a-person",
+      "n": 7,
+      "title": "A figure past its declared threshold against the prior period notifies a named person that run",
+      "verdict": "pass",
+      "held": true,
+      "expected": "In the second period's run a notification names that person and that measure. No notification in the first period, where there is nothing to compare. A crossing with no notification, or one sent to nobody in particular, fails.",
+      "actual": "Dan Kelly (director) / ar_overdue_90_plus / 2026-W43 at 2026-10-18T21:07:00.000Z",
+      "stimulus": {
+        "description": "A threshold on one measure with a named person, and two periods whose second value moves past it.",
+        "now": "2026-10-11T20:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "variance-thresholds-route-to-a-person"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 7
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W42",
+              "2026-W43"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.total_owed",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 48210,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_total_owed",
+            "definitionId": "DEF-total_owed",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT1"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.current",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 21400,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_current",
+            "definitionId": "DEF-current",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT2"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_1_30",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 11860,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_1_30",
+            "definitionId": "DEF-overdue_1_30",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT3"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_31_60",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 5240,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_31_60",
+            "definitionId": "DEF-overdue_31_60",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT4"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_61_90",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 3610,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_61_90",
+            "definitionId": "DEF-overdue_61_90",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT5"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_90_plus",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 6100,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_90_plus",
+            "definitionId": "DEF-overdue_90_plus",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT6"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "servicem8",
+            "queryRef": "jobs.completed_not_invoiced",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 12800,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "unbilled_completed_jobs",
+            "definitionId": "DEF-unbilled",
+            "source": "servicem8",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT7"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W42",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "ar_total_owed",
+                "value": 48210,
+                "unavailable": null,
+                "definition": "DEF-total_owed",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_current",
+                "value": 21400,
+                "unavailable": null,
+                "definition": "DEF-current",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_1_30",
+                "value": 11860,
+                "unavailable": null,
+                "definition": "DEF-overdue_1_30",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_31_60",
+                "value": 5240,
+                "unavailable": null,
+                "definition": "DEF-overdue_31_60",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_61_90",
+                "value": 3610,
+                "unavailable": null,
+                "definition": "DEF-overdue_61_90",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_90_plus",
+                "value": 6100,
+                "unavailable": null,
+                "definition": "DEF-overdue_90_plus",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "unbilled_completed_jobs",
+                "value": 12800,
+                "unavailable": null,
+                "definition": "DEF-unbilled",
+                "source": "servicem8",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              }
+            ],
+            "narrative": "Accounts receivable ageing for 2026-W42, in Australian dollars. Total owed: 48210. Not yet due: 21400. Overdue up to a month: 11860. Overdue one to two months: 5240. Overdue two to three months: 3610. Overdue more than three months: 6100. Completed jobs not yet invoiced: 12800.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT8",
+            "version": 1,
+            "publishedAt": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": [
+              "RPT8@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 7
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W42",
+              "2026-W43"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": [
+              "RPT8@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W43"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.total_owed",
+            "period": "2026-W43"
+          },
+          "response": {
+            "ok": true,
+            "value": 52935,
+            "asOf": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_total_owed",
+            "definitionId": "DEF-total_owed",
+            "source": "xero",
+            "asOf": "2026-10-18T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT9"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.current",
+            "period": "2026-W43"
+          },
+          "response": {
+            "ok": true,
+            "value": 22150,
+            "asOf": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_current",
+            "definitionId": "DEF-current",
+            "source": "xero",
+            "asOf": "2026-10-18T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT10"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_1_30",
+            "period": "2026-W43"
+          },
+          "response": {
+            "ok": true,
+            "value": 10420,
+            "asOf": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_1_30",
+            "definitionId": "DEF-overdue_1_30",
+            "source": "xero",
+            "asOf": "2026-10-18T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT11"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_31_60",
+            "period": "2026-W43"
+          },
+          "response": {
+            "ok": true,
+            "value": 6015,
+            "asOf": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_31_60",
+            "definitionId": "DEF-overdue_31_60",
+            "source": "xero",
+            "asOf": "2026-10-18T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT12"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_61_90",
+            "period": "2026-W43"
+          },
+          "response": {
+            "ok": true,
+            "value": 4950,
+            "asOf": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_61_90",
+            "definitionId": "DEF-overdue_61_90",
+            "source": "xero",
+            "asOf": "2026-10-18T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT13"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_90_plus",
+            "period": "2026-W43"
+          },
+          "response": {
+            "ok": true,
+            "value": 9400,
+            "asOf": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_90_plus",
+            "definitionId": "DEF-overdue_90_plus",
+            "source": "xero",
+            "asOf": "2026-10-18T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT14"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "servicem8",
+            "queryRef": "jobs.completed_not_invoiced",
+            "period": "2026-W43"
+          },
+          "response": {
+            "ok": true,
+            "value": 9900,
+            "asOf": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "unbilled_completed_jobs",
+            "definitionId": "DEF-unbilled",
+            "source": "servicem8",
+            "asOf": "2026-10-18T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT15"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W43",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "ar_total_owed",
+                "value": 52935,
+                "unavailable": null,
+                "definition": "DEF-total_owed",
+                "source": "xero",
+                "asOf": "2026-10-18T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_current",
+                "value": 22150,
+                "unavailable": null,
+                "definition": "DEF-current",
+                "source": "xero",
+                "asOf": "2026-10-18T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_1_30",
+                "value": 10420,
+                "unavailable": null,
+                "definition": "DEF-overdue_1_30",
+                "source": "xero",
+                "asOf": "2026-10-18T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_31_60",
+                "value": 6015,
+                "unavailable": null,
+                "definition": "DEF-overdue_31_60",
+                "source": "xero",
+                "asOf": "2026-10-18T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_61_90",
+                "value": 4950,
+                "unavailable": null,
+                "definition": "DEF-overdue_61_90",
+                "source": "xero",
+                "asOf": "2026-10-18T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_90_plus",
+                "value": 9400,
+                "unavailable": null,
+                "definition": "DEF-overdue_90_plus",
+                "source": "xero",
+                "asOf": "2026-10-18T21:07:00.000Z"
+              },
+              {
+                "measure": "unbilled_completed_jobs",
+                "value": 9900,
+                "unavailable": null,
+                "definition": "DEF-unbilled",
+                "source": "servicem8",
+                "asOf": "2026-10-18T21:07:00.000Z"
+              }
+            ],
+            "narrative": "Accounts receivable ageing for 2026-W43, in Australian dollars. Total owed: 52935. Not yet due: 22150. Overdue up to a month: 10420. Overdue one to two months: 6015. Overdue two to three months: 4950. Overdue more than three months: 9400. Completed jobs not yet invoiced: 9900.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT16",
+            "version": 1,
+            "publishedAt": "2026-10-18T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W43"
+          },
+          "response": {
+            "ids": [
+              "RPT16@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": [
+              "RPT8@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "person": "Dan Kelly (director)",
+            "measure": "ar_overdue_90_plus",
+            "period": "2026-W43",
+            "detail": "moved up past the threshold against 2026-W42"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-18T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "audience-gets-its-own-view",
+      "n": 8,
+      "title": "Each audience sees the figures declared for it and nothing else",
+      "verdict": "pass",
+      "held": true,
+      "expected": "For each audience a report exists whose figure measures are exactly the audience's declared measures. A figure outside the declaration, or a declared measure absent, fails.",
+      "actual": "owner: [ar_total_owed, ar_current, ar_overdue_1_30, ar_overdue_31_60, ar_overdue_61_90, ar_overdue_90_plus, unbilled_completed_jobs]; lender: [ar_total_owed, ar_overdue_90_plus]",
+      "stimulus": {
+        "description": "Two audiences: one declared for every measure, one declared for a subset.",
+        "now": "2026-10-11T20:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "audience-gets-its-own-view"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 7
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W42"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner",
+              "lender"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.total_owed",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 48210,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_total_owed",
+            "definitionId": "DEF-total_owed",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT1"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.current",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 21400,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_current",
+            "definitionId": "DEF-current",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT2"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_1_30",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 11860,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_1_30",
+            "definitionId": "DEF-overdue_1_30",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT3"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_31_60",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 5240,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_31_60",
+            "definitionId": "DEF-overdue_31_60",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT4"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_61_90",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 3610,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_61_90",
+            "definitionId": "DEF-overdue_61_90",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT5"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_90_plus",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 6100,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_90_plus",
+            "definitionId": "DEF-overdue_90_plus",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT6"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "servicem8",
+            "queryRef": "jobs.completed_not_invoiced",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 12800,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "unbilled_completed_jobs",
+            "definitionId": "DEF-unbilled",
+            "source": "servicem8",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT7"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W42",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "ar_total_owed",
+                "value": 48210,
+                "unavailable": null,
+                "definition": "DEF-total_owed",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_current",
+                "value": 21400,
+                "unavailable": null,
+                "definition": "DEF-current",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_1_30",
+                "value": 11860,
+                "unavailable": null,
+                "definition": "DEF-overdue_1_30",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_31_60",
+                "value": 5240,
+                "unavailable": null,
+                "definition": "DEF-overdue_31_60",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_61_90",
+                "value": 3610,
+                "unavailable": null,
+                "definition": "DEF-overdue_61_90",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_90_plus",
+                "value": 6100,
+                "unavailable": null,
+                "definition": "DEF-overdue_90_plus",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "unbilled_completed_jobs",
+                "value": 12800,
+                "unavailable": null,
+                "definition": "DEF-unbilled",
+                "source": "servicem8",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              }
+            ],
+            "narrative": "Accounts receivable ageing for 2026-W42, in Australian dollars. Total owed: 48210. Not yet due: 21400. Overdue up to a month: 11860. Overdue one to two months: 5240. Overdue two to three months: 3610. Overdue more than three months: 6100. Completed jobs not yet invoiced: 12800.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT8",
+            "version": 1,
+            "publishedAt": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W42",
+            "audienceId": "lender",
+            "figures": [
+              {
+                "measure": "ar_total_owed",
+                "value": 48210,
+                "unavailable": null,
+                "definition": "DEF-total_owed",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_90_plus",
+                "value": 6100,
+                "unavailable": null,
+                "definition": "DEF-overdue_90_plus",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              }
+            ],
+            "narrative": "Accounts receivable ageing for 2026-W42, in Australian dollars. Total owed: 48210. Overdue more than three months: 6100.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT9",
+            "version": 1,
+            "publishedAt": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": [
+              "RPT8@v1",
+              "RPT9@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "corrections-are-a-new-version",
+      "n": 9,
+      "title": "A published figure changes only by a named person publishing a new version with the reason",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "A gate call names the person and the reason before a new version is published. The new version supersedes the first and carries the person and the reason; the first version is unchanged and marked superseded. An in-place amendment of a published report fails.",
+      "actual": "RPT8 v1 superseded by schedule; RPT17 v2 published by Priya Shah (bookkeeper); 0 in-place amendment(s)",
+      "stimulus": {
+        "description": "One period published, then a named person asks for one figure to be corrected, with a reason.",
+        "now": "2026-10-11T20:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "corrections-are-a-new-version"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 7
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W42"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.total_owed",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 48210,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_total_owed",
+            "definitionId": "DEF-total_owed",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT1"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.current",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 21400,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_current",
+            "definitionId": "DEF-current",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT2"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_1_30",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 11860,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_1_30",
+            "definitionId": "DEF-overdue_1_30",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT3"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_31_60",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 5240,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_31_60",
+            "definitionId": "DEF-overdue_31_60",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT4"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_61_90",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 3610,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_61_90",
+            "definitionId": "DEF-overdue_61_90",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT5"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_90_plus",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 6100,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_90_plus",
+            "definitionId": "DEF-overdue_90_plus",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT6"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "servicem8",
+            "queryRef": "jobs.completed_not_invoiced",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 12800,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "unbilled_completed_jobs",
+            "definitionId": "DEF-unbilled",
+            "source": "servicem8",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT7"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W42",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "ar_total_owed",
+                "value": 48210,
+                "unavailable": null,
+                "definition": "DEF-total_owed",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_current",
+                "value": 21400,
+                "unavailable": null,
+                "definition": "DEF-current",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_1_30",
+                "value": 11860,
+                "unavailable": null,
+                "definition": "DEF-overdue_1_30",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_31_60",
+                "value": 5240,
+                "unavailable": null,
+                "definition": "DEF-overdue_31_60",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_61_90",
+                "value": 3610,
+                "unavailable": null,
+                "definition": "DEF-overdue_61_90",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_90_plus",
+                "value": 6100,
+                "unavailable": null,
+                "definition": "DEF-overdue_90_plus",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "unbilled_completed_jobs",
+                "value": 12800,
+                "unavailable": null,
+                "definition": "DEF-unbilled",
+                "source": "servicem8",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              }
+            ],
+            "narrative": "Accounts receivable ageing for 2026-W42, in Australian dollars. Total owed: 48210. Not yet due: 21400. Overdue up to a month: 11860. Overdue one to two months: 5240. Overdue two to three months: 3610. Overdue more than three months: 6100. Completed jobs not yet invoiced: 12800.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT8",
+            "version": 1,
+            "publishedAt": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": [
+              "RPT8@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 7
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W42"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": [
+              "RPT8@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": [
+              "RPT8@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "correction": "RPT8",
+            "person": "Priya Shah (bookkeeper)",
+            "reason": "credit note CN-0412 was entered against the wrong contact"
+          },
+          "response": {
+            "approved": true
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_total_owed",
+            "definitionId": "DEF-total_owed",
+            "source": "correction COR9 by Priya Shah (bookkeeper)",
+            "asOf": "2026-10-11T22:37:00.000Z"
+          },
+          "response": {
+            "id": "CIT10"
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_current",
+            "definitionId": "DEF-current",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT11"
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_1_30",
+            "definitionId": "DEF-overdue_1_30",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT12"
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_31_60",
+            "definitionId": "DEF-overdue_31_60",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT13"
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_61_90",
+            "definitionId": "DEF-overdue_61_90",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT14"
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_90_plus",
+            "definitionId": "DEF-overdue_90_plus",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT15"
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "unbilled_completed_jobs",
+            "definitionId": "DEF-unbilled",
+            "source": "servicem8",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT16"
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W42",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "ar_total_owed",
+                "value": 46760,
+                "unavailable": null,
+                "definition": "DEF-total_owed",
+                "source": "correction COR9 by Priya Shah (bookkeeper)",
+                "asOf": "2026-10-11T22:37:00.000Z"
+              },
+              {
+                "measure": "ar_current",
+                "value": 21400,
+                "unavailable": null,
+                "definition": "DEF-current",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_1_30",
+                "value": 11860,
+                "unavailable": null,
+                "definition": "DEF-overdue_1_30",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_31_60",
+                "value": 5240,
+                "unavailable": null,
+                "definition": "DEF-overdue_31_60",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_61_90",
+                "value": 3610,
+                "unavailable": null,
+                "definition": "DEF-overdue_61_90",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_90_plus",
+                "value": 6100,
+                "unavailable": null,
+                "definition": "DEF-overdue_90_plus",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "unbilled_completed_jobs",
+                "value": 12800,
+                "unavailable": null,
+                "definition": "DEF-unbilled",
+                "source": "servicem8",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              }
+            ],
+            "narrative": "Accounts receivable ageing for 2026-W42, in Australian dollars. Total owed: 46760. Not yet due: 21400. Overdue up to a month: 11860. Overdue one to two months: 5240. Overdue two to three months: 3610. Overdue more than three months: 6100. Completed jobs not yet invoiced: 12800.",
+            "supersedes": "RPT8",
+            "by": "Priya Shah (bookkeeper)",
+            "reason": "credit note CN-0412 was entered against the wrong contact"
+          },
+          "response": {
+            "id": "RPT17",
+            "version": 2,
+            "publishedAt": "2026-10-11T22:37:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": [
+              "RPT8@v1",
+              "RPT17@v2"
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "the-record-by-period",
+      "n": 10,
+      "title": "For any period: the figures, definitions, sources, as-of times, versions and who published, retrievable",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A read by period returns every version of every view. Each valued figure carries a definition id, a source and an as-of time. Each version carries who published it and, for a correction, the reason. A record missing any of those fails.",
+      "actual": "owner v1 superseded by schedule; lender v1 superseded by schedule; owner v2 published by Priya Shah (bookkeeper); lender v2 published by Priya Shah (bookkeeper)",
+      "stimulus": {
+        "description": "One period published to two audiences, then corrected once.",
+        "now": "2026-10-11T20:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "the-record-by-period"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 7
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W42"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner",
+              "lender"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.total_owed",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 48210,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_total_owed",
+            "definitionId": "DEF-total_owed",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT1"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.current",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 21400,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_current",
+            "definitionId": "DEF-current",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT2"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_1_30",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 11860,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_1_30",
+            "definitionId": "DEF-overdue_1_30",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT3"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_31_60",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 5240,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_31_60",
+            "definitionId": "DEF-overdue_31_60",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT4"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_61_90",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 3610,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_61_90",
+            "definitionId": "DEF-overdue_61_90",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT5"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "aged_receivables.overdue_90_plus",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 6100,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_90_plus",
+            "definitionId": "DEF-overdue_90_plus",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT6"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "servicem8",
+            "queryRef": "jobs.completed_not_invoiced",
+            "period": "2026-W42"
+          },
+          "response": {
+            "ok": true,
+            "value": 12800,
+            "asOf": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "unbilled_completed_jobs",
+            "definitionId": "DEF-unbilled",
+            "source": "servicem8",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT7"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W42",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "ar_total_owed",
+                "value": 48210,
+                "unavailable": null,
+                "definition": "DEF-total_owed",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_current",
+                "value": 21400,
+                "unavailable": null,
+                "definition": "DEF-current",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_1_30",
+                "value": 11860,
+                "unavailable": null,
+                "definition": "DEF-overdue_1_30",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_31_60",
+                "value": 5240,
+                "unavailable": null,
+                "definition": "DEF-overdue_31_60",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_61_90",
+                "value": 3610,
+                "unavailable": null,
+                "definition": "DEF-overdue_61_90",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_90_plus",
+                "value": 6100,
+                "unavailable": null,
+                "definition": "DEF-overdue_90_plus",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "unbilled_completed_jobs",
+                "value": 12800,
+                "unavailable": null,
+                "definition": "DEF-unbilled",
+                "source": "servicem8",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              }
+            ],
+            "narrative": "Accounts receivable ageing for 2026-W42, in Australian dollars. Total owed: 48210. Not yet due: 21400. Overdue up to a month: 11860. Overdue one to two months: 5240. Overdue two to three months: 3610. Overdue more than three months: 6100. Completed jobs not yet invoiced: 12800.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT8",
+            "version": 1,
+            "publishedAt": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W42",
+            "audienceId": "lender",
+            "figures": [
+              {
+                "measure": "ar_total_owed",
+                "value": 48210,
+                "unavailable": null,
+                "definition": "DEF-total_owed",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_90_plus",
+                "value": 6100,
+                "unavailable": null,
+                "definition": "DEF-overdue_90_plus",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              }
+            ],
+            "narrative": "Accounts receivable ageing for 2026-W42, in Australian dollars. Total owed: 48210. Overdue more than three months: 6100.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT9",
+            "version": 1,
+            "publishedAt": "2026-10-11T21:07:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": [
+              "RPT8@v1",
+              "RPT9@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T21:07:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 7
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W42"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner",
+              "lender"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": [
+              "RPT8@v1",
+              "RPT9@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": [
+              "RPT8@v1",
+              "RPT9@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "correction": "RPT9",
+            "person": "Priya Shah (bookkeeper)",
+            "reason": "credit note CN-0412 was entered against the wrong contact"
+          },
+          "response": {
+            "approved": true
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_total_owed",
+            "definitionId": "DEF-total_owed",
+            "source": "correction COR10 by Priya Shah (bookkeeper)",
+            "asOf": "2026-10-11T22:37:00.000Z"
+          },
+          "response": {
+            "id": "CIT11"
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_current",
+            "definitionId": "DEF-current",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT12"
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_1_30",
+            "definitionId": "DEF-overdue_1_30",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT13"
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_31_60",
+            "definitionId": "DEF-overdue_31_60",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT14"
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_61_90",
+            "definitionId": "DEF-overdue_61_90",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT15"
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_90_plus",
+            "definitionId": "DEF-overdue_90_plus",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT16"
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "unbilled_completed_jobs",
+            "definitionId": "DEF-unbilled",
+            "source": "servicem8",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT17"
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W42",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "ar_total_owed",
+                "value": 46760,
+                "unavailable": null,
+                "definition": "DEF-total_owed",
+                "source": "correction COR10 by Priya Shah (bookkeeper)",
+                "asOf": "2026-10-11T22:37:00.000Z"
+              },
+              {
+                "measure": "ar_current",
+                "value": 21400,
+                "unavailable": null,
+                "definition": "DEF-current",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_1_30",
+                "value": 11860,
+                "unavailable": null,
+                "definition": "DEF-overdue_1_30",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_31_60",
+                "value": 5240,
+                "unavailable": null,
+                "definition": "DEF-overdue_31_60",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_61_90",
+                "value": 3610,
+                "unavailable": null,
+                "definition": "DEF-overdue_61_90",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_90_plus",
+                "value": 6100,
+                "unavailable": null,
+                "definition": "DEF-overdue_90_plus",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              },
+              {
+                "measure": "unbilled_completed_jobs",
+                "value": 12800,
+                "unavailable": null,
+                "definition": "DEF-unbilled",
+                "source": "servicem8",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              }
+            ],
+            "narrative": "Accounts receivable ageing for 2026-W42, in Australian dollars. Total owed: 46760. Not yet due: 21400. Overdue up to a month: 11860. Overdue one to two months: 5240. Overdue two to three months: 3610. Overdue more than three months: 6100. Completed jobs not yet invoiced: 12800.",
+            "supersedes": "RPT8",
+            "by": "Priya Shah (bookkeeper)",
+            "reason": "credit note CN-0412 was entered against the wrong contact"
+          },
+          "response": {
+            "id": "RPT18",
+            "version": 2,
+            "publishedAt": "2026-10-11T22:37:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_total_owed",
+            "definitionId": "DEF-total_owed",
+            "source": "correction COR10 by Priya Shah (bookkeeper)",
+            "asOf": "2026-10-11T22:37:00.000Z"
+          },
+          "response": {
+            "id": "CIT19"
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "ar_overdue_90_plus",
+            "definitionId": "DEF-overdue_90_plus",
+            "source": "xero",
+            "asOf": "2026-10-11T21:07:00.000Z"
+          },
+          "response": {
+            "id": "CIT20"
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W42",
+            "audienceId": "lender",
+            "figures": [
+              {
+                "measure": "ar_total_owed",
+                "value": 46760,
+                "unavailable": null,
+                "definition": "DEF-total_owed",
+                "source": "correction COR10 by Priya Shah (bookkeeper)",
+                "asOf": "2026-10-11T22:37:00.000Z"
+              },
+              {
+                "measure": "ar_overdue_90_plus",
+                "value": 6100,
+                "unavailable": null,
+                "definition": "DEF-overdue_90_plus",
+                "source": "xero",
+                "asOf": "2026-10-11T21:07:00.000Z"
+              }
+            ],
+            "narrative": "Accounts receivable ageing for 2026-W42, in Australian dollars. Total owed: 46760. Overdue more than three months: 6100.",
+            "supersedes": "RPT9",
+            "by": "Priya Shah (bookkeeper)",
+            "reason": "credit note CN-0412 was entered against the wrong contact"
+          },
+          "response": {
+            "id": "RPT21",
+            "version": 2,
+            "publishedAt": "2026-10-11T22:37:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-11T22:37:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W42"
+          },
+          "response": {
+            "ids": [
+              "RPT8@v1",
+              "RPT9@v1",
+              "RPT18@v2",
+              "RPT21@v2"
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 11,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the definitions and the schedule runs on.",
+        "now": "2026-11-03T13:05:20.737Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 12,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "Both periods published at their scheduled time. The figure over the offline source is unavailable with the reason and its owner told. The crossed threshold notified its person. The correction exists as a new version with a name and a reason, and the first version is still readable.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "Two real scheduled periods on the business's own sources, with one source taken offline before the second run and one correction requested by a named person.",
+        "now": "2026-11-03T13:05:20.737Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 12,
+    "pass": 9,
+    "fail": 0,
+    "shapeOnly": 1,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
