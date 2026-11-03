@@ -1,0 +1,63 @@
+{
+  "slug": "invoice-pair",
+  "name": "Invoice Pair",
+  "office_task": "Every morning, check our Harvest invoices against the ledger by invoice id, show each difference with both values, and fix one only once a named person accepts it.",
+  "verticals": ["b2b-office"],
+  "standards": ["two-records"],
+  "systems_of_record": ["Harvest (issues the invoice and its id)", "Balances (the ledger that records payment against the Harvest invoice id)"],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/invoice-pair" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "payment.received", "wake": "webhook" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "report.published",
+      "write": "the run's report into the shared reconciliation log: contract id, the key it joined on, the master per field, and the five counts (matched, within tolerance, mismatched, orphaned, corrected), the all-clear included",
+      "readback": "the log returns a report_id, and reading that id back returns the run with its contract id and counts; no id back means the run did not publish and the owner is told"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the Harvest invoice id naming the contract owner: an open difference with both values and the master's value awaiting acceptance, an orphan on one side, a difference over the threshold amount, a run over the mismatch rate, or a correction whose write returned no id",
+      "readback": "the exception desk returns an exception_id, and reading it back returns the Harvest invoice id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "two_records.no_contract",
+      "two_records.no_master",
+      "two_records.no_master_for_field",
+      "two_records.difference_open",
+      "two_records.orphan",
+      "two_records.over_threshold",
+      "two_records.mismatch_rate",
+      "two_records.write_not_read_back"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "seam-mirror",
+    "fields": [
+      "seam.harvest_invoice_id",
+      "seam.contract_id",
+      "seam.difference_status",
+      "seam.value_harvest",
+      "seam.value_ledger",
+      "seam.correction_accepted_by",
+      "seam.correction_written_id",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Invoice Mirror",
+    "original_author": "Jerrod Tuck",
+    "share_link": "https://x.ai/bot/HwckXN5Yd1uxRu86msyfj",
+    "licence_or_permission": "reimplementation"
+  }
+}
