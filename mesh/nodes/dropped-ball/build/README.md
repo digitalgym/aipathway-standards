@@ -1,10 +1,8 @@
-# Dropped-Ball Scanner: follow-up-build-standard conformance harness
+# Follow-Up Sweep: follow-up-build-standard conformance harness
 
-A port of "Dropped-Ball Scanner" by Austen Allred
-(https://x.ai/bot/E-uo4CQ__9GjtWYhWLPQF), reimplemented from AIP-BS-FOLLOW-UP
-2026-10-05. Nothing is taken from the original bot beyond its public
-one-liner: an evening sweep that finds unanswered requests and promises with
-no next step, with a recovery touch for each. In the standard's terms, the
+An original AI Pathway build, written from AIP-BS-FOLLOW-UP 2026-10-05. It
+sweeps for things other people owe the business, each evening, with one
+follow-up touch for each. In the standard's terms, the
 sweep works the register of things owed to the business that are not money,
 and holds any item where the ball is with the business itself.
 
