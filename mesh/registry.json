@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-03T12:05:35.578Z",
+  "generated_at": "2026-11-03T12:08:05.313Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -100,6 +100,98 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 9
+        }
+      ]
+    },
+    {
+      "slug": "bill-check",
+      "name": "Bill Check",
+      "office_task": "Check every supplier bill that lands in the ledger against its purchase order before anyone books or pays it, and put each one in exactly one queue for a person.",
+      "verticals": [
+        "accounting-bookkeeping"
+      ],
+      "standards": [
+        "invoice-check"
+      ],
+      "systems_of_record": [
+        "Xero or MYOB (the ledger that issues the bill_id and holds the purchase orders)",
+        "the document store where the written variation approvals live"
+      ],
+      "consumes": [
+        {
+          "event": "bill.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "exception.raised",
+          "write": "an exception record on the bill naming the person who owns it: the check that failed and the checks that never ran, the difference in dollars, the source document, and its queue (needs a decision, waiting on the supplier, or blocked: no purchase order, or scope with no written approval)",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the bill_id, the failed check, the dollar difference, the source document and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "bill.no_source_document",
+          "bill.no_purchase_order",
+          "bill.rate_mismatch",
+          "bill.quantity_over_complete",
+          "bill.unapproved_scope",
+          "bill.contract_sum_overrun"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.bill_id",
+          "seam.order_ref",
+          "seam.queue",
+          "seam.failed_check",
+          "seam.never_ran",
+          "seam.difference",
+          "seam.tolerance_version",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/bill-check"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "invoice-check",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T11:03:40.022Z",
+          "run_id": "run-1793703820021",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 11
         }
       ]
     },
@@ -299,6 +391,87 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 10
+        }
+      ]
+    },
+    {
+      "slug": "dropped-ball",
+      "name": "Follow-Up Sweep",
+      "office_task": "Every evening, find what customers and suppliers still owe us that nobody chased, send the next capped follow-up on a consented channel, and hand any no or dead end to a named person.",
+      "verticals": [
+        "b2b-office"
+      ],
+      "standards": [
+        "follow-up"
+      ],
+      "systems_of_record": [
+        "the register of open items on the business's own records (the job system's quotes and variations, or a sheet kept beside it), with its contact consents and written cadence"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "exception.raised",
+          "write": "an escalation on the open item naming the person who now owns it, for a no, a dispute, a stop-contacting-me, or the cadence cap reached with nothing back, carrying every touch so far",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the item id, the reason, the exception_owner and the touch history; no id back means nothing was raised and the item is not touched again that run"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "follow_up.declined",
+          "follow_up.disputed",
+          "follow_up.cap_reached"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "item.status",
+          "item.touches",
+          "item.outcome",
+          "item.arrival_evidence_ref",
+          "item.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/dropped-ball"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "follow-up",
+          "edition": "2026-10-05",
+          "environment": "stub",
+          "ran_at": "2026-11-03T11:04:06.468Z",
+          "run_id": "run-1793703846466",
+          "green": 10,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 13
         }
       ]
     },
@@ -1020,8 +1193,10 @@
   ],
   "routable": [
     "after-hours-desk",
+    "bill-check",
     "comp-report",
     "deadline-desk",
+    "dropped-ball",
     "inbox-desk",
     "open-home-desk",
     "permit-answers",
