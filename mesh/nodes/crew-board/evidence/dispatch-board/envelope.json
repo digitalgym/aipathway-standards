@@ -1,0 +1,2843 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793710180884",
+  "standard": "dispatch-board-build-standard",
+  "spec": "AIP-BS-DISPATCH-BOARD",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-03T12:49:40.875Z",
+  "finishedAt": "2026-11-03T12:49:40.884Z",
+  "results": [
+    {
+      "checkId": "address-verified-before-slot",
+      "n": 1,
+      "title": "No slot until the address resolves",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The resolve call precedes the slot write for the first job and the slot carries the resolved address. No slot exists for the second job. A slot on an unresolved address fails.",
+      "actual": "12 port call(s); slots J-1@T-ARI 2026-09-26T21:00:00.000Z-2026-09-26T22:00:00.000Z; escalations J-2:address_unresolved:Lee Tran; messages 1; notices 1",
+      "stimulus": {
+        "description": "Two jobs in the system: one with an address that resolves, one with an address that does not.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "address-verified-before-slot"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "ids": [
+              "J-1",
+              "J-2"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T-ARI"
+            ],
+            "slots": 0,
+            "dispatcher": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J-1"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "14 Banksia St Aspley"
+          },
+          "response": {
+            "resolved": "14 Banksia Street, Aspley QLD 4034"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "jobId": "J-1",
+            "techId": "T-ARI",
+            "start": "2026-09-26T21:00:00.000Z",
+            "end": "2026-09-26T22:00:00.000Z",
+            "address": "14 Banksia Street, Aspley QLD 4034",
+            "by": {
+              "rule": "crew-board/v1"
+            }
+          },
+          "response": {
+            "id": "S1",
+            "externalId": "js-S1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C-1",
+            "channel": "sms"
+          },
+          "response": {
+            "givenAt": "2026-09-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "to": "C-1",
+            "channel": "sms",
+            "slotId": "S1",
+            "bodyRef": "J-1:v1:booked"
+          },
+          "response": {
+            "id": "M2",
+            "sentAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "slotId": "S1",
+            "ref": "message:M2@2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T-ARI",
+            "jobId": "J-1",
+            "address": "14 Banksia Street, Aspley QLD 4034",
+            "window": {
+              "from": "2026-09-27T07:00:00+10:00",
+              "to": "2026-09-27T12:00:00+10:00"
+            },
+            "customerSaid": "Front lawn is knee high and the side gate sticks."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J-2"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "Unit 4 the one near the servo"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "jobId": "J-2",
+            "reason": "address_unresolved",
+            "owner": "Lee Tran"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "licence-is-a-rule-not-a-vibe",
+      "n": 2,
+      "title": "A licence requirement is a rule read from the record, never assumed",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The rule for the code is read before the slot is written and the assigned tech is the one holding the current licence. An assignment to the expired or unlicensed tech fails.",
+      "actual": "10 port call(s); slots J-1@T-SAM 2026-09-26T21:00:00.000Z-2026-09-26T22:00:00.000Z; escalations none; messages 1; notices 1",
+      "stimulus": {
+        "description": "A gas job and three techs: one holding a current gas licence, one whose gas licence has expired, one with no licence at all.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "licence-is-a-rule-not-a-vibe"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J-1"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T-ARI",
+              "T-JO",
+              "T-SAM"
+            ],
+            "slots": 0,
+            "dispatcher": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J-1"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "14 Banksia St Aspley"
+          },
+          "response": {
+            "resolved": "14 Banksia Street, Aspley QLD 4034"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "licence": "plumbing"
+          },
+          "response": {
+            "holders": [
+              "T-JO:expired",
+              "T-SAM:current"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "jobId": "J-1",
+            "techId": "T-SAM",
+            "start": "2026-09-26T21:00:00.000Z",
+            "end": "2026-09-26T22:00:00.000Z",
+            "address": "14 Banksia Street, Aspley QLD 4034",
+            "by": {
+              "rule": "crew-board/v1"
+            }
+          },
+          "response": {
+            "id": "S1",
+            "externalId": "js-S1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C-1",
+            "channel": "sms"
+          },
+          "response": {
+            "givenAt": "2026-09-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "to": "C-1",
+            "channel": "sms",
+            "slotId": "S1",
+            "bodyRef": "J-1:v1:booked"
+          },
+          "response": {
+            "id": "M2",
+            "sentAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "slotId": "S1",
+            "ref": "message:M2@2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T-SAM",
+            "jobId": "J-1",
+            "address": "14 Banksia Street, Aspley QLD 4034",
+            "window": {
+              "from": "2026-09-27T07:00:00+10:00",
+              "to": "2026-09-27T12:00:00+10:00"
+            },
+            "customerSaid": "Council letter says the backflow valve test is overdue."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "window-and-travel-are-data",
+      "n": 3,
+      "title": "The slot sits inside the customer's window and after the previous job plus travel",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "Each slot is inside its job's window. The second slot starts at or after the first slot's end plus the travel read between the two addresses. A slot that overlaps, or starts before the travel allows, fails.",
+      "actual": "30 port call(s); slots J-1@T-ARI 2026-09-26T21:00:00.000Z-2026-09-26T22:00:00.000Z, J-2@T-ARI 2026-09-26T22:45:00.000Z-2026-09-26T23:45:00.000Z, J-3@T-ARI 2026-09-27T00:30:00.000Z-2026-09-27T01:30:00.000Z; escalations none; messages 3; notices 3",
+      "stimulus": {
+        "description": "Two jobs on one tech with morning windows and a travel table between their resolved addresses.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "window-and-travel-are-data"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "J-1",
+              "J-2",
+              "J-3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T-ARI"
+            ],
+            "slots": 0,
+            "dispatcher": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J-1"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "14 Banksia St Aspley"
+          },
+          "response": {
+            "resolved": "14 Banksia Street, Aspley QLD 4034"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "jobId": "J-1",
+            "techId": "T-ARI",
+            "start": "2026-09-26T21:00:00.000Z",
+            "end": "2026-09-26T22:00:00.000Z",
+            "address": "14 Banksia Street, Aspley QLD 4034",
+            "by": {
+              "rule": "crew-board/v1"
+            }
+          },
+          "response": {
+            "id": "S1",
+            "externalId": "js-S1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C-1",
+            "channel": "sms"
+          },
+          "response": {
+            "givenAt": "2026-09-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "to": "C-1",
+            "channel": "sms",
+            "slotId": "S1",
+            "bodyRef": "J-1:v1:booked"
+          },
+          "response": {
+            "id": "M2",
+            "sentAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "slotId": "S1",
+            "ref": "message:M2@2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T-ARI",
+            "jobId": "J-1",
+            "address": "14 Banksia Street, Aspley QLD 4034",
+            "window": {
+              "from": "2026-09-27T07:00:00+10:00",
+              "to": "2026-09-27T09:00:00+10:00"
+            },
+            "customerSaid": "Front lawn is knee high and the side gate sticks."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J-2"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "3 Wattle Ct Chermside"
+          },
+          "response": {
+            "resolved": "3 Wattle Court, Chermside QLD 4032"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "travel": {
+              "from": "14 Banksia Street, Aspley QLD 4034",
+              "to": "3 Wattle Court, Chermside QLD 4032"
+            }
+          },
+          "response": {
+            "ms": 2700000
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "travel": {
+              "from": "14 Banksia Street, Aspley QLD 4034",
+              "to": "3 Wattle Court, Chermside QLD 4032"
+            }
+          },
+          "response": {
+            "ms": 2700000
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "travel": {
+              "from": "14 Banksia Street, Aspley QLD 4034",
+              "to": "3 Wattle Court, Chermside QLD 4032"
+            }
+          },
+          "response": {
+            "ms": 2700000
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "jobId": "J-2",
+            "techId": "T-ARI",
+            "start": "2026-09-26T22:45:00.000Z",
+            "end": "2026-09-26T23:45:00.000Z",
+            "address": "3 Wattle Court, Chermside QLD 4032",
+            "by": {
+              "rule": "crew-board/v1"
+            }
+          },
+          "response": {
+            "id": "S3",
+            "externalId": "js-S3"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C-2",
+            "channel": "sms"
+          },
+          "response": {
+            "givenAt": "2026-09-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "to": "C-2",
+            "channel": "sms",
+            "slotId": "S3",
+            "bodyRef": "J-2:v1:booked"
+          },
+          "response": {
+            "id": "M4",
+            "sentAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "slotId": "S3",
+            "ref": "message:M4@2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T-ARI",
+            "jobId": "J-2",
+            "address": "3 Wattle Court, Chermside QLD 4032",
+            "window": {
+              "from": "2026-09-27T08:30:00+10:00",
+              "to": "2026-09-27T10:00:00+10:00"
+            },
+            "customerSaid": "Front lawn is knee high and the side gate sticks."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J-3"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "88 Gympie Rd Kedron"
+          },
+          "response": {
+            "resolved": "88 Gympie Road, Kedron QLD 4031"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "travel": {
+              "from": "14 Banksia Street, Aspley QLD 4034",
+              "to": "88 Gympie Road, Kedron QLD 4031"
+            }
+          },
+          "response": {
+            "ms": 300000
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "travel": {
+              "from": "3 Wattle Court, Chermside QLD 4032",
+              "to": "88 Gympie Road, Kedron QLD 4031"
+            }
+          },
+          "response": {
+            "ms": 300000
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "travel": {
+              "from": "14 Banksia Street, Aspley QLD 4034",
+              "to": "88 Gympie Road, Kedron QLD 4031"
+            }
+          },
+          "response": {
+            "ms": 300000
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "travel": {
+              "from": "3 Wattle Court, Chermside QLD 4032",
+              "to": "88 Gympie Road, Kedron QLD 4031"
+            }
+          },
+          "response": {
+            "ms": 300000
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "jobId": "J-3",
+            "techId": "T-ARI",
+            "start": "2026-09-27T00:30:00.000Z",
+            "end": "2026-09-27T01:30:00.000Z",
+            "address": "88 Gympie Road, Kedron QLD 4031",
+            "by": {
+              "rule": "crew-board/v1"
+            }
+          },
+          "response": {
+            "id": "S5",
+            "externalId": "js-S5"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C-3",
+            "channel": "sms"
+          },
+          "response": {
+            "givenAt": "2026-09-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "to": "C-3",
+            "channel": "sms",
+            "slotId": "S5",
+            "bodyRef": "J-3:v1:booked"
+          },
+          "response": {
+            "id": "M6",
+            "sentAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "slotId": "S5",
+            "ref": "message:M6@2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T-ARI",
+            "jobId": "J-3",
+            "address": "88 Gympie Road, Kedron QLD 4031",
+            "window": {
+              "from": "2026-09-27T10:30:00+10:00",
+              "to": "2026-09-27T12:30:00+10:00"
+            },
+            "customerSaid": "Front lawn is knee high and the side gate sticks."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-slot-per-job",
+      "n": 4,
+      "title": "One slot per job, written once, updated on a second event",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Exactly one slot exists for the job, with an external id, and the second event produced an update or no write. The write that returned no id was escalated and nothing was sent about it. A second slot, or a null id treated as success, fails.",
+      "actual": "25 port call(s); slots J-1@T-ARI 2026-09-26T21:00:00.000Z-2026-09-26T22:00:00.000Z, J-F@T-ARI 2026-09-26T22:30:00.000Z-2026-09-26T23:30:00.000Z; escalations J-F:write_failed:Lee Tran; messages 2; notices 2",
+      "stimulus": {
+        "description": "The same job's scheduling event delivered twice, and one write that returns no id.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-slot-per-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "ids": [
+              "J-F",
+              "J-1"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T-ARI"
+            ],
+            "slots": 0,
+            "dispatcher": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J-F"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "88 Gympie Rd Kedron"
+          },
+          "response": {
+            "resolved": "88 Gympie Road, Kedron QLD 4031"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "jobId": "J-F",
+            "techId": "T-ARI",
+            "start": "2026-09-26T21:00:00.000Z"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "jobId": "J-F",
+            "reason": "write_failed",
+            "owner": "Lee Tran"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J-1"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "14 Banksia St Aspley"
+          },
+          "response": {
+            "resolved": "14 Banksia Street, Aspley QLD 4034"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "jobId": "J-1",
+            "techId": "T-ARI",
+            "start": "2026-09-26T21:00:00.000Z",
+            "end": "2026-09-26T22:00:00.000Z",
+            "address": "14 Banksia Street, Aspley QLD 4034",
+            "by": {
+              "rule": "crew-board/v1"
+            }
+          },
+          "response": {
+            "id": "S1",
+            "externalId": "js-S1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C-1",
+            "channel": "sms"
+          },
+          "response": {
+            "givenAt": "2026-09-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "to": "C-1",
+            "channel": "sms",
+            "slotId": "S1",
+            "bodyRef": "J-1:v1:booked"
+          },
+          "response": {
+            "id": "M2",
+            "sentAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "slotId": "S1",
+            "ref": "message:M2@2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T-ARI",
+            "jobId": "J-1",
+            "address": "14 Banksia Street, Aspley QLD 4034",
+            "window": {
+              "from": "2026-09-27T07:00:00+10:00",
+              "to": "2026-09-27T12:00:00+10:00"
+            },
+            "customerSaid": "Front lawn is knee high and the side gate sticks."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "ids": [
+              "J-F",
+              "J-1"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T-ARI"
+            ],
+            "slots": 1,
+            "dispatcher": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J-F"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "88 Gympie Rd Kedron"
+          },
+          "response": {
+            "resolved": "88 Gympie Road, Kedron QLD 4031"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "travel": {
+              "from": "14 Banksia Street, Aspley QLD 4034",
+              "to": "88 Gympie Road, Kedron QLD 4031"
+            }
+          },
+          "response": {
+            "ms": 1800000
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "travel": {
+              "from": "14 Banksia Street, Aspley QLD 4034",
+              "to": "88 Gympie Road, Kedron QLD 4031"
+            }
+          },
+          "response": {
+            "ms": 1800000
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "jobId": "J-F",
+            "techId": "T-ARI",
+            "start": "2026-09-26T22:30:00.000Z",
+            "end": "2026-09-26T23:30:00.000Z",
+            "address": "88 Gympie Road, Kedron QLD 4031",
+            "by": {
+              "rule": "crew-board/v1"
+            }
+          },
+          "response": {
+            "id": "S3",
+            "externalId": "js-S3"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C-F",
+            "channel": "sms"
+          },
+          "response": {
+            "givenAt": "2026-09-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "to": "C-F",
+            "channel": "sms",
+            "slotId": "S3",
+            "bodyRef": "J-F:v1:booked"
+          },
+          "response": {
+            "id": "M4",
+            "sentAt": "2026-09-26T01:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "slotId": "S3",
+            "ref": "message:M4@2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T-ARI",
+            "jobId": "J-F",
+            "address": "88 Gympie Road, Kedron QLD 4031",
+            "window": {
+              "from": "2026-09-27T07:00:00+10:00",
+              "to": "2026-09-27T10:00:00+10:00"
+            },
+            "customerSaid": "Front lawn is knee high and the side gate sticks."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J-1"
+          },
+          "response": {
+            "slotId": "S1",
+            "externalId": "js-S1",
+            "jobVersion": 1
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "emergency-displaces-with-a-person",
+      "n": 5,
+      "title": "An emergency takes a slot only when a named dispatcher accepts the displacement",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "A gate call naming the dispatcher, with an acceptance, precedes the emergency's slot write. The displaced job still has exactly one slot, marked with what displaced it, and it either sits outside the emergency's time or has an escalation naming an owner. An emergency slot with no acceptance, or a displaced job with no slot and no escalation, fails.",
+      "actual": "28 port call(s); slots J-1@T-ARI 2026-09-26T22:15:00.000Z-2026-09-26T23:15:00.000Z, J-E@T-ARI 2026-09-26T21:00:00.000Z-2026-09-26T22:00:00.000Z; escalations none; messages 3; notices 3",
+      "stimulus": {
+        "description": "A full board with one tech, then an emergency arriving whose window only that tech's slotted time can meet.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "emergency-displaces-with-a-person"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J-1"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T-ARI"
+            ],
+            "slots": 0,
+            "dispatcher": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J-1"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "14 Banksia St Aspley"
+          },
+          "response": {
+            "resolved": "14 Banksia Street, Aspley QLD 4034"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "jobId": "J-1",
+            "techId": "T-ARI",
+            "start": "2026-09-26T21:00:00.000Z",
+            "end": "2026-09-26T22:00:00.000Z",
+            "address": "14 Banksia Street, Aspley QLD 4034",
+            "by": {
+              "rule": "crew-board/v1"
+            }
+          },
+          "response": {
+            "id": "S1",
+            "externalId": "js-S1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C-1",
+            "channel": "sms"
+          },
+          "response": {
+            "givenAt": "2026-09-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "to": "C-1",
+            "channel": "sms",
+            "slotId": "S1",
+            "bodyRef": "J-1:v1:booked"
+          },
+          "response": {
+            "id": "M2",
+            "sentAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "slotId": "S1",
+            "ref": "message:M2@2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T-ARI",
+            "jobId": "J-1",
+            "address": "14 Banksia Street, Aspley QLD 4034",
+            "window": {
+              "from": "2026-09-27T07:00:00+10:00",
+              "to": "2026-09-27T12:00:00+10:00"
+            },
+            "customerSaid": "Front lawn is knee high and the side gate sticks."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "ids": [
+              "J-1",
+              "J-E"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T-ARI"
+            ],
+            "slots": 1,
+            "dispatcher": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J-E"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "3 Wattle Ct Chermside"
+          },
+          "response": {
+            "resolved": "3 Wattle Court, Chermside QLD 4032"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "travel": {
+              "from": "14 Banksia Street, Aspley QLD 4034",
+              "to": "3 Wattle Court, Chermside QLD 4032"
+            }
+          },
+          "response": {
+            "ms": 900000
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "displace": "S1",
+            "for": "J-E"
+          },
+          "response": {
+            "accepted": true,
+            "person": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "jobId": "J-E",
+            "techId": "T-ARI",
+            "start": "2026-09-26T21:00:00.000Z",
+            "end": "2026-09-26T22:00:00.000Z",
+            "address": "3 Wattle Court, Chermside QLD 4032",
+            "by": {
+              "person": "Lee Tran"
+            }
+          },
+          "response": {
+            "id": "S3",
+            "externalId": "js-S3"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C-E",
+            "channel": "sms"
+          },
+          "response": {
+            "givenAt": "2026-09-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "to": "C-E",
+            "channel": "sms",
+            "slotId": "S3",
+            "bodyRef": "J-E:v1:booked"
+          },
+          "response": {
+            "id": "M4",
+            "sentAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "slotId": "S3",
+            "ref": "message:M4@2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T-ARI",
+            "jobId": "J-E",
+            "address": "3 Wattle Court, Chermside QLD 4032",
+            "window": {
+              "from": "2026-09-27T07:00:00+10:00",
+              "to": "2026-09-27T08:10:00+10:00"
+            },
+            "customerSaid": "Irrigation main has burst and is flooding the driveway."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "travel": {
+              "from": "3 Wattle Court, Chermside QLD 4032",
+              "to": "14 Banksia Street, Aspley QLD 4034"
+            }
+          },
+          "response": {
+            "ms": 900000
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "travel": {
+              "from": "3 Wattle Court, Chermside QLD 4032",
+              "to": "14 Banksia Street, Aspley QLD 4034"
+            }
+          },
+          "response": {
+            "ms": 900000
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "update": "S1",
+            "jobId": "J-1",
+            "techId": "T-ARI",
+            "start": "2026-09-26T22:15:00.000Z",
+            "end": "2026-09-26T23:15:00.000Z",
+            "displacedBy": "J-E",
+            "by": {
+              "person": "Lee Tran"
+            }
+          },
+          "response": {
+            "externalId": "js-S1",
+            "updates": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C-1",
+            "channel": "sms"
+          },
+          "response": {
+            "givenAt": "2026-09-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "to": "C-1",
+            "channel": "sms",
+            "slotId": "S1",
+            "bodyRef": "J-1:v1:moved"
+          },
+          "response": {
+            "id": "M5",
+            "sentAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "slotId": "S1",
+            "ref": "message:M5@2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T-ARI",
+            "jobId": "J-1",
+            "address": "14 Banksia Street, Aspley QLD 4034",
+            "window": {
+              "from": "2026-09-27T07:00:00+10:00",
+              "to": "2026-09-27T12:00:00+10:00"
+            },
+            "customerSaid": "Front lawn is knee high and the side gate sticks."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J-1"
+          },
+          "response": {
+            "slotId": "S1",
+            "externalId": "js-S1",
+            "jobVersion": 1
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "customer-told-once-with-consent",
+      "n": 6,
+      "title": "The customer is told once per slot, on a channel they consented to",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The consenting customer has exactly one message, preceded by a consent check, and none after the second event. The other customer has no message and an escalation names them. A second message, or one sent without consent, fails.",
+      "actual": "21 port call(s); slots J-1@T-ARI 2026-09-26T21:00:00.000Z-2026-09-26T22:00:00.000Z, J-2@T-ARI 2026-09-26T22:30:00.000Z-2026-09-26T23:30:00.000Z; escalations J-2:no_consent:Lee Tran; messages 1; notices 2",
+      "stimulus": {
+        "description": "Two jobs slotted: one customer with consent recorded for the channel, one with none. The scheduling event is then delivered a second time with nothing changed.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "customer-told-once-with-consent"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "ids": [
+              "J-1",
+              "J-2"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T-ARI"
+            ],
+            "slots": 0,
+            "dispatcher": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J-1"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "14 Banksia St Aspley"
+          },
+          "response": {
+            "resolved": "14 Banksia Street, Aspley QLD 4034"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "jobId": "J-1",
+            "techId": "T-ARI",
+            "start": "2026-09-26T21:00:00.000Z",
+            "end": "2026-09-26T22:00:00.000Z",
+            "address": "14 Banksia Street, Aspley QLD 4034",
+            "by": {
+              "rule": "crew-board/v1"
+            }
+          },
+          "response": {
+            "id": "S1",
+            "externalId": "js-S1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C-1",
+            "channel": "sms"
+          },
+          "response": {
+            "givenAt": "2026-09-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "to": "C-1",
+            "channel": "sms",
+            "slotId": "S1",
+            "bodyRef": "J-1:v1:booked"
+          },
+          "response": {
+            "id": "M2",
+            "sentAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "slotId": "S1",
+            "ref": "message:M2@2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T-ARI",
+            "jobId": "J-1",
+            "address": "14 Banksia Street, Aspley QLD 4034",
+            "window": {
+              "from": "2026-09-27T07:00:00+10:00",
+              "to": "2026-09-27T12:00:00+10:00"
+            },
+            "customerSaid": "Front lawn is knee high and the side gate sticks."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J-2"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "3 Wattle Ct Chermside"
+          },
+          "response": {
+            "resolved": "3 Wattle Court, Chermside QLD 4032"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "travel": {
+              "from": "14 Banksia Street, Aspley QLD 4034",
+              "to": "3 Wattle Court, Chermside QLD 4032"
+            }
+          },
+          "response": {
+            "ms": 1800000
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "travel": {
+              "from": "14 Banksia Street, Aspley QLD 4034",
+              "to": "3 Wattle Court, Chermside QLD 4032"
+            }
+          },
+          "response": {
+            "ms": 1800000
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "jobId": "J-2",
+            "techId": "T-ARI",
+            "start": "2026-09-26T22:30:00.000Z",
+            "end": "2026-09-26T23:30:00.000Z",
+            "address": "3 Wattle Court, Chermside QLD 4032",
+            "by": {
+              "rule": "crew-board/v1"
+            }
+          },
+          "response": {
+            "id": "S3",
+            "externalId": "js-S3"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C-2",
+            "channel": "sms"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "jobId": "J-2",
+            "reason": "no_consent",
+            "owner": "Lee Tran"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T-ARI",
+            "jobId": "J-2",
+            "address": "3 Wattle Court, Chermside QLD 4032",
+            "window": {
+              "from": "2026-09-27T07:00:00+10:00",
+              "to": "2026-09-27T12:00:00+10:00"
+            },
+            "customerSaid": "Front lawn is knee high and the side gate sticks."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "ids": [
+              "J-1",
+              "J-2"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T-ARI"
+            ],
+            "slots": 2,
+            "dispatcher": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-09-26T00:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J-1"
+          },
+          "response": {
+            "slotId": "S1",
+            "externalId": "js-S1",
+            "jobVersion": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J-2"
+          },
+          "response": {
+            "slotId": "S3",
+            "externalId": "js-S3",
+            "jobVersion": 1
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "tech-told-with-the-record",
+      "n": 7,
+      "title": "The tech's notification carries the job, the address, the window and what the customer said",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The notification to the assigned tech carries the job id, the resolved address, the window and the customer's words. A notification missing any of those fails.",
+      "actual": "9 port call(s); slots J-1@T-ARI 2026-09-26T21:00:00.000Z-2026-09-26T22:00:00.000Z; escalations none; messages 1; notices 1",
+      "stimulus": {
+        "description": "One job slotted whose customer described the fault when booking.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "tech-told-with-the-record"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J-1"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T-ARI"
+            ],
+            "slots": 0,
+            "dispatcher": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J-1"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "14 Banksia St Aspley"
+          },
+          "response": {
+            "resolved": "14 Banksia Street, Aspley QLD 4034"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "jobId": "J-1",
+            "techId": "T-ARI",
+            "start": "2026-09-26T21:00:00.000Z",
+            "end": "2026-09-26T22:00:00.000Z",
+            "address": "14 Banksia Street, Aspley QLD 4034",
+            "by": {
+              "rule": "crew-board/v1"
+            }
+          },
+          "response": {
+            "id": "S1",
+            "externalId": "js-S1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C-1",
+            "channel": "sms"
+          },
+          "response": {
+            "givenAt": "2026-09-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "to": "C-1",
+            "channel": "sms",
+            "slotId": "S1",
+            "bodyRef": "J-1:v1:booked"
+          },
+          "response": {
+            "id": "M2",
+            "sentAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "slotId": "S1",
+            "ref": "message:M2@2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T-ARI",
+            "jobId": "J-1",
+            "address": "14 Banksia Street, Aspley QLD 4034",
+            "window": {
+              "from": "2026-09-27T07:00:00+10:00",
+              "to": "2026-09-27T12:00:00+10:00"
+            },
+            "customerSaid": "Dog is out the back, please use the side gate and leave the clippings."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "change-propagates-once",
+      "n": 8,
+      "title": "A change to the job moves the slot and tells each affected party exactly once",
+      "verdict": "pass",
+      "held": true,
+      "expected": "After the change, the job still has exactly one slot and it sits inside the new window. Exactly one new message went to the customer and exactly one to the tech. A stale slot, a second slot, or a doubled message fails.",
+      "actual": "18 port call(s); slots J-1@T-ARI 2026-09-27T03:00:00.000Z-2026-09-27T04:00:00.000Z; escalations none; messages 2; notices 2",
+      "stimulus": {
+        "description": "A slotted job whose customer window is moved by the runner after the slot is written and the customer told.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "change-propagates-once"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J-1"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T-ARI"
+            ],
+            "slots": 0,
+            "dispatcher": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J-1"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "14 Banksia St Aspley"
+          },
+          "response": {
+            "resolved": "14 Banksia Street, Aspley QLD 4034"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "jobId": "J-1",
+            "techId": "T-ARI",
+            "start": "2026-09-26T21:00:00.000Z",
+            "end": "2026-09-26T22:00:00.000Z",
+            "address": "14 Banksia Street, Aspley QLD 4034",
+            "by": {
+              "rule": "crew-board/v1"
+            }
+          },
+          "response": {
+            "id": "S1",
+            "externalId": "js-S1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C-1",
+            "channel": "sms"
+          },
+          "response": {
+            "givenAt": "2026-09-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "to": "C-1",
+            "channel": "sms",
+            "slotId": "S1",
+            "bodyRef": "J-1:v1:booked"
+          },
+          "response": {
+            "id": "M2",
+            "sentAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "slotId": "S1",
+            "ref": "message:M2@2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T-ARI",
+            "jobId": "J-1",
+            "address": "14 Banksia Street, Aspley QLD 4034",
+            "window": {
+              "from": "2026-09-27T07:00:00+10:00",
+              "to": "2026-09-27T10:00:00+10:00"
+            },
+            "customerSaid": "Front lawn is knee high and the side gate sticks."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:20:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J-1"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:20:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T-ARI"
+            ],
+            "slots": 1,
+            "dispatcher": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-09-26T00:20:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J-1"
+          },
+          "response": {
+            "slotId": "S1",
+            "externalId": "js-S1",
+            "jobVersion": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:20:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "14 Banksia St Aspley"
+          },
+          "response": {
+            "resolved": "14 Banksia Street, Aspley QLD 4034"
+          }
+        },
+        {
+          "at": "2026-09-26T00:20:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "update": "S1",
+            "jobId": "J-1",
+            "techId": "T-ARI",
+            "start": "2026-09-27T03:00:00.000Z",
+            "end": "2026-09-27T04:00:00.000Z",
+            "displacedBy": null,
+            "by": {
+              "rule": "crew-board/v1"
+            }
+          },
+          "response": {
+            "externalId": "js-S1",
+            "updates": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:20:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C-1",
+            "channel": "sms"
+          },
+          "response": {
+            "givenAt": "2026-09-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:20:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "to": "C-1",
+            "channel": "sms",
+            "slotId": "S1",
+            "bodyRef": "J-1:v2:moved"
+          },
+          "response": {
+            "id": "M3",
+            "sentAt": "2026-09-26T00:20:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:20:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "slotId": "S1",
+            "ref": "message:M3@2026-09-26T00:20:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:20:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T-ARI",
+            "jobId": "J-1",
+            "address": "14 Banksia Street, Aspley QLD 4034",
+            "window": {
+              "from": "2026-09-27T13:00:00+10:00",
+              "to": "2026-09-27T16:00:00+10:00"
+            },
+            "customerSaid": "Front lawn is knee high and the side gate sticks."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "unassignable-is-a-queue",
+      "n": 9,
+      "title": "A job that cannot be slotted is escalated with a reason and an owner",
+      "verdict": "pass",
+      "held": true,
+      "expected": "None of the three has a slot. Each has an escalation carrying the job id, a reason from the list and an owner. A job with no slot and no escalation fails.",
+      "actual": "12 port call(s); slots none; escalations J-H:no_licensed_tech:Lee Tran, J-A:address_unresolved:Lee Tran, J-W:window_impossible:Lee Tran; messages 0; notices 0",
+      "stimulus": {
+        "description": "Three jobs that cannot be slotted: one needing a licence no current tech holds, one whose address does not resolve, one whose window is shorter than the job.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "unassignable-is-a-queue"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "J-H",
+              "J-A",
+              "J-W"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T-ARI",
+              "T-JO",
+              "T-SAM"
+            ],
+            "slots": 0,
+            "dispatcher": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J-H"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "5 Fig Tree Pocket Rd"
+          },
+          "response": {
+            "resolved": "5 Fig Tree Pocket Road, Fig Tree Pocket QLD 4069"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "licence": "height"
+          },
+          "response": {
+            "holders": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "jobId": "J-H",
+            "reason": "no_licensed_tech",
+            "owner": "Lee Tran"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J-A"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "behind the big shed off the highway"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "jobId": "J-A",
+            "reason": "address_unresolved",
+            "owner": "Lee Tran"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J-W"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "88 Gympie Rd Kedron"
+          },
+          "response": {
+            "resolved": "88 Gympie Road, Kedron QLD 4031"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "jobId": "J-W",
+            "reason": "window_impossible",
+            "owner": "Lee Tran"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "the-record-by-job",
+      "n": 10,
+      "title": "Who was assigned, when, by whom or by which rule, and what the customer was told are retrievable by job",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A read by job id returns the slot with its tech, start, external id and the person or rule that wrote it, and the confirmation attached as evidence with its sent time. A record missing the author or the message fails.",
+      "actual": "10 port call(s); slots J-1@T-ARI 2026-09-26T21:00:00.000Z-2026-09-26T22:00:00.000Z; escalations none; messages 1; notices 1; record {\"job\":{\"id\":\"J-1\",\"customerId\":\"C-1\",\"address\":\"14 Banksia St Aspley\",\"window\":{\"from\":\"2026-09-27T07:00:00+10:00\",\"to\":\"2026-09-27T12:00:00+10:00\"},\"durationMin\":60,\"requires\":[],\"urgency\":\"routine\",\"status\":\"slotted\",\"customerSaid\":\"Front lawn is knee high and the side gate sticks.\",\"version\":1},\"slots\":[{\"id\":\"S1\",\"jobId\":\"J-1\",\"techId\":\"T-ARI\",\"start\":\"2026-09-26T21:00:00.000Z\",\"end\":\"2026-09-26T22:00:00.000Z\",\"address\":\"14 Banksia Street, Aspley QLD 4034\",\"externalId\":\"js-S1\",\"updatedBy\":{\"rule\":\"crew-board/v1\"},\"displacedBy\":null,\"jobVersion\":1,\"updates\":0,\"evidence\":[\"message:M2@2026-09-26T00:00:00.000Z\"]}],\"messages\":[{\"id\":\"M2\",\"to\":\"C-1\",\"channel\":\"sms\",\"slotId\":\"S1\",\"bodyRef\":\"J-1:v1:booked\",\"body\":\"Your visit for job J-1 is booked for 2026-09-26T21:00:00.000Z to 2026-09-26T22:00:00.000Z.\",\"sentAt\":\"2026-09-26T00:00:00.000Z\"}]}",
+      "stimulus": {
+        "description": "One job slotted, the customer confirmed and the tech told.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "the-record-by-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J-1"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T-ARI"
+            ],
+            "slots": 0,
+            "dispatcher": "Lee Tran"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J-1"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "14 Banksia St Aspley"
+          },
+          "response": {
+            "resolved": "14 Banksia Street, Aspley QLD 4034"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "jobId": "J-1",
+            "techId": "T-ARI",
+            "start": "2026-09-26T21:00:00.000Z",
+            "end": "2026-09-26T22:00:00.000Z",
+            "address": "14 Banksia Street, Aspley QLD 4034",
+            "by": {
+              "rule": "crew-board/v1"
+            }
+          },
+          "response": {
+            "id": "S1",
+            "externalId": "js-S1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C-1",
+            "channel": "sms"
+          },
+          "response": {
+            "givenAt": "2026-09-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "to": "C-1",
+            "channel": "sms",
+            "slotId": "S1",
+            "bodyRef": "J-1:v1:booked"
+          },
+          "response": {
+            "id": "M2",
+            "sentAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "slotId": "S1",
+            "ref": "message:M2@2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T-ARI",
+            "jobId": "J-1",
+            "address": "14 Banksia Street, Aspley QLD 4034",
+            "window": {
+              "from": "2026-09-27T07:00:00+10:00",
+              "to": "2026-09-27T12:00:00+10:00"
+            },
+            "customerSaid": "Front lawn is knee high and the side gate sticks."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "J-1"
+          },
+          "response": {
+            "slots": [
+              "S1"
+            ],
+            "messages": 1
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 11,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the board and the licence rules runs on.",
+        "now": "2026-11-03T12:49:40.884Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 12,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "One slot per job in the job system with its own id, the licence-gated job on the licensed tech only, the emergency slot carrying the dispatcher's acceptance and the displaced job re-slotted, the changed job moved once with one fresh message each, and every customer message on a consented channel.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "Real scheduling events on the business's own tenant, driven by creating and changing real jobs.",
+        "now": "2026-11-03T12:49:40.884Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 12,
+    "pass": 8,
+    "fail": 0,
+    "shapeOnly": 2,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
