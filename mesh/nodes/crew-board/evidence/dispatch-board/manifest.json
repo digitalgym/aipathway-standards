@@ -1,0 +1,121 @@
+{
+  "spec": "AIP-BS-DISPATCH-BOARD",
+  "standard": "dispatch-board-build-standard",
+  "edition": "2026-10-03",
+  "source": "https://aipathway.com.au/explore-ai/dispatch-board-build-standard",
+  "ran_at": "2026-11-03T12:49:40.886Z",
+  "environment": "stub",
+  "provider": "local.mock_board",
+  "provider_block": {
+    "boundary": {
+      "never": [
+        "slot a job whose address has not resolved",
+        "assign against a licence rule",
+        "drop a displaced job",
+        "message a customer without consent",
+        "message twice for one change"
+      ],
+      "stays_with_person": [
+        "accepting an emergency displacement",
+        "deciding a job is outside the area",
+        "anything said to an upset customer",
+        "keeping each tech's licence record true, codes and expiry"
+      ]
+    },
+    "job": "the right person at the right house at the right time",
+    "skill": "dispatch-board",
+    "stub": "local.mock_board",
+    "production": null,
+    "product": null,
+    "insert": null,
+    "with_us": {
+      "kind": "scoped_build",
+      "note": "No hosted dispatch step. Office Voice already writes the booked time into ServiceM8 and Simpro, one slot per job with the id back, but only inside a Front Desk call, day or night; a board cannot call it and it reads no licences. When a job slips on the ServiceM8 or Simpro board, its running-late call rings the customer, switched on under Automations. For a board, the write into the job system's schedule and the customer message with consent are quoted as a scoped build."
+    }
+  },
+  "tally": {
+    "green": 8,
+    "red": 0,
+    "with_us": 1,
+    "evidence_required": 1,
+    "total": 12
+  },
+  "checks": [
+    {
+      "id": "address-verified-before-slot",
+      "n": 1,
+      "title": "No slot until the address resolves",
+      "verdict": "pass"
+    },
+    {
+      "id": "licence-is-a-rule-not-a-vibe",
+      "n": 2,
+      "title": "A licence requirement is a rule read from the record, never assumed",
+      "verdict": "pass"
+    },
+    {
+      "id": "window-and-travel-are-data",
+      "n": 3,
+      "title": "The slot sits inside the customer's window and after the previous job plus travel",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "one-slot-per-job",
+      "n": 4,
+      "title": "One slot per job, written once, updated on a second event",
+      "verdict": "pass"
+    },
+    {
+      "id": "emergency-displaces-with-a-person",
+      "n": 5,
+      "title": "An emergency takes a slot only when a named dispatcher accepts the displacement",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "customer-told-once-with-consent",
+      "n": 6,
+      "title": "The customer is told once per slot, on a channel they consented to",
+      "verdict": "pass"
+    },
+    {
+      "id": "tech-told-with-the-record",
+      "n": 7,
+      "title": "The tech's notification carries the job, the address, the window and what the customer said",
+      "verdict": "pass"
+    },
+    {
+      "id": "change-propagates-once",
+      "n": 8,
+      "title": "A change to the job moves the slot and tells each affected party exactly once",
+      "verdict": "pass"
+    },
+    {
+      "id": "unassignable-is-a-queue",
+      "n": 9,
+      "title": "A job that cannot be slotted is escalated with a reason and an owner",
+      "verdict": "pass"
+    },
+    {
+      "id": "the-record-by-job",
+      "n": 10,
+      "title": "Who was assigned, when, by whom or by which rule, and what the customer was told are retrievable by job",
+      "verdict": "pass"
+    },
+    {
+      "id": "survives-the-builder",
+      "n": 11,
+      "title": "It survives the builder",
+      "verdict": "evidence_required"
+    },
+    {
+      "id": "pass-test",
+      "n": 12,
+      "title": "The pass test passes",
+      "verdict": "with_us"
+    }
+  ],
+  "next": {
+    "with_us": "No hosted dispatch step. Office Voice already writes the booked time into ServiceM8 and Simpro, one slot per job with the id back, but only inside a Front Desk call, day or night; a board cannot call it and it reads no licences. When a job slips on the ServiceM8 or Simpro board, its running-late call rings the customer, switched on under Automations. For a board, the write into the job system's schedule and the customer message with consent are quoted as a scoped build. Send the failing check id for a fixed price; do not build the live step yourself.",
+    "evidence_required": "attach what proves each one; not a software check"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "slug": "crew-board",
+  "name": "Crew Board",
+  "office_task": "Put each lawn or field-service job on the right licensed crew member at a time that fits, tell the customer and the tech once, and hand anything it cannot place to the dispatcher.",
+  "verticals": ["trades-building"],
+  "standards": ["dispatch-board"],
+  "systems_of_record": ["the job system that issues the job_id and holds its schedule (ServiceM8, Simpro or Jobber)", "the tech licence register the business keeps"],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/crew-board" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "job.created", "wake": "webhook" },
+    { "event": "job.updated", "wake": "webhook" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "job.updated",
+      "write": "one slot on the job's schedule in the job system (tech, start, end, resolved address, who or which rule set it, what displaced it), updated in place on a change and never written twice",
+      "readback": "the job system returns the slot's external id, and reading the job's slot back by job_id returns that external id and the job version it was made for; no id back is a failed write, escalated as write_failed, and nothing is sent"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an escalation on the job naming its owner: an address that will not resolve, no tech with a current licence for the job, a window nobody can meet, no capacity, no consent to message the customer, a failed slot write, or a displaced job that could not be re-slotted",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the job_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "dispatch.address_unresolved",
+      "dispatch.no_licensed_tech",
+      "dispatch.window_impossible",
+      "dispatch.no_capacity",
+      "dispatch.no_consent",
+      "dispatch.write_failed",
+      "dispatch.displaced"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.job_id", "seam.slot_external_id", "seam.job_version", "seam.updated_by", "seam.displaced_by", "seam.customer_message_ref", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Dispatcher",
+    "original_author": "Brett Brownlee",
+    "share_link": "https://x.ai/bot/XO8uABzMu5WMtRJKwVHp7",
+    "licence_or_permission": "reimplementation"
+  }
+}
