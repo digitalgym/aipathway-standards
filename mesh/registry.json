@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-03T13:34:34.391Z",
+  "generated_at": "2026-11-03T13:34:53.672Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -867,6 +867,113 @@
       ]
     },
     {
+      "slug": "crew-board",
+      "name": "Crew Board",
+      "office_task": "Put each lawn or field-service job on the right licensed crew member at a time that fits, tell the customer and the tech once, and hand anything it cannot place to the dispatcher.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "dispatch-board"
+      ],
+      "systems_of_record": [
+        "the job system that issues the job_id and holds its schedule (ServiceM8, Simpro or Jobber)",
+        "the tech licence register the business keeps"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "job.created",
+          "wake": "webhook"
+        },
+        {
+          "event": "job.updated",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "job.updated",
+          "write": "one slot on the job's schedule in the job system (tech, start, end, resolved address, who or which rule set it, what displaced it), updated in place on a change and never written twice",
+          "readback": "the job system returns the slot's external id, and reading the job's slot back by job_id returns that external id and the job version it was made for; no id back is a failed write, escalated as write_failed, and nothing is sent"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an escalation on the job naming its owner: an address that will not resolve, no tech with a current licence for the job, a window nobody can meet, no capacity, no consent to message the customer, a failed slot write, or a displaced job that could not be re-slotted",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the job_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "dispatch.address_unresolved",
+          "dispatch.no_licensed_tech",
+          "dispatch.window_impossible",
+          "dispatch.no_capacity",
+          "dispatch.no_consent",
+          "dispatch.write_failed",
+          "dispatch.displaced"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.slot_external_id",
+          "seam.job_version",
+          "seam.updated_by",
+          "seam.displaced_by",
+          "seam.customer_message_ref",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/crew-board"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Dispatcher",
+        "original_author": "Brett Brownlee",
+        "share_link": "https://x.ai/bot/XO8uABzMu5WMtRJKwVHp7",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "dispatch-board",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:49:40.886Z",
+          "run_id": "run-1793710180884",
+          "green": 8,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        }
+      ]
+    },
+    {
       "slug": "deadline-desk",
       "name": "Deadline Desk",
       "office_task": "Keep every deadline from our clients' letters and lodgements on a calendar derived from dated rules, chase replies, and put anything late or unclear in front of a named person.",
@@ -1072,6 +1179,94 @@
           "with_us": 1,
           "evidence_required": 0,
           "total": 12
+        }
+      ]
+    },
+    {
+      "slug": "docs-due",
+      "name": "Docs Due",
+      "office_task": "Each weekday, chase clients for the documents the practice still needs from them, stop when each one arrives, and hand a no or a silent client to a named person.",
+      "verticals": [
+        "accounting-bookkeeping"
+      ],
+      "standards": [
+        "follow-up"
+      ],
+      "systems_of_record": [
+        "the practice's client document checklist, one open item per document owed on the client job (a practice management system such as Xero Practice Manager or FYI, or a register kept beside it)",
+        "the practice's document store, where a returned document is filed against the client job"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "evidence.filed",
+          "write": "the returned document (a signed engagement letter, a tax return authority, a fund or bank certificate) filed as evidence against its open item on the client job, which marks the item arrived and lets the job move",
+          "readback": "reading the item back by its id returns status arrived with the arrival's evidence reference, which names the message_id of the client email that carried it (or the document_id where it landed in a watched folder); no evidence reference back means it was not filed, and the item stays on the chase with no touch until a person looks"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an escalation on the item naming the cadence's person: the client said no, disputed it or asked us to stop, or the item reached its cap with nothing back, carrying every touch so far",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the item id, the reason, the touch history and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "followup.declined",
+          "followup.dispute",
+          "followup.cap_reached"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.item_id",
+          "seam.item_status",
+          "seam.touches",
+          "seam.outcome",
+          "seam.evidence_ref",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/docs-due"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "follow-up",
+          "edition": "2026-10-05",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:59:55.658Z",
+          "run_id": "run-1793710795657",
+          "green": 10,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 13
         }
       ]
     },
@@ -1683,6 +1878,102 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 11
+        }
+      ]
+    },
+    {
+      "slug": "hours-check",
+      "name": "Hours Check",
+      "office_task": "When the pay week closes, check the crew's hours against the roster, their jobs and the dated award, put the odd ones in front of a named person, and send nothing to payroll until someone releases it.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "timesheet-check"
+      ],
+      "systems_of_record": [
+        "the job system that issues the job_id and holds the allocations and roster (ServiceM8, Simpro, Tradify, Fergus or similar)",
+        "the payroll system that takes one export per period and returns its id (Xero Payroll, Employment Hero or MYOB)",
+        "the exception desk the business runs, for the anomaly queue"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "job.updated",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the period report into the system the payroll officer opens: hours by person and day with totals that list the entry ids they sum, anomalies found and resolved, the award edition cited on each card, who released the period or that nobody has, and the payroll export id once one exists. Published every run, a clean period included",
+          "readback": "the report store returns a report_id, and reading that id back returns the period id, the totals with their entry ids and the release field; the payroll export is read back by period with readExport, and a null external id is reported as a failed export, never a success"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an anomaly on the entry, from the closed list (over_hours, overlap, missing_break, not_rostered, not_allocated, rule_unclear), naming the person who owns it: the supervisor, whoever keeps the roster, the job's owner, or whoever answers for the award",
+          "readback": "the exception desk returns an exception_id, and reading the period's queue back returns that id with the entry id, the kind and the owner; one anomaly per entry and kind, so a retried wake raises none twice"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "timesheet.over_hours",
+          "timesheet.overlap",
+          "timesheet.missing_break",
+          "timesheet.not_rostered",
+          "timesheet.not_allocated",
+          "timesheet.rule_unclear"
+        ],
+        "owner_field": "owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.period_id",
+          "seam.anomaly_owner",
+          "seam.card_rule_edition",
+          "seam.released_by",
+          "seam.export_external_id",
+          "seam.report_id"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/hours-check"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-03",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "timesheet-check",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-03T12:50:14.904Z",
+          "run_id": "run-1793710214902",
+          "green": 10,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 13
         }
       ]
     },
@@ -3290,14 +3581,17 @@
     "chase-list",
     "claim-check",
     "comp-report",
+    "crew-board",
     "deadline-desk",
     "defect-desk",
+    "docs-due",
     "drawing-register",
     "dropped-ball",
     "feed-match",
     "fire-code-desk",
     "folder-brief",
     "goods-match",
+    "hours-check",
     "inbox-desk",
     "invoice-desk",
     "invoice-pair",
@@ -3317,8 +3611,44 @@
   "edges": [
     {
       "from": "after-hours-desk",
+      "to": "crew-board",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "after-hours-desk",
       "to": "quote-desk",
       "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "crew-board",
+      "to": "hours-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "crew-board",
+      "to": "quote-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "crew-board",
+      "to": "site-orders",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "practice-desk",
+      "to": "crew-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "practice-desk",
+      "to": "hours-check",
+      "event": "job.updated",
       "id": "job_id"
     },
     {
