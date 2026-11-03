@@ -1,0 +1,1060 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793714196959",
+  "standard": "quote-out-build-standard",
+  "spec": "AIP-BS-QUOTE-OUT",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-03T13:56:36.954Z",
+  "finishedAt": "2026-11-03T13:56:36.959Z",
+  "results": [
+    {
+      "checkId": "job-is-the-trigger",
+      "n": 1,
+      "title": "A job is the only trigger",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Each draft is preceded by a read of the job it came from and carries that job's id. No draft appears without one.",
+      "actual": "8 port call(s): read_job, read_pricebook, draft_quote, notify, read_job, read_pricebook, draft_quote, notify; 2 quote(s), 0 escalation(s), 2 alert(s)",
+      "stimulus": {
+        "description": "A job created by an after-hours call, and a second job created from an overnight web form.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "job-is-the-trigger"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-3101"
+          },
+          "response": {
+            "id": "JOB-3101",
+            "source": "call",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JOB-3101",
+            "lines": [
+              {
+                "catalogueId": "CLN-OFFICE-STD",
+                "description": "Office clean, up to 200 m2, per visit",
+                "rate": 18500
+              }
+            ],
+            "intentId": "JOB-3101:quote-out:estimate-desk"
+          },
+          "response": {
+            "id": "Q1",
+            "total": 18500
+          },
+          "intentId": "JOB-3101:quote-out:estimate-desk"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "estimates-owner",
+            "jobId": "JOB-3101",
+            "reason": "ready_to_release:Q1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-3102"
+          },
+          "response": {
+            "id": "JOB-3102",
+            "source": "form",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JOB-3102",
+            "lines": [
+              {
+                "catalogueId": "CLN-WASH-AMEN",
+                "description": "Washroom sanitise, per amenity",
+                "rate": 3200
+              },
+              {
+                "catalogueId": "CLN-BIN-WASH",
+                "description": "Wheelie bin wash, per bin",
+                "rate": 1800
+              }
+            ],
+            "intentId": "JOB-3102:quote-out:estimate-desk"
+          },
+          "response": {
+            "id": "Q2",
+            "total": 5000
+          },
+          "intentId": "JOB-3102:quote-out:estimate-desk"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "estimates-owner",
+            "jobId": "JOB-3102",
+            "reason": "ready_to_release:Q2"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "pricebook-is-the-only-source",
+      "n": 2,
+      "title": "The price list is the only source of a rate",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A read of the price list precedes the draft, and every priced line carries the catalogue id it came from.",
+      "actual": "4 port call(s): read_job, read_pricebook, draft_quote, notify; 1 quote(s), 0 escalation(s), 1 alert(s)",
+      "stimulus": {
+        "description": "A job whose work maps cleanly to three catalogue items.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "pricebook-is-the-only-source"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-3201"
+          },
+          "response": {
+            "id": "JOB-3201",
+            "source": "form",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JOB-3201",
+            "lines": [
+              {
+                "catalogueId": "CLN-OFFICE-STD",
+                "description": "Office clean, up to 200 m2, per visit",
+                "rate": 18500
+              },
+              {
+                "catalogueId": "CLN-WIN-INT",
+                "description": "Internal window clean, per floor",
+                "rate": 9500
+              },
+              {
+                "catalogueId": "CLN-CARPET-RM",
+                "description": "Carpet steam clean, per room",
+                "rate": 6500
+              },
+              {
+                "catalogueId": "CLN-CARPET-RM",
+                "description": "Carpet steam clean, per room",
+                "rate": 6500
+              },
+              {
+                "catalogueId": "CLN-CARPET-RM",
+                "description": "Carpet steam clean, per room",
+                "rate": 6500
+              }
+            ],
+            "intentId": "JOB-3201:quote-out:estimate-desk"
+          },
+          "response": {
+            "id": "Q1",
+            "total": 47500
+          },
+          "intentId": "JOB-3201:quote-out:estimate-desk"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "estimates-owner",
+            "jobId": "JOB-3201",
+            "reason": "ready_to_release:Q1"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "unpriceable-is-parked",
+      "n": 3,
+      "title": "What cannot be priced is parked",
+      "verdict": "pass",
+      "held": true,
+      "expected": "No draft is created. An escalate call carries a park reason from the fixed list and the unmatched line, and no invented rate appears anywhere in the trace.",
+      "actual": "3 port call(s): read_job, read_pricebook, escalate; 0 quote(s), 1 escalation(s), 0 alert(s)",
+      "stimulus": {
+        "description": "A job needing one catalogue item and one thing the price list does not cover.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "unpriceable-is-parked"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-3301"
+          },
+          "response": {
+            "id": "JOB-3301",
+            "source": "form",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "not_in_pricebook",
+            "detail": "{\"job_id\":\"JOB-3301\",\"exception_owner\":\"estimates-owner\",\"lines\":[{\"catalogueId\":\"CLN-WASH-AMEN\",\"description\":\"Washroom sanitise, per amenity\",\"rate\":3200}],\"unmatched\":[{\"description\":\"External window clean, per floor\",\"park_reason\":\"not_in_pricebook\"}],\"total_ex_gst\":null}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "no-variation-pricing",
+      "n": 4,
+      "title": "Variations and discounts stay with a person",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Both escalate with a typed reason. Neither produces a draft.",
+      "actual": "4 port call(s): read_job, escalate, read_job, escalate; 0 quote(s), 2 escalation(s), 0 alert(s)",
+      "stimulus": {
+        "description": "A job flagged as a variation to an accepted quote, then a job carrying a request for a discount.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "no-variation-pricing"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-3401"
+          },
+          "response": {
+            "id": "JOB-3401",
+            "source": "form",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "variation_to_accepted_quote",
+            "detail": "{\"job_id\":\"JOB-3401\",\"exception_owner\":\"estimates-owner\",\"lines\":[],\"unmatched\":[],\"total_ex_gst\":null}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-3402"
+          },
+          "response": {
+            "id": "JOB-3402",
+            "source": "form",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "discount_requested",
+            "detail": "{\"job_id\":\"JOB-3402\",\"exception_owner\":\"estimates-owner\",\"lines\":[],\"unmatched\":[],\"total_ex_gst\":null}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-quote-per-job",
+      "n": 5,
+      "title": "One quote per job",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Exactly one quote exists in the world the runner owns. The second pass returned the same quote carrying duplicate_of, not a create.",
+      "actual": "6 port call(s): read_job, read_pricebook, draft_quote, notify, read_job, draft_quote; 1 quote(s), 0 escalation(s), 1 alert(s)",
+      "stimulus": {
+        "description": "The same job reaching the standard twice: once from the call, once from the follow-up email minutes later.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-quote-per-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-3501"
+          },
+          "response": {
+            "id": "JOB-3501",
+            "source": "form",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JOB-3501",
+            "lines": [
+              {
+                "catalogueId": "CLN-OFFICE-STD",
+                "description": "Office clean, up to 200 m2, per visit",
+                "rate": 18500
+              },
+              {
+                "catalogueId": "CLN-WASH-AMEN",
+                "description": "Washroom sanitise, per amenity",
+                "rate": 3200
+              },
+              {
+                "catalogueId": "CLN-WASH-AMEN",
+                "description": "Washroom sanitise, per amenity",
+                "rate": 3200
+              }
+            ],
+            "intentId": "JOB-3501:quote-out:estimate-desk"
+          },
+          "response": {
+            "id": "Q1",
+            "total": 24900
+          },
+          "intentId": "JOB-3501:quote-out:estimate-desk"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "estimates-owner",
+            "jobId": "JOB-3501",
+            "reason": "ready_to_release:Q1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-22T08:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-3501"
+          },
+          "response": {
+            "id": "JOB-3501",
+            "source": "form",
+            "quoteId": "Q1"
+          }
+        },
+        {
+          "at": "2026-09-22T08:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "update": "Q1",
+            "intentId": "JOB-3501:quote-out:estimate-desk"
+          },
+          "response": {
+            "id": "Q1"
+          },
+          "intentId": "JOB-3501:quote-out:estimate-desk"
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "draft-quote-verified",
+      "n": 6,
+      "title": "The write is verified",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A notify call follows the failed write, and the job is not reported as quoted.",
+      "actual": "4 port call(s): read_job, read_pricebook, draft_quote, notify; 0 quote(s), 0 escalation(s), 1 alert(s)",
+      "stimulus": {
+        "description": "The runner seeds the stub to return a null external_id on the quote write.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "draft-quote-verified"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-3601"
+          },
+          "response": {
+            "id": "JOB-3601",
+            "source": "form",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JOB-3601",
+            "lines": [
+              {
+                "catalogueId": "CLN-WIN-INT",
+                "description": "Internal window clean, per floor",
+                "rate": 9500
+              }
+            ],
+            "intentId": "JOB-3601:quote-out:estimate-desk"
+          },
+          "response": {
+            "id": null
+          },
+          "intentId": "JOB-3601:quote-out:estimate-desk"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "estimates-owner",
+            "jobId": "JOB-3601",
+            "reason": "write_failed"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "draft-never-sends",
+      "n": 7,
+      "title": "The draft does not send itself",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The quote is written in a draft state and surfaced for a person to release. No send port appears in the trace at all.",
+      "actual": "4 port call(s): read_job, read_pricebook, draft_quote, notify; 1 quote(s), 0 escalation(s), 1 alert(s)",
+      "stimulus": {
+        "description": "A job that prices cleanly from the price list.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "draft-never-sends"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-3701"
+          },
+          "response": {
+            "id": "JOB-3701",
+            "source": "form",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JOB-3701",
+            "lines": [
+              {
+                "catalogueId": "CLN-BIN-WASH",
+                "description": "Wheelie bin wash, per bin",
+                "rate": 1800
+              },
+              {
+                "catalogueId": "CLN-BIN-WASH",
+                "description": "Wheelie bin wash, per bin",
+                "rate": 1800
+              },
+              {
+                "catalogueId": "CLN-BIN-WASH",
+                "description": "Wheelie bin wash, per bin",
+                "rate": 1800
+              },
+              {
+                "catalogueId": "CLN-BIN-WASH",
+                "description": "Wheelie bin wash, per bin",
+                "rate": 1800
+              }
+            ],
+            "intentId": "JOB-3701:quote-out:estimate-desk"
+          },
+          "response": {
+            "id": "Q1",
+            "total": 7200
+          },
+          "intentId": "JOB-3701:quote-out:estimate-desk"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "estimates-owner",
+            "jobId": "JOB-3701",
+            "reason": "ready_to_release:Q1"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "quote-is-not-ours",
+      "n": 8,
+      "title": "The quote lives in their system",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The quote is retrievable from the system of record by its own id, carrying the lines and total that were drafted.",
+      "actual": "4 port call(s): read_job, read_pricebook, draft_quote, notify; 1 quote(s), 0 escalation(s), 1 alert(s)",
+      "stimulus": {
+        "description": "A priced job, then a retrieval of the quote from the system of record.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "quote-is-not-ours"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-3801"
+          },
+          "response": {
+            "id": "JOB-3801",
+            "source": "form",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JOB-3801",
+            "lines": [
+              {
+                "catalogueId": "CLN-OFFICE-STD",
+                "description": "Office clean, up to 200 m2, per visit",
+                "rate": 18500
+              },
+              {
+                "catalogueId": "CLN-CARPET-RM",
+                "description": "Carpet steam clean, per room",
+                "rate": 6500
+              },
+              {
+                "catalogueId": "CLN-CARPET-RM",
+                "description": "Carpet steam clean, per room",
+                "rate": 6500
+              }
+            ],
+            "intentId": "JOB-3801:quote-out:estimate-desk"
+          },
+          "response": {
+            "id": "Q1",
+            "total": 31500
+          },
+          "intentId": "JOB-3801:quote-out:estimate-desk"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "estimates-owner",
+            "jobId": "JOB-3801",
+            "reason": "ready_to_release:Q1"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "log-survives",
+      "n": 9,
+      "title": "The log survives",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "One quote_id returns the source job, the ordered port calls, the catalogue ids used and the outcome as one object.",
+      "actual": "4 port call(s): read_job, read_pricebook, draft_quote, notify; 1 quote(s), 0 escalation(s), 1 alert(s)",
+      "stimulus": {
+        "description": "Any completed draft, then a retrieval by quote_id.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "log-survives"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-3901"
+          },
+          "response": {
+            "id": "JOB-3901",
+            "source": "form",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JOB-3901",
+            "lines": [
+              {
+                "catalogueId": "CLN-WIN-INT",
+                "description": "Internal window clean, per floor",
+                "rate": 9500
+              },
+              {
+                "catalogueId": "CLN-WASH-AMEN",
+                "description": "Washroom sanitise, per amenity",
+                "rate": 3200
+              }
+            ],
+            "intentId": "JOB-3901:quote-out:estimate-desk"
+          },
+          "response": {
+            "id": "Q1",
+            "total": 12700
+          },
+          "intentId": "JOB-3901:quote-out:estimate-desk"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "estimates-owner",
+            "jobId": "JOB-3901",
+            "reason": "ready_to_release:Q1"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "pricebook-is-current",
+      "n": 10,
+      "title": "The price list was read, not remembered",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The read returns the changed rate and the draft carries it, or the quote parks. The superseded rate appears nowhere on the draft.",
+      "actual": "8 port call(s): read_job, read_pricebook, draft_quote, notify, read_job, read_pricebook, draft_quote, notify; 2 quote(s), 0 escalation(s), 2 alert(s)",
+      "stimulus": {
+        "description": "A draft raised after the price list has changed in the system of record.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "pricebook-is-current"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-4001"
+          },
+          "response": {
+            "id": "JOB-4001",
+            "source": "form",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JOB-4001",
+            "lines": [
+              {
+                "catalogueId": "CLN-OFFICE-STD",
+                "description": "Office clean, up to 200 m2, per visit",
+                "rate": 18500
+              }
+            ],
+            "intentId": "JOB-4001:quote-out:estimate-desk"
+          },
+          "response": {
+            "id": "Q1",
+            "total": 18500
+          },
+          "intentId": "JOB-4001:quote-out:estimate-desk"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "estimates-owner",
+            "jobId": "JOB-4001",
+            "reason": "ready_to_release:Q1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-22T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-4002"
+          },
+          "response": {
+            "id": "JOB-4002",
+            "source": "form",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-22T02:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-22T02:00:00.000Z"
+          },
+          "response": {
+            "items": 5
+          }
+        },
+        {
+          "at": "2026-09-22T02:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JOB-4002",
+            "lines": [
+              {
+                "catalogueId": "CLN-OFFICE-STD",
+                "description": "Office clean, up to 200 m2, per visit",
+                "rate": 19900
+              }
+            ],
+            "intentId": "JOB-4002:quote-out:estimate-desk"
+          },
+          "response": {
+            "id": "Q2",
+            "total": 19900
+          },
+          "intentId": "JOB-4002:quote-out:estimate-desk"
+        },
+        {
+          "at": "2026-09-22T02:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "estimates-owner",
+            "jobId": "JOB-4002",
+            "reason": "ready_to_release:Q2"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 11,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "Run 1 wrote nothing and parked with not_in_pricebook, carrying the priced lines, no total and no invented rate. Run 2 left one real draft quote in that tenant against real catalogue ids. Run 3 kept that quote rather than creating a second, carrying duplicate_of.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "A real job, from a ServiceM8 or Simpro tenant or held by the build when the books are in Xero alone, run once with a line not in the price list and then twice without it.",
+        "now": "2026-11-03T13:56:36.959Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 11,
+    "pass": 7,
+    "fail": 0,
+    "shapeOnly": 3,
+    "withUs": 1,
+    "evidenceRequired": 0
+  }
+}
