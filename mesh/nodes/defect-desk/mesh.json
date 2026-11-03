@@ -1,0 +1,70 @@
+{
+  "slug": "defect-desk",
+  "name": "Defect Desk",
+  "office_task": "When a sprinkler inspection report lands in the inbox, file each deficiency against its tagged asset, send critical ones to a named person now, and queue the rest.",
+  "verticals": ["fire-electrical"],
+  "standards": ["fire-service-pack-standard"],
+  "systems_of_record": [
+    "the asset register that issues the asset_id (where the tags are already recorded)",
+    "Gmail or Outlook (the watched inbox that issues the message_id)",
+    "the exception desk the business runs (a sheet, a task list or a ticket queue)"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/defect-desk" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "webhook", "schedule"],
+  "consumes": [
+    { "event": "email.received", "wake": "webhook" },
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "evidence.filed",
+      "write": "Each deficiency line from the report email, filed as a service record on the one asset its tag resolves to, naming the obligation the visit discharges, the result and severity the technician recorded, the coded defect with its owner, and the email's attachments by message_id. A line with no tag photograph is filed into the unbound queue, never the pass count.",
+      "readback": "The asset register returns a service record id; reading that id back returns the asset_id, the obligation_id, the message_id and the queue (pass, defect or unbound). No id back is not a write: the line is raised as record.held and the run stops."
+    },
+    {
+      "event": "exception.raised",
+      "write": "An exception on the asset naming the person who owns it: a critical defect or an isolation for the Fire Safety Advisor at once, or a line that could not be bound or recorded (unresolved tag, no obligation named, wrong evidence for the class, uncoded defect, electrical close with no certificate, lapsed isolation) for the Service Coordinator.",
+      "readback": "The exception desk returns an exception_id; reading it back returns the asset_id, the reason and the exception_owner. No id back means nothing was raised and the run stops."
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "identity.unresolved",
+      "record.no_obligation",
+      "record.no_result",
+      "record.held",
+      "record.unbound",
+      "defect.no_severity",
+      "defect.critical",
+      "isolation.no_revisit_date",
+      "isolation.recorded",
+      "isolation.lapsed",
+      "close.refused"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.asset_id",
+      "seam.obligation_id",
+      "seam.message_id",
+      "seam.service_record_id",
+      "seam.queue",
+      "seam.defect_code",
+      "seam.severity",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Route fire sprinkler deficiencies with Gmail, OpenAI, Telegram and Sheets",
+    "original_author": "Swapnil Mandloi",
+    "share_link": "https://n8n.io/workflows/19181",
+    "licence_or_permission": "reimplementation"
+  }
+}

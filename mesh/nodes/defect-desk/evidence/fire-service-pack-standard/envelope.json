@@ -1,0 +1,1312 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793708136266",
+  "standard": "fire-service-pack-standard",
+  "spec": "AIP-BS-FIRE-SERVICE-PACK-STANDARD",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-03T12:15:36.257Z",
+  "finishedAt": "2026-11-03T12:15:36.266Z",
+  "results": [
+    {
+      "checkId": "identity-first",
+      "n": 1,
+      "title": "Identity before everything",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Only the first produces a record. The other two produce findings, and neither writes a service record.",
+      "actual": "records A-VS-01; findings 2; 7 port call(s)",
+      "stimulus": {
+        "description": "Three visits: one to a known tag, one to a tag that matches nothing, one to a tag that matches two assets.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "identity-first"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tag": "QF-1001"
+          },
+          "response": {
+            "assetId": "A-VS-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "obligationsFor": "A-VS-01"
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "record_service",
+          "verb": "write",
+          "subject": "service_record",
+          "request": {
+            "assetId": "A-VS-01",
+            "obligationId": "OB-1",
+            "result": "pass",
+            "evidence": {
+              "kind": "reading",
+              "value": "main drain 0.72 MPa"
+            },
+            "tagPhotograph": true
+          },
+          "response": {
+            "id": "SR1",
+            "unbound": false
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tag": "QF-9999"
+          },
+          "response": {
+            "finding": "no asset for tag QF-9999"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "identity.unresolved",
+            "detail": "{\"message_id\":\"msg-101\",\"tag\":\"QF-9999\",\"finding\":\"no asset for tag QF-9999\",\"exception_owner\":\"Service Coordinator\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tag": "QF-2002"
+          },
+          "response": {
+            "finding": "tag QF-2002 matches 2 assets"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "identity.unresolved",
+            "detail": "{\"message_id\":\"msg-101\",\"tag\":\"QF-2002\",\"finding\":\"tag QF-2002 matches 2 assets\",\"exception_owner\":\"Service Coordinator\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "discharges-an-obligation",
+      "n": 2,
+      "title": "The visit discharges something",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The record is refused or held rather than stored with a null obligation, and coverage does not move.",
+      "actual": "records 0; pass count 0; held 1",
+      "stimulus": {
+        "description": "A visit to an asset carrying two live obligations, naming neither.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "discharges-an-obligation"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tag": "QF-1001"
+          },
+          "response": {
+            "assetId": "A-VS-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "obligationsFor": "A-VS-01"
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "record.no_obligation",
+            "detail": "{\"message_id\":\"msg-201\",\"tag\":\"QF-1001\",\"asset_id\":\"A-VS-01\",\"live_obligations\":[\"OB-1\",\"OB-1Y\"],\"exception_owner\":\"Service Coordinator\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "result-recorded-not-computed",
+      "n": 3,
+      "title": "Result is recorded, never computed",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The stored result is the defect the person entered. No derived value overrides it.",
+      "actual": "stored defect",
+      "stimulus": {
+        "description": "A visit where every reading is within range but the attending person records a defect.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "result-recorded-not-computed"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tag": "QF-1001"
+          },
+          "response": {
+            "assetId": "A-VS-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "obligationsFor": "A-VS-01"
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "record_service",
+          "verb": "write",
+          "subject": "service_record",
+          "request": {
+            "assetId": "A-VS-01",
+            "obligationId": "OB-1",
+            "result": "defect",
+            "evidence": {
+              "kind": "reading",
+              "value": "main drain 0.72 MPa"
+            },
+            "defect": {
+              "code": "D2",
+              "owner": "Rectification Lead",
+              "note": "Valve chain lock missing"
+            },
+            "tagPhotograph": true
+          },
+          "response": {
+            "id": "SR1",
+            "unbound": false
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "evidence-per-class",
+      "n": 4,
+      "title": "Evidence is a property of the class",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Each is held for the evidence its own class requires, and a reading supplied as an image is not accepted as a reading.",
+      "actual": "records 0; refusals held: portable needs image, got reading | held: system needs reading, got image | held: passive needs inspection, got reading",
+      "stimulus": {
+        "description": "One portable item, one system with readings, one passive item, each visited with the wrong evidence for its class.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "evidence-per-class"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tag": "QF-3001"
+          },
+          "response": {
+            "assetId": "A-EX-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "obligationsFor": "A-EX-01"
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "record_service",
+          "verb": "write",
+          "subject": "service_record",
+          "request": {
+            "assetId": "A-EX-01",
+            "obligationId": "OB-41",
+            "result": "pass",
+            "evidence": {
+              "kind": "reading",
+              "value": "1.2 MPa"
+            },
+            "tagPhotograph": true
+          },
+          "response": {
+            "refused": "held: portable needs image, got reading"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "record.held",
+            "detail": "{\"message_id\":\"msg-401\",\"tag\":\"QF-3001\",\"asset_id\":\"A-EX-01\",\"why\":\"held: portable needs image, got reading\",\"exception_owner\":\"Service Coordinator\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tag": "QF-3002"
+          },
+          "response": {
+            "assetId": "A-SP-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "obligationsFor": "A-SP-01"
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "record_service",
+          "verb": "write",
+          "subject": "service_record",
+          "request": {
+            "assetId": "A-SP-01",
+            "obligationId": "OB-42",
+            "result": "pass",
+            "evidence": {
+              "kind": "image",
+              "value": "gmail:gauge-photo.jpg"
+            },
+            "tagPhotograph": true
+          },
+          "response": {
+            "refused": "held: system needs reading, got image"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "record.held",
+            "detail": "{\"message_id\":\"msg-401\",\"tag\":\"QF-3002\",\"asset_id\":\"A-SP-01\",\"why\":\"held: system needs reading, got image\",\"exception_owner\":\"Service Coordinator\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tag": "QF-3003"
+          },
+          "response": {
+            "assetId": "A-FD-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "obligationsFor": "A-FD-01"
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "record_service",
+          "verb": "write",
+          "subject": "service_record",
+          "request": {
+            "assetId": "A-FD-01",
+            "obligationId": "OB-43",
+            "result": "pass",
+            "evidence": {
+              "kind": "reading",
+              "value": "gap 3mm"
+            },
+            "tagPhotograph": true
+          },
+          "response": {
+            "refused": "held: passive needs inspection, got reading"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "record.held",
+            "detail": "{\"message_id\":\"msg-401\",\"tag\":\"QF-3003\",\"asset_id\":\"A-FD-01\",\"why\":\"held: passive needs inspection, got reading\",\"exception_owner\":\"Service Coordinator\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "baseline-absence-reportable",
+      "n": 5,
+      "title": "Baseline absence is reportable",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A non-conformance is stored naming the missing baseline. An empty field is not accepted, because an empty field and a missing baseline are different facts and only one is reportable.",
+      "actual": "non-conformances [{\"assetId\":\"A-VS-01\",\"what\":\"baseline unavailable\"}]",
+      "stimulus": {
+        "description": "A visit to an asset with no baseline on file.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "baseline-absence-reportable"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tag": "QF-1001"
+          },
+          "response": {
+            "assetId": "A-VS-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "obligationsFor": "A-VS-01"
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "baselineAbsent": "A-VS-01"
+          },
+          "response": {
+            "nonConformance": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "record_service",
+          "verb": "write",
+          "subject": "service_record",
+          "request": {
+            "assetId": "A-VS-01",
+            "obligationId": "OB-1",
+            "result": "pass",
+            "evidence": {
+              "kind": "reading",
+              "value": "main drain 0.72 MPa"
+            },
+            "tagPhotograph": true
+          },
+          "response": {
+            "id": "SR1",
+            "unbound": false
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "electrical-blocks-close",
+      "n": 6,
+      "title": "Electrical work blocks the close",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The close is refused. A reminder without a refusal fails this check.",
+      "actual": "close calls {\"ok\":false,\"why\":\"electrical work closed without a certificate\"}",
+      "stimulus": {
+        "description": "A visit involving electrical work, closed without attaching a certificate.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "electrical-blocks-close"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tag": "QF-1001"
+          },
+          "response": {
+            "assetId": "A-VS-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "obligationsFor": "A-VS-01"
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "record_service",
+          "verb": "write",
+          "subject": "service_record",
+          "request": {
+            "assetId": "A-VS-01",
+            "obligationId": "OB-1",
+            "result": "pass",
+            "evidence": {
+              "kind": "reading",
+              "value": "main drain 0.72 MPa"
+            },
+            "tagPhotograph": true
+          },
+          "response": {
+            "id": "SR1",
+            "unbound": false
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "close": "SR1"
+          },
+          "response": {
+            "ok": false,
+            "why": "electrical work closed without a certificate"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "close.refused",
+            "detail": "{\"message_id\":\"msg-601\",\"tag\":\"QF-1001\",\"asset_id\":\"A-VS-01\",\"record_id\":\"SR1\",\"why\":\"electrical work closed without a certificate\",\"exception_owner\":\"Service Coordinator\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "defects-coded",
+      "n": 7,
+      "title": "Defects are coded",
+      "verdict": "pass",
+      "held": true,
+      "expected": "It is refused or held. Every stored defect carries a code from the list and a named owner.",
+      "actual": "stored defects A-VS-02:D3",
+      "stimulus": {
+        "description": "A defect entered as a paragraph with no code and no owner.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "defects-coded"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tag": "QF-1001"
+          },
+          "response": {
+            "assetId": "A-VS-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "obligationsFor": "A-VS-01"
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "record_service",
+          "verb": "write",
+          "subject": "service_record",
+          "request": {
+            "assetId": "A-VS-01",
+            "obligationId": "OB-1",
+            "result": "defect",
+            "evidence": {
+              "kind": "reading",
+              "value": "main drain 0.72 MPa"
+            },
+            "defect": {
+              "note": "Some heads on level 3 look painted over and the gauge seems a bit off, should get someone to look."
+            },
+            "tagPhotograph": true
+          },
+          "response": {
+            "refused": "defect needs a code from the list and a named owner"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "record.held",
+            "detail": "{\"message_id\":\"msg-701\",\"tag\":\"QF-1001\",\"asset_id\":\"A-VS-01\",\"why\":\"defect needs a code from the list and a named owner\",\"exception_owner\":\"Service Coordinator\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tag": "QF-1002"
+          },
+          "response": {
+            "assetId": "A-VS-02"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "obligationsFor": "A-VS-02"
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "record_service",
+          "verb": "write",
+          "subject": "service_record",
+          "request": {
+            "assetId": "A-VS-02",
+            "obligationId": "OB-2",
+            "result": "defect",
+            "evidence": {
+              "kind": "reading",
+              "value": "main drain 0.72 MPa"
+            },
+            "defect": {
+              "code": "D3",
+              "owner": "Rectification Lead",
+              "note": "Painted sprinkler heads, level 3"
+            },
+            "tagPhotograph": true
+          },
+          "response": {
+            "id": "SR1",
+            "unbound": false
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "isolation-has-revisit",
+      "n": 8,
+      "title": "Isolation carries a revisit date",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The first is refused. The second escalates on the day it lapses, and does not clear itself.",
+      "actual": "sweeps {\"lapsed\":[]} {\"lapsed\":[\"A-VS-02\"]} {\"lapsed\":[\"A-VS-02\"]}",
+      "stimulus": {
+        "description": "An isolation with no revisit date, then a second with a date the runner's clock moves past.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "isolation-has-revisit"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tag": "QF-1001"
+          },
+          "response": {
+            "assetId": "A-VS-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "obligationsFor": "A-VS-01"
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "record_service",
+          "verb": "write",
+          "subject": "service_record",
+          "request": {
+            "isolation": "A-VS-01"
+          },
+          "response": {
+            "accepted": false
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "isolation.no_revisit_date",
+            "detail": "{\"message_id\":\"msg-801\",\"tag\":\"QF-1001\",\"asset_id\":\"A-VS-01\",\"exception_owner\":\"Fire Safety Advisor\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tag": "QF-1002"
+          },
+          "response": {
+            "assetId": "A-VS-02"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "obligationsFor": "A-VS-02"
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "record_service",
+          "verb": "write",
+          "subject": "service_record",
+          "request": {
+            "isolation": "A-VS-02",
+            "revisitDate": "2026-09-23T00:00:00.000Z"
+          },
+          "response": {
+            "accepted": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "isolation.recorded",
+            "detail": "{\"message_id\":\"msg-801\",\"tag\":\"QF-1002\",\"asset_id\":\"A-VS-02\",\"revisit_by\":\"2026-09-23T00:00:00.000Z\",\"authorised_by\":\"Site Manager\",\"exception_owner\":\"Fire Safety Advisor\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "sweepIsolations": true
+          },
+          "response": {
+            "lapsed": []
+          }
+        },
+        {
+          "at": "2026-09-24T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "sweepIsolations": true
+          },
+          "response": {
+            "lapsed": [
+              "A-VS-02"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-24T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "isolation.lapsed",
+            "detail": "{\"asset_id\":\"A-VS-02\",\"exception_owner\":\"Fire Safety Advisor\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-25T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "sweepIsolations": true
+          },
+          "response": {
+            "lapsed": [
+              "A-VS-02"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-25T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "isolation.lapsed",
+            "detail": "{\"asset_id\":\"A-VS-02\",\"exception_owner\":\"Fire Safety Advisor\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "unbound-is-visible",
+      "n": 9,
+      "title": "Unbound is a queue you can see",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The record lands in unbound, is absent from the pass count, and carries an age. A build with no unbound queue fails here even though nothing errored, which is the point of the check.",
+      "actual": "unbound 1; pass count 0",
+      "stimulus": {
+        "description": "A visit marked complete with the tag photograph missing.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "unbound-is-visible"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tag": "QF-1001"
+          },
+          "response": {
+            "assetId": "A-VS-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "obligationsFor": "A-VS-01"
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "record_service",
+          "verb": "write",
+          "subject": "service_record",
+          "request": {
+            "assetId": "A-VS-01",
+            "obligationId": "OB-1",
+            "result": "pass",
+            "evidence": {
+              "kind": "reading",
+              "value": "main drain 0.72 MPa"
+            },
+            "tagPhotograph": false
+          },
+          "response": {
+            "id": "SR1",
+            "unbound": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "record.unbound",
+            "detail": "{\"message_id\":\"msg-901\",\"tag\":\"QF-1001\",\"asset_id\":\"A-VS-01\",\"record_id\":\"SR1\",\"exception_owner\":\"Service Coordinator\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "documents-from-the-record",
+      "n": 10,
+      "title": "Documents are generated from the record",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The document carries the corrected values, because it is derived at request time.",
+      "actual": "documents A-VS-01 defect main drain 0.45 MPa",
+      "stimulus": {
+        "description": "A client-facing document requested for an asset whose record was since corrected.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "documents-from-the-record"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tag": "QF-1001"
+          },
+          "response": {
+            "assetId": "A-VS-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "obligationsFor": "A-VS-01"
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "record_service",
+          "verb": "write",
+          "subject": "service_record",
+          "request": {
+            "assetId": "A-VS-01",
+            "obligationId": "OB-1",
+            "result": "defect",
+            "evidence": {
+              "kind": "reading",
+              "value": "main drain 0.40 MPa"
+            },
+            "defect": {
+              "code": "D1",
+              "owner": "Rectification Lead",
+              "note": "Low main drain pressure"
+            },
+            "tagPhotograph": true
+          },
+          "response": {
+            "id": "SR1",
+            "unbound": false
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "defect.critical",
+            "detail": "{\"message_id\":\"msg-1001\",\"tag\":\"QF-1001\",\"asset_id\":\"A-VS-01\",\"record_id\":\"SR1\",\"code\":\"D1\",\"exception_owner\":\"Fire Safety Advisor\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "SR1"
+          },
+          "response": {
+            "text": "A-VS-01 defect main drain 0.45 MPa"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "assetId": "A-VS-01",
+            "jurisdiction": "QLD",
+            "obligationType": "sprinkler-6-monthly"
+          },
+          "response": {
+            "retentionYears": 5,
+            "attestedBy": "the occupier (occupier's statement)"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "jurisdiction-is-data",
+      "n": 11,
+      "title": "Jurisdiction is data",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Retention and the person who may attest differ between the two. A single hard-coded value fails, because it is wrong in at least one state.",
+      "actual": "rules read QLD:{\"retentionYears\":5,\"attestedBy\":\"the occupier (occupier's statement)\"} VIC:{\"retentionYears\":10,\"attestedBy\":\"the owner (annual essential safety measures report)\"}",
+      "stimulus": {
+        "description": "The same asset requested as a Queensland site and as a Victorian one.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "jurisdiction-is-data"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tag": "QF-1001"
+          },
+          "response": {
+            "assetId": "A-VS-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "obligationsFor": "A-VS-01"
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "record_service",
+          "verb": "write",
+          "subject": "service_record",
+          "request": {
+            "assetId": "A-VS-01",
+            "obligationId": "OB-1",
+            "result": "pass",
+            "evidence": {
+              "kind": "reading",
+              "value": "main drain 0.72 MPa"
+            },
+            "tagPhotograph": true
+          },
+          "response": {
+            "id": "SR1",
+            "unbound": false
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tag": "VF-1001"
+          },
+          "response": {
+            "assetId": "A-VS-V1"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "obligationsFor": "A-VS-V1"
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "record_service",
+          "verb": "write",
+          "subject": "service_record",
+          "request": {
+            "assetId": "A-VS-V1",
+            "obligationId": "OB-V1",
+            "result": "pass",
+            "evidence": {
+              "kind": "reading",
+              "value": "main drain 0.72 MPa"
+            },
+            "tagPhotograph": true
+          },
+          "response": {
+            "id": "SR2",
+            "unbound": false
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "SR1"
+          },
+          "response": {
+            "text": "A-VS-01 pass main drain 0.72 MPa"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "assetId": "A-VS-01",
+            "jurisdiction": "QLD",
+            "obligationType": "sprinkler-6-monthly"
+          },
+          "response": {
+            "retentionYears": 5,
+            "attestedBy": "the occupier (occupier's statement)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "SR2"
+          },
+          "response": {
+            "text": "A-VS-V1 pass main drain 0.72 MPa"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "assetId": "A-VS-V1",
+            "jurisdiction": "VIC",
+            "obligationType": "sprinkler-6-monthly"
+          },
+          "response": {
+            "retentionYears": 10,
+            "attestedBy": "the owner (annual essential safety measures report)"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 12,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "The pack is complete and produced within the jurisdiction's window, and nothing in the flow issues or implies a certificate.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "A complete pack produced for a real asset and handed to the person who attests, on a live register.",
+        "now": "2026-11-03T12:15:36.266Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 12,
+    "pass": 11,
+    "fail": 0,
+    "shapeOnly": 0,
+    "withUs": 1,
+    "evidenceRequired": 0
+  }
+}
