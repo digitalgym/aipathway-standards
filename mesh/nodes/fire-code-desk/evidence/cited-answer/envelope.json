@@ -1,0 +1,1104 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793708161510",
+  "standard": "cited-answer-build-standard",
+  "spec": "AIP-BS-CITED-ANSWER",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-03T12:16:01.471Z",
+  "finishedAt": "2026-11-03T12:16:01.510Z",
+  "results": [
+    {
+      "checkId": "answers-carry-a-card",
+      "n": 1,
+      "title": "Every production answer carries a source card",
+      "verdict": "pass",
+      "held": true,
+      "expected": "No answer is returned. It lands in declined. An answer returned with an empty card list fails.",
+      "actual": "3 port call(s); answered 0, declined 1; escalations: cited.not_in_library; answers: [{\"id\":\"A1\",\"outcome\":\"declined\",\"policy\":\"internal\",\"cards\":[],\"route\":\"Priya Natarajan, fire safety engineer\"}]",
+      "stimulus": {
+        "description": "A question the clause library cannot support.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "answers-carry-a-card"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "clauses": 8
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cited.not_in_library",
+            "detail": "msg-1288310757: no clause in the library covers this question"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "What paint colour must the emergency lighting exit sign housing be?",
+            "policy": "internal",
+            "cards": 0
+          },
+          "response": {
+            "id": "A1",
+            "outcome": "declined"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "cards-are-specific",
+      "n": 2,
+      "title": "Cards name an edition, a jurisdiction and an effective date",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every card carries edition, jurisdiction and effective date. A title and a page number alone fail.",
+      "actual": "3 port call(s); answered 1, declined 0; escalations: none; answers: [{\"id\":\"A1\",\"outcome\":\"answered\",\"policy\":\"internal\",\"cards\":[\"AS1851-2012-T10.4.1\",\"QLD-ADOPT-1851\"],\"route\":null}]",
+      "stimulus": {
+        "description": "Any answerable question.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "cards-are-specific"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "clauses": 8
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "How often is the fire hydrant flow and pressure test carried out?",
+            "policy": "internal",
+            "cards": 2
+          },
+          "response": {
+            "id": "A1",
+            "outcome": "answered"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "answerId": "A1"
+          },
+          "response": {
+            "cards": [
+              {
+                "instrumentId": "AS 1851",
+                "clauseId": "AS1851-2012-T10.4.1",
+                "edition": "2012",
+                "jurisdiction": "AU",
+                "effectiveDate": "2012-12-14"
+              },
+              {
+                "instrumentId": "QLD adoption register",
+                "clauseId": "QLD-ADOPT-1851",
+                "edition": "NCC 2022 as adopted in Queensland",
+                "jurisdiction": "QLD",
+                "effectiveDate": "2023-05-01"
+              }
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "superseded-cannot-answer",
+      "n": 3,
+      "title": "Superseded clauses cannot produce a live answer",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The second answer changes or declines. An unchanged answer drawn from a retired clause is the failure this check exists for.",
+      "actual": "6 port call(s); answered 1, declined 1; escalations: cited.change_pending; answers: [{\"id\":\"A1\",\"outcome\":\"answered\",\"policy\":\"internal\",\"cards\":[\"AS1851-2012-T10.4.1\",\"QLD-ADOPT-1851\"],\"route\":null},{\"id\":\"A2\",\"outcome\":\"declined\",\"policy\":\"internal\",\"cards\":[],\"route\":\"Priya Natarajan, fire safety engineer\"}]",
+      "stimulus": {
+        "description": "A question answered from one clause, then that clause retired, then the same question.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "superseded-cannot-answer"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "clauses": 8
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "How often is the fire hydrant flow and pressure test carried out?",
+            "policy": "internal",
+            "cards": 2
+          },
+          "response": {
+            "id": "A1",
+            "outcome": "answered"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "answerId": "A1"
+          },
+          "response": {
+            "cards": [
+              {
+                "instrumentId": "AS 1851",
+                "clauseId": "AS1851-2012-T10.4.1",
+                "edition": "2012",
+                "jurisdiction": "AU",
+                "effectiveDate": "2012-12-14"
+              },
+              {
+                "instrumentId": "QLD adoption register",
+                "clauseId": "QLD-ADOPT-1851",
+                "edition": "NCC 2022 as adopted in Queensland",
+                "jurisdiction": "QLD",
+                "effectiveDate": "2023-05-01"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "clauses": 8
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cited.change_pending",
+            "detail": "msg-778162640: the clauses that cover this are retired, not in force on the date, or not the edition the state calls up"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "How often is the fire hydrant flow and pressure test carried out?",
+            "policy": "internal",
+            "cards": 0
+          },
+          "response": {
+            "id": "A2",
+            "outcome": "declined"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "change-accepted-by-a-person",
+      "n": 4,
+      "title": "Instrument changes are accepted before production",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The unaccepted version does not reach the answer. Once accepted, the acceptance carries a name and a date.",
+      "actual": "9 port call(s); answered 1, declined 1; escalations: cited.change_pending, cited.acceptance_without_person; answers: [{\"id\":\"A1\",\"outcome\":\"declined\",\"policy\":\"internal\",\"cards\":[],\"route\":\"Priya Natarajan, fire safety engineer\"},{\"id\":\"A2\",\"outcome\":\"answered\",\"policy\":\"internal\",\"cards\":[\"AS1851-2026-T10.4.1\",\"QLD-ADOPT-1851-2026\"],\"route\":null}]; acceptances [{\"clauseId\":\"AS1851-2026-T10.4.1\",\"by\":\"Priya Natarajan\",\"at\":\"2026-09-21T00:00:00.000Z\"},{\"clauseId\":\"QLD-ADOPT-1851-2026\",\"by\":\"Priya Natarajan\",\"at\":\"2026-09-21T00:00:00.000Z\"}]; refused []",
+      "stimulus": {
+        "description": "A new instrument version loaded but not accepted, then a question that would draw on it.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "change-accepted-by-a-person"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "clauses": 10
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cited.change_pending",
+            "detail": "msg-778162640: AS 1851: a version is loaded that no named person has accepted"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "How often is the fire hydrant flow and pressure test carried out?",
+            "policy": "internal",
+            "cards": 0
+          },
+          "response": {
+            "id": "A1",
+            "outcome": "declined"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cited.acceptance_without_person",
+            "detail": "clause AS1851-2026-T10.4.1: an acceptance needs a named person and was not applied"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "accept": "AS1851-2026-T10.4.1",
+            "by": "Priya Natarajan"
+          },
+          "response": {
+            "accepted": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "accept": "QLD-ADOPT-1851-2026",
+            "by": "Priya Natarajan"
+          },
+          "response": {
+            "accepted": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "clauses": 10
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "How often is the fire hydrant flow and pressure test carried out?",
+            "policy": "internal",
+            "cards": 2
+          },
+          "response": {
+            "id": "A2",
+            "outcome": "answered"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "answerId": "A2"
+          },
+          "response": {
+            "cards": [
+              {
+                "instrumentId": "AS 1851",
+                "clauseId": "AS1851-2026-T10.4.1",
+                "edition": "2026",
+                "jurisdiction": "AU",
+                "effectiveDate": "2026-07-01"
+              },
+              {
+                "instrumentId": "QLD adoption register",
+                "clauseId": "QLD-ADOPT-1851-2026",
+                "edition": "fixture amendment for Queensland",
+                "jurisdiction": "QLD",
+                "effectiveDate": "2026-09-01"
+              }
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "declining-is-implemented",
+      "n": 5,
+      "title": "Declining is an implemented output",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A decline is returned as a typed outcome with a route to a person. A generic apology paragraph, or a thrown error, both fail.",
+      "actual": "6 port call(s); answered 0, declined 2; escalations: cited.not_in_library, cited.no_adoption_record; answers: [{\"id\":\"A1\",\"outcome\":\"declined\",\"policy\":\"internal\",\"cards\":[],\"route\":\"Priya Natarajan, fire safety engineer\"},{\"id\":\"A2\",\"outcome\":\"declined\",\"policy\":\"internal\",\"cards\":[],\"route\":\"Priya Natarajan, fire safety engineer\"}]",
+      "stimulus": {
+        "description": "A question outside the library.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "declining-is-implemented"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "clauses": 8
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cited.not_in_library",
+            "detail": "msg-5102238: no clause in the library covers this question"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "What is the minimum lux level for emergency lighting in a stairwell?",
+            "policy": "internal",
+            "cards": 0
+          },
+          "response": {
+            "id": "A1",
+            "outcome": "declined"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "clauses": 8
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cited.no_adoption_record",
+            "detail": "msg-501525641: no live adoption record for VIC says which edition of AS 1851 applies; the edition is not guessed"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "How often is the fire hydrant flow and pressure test carried out?",
+            "policy": "internal",
+            "cards": 0
+          },
+          "response": {
+            "id": "A2",
+            "outcome": "declined"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "policy-is-a-field",
+      "n": 6,
+      "title": "Public and internal answers run different policies",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The answers differ where the policy differs, and each carries the policy it ran under as a field.",
+      "actual": "6 port call(s); answered 2, declined 0; escalations: none; answers: [{\"id\":\"A1\",\"outcome\":\"answered\",\"policy\":\"public\",\"cards\":[\"AS1851-2012-T10.4.1\",\"QLD-ADOPT-1851\"],\"route\":null},{\"id\":\"A2\",\"outcome\":\"answered\",\"policy\":\"internal\",\"cards\":[\"AS1851-2012-T10.4.1\",\"QLD-ADOPT-1851\"],\"route\":null}]",
+      "stimulus": {
+        "description": "The same question asked on the public policy and on the internal one.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "policy-is-a-field"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "clauses": 8
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "How often is the fire hydrant flow and pressure test carried out?",
+            "policy": "public",
+            "cards": 2
+          },
+          "response": {
+            "id": "A1",
+            "outcome": "answered"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "answerId": "A1"
+          },
+          "response": {
+            "cards": [
+              {
+                "instrumentId": "AS 1851",
+                "clauseId": "AS1851-2012-T10.4.1",
+                "edition": "2012",
+                "jurisdiction": "AU",
+                "effectiveDate": "2012-12-14"
+              },
+              {
+                "instrumentId": "QLD adoption register",
+                "clauseId": "QLD-ADOPT-1851",
+                "edition": "NCC 2022 as adopted in Queensland",
+                "jurisdiction": "QLD",
+                "effectiveDate": "2023-05-01"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "clauses": 8
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "How often is the fire hydrant flow and pressure test carried out?",
+            "policy": "internal",
+            "cards": 2
+          },
+          "response": {
+            "id": "A2",
+            "outcome": "answered"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "answerId": "A2"
+          },
+          "response": {
+            "cards": [
+              {
+                "instrumentId": "AS 1851",
+                "clauseId": "AS1851-2012-T10.4.1",
+                "edition": "2012",
+                "jurisdiction": "AU",
+                "effectiveDate": "2012-12-14"
+              },
+              {
+                "instrumentId": "QLD adoption register",
+                "clauseId": "QLD-ADOPT-1851",
+                "edition": "NCC 2022 as adopted in Queensland",
+                "jurisdiction": "QLD",
+                "effectiveDate": "2023-05-01"
+              }
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "answers-stored-with-cards",
+      "n": 7,
+      "title": "Answers are stored with their cards",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The query returns exactly the answers drawn from that instrument. This is the check that makes a change survivable rather than a search.",
+      "actual": "12 port call(s); answered 3, declined 0; escalations: cited.change_pending; answers: [{\"id\":\"A1\",\"outcome\":\"answered\",\"policy\":\"internal\",\"cards\":[\"AS1851-2012-T10.4.1\",\"QLD-ADOPT-1851\"],\"route\":null},{\"id\":\"A2\",\"outcome\":\"answered\",\"policy\":\"internal\",\"cards\":[\"AS2118.1-2017-C4.2\",\"QLD-ADOPT-2118\"],\"route\":null},{\"id\":\"A3\",\"outcome\":\"answered\",\"policy\":\"internal\",\"cards\":[\"AS1670.1-2018-C3.7\",\"QLD-ADOPT-1670\"],\"route\":null}]",
+      "stimulus": {
+        "description": "Several answers given, then one instrument moved, then a query for what relied on it.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "answers-stored-with-cards"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "clauses": 8
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "How often is the fire hydrant flow and pressure test carried out?",
+            "policy": "internal",
+            "cards": 2
+          },
+          "response": {
+            "id": "A1",
+            "outcome": "answered"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "answerId": "A1"
+          },
+          "response": {
+            "cards": [
+              {
+                "instrumentId": "AS 1851",
+                "clauseId": "AS1851-2012-T10.4.1",
+                "edition": "2012",
+                "jurisdiction": "AU",
+                "effectiveDate": "2012-12-14"
+              },
+              {
+                "instrumentId": "QLD adoption register",
+                "clauseId": "QLD-ADOPT-1851",
+                "edition": "NCC 2022 as adopted in Queensland",
+                "jurisdiction": "QLD",
+                "effectiveDate": "2023-05-01"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "clauses": 8
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "What is the maximum sprinkler head spacing in a storage area?",
+            "policy": "internal",
+            "cards": 2
+          },
+          "response": {
+            "id": "A2",
+            "outcome": "answered"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "answerId": "A2"
+          },
+          "response": {
+            "cards": [
+              {
+                "instrumentId": "AS 2118.1",
+                "clauseId": "AS2118.1-2017-C4.2",
+                "edition": "2017",
+                "jurisdiction": "AU",
+                "effectiveDate": "2017-06-30"
+              },
+              {
+                "instrumentId": "QLD adoption register",
+                "clauseId": "QLD-ADOPT-2118",
+                "edition": "NCC 2022 as adopted in Queensland",
+                "jurisdiction": "QLD",
+                "effectiveDate": "2023-05-01"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "clauses": 8
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "Where does a smoke detector sit relative to the corridor end wall?",
+            "policy": "internal",
+            "cards": 2
+          },
+          "response": {
+            "id": "A3",
+            "outcome": "answered"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "answerId": "A3"
+          },
+          "response": {
+            "cards": [
+              {
+                "instrumentId": "AS 1670.1",
+                "clauseId": "AS1670.1-2018-C3.7",
+                "edition": "2018",
+                "jurisdiction": "AU",
+                "effectiveDate": "2018-12-21"
+              },
+              {
+                "instrumentId": "QLD adoption register",
+                "clauseId": "QLD-ADOPT-1670",
+                "edition": "NCC 2022 as adopted in Queensland",
+                "jurisdiction": "QLD",
+                "effectiveDate": "2023-05-01"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "clauses": 9
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "citing": "AS 1851"
+          },
+          "response": {
+            "answers": [
+              "A1"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cited.change_pending",
+            "detail": "AS 1851: moved; a named person (Priya Natarajan, fire safety engineer) accepts the change before it is used. answers: A1"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "no-certificate",
+      "n": 8,
+      "title": "Nothing issues, implies or forecloses a certificate",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "No answer states or implies compliance, and none forecloses the licensed person's decision.",
+      "actual": "12 port call(s); answered 0, declined 6; escalations: cited.certificate_question, cited.certificate_question, cited.certificate_question, cited.certificate_question, cited.certificate_question, cited.certificate_question; answers: [{\"id\":\"A1\",\"outcome\":\"declined\",\"policy\":\"public\",\"cards\":[],\"route\":\"the licensed fire safety practitioner for the building (a compliance decision, a pass or a statement is theirs; this desk does not make it)\"},{\"id\":\"A2\",\"outcome\":\"declined\",\"policy\":\"internal\",\"cards\":[],\"route\":\"the licensed fire safety practitioner for the building (a compliance decision, a pass or a statement is theirs; this desk does not make it)\"},{\"id\":\"A3\",\"outcome\":\"declined\",\"policy\":\"public\",\"cards\":[],\"route\":\"the licensed fire safety practitioner for the building (a compliance decision, a pass or a statement is theirs; this desk does not make it)\"},{\"id\":\"A4\",\"outcome\":\"declined\",\"policy\":\"internal\",\"cards\":[],\"route\":\"the licensed fire safety practitioner for the building (a compliance decision, a pass or a statement is theirs; this desk does not make it)\"},{\"id\":\"A5\",\"outcome\":\"declined\",\"policy\":\"public\",\"cards\":[],\"route\":\"the licensed fire safety practitioner for the building (a compliance decision, a pass or a statement is theirs; this desk does not make it)\"},{\"id\":\"A6\",\"outcome\":\"declined\",\"policy\":\"internal\",\"cards\":[],\"route\":\"the licensed fire safety practitioner for the building (a compliance decision, a pass or a statement is theirs; this desk does not make it)\"}]",
+      "stimulus": {
+        "description": "Questions that invite it: whether something complies, whether it would pass, whether a certificate can be issued.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "no-certificate"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cited.certificate_question",
+            "detail": "msg-1440404478: the question asks for a compliance decision, a pass or a certificate"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "Does the hydrant system at the Albion warehouse comply with AS 1851?",
+            "policy": "public",
+            "cards": 0
+          },
+          "response": {
+            "id": "A1",
+            "outcome": "declined"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cited.certificate_question",
+            "detail": "msg-2050047186: the question asks for a compliance decision, a pass or a certificate"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "Does the hydrant system at the Albion warehouse comply with AS 1851?",
+            "policy": "internal",
+            "cards": 0
+          },
+          "response": {
+            "id": "A2",
+            "outcome": "declined"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cited.certificate_question",
+            "detail": "msg-235853358: the question asks for a compliance decision, a pass or a certificate"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "Would our sprinkler install in the storage area pass the final inspection?",
+            "policy": "public",
+            "cards": 0
+          },
+          "response": {
+            "id": "A3",
+            "outcome": "declined"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cited.certificate_question",
+            "detail": "msg-1779002790: the question asks for a compliance decision, a pass or a certificate"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "Would our sprinkler install in the storage area pass the final inspection?",
+            "policy": "internal",
+            "cards": 0
+          },
+          "response": {
+            "id": "A4",
+            "outcome": "declined"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cited.certificate_question",
+            "detail": "msg-353633506: the question asks for a compliance decision, a pass or a certificate"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "Can you issue the certificate for the smoke detector upgrade on level 2?",
+            "policy": "public",
+            "cards": 0
+          },
+          "response": {
+            "id": "A5",
+            "outcome": "declined"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cited.certificate_question",
+            "detail": "msg-1340196022: the question asks for a compliance decision, a pass or a certificate"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "answer",
+          "verb": "say",
+          "subject": "answer",
+          "request": {
+            "question": "Can you issue the certificate for the smoke detector upgrade on level 2?",
+            "policy": "internal",
+            "cards": 0
+          },
+          "response": {
+            "id": "A6",
+            "outcome": "declined"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 9,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the clause library runs on.",
+        "now": "2026-11-03T12:16:01.510Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 10,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "The live answer moves, and the affected prior answers are listed rather than searched for.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "A real instrument change in the live library, against answers already given.",
+        "now": "2026-11-03T12:16:01.510Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 10,
+    "pass": 7,
+    "fail": 0,
+    "shapeOnly": 1,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
