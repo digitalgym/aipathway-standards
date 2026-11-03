@@ -1,0 +1,76 @@
+{
+  "slug": "bill-check",
+  "name": "Bill Check",
+  "office_task": "Check every supplier bill that lands in the ledger against its purchase order before anyone books or pays it, and put each one in exactly one queue for a person.",
+  "verticals": [
+    "accounting-bookkeeping"
+  ],
+  "standards": [
+    "invoice-check"
+  ],
+  "systems_of_record": [
+    "Xero or MYOB (the ledger that issues the bill_id and holds the purchase orders)",
+    "the document store where the written variation approvals live"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/bill-check"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "schedule",
+    "webhook"
+  ],
+  "consumes": [
+    {
+      "event": "bill.received",
+      "wake": "webhook"
+    },
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    },
+    {
+      "event": "exception.closed",
+      "wake": "webhook"
+    }
+  ],
+  "emits": [
+    {
+      "event": "exception.raised",
+      "write": "an exception record on the bill naming the person who owns it: the check that failed and the checks that never ran, the difference in dollars, the source document, and its queue (needs a decision, waiting on the supplier, or blocked: no purchase order, or scope with no written approval)",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the bill_id, the failed check, the dollar difference, the source document and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "bill.no_source_document",
+      "bill.no_purchase_order",
+      "bill.rate_mismatch",
+      "bill.quantity_over_complete",
+      "bill.unapproved_scope",
+      "bill.contract_sum_overrun"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.bill_id",
+      "seam.order_ref",
+      "seam.queue",
+      "seam.failed_check",
+      "seam.never_ran",
+      "seam.difference",
+      "seam.tolerance_version",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
