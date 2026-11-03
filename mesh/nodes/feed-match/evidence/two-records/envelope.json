@@ -1,0 +1,2086 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793709472702",
+  "standard": "two-records-build-standard",
+  "spec": "AIP-BS-TWO-RECORDS",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-03T12:37:52.696Z",
+  "finishedAt": "2026-11-03T12:37:52.702Z",
+  "results": [
+    {
+      "checkId": "a-pair-is-declared-not-guessed",
+      "n": 1,
+      "title": "A pair is declared in a written contract, never guessed",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The contract is read before either source. The published run names the contract and declares the same master per field the contract holds. A run under no contract, or one that declares no master, fails.",
+      "actual": "runs [{\"contractId\":\"PC-bank-feed-vs-xero-bills-2026-10-01\",\"masterByField\":{\"amount\":\"a\",\"paid_on\":\"a\"}}]; no-contract world: 0 run(s), 1 escalation(s); 5 port call(s)",
+      "stimulus": {
+        "description": "A written pair contract naming both sources, the shared key, and a master for each compared field, beside two seeded sources.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "a-pair-is-declared-not-guessed"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "id": "PC-bank-feed-vs-xero-bills-2026-10-01",
+            "key": "bill_id",
+            "masterByField": {
+              "amount": "a",
+              "paid_on": "a"
+            }
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "acceptances": true
+          },
+          "response": {
+            "count": 0,
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "a"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "BILL-101",
+              "BILL-102"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "b"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "BILL-101",
+              "BILL-102"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "runId": "feed-match-2026-09-26T00:00:00.000Z",
+            "contractId": "PC-bank-feed-vs-xero-bills-2026-10-01",
+            "joinedOn": "bill_id",
+            "matched": 2,
+            "withinTolerance": 0,
+            "mismatched": 0,
+            "orphaned": 0,
+            "corrected": 0
+          },
+          "response": {
+            "publishedAt": "2026-09-26T00:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "keys-join-ids-not-labels",
+      "n": 2,
+      "title": "Records are joined on the shared id, never on a name or an amount",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The run declares the contract's key as the join. Those two records are not matched and no difference is raised between them. A run joined on name or amount fails.",
+      "actual": "joinedOn bill_id; matched 1; differences none; orphans BILL-201/a,BILL-202/b",
+      "stimulus": {
+        "description": "Two sources where one record in each carries the same customer name and the same amount but different ids.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "keys-join-ids-not-labels"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "id": "PC-bank-feed-vs-xero-bills-2026-10-01",
+            "key": "bill_id",
+            "masterByField": {
+              "amount": "a",
+              "paid_on": "a"
+            }
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "acceptances": true
+          },
+          "response": {
+            "count": 0,
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "a"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "BILL-201",
+              "BILL-210"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "b"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "BILL-202",
+              "BILL-210"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "orphan": "BILL-201",
+            "source": "a",
+            "reason": "A bank-feed line carries bill BILL-201 in its reference, but no paid bill under that id is in Xero for the period.",
+            "owner": "Priya Shah (bookkeeper)",
+            "runId": "feed-match-2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "orphan": "BILL-202",
+            "source": "b",
+            "reason": "Xero shows bill BILL-202 paid in the period, but no bank-feed line carries that bill id.",
+            "owner": "Priya Shah (bookkeeper)",
+            "runId": "feed-match-2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "runId": "feed-match-2026-09-26T00:00:00.000Z",
+            "contractId": "PC-bank-feed-vs-xero-bills-2026-10-01",
+            "joinedOn": "bill_id",
+            "matched": 1,
+            "withinTolerance": 0,
+            "mismatched": 0,
+            "orphaned": 2,
+            "corrected": 0
+          },
+          "response": {
+            "publishedAt": "2026-09-26T00:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "matched-is-silent-mismatched-is-an-object",
+      "n": 3,
+      "title": "A matched pair produces nothing; a mismatch produces a Difference, never a corrected record",
+      "verdict": "pass",
+      "held": true,
+      "expected": "No Difference exists for the three that agree. The mismatch carries the field, both values and the master's value. No write reached either source and no field changed. A corrected row fails.",
+      "actual": "differences [[\"BILL-304\",\"amount\",412.5,375,412.5],[\"BILL-305\",\"amount\",89,98,89]]; writes 0; changed 0",
+      "stimulus": {
+        "description": "Five shared records: three that agree on every field and two that disagree on the total.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "matched-is-silent-mismatched-is-an-object"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "id": "PC-bank-feed-vs-xero-bills-2026-10-01",
+            "key": "bill_id",
+            "masterByField": {
+              "amount": "a",
+              "paid_on": "a"
+            }
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "acceptances": true
+          },
+          "response": {
+            "count": 0,
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "a"
+          },
+          "response": {
+            "count": 5,
+            "keys": [
+              "BILL-301",
+              "BILL-302",
+              "BILL-303",
+              "BILL-304",
+              "BILL-305"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "b"
+          },
+          "response": {
+            "count": 5,
+            "keys": [
+              "BILL-301",
+              "BILL-302",
+              "BILL-303",
+              "BILL-304",
+              "BILL-305"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "history": "BILL-304"
+          },
+          "response": {
+            "runs": 0,
+            "differences": 0,
+            "corrections": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "difference": "BILL-304",
+            "field": "amount",
+            "valueA": 412.5,
+            "valueB": 375,
+            "masterValue": 412.5,
+            "status": "open",
+            "runId": "feed-match-2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "id": "D1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "propose": "D1",
+            "proposedValue": 412.5,
+            "target": "b"
+          },
+          "response": {
+            "pending": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "history": "BILL-305"
+          },
+          "response": {
+            "runs": 0,
+            "differences": 0,
+            "corrections": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "difference": "BILL-305",
+            "field": "amount",
+            "valueA": 89,
+            "valueB": 98,
+            "masterValue": 89,
+            "status": "open",
+            "runId": "feed-match-2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "id": "D2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "propose": "D2",
+            "proposedValue": 89,
+            "target": "b"
+          },
+          "response": {
+            "pending": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "runId": "feed-match-2026-09-26T00:00:00.000Z",
+            "contractId": "PC-bank-feed-vs-xero-bills-2026-10-01",
+            "joinedOn": "bill_id",
+            "matched": 3,
+            "withinTolerance": 0,
+            "mismatched": 2,
+            "orphaned": 0,
+            "corrected": 0
+          },
+          "response": {
+            "publishedAt": "2026-09-26T00:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "nothing-is-auto-corrected",
+      "n": 4,
+      "title": "A correction is proposed with both values and written only after a named person accepts it",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "No write exists before the acceptance. Exactly one write exists after it, carrying the person's name, and the proposal preceded it. A write with no acceptance, or a second write, fails.",
+      "actual": "writes [{\"source\":\"b\",\"key\":\"BILL-401\",\"field\":\"amount\",\"value\":1320,\"correction\":{\"differenceId\":\"D1\",\"acceptedBy\":\"Priya Shah\",\"acceptedAt\":\"2026-09-26T01:00:00.000Z\"}}]; acceptances 1",
+      "stimulus": {
+        "description": "One open difference. The build runs, a named person accepts the proposal an hour later, and the build runs again.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "nothing-is-auto-corrected"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "id": "PC-bank-feed-vs-xero-bills-2026-10-01",
+            "key": "bill_id",
+            "masterByField": {
+              "amount": "a",
+              "paid_on": "a"
+            }
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "acceptances": true
+          },
+          "response": {
+            "count": 0,
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "a"
+          },
+          "response": {
+            "count": 1,
+            "keys": [
+              "BILL-401"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "b"
+          },
+          "response": {
+            "count": 1,
+            "keys": [
+              "BILL-401"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "history": "BILL-401"
+          },
+          "response": {
+            "runs": 0,
+            "differences": 0,
+            "corrections": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "difference": "BILL-401",
+            "field": "amount",
+            "valueA": 1320,
+            "valueB": 1230,
+            "masterValue": 1320,
+            "status": "open",
+            "runId": "feed-match-2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "id": "D1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "propose": "D1",
+            "proposedValue": 1320,
+            "target": "b"
+          },
+          "response": {
+            "pending": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "two-records.mismatch_rate_exceeded",
+            "detail": "1 of 1 paired bills have an open difference, over the declared rate of 0.5. Owner: Priya Shah (bookkeeper)."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "runId": "feed-match-2026-09-26T00:00:00.000Z",
+            "contractId": "PC-bank-feed-vs-xero-bills-2026-10-01",
+            "joinedOn": "bill_id",
+            "matched": 0,
+            "withinTolerance": 0,
+            "mismatched": 1,
+            "orphaned": 0,
+            "corrected": 0
+          },
+          "response": {
+            "publishedAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "id": "PC-bank-feed-vs-xero-bills-2026-10-01",
+            "key": "bill_id",
+            "masterByField": {
+              "amount": "a",
+              "paid_on": "a"
+            }
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "acceptances": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "D1"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "source": "b",
+            "key": "BILL-401",
+            "field": "amount",
+            "value": 1320,
+            "correction": {
+              "differenceId": "D1",
+              "acceptedBy": "Priya Shah",
+              "acceptedAt": "2026-09-26T01:00:00.000Z"
+            }
+          },
+          "response": {
+            "writtenId": "W2"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "a"
+          },
+          "response": {
+            "count": 1,
+            "keys": [
+              "BILL-401"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "b"
+          },
+          "response": {
+            "count": 1,
+            "keys": [
+              "BILL-401"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "runId": "feed-match-2026-09-26T01:00:00.000Z",
+            "contractId": "PC-bank-feed-vs-xero-bills-2026-10-01",
+            "joinedOn": "bill_id",
+            "matched": 1,
+            "withinTolerance": 0,
+            "mismatched": 0,
+            "orphaned": 0,
+            "corrected": 1
+          },
+          "response": {
+            "publishedAt": "2026-09-26T01:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "id": "PC-bank-feed-vs-xero-bills-2026-10-01",
+            "key": "bill_id",
+            "masterByField": {
+              "amount": "a",
+              "paid_on": "a"
+            }
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "acceptances": true
+          },
+          "response": {
+            "count": 0,
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "a"
+          },
+          "response": {
+            "count": 1,
+            "keys": [
+              "BILL-401"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "b"
+          },
+          "response": {
+            "count": 1,
+            "keys": [
+              "BILL-401"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "runId": "feed-match-2026-09-26T02:00:00.000Z",
+            "contractId": "PC-bank-feed-vs-xero-bills-2026-10-01",
+            "joinedOn": "bill_id",
+            "matched": 1,
+            "withinTolerance": 0,
+            "mismatched": 0,
+            "orphaned": 0,
+            "corrected": 0
+          },
+          "response": {
+            "publishedAt": "2026-09-26T02:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "orphans-are-a-queue",
+      "n": 5,
+      "title": "A record with no partner is an orphan with a reason and an owner, not a silent gap",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Two orphans exist, one per source, each with a reason and an owner, and each was handed to that owner. The run counts two orphaned. A run that reports none fails.",
+      "actual": "orphans [{\"runId\":\"feed-match-2026-09-26T00:00:00.000Z\",\"key\":\"BILL-502\",\"source\":\"a\",\"reason\":\"A bank-feed line carries bill BILL-502 in its reference, but no paid bill under that id is in Xero for the period.\",\"owner\":\"Priya Shah (bookkeeper)\"},{\"runId\":\"feed-match-2026-09-26T00:00:00.000Z\",\"key\":\"BILL-503\",\"source\":\"b\",\"reason\":\"Xero shows bill BILL-503 paid in the period, but no bank-feed line carries that bill id.\",\"owner\":\"Priya Shah (bookkeeper)\"}]; run orphaned 2",
+      "stimulus": {
+        "description": "One record in the first source with no partner in the second, and one in the second with no partner in the first.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "orphans-are-a-queue"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "id": "PC-bank-feed-vs-xero-bills-2026-10-01",
+            "key": "bill_id",
+            "masterByField": {
+              "amount": "a",
+              "paid_on": "a"
+            }
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "acceptances": true
+          },
+          "response": {
+            "count": 0,
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "a"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "BILL-501",
+              "BILL-502"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "b"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "BILL-501",
+              "BILL-503"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "orphan": "BILL-502",
+            "source": "a",
+            "reason": "A bank-feed line carries bill BILL-502 in its reference, but no paid bill under that id is in Xero for the period.",
+            "owner": "Priya Shah (bookkeeper)",
+            "runId": "feed-match-2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "orphan": "BILL-503",
+            "source": "b",
+            "reason": "Xero shows bill BILL-503 paid in the period, but no bank-feed line carries that bill id.",
+            "owner": "Priya Shah (bookkeeper)",
+            "runId": "feed-match-2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "runId": "feed-match-2026-09-26T00:00:00.000Z",
+            "contractId": "PC-bank-feed-vs-xero-bills-2026-10-01",
+            "joinedOn": "bill_id",
+            "matched": 1,
+            "withinTolerance": 0,
+            "mismatched": 0,
+            "orphaned": 2,
+            "corrected": 0
+          },
+          "response": {
+            "publishedAt": "2026-09-26T00:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "tolerance-is-written-down",
+      "n": 6,
+      "title": "Rounding and timing tolerances are declared per field with a value, and never assumed",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The small difference is recorded with status within_tolerance and the large one as open. Every within_tolerance difference names a field the contract holds a tolerance for. An assumed tolerance fails.",
+      "actual": "differences [[\"BILL-601\",\"amount\",\"within_tolerance\"],[\"BILL-602\",\"amount\",\"open\"],[\"BILL-603\",\"paid_on\",\"open\"]]",
+      "stimulus": {
+        "description": "A contract declaring a small tolerance on one field and none on another, with one mismatch inside that tolerance and one outside it.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "tolerance-is-written-down"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "id": "PC-bank-feed-vs-xero-bills-2026-10-01",
+            "key": "bill_id",
+            "masterByField": {
+              "amount": "a",
+              "paid_on": "a"
+            }
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "acceptances": true
+          },
+          "response": {
+            "count": 0,
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "a"
+          },
+          "response": {
+            "count": 3,
+            "keys": [
+              "BILL-601",
+              "BILL-602",
+              "BILL-603"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "b"
+          },
+          "response": {
+            "count": 3,
+            "keys": [
+              "BILL-601",
+              "BILL-602",
+              "BILL-603"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "history": "BILL-601"
+          },
+          "response": {
+            "runs": 0,
+            "differences": 0,
+            "corrections": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "difference": "BILL-601",
+            "field": "amount",
+            "valueA": 333.34,
+            "valueB": 333.33,
+            "masterValue": 333.34,
+            "status": "within_tolerance",
+            "runId": "feed-match-2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "id": "D1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "history": "BILL-602"
+          },
+          "response": {
+            "runs": 0,
+            "differences": 0,
+            "corrections": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "difference": "BILL-602",
+            "field": "amount",
+            "valueA": 150,
+            "valueB": 165,
+            "masterValue": 150,
+            "status": "open",
+            "runId": "feed-match-2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "id": "D2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "propose": "D2",
+            "proposedValue": 150,
+            "target": "b"
+          },
+          "response": {
+            "pending": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "history": "BILL-603"
+          },
+          "response": {
+            "runs": 0,
+            "differences": 0,
+            "corrections": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "difference": "BILL-603",
+            "field": "paid_on",
+            "valueA": "2026-09-24",
+            "valueB": "2026-09-23",
+            "masterValue": "2026-09-24",
+            "status": "open",
+            "runId": "feed-match-2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "id": "D3"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "propose": "D3",
+            "proposedValue": "2026-09-24",
+            "target": "b"
+          },
+          "response": {
+            "pending": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "two-records.mismatch_rate_exceeded",
+            "detail": "2 of 3 paired bills have an open difference, over the declared rate of 0.5. Owner: Priya Shah (bookkeeper)."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "runId": "feed-match-2026-09-26T00:00:00.000Z",
+            "contractId": "PC-bank-feed-vs-xero-bills-2026-10-01",
+            "joinedOn": "bill_id",
+            "matched": 0,
+            "withinTolerance": 1,
+            "mismatched": 2,
+            "orphaned": 0,
+            "corrected": 0
+          },
+          "response": {
+            "publishedAt": "2026-09-26T00:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "runs-on-a-schedule-and-publishes-regardless",
+      "n": 7,
+      "title": "The run publishes on schedule with its counts, including the all-clear",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Two runs are published, each with all five counts and a published time, each an all-clear. A run that stays silent because there was nothing to report fails.",
+      "actual": "runs [{\"at\":\"2026-09-26T00:00:00.000Z\",\"matched\":2,\"withinTolerance\":0,\"mismatched\":0,\"orphaned\":0,\"corrected\":0},{\"at\":\"2026-09-27T00:00:00.000Z\",\"matched\":2,\"withinTolerance\":0,\"mismatched\":0,\"orphaned\":0,\"corrected\":0}]",
+      "stimulus": {
+        "description": "Two sources that agree on every record, and the clock advanced through two scheduled runs.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "runs-on-a-schedule-and-publishes-regardless"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "id": "PC-bank-feed-vs-xero-bills-2026-10-01",
+            "key": "bill_id",
+            "masterByField": {
+              "amount": "a",
+              "paid_on": "a"
+            }
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "acceptances": true
+          },
+          "response": {
+            "count": 0,
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "a"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "BILL-701",
+              "BILL-702"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "b"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "BILL-701",
+              "BILL-702"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "runId": "feed-match-2026-09-26T00:00:00.000Z",
+            "contractId": "PC-bank-feed-vs-xero-bills-2026-10-01",
+            "joinedOn": "bill_id",
+            "matched": 2,
+            "withinTolerance": 0,
+            "mismatched": 0,
+            "orphaned": 0,
+            "corrected": 0
+          },
+          "response": {
+            "publishedAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "id": "PC-bank-feed-vs-xero-bills-2026-10-01",
+            "key": "bill_id",
+            "masterByField": {
+              "amount": "a",
+              "paid_on": "a"
+            }
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "acceptances": true
+          },
+          "response": {
+            "count": 0,
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "a"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "BILL-701",
+              "BILL-702"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "b"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "BILL-701",
+              "BILL-702"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "runId": "feed-match-2026-09-27T00:00:00.000Z",
+            "contractId": "PC-bank-feed-vs-xero-bills-2026-10-01",
+            "joinedOn": "bill_id",
+            "matched": 2,
+            "withinTolerance": 0,
+            "mismatched": 0,
+            "orphaned": 0,
+            "corrected": 0
+          },
+          "response": {
+            "publishedAt": "2026-09-27T00:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "thresholds-route-to-a-person",
+      "n": 8,
+      "title": "A difference over the declared threshold, or too many mismatches, reaches a named person that run",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The named person is notified of that difference before the run publishes, and the run is escalated for its rate. A threshold breach that waits for the next run fails.",
+      "actual": "notices [{\"to\":\"Priya Shah (bookkeeper)\",\"reason\":\"two-records.over_threshold_amount\",\"detail\":\"Bill BILL-801, amount: bank feed 2400, Xero 1500, master 2400. Apart by 900.00, over the declared 500.\",\"at\":\"2026-09-26T00:00:00.000Z\"}]; escalations [{\"reason\":\"two-records.mismatch_rate_exceeded\",\"detail\":\"1 of 3 paired bills have an open difference, over the declared rate of 0.25. Owner: Priya Shah (bookkeeper).\",\"at\":\"2026-09-26T00:00:00.000Z\"}]; published 1",
+      "stimulus": {
+        "description": "A contract with a threshold amount and a mismatch rate, and one difference over the amount that also tips the run over the rate.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "thresholds-route-to-a-person"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "id": "PC-bank-feed-vs-xero-bills-2026-10-01",
+            "key": "bill_id",
+            "masterByField": {
+              "amount": "a",
+              "paid_on": "a"
+            }
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "acceptances": true
+          },
+          "response": {
+            "count": 0,
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "a"
+          },
+          "response": {
+            "count": 3,
+            "keys": [
+              "BILL-801",
+              "BILL-802",
+              "BILL-803"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "b"
+          },
+          "response": {
+            "count": 3,
+            "keys": [
+              "BILL-801",
+              "BILL-802",
+              "BILL-803"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "history": "BILL-801"
+          },
+          "response": {
+            "runs": 0,
+            "differences": 0,
+            "corrections": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "difference": "BILL-801",
+            "field": "amount",
+            "valueA": 2400,
+            "valueB": 1500,
+            "masterValue": 2400,
+            "status": "open",
+            "runId": "feed-match-2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "id": "D1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "propose": "D1",
+            "proposedValue": 2400,
+            "target": "b"
+          },
+          "response": {
+            "pending": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "Priya Shah (bookkeeper)",
+            "reason": "two-records.over_threshold_amount",
+            "detail": "Bill BILL-801, amount: bank feed 2400, Xero 1500, master 2400. Apart by 900.00, over the declared 500."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "two-records.mismatch_rate_exceeded",
+            "detail": "1 of 3 paired bills have an open difference, over the declared rate of 0.25. Owner: Priya Shah (bookkeeper)."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "runId": "feed-match-2026-09-26T00:00:00.000Z",
+            "contractId": "PC-bank-feed-vs-xero-bills-2026-10-01",
+            "joinedOn": "bill_id",
+            "matched": 2,
+            "withinTolerance": 0,
+            "mismatched": 1,
+            "orphaned": 0,
+            "corrected": 0
+          },
+          "response": {
+            "publishedAt": "2026-09-26T00:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "history-survives-the-fix",
+      "n": 9,
+      "title": "Every accepted correction keeps both original values and the person who accepted",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The other source now holds the master's value, the Difference still holds both original values, and the Correction names the person, the time and the written id. Any changed field with no Correction behind it fails.",
+      "actual": "differences [{\"id\":\"D1\",\"runId\":\"feed-match-2026-09-26T00:00:00.000Z\",\"key\":\"BILL-901\",\"field\":\"amount\",\"valueA\":2210,\"valueB\":2201,\"masterValue\":2210,\"status\":\"accepted\"}]; corrections [{\"differenceId\":\"D1\",\"proposedValue\":2210,\"target\":\"b\",\"acceptedBy\":\"Priya Shah\",\"acceptedAt\":\"2026-09-26T02:00:00.000Z\",\"writtenId\":\"W2\"}]; changed [{\"source\":\"b\",\"key\":\"BILL-901\",\"field\":\"amount\",\"from\":2201,\"to\":2210}]",
+      "stimulus": {
+        "description": "One difference, accepted by a named person and written.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "history-survives-the-fix"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "id": "PC-bank-feed-vs-xero-bills-2026-10-01",
+            "key": "bill_id",
+            "masterByField": {
+              "amount": "a",
+              "paid_on": "a"
+            }
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "acceptances": true
+          },
+          "response": {
+            "count": 0,
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "a"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "BILL-901",
+              "BILL-902"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "b"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "BILL-901",
+              "BILL-902"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "history": "BILL-901"
+          },
+          "response": {
+            "runs": 0,
+            "differences": 0,
+            "corrections": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "difference": "BILL-901",
+            "field": "amount",
+            "valueA": 2210,
+            "valueB": 2201,
+            "masterValue": 2210,
+            "status": "open",
+            "runId": "feed-match-2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "id": "D1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "propose": "D1",
+            "proposedValue": 2210,
+            "target": "b"
+          },
+          "response": {
+            "pending": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "runId": "feed-match-2026-09-26T00:00:00.000Z",
+            "contractId": "PC-bank-feed-vs-xero-bills-2026-10-01",
+            "joinedOn": "bill_id",
+            "matched": 1,
+            "withinTolerance": 0,
+            "mismatched": 1,
+            "orphaned": 0,
+            "corrected": 0
+          },
+          "response": {
+            "publishedAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "id": "PC-bank-feed-vs-xero-bills-2026-10-01",
+            "key": "bill_id",
+            "masterByField": {
+              "amount": "a",
+              "paid_on": "a"
+            }
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "acceptances": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "D1"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "source": "b",
+            "key": "BILL-901",
+            "field": "amount",
+            "value": 2210,
+            "correction": {
+              "differenceId": "D1",
+              "acceptedBy": "Priya Shah",
+              "acceptedAt": "2026-09-26T02:00:00.000Z"
+            }
+          },
+          "response": {
+            "writtenId": "W2"
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "a"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "BILL-901",
+              "BILL-902"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "b"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "BILL-901",
+              "BILL-902"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "runId": "feed-match-2026-09-26T02:00:00.000Z",
+            "contractId": "PC-bank-feed-vs-xero-bills-2026-10-01",
+            "joinedOn": "bill_id",
+            "matched": 2,
+            "withinTolerance": 0,
+            "mismatched": 0,
+            "orphaned": 0,
+            "corrected": 1
+          },
+          "response": {
+            "publishedAt": "2026-09-26T02:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "the-record-by-key",
+      "n": 10,
+      "title": "For any shared id, the runs, differences and corrections are retrievable",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A read by that id returns the runs that touched it, the difference with both values, and the correction with the person's name. A record missing the correction fails.",
+      "actual": "history {\"runs\":[{\"id\":\"feed-match-2026-09-26T00:00:00.000Z\",\"at\":\"2026-09-26T00:00:00.000Z\",\"contractId\":\"PC-bank-feed-vs-xero-bills-2026-10-01\",\"joinedOn\":\"bill_id\",\"masterByField\":{\"amount\":\"a\",\"paid_on\":\"a\"},\"matched\":1,\"withinTolerance\":0,\"mismatched\":1,\"orphaned\":0,\"corrected\":0,\"publishedAt\":\"2026-09-26T00:00:00.000Z\"}],\"differences\":[{\"id\":\"D1\",\"runId\":\"feed-match-2026-09-26T00:00:00.000Z\",\"key\":\"BILL-1001\",\"field\":\"amount\",\"valueA\":760,\"valueB\":670,\"masterValue\":760,\"status\":\"accepted\"}],\"corrections\":[{\"differenceId\":\"D1\",\"proposedValue\":760,\"target\":\"b\",\"acceptedBy\":\"Priya Shah\",\"acceptedAt\":\"2026-09-26T01:00:00.000Z\",\"writtenId\":\"W2\"}],\"orphans\":[]}",
+      "stimulus": {
+        "description": "One shared id that was mismatched in one run, accepted, and written in the next.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "the-record-by-key"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "id": "PC-bank-feed-vs-xero-bills-2026-10-01",
+            "key": "bill_id",
+            "masterByField": {
+              "amount": "a",
+              "paid_on": "a"
+            }
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "acceptances": true
+          },
+          "response": {
+            "count": 0,
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "a"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "BILL-1001",
+              "BILL-1002"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "b"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "BILL-1001",
+              "BILL-1002"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "history": "BILL-1001"
+          },
+          "response": {
+            "runs": 0,
+            "differences": 0,
+            "corrections": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "difference": "BILL-1001",
+            "field": "amount",
+            "valueA": 760,
+            "valueB": 670,
+            "masterValue": 760,
+            "status": "open",
+            "runId": "feed-match-2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "id": "D1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "propose": "D1",
+            "proposedValue": 760,
+            "target": "b"
+          },
+          "response": {
+            "pending": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "runId": "feed-match-2026-09-26T00:00:00.000Z",
+            "contractId": "PC-bank-feed-vs-xero-bills-2026-10-01",
+            "joinedOn": "bill_id",
+            "matched": 1,
+            "withinTolerance": 0,
+            "mismatched": 1,
+            "orphaned": 0,
+            "corrected": 0
+          },
+          "response": {
+            "publishedAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "id": "PC-bank-feed-vs-xero-bills-2026-10-01",
+            "key": "bill_id",
+            "masterByField": {
+              "amount": "a",
+              "paid_on": "a"
+            }
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "acceptances": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "D1"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "source": "b",
+            "key": "BILL-1001",
+            "field": "amount",
+            "value": 760,
+            "correction": {
+              "differenceId": "D1",
+              "acceptedBy": "Priya Shah",
+              "acceptedAt": "2026-09-26T01:00:00.000Z"
+            }
+          },
+          "response": {
+            "writtenId": "W2"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "a"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "BILL-1001",
+              "BILL-1002"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "b"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "BILL-1001",
+              "BILL-1002"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "runId": "feed-match-2026-09-26T01:00:00.000Z",
+            "contractId": "PC-bank-feed-vs-xero-bills-2026-10-01",
+            "joinedOn": "bill_id",
+            "matched": 2,
+            "withinTolerance": 0,
+            "mismatched": 0,
+            "orphaned": 0,
+            "corrected": 1
+          },
+          "response": {
+            "publishedAt": "2026-09-26T01:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "history": "BILL-1001"
+          },
+          "response": {
+            "runs": 1,
+            "differences": 1,
+            "corrections": 1
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 11,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the pair contract and the runs runs on.",
+        "now": "2026-11-03T12:37:52.702Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 12,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "The difference shows both values and the master's. The orphan carries a reason and an owner. After a person accepts, the other source holds the master's value once, with the history kept, and the next run publishes an all-clear.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "A real pair on the business's own tenants, with one value deliberately changed in one source and one record added to only one side.",
+        "now": "2026-11-03T12:37:52.702Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 12,
+    "pass": 9,
+    "fail": 0,
+    "shapeOnly": 1,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
