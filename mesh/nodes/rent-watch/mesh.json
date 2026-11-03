@@ -1,0 +1,50 @@
+{
+  "slug": "rent-watch",
+  "name": "Rent Watch",
+  "office_task": "Every day, work out which tenancies are really behind on rent, chase only those, and hand anything past a reminder to a named person.",
+  "verticals": ["property"],
+  "standards": ["rent-arrears"],
+  "systems_of_record": ["the property management system that issues the tenancy_id (its tenancy ledger and message log)"],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/rent-watch" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "rent.overdue", "wake": "webhook" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "exception.raised",
+      "write": "an exception on the tenancy naming the person who owns it: a stop condition that matched, a failed or stale ledger read, a drafted notice awaiting a named release, a fee held for a person, or an unanswered sequence",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the tenancy_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "rent.ledger_read_failed",
+      "rent.ledger_stale",
+      "rent.no_rule_for_state",
+      "rent.payment_received",
+      "rent.hardship_on_file",
+      "rent.notice_drafted_awaiting_release",
+      "rent.fee_held_for_person",
+      "rent.sequence_unanswered",
+      "rent.send_refused"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.tenancy_id", "seam.triage_outcome", "seam.stop_check", "seam.rule_version", "seam.notice_status", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Landlord Ledger",
+    "original_author": "Daniel Masarsky",
+    "share_link": "https://x.ai/bot/sPjI0Dec1DUvTc7H0zxNG",
+    "licence_or_permission": "reimplementation"
+  }
+}
