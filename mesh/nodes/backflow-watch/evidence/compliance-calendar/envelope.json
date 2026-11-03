@@ -1,0 +1,1179 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793708072715",
+  "standard": "compliance-calendar-build-standard",
+  "spec": "AIP-BS-COMPLIANCE-CALENDAR",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-03T12:14:32.683Z",
+  "finishedAt": "2026-11-03T12:14:32.715Z",
+  "results": [
+    {
+      "checkId": "dates-derived-not-stored",
+      "n": 1,
+      "title": "Due dates are derived",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The due date changes on its own. A stored value that survives the rule change fails, which is the whole point of the check.",
+      "actual": "OB-1001 due: 2027-02-28 (QLD-v1) then 2026-10-31 (QLD-v2); due-soon raised 1",
+      "stimulus": {
+        "description": "An obligation with a due date, then a new rule version that changes the interval, effective from a date the runner's clock passes.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "dates-derived-not-stored"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "OB-1001"
+          },
+          "response": {
+            "date": "2027-02-28T00:00:00.000Z",
+            "version": "QLD-v1"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "backflow_device_test",
+            "jurisdiction": "QLD"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "QLD-v1",
+                "effectiveFrom": "2020-01-01T00:00:00.000Z"
+              },
+              {
+                "version": "QLD-v2",
+                "effectiveFrom": "2026-10-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "breached": []
+          }
+        },
+        {
+          "at": "2026-10-11T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-10-11T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "OB-1001"
+          },
+          "response": {
+            "date": "2026-10-31T00:00:00.000Z",
+            "version": "QLD-v2"
+          }
+        },
+        {
+          "at": "2026-10-11T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "backflow_device_test",
+            "jurisdiction": "QLD"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "QLD-v1",
+                "effectiveFrom": "2020-01-01T00:00:00.000Z"
+              },
+              {
+                "version": "QLD-v2",
+                "effectiveFrom": "2026-10-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-10-11T00:00:00.000Z"
+          },
+          "response": {
+            "breached": []
+          }
+        },
+        {
+          "at": "2026-10-11T00:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "prepare": "OB-1001"
+          },
+          "response": {
+            "issued": false,
+            "awaiting": "a named release"
+          }
+        },
+        {
+          "at": "2026-10-11T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "backflow.test_due_soon",
+            "detail": "OB-1001 device BFD-QLD-0141 owner=compliance coordinator due 2026-10-31 under QLD-v2"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "superseded-versions-retained",
+      "n": 2,
+      "title": "Superseded rule versions are retained",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The old version is still readable with its effective dates, and the historic due date can be explained by the rule that produced it.",
+      "actual": "versions read: [{\"versions\":[{\"version\":\"NSW-v1\",\"effectiveFrom\":\"2020-01-01T00:00:00.000Z\"},{\"version\":\"NSW-v2\",\"effectiveFrom\":\"2026-07-01T00:00:00.000Z\"}]}]",
+      "stimulus": {
+        "description": "Two rule versions, and a query about an obligation that fell due under the old one.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "superseded-versions-retained"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "OB-2001"
+          },
+          "response": {
+            "date": "2028-08-11T00:00:00.000Z",
+            "version": "NSW-v2"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "backflow_device_test",
+            "jurisdiction": "NSW"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "NSW-v1",
+                "effectiveFrom": "2020-01-01T00:00:00.000Z"
+              },
+              {
+                "version": "NSW-v2",
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "breached": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "rules-per-jurisdiction",
+      "n": 3,
+      "title": "Rules are held per jurisdiction",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The two due dates differ where the rule differs, from one rule store rather than two builds.",
+      "actual": "QLD {\"date\":\"2026-10-11T00:00:00.000Z\",\"version\":\"QLD-v1\"}, VIC {\"date\":\"2026-12-10T00:00:00.000Z\",\"version\":\"VIC-v1\"}",
+      "stimulus": {
+        "description": "The same obligation on two properties in different states.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "rules-per-jurisdiction"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "OB-3001"
+          },
+          "response": {
+            "date": "2026-10-11T00:00:00.000Z",
+            "version": "QLD-v1"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "backflow_device_test",
+            "jurisdiction": "QLD"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "QLD-v1",
+                "effectiveFrom": "2020-01-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "OB-3002"
+          },
+          "response": {
+            "date": "2026-12-10T00:00:00.000Z",
+            "version": "VIC-v1"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "backflow_device_test",
+            "jurisdiction": "VIC"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "VIC-v1",
+                "effectiveFrom": "2020-01-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "breached": []
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "prepare": "OB-3001"
+          },
+          "response": {
+            "issued": false,
+            "awaiting": "a named release"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "backflow.test_due_soon",
+            "detail": "OB-3001 device BFD-QLD-0141 owner=compliance coordinator due 2026-10-11 under QLD-v1"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "unknown-anchor-surfaces",
+      "n": 4,
+      "title": "An unknown anchor surfaces",
+      "verdict": "pass",
+      "held": true,
+      "expected": "It appears in an explicit unknown-anchor state. A silently defaulted date, including today, fails: a wrong due date that looks confident is worse than a visible gap.",
+      "actual": "unknown anchors surfaced: 1; escalations [\"backflow.anchor_unknown\"]",
+      "stimulus": {
+        "description": "An obligation whose anchor date is missing.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "unknown-anchor-surfaces"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "unknownAnchor": "OB-4001"
+          },
+          "response": {
+            "surfaced": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "backflow.anchor_unknown",
+            "detail": "OB-4001 device BFD-QLD-0141 owner=compliance coordinator no last-test date on the register"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "breached": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "evidence-of-completion",
+      "n": 5,
+      "title": "Completion carries evidence",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The completion is not accepted as evidence on its own, and the obligation is not counted as covered.",
+      "actual": "completion attempts: [{\"accepted\":false,\"why\":\"no document attached\"}]",
+      "stimulus": {
+        "description": "An obligation marked complete with no document attached.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "evidence-of-completion"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "complete": "OB-5001"
+          },
+          "response": {
+            "accepted": false,
+            "why": "no document attached"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "backflow.test_without_report",
+            "detail": "OB-5001 device BFD-QLD-0141 owner=compliance coordinator no document attached"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "OB-5001"
+          },
+          "response": {
+            "date": "2026-10-01T00:00:00.000Z",
+            "version": "QLD-v1"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "backflow_device_test",
+            "jurisdiction": "QLD"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "QLD-v1",
+                "effectiveFrom": "2020-01-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "breached": []
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "prepare": "OB-5001"
+          },
+          "response": {
+            "issued": false,
+            "awaiting": "a named release"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "backflow.test_due_soon",
+            "detail": "OB-5001 device BFD-QLD-0141 owner=compliance coordinator due 2026-10-01 under QLD-v1"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "refusal-is-dated-outcome",
+      "n": 6,
+      "title": "A refusal is a dated outcome",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The refusal is stored with its date, and the obligation is still live and now overdue. A refusal that closes the obligation fails.",
+      "actual": "sweeps: [[],[\"OB-6001\"]]",
+      "stimulus": {
+        "description": "An owner declines the work. The runner then advances the clock past the due date.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "refusal-is-dated-outcome"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "refusal": "OB-6001",
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "stillLive": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "backflow.test_declined",
+            "detail": "OB-6001 device BFD-VIC-0318 owner=compliance coordinator declined by site owner on 2026-09-21"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "OB-6001"
+          },
+          "response": {
+            "date": "2026-10-01T00:00:00.000Z",
+            "version": "VIC-v1"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "backflow_device_test",
+            "jurisdiction": "VIC"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "VIC-v1",
+                "effectiveFrom": "2020-01-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "breached": []
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "prepare": "OB-6001"
+          },
+          "response": {
+            "issued": false,
+            "awaiting": "a named release"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "backflow.test_due_soon",
+            "detail": "OB-6001 device BFD-VIC-0318 owner=compliance coordinator due 2026-10-01 under VIC-v1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-10-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "OB-6001"
+          },
+          "response": {
+            "date": "2026-10-01T00:00:00.000Z",
+            "version": "VIC-v1"
+          }
+        },
+        {
+          "at": "2026-10-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "backflow_device_test",
+            "jurisdiction": "VIC"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "VIC-v1",
+                "effectiveFrom": "2020-01-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-10-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-10-21T00:00:00.000Z"
+          },
+          "response": {
+            "breached": [
+              "OB-6001"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "backflow.critical_overdue",
+            "detail": "OB-6001 device BFD-VIC-0318 owner=compliance coordinator due 2026-10-01 under VIC-v1"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "notice-needs-a-person",
+      "n": 7,
+      "title": "Nothing sends a legal notice unreleased",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "No notice is issued. The notice sits awaiting a named release.",
+      "actual": "notice calls: [{\"issued\":false,\"awaiting\":\"a named release\"}]",
+      "stimulus": {
+        "description": "A breached obligation whose rule names a notice, with no release recorded.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "notice-needs-a-person"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "OB-7001"
+          },
+          "response": {
+            "date": "2026-08-12T00:00:00.000Z",
+            "version": "NSW-v1"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "backflow_device_test",
+            "jurisdiction": "NSW"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "NSW-v1",
+                "effectiveFrom": "2020-01-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "breached": [
+              "OB-7001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "backflow.critical_overdue",
+            "detail": "OB-7001 device BFD-NSW-0207 owner=compliance coordinator due 2026-08-12 under NSW-v1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "prepare": "OB-7001"
+          },
+          "response": {
+            "issued": false,
+            "awaiting": "a named release"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "backflow.notice_drafted_awaiting_release",
+            "detail": "OB-7001 device BFD-NSW-0207 owner=compliance coordinator"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "breach-does-not-self-clear",
+      "n": 8,
+      "title": "A breach does not clear itself",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The breach remains on the record after completion. The next cycle starts clean; the breach does not disappear from the history.",
+      "actual": "breached on each sweep: [[\"OB-8001\"],[\"OB-8001\"],[\"OB-8001\"]]",
+      "stimulus": {
+        "description": "An obligation allowed to breach, then completed late, then the clock advanced again.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "breach-does-not-self-clear"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-01T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-10-01T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "OB-8001"
+          },
+          "response": {
+            "date": "2026-09-26T00:00:00.000Z",
+            "version": "QLD-v1"
+          }
+        },
+        {
+          "at": "2026-10-01T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "backflow_device_test",
+            "jurisdiction": "QLD"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "QLD-v1",
+                "effectiveFrom": "2020-01-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-10-01T00:00:00.000Z"
+          },
+          "response": {
+            "breached": [
+              "OB-8001"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "backflow.critical_overdue",
+            "detail": "OB-8001 device BFD-QLD-0141 owner=compliance coordinator due 2026-09-26 under QLD-v1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-06T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-10-06T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "complete": "OB-8001",
+            "evidenceRef": "doc:backflow-test-report-OB-8001.pdf"
+          },
+          "response": {
+            "accepted": true
+          }
+        },
+        {
+          "at": "2026-10-06T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "OB-8001"
+          },
+          "response": {
+            "date": "2026-09-26T00:00:00.000Z",
+            "version": "QLD-v1"
+          }
+        },
+        {
+          "at": "2026-10-06T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "backflow_device_test",
+            "jurisdiction": "QLD"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "QLD-v1",
+                "effectiveFrom": "2020-01-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-10-06T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-10-06T00:00:00.000Z"
+          },
+          "response": {
+            "breached": [
+              "OB-8001"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-05T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-11-05T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "OB-8001"
+          },
+          "response": {
+            "date": "2026-09-26T00:00:00.000Z",
+            "version": "QLD-v1"
+          }
+        },
+        {
+          "at": "2026-11-05T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "backflow_device_test",
+            "jurisdiction": "QLD"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "QLD-v1",
+                "effectiveFrom": "2020-01-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-11-05T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-11-05T00:00:00.000Z"
+          },
+          "response": {
+            "breached": [
+              "OB-8001"
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 9,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the rule store runs on.",
+        "now": "2026-11-03T12:14:32.715Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 10,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "Every affected obligation re-derives, and nothing that was breached reads clean afterwards.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "A real rule change against the live register, then a real late completion.",
+        "now": "2026-11-03T12:14:32.715Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 10,
+    "pass": 7,
+    "fail": 0,
+    "shapeOnly": 1,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
