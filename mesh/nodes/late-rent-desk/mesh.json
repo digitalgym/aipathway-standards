@@ -1,0 +1,63 @@
+{
+  "slug": "late-rent-desk",
+  "name": "Late Rent Desk",
+  "office_task": "For a landlord with 1 to 50 doors: each day, find who is really behind on rent, text only them, and hand notices, fees and hardship to a person.",
+  "verticals": ["property"],
+  "standards": ["rent-arrears"],
+  "systems_of_record": ["the property management system or rent ledger that issues the tenancy_id (its tenancy ledger, rule store and message log)"],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/late-rent-desk" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "rent.overdue", "wake": "webhook" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "evidence.filed",
+      "write": "the sent copy of each released arrears SMS (body, recipient tenancy, timestamp), filed in the message log against the tenancy_id, after every stop condition was checked against a fresh ledger read",
+      "readback": "reading the message log by tenancy_id returns the message with its tenancy_id, body and sent time; if the new copy does not read back, the desk raises rent.message_not_filed and the sequence goes no further"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the tenancy naming the person who owns it: a stop condition that matched, a failed or stale ledger read, no dated rule for the state, a notice drafted and held for a named release, a fee held for a person, hardship stated, or a sequence that went unanswered",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the tenancy_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "rent.ledger_read_failed",
+      "rent.ledger_stale",
+      "rent.no_rule_for_state",
+      "rent.unmatched_receipt",
+      "rent.payment_received",
+      "rent.payment_in_transit",
+      "rent.payment_arrangement",
+      "rent.hardship_on_file",
+      "rent.hardship_stated",
+      "rent.dispute_or_advocacy_on_file",
+      "rent.on_formal_path",
+      "rent.paused_by_person",
+      "rent.notice_drafted_awaiting_release",
+      "rent.fee_held_for_person",
+      "rent.sequence_unanswered",
+      "rent.send_refused",
+      "rent.message_not_filed"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.tenancy_id", "seam.triage_outcome", "seam.stop_check", "seam.rule_version", "seam.next_lawful_date", "seam.notice_status", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "LeaseLord",
+    "original_author": "Jonah",
+    "share_link": "https://x.ai/bot/cMtHljXnkIqtyUf20XbIE",
+    "licence_or_permission": "reimplementation"
+  }
+}
