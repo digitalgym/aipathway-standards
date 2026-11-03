@@ -2,19 +2,40 @@
   "slug": "comp-report",
   "name": "Comp Report",
   "office_task": "Every Monday, publish the multifamily comp report: availability, effective rents and the comp set, every figure linked to its source and read time.",
-  "verticals": ["property"],
-  "standards": ["recurring-report"],
+  "verticals": [
+    "property"
+  ],
+  "standards": [
+    "recurring-report"
+  ],
   "systems_of_record": [
     "the property management system (rent roll and unit availability)",
     "the comp survey the leasing team keeps",
     "the system the report is published into, which issues the report_id"
   ],
-  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/comp-report" },
-  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
-  "runtime": ["node", "schedule", "webhook"],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/comp-report",
+    "bot": "https://x.ai/bot/2klmOvDYaA_opn3EOIUfq"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "schedule",
+    "webhook",
+    "grok-bot-template"
+  ],
   "consumes": [
-    { "event": "schedule.tick", "wake": "schedule" },
-    { "event": "exception.closed", "wake": "webhook" }
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    },
+    {
+      "event": "exception.closed",
+      "wake": "webhook"
+    }
   ],
   "emits": [
     {
@@ -44,7 +65,14 @@
   },
   "durable_state": {
     "writes_to": "system-of-record",
-    "fields": ["seam.report_id", "seam.period", "seam.version", "seam.supersedes", "seam.published_by", "seam.exception_owner"]
+    "fields": [
+      "seam.report_id",
+      "seam.period",
+      "seam.version",
+      "seam.supersedes",
+      "seam.published_by",
+      "seam.exception_owner"
+    ]
   },
   "private_memory": "none",
   "port_of": {

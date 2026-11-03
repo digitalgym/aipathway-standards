@@ -2,8 +2,12 @@
   "slug": "consultant-hours",
   "name": "Consultant Hours",
   "office_task": "Total each consultant's onsite, remote and unplaced hours from their PDF timesheets, put the odd ones in front of a named person, and send nothing to payroll until someone releases it.",
-  "verticals": ["b2b-office"],
-  "standards": ["timesheet-check"],
+  "verticals": [
+    "b2b-office"
+  ],
+  "standards": [
+    "timesheet-check"
+  ],
   "systems_of_record": [
     "the document store that issues the document_id for each PDF timesheet (SharePoint or Google Drive); entries are keyed <document_id>#<row>",
     "the job system that issues the job_id and holds the allocations and the roster",
@@ -11,13 +15,33 @@
     "the workbook or report store the payroll officer opens, which returns a report_id",
     "the exception desk the business runs, for the anomaly queue"
   ],
-  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/consultant-hours" },
-  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
-  "runtime": ["node", "schedule", "webhook"],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/consultant-hours",
+    "bot": "https://x.ai/bot/QKzqqDJ8wJbvqYBaI7wAC"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "schedule",
+    "webhook",
+    "grok-bot-template"
+  ],
   "consumes": [
-    { "event": "document.received", "wake": "webhook" },
-    { "event": "schedule.tick", "wake": "schedule" },
-    { "event": "exception.closed", "wake": "webhook" }
+    {
+      "event": "document.received",
+      "wake": "webhook"
+    },
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    },
+    {
+      "event": "exception.closed",
+      "wake": "webhook"
+    }
   ],
   "emits": [
     {
@@ -33,13 +57,28 @@
   ],
   "matches_after_intake": "id-only",
   "exceptions": {
-    "raises": ["over_hours", "overlap", "missing_break", "not_rostered", "not_allocated", "rule_unclear"],
+    "raises": [
+      "over_hours",
+      "overlap",
+      "missing_break",
+      "not_rostered",
+      "not_allocated",
+      "rule_unclear"
+    ],
     "owner_field": "owner",
     "halts_on_open": true
   },
   "durable_state": {
     "writes_to": "system-of-record",
-    "fields": ["anomaly.kind", "anomaly.owner", "anomaly.resolution", "card.rule_id", "card.edition", "period.released_by", "period.export_external_id"]
+    "fields": [
+      "anomaly.kind",
+      "anomaly.owner",
+      "anomaly.resolution",
+      "card.rule_id",
+      "card.edition",
+      "period.released_by",
+      "period.export_external_id"
+    ]
   },
   "private_memory": "none",
   "port_of": {

@@ -2,16 +2,42 @@
   "slug": "arrears-desk",
   "name": "Arrears Desk",
   "office_task": "Each day after the platform's own reminders, chase only tenants who are truly behind, quoting the paid-to date and exact balance, and hand the rest to a named person.",
-  "verticals": ["property"],
-  "standards": ["rent-arrears"],
-  "systems_of_record": ["the property management system that issues the tenancy_id (PropertyMe, Console Cloud or similar): its tenancy ledger, rule store and message log"],
-  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/arrears-desk" },
-  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
-  "runtime": ["node", "schedule", "webhook"],
+  "verticals": [
+    "property"
+  ],
+  "standards": [
+    "rent-arrears"
+  ],
+  "systems_of_record": [
+    "the property management system that issues the tenancy_id (PropertyMe, Console Cloud or similar): its tenancy ledger, rule store and message log"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/arrears-desk",
+    "bot": "https://x.ai/bot/z0E70Q65K7N9H0DK4lpFv"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "schedule",
+    "webhook",
+    "grok-bot-template"
+  ],
   "consumes": [
-    { "event": "schedule.tick", "wake": "schedule" },
-    { "event": "rent.overdue", "wake": "webhook" },
-    { "event": "exception.closed", "wake": "webhook" }
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    },
+    {
+      "event": "rent.overdue",
+      "wake": "webhook"
+    },
+    {
+      "event": "exception.closed",
+      "wake": "webhook"
+    }
   ],
   "emits": [
     {
@@ -46,7 +72,14 @@
   },
   "durable_state": {
     "writes_to": "system-of-record",
-    "fields": ["seam.tenancy_id", "seam.triage_outcome", "seam.stop_check", "seam.rule_version", "seam.notice_status", "seam.exception_owner"]
+    "fields": [
+      "seam.tenancy_id",
+      "seam.triage_outcome",
+      "seam.stop_check",
+      "seam.rule_version",
+      "seam.notice_status",
+      "seam.exception_owner"
+    ]
   },
   "private_memory": "none",
   "port_of": {

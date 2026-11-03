@@ -2,17 +2,47 @@
   "slug": "buy-desk",
   "name": "Buy Desk",
   "office_task": "Buy the materials for one job from stock first and the supplier's own prices, release only under the money rules, and check every delivery docket back.",
-  "verticals": ["trades-building"],
-  "standards": ["material-order"],
-  "systems_of_record": ["the job system that issues the job_id and holds its material list and stock", "the supplier portal or job-system purchasing that issues each order's external id"],
-  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/buy-desk" },
-  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
-  "runtime": ["node", "schedule", "webhook"],
+  "verticals": [
+    "trades-building"
+  ],
+  "standards": [
+    "material-order"
+  ],
+  "systems_of_record": [
+    "the job system that issues the job_id and holds its material list and stock",
+    "the supplier portal or job-system purchasing that issues each order's external id"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/buy-desk",
+    "bot": "https://x.ai/bot/1W4EU_JwirerMm-cGcCaJ"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "schedule",
+    "webhook",
+    "grok-bot-template"
+  ],
   "consumes": [
-    { "event": "schedule.tick", "wake": "schedule" },
-    { "event": "job.updated", "wake": "webhook" },
-    { "event": "document.received", "wake": "webhook" },
-    { "event": "exception.closed", "wake": "webhook" }
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    },
+    {
+      "event": "job.updated",
+      "wake": "webhook"
+    },
+    {
+      "event": "document.received",
+      "wake": "webhook"
+    },
+    {
+      "event": "exception.closed",
+      "wake": "webhook"
+    }
   ],
   "emits": [
     {
@@ -50,7 +80,15 @@
   },
   "durable_state": {
     "writes_to": "system-of-record",
-    "fields": ["seam.job_id", "seam.order_external_id", "seam.supplier_id", "seam.catalogue_edition", "seam.released_by", "seam.order_status", "seam.exception_owner"]
+    "fields": [
+      "seam.job_id",
+      "seam.order_external_id",
+      "seam.supplier_id",
+      "seam.catalogue_edition",
+      "seam.released_by",
+      "seam.order_status",
+      "seam.exception_owner"
+    ]
   },
   "private_memory": "none",
   "port_of": {

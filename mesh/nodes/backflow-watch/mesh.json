@@ -2,16 +2,42 @@
   "slug": "backflow-watch",
   "name": "Backflow Watch",
   "office_task": "Every morning, check our backflow device register against each state's rule, draft bookings for tests due soon, and put anything overdue or unclear in front of a named person.",
-  "verticals": ["fire-electrical"],
-  "standards": ["compliance-calendar"],
-  "systems_of_record": ["the contractor's asset register of testable backflow prevention devices (its dated rule store per state, and the document store the signed test reports are filed in)"],
-  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/backflow-watch" },
-  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
-  "runtime": ["node", "schedule", "webhook"],
+  "verticals": [
+    "fire-electrical"
+  ],
+  "standards": [
+    "compliance-calendar"
+  ],
+  "systems_of_record": [
+    "the contractor's asset register of testable backflow prevention devices (its dated rule store per state, and the document store the signed test reports are filed in)"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/backflow-watch",
+    "bot": "https://x.ai/bot/ED8j8tN_8248uYCmMquRb"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "schedule",
+    "webhook",
+    "grok-bot-template"
+  ],
   "consumes": [
-    { "event": "schedule.tick", "wake": "schedule" },
-    { "event": "document.received", "wake": "webhook" },
-    { "event": "exception.closed", "wake": "webhook" }
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    },
+    {
+      "event": "document.received",
+      "wake": "webhook"
+    },
+    {
+      "event": "exception.closed",
+      "wake": "webhook"
+    }
   ],
   "emits": [
     {
@@ -44,7 +70,16 @@
   },
   "durable_state": {
     "writes_to": "system-of-record",
-    "fields": ["seam.asset_id", "seam.rule_version", "seam.anchor_status", "seam.class", "seam.evidence", "seam.refused_at", "seam.breached_at", "seam.exception_owner"]
+    "fields": [
+      "seam.asset_id",
+      "seam.rule_version",
+      "seam.anchor_status",
+      "seam.class",
+      "seam.evidence",
+      "seam.refused_at",
+      "seam.breached_at",
+      "seam.exception_owner"
+    ]
   },
   "private_memory": "none",
   "port_of": {
