@@ -1,0 +1,73 @@
+{
+  "slug": "fire-code-desk",
+  "name": "Fire Code Desk",
+  "office_task": "Answer our engineers' fire and electrical code questions from the Standards we hold, citing the clause and the edition the state adopted, or hand them to a named person.",
+  "verticals": ["fire-electrical"],
+  "standards": ["cited-answer"],
+  "systems_of_record": [
+    "the mail system that issues the message_id the question arrived on (Gmail, Outlook)",
+    "the office's own clause library of the NCC, the Australian Standards it calls up (AS 1851, AS 1670.1, AS 2118.1, AS 2419.1, AS/NZS 3000) and each state's adoption records, with its answer register",
+    "the exception desk the business runs, which issues the exception_id"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/fire-code-desk" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "webhook", "schedule"],
+  "consumes": [
+    { "event": "email.received", "wake": "webhook" },
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "answer.sent",
+      "write": "a stored answer with its source cards (the clause, and the state adoption record that calls up its edition), sent as a reply on the question's thread only after a named person released it on the answer register",
+      "readback": "the mail system returns the reply's message_id, and reading that id back returns the thread it replies in and the answer register id; no id back means it was not sent, and cited.send_unconfirmed is raised to the named owner"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the question's message naming the person who owns it: no state given, nothing in the library covers it, no adoption record says which edition applies in that state, a compliance or certificate question for the licensed practitioner, a source conflict between two live instruments, or an instrument that moved and waits for a named person to accept it (listing every stored answer that relied on it)",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the message_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "cited.no_jurisdiction",
+      "cited.not_in_library",
+      "cited.no_adoption_record",
+      "cited.certificate_question",
+      "cited.source_conflict",
+      "cited.change_pending",
+      "cited.acceptance_without_person",
+      "cited.release_refused",
+      "cited.release_without_person",
+      "cited.send_unconfirmed"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "answer.message_id",
+      "answer.queue",
+      "answer.policy",
+      "answer.source_card_ids",
+      "answer.released_by",
+      "source_card.edition",
+      "source_card.jurisdiction",
+      "source_card.effective_from",
+      "adoption.calls_up_edition",
+      "change_delta.accepted_by",
+      "change_delta.accepted_on",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "NFPA Research Assistant",
+    "original_author": "Michal Sullivan",
+    "share_link": "https://x.ai/bot/m80whfWBZ-sHVLjHbtBg1",
+    "licence_or_permission": "reimplementation"
+  }
+}
