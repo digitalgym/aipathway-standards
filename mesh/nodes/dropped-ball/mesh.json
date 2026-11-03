@@ -1,0 +1,39 @@
+{
+  "slug": "dropped-ball",
+  "name": "Dropped-Ball Scanner",
+  "office_task": "Every evening, find what customers and suppliers still owe us that nobody chased, send the next capped follow-up on a consented channel, and hand any no or dead end to a named person.",
+  "verticals": ["b2b-office"],
+  "standards": ["follow-up"],
+  "systems_of_record": ["the register of open items on the business's own records (the job system's quotes and variations, or a sheet kept beside it), with its contact consents and written cadence"],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/dropped-ball" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "exception.raised",
+      "write": "an escalation on the open item naming the person who now owns it, for a no, a dispute, a stop-contacting-me, or the cadence cap reached with nothing back, carrying every touch so far",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the item id, the reason, the exception_owner and the touch history; no id back means nothing was raised and the item is not touched again that run"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": ["follow_up.declined", "follow_up.disputed", "follow_up.cap_reached"],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["item.status", "item.touches", "item.outcome", "item.arrival_evidence_ref", "item.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Dropped-Ball Scanner",
+    "original_author": "Austen Allred",
+    "share_link": "https://x.ai/bot/E-uo4CQ__9GjtWYhWLPQF",
+    "licence_or_permission": "reimplementation"
+  }
+}
