@@ -1,0 +1,62 @@
+{
+  "slug": "permit-answers",
+  "name": "Permit Answers",
+  "office_task": "Answer the office's permit, inspection, zoning and building code questions from the council and state rules we hold, citing the clause, or hand them to a named person.",
+  "verticals": ["trades-building"],
+  "standards": ["cited-answer"],
+  "systems_of_record": [
+    "the mail system that issues the message_id the question arrived on (Gmail, Outlook)",
+    "the business's own clause library of council planning schemes, building regulations and inspection schedules, with its answer register",
+    "the exception desk the business runs, which issues the exception_id"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/permit-answers" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "webhook", "schedule"],
+  "consumes": [
+    { "event": "email.received", "wake": "webhook" },
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "exception.raised",
+      "write": "an exception on the question's message naming the person who owns it: no jurisdiction given, nothing in the library covers it, a compliance or certificate question for the licensed certifier, a source conflict between two live instruments, or an instrument that moved and is waiting for a named person to accept the change (listing every stored answer that relied on it)",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the message_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "cited.no_jurisdiction",
+      "cited.not_in_library",
+      "cited.certificate_question",
+      "cited.source_conflict",
+      "cited.change_pending",
+      "cited.acceptance_without_person"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "answer.message_id",
+      "answer.queue",
+      "answer.policy",
+      "answer.source_card_ids",
+      "source_card.edition",
+      "source_card.jurisdiction",
+      "source_card.effective_from",
+      "change_delta.accepted_by",
+      "change_delta.accepted_on",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "CITY HALL",
+    "original_author": "John Christian",
+    "share_link": "https://x.ai/bot/j8YX4im_bz4a5L75BYhWe",
+    "licence_or_permission": "reimplementation"
+  }
+}
