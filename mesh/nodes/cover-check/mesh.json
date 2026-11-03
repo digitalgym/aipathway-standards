@@ -1,0 +1,69 @@
+{
+  "slug": "cover-check",
+  "name": "Cover Check",
+  "office_task": "File each contractor insurance certificate against their record, check it is current and right for the work, track its expiry, and clear no one with an item missing until a person releases it.",
+  "verticals": ["property"],
+  "standards": ["rejected-pack"],
+  "systems_of_record": [
+    "the mail system that issues the message_id (the agency's Gmail or Outlook mailbox the certificates arrive in)",
+    "the property management system's contractor record (PropertyMe, Console Cloud or PropertyTree) that each certificate is bound to",
+    "the document store that holds the filed original (SharePoint, OneDrive or Google Drive)",
+    "the exception desk the agency runs, holding each stopped pack with its named owner"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/cover-check" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "webhook", "schedule"],
+  "consumes": [
+    { "event": "email.received", "wake": "webhook" },
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "evidence.filed",
+      "write": "the certificate of insurance from the message, filed against the contractor's record by its id, with the extracted policy details (insurer, policy number, cover amount, expiry, insured name and ABN) as graph fields carrying their confidence, the pack's queue after the eight checks in order, every written not-applicable with its rule, the renewal request date derived from the dated rule, and the as-of date",
+      "readback": "reading the contractor record by its id from the property system returns the filed document with the message_id and seam.queue, seam.failed_check, seam.as_of and seam.renewal_due; no document back with that message_id means it was not filed and the run raises an exception instead"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the contractor's pack naming the person who owns it: the first check that failed (identity, an expired certificate or licence, no rule loaded, a missing item, cover under the minimum, or two ABNs in one pack), Yellow fields waiting for a person to confirm, or a pack waiting for a named release before it can be handed over",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the contractor record id, the message_id, the failed check with its reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "cover.identity_failed",
+      "cover.certificate_expired",
+      "cover.no_rule_for_state",
+      "cover.item_missing",
+      "cover.below_minimum",
+      "cover.two_abns",
+      "cover.yellow_fields",
+      "cover.awaiting_release"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.message_id",
+      "seam.contractor_ref",
+      "seam.queue",
+      "seam.failed_check",
+      "seam.rule_version",
+      "seam.renewal_due",
+      "seam.as_of",
+      "seam.accepted_by",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "Track vendor insurance COIs and renewals with Gmail, DeepSeek, Sheets, Discord, and Telegram",
+    "original_author": "Khaisa Studio",
+    "share_link": "https://n8n.io/workflows/18553",
+    "licence_or_permission": "reimplementation"
+  }
+}
