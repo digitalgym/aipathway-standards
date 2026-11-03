@@ -1,0 +1,4260 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793713988719",
+  "standard": "follow-up-build-standard",
+  "spec": "AIP-BS-FOLLOW-UP",
+  "specVersion": "2026-10-05",
+  "environment": "stub",
+  "startedAt": "2026-11-03T13:53:08.676Z",
+  "finishedAt": "2026-11-03T13:53:08.719Z",
+  "results": [
+    {
+      "checkId": "open-item-is-an-object",
+      "n": 1,
+      "title": "Every thing owed is an open item with a kind, a record, a person and a due date",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every touch traces to an item carrying all four fields. The note receives no touch. A touch on anything that is not an open item fails.",
+      "actual": "5 touch(es) [Q105:sms:sent, P103:sms:sent, V101:sms:sent, C102:sms:sent, F104:sms:sent]; 0 outcome(s); 0 arrival(s); 0 escalation(s); 0 alert(s)",
+      "stimulus": {
+        "description": "Five well-formed open items of mixed kinds, plus one note somebody typed with no kind, no record and no due date.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "open-item-is-an-object"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 6,
+            "open": [
+              "V101",
+              "C102",
+              "P103",
+              "F104",
+              "Q105",
+              "NOTE1"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 12
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 5
+          },
+          "response": {
+            "order": [
+              "Q105",
+              "P103",
+              "V101",
+              "C102",
+              "F104"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms",
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "Q105"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "Q105",
+            "channel": "sms",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "Q105",
+            "channel": "sms",
+            "text": "Hi Sam, a reminder from the builder's office: we are still waiting on your decision on the quote for job JOB-105. It was due back on 2026-09-24. If you have already sent it, thanks, and please ignore this. Reply STOP and we will not contact you about it again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "po_number"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms",
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "P103"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "P103",
+            "channel": "sms",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "P103",
+            "channel": "sms",
+            "text": "Hi Mel, a reminder from the builder's office: we are still waiting on your purchase order number for job JOB-103. It was due back on 2026-09-25. If you have already sent it, thanks, and please ignore this. Reply STOP and we will not contact you about it again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "signed_variation"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms",
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "V101"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "V101",
+            "channel": "sms",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "V101",
+            "channel": "sms",
+            "text": "Hi Priya, a reminder from the builder's office: we are still waiting on the signed variation for job JOB-101 ($8,400.00 inc GST). It was due back on 2026-09-23. If you have already sent it, thanks, and please ignore this. Reply STOP and we will not contact you about it again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "certificate"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms",
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "C102"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "C102",
+            "channel": "sms",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "C102",
+            "channel": "sms",
+            "text": "Hi Tom, a reminder from the builder's office: we are still waiting on the compliance certificate for your work for job JOB-102. It was due back on 2026-09-20. If you have already sent it, thanks, and please ignore this. Reply STOP and we will not contact you about it again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms",
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "F104"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "F104",
+            "channel": "sms",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "F104",
+            "channel": "sms",
+            "text": "Hi Dave, a reminder from the builder's office: we are still waiting on the signed form for job JOB-104. It was due back on 2026-09-17. If you have already sent it, thanks, and please ignore this. Reply STOP and we will not contact you about it again."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "ranked-by-value-and-age-not-age-alone",
+      "n": 2,
+      "title": "The chase order is value at risk, then days open, never age alone",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The submitted order is by value at risk descending, then by days open. An order that puts the oldest small item first fails.",
+      "actual": "submitted order: V204($22500, 3d) > P205($9100, 1d) > C202($4800, 20d) > V203($4800, 12d) > F201($300, 40d)",
+      "stimulus": {
+        "description": "Five open items where the oldest carries the smallest value and the newest but one carries the largest.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "ranked-by-value-and-age-not-age-alone"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 5,
+            "open": [
+              "F201",
+              "C202",
+              "V203",
+              "V204",
+              "P205"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 5
+          },
+          "response": {
+            "order": [
+              "V204",
+              "P205",
+              "C202",
+              "V203",
+              "F201"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "signed_variation"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "V204"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "V204",
+            "channel": "email",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "V204",
+            "channel": "email",
+            "text": "Hi Dave, a reminder from the builder's office: we are still waiting on the signed variation for job JOB-204 ($22,500.00 inc GST). It was due back on 2026-09-26. If you have already sent it, thanks, and please ignore this. Reply STOP and we will not contact you about it again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "po_number"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "P205"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "P205",
+            "channel": "email",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "P205",
+            "channel": "email",
+            "text": "Hi Sam, a reminder from the builder's office: we are still waiting on your purchase order number for job JOB-205. It was due back on 2026-09-26. If you have already sent it, thanks, and please ignore this. Reply STOP and we will not contact you about it again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "certificate"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "C202"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "C202",
+            "channel": "email",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "C202",
+            "channel": "email",
+            "text": "Hi Tom, a reminder from the builder's office: we are still waiting on the compliance certificate for your work for job JOB-202. It was due back on 2026-09-09. If you have already sent it, thanks, and please ignore this. Reply STOP and we will not contact you about it again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "signed_variation"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "V203"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "V203",
+            "channel": "email",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "V203",
+            "channel": "email",
+            "text": "Hi Mel, a reminder from the builder's office: we are still waiting on the signed variation for job JOB-203 ($4,800.00 inc GST). It was due back on 2026-09-17. If you have already sent it, thanks, and please ignore this. Reply STOP and we will not contact you about it again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "F201"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "F201",
+            "channel": "email",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "F201",
+            "channel": "email",
+            "text": "Hi Priya, a reminder from the builder's office: we are still waiting on the signed form for job JOB-201. It was due back on 2026-08-20. If you have already sent it, thanks, and please ignore this. Reply STOP and we will not contact you about it again."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "cadence-has-a-cap",
+      "n": 3,
+      "title": "Touches per item are capped and spaced, on a written cadence",
+      "verdict": "pass",
+      "held": true,
+      "expected": "No item carries more touches than its cap, no two touches on one item are closer than the gap, and every touch follows a gate decision that allowed it. A touch with no gate decision fails.",
+      "actual": "3 touch(es) [V301:sms:sent, V301:sms:sent, V301:sms:sent]; 0 outcome(s); 0 arrival(s); 1 escalation(s); 1 alert(s)",
+      "stimulus": {
+        "description": "A cadence of three touches, two days apart. The run driven every day for eight days on the same open item.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "cadence-has-a-cap"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "V301"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "V301"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "signed_variation"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "V301"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "V301",
+            "channel": "sms",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "V301",
+            "channel": "sms",
+            "text": "Hi Priya, a reminder from the builder's office: we are still waiting on the signed variation for job JOB-301 ($12,750.00 inc GST). It was due back on 2026-09-24. If you have already sent it, thanks, and please ignore this. Reply STOP and we will not contact you about it again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "V301"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "V301"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "signed_variation"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "V301"
+          },
+          "response": {
+            "touches": 1,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "V301",
+            "channel": "sms",
+            "touchesSoFar": 1
+          },
+          "response": {
+            "allowed": false,
+            "reason": "too_soon"
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "V301"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "V301"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "signed_variation"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "V301"
+          },
+          "response": {
+            "touches": 1,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "V301",
+            "channel": "sms",
+            "touchesSoFar": 1
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "V301",
+            "channel": "sms",
+            "text": "Hi Priya, a reminder from the builder's office: we are still waiting on the signed variation for job JOB-301 ($12,750.00 inc GST). It was due back on 2026-09-24. If you have already sent it, thanks, and please ignore this. Reply STOP and we will not contact you about it again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-29T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "V301"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-29T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-29T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-29T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "V301"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-29T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "signed_variation"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-29T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "V301"
+          },
+          "response": {
+            "touches": 2,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-29T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "V301",
+            "channel": "sms",
+            "touchesSoFar": 2
+          },
+          "response": {
+            "allowed": false,
+            "reason": "too_soon"
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "V301"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "V301"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "signed_variation"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "V301"
+          },
+          "response": {
+            "touches": 2,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "V301",
+            "channel": "sms",
+            "touchesSoFar": 2
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "V301",
+            "channel": "sms",
+            "text": "Hi Priya, a reminder from the builder's office: we are still waiting on the signed variation for job JOB-301 ($12,750.00 inc GST). It was due back on 2026-09-24. If you have already sent it, thanks, and please ignore this. Reply STOP and we will not contact you about it again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-01T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "V301"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-10-01T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-10-01T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "V301"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "signed_variation"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "V301"
+          },
+          "response": {
+            "touches": 3,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "V301"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "V301"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "signed_variation"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "V301"
+          },
+          "response": {
+            "touches": 3,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "itemId": "V301",
+            "reason": "cap_reached",
+            "to": "Karen Doyle, contracts administrator",
+            "history": 3
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "person": "Karen Doyle, contracts administrator",
+            "text": "the signed variation on job JOB-301 (item V301, $12,750.00 at risk) reached the cap of 3 touches with nothing back. 3 touch(es) so far: sms 2026-09-26T00:00:00.000Z sent; sms 2026-09-28T00:00:00.000Z sent; sms 2026-09-30T00:00:00.000Z sent. It is with you now; nothing further goes out from here."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-03T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-10-03T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-10-03T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-10-03T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "channel-follows-consent",
+      "n": 4,
+      "title": "A message goes only on a channel the contact has consented to",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every SMS or email touch has a consent row for that contact and that channel. The email-only contact receives email. A text to them fails.",
+      "actual": "2 touch(es) [V401:email:sent, V402:sms:sent]; 0 outcome(s); 0 arrival(s); 0 escalation(s); 0 alert(s)",
+      "stimulus": {
+        "description": "A cadence whose first channel is SMS, and a contact whose only recorded consent is email.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "channel-follows-consent"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 2,
+            "open": [
+              "V401",
+              "V402"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "V401",
+              "V402"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "signed_variation"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms",
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "V401"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "V401",
+            "channel": "email",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "V401",
+            "channel": "email",
+            "text": "Hi Priya, a reminder from the builder's office: we are still waiting on the signed variation for job JOB-401 ($6,200.00 inc GST). It was due back on 2026-09-25. If you have already sent it, thanks, and please ignore this. Reply STOP and we will not contact you about it again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "signed_variation"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms",
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "V402"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "V402",
+            "channel": "sms",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "V402",
+            "channel": "sms",
+            "text": "Hi Tom, a reminder from the builder's office: we are still waiting on the signed variation for job JOB-402 ($3,900.00 inc GST). It was due back on 2026-09-25. If you have already sent it, thanks, and please ignore this. Reply STOP and we will not contact you about it again."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "the-call-discloses-first",
+      "n": 5,
+      "title": "A follow-up call opens with the AI identification and the recording notice",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "For every call, the first turn spoken is the disclosure and it carries both the identification and the recording notice. A call whose first turn is the ask fails.",
+      "actual": "V501 agent: Hi, this is an AI assistant calling on behalf of the builder's office. This call is recorded. | V501 agent: I'm calling about the signed variation for job JOB-501. What day can we expect it back? | V501 contact: Should have it back to you in a few days | C502 agent: Hi, this is an AI assistant calling on behalf of the builder's office. This call is recorded. | C502 agent: I'm calling about the compliance certificate for your work for job JOB-502. What day can we expect it back? | C502 contact: Should have it back to you in a few days",
+      "stimulus": {
+        "description": "A cadence whose channel is the call, on two open items.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "the-call-discloses-first"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 2,
+            "open": [
+              "V501",
+              "C502"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "V501",
+              "C502"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "signed_variation"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "call"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "V501"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "V501",
+            "channel": "call",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "itemId": "V501",
+            "text": "Hi, this is an AI assistant calling on behalf of the builder's office. This call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "V501",
+            "text": "I'm calling about the signed variation for job JOB-501. What day can we expect it back?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "V501",
+            "listen": true
+          },
+          "response": {
+            "text": "Should have it back to you in a few days",
+            "heard": "date",
+            "value": "2026-10-02"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "record_promise",
+          "verb": "write",
+          "subject": "promise",
+          "request": {
+            "itemId": "V501",
+            "kind": "date",
+            "value": "2026-10-02"
+          },
+          "response": {
+            "id": "OUT1",
+            "recordedAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "certificate"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "call"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "C502"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "C502",
+            "channel": "call",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "itemId": "C502",
+            "text": "Hi, this is an AI assistant calling on behalf of the builder's office. This call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "C502",
+            "text": "I'm calling about the compliance certificate for your work for job JOB-502. What day can we expect it back?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "C502",
+            "listen": true
+          },
+          "response": {
+            "text": "Should have it back to you in a few days",
+            "heard": "date",
+            "value": "2026-10-02"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "record_promise",
+          "verb": "write",
+          "subject": "promise",
+          "request": {
+            "itemId": "C502",
+            "kind": "date",
+            "value": "2026-10-02"
+          },
+          "response": {
+            "id": "OUT2",
+            "recordedAt": "2026-09-26T00:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-ask-one-answer",
+      "n": 6,
+      "title": "The call asks for the one thing owed and records the answer as a date or a decision",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Each call has one ask and one recorded outcome for its item, the first with kind date and a real date as its value, the second with kind decision. A call with no outcome, or an outcome whose value is free text, fails.",
+      "actual": "2 touch(es) [Q602:call:decision, V601:call:date]; 2 outcome(s); 1 arrival(s); 0 escalation(s); 0 alert(s); outcomes Q602=decision:approved, V601=date:2026-10-02",
+      "stimulus": {
+        "description": "Two calls: one where the contact gives a day, one where the contact says the quote is approved.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-ask-one-answer"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 2,
+            "open": [
+              "V601",
+              "Q602"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "Q602",
+              "V601"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "call"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "Q602"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "Q602",
+            "channel": "call",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "itemId": "Q602",
+            "text": "Hi, this is an AI assistant calling on behalf of the builder's office. This call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "Q602",
+            "text": "I'm calling about the quote for job JOB-602. Are you going ahead with it?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "Q602",
+            "listen": true
+          },
+          "response": {
+            "text": "Yes, that's approved, go ahead",
+            "heard": "decision",
+            "value": "approved"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "record_promise",
+          "verb": "write",
+          "subject": "promise",
+          "request": {
+            "itemId": "Q602",
+            "kind": "decision",
+            "value": "approved"
+          },
+          "response": {
+            "id": "OUT1",
+            "recordedAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "signed_variation"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "call"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "V601"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "V601",
+            "channel": "call",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "itemId": "V601",
+            "text": "Hi, this is an AI assistant calling on behalf of the builder's office. This call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "V601",
+            "text": "I'm calling about the signed variation for job JOB-601. What day can we expect it back?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "V601",
+            "listen": true
+          },
+          "response": {
+            "text": "I'll have it signed and back to you by 2026-10-02",
+            "heard": "date",
+            "value": "2026-10-02"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "record_promise",
+          "verb": "write",
+          "subject": "promise",
+          "request": {
+            "itemId": "V601",
+            "kind": "date",
+            "value": "2026-10-02"
+          },
+          "response": {
+            "id": "OUT2",
+            "recordedAt": "2026-09-26T00:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "stops-the-moment-it-arrives",
+      "n": 7,
+      "title": "When the item arrives, the chase stops that run",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The arrival is attached as evidence on the item, the item's status is arrived, and no touch on it carries a time after the arrival. A reminder sent after the document came back fails.",
+      "actual": "1 touch(es) [V701:sms:sent]; 0 outcome(s); 1 arrival(s); 0 escalation(s); 0 alert(s); status arrived; evidence gmail:18c2f9a4e7-signed-variation-v701.pdf",
+      "stimulus": {
+        "description": "One touch goes out, then the signed variation arrives between runs, then two more runs.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "stops-the-moment-it-arrives"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "V701"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 12
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "V701"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "signed_variation"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms",
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "V701"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "V701",
+            "channel": "sms",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "V701",
+            "channel": "sms",
+            "text": "Hi Priya, a reminder from the builder's office: we are still waiting on the signed variation for job JOB-701 ($14,300.00 inc GST). It was due back on 2026-09-24. If you have already sent it, thanks, and please ignore this. Reply STOP and we will not contact you about it again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "V701"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 12
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "itemId": "V701",
+            "ref": "gmail:18c2f9a4e7-signed-variation-v701.pdf"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 12
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "disputed-or-declined-stops-and-escalates",
+      "n": 8,
+      "title": "A no, a dispute, or stop contacting me ends the chase and goes to a person",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Both items carry a declined or dispute outcome, an escalation naming a person, and no touch after the outcome. A second touch on either fails.",
+      "actual": "2 touch(es) [V802:call:declined, V801:call:declined]; 2 outcome(s); 0 arrival(s); 2 escalation(s); 2 alert(s); escalated to V802->Karen Doyle, contracts administrator (declined), V801->Karen Doyle, contracts administrator (declined)",
+      "stimulus": {
+        "description": "One contact says no on the call; another says stop contacting me. Then two more runs.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "disputed-or-declined-stops-and-escalates"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 2,
+            "open": [
+              "V801",
+              "V802"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 12
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "V802",
+              "V801"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "signed_variation"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "call",
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "V802"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "V802",
+            "channel": "call",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "itemId": "V802",
+            "text": "Hi, this is an AI assistant calling on behalf of the builder's office. This call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "V802",
+            "text": "I'm calling about the signed variation for job JOB-802. What day can we expect it back?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "V802",
+            "listen": true
+          },
+          "response": {
+            "text": "Please stop contacting me about this",
+            "heard": "stop"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "record_promise",
+          "verb": "write",
+          "subject": "promise",
+          "request": {
+            "itemId": "V802",
+            "kind": "declined",
+            "value": "stop_contact"
+          },
+          "response": {
+            "id": "OUT1",
+            "recordedAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "V802"
+          },
+          "response": {
+            "touches": 1,
+            "outcomes": 1,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "itemId": "V802",
+            "reason": "declined",
+            "to": "Karen Doyle, contracts administrator",
+            "history": 1
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "person": "Karen Doyle, contracts administrator",
+            "text": "the signed variation on job JOB-802 (item V802, $11,200.00 at risk) the other side said no (\"Please stop contacting me about this\"). 1 touch(es) so far: call 2026-09-26T00:00:00.000Z declined. It is with you now; nothing further goes out from here."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "signed_variation"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "call",
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "V801"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "V801",
+            "channel": "call",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "itemId": "V801",
+            "text": "Hi, this is an AI assistant calling on behalf of the builder's office. This call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "V801",
+            "text": "I'm calling about the signed variation for job JOB-801. What day can we expect it back?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "V801",
+            "listen": true
+          },
+          "response": {
+            "text": "No, we're not going ahead with that variation",
+            "heard": "declined"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "record_promise",
+          "verb": "write",
+          "subject": "promise",
+          "request": {
+            "itemId": "V801",
+            "kind": "declined",
+            "value": "declined"
+          },
+          "response": {
+            "id": "OUT2",
+            "recordedAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "V801"
+          },
+          "response": {
+            "touches": 1,
+            "outcomes": 1,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "itemId": "V801",
+            "reason": "declined",
+            "to": "Karen Doyle, contracts administrator",
+            "history": 1
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "person": "Karen Doyle, contracts administrator",
+            "text": "the signed variation on job JOB-801 (item V801, $5,600.00 at risk) the other side said no (\"No, we're not going ahead with that variation\"). 1 touch(es) so far: call 2026-09-26T00:00:00.000Z declined. It is with you now; nothing further goes out from here."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 2,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 12
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 2,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 12
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "never-nags-a-person-who-is-waiting-on-us",
+      "n": 9,
+      "title": "No touch goes out while the ball is with the business",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The items were read, the gate was asked, and that item has no touch. Any touch on it fails.",
+      "actual": "2 touch(es) [V902:sms:sent, V902:sms:sent]; 0 outcome(s); 0 arrival(s); 0 escalation(s); 0 alert(s); gate on V901: we_owe_them, we_owe_them",
+      "stimulus": {
+        "description": "An open item whose record says the business still owes the contact a revised drawing. Two runs.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "never-nags-a-person-who-is-waiting-on-us"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 2,
+            "open": [
+              "V901",
+              "V902"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 12
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "V901",
+              "V902"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "signed_variation"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms",
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "V901"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "V901",
+            "channel": "sms",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": false,
+            "reason": "we_owe_them"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "signed_variation"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms",
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "V902"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "V902",
+            "channel": "sms",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "V902",
+            "channel": "sms",
+            "text": "Hi Tom, a reminder from the builder's office: we are still waiting on the signed variation for job JOB-902 ($3,100.00 inc GST). It was due back on 2026-09-23. If you have already sent it, thanks, and please ignore this. Reply STOP and we will not contact you about it again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 2,
+            "open": [
+              "V901",
+              "V902"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 12
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "V901",
+              "V902"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "signed_variation"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms",
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "V901"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "V901",
+            "channel": "sms",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": false,
+            "reason": "we_owe_them"
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "signed_variation"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms",
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "V902"
+          },
+          "response": {
+            "touches": 1,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "V902",
+            "channel": "sms",
+            "touchesSoFar": 1
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "V902",
+            "channel": "sms",
+            "text": "Hi Tom, a reminder from the builder's office: we are still waiting on the signed variation for job JOB-902 ($3,100.00 inc GST). It was due back on 2026-09-23. If you have already sent it, thanks, and please ignore this. Reply STOP and we will not contact you about it again."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "escalates-after-the-cap",
+      "n": 10,
+      "title": "An item still open at the cap goes to a named person with its history, not into a longer loop",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Exactly three touches, then one escalation naming a person and carrying three touches of history, and a notification to that person. A fourth touch, a second escalation, or an escalation with no name fails.",
+      "actual": "3 touch(es) [V1001:sms:sent, V1001:sms:sent, V1001:sms:sent]; 0 outcome(s); 0 arrival(s); 1 escalation(s); 1 alert(s); escalations Karen Doyle, contracts administrator with 3 touch(es)",
+      "stimulus": {
+        "description": "A cadence of three, driven past the cap: five runs at the gap on one item that never arrives.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "escalates-after-the-cap"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "V1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "V1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "signed_variation"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "V1001"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "V1001",
+            "channel": "sms",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "V1001",
+            "channel": "sms",
+            "text": "Hi Priya, a reminder from the builder's office: we are still waiting on the signed variation for job JOB-1001 ($17,800.00 inc GST). It was due back on 2026-09-24. If you have already sent it, thanks, and please ignore this. Reply STOP and we will not contact you about it again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "V1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "V1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "signed_variation"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "V1001"
+          },
+          "response": {
+            "touches": 1,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "V1001",
+            "channel": "sms",
+            "touchesSoFar": 1
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "V1001",
+            "channel": "sms",
+            "text": "Hi Priya, a reminder from the builder's office: we are still waiting on the signed variation for job JOB-1001 ($17,800.00 inc GST). It was due back on 2026-09-24. If you have already sent it, thanks, and please ignore this. Reply STOP and we will not contact you about it again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "V1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "V1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "signed_variation"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "V1001"
+          },
+          "response": {
+            "touches": 2,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "V1001",
+            "channel": "sms",
+            "touchesSoFar": 2
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "V1001",
+            "channel": "sms",
+            "text": "Hi Priya, a reminder from the builder's office: we are still waiting on the signed variation for job JOB-1001 ($17,800.00 inc GST). It was due back on 2026-09-24. If you have already sent it, thanks, and please ignore this. Reply STOP and we will not contact you about it again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "V1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "V1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "signed_variation"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "V1001"
+          },
+          "response": {
+            "touches": 3,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "itemId": "V1001",
+            "reason": "cap_reached",
+            "to": "Karen Doyle, contracts administrator",
+            "history": 3
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "person": "Karen Doyle, contracts administrator",
+            "text": "the signed variation on job JOB-1001 (item V1001, $17,800.00 at risk) reached the cap of 3 touches with nothing back. 3 touch(es) so far: sms 2026-09-26T00:00:00.000Z sent; sms 2026-09-28T00:00:00.000Z sent; sms 2026-09-30T00:00:00.000Z sent. It is with you now; nothing further goes out from here."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-04T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-10-04T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-10-04T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-10-04T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "the-record-by-item",
+      "n": 11,
+      "title": "Every touch, its channel, its outcome and the arrival are retrievable by item",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A read by item id returns two touches with their channels and outcomes, the date outcome, and the arrival with its evidence reference. A touch with no outcome, or an arrival with no evidence, fails.",
+      "actual": "touches call:date, sms:sent; arrival gmail:18c3a01b22-signed-variation-v1101.pdf",
+      "stimulus": {
+        "description": "One item: a call that gets a date, a text two days later, then the document arrives.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "the-record-by-item"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "V1101"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "V1101"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "signed_variation"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "call",
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "V1101"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "V1101",
+            "channel": "call",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "itemId": "V1101",
+            "text": "Hi, this is an AI assistant calling on behalf of the builder's office. This call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "V1101",
+            "text": "I'm calling about the signed variation for job JOB-1101. What day can we expect it back?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "V1101",
+            "listen": true
+          },
+          "response": {
+            "text": "Should have it signed and back by 2026-09-30",
+            "heard": "date",
+            "value": "2026-09-30"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "record_promise",
+          "verb": "write",
+          "subject": "promise",
+          "request": {
+            "itemId": "V1101",
+            "kind": "date",
+            "value": "2026-09-30"
+          },
+          "response": {
+            "id": "OUT1",
+            "recordedAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "V1101"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "V1101"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "signed_variation"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "call",
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "V1101"
+          },
+          "response": {
+            "touches": 1,
+            "outcomes": 1,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "V1101",
+            "channel": "sms",
+            "touchesSoFar": 1
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "V1101",
+            "channel": "sms",
+            "text": "Hi Priya, a reminder from the builder's office: we are still waiting on the signed variation for job JOB-1101 ($8,900.00 inc GST). You said it would be back with us by 2026-09-30. If you have already sent it, thanks, and please ignore this. Reply STOP and we will not contact you about it again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "V1101"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "itemId": "V1101",
+            "ref": "gmail:18c3a01b22-signed-variation-v1101.pdf"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 12,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the open items and the cadence runs on.",
+        "now": "2026-11-03T13:53:08.719Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 13,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "The arrived item has no touch after its arrival. The no is recorded and with a person. The capped item is escalated once with its history. Each call's recording opens with the disclosure and ends with a recorded outcome.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "Real open items on the business's own records, real contacts on real numbers, the cadence the business wrote down, run over its own days.",
+        "now": "2026-11-03T13:53:08.719Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 13,
+    "pass": 10,
+    "fail": 0,
+    "shapeOnly": 1,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
