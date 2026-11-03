@@ -1,0 +1,25 @@
+name: conformance
+
+# The @aipathway/conformance runner's own tests. Every listing's evidence comes
+# from this runner, so a change to it is tested before anything is published.
+
+on:
+  pull_request:
+    paths: ["packages/conformance/**", ".github/workflows/conformance.yml"]
+  push:
+    branches: [main]
+    paths: ["packages/conformance/**", ".github/workflows/conformance.yml"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/conformance
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - run: npm test

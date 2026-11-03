@@ -135,8 +135,15 @@ export async function runCheck<W extends RunnerWorld = StubWorld>(
   let actual: string;
   try {
     await scenario.drive(build, world);
-    held = scenario.holds(world);
+    // Only an explicit true holds. holds() is typed boolean, but scenarios are
+    // plain JS: one that forgets to return gives undefined, and undefined must
+    // never score as a pass. Two mesh ports hit exactly that before 1.4.1.
+    const result: unknown = scenario.holds(world);
+    held = result === true;
     actual = scenario.describe(world);
+    if (typeof result !== "boolean") {
+      actual = `holds() returned ${result === undefined ? "undefined" : typeof result}, not true or false, so the check fails. ${actual}`;
+    }
   } catch (err) {
     held = false;
     actual = `The build threw: ${err instanceof Error ? err.message : String(err)}`;
