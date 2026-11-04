@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T12:07:38.619Z",
+  "generated_at": "2026-11-04T12:09:21.515Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -7016,6 +7016,113 @@
       ]
     },
     {
+      "slug": "outgoings-book",
+      "name": "Outgoings Book",
+      "office_task": "File each managed property's council rates, water, strata levy and power bills against that property by the account number printed on them, and list what falls due when for a person to pay.",
+      "verticals": [
+        "property"
+      ],
+      "standards": [
+        "document-filing"
+      ],
+      "systems_of_record": [
+        "the property management system that issues each property record and holds its account numbers (rates assessment, water account, strata plan and lot, electricity or gas NMI), e.g. PropertyMe or Console Cloud",
+        "the agency's document store, where each original is kept unaltered"
+      ],
+      "consumes": [
+        {
+          "event": "document.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        }
+      ],
+      "emits": [
+        {
+          "event": "evidence.filed",
+          "write": "the original rates, water, strata levy or power bill attached unaltered to the one property whose account register holds the number printed on it, with the amount and due date typed into that bill period's blank fields only, and the tenancy_id carried where the property is let",
+          "readback": "the property management system returns the attachment id on the property; reading the property back by its id returns the attachment, its fingerprint and the entered fields; no id back means it was not filed and an exception is raised"
+        },
+        {
+          "event": "report.published",
+          "write": "the daily close: arrived, filed, on the list and duplicates, the open exceptions oldest first, and every filed bill falling due from today with its property, amount and due date, soonest first, published on quiet days too; nothing on it is paid",
+          "readback": "the system the close is published into returns a report_id, and reading it back returns the day, counts that add up and the due list"
+        },
+        {
+          "event": "exception.raised",
+          "write": "one exception on the outgoings list for a bill that cannot be filed with confidence, with its closed-list reason, the field, both values where the bill disagrees with what the property already holds, and the named owner",
+          "readback": "the exception desk returns an exception_id, and reading it back returns the arrival, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "filing.no_id",
+          "filing.two_matches",
+          "filing.no_match",
+          "filing.unreadable_field",
+          "filing.does_not_add_up",
+          "filing.conflicts_with_record",
+          "filing.unknown_kind"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.arrival_id",
+          "seam.file_hash",
+          "seam.property_id",
+          "seam.tenancy_id",
+          "seam.bill_period",
+          "seam.filing_state",
+          "seam.exception_owner",
+          "seam.cleared_by"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/outgoings-book"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "document-filing",
+          "edition": "2026-10-24",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:06:37.324Z",
+          "run_id": "run-1793793997323",
+          "green": 10,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 14
+        }
+      ]
+    },
+    {
       "slug": "owing-today",
       "name": "Owing Today",
       "office_task": "Every morning, show me who owes us money, biggest first, with a polite or firmer reminder already written for each one, and I send them.",
@@ -11370,6 +11477,7 @@
     "open-home-desk",
     "ops-map",
     "order-release",
+    "outgoings-book",
     "owing-today",
     "parts-quote",
     "payment-watch",
