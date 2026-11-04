@@ -1,0 +1,95 @@
+{
+  "slug": "fix-book",
+  "name": "Fix Book",
+  "office_task": "Keep the fixes our techs find on site, and when a tech asks how we fixed a fault before, show them what was written on that job, or tell them we have no record.",
+  "verticals": [
+    "trades-building"
+  ],
+  "standards": [
+    "knowledge-base"
+  ],
+  "systems_of_record": [
+    "the job system that issues the job_id and names the tech on each job (ServiceM8, Simpro, Tradify, Fergus), whose id names each job's fix folder on the drive",
+    "the shared drive that holds the fix notes, voice memos, service manuals and procedures and issues the document_id (Google Drive or SharePoint), left where it is",
+    "the register on that tenant (one Sheet or SharePoint list: a row per source, owner a person, kind, edition and checksum)",
+    "the task list the office runs (Google Tasks, Planner or a sheet), which issues the exception_id for each open question"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/fix-book"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "schedule",
+    "webhook"
+  ],
+  "consumes": [
+    {
+      "event": "job.completed",
+      "wake": "webhook"
+    },
+    {
+      "event": "email.received",
+      "wake": "webhook"
+    },
+    {
+      "event": "document.received",
+      "wake": "webhook"
+    },
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    },
+    {
+      "event": "exception.closed",
+      "wake": "webhook"
+    }
+  ],
+  "emits": [
+    {
+      "event": "evidence.filed",
+      "write": "the tech's fix, sent back after the job, filed as one fix note (fault, cause, fix, parts, tested) into Fixes/<job_id>/ on the drive by the job system's job_id, with the customer's name, phone and address left out; it is then registered with the tech as owner before any of it is searchable",
+      "readback": "the drive returns the note's file id, and reading that id back returns the note in the job_id's folder with the message_id it came from; no id back means nothing was filed and the tech's message is raised to the service manager"
+    },
+    {
+      "event": "exception.raised",
+      "write": "a task on the office's task list naming the person who owns it, with a due date: a fix note or procedure whose only owner is a team, two copies of one fix note waiting for a person to pick the one to keep, a customer's material waiting for someone to set who may read it and for how long, a manual or fault code chart the office expects and the drive does not hold, a tech's message with no fault or no fix line, or a registered file gone from the drive",
+      "readback": "the task list returns an exception_id, and reading that id back returns what is expected, the owner and the due date; no id back means nothing was raised, and the file stays off the index"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "kb.owner_not_a_person",
+      "kb.canonical_copy_undecided",
+      "kb.customer_access_undecided",
+      "kb.expected_edition_missing",
+      "kb.fix_message_incomplete",
+      "kb.source_gone_from_drive"
+    ],
+    "owner_field": "owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "register.id",
+      "register.kind",
+      "register.owner",
+      "register.location",
+      "register.edition",
+      "register.checksum",
+      "register.retrieved_at",
+      "register.status",
+      "register.duplicate_of",
+      "register.access_list",
+      "register.expires_on",
+      "register.superseded_checksums"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
