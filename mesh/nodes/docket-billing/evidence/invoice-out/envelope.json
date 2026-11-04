@@ -1,0 +1,1509 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793792469793",
+  "standard": "invoice-out-build-standard",
+  "spec": "AIP-BS-INVOICE-OUT",
+  "specVersion": "2026-10-05",
+  "environment": "stub",
+  "startedAt": "2026-11-04T11:41:09.781Z",
+  "finishedAt": "2026-11-04T11:41:09.793Z",
+  "results": [
+    {
+      "checkId": "completion-is-the-trigger",
+      "n": 1,
+      "title": "The job's completion is the only trigger",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Two invoices exist and each traces to a job read that showed it complete. An invoice for the open job, or one written before any job was read, fails.",
+      "actual": "7 port call(s); invoices JB-3101:draft JB-3102:draft; escalations none; sends 0",
+      "stimulus": {
+        "description": "Three jobs in the system: two marked complete today, one still open.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "completion-is-the-trigger"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 3,
+            "complete": [
+              "JB-3101",
+              "JB-3102"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "schedule-of-rates-2026-10",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JB-3101"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JB-3101",
+            "lines": [
+              "MOB-SITEx1@350"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Job JB-3101. Docket lines: MOB-SITE x1 from SD-4401. Rates from schedule schedule-of-rates-2026-10"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JB-3102"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JB-3102",
+            "lines": [
+              "CREW-HRx8@92"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Job JB-3102. Docket lines: CREW-HR x8 from SD-4402. Rates from schedule schedule-of-rates-2026-10"
+          },
+          "response": {
+            "id": "INV2",
+            "externalId": "xero-INV2"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "lines-come-from-the-job",
+      "n": 2,
+      "title": "Every invoice line traces to a line on the job",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The invoice carries those three codes and quantities and no others. An extra line, or a missing one with no parked reason, fails.",
+      "actual": "5 port call(s); invoices JB-3110:draft; escalations none; sends 0",
+      "stimulus": {
+        "description": "A complete job with three lines: a callout, two hours of labour and a material.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "lines-come-from-the-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "complete": [
+              "JB-3110"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "schedule-of-rates-2026-10",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JB-3110"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JB-3110",
+            "lines": [
+              "MOB-SITEx1@350",
+              "CREW-HRx2@92",
+              "MAT-RB20x12.5@48"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Job JB-3110. Docket lines: MOB-SITE x1 from SD-3110-A; CREW-HR x2 from SD-3110-A; MAT-RB20 x12.5 from SD-3110-B. Rates from schedule schedule-of-rates-2026-10"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "rates-only-from-the-book",
+      "n": 3,
+      "title": "Every line is priced from the price book, and a line the book does not cover parks the invoice",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The book is read before the write. Every priced line's rate equals the book's rate for its code. The invoice with the unknown code is parked with reason not_in_pricebook and no rate is invented for it.",
+      "actual": "8 port call(s); invoices JB-3120:parked/not_in_pricebook JB-3121:draft; escalations not_in_pricebook; sends 0",
+      "stimulus": {
+        "description": "A complete job whose lines include one code the price book does not hold.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "rates-only-from-the-book"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "JB-3120",
+              "JB-3121"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "schedule-of-rates-2026-10",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JB-3120"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JB-3120",
+            "lines": [
+              "PLANT-EX5x4@155"
+            ],
+            "stage": null,
+            "park": "not_in_pricebook",
+            "notes": "Job JB-3120. Docket lines: PLANT-EX5 x4 from SD-4407. Not in the schedule of rates, left unpriced: MAT-AG100. Rates from schedule schedule-of-rates-2026-10"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "not_in_pricebook",
+            "detail": "job JB-3120, invoice xero-INV1: not_in_pricebook (MAT-AG100). Owner: the accounts person the business named for docket billing"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JB-3121"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JB-3121",
+            "lines": [
+              "PLANT-TIPx3@130",
+              "CREW-HRx5@92"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Job JB-3121. Docket lines: PLANT-TIP x3 from SD-4409; CREW-HR x5 from SD-4410. Rates from schedule schedule-of-rates-2026-10"
+          },
+          "response": {
+            "id": "INV2",
+            "externalId": "xero-INV2"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "variation-needs-a-signature",
+      "n": 4,
+      "title": "A variation is billed only with a signed acceptance attached",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The signed one is invoiced with the acceptance attached as evidence. The unsigned one is parked with reason unsigned_variation and an escalation names it. Billing an unsigned variation fails.",
+      "actual": "9 port call(s); invoices JB-3130:draft JB-3131:parked/unsigned_variation; escalations unsigned_variation; sends 0",
+      "stimulus": {
+        "description": "Two complete jobs each carrying a variation line: one with a signed acceptance on file, one without.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "variation-needs-a-signature"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "JB-3130",
+              "JB-3131"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "schedule-of-rates-2026-10",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JB-3130"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JB-3130",
+            "lines": [
+              "CREW-HRx4@92",
+              "DW-CREWx3@105"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Job JB-3130. Docket lines: CREW-HR x4 from SD-4411; DW-CREW x3 from SD-3130-D. Rates from schedule schedule-of-rates-2026-10"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "invoiceId": "INV1",
+            "ref": "doc:signed-docket-SD-3130-D"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JB-3131"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JB-3131",
+            "lines": [
+              "CREW-HRx4@92"
+            ],
+            "stage": null,
+            "park": "unsigned_variation",
+            "notes": "Job JB-3131. Docket lines: CREW-HR x4 from SD-4413. Daywork on a docket nobody signed, not billed: DW-CREW on SD-3131-D. Rates from schedule schedule-of-rates-2026-10"
+          },
+          "response": {
+            "id": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "unsigned_variation",
+            "detail": "job JB-3131, invoice xero-INV2: unsigned_variation (DW-CREW on SD-3131-D). Owner: the accounts person the business named for docket billing"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "stage-invoice-never-claim",
+      "n": 5,
+      "title": "A job under a building contract is invoiced as a stage invoice, and the claim stays with the builder",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The invoice carries the stage name. No invoice, line or note contains the phrase progress claim. An invoice on a staged job with no stage fails.",
+      "actual": "5 port call(s); invoices JB-3140:draft; escalations none; sends 0",
+      "stimulus": {
+        "description": "A complete job carrying a contract stage name.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "stage-invoice-never-claim"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "complete": [
+              "JB-3140"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "schedule-of-rates-2026-10",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JB-3140"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JB-3140",
+            "lines": [
+              "PLANT-EX5x16@155"
+            ],
+            "stage": "Stage 1: bulk earthworks",
+            "park": null,
+            "notes": "Job JB-3140. Stage invoice: Stage 1: bulk earthworks. Docket lines: PLANT-EX5 x16 from SD-4415. Rates from schedule schedule-of-rates-2026-10"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-invoice-per-job",
+      "n": 6,
+      "title": "One invoice per job, written once, updated on a second event",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Exactly one invoice exists for the job, with an external id, and the second event produced an update or no write. A second invoice, or a null id treated as success, fails.",
+      "actual": "9 port call(s); invoices JB-3150:draft; escalations none; sends 0",
+      "stimulus": {
+        "description": "The same job's completion event delivered twice.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-invoice-per-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "complete": [
+              "JB-3150"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "schedule-of-rates-2026-10",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JB-3150"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JB-3150",
+            "lines": [
+              "MOB-SITEx1@350",
+              "PLANT-TIPx6@130"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Job JB-3150. Docket lines: MOB-SITE x1 from SD-4416; PLANT-TIP x6 from SD-4417. Rates from schedule schedule-of-rates-2026-10"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "complete": [
+              "JB-3150"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "schedule-of-rates-2026-10",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JB-3150"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "externalId": "xero-INV1"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "written-into-the-ledger",
+      "n": 7,
+      "title": "The invoice exists in the ledger the business runs, with an external id back",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The write returns an external id and the id is stored against the job. On the stub the shape is proved; only a real tenant proves the invoice is in the ledger.",
+      "actual": "5 port call(s); invoices JB-3160:draft; escalations none; sends 0",
+      "stimulus": {
+        "description": "A complete, fully priced job.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "written-into-the-ledger"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "complete": [
+              "JB-3160"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "schedule-of-rates-2026-10",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JB-3160"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JB-3160",
+            "lines": [
+              "CREW-HRx8@92",
+              "MAT-RB20x6@48"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Job JB-3160. Docket lines: CREW-HR x8 from SD-4418; MAT-RB20 x6 from SD-4419. Rates from schedule schedule-of-rates-2026-10"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "send-is-a-gate",
+      "n": 8,
+      "title": "Nothing is sent without a release by a person, or by a rule a person set with a threshold",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The first is released by the rule and sent. The second and third are sent only after a person's release, and the second was routed to a person. A send with no release fails.",
+      "actual": "13 port call(s); invoices JB-3170:sent JB-3171:sent; escalations over_threshold; sends 2 | no-rule business: 8 port call(s); invoices JB-3172:sent; escalations none; sends 1",
+      "stimulus": {
+        "description": "Three drafts: one under an auto-release threshold, one over it, one with no rule set.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "send-is-a-gate"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "JB-3170",
+              "JB-3171"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "schedule-of-rates-2026-10",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Under $2,000, released by Kylie Brennan's rule",
+            "threshold": 2000
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JB-3170"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JB-3170",
+            "lines": [
+              "MOB-SITEx1@350",
+              "CREW-HRx4@92"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Job JB-3170. Docket lines: MOB-SITE x1 from SD-4420; CREW-HR x4 from SD-4421. Rates from schedule schedule-of-rates-2026-10"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "INV1",
+            "person": null,
+            "rule": "Under $2,000, released by Kylie Brennan's rule"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "send": "INV1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JB-3171"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JB-3171",
+            "lines": [
+              "PLANT-EX5x40@155"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Job JB-3171. Docket lines: PLANT-EX5 x40 from SD-4422. Rates from schedule schedule-of-rates-2026-10"
+          },
+          "response": {
+            "id": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "job JB-3171, invoice xero-INV2: 6200.00 is over Under $2,000, released by Kylie Brennan's rule (2000). Waiting for the accounts person the business named for docket billing"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JB-3171"
+          },
+          "response": {
+            "invoiceId": "INV2",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "INV2",
+            "person": "Kylie Brennan, accounts",
+            "rule": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "send": "INV2"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "parked-is-a-queue",
+      "n": 9,
+      "title": "A parked invoice is a queue with a reason and an owner, and nothing parked is sent",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every parked invoice carries a reason and an escalation names it to a person. No parked invoice has a send event.",
+      "actual": "21 port call(s); invoices JB-3191:parked/not_in_pricebook JB-3192:parked/unsigned_variation JB-3190:sent; escalations write_failed not_in_pricebook unsigned_variation; sends 1",
+      "stimulus": {
+        "description": "The parked invoices from the checks above.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "parked-is-a-queue"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 3,
+            "complete": [
+              "JB-3190",
+              "JB-3191",
+              "JB-3192"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "schedule-of-rates-2026-10",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Release everything under $1m",
+            "threshold": 1000000
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JB-3190"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JB-3190",
+            "lines": 1
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "write_failed",
+            "detail": "job JB-3190: the ledger returned no invoice id. Owner: the accounts person the business named for docket billing"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JB-3191"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JB-3191",
+            "lines": [
+              "CREW-HRx2@92"
+            ],
+            "stage": null,
+            "park": "not_in_pricebook",
+            "notes": "Job JB-3191. Docket lines: CREW-HR x2 from SD-4425. Not in the schedule of rates, left unpriced: MAT-AG100. Rates from schedule schedule-of-rates-2026-10"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "not_in_pricebook",
+            "detail": "job JB-3191, invoice xero-INV1: not_in_pricebook (MAT-AG100). Owner: the accounts person the business named for docket billing"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JB-3192"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JB-3192",
+            "lines": [
+              "CREW-HRx2@92"
+            ],
+            "stage": null,
+            "park": "unsigned_variation",
+            "notes": "Job JB-3192. Docket lines: CREW-HR x2 from SD-4427. Daywork on a docket nobody signed, not billed: DW-CREW on SD-4428. Rates from schedule schedule-of-rates-2026-10"
+          },
+          "response": {
+            "id": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "unsigned_variation",
+            "detail": "job JB-3192, invoice xero-INV2: unsigned_variation (DW-CREW on SD-4428). Owner: the accounts person the business named for docket billing"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 3,
+            "complete": [
+              "JB-3190",
+              "JB-3191",
+              "JB-3192"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "schedule-of-rates-2026-10",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Release everything under $1m",
+            "threshold": 1000000
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JB-3190"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JB-3190",
+            "lines": [
+              "CREW-HRx2@92"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Job JB-3190. Docket lines: CREW-HR x2 from SD-4424. Rates from schedule schedule-of-rates-2026-10"
+          },
+          "response": {
+            "id": "INV3",
+            "externalId": "xero-INV3"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "INV3",
+            "person": null,
+            "rule": "Release everything under $1m"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "send": "INV3"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JB-3191"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JB-3192"
+          },
+          "response": {
+            "invoiceId": "INV2",
+            "externalId": "xero-INV2"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "the-record-by-job",
+      "n": 10,
+      "title": "Job id, invoice id, the lines, the rates read, who released and when it was sent are retrievable by job",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A read by job id returns the invoice, its lines with the rates and the book edition, the release with a name or rule, and the send time. A record missing the release fails.",
+      "actual": "9 port call(s); invoices JB-3200:sent; escalations none; sends 1",
+      "stimulus": {
+        "description": "One job invoiced, released and sent.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "the-record-by-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "complete": [
+              "JB-3200"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "schedule-of-rates-2026-10",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "JB-3200"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "JB-3200",
+            "lines": [
+              "MOB-SITEx1@350",
+              "PLANT-EX5x3@155"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Job JB-3200. Docket lines: MOB-SITE x1 from SD-4429; PLANT-EX5 x3 from SD-4430. Rates from schedule schedule-of-rates-2026-10"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JB-3200"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "INV1",
+            "person": "Kylie Brennan, accounts",
+            "rule": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "send": "INV1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "JB-3200"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "status": "sent"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 11,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the ledger write and the release rule runs on.",
+        "now": "2026-11-04T11:41:09.793Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 12,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "One invoice per job in the ledger with the ledger's id, the variation parked and named, the unknown code parked and not priced, the over-threshold draft waiting for a person, and every sent invoice carrying a release.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "Real completion events on the business's own tenant, driven by marking real jobs complete.",
+        "now": "2026-11-04T11:41:09.793Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 12,
+    "pass": 7,
+    "fail": 0,
+    "shapeOnly": 3,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
