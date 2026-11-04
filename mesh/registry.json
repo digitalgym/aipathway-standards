@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T12:45:15.611Z",
+  "generated_at": "2026-11-04T12:46:59.878Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -9603,6 +9603,117 @@
       ]
     },
     {
+      "slug": "prestart-desk",
+      "name": "Prestart Desk",
+      "office_task": "File each daily vehicle pre-start or site safety check on its vehicle or job, and put every failed item in front of the person our table names, with a clock, for them to sort and tick off.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "exception-desk"
+      ],
+      "systems_of_record": [
+        "the job system (Simpro, or ServiceM8, AroFlo or Fergus) that issues the job_id for a site check and the asset_id for a vehicle kept as plant and equipment, where each completed check is filed as an attachment",
+        "the ledger that issues the invoice_id (Xero), for items other surfaces raise against an invoice",
+        "the checks mailbox (Gmail or Outlook) the pre-start form app emails each completed check into, which issues the message_id",
+        "the exception desk the business runs (a sheet with Raise and Routing tabs, a SharePoint list, or Office Voice's queue), which issues the exception_id"
+      ],
+      "consumes": [
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "evidence.filed",
+          "write": "the completed vehicle or site check, filed as an attachment on the vehicle's asset record or on the job it was done on, by that record's id, keyed on message id + check + prestart-desk so a resent email files once",
+          "readback": "the job system returns an attachment id, and reading the asset or job back by its id lists that attachment with the message_id. No id back means it was not filed: a write_failed item goes to the named owner and the check is not counted"
+        },
+        {
+          "event": "exception.raised",
+          "write": "One item per vehicle or job and type on the exception desk: failed items land as type other with the vehicle_check_failed or site_check_failed label kept in the reason, each failed item listed, the filed check as evidence, and the owner and the clock from the routing table. A later failing check updates the same item without restarting its clock; a later passing check marks it resolved upstream and it stays open for the owner to close. Raises from other surfaces are typed from the closed list the same way.",
+          "readback": "the exception desk returns an exception_id, and reading it back returns the asset_id or job_id (or invoice_id), the type, the reason, the failed items, the due time and the exception_owner. No id back means nothing was raised: the raiser is told and the run stops"
+        },
+        {
+          "event": "report.published",
+          "write": "the morning summary, once a day at the set time and also when nothing is open: open items by type and by owner, the overdue ones, the labels that arrived as other, and every vehicle or job with failed check items still open",
+          "readback": "the place the office reads it (an email, a Teams channel or a sheet tab) returns a report_id for that day, and a second run that morning reads it back and publishes nothing"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "vehicle_check_failed",
+          "site_check_failed",
+          "write_failed",
+          "parts_shortfall",
+          "price_not_in_book",
+          "address_unresolved",
+          "promise_broken",
+          "dispute",
+          "hardship",
+          "other"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.asset_id",
+          "seam.job_id",
+          "seam.check_attachment_id",
+          "seam.exception_id",
+          "seam.exception_type",
+          "seam.exception_owner",
+          "seam.due_at",
+          "seam.raise_count",
+          "seam.resolved_upstream",
+          "seam.stop_chase",
+          "seam.escalated_at"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/prestart-desk"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "exception-desk",
+          "edition": "2026-11-01",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:43:09.860Z",
+          "run_id": "run-1793796189859",
+          "green": 6,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 0,
+          "total": 9
+        }
+      ]
+    },
+    {
       "slug": "price-creep",
       "name": "Price Creep",
       "office_task": "Check every line price on each supplier bill against the price we agreed with that supplier, flag every rise in dollars before anyone approves it, and put it in front of a named person.",
@@ -14349,6 +14460,7 @@
     "po-match",
     "policy-desk",
     "practice-desk",
+    "prestart-desk",
     "price-creep",
     "price-sheet",
     "promise-watch",
