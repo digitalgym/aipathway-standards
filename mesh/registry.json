@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T12:43:18.091Z",
+  "generated_at": "2026-11-04T12:45:15.611Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -9173,6 +9173,114 @@
       ]
     },
     {
+      "slug": "plant-watch",
+      "name": "Plant Watch",
+      "office_task": "Remind us when each piece of our plant and equipment is due its inspection, draft the booking for a person to release, and count it done only when the completed check is filed on the item.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "compliance-calendar"
+      ],
+      "systems_of_record": [
+        "the business's plant register (each item of plant and equipment with its state, the date its last completed check was filed, the dated inspection rule set per state, and the document store inspection reports and test and tag records are filed in)"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "document.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "asset.service_due",
+          "write": "the item's inspection flagged due on its plant record by asset id, with the due date derived from the rule version in force for its state, and, where the rule names an outside inspector or tester, the booking request drafted and held unsent for a named person to release",
+          "readback": "the obligation is read back by its id and must return the derived due date, the rule version that produced it and the drafted booking still unreleased; a release with no named person is refused and plant.release_refused is raised"
+        },
+        {
+          "event": "evidence.filed",
+          "write": "the completed inspection report or test and tag record that arrived in the watched plant folder, filed as evidence on the item's obligation named by obligation id; a document with no obligation id is never matched on an item name or tag and is raised instead",
+          "readback": "the obligation is read back by its id and must return the same document reference and a completion date; if it does not, nothing was filed and plant.report_not_read_back is raised"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the item's obligation naming the person who owns it: an inspection coming due, an item overdue that should not be used until its check is filed, a done with no report, no date of last check on the record, no rule for that check in that state, a past due date no retained rule version explains, a dated decision to park the item instead, a drafted booking awaiting release, a release with no named person, silence past the next chase date, or a document with no obligation id",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the obligation id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "plant.inspection_due",
+          "plant.inspection_overdue",
+          "plant.done_without_report",
+          "plant.report_not_read_back",
+          "plant.report_unmatched",
+          "plant.last_check_unknown",
+          "plant.no_rule_in_force",
+          "plant.history_unexplained",
+          "plant.inspection_declined",
+          "plant.booking_drafted_awaiting_release",
+          "plant.release_refused",
+          "plant.chase_due"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.obligation_ref",
+          "seam.rule_version",
+          "seam.anchor_status",
+          "seam.state",
+          "seam.evidence",
+          "seam.refused_at",
+          "seam.breached_at",
+          "seam.next_chase",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/plant-watch"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "compliance-calendar",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:42:29.370Z",
+          "run_id": "run-1793796149368",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 10
+        }
+      ]
+    },
+    {
       "slug": "po-match",
       "name": "PO Match",
       "office_task": "Match each emailed supplier invoice against its purchase order and what was received, leave clean ones as draft bills for a person, and raise every mismatch in dollars.",
@@ -14237,6 +14345,7 @@
     "parts-quote",
     "payment-watch",
     "permit-answers",
+    "plant-watch",
     "po-match",
     "policy-desk",
     "practice-desk",
