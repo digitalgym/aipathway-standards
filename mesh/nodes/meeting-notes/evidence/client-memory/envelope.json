@@ -1,0 +1,1718 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793793631403",
+  "standard": "client-memory-build-standard",
+  "spec": "AIP-BS-CLIENT-MEMORY",
+  "specVersion": "2026-10-29",
+  "environment": "stub",
+  "startedAt": "2026-11-04T12:00:31.389Z",
+  "finishedAt": "2026-11-04T12:00:31.403Z",
+  "results": [
+    {
+      "checkId": "agent-proposes-only",
+      "n": 1,
+      "title": "An agent proposes; it never writes an approved item",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Two proposals exist, both proposed, neither carrying an approver or an approval time. The first has a stated source naming the call. The second has an inferred source naming the call and the system that inferred it. No write_memory call happened. A proposal sent as approved, with an approver, or with the inference labelled stated, fails.",
+      "actual": "proposals: invoice_to proposed stated; payment_timing proposed inferred by meeting-summary-model; write_memory x0",
+      "stimulus": {
+        "description": "A call ends. The client said invoices should go to the accounts address. The call summary, written by a different model, adds that the client is happy to pay on the day. Nobody has decided anything.",
+        "now": "2026-11-03T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "agent-proposes-only"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "incoming",
+          "request": {
+            "box": "incoming"
+          },
+          "response": [
+            {
+              "kind": "meeting_note",
+              "message_id": "MSG-M-1",
+              "job_id": "J-1001",
+              "heard": [
+                {
+                  "type": "standing_instruction",
+                  "key": "invoice_to",
+                  "value": "accounts@shahholdings.example.com.au",
+                  "content": "Send invoices to the accounts address",
+                  "said_by": "client"
+                },
+                {
+                  "type": "preference",
+                  "key": "payment_timing",
+                  "value": "pays by card on the day",
+                  "content": "Happy to pay by card on the day",
+                  "said_by": "model",
+                  "model": "meeting-summary-model"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "J-1001",
+          "request": {
+            "jobId": "J-1001"
+          },
+          "response": {
+            "id": "J-1001",
+            "client_id": "C-501",
+            "client_name": "Shah Holdings Pty Ltd",
+            "contact_email": "priya@shahholdings.example.com.au",
+            "kind": "practice job",
+            "open_exception": null
+          }
+        },
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "read_memory",
+          "verb": "read",
+          "subject": "C-501",
+          "request": {
+            "clientId": "C-501"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "propose_memory",
+          "verb": "write",
+          "subject": "C-501",
+          "request": {
+            "client_id": "C-501",
+            "job_id": "J-1001",
+            "type": "standing_instruction",
+            "key": "invoice_to",
+            "value": "accounts@shahholdings.example.com.au",
+            "content": "Send invoices to the accounts address",
+            "critical": false,
+            "source": {
+              "kind": "stated",
+              "ref": "MSG-M-1"
+            },
+            "proposed_at": "2026-11-03T23:00:00.000Z",
+            "status": "proposed",
+            "version": null,
+            "supersedes": null,
+            "idempotency_key": "MSG-M-1:invoice_to:meeting-notes"
+          },
+          "response": {
+            "id": "MEM-0001"
+          }
+        },
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "read_memory",
+          "verb": "read",
+          "subject": "MEM-0001",
+          "request": {
+            "itemId": "MEM-0001"
+          },
+          "response": {
+            "superseded_by": null,
+            "client_id": "C-501",
+            "job_id": "J-1001",
+            "type": "standing_instruction",
+            "key": "invoice_to",
+            "value": "accounts@shahholdings.example.com.au",
+            "content": "Send invoices to the accounts address",
+            "critical": false,
+            "source": {
+              "kind": "stated",
+              "ref": "MSG-M-1"
+            },
+            "proposed_at": "2026-11-03T23:00:00.000Z",
+            "status": "proposed",
+            "version": null,
+            "supersedes": null,
+            "idempotency_key": "MSG-M-1:invoice_to:meeting-notes",
+            "id": "MEM-0001"
+          }
+        },
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "propose_memory",
+          "verb": "write",
+          "subject": "C-501",
+          "request": {
+            "client_id": "C-501",
+            "job_id": "J-1001",
+            "type": "preference",
+            "key": "payment_timing",
+            "value": "pays by card on the day",
+            "content": "Happy to pay by card on the day",
+            "critical": false,
+            "source": {
+              "kind": "inferred",
+              "ref": "MSG-M-1",
+              "by": "meeting-summary-model"
+            },
+            "proposed_at": "2026-11-03T23:00:00.000Z",
+            "status": "proposed",
+            "version": null,
+            "supersedes": null,
+            "idempotency_key": "MSG-M-1:payment_timing:meeting-notes"
+          },
+          "response": {
+            "id": "MEM-0002"
+          }
+        },
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "read_memory",
+          "verb": "read",
+          "subject": "MEM-0002",
+          "request": {
+            "itemId": "MEM-0002"
+          },
+          "response": {
+            "superseded_by": null,
+            "client_id": "C-501",
+            "job_id": "J-1001",
+            "type": "preference",
+            "key": "payment_timing",
+            "value": "pays by card on the day",
+            "content": "Happy to pay by card on the day",
+            "critical": false,
+            "source": {
+              "kind": "inferred",
+              "ref": "MSG-M-1",
+              "by": "meeting-summary-model"
+            },
+            "proposed_at": "2026-11-03T23:00:00.000Z",
+            "status": "proposed",
+            "version": null,
+            "supersedes": null,
+            "idempotency_key": "MSG-M-1:payment_timing:meeting-notes",
+            "id": "MEM-0002"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "approval-names-a-person",
+      "n": 2,
+      "title": "Only a decision by an authorised person changes a proposal, and the record says who and when",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The first is approved with the owner's name and the time of the owner's decision. The second is rejected with the manager's name and time. The third is still proposed, and an escalation names the decision as unauthorised_approver. Every write_memory names a decision that arrived on the approval surface. A commit with no decision, or by someone not on the list, fails.",
+      "actual": "writes: P-1 approved by Dana Whitfield (partner) (D-1); P-2 rejected by Mel Tran (practice manager) (D-2); escalations: unauthorised_approver D-3",
+      "stimulus": {
+        "description": "Three proposals. The owner approves one, the office manager rejects one, and an auto-approver run by another agent approves the third.",
+        "now": "2026-11-03T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "approval-names-a-person"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "incoming",
+          "request": {
+            "box": "incoming"
+          },
+          "response": [
+            {
+              "kind": "decision",
+              "decision_id": "D-1",
+              "item_id": "P-1",
+              "action": "approve",
+              "by": "Dana Whitfield (partner)",
+              "at": "2026-11-03T23:10:00.000Z",
+              "surface": "approval_surface"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "approvers",
+          "request": {
+            "name": "approvers"
+          },
+          "response": [
+            "Dana Whitfield (partner)",
+            "Mel Tran (practice manager)"
+          ]
+        },
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "read_memory",
+          "verb": "read",
+          "subject": "P-1",
+          "request": {
+            "itemId": "P-1"
+          },
+          "response": {
+            "status": "proposed",
+            "version": null,
+            "supersedes": null,
+            "superseded_by": null,
+            "id": "P-1",
+            "client_id": "C-501",
+            "type": "fact",
+            "key": "year_end",
+            "value": "30 June",
+            "content": "Financial year ends 30 June",
+            "source": {
+              "kind": "stated",
+              "ref": "MSG-M-1"
+            }
+          }
+        },
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "write_memory",
+          "verb": "write",
+          "subject": "P-1",
+          "request": {
+            "itemId": "P-1",
+            "patch": {
+              "status": "approved",
+              "approved_by": "Dana Whitfield (partner)",
+              "approved_at": "2026-11-03T23:10:00.000Z",
+              "version": 1
+            },
+            "decisionId": "D-1"
+          },
+          "response": {
+            "id": "P-1"
+          }
+        },
+        {
+          "at": "2026-11-03T23:01:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "incoming",
+          "request": {
+            "box": "incoming"
+          },
+          "response": [
+            {
+              "kind": "decision",
+              "decision_id": "D-2",
+              "item_id": "P-2",
+              "action": "reject",
+              "by": "Mel Tran (practice manager)",
+              "at": "2026-11-03T23:11:00.000Z",
+              "surface": "approval_surface"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-03T23:01:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "approvers",
+          "request": {
+            "name": "approvers"
+          },
+          "response": [
+            "Dana Whitfield (partner)",
+            "Mel Tran (practice manager)"
+          ]
+        },
+        {
+          "at": "2026-11-03T23:01:00.000Z",
+          "port": "read_memory",
+          "verb": "read",
+          "subject": "P-2",
+          "request": {
+            "itemId": "P-2"
+          },
+          "response": {
+            "status": "proposed",
+            "version": null,
+            "supersedes": null,
+            "superseded_by": null,
+            "id": "P-2",
+            "client_id": "C-501",
+            "type": "preference",
+            "key": "contact_hours",
+            "value": "after 3pm",
+            "content": "Ring after 3pm",
+            "source": {
+              "kind": "inferred",
+              "ref": "MSG-M-1",
+              "by": "meeting-summary-model"
+            }
+          }
+        },
+        {
+          "at": "2026-11-03T23:01:00.000Z",
+          "port": "write_memory",
+          "verb": "write",
+          "subject": "P-2",
+          "request": {
+            "itemId": "P-2",
+            "patch": {
+              "status": "rejected",
+              "rejected_by": "Mel Tran (practice manager)",
+              "rejected_at": "2026-11-03T23:11:00.000Z"
+            },
+            "decisionId": "D-2"
+          },
+          "response": {
+            "id": "P-2"
+          }
+        },
+        {
+          "at": "2026-11-03T23:02:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "incoming",
+          "request": {
+            "box": "incoming"
+          },
+          "response": [
+            {
+              "kind": "decision",
+              "decision_id": "D-3",
+              "item_id": "P-3",
+              "action": "approve",
+              "by": "auto-approver (another agent)",
+              "at": "2026-11-03T23:12:00.000Z",
+              "surface": "agent"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-03T23:02:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "approvers",
+          "request": {
+            "name": "approvers"
+          },
+          "response": [
+            "Dana Whitfield (partner)",
+            "Mel Tran (practice manager)"
+          ]
+        },
+        {
+          "at": "2026-11-03T23:02:00.000Z",
+          "port": "escalate",
+          "verb": "write",
+          "subject": "D-3",
+          "request": {
+            "reason": "unauthorised_approver",
+            "decision_id": "D-3",
+            "item_id": "P-3",
+            "by": "auto-approver (another agent)",
+            "exception_owner": "practice_manager"
+          },
+          "response": {
+            "exception_id": "EXC-0001"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "approved-never-overwritten",
+      "n": 3,
+      "title": "An approved item is never overwritten: a change is a new version, and the old one holds until it is approved",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The change is proposed with supersedes naming the first instruction. The first invoice goes to the accounts address. After approval the first instruction is superseded and points at the second, which is version 2, and the second invoice goes to Jan. The first instruction's content never changed. An invoice to Jan before the approval, or an edit to the approved item, fails.",
+      "actual": "proposed: MEM-0001 jan@shahholdings.example.com.au supersedes I-1; drafts: accounts@shahholdings.example.com.au then jan@shahholdings.example.com.au; writes: MEM-0001 {\"status\":\"approved\",\"approved_by\":\"Dana Whitfield (partner)\",\"approved_at\":\"2026-11-04T17:00:00.000Z\",\"version\":2}; I-1 {\"status\":\"superseded\",\"superseded_by\":\"MEM-0001\"}",
+      "stimulus": {
+        "description": "An approved standing instruction: invoices to the accounts address. On a later call the client says to send them to Jan instead. An invoice comes due before anybody decides. Then the owner approves the change, and another invoice comes due.",
+        "now": "2026-11-03T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "approved-never-overwritten"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "incoming",
+          "request": {
+            "box": "incoming"
+          },
+          "response": [
+            {
+              "kind": "meeting_note",
+              "message_id": "MSG-M-2",
+              "job_id": "J-1001",
+              "heard": [
+                {
+                  "type": "standing_instruction",
+                  "key": "invoice_to",
+                  "value": "jan@shahholdings.example.com.au",
+                  "content": "Send invoices to Jan, the bookkeeper, from now on",
+                  "said_by": "client"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "J-1001",
+          "request": {
+            "jobId": "J-1001"
+          },
+          "response": {
+            "id": "J-1001",
+            "client_id": "C-501",
+            "client_name": "Shah Holdings Pty Ltd",
+            "contact_email": "priya@shahholdings.example.com.au",
+            "kind": "practice job",
+            "open_exception": null
+          }
+        },
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "read_memory",
+          "verb": "read",
+          "subject": "C-501",
+          "request": {
+            "clientId": "C-501"
+          },
+          "response": [
+            {
+              "status": "approved",
+              "version": 1,
+              "supersedes": null,
+              "superseded_by": null,
+              "id": "I-1",
+              "client_id": "C-501",
+              "type": "standing_instruction",
+              "key": "invoice_to",
+              "value": "accounts@shahholdings.example.com.au",
+              "content": "Send invoices to the accounts address",
+              "critical": false,
+              "approved_by": "Dana Whitfield (partner)",
+              "approved_at": "2026-09-01T00:00:00.000Z",
+              "source": {
+                "kind": "stated",
+                "ref": "MSG-M-0"
+              }
+            }
+          ]
+        },
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "propose_memory",
+          "verb": "write",
+          "subject": "C-501",
+          "request": {
+            "client_id": "C-501",
+            "job_id": "J-1001",
+            "type": "standing_instruction",
+            "key": "invoice_to",
+            "value": "jan@shahholdings.example.com.au",
+            "content": "Send invoices to Jan, the bookkeeper, from now on",
+            "critical": false,
+            "source": {
+              "kind": "stated",
+              "ref": "MSG-M-2"
+            },
+            "proposed_at": "2026-11-03T23:00:00.000Z",
+            "status": "proposed",
+            "version": null,
+            "supersedes": "I-1",
+            "idempotency_key": "MSG-M-2:invoice_to:meeting-notes"
+          },
+          "response": {
+            "id": "MEM-0001"
+          }
+        },
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "read_memory",
+          "verb": "read",
+          "subject": "MEM-0001",
+          "request": {
+            "itemId": "MEM-0001"
+          },
+          "response": {
+            "superseded_by": null,
+            "client_id": "C-501",
+            "job_id": "J-1001",
+            "type": "standing_instruction",
+            "key": "invoice_to",
+            "value": "jan@shahholdings.example.com.au",
+            "content": "Send invoices to Jan, the bookkeeper, from now on",
+            "critical": false,
+            "source": {
+              "kind": "stated",
+              "ref": "MSG-M-2"
+            },
+            "proposed_at": "2026-11-03T23:00:00.000Z",
+            "status": "proposed",
+            "version": null,
+            "supersedes": "I-1",
+            "idempotency_key": "MSG-M-2:invoice_to:meeting-notes",
+            "id": "MEM-0001"
+          }
+        },
+        {
+          "at": "2026-11-04T05:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "incoming",
+          "request": {
+            "box": "incoming"
+          },
+          "response": [
+            {
+              "kind": "draft_due",
+              "job_id": "J-1001",
+              "purpose": "invoice",
+              "ref": "INV-DUE-1"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T05:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "J-1001",
+          "request": {
+            "jobId": "J-1001"
+          },
+          "response": {
+            "id": "J-1001",
+            "client_id": "C-501",
+            "client_name": "Shah Holdings Pty Ltd",
+            "contact_email": "priya@shahholdings.example.com.au",
+            "kind": "practice job",
+            "open_exception": null
+          }
+        },
+        {
+          "at": "2026-11-04T05:00:00.000Z",
+          "port": "read_memory",
+          "verb": "read",
+          "subject": "C-501",
+          "request": {
+            "clientId": "C-501"
+          },
+          "response": [
+            {
+              "status": "approved",
+              "version": 1,
+              "supersedes": null,
+              "superseded_by": null,
+              "id": "I-1",
+              "client_id": "C-501",
+              "type": "standing_instruction",
+              "key": "invoice_to",
+              "value": "accounts@shahholdings.example.com.au",
+              "content": "Send invoices to the accounts address",
+              "critical": false,
+              "approved_by": "Dana Whitfield (partner)",
+              "approved_at": "2026-09-01T00:00:00.000Z",
+              "source": {
+                "kind": "stated",
+                "ref": "MSG-M-0"
+              }
+            },
+            {
+              "superseded_by": null,
+              "client_id": "C-501",
+              "job_id": "J-1001",
+              "type": "standing_instruction",
+              "key": "invoice_to",
+              "value": "jan@shahholdings.example.com.au",
+              "content": "Send invoices to Jan, the bookkeeper, from now on",
+              "critical": false,
+              "source": {
+                "kind": "stated",
+                "ref": "MSG-M-2"
+              },
+              "proposed_at": "2026-11-03T23:00:00.000Z",
+              "status": "proposed",
+              "version": null,
+              "supersedes": "I-1",
+              "idempotency_key": "MSG-M-2:invoice_to:meeting-notes",
+              "id": "MEM-0001"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T05:00:00.000Z",
+          "port": "draft_message",
+          "verb": "write",
+          "subject": "J-1001",
+          "request": {
+            "job_id": "J-1001",
+            "client_id": "C-501",
+            "purpose": "invoice",
+            "to": "accounts@shahholdings.example.com.au",
+            "followed": [
+              "I-1"
+            ],
+            "memory_read_at": "2026-11-04T05:00:00.000Z",
+            "release": "held for a named person"
+          },
+          "response": {
+            "id": "DRF-0002"
+          }
+        },
+        {
+          "at": "2026-11-04T17:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "incoming",
+          "request": {
+            "box": "incoming"
+          },
+          "response": [
+            {
+              "kind": "decision",
+              "decision_id": "D-10",
+              "item_id": "MEM-0001",
+              "action": "approve",
+              "by": "Dana Whitfield (partner)",
+              "at": "2026-11-04T17:00:00.000Z",
+              "surface": "approval_surface"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T17:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "approvers",
+          "request": {
+            "name": "approvers"
+          },
+          "response": [
+            "Dana Whitfield (partner)",
+            "Mel Tran (practice manager)"
+          ]
+        },
+        {
+          "at": "2026-11-04T17:00:00.000Z",
+          "port": "read_memory",
+          "verb": "read",
+          "subject": "MEM-0001",
+          "request": {
+            "itemId": "MEM-0001"
+          },
+          "response": {
+            "superseded_by": null,
+            "client_id": "C-501",
+            "job_id": "J-1001",
+            "type": "standing_instruction",
+            "key": "invoice_to",
+            "value": "jan@shahholdings.example.com.au",
+            "content": "Send invoices to Jan, the bookkeeper, from now on",
+            "critical": false,
+            "source": {
+              "kind": "stated",
+              "ref": "MSG-M-2"
+            },
+            "proposed_at": "2026-11-03T23:00:00.000Z",
+            "status": "proposed",
+            "version": null,
+            "supersedes": "I-1",
+            "idempotency_key": "MSG-M-2:invoice_to:meeting-notes",
+            "id": "MEM-0001"
+          }
+        },
+        {
+          "at": "2026-11-04T17:00:00.000Z",
+          "port": "read_memory",
+          "verb": "read",
+          "subject": "I-1",
+          "request": {
+            "itemId": "I-1"
+          },
+          "response": {
+            "status": "approved",
+            "version": 1,
+            "supersedes": null,
+            "superseded_by": null,
+            "id": "I-1",
+            "client_id": "C-501",
+            "type": "standing_instruction",
+            "key": "invoice_to",
+            "value": "accounts@shahholdings.example.com.au",
+            "content": "Send invoices to the accounts address",
+            "critical": false,
+            "approved_by": "Dana Whitfield (partner)",
+            "approved_at": "2026-09-01T00:00:00.000Z",
+            "source": {
+              "kind": "stated",
+              "ref": "MSG-M-0"
+            }
+          }
+        },
+        {
+          "at": "2026-11-04T17:00:00.000Z",
+          "port": "write_memory",
+          "verb": "write",
+          "subject": "MEM-0001",
+          "request": {
+            "itemId": "MEM-0001",
+            "patch": {
+              "status": "approved",
+              "approved_by": "Dana Whitfield (partner)",
+              "approved_at": "2026-11-04T17:00:00.000Z",
+              "version": 2
+            },
+            "decisionId": "D-10"
+          },
+          "response": {
+            "id": "MEM-0001"
+          }
+        },
+        {
+          "at": "2026-11-04T17:00:00.000Z",
+          "port": "write_memory",
+          "verb": "write",
+          "subject": "I-1",
+          "request": {
+            "itemId": "I-1",
+            "patch": {
+              "status": "superseded",
+              "superseded_by": "MEM-0001"
+            },
+            "decisionId": "D-10"
+          },
+          "response": {
+            "id": "I-1"
+          }
+        },
+        {
+          "at": "2026-11-05T17:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "incoming",
+          "request": {
+            "box": "incoming"
+          },
+          "response": [
+            {
+              "kind": "draft_due",
+              "job_id": "J-1001",
+              "purpose": "invoice",
+              "ref": "INV-DUE-2"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-05T17:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "J-1001",
+          "request": {
+            "jobId": "J-1001"
+          },
+          "response": {
+            "id": "J-1001",
+            "client_id": "C-501",
+            "client_name": "Shah Holdings Pty Ltd",
+            "contact_email": "priya@shahholdings.example.com.au",
+            "kind": "practice job",
+            "open_exception": null
+          }
+        },
+        {
+          "at": "2026-11-05T17:00:00.000Z",
+          "port": "read_memory",
+          "verb": "read",
+          "subject": "C-501",
+          "request": {
+            "clientId": "C-501"
+          },
+          "response": [
+            {
+              "status": "superseded",
+              "version": 1,
+              "supersedes": null,
+              "superseded_by": "MEM-0001",
+              "id": "I-1",
+              "client_id": "C-501",
+              "type": "standing_instruction",
+              "key": "invoice_to",
+              "value": "accounts@shahholdings.example.com.au",
+              "content": "Send invoices to the accounts address",
+              "critical": false,
+              "approved_by": "Dana Whitfield (partner)",
+              "approved_at": "2026-09-01T00:00:00.000Z",
+              "source": {
+                "kind": "stated",
+                "ref": "MSG-M-0"
+              }
+            },
+            {
+              "superseded_by": null,
+              "client_id": "C-501",
+              "job_id": "J-1001",
+              "type": "standing_instruction",
+              "key": "invoice_to",
+              "value": "jan@shahholdings.example.com.au",
+              "content": "Send invoices to Jan, the bookkeeper, from now on",
+              "critical": false,
+              "source": {
+                "kind": "stated",
+                "ref": "MSG-M-2"
+              },
+              "proposed_at": "2026-11-03T23:00:00.000Z",
+              "status": "approved",
+              "version": 2,
+              "supersedes": "I-1",
+              "idempotency_key": "MSG-M-2:invoice_to:meeting-notes",
+              "id": "MEM-0001",
+              "approved_by": "Dana Whitfield (partner)",
+              "approved_at": "2026-11-04T17:00:00.000Z"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-05T17:00:00.000Z",
+          "port": "draft_message",
+          "verb": "write",
+          "subject": "J-1001",
+          "request": {
+            "job_id": "J-1001",
+            "client_id": "C-501",
+            "purpose": "invoice",
+            "to": "jan@shahholdings.example.com.au",
+            "followed": [
+              "MEM-0001"
+            ],
+            "memory_read_at": "2026-11-05T17:00:00.000Z",
+            "release": "held for a named person"
+          },
+          "response": {
+            "id": "DRF-0003"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "read-by-client-id",
+      "n": 4,
+      "title": "Every other standard reads the approved slice by the client id on the job, never by name or phone",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every memory read names the client id from the job it is acting on, and no client search by name or phone runs. The first client's quote goes to the approved address, not the proposed one. The second client's quote goes to the contact on their own job. Either quote following the other client's instruction, or the pending proposal, fails.",
+      "actual": "memory reads: C-100, C-200; contact searches: 0; drafts: J-2001 to quotes@coastaljoinery-a.example.com.au; J-2002 to admin@coastaljoinery-b.example.com.au",
+      "stimulus": {
+        "description": "Two clients with the same name and different client ids. One has an approved instruction for where quotes go, and a pending proposal for a different address. A quote comes due for each.",
+        "now": "2026-11-03T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "read-by-client-id"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "incoming",
+          "request": {
+            "box": "incoming"
+          },
+          "response": [
+            {
+              "kind": "draft_due",
+              "job_id": "J-2001",
+              "purpose": "quote",
+              "ref": "Q-DUE-1"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "J-2001",
+          "request": {
+            "jobId": "J-2001"
+          },
+          "response": {
+            "id": "J-2001",
+            "client_id": "C-100",
+            "client_name": "Coastal Joinery Pty Ltd",
+            "contact_email": "office@coastaljoinery-a.example.com.au",
+            "kind": "practice job",
+            "open_exception": null
+          }
+        },
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "read_memory",
+          "verb": "read",
+          "subject": "C-100",
+          "request": {
+            "clientId": "C-100"
+          },
+          "response": [
+            {
+              "status": "proposed",
+              "version": null,
+              "supersedes": "I-20",
+              "superseded_by": null,
+              "id": "P-21",
+              "client_id": "C-100",
+              "type": "standing_instruction",
+              "key": "quote_to",
+              "value": "owner@coastaljoinery-a.example.com.au",
+              "content": "Quotes to the owner",
+              "source": {
+                "kind": "inferred",
+                "ref": "MSG-M-21",
+                "by": "meeting-summary-model"
+              }
+            },
+            {
+              "status": "approved",
+              "version": 1,
+              "supersedes": null,
+              "superseded_by": null,
+              "id": "I-20",
+              "client_id": "C-100",
+              "type": "standing_instruction",
+              "key": "quote_to",
+              "value": "quotes@coastaljoinery-a.example.com.au",
+              "content": "Quotes to the quotes inbox",
+              "approved_by": "Dana Whitfield (partner)",
+              "approved_at": "2026-10-01T00:00:00.000Z",
+              "source": {
+                "kind": "stated",
+                "ref": "MSG-M-20"
+              }
+            }
+          ]
+        },
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "draft_message",
+          "verb": "write",
+          "subject": "J-2001",
+          "request": {
+            "job_id": "J-2001",
+            "client_id": "C-100",
+            "purpose": "quote",
+            "to": "quotes@coastaljoinery-a.example.com.au",
+            "followed": [
+              "I-20"
+            ],
+            "memory_read_at": "2026-11-03T23:00:00.000Z",
+            "release": "held for a named person"
+          },
+          "response": {
+            "id": "DRF-0001"
+          }
+        },
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "incoming",
+          "request": {
+            "box": "incoming"
+          },
+          "response": [
+            {
+              "kind": "draft_due",
+              "job_id": "J-2002",
+              "purpose": "quote",
+              "ref": "Q-DUE-2"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "J-2002",
+          "request": {
+            "jobId": "J-2002"
+          },
+          "response": {
+            "id": "J-2002",
+            "client_id": "C-200",
+            "client_name": "Coastal Joinery Pty Ltd",
+            "contact_email": "admin@coastaljoinery-b.example.com.au",
+            "kind": "practice job",
+            "open_exception": null
+          }
+        },
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "read_memory",
+          "verb": "read",
+          "subject": "C-200",
+          "request": {
+            "clientId": "C-200"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "draft_message",
+          "verb": "write",
+          "subject": "J-2002",
+          "request": {
+            "job_id": "J-2002",
+            "client_id": "C-200",
+            "purpose": "quote",
+            "to": "admin@coastaljoinery-b.example.com.au",
+            "followed": [],
+            "memory_read_at": "2026-11-03T23:00:00.000Z",
+            "release": "held for a named person"
+          },
+          "response": {
+            "id": "DRF-0002"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "critical-instructions-applied",
+      "n": 5,
+      "title": "A critical standing instruction is read fresh and followed on every later interaction",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "All four drafts follow the instruction, and each one was preceded by a read of that client's memory made after the previous draft for that client. One draft that ignores it, or a draft with no fresh read before it, fails.",
+      "actual": "drafts: quote to bookkeeper@ridgeline.example.com.au; invoice to bookkeeper@ridgeline.example.com.au; chase to bookkeeper@ridgeline.example.com.au; chase to bookkeeper@ridgeline.example.com.au; memory reads: 4",
+      "stimulus": {
+        "description": "A client with one approved critical instruction. Over three weeks, as separate events with nothing carried between runs: a quote, an invoice and two chases.",
+        "now": "2026-11-03T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "critical-instructions-applied"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "incoming",
+          "request": {
+            "box": "incoming"
+          },
+          "response": [
+            {
+              "kind": "draft_due",
+              "job_id": "J-3001",
+              "purpose": "quote",
+              "ref": "DUE-1"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "J-3001",
+          "request": {
+            "jobId": "J-3001"
+          },
+          "response": {
+            "id": "J-3001",
+            "client_id": "C-300",
+            "client_name": "Ridge Line Earthmoving Pty Ltd",
+            "contact_email": "ops@ridgeline.example.com.au",
+            "kind": "practice job",
+            "open_exception": null
+          }
+        },
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "read_memory",
+          "verb": "read",
+          "subject": "C-300",
+          "request": {
+            "clientId": "C-300"
+          },
+          "response": [
+            {
+              "status": "approved",
+              "version": 1,
+              "supersedes": null,
+              "superseded_by": null,
+              "id": "I-30",
+              "client_id": "C-300",
+              "type": "standing_instruction",
+              "key": "send_to",
+              "value": "bookkeeper@ridgeline.example.com.au",
+              "content": "Everything to the bookkeeper, never the site office",
+              "critical": true,
+              "approved_by": "Dana Whitfield (partner)",
+              "approved_at": "2026-10-01T00:00:00.000Z",
+              "source": {
+                "kind": "stated",
+                "ref": "MSG-M-30"
+              }
+            }
+          ]
+        },
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "draft_message",
+          "verb": "write",
+          "subject": "J-3001",
+          "request": {
+            "job_id": "J-3001",
+            "client_id": "C-300",
+            "purpose": "quote",
+            "to": "bookkeeper@ridgeline.example.com.au",
+            "followed": [
+              "I-30"
+            ],
+            "memory_read_at": "2026-11-03T23:00:00.000Z",
+            "release": "held for a named person"
+          },
+          "response": {
+            "id": "DRF-0001"
+          }
+        },
+        {
+          "at": "2026-11-10T23:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "incoming",
+          "request": {
+            "box": "incoming"
+          },
+          "response": [
+            {
+              "kind": "draft_due",
+              "job_id": "J-3001",
+              "purpose": "invoice",
+              "ref": "DUE-2"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-10T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "J-3001",
+          "request": {
+            "jobId": "J-3001"
+          },
+          "response": {
+            "id": "J-3001",
+            "client_id": "C-300",
+            "client_name": "Ridge Line Earthmoving Pty Ltd",
+            "contact_email": "ops@ridgeline.example.com.au",
+            "kind": "practice job",
+            "open_exception": null
+          }
+        },
+        {
+          "at": "2026-11-10T23:00:00.000Z",
+          "port": "read_memory",
+          "verb": "read",
+          "subject": "C-300",
+          "request": {
+            "clientId": "C-300"
+          },
+          "response": [
+            {
+              "status": "approved",
+              "version": 1,
+              "supersedes": null,
+              "superseded_by": null,
+              "id": "I-30",
+              "client_id": "C-300",
+              "type": "standing_instruction",
+              "key": "send_to",
+              "value": "bookkeeper@ridgeline.example.com.au",
+              "content": "Everything to the bookkeeper, never the site office",
+              "critical": true,
+              "approved_by": "Dana Whitfield (partner)",
+              "approved_at": "2026-10-01T00:00:00.000Z",
+              "source": {
+                "kind": "stated",
+                "ref": "MSG-M-30"
+              }
+            }
+          ]
+        },
+        {
+          "at": "2026-11-10T23:00:00.000Z",
+          "port": "draft_message",
+          "verb": "write",
+          "subject": "J-3001",
+          "request": {
+            "job_id": "J-3001",
+            "client_id": "C-300",
+            "purpose": "invoice",
+            "to": "bookkeeper@ridgeline.example.com.au",
+            "followed": [
+              "I-30"
+            ],
+            "memory_read_at": "2026-11-10T23:00:00.000Z",
+            "release": "held for a named person"
+          },
+          "response": {
+            "id": "DRF-0002"
+          }
+        },
+        {
+          "at": "2026-11-17T23:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "incoming",
+          "request": {
+            "box": "incoming"
+          },
+          "response": [
+            {
+              "kind": "draft_due",
+              "job_id": "J-3001",
+              "purpose": "chase",
+              "ref": "DUE-3"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-17T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "J-3001",
+          "request": {
+            "jobId": "J-3001"
+          },
+          "response": {
+            "id": "J-3001",
+            "client_id": "C-300",
+            "client_name": "Ridge Line Earthmoving Pty Ltd",
+            "contact_email": "ops@ridgeline.example.com.au",
+            "kind": "practice job",
+            "open_exception": null
+          }
+        },
+        {
+          "at": "2026-11-17T23:00:00.000Z",
+          "port": "read_memory",
+          "verb": "read",
+          "subject": "C-300",
+          "request": {
+            "clientId": "C-300"
+          },
+          "response": [
+            {
+              "status": "approved",
+              "version": 1,
+              "supersedes": null,
+              "superseded_by": null,
+              "id": "I-30",
+              "client_id": "C-300",
+              "type": "standing_instruction",
+              "key": "send_to",
+              "value": "bookkeeper@ridgeline.example.com.au",
+              "content": "Everything to the bookkeeper, never the site office",
+              "critical": true,
+              "approved_by": "Dana Whitfield (partner)",
+              "approved_at": "2026-10-01T00:00:00.000Z",
+              "source": {
+                "kind": "stated",
+                "ref": "MSG-M-30"
+              }
+            }
+          ]
+        },
+        {
+          "at": "2026-11-17T23:00:00.000Z",
+          "port": "draft_message",
+          "verb": "write",
+          "subject": "J-3001",
+          "request": {
+            "job_id": "J-3001",
+            "client_id": "C-300",
+            "purpose": "chase",
+            "to": "bookkeeper@ridgeline.example.com.au",
+            "followed": [
+              "I-30"
+            ],
+            "memory_read_at": "2026-11-17T23:00:00.000Z",
+            "release": "held for a named person"
+          },
+          "response": {
+            "id": "DRF-0003"
+          }
+        },
+        {
+          "at": "2026-11-24T23:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "incoming",
+          "request": {
+            "box": "incoming"
+          },
+          "response": [
+            {
+              "kind": "draft_due",
+              "job_id": "J-3001",
+              "purpose": "chase",
+              "ref": "DUE-4"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-24T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "J-3001",
+          "request": {
+            "jobId": "J-3001"
+          },
+          "response": {
+            "id": "J-3001",
+            "client_id": "C-300",
+            "client_name": "Ridge Line Earthmoving Pty Ltd",
+            "contact_email": "ops@ridgeline.example.com.au",
+            "kind": "practice job",
+            "open_exception": null
+          }
+        },
+        {
+          "at": "2026-11-24T23:00:00.000Z",
+          "port": "read_memory",
+          "verb": "read",
+          "subject": "C-300",
+          "request": {
+            "clientId": "C-300"
+          },
+          "response": [
+            {
+              "status": "approved",
+              "version": 1,
+              "supersedes": null,
+              "superseded_by": null,
+              "id": "I-30",
+              "client_id": "C-300",
+              "type": "standing_instruction",
+              "key": "send_to",
+              "value": "bookkeeper@ridgeline.example.com.au",
+              "content": "Everything to the bookkeeper, never the site office",
+              "critical": true,
+              "approved_by": "Dana Whitfield (partner)",
+              "approved_at": "2026-10-01T00:00:00.000Z",
+              "source": {
+                "kind": "stated",
+                "ref": "MSG-M-30"
+              }
+            }
+          ]
+        },
+        {
+          "at": "2026-11-24T23:00:00.000Z",
+          "port": "draft_message",
+          "verb": "write",
+          "subject": "J-3001",
+          "request": {
+            "job_id": "J-3001",
+            "client_id": "C-300",
+            "purpose": "chase",
+            "to": "bookkeeper@ridgeline.example.com.au",
+            "followed": [
+              "I-30"
+            ],
+            "memory_read_at": "2026-11-24T23:00:00.000Z",
+            "release": "held for a named person"
+          },
+          "response": {
+            "id": "DRF-0004"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "review-flags-drift",
+      "n": 6,
+      "title": "A review lists every approved standing instruction, flags drift, and changes nothing",
+      "verdict": "pass",
+      "held": true,
+      "expected": "One review, listing each approved standing instruction once with its version. The first is ok, the second is not_applied naming the draft that missed it, and the third pair are each contradicted naming the other. No write_memory happened during the review, every approved item is unchanged, and any proposal made names the item it would replace. A review that fixes anything itself, or misses a flag, fails.",
+      "actual": "reviews: 1; lines: I-41 v1 ok [DRF-A1,DRF-A2]; I-42 v2 not_applied [DRF-B2]; I-43a v1 contradicted [I-43b]; I-43b v1 contradicted [I-43a]; write_memory x0",
+      "stimulus": {
+        "description": "A review comes due. Three clients: one instruction followed every time since it was approved, one a later invoice ignored, and two approved instructions for the same client that disagree.",
+        "now": "2026-11-03T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "review-flags-drift"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "incoming",
+          "request": {
+            "box": "incoming"
+          },
+          "response": [
+            {
+              "kind": "review_due",
+              "ref": "monthly"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "read_memory",
+          "verb": "read",
+          "subject": "*",
+          "request": {
+            "scope": "all"
+          },
+          "response": [
+            {
+              "status": "approved",
+              "version": 1,
+              "supersedes": null,
+              "superseded_by": null,
+              "id": "I-41",
+              "client_id": "C-401",
+              "type": "standing_instruction",
+              "key": "invoice_to",
+              "value": "accounts@bayplumbing.example.com.au",
+              "content": "Invoices to accounts",
+              "approved_by": "Dana Whitfield (partner)",
+              "approved_at": "2026-09-01T00:00:00.000Z",
+              "source": {
+                "kind": "stated",
+                "ref": "MSG-M-41"
+              }
+            },
+            {
+              "status": "approved",
+              "version": 2,
+              "supersedes": null,
+              "superseded_by": null,
+              "id": "I-42",
+              "client_id": "C-402",
+              "type": "standing_instruction",
+              "key": "invoice_to",
+              "value": "books@hinterlandcafe.example.com.au",
+              "content": "Invoices to the bookkeeper",
+              "approved_by": "Dana Whitfield (partner)",
+              "approved_at": "2026-09-15T00:00:00.000Z",
+              "source": {
+                "kind": "stated",
+                "ref": "MSG-M-42"
+              }
+            },
+            {
+              "status": "approved",
+              "version": 1,
+              "supersedes": null,
+              "superseded_by": null,
+              "id": "I-43a",
+              "client_id": "C-403",
+              "type": "standing_instruction",
+              "key": "send_to",
+              "value": "admin@northshore.example.com.au",
+              "content": "Everything to admin",
+              "approved_by": "Mel Tran (practice manager)",
+              "approved_at": "2026-08-01T00:00:00.000Z",
+              "source": {
+                "kind": "stated",
+                "ref": "MSG-M-43"
+              }
+            },
+            {
+              "status": "approved",
+              "version": 1,
+              "supersedes": null,
+              "superseded_by": null,
+              "id": "I-43b",
+              "client_id": "C-403",
+              "type": "standing_instruction",
+              "key": "send_to",
+              "value": "director@northshore.example.com.au",
+              "content": "Everything to the director",
+              "approved_by": "Dana Whitfield (partner)",
+              "approved_at": "2026-09-01T00:00:00.000Z",
+              "source": {
+                "kind": "stated",
+                "ref": "MSG-M-44"
+              }
+            }
+          ]
+        },
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "drafts",
+          "request": {
+            "box": "drafts"
+          },
+          "response": [
+            {
+              "id": "DRF-A1",
+              "client_id": "C-401",
+              "job_id": "J-4001",
+              "purpose": "invoice",
+              "to": "accounts@bayplumbing.example.com.au",
+              "at": "2026-09-30T00:00:00.000Z",
+              "status": "released"
+            },
+            {
+              "id": "DRF-A2",
+              "client_id": "C-401",
+              "job_id": "J-4001",
+              "purpose": "invoice",
+              "to": "accounts@bayplumbing.example.com.au",
+              "at": "2026-10-31T00:00:00.000Z",
+              "status": "released"
+            },
+            {
+              "id": "DRF-B1",
+              "client_id": "C-402",
+              "job_id": "J-4002",
+              "purpose": "invoice",
+              "to": "books@hinterlandcafe.example.com.au",
+              "at": "2026-09-30T00:00:00.000Z",
+              "status": "released"
+            },
+            {
+              "id": "DRF-B2",
+              "client_id": "C-402",
+              "job_id": "J-4002",
+              "purpose": "invoice",
+              "to": "owner@hinterlandcafe.example.com.au",
+              "at": "2026-10-31T00:00:00.000Z",
+              "status": "released"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-03T23:00:00.000Z",
+          "port": "publish_report",
+          "verb": "write",
+          "subject": "review",
+          "request": {
+            "kind": "client_memory_review",
+            "at": "2026-11-03T23:00:00.000Z",
+            "lines": [
+              {
+                "item_id": "I-41",
+                "version": 1,
+                "last_followed": "2026-10-31T00:00:00.000Z",
+                "flag": "ok",
+                "evidence": [
+                  "DRF-A1",
+                  "DRF-A2"
+                ]
+              },
+              {
+                "item_id": "I-42",
+                "version": 2,
+                "last_followed": "2026-09-30T00:00:00.000Z",
+                "flag": "not_applied",
+                "evidence": [
+                  "DRF-B2"
+                ]
+              },
+              {
+                "item_id": "I-43a",
+                "version": 1,
+                "last_followed": null,
+                "flag": "contradicted",
+                "evidence": [
+                  "I-43b"
+                ]
+              },
+              {
+                "item_id": "I-43b",
+                "version": 1,
+                "last_followed": null,
+                "flag": "contradicted",
+                "evidence": [
+                  "I-43a"
+                ]
+              }
+            ]
+          },
+          "response": {
+            "report_id": "RPT-0001"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 7,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the memory record and the list of approvers runs on.",
+        "now": "2026-11-04T12:00:31.403Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 8,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "The memory record holds the proposal with its call, the owner's approval with name and time, version 1 superseded by version 2, and no item approved by anything but a person. The second call used the instruction. The invoice before the change went to the old address and the one after to the new. The review listed both versions' history.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "Real calls on the real line: one where the client asks for invoices to go to their bookkeeper, a second after the owner approves it, and a third where the client changes it. A real invoice before and after the change is approved, then a review run on demand.",
+        "now": "2026-11-04T12:00:31.403Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 8,
+    "pass": 5,
+    "fail": 0,
+    "shapeOnly": 1,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}

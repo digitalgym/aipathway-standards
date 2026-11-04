@@ -1,0 +1,100 @@
+{
+  "spec": "AIP-BS-CLIENT-MEMORY",
+  "standard": "client-memory-build-standard",
+  "edition": "2026-10-29",
+  "source": "https://aipathway.com.au/explore-ai/client-memory-build-standard",
+  "ran_at": "2026-11-04T12:00:31.404Z",
+  "environment": "stub",
+  "provider": "local.mock_client_memory",
+  "provider_block": {
+    "boundary": {
+      "never": [
+        "approve, or write as approved, anything an agent heard or inferred",
+        "record another model's inference as something the client said",
+        "apply a decision from anyone not on the approvers list",
+        "edit an approved item in place instead of proposing a new version",
+        "act on a proposal, a rejected item or a superseded one",
+        "read memory by a client's name or phone number instead of the client id on the job",
+        "let the review fix anything it finds"
+      ],
+      "stays_with_person": [
+        "approving or rejecting every proposed item",
+        "who is on the approvers list",
+        "which standing instructions are critical",
+        "deciding between two instructions that contradict each other",
+        "acting on every item the review flags"
+      ]
+    },
+    "job": "what the business knows about each client, approved by a person and read by every standard",
+    "skill": "client-memory",
+    "stub": "local.mock_client_memory",
+    "production": null,
+    "product": null,
+    "insert": null,
+    "with_us": {
+      "kind": "scoped_build",
+      "note": "The call is Office Voice's live step: it reads the owner's notes for the caller and records what was said with its source. Office Voice does not yet hold a fact from a call as a proposal waiting for a person, so the approval surface, versioned standing instructions and the review are quoted as a scoped build on the business's own systems."
+    }
+  },
+  "tally": {
+    "green": 5,
+    "red": 0,
+    "with_us": 1,
+    "evidence_required": 1,
+    "total": 8
+  },
+  "checks": [
+    {
+      "id": "agent-proposes-only",
+      "n": 1,
+      "title": "An agent proposes; it never writes an approved item",
+      "verdict": "pass"
+    },
+    {
+      "id": "approval-names-a-person",
+      "n": 2,
+      "title": "Only a decision by an authorised person changes a proposal, and the record says who and when",
+      "verdict": "pass"
+    },
+    {
+      "id": "approved-never-overwritten",
+      "n": 3,
+      "title": "An approved item is never overwritten: a change is a new version, and the old one holds until it is approved",
+      "verdict": "pass"
+    },
+    {
+      "id": "read-by-client-id",
+      "n": 4,
+      "title": "Every other standard reads the approved slice by the client id on the job, never by name or phone",
+      "verdict": "pass"
+    },
+    {
+      "id": "critical-instructions-applied",
+      "n": 5,
+      "title": "A critical standing instruction is read fresh and followed on every later interaction",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "review-flags-drift",
+      "n": 6,
+      "title": "A review lists every approved standing instruction, flags drift, and changes nothing",
+      "verdict": "pass"
+    },
+    {
+      "id": "survives-the-builder",
+      "n": 7,
+      "title": "It survives the builder",
+      "verdict": "evidence_required"
+    },
+    {
+      "id": "pass-test",
+      "n": 8,
+      "title": "The pass test passes",
+      "verdict": "with_us"
+    }
+  ],
+  "next": {
+    "with_us": "The call is Office Voice's live step: it reads the owner's notes for the caller and records what was said with its source. Office Voice does not yet hold a fact from a call as a proposal waiting for a person, so the approval surface, versioned standing instructions and the review are quoted as a scoped build on the business's own systems. Send the failing check id for a fixed price; do not build the live step yourself.",
+    "evidence_required": "attach what proves each one; not a software check"
+  }
+}
