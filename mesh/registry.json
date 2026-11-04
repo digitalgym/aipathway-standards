@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T11:58:27.057Z",
+  "generated_at": "2026-11-04T12:00:12.491Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -2098,6 +2098,108 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 12
+        }
+      ]
+    },
+    {
+      "slug": "company-review-watch",
+      "name": "Company Review Watch",
+      "office_task": "Keep each client company's ASIC annual review and officeholder change dates worked out from dated rules, draft the client reminder before late fees start, and file the proof.",
+      "verticals": [
+        "accounting-bookkeeping"
+      ],
+      "standards": [
+        "compliance-calendar"
+      ],
+      "systems_of_record": [
+        "the practice's obligation register (its client company calendar, dated rule set and the document store ASIC confirmations and fee receipts are filed in)"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "evidence.filed",
+          "write": "an ASIC confirmation (a paid annual review fee receipt or a lodged officeholder change) attached to an email, filed as evidence of completion on the client obligation it names by obligation id; an email with no obligation id is never matched on a company name or ACN text and is raised instead",
+          "readback": "the obligation is read back by its id and must return the same evidence reference (the message_id and attachment) and a completion date; if it does not, nothing was filed and review.evidence_not_read_back is raised"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the client obligation naming the person who owns it: an unknown review or change date, no rule in force, a past date no retained rule version explains, a 'paid' or 'lodged' email with no document, a director's dated refusal, a breach, a drafted client reminder awaiting a named release, a release with no named person, silence past the next chase date, or an email with no obligation id",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the obligation id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "review.anchor_unknown",
+          "review.no_rule_in_force",
+          "review.history_unexplained",
+          "review.completion_without_evidence",
+          "review.evidence_not_read_back",
+          "review.refusal_recorded",
+          "review.breached",
+          "review.reminder_drafted_awaiting_release",
+          "review.release_refused",
+          "review.chase_due",
+          "review.email_unmatched"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.obligation_ref",
+          "seam.rule_version",
+          "seam.anchor_status",
+          "seam.state",
+          "seam.evidence",
+          "seam.refused_at",
+          "seam.breached_at",
+          "seam.next_chase",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/company-review-watch"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "compliance-calendar",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T11:56:10.105Z",
+          "run_id": "run-1793793370104",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 10
         }
       ]
     },
@@ -10616,6 +10718,7 @@
     "close-check",
     "comp-check",
     "comp-report",
+    "company-review-watch",
     "consultant-hours",
     "contract-billing",
     "cost-desk",
