@@ -1,0 +1,67 @@
+{
+  "slug": "meeting-notes",
+  "name": "Meeting Notes",
+  "office_task": "After each client meeting, file what the client told us (facts, preferences, standing instructions) on their record as suggestions, for a partner to accept or reject.",
+  "verticals": ["accounting-bookkeeping"],
+  "standards": ["client-memory"],
+  "systems_of_record": [
+    "the practice management system that issues the job_id and the client id on it (for example Xero Practice Manager or FYI)",
+    "the practice's client memory list on its own Microsoft 365 or Google Workspace, with an approvals list only approvers can write to"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/meeting-notes" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "webhook", "schedule"],
+  "consumes": [
+    { "event": "email.received", "wake": "webhook" },
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "evidence.filed",
+      "write": "each fact, preference or standing instruction heard in the meeting note, filed as a proposed item on the client's memory list against the job_id the note names, with the note's message_id as its source and stated or inferred (naming the model) as said",
+      "readback": "the memory list returns an item id; reading that id back returns the client_id from the job, the job_id, source.ref equal to the message_id and status proposed. No id back, or any other status, means nothing was filed: an exception is raised and the run stops"
+    },
+    {
+      "event": "report.published",
+      "write": "the monthly review: every approved standing instruction once, with its version, when it was last followed, and an ok, not_applied or contradicted flag with its evidence. It changes nothing on the list",
+      "readback": "the review list returns a report_id; reading it back returns the lines published. No id back raises memory.review_not_published"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception naming the practice manager: a decision from someone not on the approvers list or not from the approval surface, a note with no job id, an unreadable job, or a write that did not read back",
+      "readback": "the exception desk returns an exception_id, and reading it back returns the job_id or decision id, the reason and the exception_owner"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "unauthorised_approver",
+      "memory.no_job_id",
+      "memory.job_unreadable",
+      "memory.write_not_read_back",
+      "memory.decision_on_non_proposal",
+      "memory.superseded_item_not_in_force",
+      "memory.review_not_published"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "memory.client_id",
+      "memory.job_id",
+      "memory.source",
+      "memory.status",
+      "memory.version",
+      "memory.supersedes",
+      "memory.superseded_by",
+      "memory.approved_by",
+      "memory.approved_at",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
