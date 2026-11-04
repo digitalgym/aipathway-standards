@@ -17,6 +17,16 @@ next.
 
 Or copy any `skills/<name>/` folder into `.claude/skills/` in your own project.
 
+On ChatGPT or Codex, the same skills install as an OpenAI plugin:
+
+```
+codex plugin marketplace add digitalgym/aipathway-standards
+codex plugin add build-standards@aipathway-standards
+```
+
+In the ChatGPT desktop app, add the marketplace the same way, then install
+`build-standards` from the Plugins Directory under AI Pathway.
+
 Not on Claude? The same rules are in `AGENTS.md` (Codex, Copilot CLI and
 anything that reads the convention), `.cursor/rules/aipathway-standards.mdc`
 (Cursor) and `.github/copilot-instructions.md` (GitHub Copilot). All three
