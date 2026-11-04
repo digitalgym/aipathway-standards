@@ -67,6 +67,7 @@ https://aipathway.com.au/explore-ai/mesh-directory.
 | `AIP-BS-REVIEW-REQUEST` | [`review-request`](skills/review-request/SKILL.md) | Review Request Build Standard |
 | `AIP-BS-NEXT-SERVICE` | [`next-service`](skills/next-service/SKILL.md) | Next Service Build Standard |
 | `AIP-BS-FAULT-TRIAGE` | [`fault-triage`](skills/fault-triage/SKILL.md) | Fault Triage Build Standard |
+| `AIP-BS-PROGRESS-CLAIM-DRAFT` | [`progress-claim-draft`](skills/progress-claim-draft/SKILL.md) | Progress Claim Draft Build Standard |
 | `AIP-BS-DOCUMENT-FILING` | [`document-filing`](skills/document-filing/SKILL.md) | Document Filing Build Standard |
 | `AIP-BS-REMITTANCE-SPLIT` | [`remittance-split`](skills/remittance-split/SKILL.md) | Remittance Split Build Standard |
 | `AIP-BS-OPEN-HOME-FEEDBACK` | [`open-home-feedback`](skills/open-home-feedback/SKILL.md) | Open Home Feedback Build Standard |
