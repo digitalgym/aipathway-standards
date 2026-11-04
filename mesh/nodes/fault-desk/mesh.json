@@ -1,0 +1,84 @@
+{
+  "slug": "fault-desk",
+  "name": "Fault Desk",
+  "office_task": "Before we send a tech, check each fault call, text or alarm against our written fault list, give only our own reset steps, and book one job with what was tried.",
+  "verticals": [
+    "trades-building"
+  ],
+  "standards": [
+    "fault-triage"
+  ],
+  "systems_of_record": [
+    "the job system that issues the job_id (ServiceM8 or Simpro, written over its API; on Tradify a person writes the job from the triage log)",
+    "the fault list the business writes, one sheet or SharePoint list with an edition per upload, read before every triage and never written by the bot",
+    "the asset register that issues the asset_id and names each customer's model",
+    "the office's message system (Gmail or Outlook), whose drafts folder holds every written reply for a named person to send",
+    "the task list the office runs (Google Tasks, Planner or a sheet), which issues the exception_id for each parked alarm or failed job write"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/fault-desk"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "webhook"
+  ],
+  "consumes": [
+    {
+      "event": "email.received",
+      "wake": "webhook"
+    },
+    {
+      "event": "call.received",
+      "wake": "webhook"
+    },
+    {
+      "event": "exception.closed",
+      "wake": "webhook"
+    }
+  ],
+  "emits": [
+    {
+      "event": "job.created",
+      "write": "one job in the job system for a fault that cannot be fixed from a written procedure, or whose procedure the customer said did not work: emergency, routine or unclassified, carrying the fault matched, the outcome, the fault list edition, the steps tried and what the customer said, so the tech knows before they leave",
+      "readback": "the job system returns the job_id, and reading that id back returns the job with its triage block; no id back means nothing was written, and a named person is raised (and for an emergency, handed the call at once)"
+    },
+    {
+      "event": "job.updated",
+      "write": "the triage added to the customer's job that is already open, marked as a duplicate of it, instead of a second job",
+      "readback": "reading the open job_id back returns the new triage note on it; no id back means nothing was written and a named person is raised"
+    },
+    {
+      "event": "exception.raised",
+      "write": "a task naming the service coordinator: a monitoring alarm the fault list leaves to a person or cannot place, or a job write that returned no id",
+      "readback": "the task list returns an exception_id, and reading that id back returns the intake, the asset, the list edition and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "fault.alert_left_to_person",
+      "fault.alert_unplaced",
+      "fault.job_write_failed"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "triage.outcome",
+      "triage.matched_fault_id",
+      "triage.edition",
+      "triage.steps_tried",
+      "triage.customer_said",
+      "triage.duplicate_of",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
