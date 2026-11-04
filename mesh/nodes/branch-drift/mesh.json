@@ -1,0 +1,50 @@
+{
+  "slug": "branch-drift",
+  "name": "Branch Drift",
+  "office_task": "Every week, check each branch or franchise against our written operating standard, score its drift the same way for all, send each its own report, and put a slipping one in front of a named person.",
+  "verticals": ["b2b-office"],
+  "standards": ["multi-site-conformance"],
+  "systems_of_record": [
+    "the versioned key contract the business keeps (a SharePoint list or Google Sheet) that issues the contract version",
+    "Microsoft 365 or Google Workspace access groups, which decide which branch a record belongs to",
+    "each branch's own report location (a folder, channel or list) that issues the report_id",
+    "the exception desk the business runs, which issues the exception_id"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/branch-drift" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "report.published",
+      "write": "one drift report per branch, published on schedule whether or not anything drifted, into that branch's own report location with the centre's copy at the same detail: each finding's kind (schema, gate bypass, shadow register, silence), the record it points to, the contract version it was scored against and the one score",
+      "readback": "the report location returns a report_id, and reading that id back returns the branch's segment_id, the period, the contract version and the findings list (empty on an all-clear); no id back means the report was not published and an exception is raised"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception naming one person: a branch past its threshold routed to its named owner, a branch owned only by a distribution list, a refused rename or second key that asks for a contract version bump, a record refused because a new branch's gates are not yet live, or a contract that could not be read as a versioned document",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the segment_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "multisite.threshold_crossed",
+      "multisite.no_named_owner",
+      "multisite.contract_change_requested",
+      "multisite.segment_not_ready",
+      "multisite.contract_unversioned"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.segment_id", "seam.contract_version", "seam.report_id", "seam.drift_score", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
