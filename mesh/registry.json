@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T11:56:33.434Z",
+  "generated_at": "2026-11-04T11:58:27.057Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -526,6 +526,103 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 10
+        }
+      ]
+    },
+    {
+      "slug": "balance-proof",
+      "name": "Balance Proof",
+      "office_task": "Each month, tie every balance sheet account in Xero to the statement that supports it, by account id, and list every balance nobody can explain for a named person to clear.",
+      "verticals": [
+        "accounting-bookkeeping"
+      ],
+      "standards": [
+        "two-records"
+      ],
+      "systems_of_record": [
+        "Xero (the ledger that issues the account id and holds each balance sheet account's month-end balance)",
+        "the practice's support file for the month (bank, loan and hire purchase statements, the ATO integrated client account, payroll liabilities and super reports, the fixed asset register), each document tagged with the Xero account id it supports"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the month's balance sheet tie-out, written where the accountant opens it: the pair contract it ran under, the join key (the Xero account id), the master per field, and the counts tied, within tolerance, not tied, unexplained and corrected, published every month including the all-clear",
+          "readback": "the report store returns a report_id, and reading that id back returns the contract id, the five counts and the published time; no id back means the run did not publish and the owner is told"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the account naming the person who owns it: a balance that does not tie, with the document's value, Xero's value and the master's value side by side; a Xero balance with no supporting document (a balance nobody can explain); a document naming an account Xero holds no balance on; a gap over the threshold amount; too many accounts not tied; or an accepted adjustment whose draft journal returned no id",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the account id, the reason, both values and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "two-records.contract_missing",
+          "two-records.difference_open",
+          "two-records.orphan_unsupported_balance",
+          "two-records.orphan_unmatched_document",
+          "two-records.over_threshold_amount",
+          "two-records.mismatch_rate_exceeded",
+          "two-records.write_not_read_back"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "seam-mirror",
+        "fields": [
+          "seam.account_id",
+          "seam.period",
+          "seam.contract_id",
+          "seam.run_id",
+          "seam.difference_status",
+          "seam.value_document",
+          "seam.value_xero",
+          "seam.master_value",
+          "seam.accepted_by",
+          "seam.written_id",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/balance-proof"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "two-records",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T11:51:44.485Z",
+          "run_id": "run-1793793104484",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
         }
       ]
     },
@@ -10504,6 +10601,7 @@
     "agent-rules-desk",
     "arrears-desk",
     "backflow-watch",
+    "balance-proof",
     "bank-questions",
     "bill-check",
     "billing-match",
