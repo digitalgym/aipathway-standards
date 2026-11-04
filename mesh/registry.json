@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T12:37:06.776Z",
+  "generated_at": "2026-11-04T12:38:56.819Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -3219,6 +3219,106 @@
       ]
     },
     {
+      "slug": "day-desk",
+      "name": "Day Desk",
+      "office_task": "Answers our phone during the day, looks the caller up, tells an existing customer when we're coming off their job, and writes new work as one job.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "client-desk"
+      ],
+      "systems_of_record": [
+        "ServiceM8",
+        "Simpro"
+      ],
+      "consumes": [
+        {
+          "event": "call.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "job.updated",
+          "wake": "webhook"
+        },
+        {
+          "event": "job.completed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "job.created",
+          "write": "one job per new caller with no open job: the caller's own words and a type from the fixed list (emergency, routine, quote, unclassified)",
+          "readback": "the job system returns the job id (ServiceM8 job uuid, Simpro job ID) and the job is read back by that id before the caller is told they are booked; no id back means no booking, no job.created, and a callback task to the person on duty"
+        },
+        {
+          "event": "job.updated",
+          "write": "a note on the job for every call (what the caller said and what they were told, by call id), and a drafted running-late, on-the-way or job-complete update waiting for a named person to release it; a released update is sent to the job's contact and noted on the job by the event that caused it",
+          "readback": "the note and the draft are read back on the job by its job id; a send counts only once the job shows the update_sent note with the change it was for"
+        },
+        {
+          "event": "exception.raised",
+          "write": "a callback task owned by the person the roster names: a transfer nobody picked up, a job with no arrival time, a job write that came back with no id, or a caller on a job with an open exception",
+          "readback": "the task desk returns an exception_id, and reading it back returns the job_id (or the caller's number when no job was written), the owner and the due-by time; no id back means the caller is not told a callback is coming"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "transfer_unanswered",
+          "no_arrival_time_on_job",
+          "status_question_no_open_job",
+          "job_write_failed",
+          "job_readback_failed",
+          "caller_on_job_with_open_exception"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.call_id",
+          "seam.update_change_key",
+          "seam.update_released_by",
+          "seam.callback_owner",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "office-voice-front-desk",
+        "node",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/day-desk"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "client-desk",
+          "edition": "2026-10-26",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:35:58.787Z",
+          "run_id": "run-1793795758785",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        }
+      ]
+    },
+    {
       "slug": "deadline-desk",
       "name": "Deadline Desk",
       "office_task": "Keep every deadline from our clients' letters and lodgements on a calendar derived from dated rules, chase replies, and put anything late or unclear in front of a named person.",
@@ -3428,6 +3528,106 @@
           "with_us": 1,
           "evidence_required": 0,
           "total": 12
+        }
+      ]
+    },
+    {
+      "slug": "defect-quote",
+      "name": "Defect Quote",
+      "office_task": "When a tech logs fire or life-safety defects on a site's inspection or fault job, draft one rectification quote on it from our own price list, or park it, and leave it for us to send.",
+      "verticals": [
+        "fire-electrical"
+      ],
+      "standards": [
+        "quote-out"
+      ],
+      "systems_of_record": [
+        "Simpro",
+        "ServiceM8",
+        "Xero (Items as the rectification price list, Quotes)"
+      ],
+      "consumes": [
+        {
+          "event": "job.created",
+          "wake": "webhook"
+        },
+        {
+          "event": "job.updated",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "quote.drafted",
+          "write": "One draft rectification quote on the inspection or fault job the defects were logged on, one line per open defect, each line carrying the catalogue id and rate read from the price list at draft time (ex GST), the defect id and the asset id it rectifies. It is left in draft for the person who owns defect quotes to send to the site's owner or managing agent; this node has no way to send it.",
+          "readback": "The quote is read back by the id the system returned (Simpro GET /api/v1.0/companies/{companyID}/quotes/{quoteID}, ServiceM8 GET /api_1.0/jobquote/{uuid}.json, Xero GET /api.xro/2.0/Quotes/{QuoteID}) and must carry the job id. No id back is not a write: it raises quote.write_failed."
+        },
+        {
+          "event": "exception.raised",
+          "write": "A parked rectification quote as an exception on the job: the park reason from the standard's fixed list, the defects that did price with their catalogue ids, the defects that did not with their defect and asset ids, no total, and exception_owner set to the person the business named for defect quotes.",
+          "readback": "The exception desk returns an exception_id; reading the job by its id shows the open exception with its exception_owner, and the next hop reads it there and stops."
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "quote.not_in_pricebook",
+          "quote.variation_to_accepted_quote",
+          "quote.discount_requested",
+          "quote.pricebook_unreadable",
+          "quote.write_failed"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.quote_id",
+          "seam.status",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/defect-quote"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "quote-out",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:34:45.829Z",
+          "run_id": "run-1793795685826",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 0,
+          "total": 11
+        },
+        {
+          "standard": "cash-seam",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:35:29.076Z",
+          "run_id": "run-1793795729074",
+          "green": 4,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 9
         }
       ]
     },
@@ -13559,8 +13759,10 @@
     "cover-check",
     "crew-board",
     "danger-tag-desk",
+    "day-desk",
     "deadline-desk",
     "defect-desk",
+    "defect-quote",
     "delivery-billing",
     "deposit-match",
     "docket-billing",
@@ -13666,6 +13868,12 @@
     },
     {
       "from": "after-hours-desk",
+      "to": "defect-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "after-hours-desk",
       "to": "estimate-desk",
       "event": "job.created",
       "id": "job_id"
@@ -13745,6 +13953,18 @@
     {
       "from": "crew-board",
       "to": "danger-tag-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "crew-board",
+      "to": "day-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "crew-board",
+      "to": "defect-quote",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -13857,6 +14077,222 @@
       "id": "job_id"
     },
     {
+      "from": "day-desk",
+      "to": "crew-board",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "defect-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "estimate-desk",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "measure-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "parts-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "proposal-desk",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "quote-desk",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "repair-board",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "route-plan",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "trim-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "van-board",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "visit-offer",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "visit-round",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "arrival-brief",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "buy-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "crew-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "danger-tag-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "defect-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "estimate-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "hours-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "measure-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "order-release",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "parts-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "proposal-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "quote-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "repair-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "retention-book",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "review-ask",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "route-plan",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "safety-cert-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "site-orders",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "trim-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "van-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "van-stock",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "visit-offer",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "visit-round",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
       "from": "deposit-match",
       "to": "chase-book",
       "event": "payment.received",
@@ -13895,6 +14331,12 @@
     {
       "from": "install-book",
       "to": "crew-board",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "install-book",
+      "to": "defect-quote",
       "event": "job.created",
       "id": "job_id"
     },
@@ -13967,6 +14409,12 @@
     {
       "from": "job-sheet",
       "to": "contract-billing",
+      "event": "job.completed",
+      "id": "job_id"
+    },
+    {
+      "from": "job-sheet",
+      "to": "day-desk",
       "event": "job.completed",
       "id": "job_id"
     },
@@ -14087,6 +14535,18 @@
     {
       "from": "practice-desk",
       "to": "danger-tag-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "practice-desk",
+      "to": "day-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "practice-desk",
+      "to": "defect-quote",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -14236,6 +14696,18 @@
     },
     {
       "from": "repair-board",
+      "to": "day-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "repair-board",
+      "to": "defect-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "repair-board",
       "to": "estimate-desk",
       "event": "job.updated",
       "id": "job_id"
@@ -14344,6 +14816,12 @@
     },
     {
       "from": "roof-desk",
+      "to": "defect-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "roof-desk",
       "to": "estimate-desk",
       "event": "job.created",
       "id": "job_id"
@@ -14429,6 +14907,18 @@
     {
       "from": "route-plan",
       "to": "danger-tag-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "route-plan",
+      "to": "day-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "route-plan",
+      "to": "defect-quote",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -14542,6 +15032,12 @@
     },
     {
       "from": "service-due",
+      "to": "defect-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "service-due",
       "to": "estimate-desk",
       "event": "job.created",
       "id": "job_id"
@@ -14627,6 +15123,18 @@
     {
       "from": "van-board",
       "to": "danger-tag-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "van-board",
+      "to": "day-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "van-board",
+      "to": "defect-quote",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -14753,6 +15261,18 @@
     {
       "from": "visit-offer",
       "to": "danger-tag-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-offer",
+      "to": "day-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-offer",
+      "to": "defect-quote",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -14879,6 +15399,18 @@
     {
       "from": "visit-round",
       "to": "danger-tag-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-round",
+      "to": "day-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-round",
+      "to": "defect-quote",
       "event": "job.updated",
       "id": "job_id"
     },
