@@ -1,0 +1,82 @@
+{
+  "slug": "expense-check",
+  "name": "Expense Check",
+  "office_task": "Check each staff expense claim has its receipt, a proper tax invoice where the ATO needs one, and fits our expense policy, then queue it for the approver to approve or reject.",
+  "verticals": [
+    "b2b-office"
+  ],
+  "standards": [
+    "invoice-check"
+  ],
+  "systems_of_record": [
+    "Xero or MYOB (the ledger that issues the bill_id for the claim, entered as a draft bill payable to the staff member, and holds the expense policy lines)",
+    "the document store where receipts and written pre-approvals are filed"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/expense-check"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "schedule",
+    "webhook"
+  ],
+  "consumes": [
+    {
+      "event": "bill.received",
+      "wake": "webhook"
+    },
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    },
+    {
+      "event": "exception.closed",
+      "wake": "webhook"
+    }
+  ],
+  "emits": [
+    {
+      "event": "bill.checked",
+      "write": "the claim's draft bill marked as passing all four checks and queued for the approver, with each check record (policy cap, units supported, out-of-policy pre-approval, monthly allowance), the tolerances in force and the receipt; the bill stays a draft and nothing is reimbursed",
+      "readback": "reading the bill_id back from the ledger returns the bill still in draft with the seam fields seam.queue = done_reversible and seam.tolerance_version; a bill that does not read back as a draft means nothing was queued and the run raises an exception"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception record on the claim naming the person who owns it: the check that failed and the checks that never ran, the difference in dollars, the receipt, and its queue (needs a decision, waiting on the staff member for a receipt or tax invoice with a drafted request, or blocked: no policy line, or an out-of-policy item with no written pre-approval)",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the bill_id, the failed check, the dollar difference, the receipt and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "expense.no_receipt",
+      "expense.not_a_tax_invoice",
+      "expense.no_policy_line",
+      "expense.over_policy_cap",
+      "expense.units_not_supported",
+      "expense.out_of_policy_no_preapproval",
+      "expense.over_monthly_allowance"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.bill_id",
+      "seam.policy_line",
+      "seam.queue",
+      "seam.failed_check",
+      "seam.never_ran",
+      "seam.difference",
+      "seam.tolerance_version",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
