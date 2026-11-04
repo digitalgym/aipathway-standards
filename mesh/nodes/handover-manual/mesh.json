@@ -1,0 +1,84 @@
+{
+  "slug": "handover-manual",
+  "name": "Handover Manual",
+  "office_task": "At practical completion, put the O&M manual together from the job's asset list, certificates and records, list anything missing, and hold it for the project manager to release.",
+  "verticals": [
+    "trades-building"
+  ],
+  "standards": [
+    "rejected-pack"
+  ],
+  "systems_of_record": [
+    "the job system that issues the job_id the manual belongs to, with its installed asset list (Simpro, ServiceM8 or Tradify's job export)",
+    "the document store that issues the document_id of each certificate, warranty and record in the job folder, and holds the drafted manual (SharePoint, OneDrive or Google Drive)",
+    "the exception desk the business runs, holding each held manual with its named owner"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/handover-manual"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "webhook"
+  ],
+  "consumes": [
+    {
+      "event": "job.completed",
+      "wake": "webhook"
+    },
+    {
+      "event": "document.received",
+      "wake": "webhook"
+    },
+    {
+      "event": "exception.closed",
+      "wake": "webhook"
+    }
+  ],
+  "emits": [
+    {
+      "event": "report.published",
+      "write": "the drafted O&M manual, written into the job's handover folder against the job_id: the asset schedule (make, model, serial, location, installer and licence), each filed certificate, warranty and instruction by its number, the written not-applicable for each record the job does not need with its rule, warranty end and first service dates derived from the dated rules, the date the manual is due to the client, the queue after the eight checks in order, and the as-of date; marked released only after the project manager's named release, which the build never gives",
+      "readback": "the document store returns a report_id, and reading that id back returns the job_id, seam.queue, seam.rule_version, seam.manual_due and seam.as_of; no id back means the manual was not written and the run raises an exception instead"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the job naming its project manager: the first check that failed (a record filed for another job, a lapsed builder or trade licence, an asset with no handover rule, records still missing listed in full, a second site address or licence number), values read off a scan waiting for a person to confirm, or a manual waiting for the project manager's named release",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the job_id, the failed check with its reason, the list of missing records and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "handover.record_for_other_job",
+      "handover.licence_lapsed",
+      "handover.no_rule_for_asset",
+      "handover.records_missing",
+      "handover.two_addresses_or_licences",
+      "handover.yellow_values",
+      "handover.awaiting_release"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.job_id",
+      "seam.report_id",
+      "seam.queue",
+      "seam.failed_check",
+      "seam.missing",
+      "seam.rule_version",
+      "seam.manual_due",
+      "seam.as_of",
+      "seam.accepted_by",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
