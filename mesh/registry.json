@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T12:22:31.176Z",
+  "generated_at": "2026-11-04T12:22:44.786Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -5130,6 +5130,104 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 12
+        }
+      ]
+    },
+    {
+      "slug": "install-book",
+      "name": "Install Book",
+      "office_task": "When an install is signed off, put the unit and its warranty on our books from the commissioning record, work out its first service date from our schedule, and remind the customer once.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "next-service"
+      ],
+      "systems_of_record": [
+        "the job system that issues the job_id (ServiceM8, Simpro, Fergus, Jobber or AroFlo: the completed install or service job and the equipment the technician recorded on it)",
+        "the asset register that issues the asset_id (each installed unit, with its service records and the reminder history kept against it)"
+      ],
+      "consumes": [
+        {
+          "event": "job.completed",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "job.created",
+          "write": "one booking request in the job system per yes, against the customer and the asset, carrying the customer's reply word for word and no time slot or price; a person books the time and prices the work",
+          "readback": "the job system returns the job id, and reading that job back returns the same customer_id and asset_id before the office is told a request is waiting; an open job already on the asset means nothing new is written; no job that reads back means an exception, not a booking"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the asset or the reply naming the person who owns it: a missing install date, model or equipment type, an equipment type with no schedule row, a customer who agreed to no channel, a reply that is not a yes or a stop, a refused send, or a booking request that did not read back",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the asset_id or reply_id, the kind and the exception_owner; no id back means nothing was raised and the run stops for that asset"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "missing_install_date",
+          "missing_model",
+          "missing_equipment_type",
+          "no_schedule",
+          "no_consent",
+          "unclear_reply",
+          "next_service.send_refused",
+          "next_service.booking_not_read_back",
+          "next_service.record_not_written"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.asset_id",
+          "seam.source_job_id",
+          "seam.reminder_stage",
+          "seam.booking_job_id",
+          "seam.opt_out",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/install-book"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "next-service",
+          "edition": "2026-10-24",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:19:05.476Z",
+          "run_id": "run-1793794745475",
+          "green": 10,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 15
         }
       ]
     },
@@ -12480,6 +12578,7 @@
     "hours-audit",
     "hours-check",
     "inbox-desk",
+    "install-book",
     "intercompany-match",
     "invoice-desk",
     "invoice-hold",
@@ -12749,6 +12848,66 @@
       "id": "payment_id"
     },
     {
+      "from": "install-book",
+      "to": "crew-board",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "install-book",
+      "to": "estimate-desk",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "install-book",
+      "to": "parts-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "install-book",
+      "to": "proposal-desk",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "install-book",
+      "to": "quote-desk",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "install-book",
+      "to": "repair-board",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "install-book",
+      "to": "trim-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "install-book",
+      "to": "van-board",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "install-book",
+      "to": "visit-offer",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "install-book",
+      "to": "visit-round",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
       "from": "job-sheet",
       "to": "contract-billing",
       "event": "job.completed",
@@ -12763,6 +12922,12 @@
     {
       "from": "job-sheet",
       "to": "docket-billing",
+      "event": "job.completed",
+      "id": "job_id"
+    },
+    {
+      "from": "job-sheet",
+      "to": "install-book",
       "event": "job.completed",
       "id": "job_id"
     },
