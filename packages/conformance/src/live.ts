@@ -89,6 +89,10 @@ export const CALL_PORT_MAP = {
 export const QUOTE_PORT_MAP = {
   readJob: "read_job",
   readPricebook: "read_pricebook",
+  // Options (checks 11 to 14). The tier map is the business's own, part of its
+  // book, so it reads through the same port. The hosted ports file does not
+  // implement it: the build holds the tier map, and LiveWorld names the gap.
+  readTierMap: "read_pricebook",
   draftQuote: "draft_quote",
   updateQuote: "draft_quote",
   escalate: "escalate",

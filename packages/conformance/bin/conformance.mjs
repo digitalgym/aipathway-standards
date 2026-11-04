@@ -72,7 +72,20 @@ const KNOWN = [
   "simpro-claude-connector-build-standard",
   "price-one-pager-build-standard",
   "open-home-feedback-build-standard",
-  "just-sold-pack-build-standard"
+  "review-request-build-standard",
+  "next-service-build-standard",
+  "job-brief-build-standard",
+  "document-filing-build-standard",
+  "remittance-split-build-standard",
+  "just-sold-pack-build-standard",
+  "client-desk-build-standard",
+  "virtual-admin-build-standard",
+  "client-memory-build-standard",
+  "job-close-build-standard",
+  "exception-desk-build-standard",
+  "parts-ready-build-standard",
+  "fault-triage-build-standard",
+  "progress-claim-draft-build-standard"
 ];
 
 const [cmd, slug] = process.argv.slice(2);

@@ -116,6 +116,19 @@ const WORLDS: Record<string, string> = {
   "price-one-pager-build-standard": "PriceWorld",
   "open-home-feedback-build-standard": "OpenHomeWorld",
   "just-sold-pack-build-standard": "JustSoldWorld",
+  "review-request-build-standard": "ReviewWorld",
+  "next-service-build-standard": "NextServiceWorld",
+  "job-brief-build-standard": "JobBriefWorld",
+  "document-filing-build-standard": "DocumentFilingWorld",
+  "remittance-split-build-standard": "RemittanceWorld",
+  "client-desk-build-standard": "ClientDeskWorld",
+  "virtual-admin-build-standard": "VirtualAdminWorld",
+  "client-memory-build-standard": "ClientMemoryWorld",
+  "job-close-build-standard": "JobCloseWorld",
+  "exception-desk-build-standard": "ExceptionDeskWorld",
+  "parts-ready-build-standard": "PartsReadyWorld",
+  "fault-triage-build-standard": "FaultTriageWorld",
+  "progress-claim-draft-build-standard": "ProgressClaimWorld",
 };
 
 /**
@@ -1002,12 +1015,51 @@ function quotePortsBody(provider: string): string {
     ...(r.duplicate_of ? { duplicateOf: r.duplicate_of } : {}),
   });
 
+  const toOptionsArg = (options) => options.map((o) => ({
+    label: o.label,
+    line_items: o.lines.map((l) => ({ catalogue_id: l.catalogueId, ...(l.description ? { description: l.description } : {}) })),
+  }));
+  // A reused set comes back with labels and ids only, so each option's lines
+  // and total are the ones this run asked for.
+  const toOptionsQuote = (r, asked) => ({
+    id: r.quote_external_id,
+    jobId: r.job_external_id,
+    lines: [],
+    total: 0,
+    options: (r.options ?? []).map((o) => {
+      const mine = asked.find((a) => a.label.toLowerCase() === o.label.toLowerCase());
+      const lines = o.line_items
+        ? o.line_items.map((l) => ({ catalogueId: l.catalogue_id, description: l.description, rate: cents(l.line_total ?? l.unit_price) }))
+        : (mine?.lines ?? []);
+      return { label: o.label, lines, total: o.amount != null ? cents(o.amount) : lines.reduce((t, l) => t + l.rate, 0) };
+    }),
+    state: "draft",
+    updates: r.outcome === "quote_reused" ? 1 : 0,
+    ...(r.duplicate_of ? { duplicateOf: Array.isArray(r.duplicate_of) ? r.duplicate_of[0] : r.duplicate_of } : {}),
+  });
+
   return {
     async readJob(jobId) {
       const r = await call("read_job", { job_external_id: jobId });
       if (r.outcome !== "job_read") return null;
       lastJob = r.job_external_id;
-      return { id: r.job_external_id, source: "call", wants: r.description ? [r.description] : [], ...(r.quote_external_id ? { quoteId: r.quote_external_id } : {}) };
+      return {
+        id: r.job_external_id,
+        source: "call",
+        wants: r.description ? [r.description] : [],
+        ...(r.quote_external_id ? { quoteId: r.quote_external_id } : {}),
+        // A job drafted as options names them, and the one a person marked
+        // accepted. Nothing here marks a choice (check 14).
+        ...(r.quote_options ? { quoteOptions: r.quote_options.map((o) => o.label) } : {}),
+        ...(r.chosen_option ? { chosenOption: r.chosen_option } : {}),
+      };
+    },
+
+    readTierMap() {
+      // The tier map is the business's own (check 13). Office Voice prices the
+      // options it is sent and holds no tier map, so read it from your own sheet
+      // or file and pass the result to draftQuote as options.
+      throw new Error("readTierMap: Office Voice holds no tier map; read it from your own build");
     },
 
     async readPricebook() {
@@ -1018,6 +1070,16 @@ function quotePortsBody(provider: string): string {
     },
 
     async draftQuote(input, intentId) {
+      // Options (checks 11 to 14): Office Voice writes one draft per option in
+      // Xero, labelled job:<id> / <label>, and parks them priced for a person in
+      // ServiceM8 and Simpro. The set is the job's one quote either way.
+      if (input.options) {
+        const r = await call("draft_quote", { job_external_id: input.jobId, options: toOptionsArg(input.options) });
+        if (r.outcome !== "quote_drafted" && r.outcome !== "quote_reused") return null;
+        const quote = toOptionsQuote(r, input.options);
+        byQuote.set(quote.id, { jobId: input.jobId, lines: [], options: input.options, quote });
+        return quote;
+      }
       const r = await call("draft_quote", {
         job_external_id: input.jobId,
         line_items: input.lines.map((l) => ({ catalogue_id: l.catalogueId, ...(l.description ? { description: l.description } : {}) })),
@@ -1035,11 +1097,14 @@ function quotePortsBody(provider: string): string {
       if (!known) throw new Error(\`updateQuote: \${quoteId} was not drafted in this run\`);
       const r = await call("draft_quote", {
         job_external_id: known.jobId,
-        line_items: known.lines.map((l) => ({ catalogue_id: l.catalogueId, ...(l.description ? { description: l.description } : {}) })),
+        ...(known.options
+          ? { options: toOptionsArg(known.options) }
+          : { line_items: known.lines.map((l) => ({ catalogue_id: l.catalogueId, ...(l.description ? { description: l.description } : {}) })) }),
       });
       if (r.outcome !== "quote_drafted" && r.outcome !== "quote_reused") return null;
       known.quote.updates += 1;
-      known.quote.duplicateOf = known.quote.duplicateOf ?? r.duplicate_of ?? quoteId;
+      const dup = Array.isArray(r.duplicate_of) ? r.duplicate_of[0] : r.duplicate_of;
+      known.quote.duplicateOf = known.quote.duplicateOf ?? dup ?? quoteId;
       return { ...known.quote };
     },
 
