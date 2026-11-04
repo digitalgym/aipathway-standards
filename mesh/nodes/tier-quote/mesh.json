@@ -1,0 +1,47 @@
+{
+  "slug": "tier-quote",
+  "name": "Tier Quote",
+  "office_task": "When a job is booked, draft one quote with good, better and best options from our own tier list, each line at our own price-list rate, or park it, and leave it for us to send.",
+  "verticals": ["trades-building"],
+  "standards": ["quote-out"],
+  "systems_of_record": ["ServiceM8", "Simpro", "Xero (Items as the price list, Quotes)"],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/tier-quote" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "webhook"],
+  "consumes": [
+    { "event": "job.created", "wake": "webhook" },
+    { "event": "job.updated", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "quote.drafted",
+      "write": "One draft quote on the job it was drafted from, ex GST, holding two or three named options (Good, Better and Best unless the business renames them), in the tier list's order and under its labels. Every line in every option is a catalogue id the tier list names for that kind of work, at the rate read from the business's own price list at draft time; each option carries its own total and there is no sum across options. Where the system cannot hold options on one quote, one draft per option carries the job id and the option label and the set counts as the one quote. It is left in draft for the person who owns quotes; this node has no way to send it, mark the customer's choice or void an option.",
+      "readback": "The quote is read back by the id the system returned (ServiceM8 GET /api_1.0/jobquote/{uuid}.json, Simpro GET /api/v1.0/companies/{companyID}/quotes/{quoteID}, Xero GET /api.xro/2.0/Quotes/{QuoteID}) and must carry the job id and every option label. No id back is not a write: it raises quote.write_failed."
+    },
+    {
+      "event": "exception.raised",
+      "write": "A parked quote as an exception on the job: the park reason from the standard's fixed list (not_in_pricebook, variation_to_accepted_quote, discount_requested, pricebook_unreadable, no_tier_map, too_many_options), each option's priced lines, the line that did not price and the option it was in, no total, and exception_owner set to the person the business named for quotes. Once a person marks the option the customer chose, the same owner is told which other options to void or decline.",
+      "readback": "The exception desk returns an exception_id; reading the job by its id shows the open exception with its exception_owner, and the next hop reads it there and stops."
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "quote.not_in_pricebook",
+      "quote.variation_to_accepted_quote",
+      "quote.discount_requested",
+      "quote.pricebook_unreadable",
+      "quote.no_tier_map",
+      "quote.too_many_options",
+      "quote.write_failed"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.job_id", "seam.quote_id", "seam.status", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
