@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T12:48:45.366Z",
+  "generated_at": "2026-11-04T12:49:07.155Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -5533,6 +5533,106 @@
       ]
     },
     {
+      "slug": "handover-manual",
+      "name": "Handover Manual",
+      "office_task": "At practical completion, put the O&M manual together from the job's asset list, certificates and records, list anything missing, and hold it for the project manager to release.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "rejected-pack"
+      ],
+      "systems_of_record": [
+        "the job system that issues the job_id the manual belongs to, with its installed asset list (Simpro, ServiceM8 or Tradify's job export)",
+        "the document store that issues the document_id of each certificate, warranty and record in the job folder, and holds the drafted manual (SharePoint, OneDrive or Google Drive)",
+        "the exception desk the business runs, holding each held manual with its named owner"
+      ],
+      "consumes": [
+        {
+          "event": "job.completed",
+          "wake": "webhook"
+        },
+        {
+          "event": "document.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the drafted O&M manual, written into the job's handover folder against the job_id: the asset schedule (make, model, serial, location, installer and licence), each filed certificate, warranty and instruction by its number, the written not-applicable for each record the job does not need with its rule, warranty end and first service dates derived from the dated rules, the date the manual is due to the client, the queue after the eight checks in order, and the as-of date; marked released only after the project manager's named release, which the build never gives",
+          "readback": "the document store returns a report_id, and reading that id back returns the job_id, seam.queue, seam.rule_version, seam.manual_due and seam.as_of; no id back means the manual was not written and the run raises an exception instead"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the job naming its project manager: the first check that failed (a record filed for another job, a lapsed builder or trade licence, an asset with no handover rule, records still missing listed in full, a second site address or licence number), values read off a scan waiting for a person to confirm, or a manual waiting for the project manager's named release",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the job_id, the failed check with its reason, the list of missing records and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "handover.record_for_other_job",
+          "handover.licence_lapsed",
+          "handover.no_rule_for_asset",
+          "handover.records_missing",
+          "handover.two_addresses_or_licences",
+          "handover.yellow_values",
+          "handover.awaiting_release"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.report_id",
+          "seam.queue",
+          "seam.failed_check",
+          "seam.missing",
+          "seam.rule_version",
+          "seam.manual_due",
+          "seam.as_of",
+          "seam.accepted_by",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/handover-manual"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "rejected-pack",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:45:12.377Z",
+          "run_id": "run-1793796312375",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 0,
+          "total": 13
+        }
+      ]
+    },
+    {
       "slug": "hours-audit",
       "name": "Hours Audit",
       "office_task": "Every week before the pay run, check the Square timecards against the roster and the award edition, put anything odd in front of its owner, and export only what a person released.",
@@ -9498,6 +9598,108 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 10
+        }
+      ]
+    },
+    {
+      "slug": "portal-match",
+      "name": "Portal Match",
+      "office_task": "Each weekday, check every job's status in Simpro against the client's work-order portal by work-order number, show each difference with both values, and fix one only once a person accepts it.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "two-records"
+      ],
+      "systems_of_record": [
+        "Simpro (the job carries the client's work-order number; owns the job status and the invoiced total)",
+        "the client's work-order portal: a real estate agency's maintenance system, a facilities manager or a CMMS (issues the work-order number; owns the attend-by date and the not-to-exceed limit)"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the run's work-order report where the service coordinator opens it: the pair contract it ran under, the key it joined on (work_order_no), the owner per field, and the counts matched, within tolerance, mismatched, orphaned and corrected, published every run including the all-clear",
+          "readback": "the report store returns a report_id, and reading that id back returns the contract id, the five counts and the published time; no id back means the run did not publish and the owner is told"
+        },
+        {
+          "event": "job.updated",
+          "write": "an accepted correction on the Simpro job, one field (the attend-by date or the not-to-exceed limit the portal owns), with the difference id and the name of the person who accepted it, and both original values kept on the difference",
+          "readback": "Simpro returns the job id for the write, and reading the job back returns the accepted value on that field; no id back raises portal_match.write_not_read_back and the person keys it by hand"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the work order naming the person who owns it: an open difference with the Simpro value, the portal value and the owning system's value side by side awaiting acceptance, a work order on one side only, a gap over the threshold amount, a run over the mismatch rate, or an accepted correction whose write returned no id",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the work_order_no, the field, both values and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "portal_match.contract_missing",
+          "portal_match.owner_missing",
+          "portal_match.difference_open",
+          "portal_match.orphan",
+          "portal_match.over_threshold",
+          "portal_match.mismatch_rate",
+          "portal_match.write_not_read_back"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "seam-mirror",
+        "fields": [
+          "seam.work_order_no",
+          "seam.job_id",
+          "seam.contract_id",
+          "seam.run_id",
+          "seam.difference_status",
+          "seam.value_simpro",
+          "seam.value_portal",
+          "seam.owner_value",
+          "seam.correction_accepted_by",
+          "seam.correction_written_id",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/portal-match"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "two-records",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:44:53.675Z",
+          "run_id": "run-1793796293674",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
         }
       ]
     },
@@ -14528,6 +14730,7 @@
     "gas-tally",
     "goods-match",
     "handbook-desk",
+    "handover-manual",
     "hours-audit",
     "hours-check",
     "inbox-desk",
@@ -14565,6 +14768,7 @@
     "plant-watch",
     "po-match",
     "policy-desk",
+    "portal-match",
     "practice-desk",
     "prestart-desk",
     "price-creep",
@@ -15234,6 +15438,12 @@
     },
     {
       "from": "job-sheet",
+      "to": "handover-manual",
+      "event": "job.completed",
+      "id": "job_id"
+    },
+    {
+      "from": "job-sheet",
       "to": "install-book",
       "event": "job.completed",
       "id": "job_id"
@@ -15314,6 +15524,162 @@
       "from": "job-sheet",
       "to": "timesheet-billing",
       "event": "job.completed",
+      "id": "job_id"
+    },
+    {
+      "from": "portal-match",
+      "to": "arrival-brief",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "portal-match",
+      "to": "buy-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "portal-match",
+      "to": "crew-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "portal-match",
+      "to": "danger-tag-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "portal-match",
+      "to": "day-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "portal-match",
+      "to": "defect-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "portal-match",
+      "to": "estimate-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "portal-match",
+      "to": "hours-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "portal-match",
+      "to": "measure-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "portal-match",
+      "to": "order-release",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "portal-match",
+      "to": "parts-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "portal-match",
+      "to": "proposal-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "portal-match",
+      "to": "quote-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "portal-match",
+      "to": "repair-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "portal-match",
+      "to": "retention-book",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "portal-match",
+      "to": "review-ask",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "portal-match",
+      "to": "route-plan",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "portal-match",
+      "to": "safety-cert-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "portal-match",
+      "to": "site-orders",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "portal-match",
+      "to": "site-test-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "portal-match",
+      "to": "swms-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "portal-match",
+      "to": "trim-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "portal-match",
+      "to": "van-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "portal-match",
+      "to": "van-stock",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "portal-match",
+      "to": "visit-offer",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "portal-match",
+      "to": "visit-round",
+      "event": "job.updated",
       "id": "job_id"
     },
     {
