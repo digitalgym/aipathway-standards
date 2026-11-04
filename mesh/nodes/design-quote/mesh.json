@@ -1,0 +1,46 @@
+{
+  "slug": "design-quote",
+  "name": "Design Quote",
+  "office_task": "When a customer accepts their solar or heat-pump design and it is on the job, draft the job's quote lines from our own price book, or park it with a reason, and leave it for us to send.",
+  "verticals": ["fire-electrical"],
+  "standards": ["quote-out"],
+  "systems_of_record": ["Simpro", "ServiceM8", "Xero (Items as the price book, Quotes)"],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/design-quote" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "webhook"],
+  "consumes": [
+    { "event": "job.created", "wake": "webhook" },
+    { "event": "job.updated", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "quote.drafted",
+      "write": "A draft quote on the job the accepted design is attached to, ex GST, carrying the design's id. One line per equipment or install item on the accepted design: the catalogue id from the business's own price book, the whole-number count from the design, and that item's sell-rate as read at draft time. The amount is count times rate and nothing else; the design tool's own prices are never used, and no STC or rebate deduction is applied. It is left in draft, editable, for the person who owns quotes; this node has no way to send it.",
+      "readback": "The quote is read back by the id the system returned (Simpro GET /api/v1.0/companies/{companyID}/quotes/{quoteID}, ServiceM8 GET /api_1.0/jobquote/{uuid}.json, Xero GET /api.xro/2.0/Quotes/{QuoteID}) and must carry the job id. No id back is not a write: it raises quote.write_failed."
+    },
+    {
+      "event": "exception.raised",
+      "write": "A parked quote, or a job sent back for its design, as an exception on the job: the park reason from the standard's fixed list (or design_quantity_not_whole), the design id, the lines that did price with their catalogue ids, the items that did not, no total, and exception_owner set to the person the business named for quotes.",
+      "readback": "The exception desk returns an exception_id; reading the job by its id shows the open exception with its exception_owner, and the next hop reads it there and stops."
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "quote.not_in_pricebook",
+      "quote.variation_to_accepted_quote",
+      "quote.discount_requested",
+      "quote.pricebook_unreadable",
+      "quote.design_quantity_not_whole",
+      "quote.write_failed"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.job_id", "seam.quote_id", "seam.status", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
