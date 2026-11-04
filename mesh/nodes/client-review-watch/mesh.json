@@ -1,0 +1,55 @@
+{
+  "slug": "client-review-watch",
+  "name": "Client Review Watch",
+  "office_task": "Work out when each client's AML/CTF review is next due from our program's dated rules, and list everyone due or overdue, with their last review, for our compliance officer.",
+  "verticals": ["accounting-bookkeeping"],
+  "standards": ["compliance-calendar"],
+  "systems_of_record": ["the practice's client review register (its AML/CTF program's dated review rules by risk rating, each client's review obligation, and the document store signed review records are filed in)"],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/client-review-watch" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "email.received", "wake": "webhook" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "evidence.filed",
+      "write": "a signed client review record, attached to an email that names the review obligation id and the reviewer, filed as evidence of the completed review on that obligation; a 'reviewed' with no document or no named reviewer is never filed, and an email with no obligation id is never matched on a client name",
+      "readback": "the obligation is read back by its id and must return the same evidence reference (the message_id and attachment) and a completion date; if it does not, nothing was filed and cdd_review.record_not_read_back is raised"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the client's review obligation naming the compliance officer who owns it: a review coming due (with the rule version, due date and last review on file), an overdue review, a client with no review on file, no rule in force, a past date no retained rule version explains, a client who declined to update details, a change the client told us about, a drafted client information request awaiting a named release, a release with no named person, silence past the next chase date, or an email with no obligation id",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the obligation id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "cdd_review.due",
+      "cdd_review.overdue",
+      "cdd_review.no_review_on_file",
+      "cdd_review.no_rule_in_force",
+      "cdd_review.history_unexplained",
+      "cdd_review.completed_without_record",
+      "cdd_review.reviewer_unnamed",
+      "cdd_review.record_not_read_back",
+      "cdd_review.client_declined",
+      "cdd_review.change_notified",
+      "cdd_review.request_drafted_awaiting_release",
+      "cdd_review.release_without_person",
+      "cdd_review.chase_due",
+      "cdd_review.email_unmatched"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.obligation_ref", "seam.rule_version", "seam.anchor_status", "seam.state", "seam.evidence", "seam.refused_at", "seam.breached_at", "seam.next_chase", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": null
+}

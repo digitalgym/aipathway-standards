@@ -1,0 +1,1318 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793793279566",
+  "standard": "compliance-calendar-build-standard",
+  "spec": "AIP-BS-COMPLIANCE-CALENDAR",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-04T11:54:39.549Z",
+  "finishedAt": "2026-11-04T11:54:39.566Z",
+  "results": [
+    {
+      "checkId": "dates-derived-not-stored",
+      "n": 1,
+      "title": "Due dates are derived",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The due date changes on its own. A stored value that survives the rule change fails, which is the whole point of the check.",
+      "actual": "REV-1001 due: 2027-08-07 (P1) then 2027-02-08 (P2)",
+      "stimulus": {
+        "description": "An obligation with a due date, then a new rule version that changes the interval, effective from a date the runner's clock passes.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "dates-derived-not-stored"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "REV-1001"
+          },
+          "response": {
+            "date": "2027-08-07T00:00:00.000Z",
+            "version": "P1"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "cdd_review_high",
+            "jurisdiction": "QLD"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "P1",
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "version": "P2",
+                "effectiveFrom": "2026-10-05T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "breached": []
+          }
+        },
+        {
+          "at": "2026-10-11T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-10-11T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "REV-1001"
+          },
+          "response": {
+            "date": "2027-02-08T00:00:00.000Z",
+            "version": "P2"
+          }
+        },
+        {
+          "at": "2026-10-11T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "cdd_review_high",
+            "jurisdiction": "QLD"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "P1",
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "version": "P2",
+                "effectiveFrom": "2026-10-05T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-10-11T00:00:00.000Z"
+          },
+          "response": {
+            "breached": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "superseded-versions-retained",
+      "n": 2,
+      "title": "Superseded rule versions are retained",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The old version is still readable with its effective dates, and the historic due date can be explained by the rule that produced it.",
+      "actual": "versions read: [{\"version\":\"P1\",\"effectiveFrom\":\"2025-01-01T00:00:00.000Z\"},{\"version\":\"P2\",\"effectiveFrom\":\"2026-07-01T00:00:00.000Z\"}]; due {\"date\":\"2028-02-13T00:00:00.000Z\",\"version\":\"P2\"}",
+      "stimulus": {
+        "description": "Two rule versions, and a query about an obligation that fell due under the old one.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "superseded-versions-retained"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "REV-2001"
+          },
+          "response": {
+            "date": "2028-02-13T00:00:00.000Z",
+            "version": "P2"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "cdd_review_medium",
+            "jurisdiction": "NSW"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "P1",
+                "effectiveFrom": "2025-01-01T00:00:00.000Z"
+              },
+              {
+                "version": "P2",
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "breached": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "rules-per-jurisdiction",
+      "n": 3,
+      "title": "Rules are held per jurisdiction",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The two due dates differ where the rule differs, from one rule store rather than two builds.",
+      "actual": "QLD {\"date\":\"2029-07-17T00:00:00.000Z\",\"version\":\"QLD-P1\"}, VIC {\"date\":\"2028-07-22T00:00:00.000Z\",\"version\":\"VIC-P1\"}",
+      "stimulus": {
+        "description": "The same obligation on two properties in different states.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "rules-per-jurisdiction"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "REV-3001"
+          },
+          "response": {
+            "date": "2029-07-17T00:00:00.000Z",
+            "version": "QLD-P1"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "cdd_review_low",
+            "jurisdiction": "QLD"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "QLD-P1",
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "REV-3002"
+          },
+          "response": {
+            "date": "2028-07-22T00:00:00.000Z",
+            "version": "VIC-P1"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "cdd_review_low",
+            "jurisdiction": "VIC"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "VIC-P1",
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "breached": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "unknown-anchor-surfaces",
+      "n": 4,
+      "title": "An unknown anchor surfaces",
+      "verdict": "pass",
+      "held": true,
+      "expected": "It appears in an explicit unknown-anchor state. A silently defaulted date, including today, fails: a wrong due date that looks confident is worse than a visible gap.",
+      "actual": "unknown anchors: [\"REV-4001\"]; raised 1",
+      "stimulus": {
+        "description": "An obligation whose anchor date is missing.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "unknown-anchor-surfaces"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "unknownAnchor": "REV-4001"
+          },
+          "response": {
+            "surfaced": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cdd_review.no_review_on_file",
+            "detail": "REV-4001"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "breached": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "evidence-of-completion",
+      "n": 5,
+      "title": "Completion carries evidence",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The completion is not accepted as evidence on its own, and the obligation is not counted as covered.",
+      "actual": "refused completions: [{\"obligationId\":\"REV-5001\",\"why\":\"no document attached\"}]; live REV-5001",
+      "stimulus": {
+        "description": "An obligation marked complete with no document attached.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "evidence-of-completion"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "complete": "REV-5001"
+          },
+          "response": {
+            "accepted": false,
+            "why": "no document attached"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cdd_review.completed_without_record",
+            "detail": "REV-5001"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "REV-5001"
+          },
+          "response": {
+            "date": "2026-10-11T00:00:00.000Z",
+            "version": "P1"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "cdd_review_high",
+            "jurisdiction": "QLD"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "P1",
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "breached": []
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cdd_review.due",
+            "detail": "REV-5001 due 2026-10-11 under P1; last review none on file"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cdd_review.reviewer_unnamed",
+            "detail": "REV-5001"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "REV-5001"
+          },
+          "response": {
+            "date": "2026-10-11T00:00:00.000Z",
+            "version": "P1"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "cdd_review_high",
+            "jurisdiction": "QLD"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "P1",
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "breached": []
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cdd_review.due",
+            "detail": "REV-5001 due 2026-10-11 under P1; last review none on file"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "refusal-is-dated-outcome",
+      "n": 6,
+      "title": "A refusal is a dated outcome",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The refusal is stored with its date, and the obligation is still live and now overdue. A refusal that closes the obligation fails.",
+      "actual": "REV-6001: {\"id\":\"REV-6001\",\"assetId\":\"CLT-0411\",\"jurisdiction\":\"QLD\",\"obligationType\":\"cdd_review_high\",\"anchorDate\":\"2025-10-06T00:00:00.000Z\",\"refusedAt\":\"2026-09-20T00:00:00.000Z\",\"breachedAt\":\"2026-10-11T00:00:00.000Z\"}",
+      "stimulus": {
+        "description": "An owner declines the work. The runner then advances the clock past the due date.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "refusal-is-dated-outcome"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "refusal": "REV-6001",
+            "at": "2026-09-20T00:00:00.000Z"
+          },
+          "response": {
+            "stillLive": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cdd_review.client_declined",
+            "detail": "REV-6001 declined by client director at 2026-09-20T00:00:00.000Z"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "REV-6001"
+          },
+          "response": {
+            "date": "2026-10-01T00:00:00.000Z",
+            "version": "P1"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "cdd_review_high",
+            "jurisdiction": "QLD"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "P1",
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "breached": []
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cdd_review.due",
+            "detail": "REV-6001 due 2026-10-01 under P1; last review none on file"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-11T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-10-11T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "REV-6001"
+          },
+          "response": {
+            "date": "2026-10-01T00:00:00.000Z",
+            "version": "P1"
+          }
+        },
+        {
+          "at": "2026-10-11T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "cdd_review_high",
+            "jurisdiction": "QLD"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "P1",
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-10-11T00:00:00.000Z"
+          },
+          "response": {
+            "breached": [
+              "REV-6001"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-11T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cdd_review.overdue",
+            "detail": "REV-6001"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "notice-needs-a-person",
+      "n": 7,
+      "title": "Nothing sends a legal notice unreleased",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "No notice is issued. The notice sits awaiting a named release.",
+      "actual": "notice calls: [{\"issued\":false,\"awaiting\":\"a named release\"},{\"issued\":false,\"why\":\"no named person\"},{\"issued\":false,\"awaiting\":\"a named release\"}]",
+      "stimulus": {
+        "description": "A breached obligation whose rule names a notice, with no release recorded.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "notice-needs-a-person"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "REV-7001"
+          },
+          "response": {
+            "date": "2026-09-01T00:00:00.000Z",
+            "version": "P1"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "cdd_review_high",
+            "jurisdiction": "QLD"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "P1",
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "breached": [
+              "REV-7001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cdd_review.overdue",
+            "detail": "REV-7001"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "prepare": "REV-7001"
+          },
+          "response": {
+            "issued": false,
+            "awaiting": "a named release"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cdd_review.request_drafted_awaiting_release",
+            "detail": "REV-7001"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "release": "REV-7001"
+          },
+          "response": {
+            "issued": false,
+            "why": "no named person"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cdd_review.release_without_person",
+            "detail": "REV-7001"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "REV-7001"
+          },
+          "response": {
+            "date": "2026-09-01T00:00:00.000Z",
+            "version": "P1"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "cdd_review_high",
+            "jurisdiction": "QLD"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "P1",
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "breached": [
+              "REV-7001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cdd_review.overdue",
+            "detail": "REV-7001"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "prepare": "REV-7001"
+          },
+          "response": {
+            "issued": false,
+            "awaiting": "a named release"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cdd_review.request_drafted_awaiting_release",
+            "detail": "REV-7001"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "breach-does-not-self-clear",
+      "n": 8,
+      "title": "A breach does not clear itself",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The breach remains on the record after completion. The next cycle starts clean; the breach does not disappear from the history.",
+      "actual": "REV-8001: {\"id\":\"REV-8001\",\"assetId\":\"CLT-0411\",\"jurisdiction\":\"QLD\",\"obligationType\":\"cdd_review_high\",\"anchorDate\":\"2025-09-16T00:00:00.000Z\",\"breachedAt\":\"2026-09-21T00:00:00.000Z\",\"completedAt\":\"2026-09-26T00:00:00.000Z\",\"evidenceRef\":\"MSG-8001#cdd-review-CLT-0411.pdf\"}",
+      "stimulus": {
+        "description": "An obligation allowed to breach, then completed late, then the clock advanced again.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "breach-does-not-self-clear"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "REV-8001"
+          },
+          "response": {
+            "date": "2026-09-11T00:00:00.000Z",
+            "version": "P1"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "cdd_review_high",
+            "jurisdiction": "QLD"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "P1",
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-09-21T00:00:00.000Z"
+          },
+          "response": {
+            "breached": [
+              "REV-8001"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "cdd_review.overdue",
+            "detail": "REV-8001"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "complete": "REV-8001",
+            "evidenceRef": "MSG-8001#cdd-review-CLT-0411.pdf"
+          },
+          "response": {
+            "accepted": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "REV-8001"
+          },
+          "response": {
+            "date": "2026-09-11T00:00:00.000Z",
+            "version": "P1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "cdd_review_high",
+            "jurisdiction": "QLD"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "P1",
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "breached": [
+              "REV-8001"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "obligations": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-10-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "dueDate": "REV-8001"
+          },
+          "response": {
+            "date": "2026-09-11T00:00:00.000Z",
+            "version": "P1"
+          }
+        },
+        {
+          "at": "2026-10-26T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "obligationType": "cdd_review_high",
+            "jurisdiction": "QLD"
+          },
+          "response": {
+            "versions": [
+              {
+                "version": "P1",
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-10-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "sweep": true,
+            "at": "2026-10-26T00:00:00.000Z"
+          },
+          "response": {
+            "breached": [
+              "REV-8001"
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 9,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the rule store runs on.",
+        "now": "2026-11-04T11:54:39.566Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 10,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "Every affected obligation re-derives, and nothing that was breached reads clean afterwards.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "A real rule change against the live register, then a real late completion.",
+        "now": "2026-11-04T11:54:39.566Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 10,
+    "pass": 7,
+    "fail": 0,
+    "shapeOnly": 1,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
