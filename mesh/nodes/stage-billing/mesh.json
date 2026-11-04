@@ -1,0 +1,48 @@
+{
+  "slug": "stage-billing",
+  "name": "Stage Billing",
+  "office_task": "When a building job reaches a stage on its payment schedule, deposit included, draft that stage's invoice in Xero at the contract amount, park what it can't bill, and hold it for a named person.",
+  "verticals": ["trades-building"],
+  "standards": ["invoice-out"],
+  "systems_of_record": [
+    "the job system that holds each building job's payment schedule as one stage record per instalment and marks a record complete when the supervisor signs that stage off (Simpro, ServiceM8, Buildxact or the job sheet the builder runs), issuing the stage record's id (carried as job_id)",
+    "Xero, which holds the agreed payment schedules as items and issues the invoice_id"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/stage-billing" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "webhook", "schedule"],
+  "consumes": [
+    { "event": "job.completed", "wake": "webhook" },
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "invoice.raised",
+      "write": "One draft stage invoice in Xero per stage record, referenced job:<stage record id> and naming the stage as the contract writes it (Deposit, Base stage, Frame stage and so on), every line the record carries at the dollar amount the signed payment schedule sets, read at draft time and never worked out from a percentage, with any signed variation attached. It is a stage invoice and never called a progress claim. A second stage-reached event updates the same draft.",
+      "readback": "Xero returns the InvoiceID; GET /api.xro/2.0/Invoices/{InvoiceID} must return the invoice with Reference job:<stage record id>, and that id is stamped on the stage record as seam.invoice_id. No id back is not a write: it raises invoice.write_failed and the run stops."
+    },
+    {
+      "event": "invoice.sent",
+      "write": "The stage invoice leaves only after a release naming the contracts administrator, or naming a release rule that person wrote down and showing the total is under its threshold; with no rule set, every stage invoice waits for the person. The release and the send time are recorded against the stage record. The bot never approves or emails in Xero on its own judgement.",
+      "readback": "GET /api.xro/2.0/Invoices/{InvoiceID} returns it AUTHORISED and sent to the contact, and the stage record read by its id shows seam.released_by (a person or a rule) before the send time. A send with no release on the record is refused."
+    },
+    {
+      "event": "exception.raised",
+      "write": "A parked or waiting stage invoice as an exception on the stage record: the reason (no_stage, not_in_pricebook, unsigned_variation, write_failed, or over_threshold), the stage record id, the invoice id, the codes left unbilled, and exception_owner set to the person the builder named for stage invoices.",
+      "readback": "The exception desk returns an exception_id, and reading it back returns the job_id, the invoice_id, the reason and the exception_owner; the next run reads it there and stops until exception.closed."
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": ["invoice.no_stage", "invoice.not_in_pricebook", "invoice.unsigned_variation", "invoice.write_failed", "invoice.over_threshold"],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.job_id", "seam.invoice_id", "seam.quote_id", "seam.stage", "seam.book_edition", "seam.status", "seam.park_reason", "seam.released_by", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
