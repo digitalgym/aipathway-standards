@@ -1,0 +1,59 @@
+{
+  "slug": "safety-cert-desk",
+  "name": "Safety Cert Desk",
+  "office_task": "When a smoke alarm and RCD job is done, draft the property's compliance pack from the tech's results for our licensed electrician to sign, and hold it if any result is missing.",
+  "verticals": ["fire-electrical"],
+  "standards": ["fire-service-pack-standard"],
+  "systems_of_record": [
+    "the job system that issues the job_id (ServiceM8, Simpro or similar: the completed job, its test form results and attachments)",
+    "the asset register that issues the asset_id (each smoke alarm and RCD on the property, by the tag printed on it)",
+    "the exception desk the business runs (a sheet, a task list or a ticket queue)"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/safety-cert-desk" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "webhook", "schedule"],
+  "consumes": [
+    { "event": "job.completed", "wake": "webhook" },
+    { "event": "job.updated", "wake": "webhook" },
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "evidence.filed",
+      "write": "Each smoke alarm and RCD test filed as a service record on the one asset its tag resolves to, naming the obligation it discharges, the result the electrician recorded and the RCD trip time as a number; then, only when every item bound cleanly, the draft compliance pack, marked DRAFT and unsigned, attached to the job and filed in the property's pack folder for the licensed person to sign and issue.",
+      "readback": "The asset register returns a service record id per test, and reading it back returns the asset_id, the obligation_id and the queue (pass, defect or unbound); the job system returns the attachment id of the draft pack, and reading it back returns the job_id. No id back is not a write: the item is raised as record.refused and the pack waits."
+    },
+    {
+      "event": "exception.raised",
+      "write": "An exception on the job naming the person who owns it: a tag that resolves to no alarm or to two, no obligation named, a missing result, the wrong evidence for the item (a trip time sent as a photo), an uncoded defect, an RCD closed without its test sheet, a missing tag photograph, an isolated circuit without a revisit date or past it, and the held pack itself.",
+      "readback": "The exception desk returns an exception_id, and reading that id back returns the job_id, the asset_id, the reason and the exception_owner. No id back means nothing was raised and the run stops."
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "asset.unresolved",
+      "record.no_obligation",
+      "result.missing",
+      "evidence.wrong_for_class",
+      "defect.uncoded",
+      "close.refused",
+      "record.unbound",
+      "record.refused",
+      "isolation.no_revisit",
+      "isolation.recorded",
+      "isolation.lapsed",
+      "rule.missing_for_state",
+      "pack.held"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.job_id", "seam.records", "seam.queue", "seam.pack_status", "seam.rule_version", "seam.exception_open", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
