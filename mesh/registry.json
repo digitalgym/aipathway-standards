@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T11:45:23.757Z",
+  "generated_at": "2026-11-04T11:45:35.628Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -7692,6 +7692,113 @@
       ]
     },
     {
+      "slug": "retention-book",
+      "name": "Retention Book",
+      "office_task": "Keep the retention held on each contract, work out when each half is due back and when the defects period ends, and draft the release request for a named person to send.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "compliance-calendar"
+      ],
+      "systems_of_record": [
+        "the job system that issues the job_id (Simpro, ServiceM8 or similar): the contract job, its practical completion date and retention terms",
+        "the exception desk the business runs, which issues the exception_id",
+        "the document store (Drive or SharePoint), where remittances and release certificates are filed against the job"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "job.updated",
+          "wake": "webhook"
+        },
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "evidence.filed",
+          "write": "the client's remittance or release certificate for a retention release, filed against the job it belongs to by job_id and the release obligation id; only then does the release count as received",
+          "readback": "the document store returns a document id for the filed attachment, and reading the job by its job_id lists that message_id against the release obligation; no id back means nothing was filed and the release stays live"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the contract job naming the person who owns it: a release request drafted and awaiting a named release, a release overdue, a client refusal (dated, the release still live), practical completion not recorded, no retention rule for the state, a release marked received with no document, or a release that came in late",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the job_id, the obligation id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "retention.release_request_drafted",
+          "retention.release_overdue",
+          "retention.release_refused",
+          "retention.practical_completion_unknown",
+          "retention.no_rule_for_state",
+          "retention.no_state_on_contract",
+          "retention.rule_history_missing",
+          "retention.released_without_document",
+          "retention.released_late",
+          "retention.release_unnamed",
+          "retention.reply_unmatched"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.retention_obligation_id",
+          "seam.rule_version",
+          "seam.release_state",
+          "seam.refused_at",
+          "seam.breached_at",
+          "seam.evidence_message_id",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/retention-book"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "compliance-calendar",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T11:41:45.084Z",
+          "run_id": "run-1793792505082",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 10
+        }
+      ]
+    },
+    {
       "slug": "ring-list",
       "name": "Ring List",
       "office_task": "Every weekday morning, tell me who to ring today from my own database, why each one, with a short opener drafted, and nothing past the do-not-call flags.",
@@ -9697,6 +9804,7 @@
     "renewal-watch",
     "rent-watch",
     "repair-board",
+    "retention-book",
     "ring-list",
     "roof-desk",
     "seller-book",
@@ -9804,6 +9912,12 @@
     {
       "from": "crew-board",
       "to": "repair-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "crew-board",
+      "to": "retention-book",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -9923,6 +10037,12 @@
     },
     {
       "from": "practice-desk",
+      "to": "retention-book",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "practice-desk",
       "to": "site-orders",
       "event": "job.updated",
       "id": "job_id"
@@ -10007,6 +10127,12 @@
     },
     {
       "from": "repair-board",
+      "to": "retention-book",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "repair-board",
       "to": "site-orders",
       "event": "job.updated",
       "id": "job_id"
@@ -10133,6 +10259,12 @@
     },
     {
       "from": "van-board",
+      "to": "retention-book",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "van-board",
       "to": "site-orders",
       "event": "job.updated",
       "id": "job_id"
@@ -10200,6 +10332,12 @@
     {
       "from": "visit-offer",
       "to": "repair-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-offer",
+      "to": "retention-book",
       "event": "job.updated",
       "id": "job_id"
     },
