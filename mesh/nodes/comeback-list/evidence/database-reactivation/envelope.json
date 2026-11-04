@@ -1,0 +1,6287 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793795420148",
+  "standard": "database-reactivation-build-standard",
+  "spec": "AIP-BS-DATABASE-REACTIVATION",
+  "specVersion": "2026-10-24",
+  "environment": "stub",
+  "startedAt": "2026-11-04T12:30:20.104Z",
+  "finishedAt": "2026-11-04T12:30:20.148Z",
+  "results": [
+    {
+      "checkId": "five-fields-present",
+      "n": 1,
+      "title": "The fields each play needs are present",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A contact missing name, mobile or address is reported as not ready and excluded from every play. A contact missing purchase date is excluded from the tenure play only, and one missing the investor flag from the investor play only. One missing last-contact outcome is ranked as cold state. Every gap is reported.",
+      "actual": "run: F-OUTC:lapsed_appraisal, F-TYPE:lapsed_appraisal, F-DATE:investor; skips 7",
+      "stimulus": {
+        "description": "A list seeded with one contact missing each of the five fields in turn.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "five-fields-present"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "F-NAME"
+          },
+          "response": {
+            "missing": [
+              "nameAndMobile"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "F-NAME",
+            "reason": "not ready: missing nameAndMobile; held out of every play until the job system has it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "F-ADDR"
+          },
+          "response": {
+            "missing": [
+              "address"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "F-ADDR",
+            "reason": "not ready: missing address; held out of every play until the job system has it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "F-DATE"
+          },
+          "response": {
+            "missing": [
+              "purchaseDate"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "F-DATE",
+            "reason": "gap: no completed date on the last job; held out of the check-up and year-since plays only"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "F-DATE2"
+          },
+          "response": {
+            "missing": [
+              "purchaseDate"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "F-DATE2",
+            "reason": "gap: no completed date on the last job; held out of the check-up and year-since plays only"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "F-DATE2",
+            "reason": "no play: nothing true about this customer today gives a reason to message"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "F-TYPE"
+          },
+          "response": {
+            "missing": [
+              "ownerType"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "F-TYPE",
+            "reason": "gap: landlord or lives there not on the record; held out of the rental play only. Never guessed"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "F-OUTC"
+          },
+          "response": {
+            "missing": [
+              "lastContactOutcome"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "F-OUTC",
+            "reason": "gap: no last outcome on record; ranked as cold"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 3
+          },
+          "response": {
+            "order": [
+              "F-OUTC",
+              "F-TYPE",
+              "F-DATE"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "F-OUTC",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "F-TYPE",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "F-DATE",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 3
+          },
+          "response": {
+            "listed": [
+              "F-OUTC",
+              "F-TYPE",
+              "F-DATE"
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "four-plays-real-triggers",
+      "n": 2,
+      "title": "Four plays, each with a real trigger",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Each lands in its own play and the last lands in none. A build that puts everybody in one sequence fails here.",
+      "actual": "run: P-NEAR:equity_checkin, P-CHK:tenure, P-LAPSE:lapsed_appraisal, P-QUOTE:lapsed_appraisal, P-RENT:investor",
+      "stimulus": {
+        "description": "A list containing one contact who qualifies for each play, and one who qualifies for none.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "four-plays-real-triggers"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "P-CHK"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "P-NEAR"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "P-RENT"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "P-LAPSE"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "P-QUOTE"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "P-NONE"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "P-NONE",
+            "reason": "no play: nothing true about this customer today gives a reason to message"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 5
+          },
+          "response": {
+            "order": [
+              "P-NEAR",
+              "P-CHK",
+              "P-LAPSE",
+              "P-QUOTE",
+              "P-RENT"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "P-NEAR",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "P-CHK",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "P-LAPSE",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "P-QUOTE",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "P-RENT",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 5
+          },
+          "response": {
+            "listed": [
+              "P-NEAR",
+              "P-CHK",
+              "P-LAPSE",
+              "P-QUOTE",
+              "P-RENT"
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "ranking-six-rules-in-order",
+      "n": 3,
+      "title": "Ranking is by the six rules, in order",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The produced order matches exactly. A different order is a different standard, not a tuning choice.",
+      "actual": "order: R-CB > R-NEAR > R-SWEET > R-OLD > R-OLD2 > R-NEAR-NO",
+      "stimulus": {
+        "description": "A seeded set whose correct order under the six rules is known and not the obvious one.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "ranking-six-rules-in-order"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "R-NEAR-NO"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "R-OLD2"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "R-OLD"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "R-SWEET"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "R-NEAR"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "R-CB"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 6
+          },
+          "response": {
+            "order": [
+              "R-CB",
+              "R-NEAR",
+              "R-SWEET",
+              "R-OLD",
+              "R-OLD2",
+              "R-NEAR-NO"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "R-CB",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "R-NEAR",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "R-SWEET",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "R-OLD",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "R-OLD2",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "R-NEAR-NO",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 6
+          },
+          "response": {
+            "listed": [
+              "R-CB",
+              "R-NEAR",
+              "R-SWEET",
+              "R-OLD",
+              "R-OLD2",
+              "R-NEAR-NO"
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-play-at-a-time",
+      "n": 4,
+      "title": "A contact belongs to one play at a time",
+      "verdict": "pass",
+      "held": true,
+      "expected": "They appear in exactly one run and receive exactly one opener. The runner holds state across runs to see this at all.",
+      "actual": "X in 1 run(s), 1 draft(s)",
+      "stimulus": {
+        "description": "A contact who legitimately qualifies for two plays, with both runs executed in the same week.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-play-at-a-time"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "X"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "Y"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "X",
+              "Y"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "X",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "Y",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 2
+          },
+          "response": {
+            "listed": [
+              "X",
+              "Y"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "write_log",
+          "verb": "write",
+          "subject": "log",
+          "request": {
+            "contactId": "X",
+            "outcome": "no_answer"
+          },
+          "response": {
+            "written": true,
+            "at": "2026-09-21T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "X"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "X",
+            "reason": "cadence: no_answer marked 2 day(s) ago; one message a week, nothing for 7 days after no_answer"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "Y"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "Y"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "Y",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 1
+          },
+          "response": {
+            "listed": [
+              "Y"
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "opener-names-the-reason",
+      "n": 5,
+      "title": "The opener names why you are calling",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The opener references that trigger. A generic opener with the trigger only in the metadata fails.",
+      "actual": "O-NEAR: Hi Kim, we have a tech booked near 22 Jacaranda St, Buderim QLD 4556 [O-NEAR] this week. Anything you would like looked at while they are close by? Coastline Plumbing. Reply STOP to opt out. | O-YEAR: Hi Kim, 13 months since we were last out at 25 Jacaranda St, Buderim QLD 4556 [O-YEAR]. Is everything still working as it should? Coastline Plumbing. Reply STOP to opt out. | O-CHK: Hi Kim, it has been 25 months since the hot water service at 21 Jacaranda St, Buderim QLD 4556 [O-CHK], and it is due again. Want us to pencil in a time? Coastline Plumbing. Reply STOP to opt out. | O-QUOTE: Hi Kim, about the quote for 24 Jacaranda St, Buderim QLD 4556 [O-QUOTE] that never went ahead: has anything changed since? Coastline Plumbing. Reply STOP to opt out. | O-RENT: Hi Kim, for the rental at 23 Jacaranda St, Buderim QLD 4556 [O-RENT], would a check before the next lease year save a call-out later? Coastline Plumbing. Reply STOP to opt out.",
+      "stimulus": {
+        "description": "A contact qualified by a specific trigger, then the call opened.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "opener-names-the-reason"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 5
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "O-CHK"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "O-NEAR"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "O-RENT"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "O-QUOTE"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "O-YEAR"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 5
+          },
+          "response": {
+            "order": [
+              "O-NEAR",
+              "O-YEAR",
+              "O-CHK",
+              "O-QUOTE",
+              "O-RENT"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "O-NEAR",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "O-YEAR",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "O-CHK",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "O-QUOTE",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "O-RENT",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 5
+          },
+          "response": {
+            "listed": [
+              "O-NEAR",
+              "O-YEAR",
+              "O-CHK",
+              "O-QUOTE",
+              "O-RENT"
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "cadence-has-a-stop",
+      "n": 6,
+      "title": "Cadence has a stop, and the stop is honoured",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The first stops at its defined end. The second stops on the reply and sends nothing further.",
+      "actual": "S-A steps 1,2,3; S-B steps 1,2",
+      "stimulus": {
+        "description": "One sequence run to its end with no reply, and one where the contact replies at step two.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "cadence-has-a-stop"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "S-A",
+              "S-B"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "S-A",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "S-B",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 2
+          },
+          "response": {
+            "listed": [
+              "S-A",
+              "S-B"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "write_log",
+          "verb": "write",
+          "subject": "log",
+          "request": {
+            "contactId": "S-A",
+            "outcome": "no_answer"
+          },
+          "response": {
+            "written": true,
+            "at": "2026-09-21T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "write_log",
+          "verb": "write",
+          "subject": "log",
+          "request": {
+            "contactId": "S-B",
+            "outcome": "no_answer"
+          },
+          "response": {
+            "written": true,
+            "at": "2026-09-21T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence: between messages; message 2 is due on its weekly day"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence: between messages; message 2 is due on its weekly day"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence: between messages; message 2 is due on its weekly day"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence: between messages; message 2 is due on its weekly day"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-09-23T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence: between messages; message 2 is due on its weekly day"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence: between messages; message 2 is due on its weekly day"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-09-24T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence: between messages; message 2 is due on its weekly day"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence: between messages; message 2 is due on its weekly day"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-09-25T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence: between messages; message 2 is due on its weekly day"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence: between messages; message 2 is due on its weekly day"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-09-26T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-09-27T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-27T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-27T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence: between messages; message 2 is due on its weekly day"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-27T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-27T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence: between messages; message 2 is due on its weekly day"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-27T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-09-27T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "S-A",
+              "S-B"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "S-A",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "S-B",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 2
+          },
+          "response": {
+            "listed": [
+              "S-A",
+              "S-B"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "write_log",
+          "verb": "write",
+          "subject": "log",
+          "request": {
+            "contactId": "S-A",
+            "outcome": "no_answer"
+          },
+          "response": {
+            "written": true,
+            "at": "2026-09-28T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-28T04:00:00.000Z",
+          "port": "write_log",
+          "verb": "write",
+          "subject": "log",
+          "request": {
+            "contactId": "S-B",
+            "outcome": "spoke"
+          },
+          "response": {
+            "written": true,
+            "at": "2026-09-28T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-29T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-29T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-29T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence: between messages; message 3 is due on its weekly day"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-29T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-29T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "S-B"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-09-29T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence stopped: the customer replied (spoke); nothing further from it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-29T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-09-29T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-09-30T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-30T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-30T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence: between messages; message 3 is due on its weekly day"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-30T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-30T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "S-B"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-09-30T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence stopped: the customer replied (spoke); nothing further from it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-30T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-09-30T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-10-01T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-10-01T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-01T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence: between messages; message 3 is due on its weekly day"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-01T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-01T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "S-B"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-10-01T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence stopped: the customer replied (spoke); nothing further from it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-01T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-10-01T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-10-02T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-10-02T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-02T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence: between messages; message 3 is due on its weekly day"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-02T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-02T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "S-B"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-10-02T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence stopped: the customer replied (spoke); nothing further from it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-02T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-10-02T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-10-03T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-10-03T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-03T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence: between messages; message 3 is due on its weekly day"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-03T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-03T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "S-B"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-10-03T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence stopped: the customer replied (spoke); nothing further from it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-03T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-10-03T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-10-04T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-10-04T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-04T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence: between messages; message 3 is due on its weekly day"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-04T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-04T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "S-B"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-10-04T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence stopped: the customer replied (spoke); nothing further from it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-04T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-10-04T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-10-05T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-10-05T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-05T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-05T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "S-B"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-10-05T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence stopped: the customer replied (spoke); nothing further from it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-05T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "S-A"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-05T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "S-A",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-10-05T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 1
+          },
+          "response": {
+            "listed": [
+              "S-A"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-05T04:00:00.000Z",
+          "port": "write_log",
+          "verb": "write",
+          "subject": "log",
+          "request": {
+            "contactId": "S-A",
+            "outcome": "no_answer"
+          },
+          "response": {
+            "written": true,
+            "at": "2026-10-05T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-06T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-10-06T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-06T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence: between messages; message 4 is due on its weekly day"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-06T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-06T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "S-B"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-10-06T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence stopped: the customer replied (spoke); nothing further from it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-06T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-10-06T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-10-07T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-10-07T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-07T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence: between messages; message 4 is due on its weekly day"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-07T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-07T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "S-B"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-10-07T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence stopped: the customer replied (spoke); nothing further from it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-07T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-10-07T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-10-08T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-10-08T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-08T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence: between messages; message 4 is due on its weekly day"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-08T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-08T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "S-B"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-10-08T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence stopped: the customer replied (spoke); nothing further from it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-08T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-10-08T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-10-09T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-10-09T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-09T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence: between messages; message 4 is due on its weekly day"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-09T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-09T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "S-B"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-10-09T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence stopped: the customer replied (spoke); nothing further from it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-09T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-10-09T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-10-10T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-10-10T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-10T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence: between messages; message 4 is due on its weekly day"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-10T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-10T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "S-B"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-10-10T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence stopped: the customer replied (spoke); nothing further from it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-10T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-10-10T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-10-11T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-10-11T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-11T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence: between messages; message 4 is due on its weekly day"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-11T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-11T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "S-B"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-10-11T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence stopped: the customer replied (spoke); nothing further from it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-11T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-10-11T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-10-12T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-10-12T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-12T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence ended at message 3 with no reply"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-12T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-12T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "S-B"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-10-12T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence stopped: the customer replied (spoke); nothing further from it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-12T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-10-12T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-10-13T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-10-13T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-13T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence ended at message 3 with no reply"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-13T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-13T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "S-B"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-10-13T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence stopped: the customer replied (spoke); nothing further from it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-13T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-10-13T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-10-14T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-10-14T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-14T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence ended at message 3 with no reply"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-14T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-14T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "S-B"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-10-14T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence stopped: the customer replied (spoke); nothing further from it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-14T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-10-14T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-10-15T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-10-15T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-15T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence ended at message 3 with no reply"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-15T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-15T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "S-B"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-10-15T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence stopped: the customer replied (spoke); nothing further from it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-15T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-10-15T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-10-16T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-10-16T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-16T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence ended at message 3 with no reply"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-16T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-16T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "S-B"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-10-16T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence stopped: the customer replied (spoke); nothing further from it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-16T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-10-16T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-10-17T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-10-17T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-17T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence ended at message 3 with no reply"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-17T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-17T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "S-B"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-10-17T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence stopped: the customer replied (spoke); nothing further from it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-17T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-10-17T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-10-18T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-10-18T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-18T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence ended at message 3 with no reply"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-18T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-18T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "S-B"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-10-18T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence stopped: the customer replied (spoke); nothing further from it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-18T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-10-18T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-10-19T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-10-19T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-19T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence ended at message 3 with no reply"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-19T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-19T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "S-B"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-10-19T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence stopped: the customer replied (spoke); nothing further from it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-19T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-10-19T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-10-20T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-10-20T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-20T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence ended at message 3 with no reply"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-20T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-20T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "S-B"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-10-20T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence stopped: the customer replied (spoke); nothing further from it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-20T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-10-20T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-10-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-10-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence ended at message 3 with no reply"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "S-B"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-10-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence stopped: the customer replied (spoke); nothing further from it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-10-21T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-10-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-10-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-22T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence ended at message 3 with no reply"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "S-B"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-10-22T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence stopped: the customer replied (spoke); nothing further from it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-22T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-10-22T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-10-23T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-10-23T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-23T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence ended at message 3 with no reply"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-23T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-23T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "S-B"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-10-23T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence stopped: the customer replied (spoke); nothing further from it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-23T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-10-23T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-10-24T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-10-24T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-24T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence ended at message 3 with no reply"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-24T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-24T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "S-B"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-10-24T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence stopped: the customer replied (spoke); nothing further from it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-24T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-10-24T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-10-25T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-10-25T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-25T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-A",
+            "reason": "sequence ended at message 3 with no reply"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-25T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "S-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-10-25T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "S-B"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-10-25T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "S-B",
+            "reason": "sequence stopped: the customer replied (spoke); nothing further from it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-10-25T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-10-25T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "gate-under-ranking",
+      "n": 7,
+      "title": "The gate sits underneath the ranking",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "Neither is called, each with a reason, and the highest score does not override either.",
+      "actual": "G-TOP gates: outside_hours, do_not_contact",
+      "stimulus": {
+        "description": "The top-ranked contact, run outside their local calling hours; then the same contact flagged do-not-contact.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "gate-under-ranking"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T16:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-21T16:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "G-TOP"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T16:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "G-2"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T16:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "G-TOP",
+              "G-2"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T16:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "G-TOP",
+            "localHour": 2
+          },
+          "response": {
+            "allowed": false,
+            "reason": "outside_hours"
+          }
+        },
+        {
+          "at": "2026-09-21T16:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "G-TOP",
+            "reason": "gate: outside_hours; not on today's list, whatever its rank"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T16:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "G-2",
+            "localHour": 2
+          },
+          "response": {
+            "allowed": false,
+            "reason": "outside_hours"
+          }
+        },
+        {
+          "at": "2026-09-21T16:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "G-2",
+            "reason": "gate: outside_hours; not on today's list, whatever its rank"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T16:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 0
+          },
+          "response": {
+            "listed": []
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "flag": "G-TOP"
+          },
+          "response": {
+            "doNotContact": true,
+            "permanent": true
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "G-TOP"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "G-2"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "G-TOP",
+              "G-2"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "G-TOP",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": false,
+            "reason": "do_not_contact"
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "G-TOP",
+            "reason": "gate: do_not_contact; not on today's list, whatever its rank"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "G-2",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 1
+          },
+          "response": {
+            "listed": [
+              "G-2"
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "dnc-permanent-and-global",
+      "n": 8,
+      "title": "Do-not-contact is permanent and global",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The flag survives the import and still blocks every play. An import that clears it is the failure this check exists for.",
+      "actual": "D-1 gates: do_not_contact, do_not_contact; D-1 rows 0",
+      "stimulus": {
+        "description": "A contact flagged do-not-contact, then the whole list re-imported with that contact present and unflagged.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "dnc-permanent-and-global"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "D-1"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "D-2"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "D-1",
+              "D-2"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "D-1",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": false,
+            "reason": "do_not_contact"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "D-1",
+            "reason": "gate: do_not_contact; not on today's list, whatever its rank"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "D-2",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 1
+          },
+          "response": {
+            "listed": [
+              "D-2"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "import": 2
+          },
+          "response": {
+            "imported": 2,
+            "flagsPreserved": 1
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "D-1"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "D-2"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "D-1",
+              "D-2"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "D-1",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": false,
+            "reason": "do_not_contact"
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "D-1",
+            "reason": "gate: do_not_contact; not on today's list, whatever its rank"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "D-2",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 1
+          },
+          "response": {
+            "listed": [
+              "D-2"
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "every-skip-explained",
+      "n": 9,
+      "title": "Every skip is explained",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Each skip carries its own reason. A count of skips without reasons fails.",
+      "actual": "K-NOADDR: not ready: missing address; held out of every play until the job system has it | K-NONE: no play: nothing true about this customer today gives a reason to message | K-EXC: open exception owned by Dana (office manager); nothing until they close it | K-REPLY: reply waiting (reply_outside_play); the owner answers it, nothing is drafted | K-DNC: gate: do_not_contact; not on today's list, whatever its rank | K-CAP: beyond today's cap of 1; ranked below the rows above",
+      "stimulus": {
+        "description": "A run where several contacts are skipped for different reasons.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "every-skip-explained"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 7
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "K-LIST"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "K-CAP"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "K-NOADDR"
+          },
+          "response": {
+            "missing": [
+              "address"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "K-NOADDR",
+            "reason": "not ready: missing address; held out of every play until the job system has it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "K-NONE"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "K-NONE",
+            "reason": "no play: nothing true about this customer today gives a reason to message"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "K-EXC",
+            "reason": "open exception owned by Dana (office manager); nothing until they close it"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "K-DNC"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "K-REPLY"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "K-REPLY"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "contactId": "K-REPLY",
+            "reason": "reply_outside_play"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "K-REPLY",
+            "reason": "reply waiting (reply_outside_play); the owner answers it, nothing is drafted"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 3
+          },
+          "response": {
+            "order": [
+              "K-DNC",
+              "K-LIST",
+              "K-CAP"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "K-DNC",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": false,
+            "reason": "do_not_contact"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "K-DNC",
+            "reason": "gate: do_not_contact; not on today's list, whatever its rank"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "K-LIST",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "K-CAP",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "K-CAP",
+            "reason": "beyond today's cap of 1; ranked below the rows above"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 1
+          },
+          "response": {
+            "listed": [
+              "K-LIST"
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "relationship-needs-a-person",
+      "n": 10,
+      "title": "A human decides anything that is a relationship",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "Both escalate with a typed reason rather than being answered. No price and no resolution is offered by the build.",
+      "actual": "escalations: H-PRICE:price_question, H-COMP:complaint",
+      "stimulus": {
+        "description": "A contact who asks for a price, and one who makes a complaint.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "relationship-needs-a-person"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "H-PRICE"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "H-PRICE"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "contactId": "H-PRICE",
+            "reason": "price_question"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "H-PRICE",
+            "reason": "reply waiting (price_question); the owner answers it, nothing is drafted"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "H-COMP"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "reply": "H-COMP"
+          },
+          "response": {
+            "stops": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "contactId": "H-COMP",
+            "reason": "complaint"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "H-COMP",
+            "reason": "reply waiting (complaint); the owner answers it, nothing is drafted"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "H-OK"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "H-OK"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "H-OK",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 1
+          },
+          "response": {
+            "listed": [
+              "H-OK"
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "daily-list-capped-with-reasons",
+      "n": 11,
+      "title": "The day's list respects the cap and carries a reason per row",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The list holds at most two rows, in rank order, none of them gated out. Every row names its play, the trigger that qualified it, an opener that uses that trigger, and the last outcome. A list longer than the cap, or a row with no reason, fails.",
+      "actual": "L-1 equity_checkin \"a tech already booked near 47 Jacaranda St, Buderim QLD 4556 [L-1] this week\" last:cold | L-2 lapsed_appraisal \"18 months since we were last at 46 Jacaranda St, Buderim QLD 4556 [L-2]\" last:cold",
+      "stimulus": {
+        "description": "A cap of two against a list where four contacts qualify and one is flagged do-not-contact, then the morning list made.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "daily-list-capped-with-reasons"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 5
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "L-4"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "L-3"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "L-2"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "L-1"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "L-DNC"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 5
+          },
+          "response": {
+            "order": [
+              "L-DNC",
+              "L-1",
+              "L-2",
+              "L-3",
+              "L-4"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "L-DNC",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": false,
+            "reason": "do_not_contact"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "L-DNC",
+            "reason": "gate: do_not_contact; not on today's list, whatever its rank"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "L-1",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "L-2",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "L-3",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "L-3",
+            "reason": "beyond today's cap of 2; ranked below the rows above"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "L-4",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "L-4",
+            "reason": "beyond today's cap of 2; ranked below the rows above"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 2
+          },
+          "response": {
+            "listed": [
+              "L-1",
+              "L-2"
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "outcomes-change-tomorrow",
+      "n": 12,
+      "title": "Yesterday's outcomes change today's list",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "Each outcome is written back on the day it was recorded. Day two's list leaves out the contact spoken to yesterday and the one who opted out, and puts the callback first. A list that comes back the same as yesterday's fails.",
+      "actual": "lists: 2026-09-21 T-A/T-B/T-C then 2026-09-22 T-C/T-D/T-E",
+      "stimulus": {
+        "description": "Day one's list is worked: the first contact is spoken to, the second asks not to be contacted again, and the third asks to be called back. The next morning's list is made.",
+        "now": "2026-09-21T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "outcomes-change-tomorrow"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 5
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "T-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "T-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "T-C"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "T-D"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "T-E"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 5
+          },
+          "response": {
+            "order": [
+              "T-A",
+              "T-B",
+              "T-C",
+              "T-D",
+              "T-E"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "T-A",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "T-B",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "T-C",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "T-D",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "T-D",
+            "reason": "beyond today's cap of 3; ranked below the rows above"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "T-E",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "T-E",
+            "reason": "beyond today's cap of 3; ranked below the rows above"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 3
+          },
+          "response": {
+            "listed": [
+              "T-A",
+              "T-B",
+              "T-C"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "write_log",
+          "verb": "write",
+          "subject": "log",
+          "request": {
+            "contactId": "T-A",
+            "outcome": "spoke"
+          },
+          "response": {
+            "written": true,
+            "at": "2026-09-21T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "write_log",
+          "verb": "write",
+          "subject": "log",
+          "request": {
+            "contactId": "T-B",
+            "outcome": "do_not_contact"
+          },
+          "response": {
+            "written": true,
+            "at": "2026-09-21T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-21T04:00:00.000Z",
+          "port": "write_log",
+          "verb": "write",
+          "subject": "log",
+          "request": {
+            "contactId": "T-C",
+            "outcome": "callback_requested"
+          },
+          "response": {
+            "written": true,
+            "at": "2026-09-21T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "list": true
+          },
+          "response": {
+            "count": 5
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "T-A"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "T-A",
+            "reason": "cadence: spoke marked 1 day(s) ago; one message a week, nothing for 30 days after spoke"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "flag": "T-B"
+          },
+          "response": {
+            "doNotContact": true,
+            "permanent": true
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "T-B"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "T-C"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "T-D"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contactId": "T-E"
+          },
+          "response": {
+            "missing": []
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 4
+          },
+          "response": {
+            "order": [
+              "T-C",
+              "T-B",
+              "T-D",
+              "T-E"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "T-C",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "T-B",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": false,
+            "reason": "do_not_contact"
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "skip": "T-B",
+            "reason": "gate: do_not_contact; not on today's list, whatever its rank"
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "T-D",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "contactId": "T-E",
+            "localHour": 14
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-22T04:00:00.000Z",
+          "port": "raise_task",
+          "verb": "write",
+          "subject": "task",
+          "request": {
+            "rows": 3
+          },
+          "response": {
+            "listed": [
+              "T-C",
+              "T-D",
+              "T-E"
+            ]
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 13,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the list and the plays runs on.",
+        "now": "2026-11-04T12:30:20.148Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 14,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "No call is placed to that contact, and the audit names the gate rather than reporting a generic skip.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "A real run against the live list, at a real time, with a flagged contact ranked first.",
+        "now": "2026-11-04T12:30:20.148Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 14,
+    "pass": 8,
+    "fail": 0,
+    "shapeOnly": 4,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
