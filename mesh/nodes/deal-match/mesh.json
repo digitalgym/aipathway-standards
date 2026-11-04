@@ -1,0 +1,81 @@
+{
+  "slug": "deal-match",
+  "name": "Deal Match",
+  "office_task": "Every morning, check each CRM deal against its Simpro quote by quote id, show each difference in value, stage, customer or contact with both values, and change one only once a person accepts it.",
+  "verticals": [
+    "b2b-office",
+    "trades-building"
+  ],
+  "standards": [
+    "two-records"
+  ],
+  "systems_of_record": [
+    "the CRM (holds each sales deal, carries the Simpro quote id, and owns the contact name and contact email)",
+    "Simpro (issues the quote id and owns the quote value ex GST, the quote stage and the Simpro customer id the quote is raised against)"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/deal-match"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "schedule",
+    "webhook"
+  ],
+  "consumes": [
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    },
+    {
+      "event": "exception.closed",
+      "wake": "webhook"
+    }
+  ],
+  "emits": [
+    {
+      "event": "report.published",
+      "write": "the morning deal-to-quote report where sales administration opens it: the pair contract it ran under, the key it joined on (simpro_quote_id), the owner per field, and the counts matched, within tolerance, mismatched, orphaned and corrected, published every run including the all-clear",
+      "readback": "the report store returns a report_id, and reading that id back returns the contract id, the five counts and the published time; no id back means the run did not publish and the owner is told"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the quote naming the person who owns it: an open difference with the CRM value, the Simpro value and the owning system's value side by side awaiting acceptance, a deal or quote with no partner, a value gap over the threshold, a run over the mismatch rate, or an accepted change whose write returned no id",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the simpro quote_id, the field, both values and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "deal_match.contract_missing",
+      "deal_match.owner_missing",
+      "deal_match.difference_open",
+      "deal_match.orphan",
+      "deal_match.over_threshold",
+      "deal_match.mismatch_rate",
+      "deal_match.write_not_read_back"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "seam-mirror",
+    "fields": [
+      "seam.quote_id",
+      "seam.contract_id",
+      "seam.run_id",
+      "seam.difference_status",
+      "seam.value_crm",
+      "seam.value_simpro",
+      "seam.owner_value",
+      "seam.correction_accepted_by",
+      "seam.correction_written_id",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
