@@ -1,0 +1,78 @@
+{
+  "slug": "receipt-chase",
+  "name": "Receipt Chase",
+  "office_task": "Each weekday, find the bank and card lines in Xero with no receipt, ask the person who spent each one for it, attach it when it comes back, and hand a no or a silence to the bookkeeper.",
+  "verticals": [
+    "accounting-bookkeeping"
+  ],
+  "standards": [
+    "follow-up"
+  ],
+  "systems_of_record": [
+    "Xero, where each spend line in the bank feed has its bank transaction id and the receipt is attached to that line",
+    "the receipt register kept beside it, one open item per line with no receipt, owed by the person who spent it",
+    "the practice's mailbox (Gmail or Outlook), where a receipt sent back on the chase thread arrives with its message id"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/receipt-chase"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "schedule",
+    "webhook"
+  ],
+  "consumes": [
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    },
+    {
+      "event": "email.received",
+      "wake": "webhook"
+    },
+    {
+      "event": "exception.closed",
+      "wake": "webhook"
+    }
+  ],
+  "emits": [
+    {
+      "event": "evidence.filed",
+      "write": "the receipt (a tax invoice, or a photo of the docket) attached to its bank or card line in Xero by the line's bank transaction id, which marks the register item arrived so the line can be coded and its GST claimed by the bookkeeper",
+      "readback": "reading the line back from Xero by its bank transaction id lists the attachment, and the register item reads back status arrived with an evidence reference naming the message_id the receipt came in on; no attachment back means it was not filed, and the item stays on the register untouched until a person looks"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an escalation on the register item naming the bookkeeper: the spender said no or asked us to stop, disputed the line, or the cap was reached with no receipt, carrying every reminder so far",
+      "readback": "the exception desk returns an exception_id, and reading it back returns the item id, the bank transaction id, the reason, the touch history and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "followup.declined",
+      "followup.dispute",
+      "followup.cap_reached"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.item_id",
+      "seam.bank_transaction_id",
+      "seam.item_status",
+      "seam.touches",
+      "seam.outcome",
+      "seam.evidence_ref",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
