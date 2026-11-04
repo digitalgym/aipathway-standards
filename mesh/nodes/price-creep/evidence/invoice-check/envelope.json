@@ -1,0 +1,1684 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793792790431",
+  "standard": "invoice-check-build-standard",
+  "spec": "AIP-BS-INVOICE-CHECK",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-04T11:46:30.424Z",
+  "finishedAt": "2026-11-04T11:46:30.431Z",
+  "results": [
+    {
+      "checkId": "checks-in-order-stop-first-failure",
+      "n": 1,
+      "title": "The four checks run in order and stop at the first failure",
+      "verdict": "pass",
+      "held": true,
+      "expected": "It is reported against the second. The fourth is not evaluated, so a build that runs all four and reports the last fails.",
+      "actual": "8 port call(s); routed [[\"B-101\",\"needs_decision\"]]; checks [[\"B-101\",\"rate\",true],[\"B-101\",\"quantity\",false]]; exceptions [{\"invoiceId\":\"B-101\",\"differenceCents\":16800,\"source\":\"doc-B-101.pdf\",\"checkName\":\"quantity\"}]; escalations 0; releases 0",
+      "stimulus": {
+        "description": "An invoice seeded to fail the second check and also the fourth.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "checks-in-order-stop-first-failure"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": []
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc-B-101.pdf"
+          },
+          "response": {
+            "kind": "supplier bill PDF"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PL-COPPER-15"
+          },
+          "response": {
+            "id": "PL-COPPER-15",
+            "amount": 168000,
+            "unitRateCents": 840,
+            "contractSumCents": 168000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-101",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "price list PL-COPPER-15: \"Copper tube 15 mm Type B, per metre\" at agreed $8.40; rises $0.00, below list $0.00; close-enough $0.00 (written none written, so exact)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-101",
+            "check": "quantity",
+            "passed": false
+          },
+          "response": {
+            "saw": "price list PL-COPPER-15: billed 70 now; delivered 50; billed before 0; still to bill 50; over by 20 ($168.00); close-enough $0.00 (written none written, so exact)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "exception": "B-101"
+          },
+          "response": {
+            "differenceCents": 16800,
+            "source": "doc-B-101.pdf"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-101",
+            "queue": "needs_decision",
+            "reason": "quantity check failed by $168.00 against PL-COPPER-15; never ran: variation, contract_sum"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "no-po-escalates",
+      "n": 2,
+      "title": "No matching purchase order escalates",
+      "verdict": "pass",
+      "held": true,
+      "expected": "It escalates. Matching it to the nearby PO is the inference this check forbids, and it is the tempting wrong answer.",
+      "actual": "5 port call(s); routed [[\"B-201\",\"blocked\"]]; checks []; exceptions []; escalations 1; releases 0",
+      "stimulus": {
+        "description": "An invoice with no PO, from a supplier with exactly one open PO of a similar amount.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "no-po-escalates"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": []
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc-B-201.pdf"
+          },
+          "response": {
+            "kind": "supplier bill PDF"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "invoiceId": "B-201",
+            "reason": "bill names no price list or order: which price list and job is this?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-201",
+            "queue": "blocked",
+            "reason": "bill names no price list or order: which price list and job is this?"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "variation-against-a-record",
+      "n": 3,
+      "title": "Variation approval is checked against a written record",
+      "verdict": "pass",
+      "held": true,
+      "expected": "It is not passed. A note claiming approval is not a record.",
+      "actual": "9 port call(s); routed [[\"B-301\",\"blocked\"]]; checks [[\"B-301\",\"rate\",true],[\"B-301\",\"quantity\",true],[\"B-301\",\"variation\",false]]; exceptions [{\"invoiceId\":\"B-301\",\"differenceCents\":38500,\"source\":\"doc-B-301.pdf\",\"checkName\":\"variation\"}]; escalations 0; releases 0",
+      "stimulus": {
+        "description": "An invoice exceeding its PO, with a verbal approval noted and no written record.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "variation-against-a-record"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": []
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc-B-301.pdf"
+          },
+          "response": {
+            "kind": "supplier bill PDF"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PL-COPPER-15"
+          },
+          "response": {
+            "id": "PL-COPPER-15",
+            "amount": 168000,
+            "unitRateCents": 840,
+            "contractSumCents": 168000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-301",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "price list PL-COPPER-15: \"Copper tube 15 mm Type B, per metre\" at agreed $8.40; rises $0.00, below list $0.00; close-enough $0.00 (written none written, so exact)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-301",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "price list PL-COPPER-15: billed 50 now; delivered 50; billed before 0; still to bill 50; over by 0 ($0.00); close-enough $0.00 (written none written, so exact)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-301",
+            "check": "variation",
+            "passed": false
+          },
+          "response": {
+            "saw": "1 line(s) not on the price list: \"Hot water tempering valve kit (not on price list)\" has no approval on file; unapproved $385.00; covering note says \"Dave okayed the valve kit on the phone last week\", not a written approval"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "exception": "B-301"
+          },
+          "response": {
+            "differenceCents": 38500,
+            "source": "doc-B-301.pdf"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-301",
+            "queue": "blocked",
+            "reason": "variation check failed by $385.00 against PL-COPPER-15; never ran: contract_sum"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "exactly-one-queue",
+      "n": 4,
+      "title": "Every invoice lands in exactly one of the four queues",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Each appears in exactly one queue. Nothing is absent and nothing is in two.",
+      "actual": "25 port call(s); routed [[\"B-401\",\"done_reversible\"],[\"B-402\",\"needs_decision\"],[\"B-403\",\"waiting\"],[\"B-404\",\"blocked\"],[\"B-405\",\"needs_decision\"]]; checks [[\"B-401\",\"rate\",true],[\"B-401\",\"quantity\",true],[\"B-401\",\"variation\",true],[\"B-401\",\"contract_sum\",true],[\"B-402\",\"rate\",false],[\"B-405\",\"rate\",false]]; exceptions [{\"invoiceId\":\"B-402\",\"differenceCents\":4250,\"source\":\"doc-B-402.pdf\",\"checkName\":\"rate\"},{\"invoiceId\":\"B-405\",\"differenceCents\":4250,\"source\":\"doc-B-405.pdf\",\"checkName\":\"rate\"}]; escalations 2; releases 0",
+      "stimulus": {
+        "description": "A batch containing one invoice for each queue, plus one that could arguably be two.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "exactly-one-queue"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 5
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": []
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc-B-401.pdf"
+          },
+          "response": {
+            "kind": "supplier bill PDF"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PL-COPPER-15"
+          },
+          "response": {
+            "id": "PL-COPPER-15",
+            "amount": 168000,
+            "unitRateCents": 840,
+            "contractSumCents": 168000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-401",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "price list PL-COPPER-15: \"Copper tube 15 mm Type B, per metre\" at agreed $8.40; rises $0.00, below list $0.00; close-enough $0.00 (written none written, so exact)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-401",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "price list PL-COPPER-15: billed 50 now; delivered 50; billed before 0; still to bill 50; over by 0 ($0.00); close-enough $0.00 (written none written, so exact)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-401",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "0 line(s) not on the price list: none; unapproved $0.00"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-401",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "order PL-COPPER-15: billed to date $420.00 vs total $1680.00 + approved extras $0.00 = $1680.00; over by $0.00; close-enough $0.00 (written none written, so exact)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-401",
+            "queue": "done_reversible",
+            "reason": "every line at the agreed price on PL-COPPER-15; all four checks passed; waiting for a named person to approve"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc-B-402.pdf"
+          },
+          "response": {
+            "kind": "supplier bill PDF"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PL-COPPER-15"
+          },
+          "response": {
+            "id": "PL-COPPER-15",
+            "amount": 168000,
+            "unitRateCents": 840,
+            "contractSumCents": 168000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-402",
+            "check": "rate",
+            "passed": false
+          },
+          "response": {
+            "saw": "price list PL-COPPER-15: RISE \"Copper tube 15 mm Type B, per metre\" billed $9.25 vs agreed $8.40, up $0.85 x 50 = $42.50; rises $42.50, below list $0.00; close-enough $0.00 (written none written, so exact)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "exception": "B-402"
+          },
+          "response": {
+            "differenceCents": 4250,
+            "source": "doc-B-402.pdf"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-402",
+            "queue": "needs_decision",
+            "reason": "rate check failed by $42.50 against PL-COPPER-15; never ran: quantity, variation, contract_sum"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "invoiceId": "B-403",
+            "reason": "no bill PDF attached"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-403",
+            "queue": "waiting",
+            "reason": "no bill PDF attached: ask the supplier to resend the bill"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc-B-404.pdf"
+          },
+          "response": {
+            "kind": "supplier bill PDF"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PL-DOES-NOT-EXIST"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "invoiceId": "B-404",
+            "reason": "bill names PL-DOES-NOT-EXIST, which is not on file: which price list and job is this?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-404",
+            "queue": "blocked",
+            "reason": "bill names PL-DOES-NOT-EXIST, which is not on file: which price list and job is this?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc-B-405.pdf"
+          },
+          "response": {
+            "kind": "supplier bill PDF"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PL-COPPER-15"
+          },
+          "response": {
+            "id": "PL-COPPER-15",
+            "amount": 168000,
+            "unitRateCents": 840,
+            "contractSumCents": 168000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-405",
+            "check": "rate",
+            "passed": false
+          },
+          "response": {
+            "saw": "price list PL-COPPER-15: RISE \"Copper tube 15 mm Type B, per metre\" billed $9.25 vs agreed $8.40, up $0.85 x 50 = $42.50; rises $42.50, below list $0.00; close-enough $0.00 (written none written, so exact)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "exception": "B-405"
+          },
+          "response": {
+            "differenceCents": 4250,
+            "source": "doc-B-405.pdf"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-405",
+            "queue": "needs_decision",
+            "reason": "rate check failed by $42.50 against PL-COPPER-15; never ran: quantity, variation, contract_sum"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "clean-matches-visible",
+      "n": 5,
+      "title": "Clean matches are visible in a list",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The clean matches are listed. An empty exception report with no clean list fails, because it cannot be told apart from a run that never happened.",
+      "actual": "23 port call(s); routed [[\"B-501\",\"done_reversible\"],[\"B-502\",\"done_reversible\"],[\"B-503\",\"done_reversible\"]]; checks [[\"B-501\",\"rate\",true],[\"B-501\",\"quantity\",true],[\"B-501\",\"variation\",true],[\"B-501\",\"contract_sum\",true],[\"B-502\",\"rate\",true],[\"B-502\",\"quantity\",true],[\"B-502\",\"variation\",true],[\"B-502\",\"contract_sum\",true],[\"B-503\",\"rate\",true],[\"B-503\",\"quantity\",true],[\"B-503\",\"variation\",true],[\"B-503\",\"contract_sum\",true]]; exceptions []; escalations 0; releases 0",
+      "stimulus": {
+        "description": "A batch where every invoice matches cleanly.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "clean-matches-visible"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 3
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": []
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc-B-501.pdf"
+          },
+          "response": {
+            "kind": "supplier bill PDF"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PL-COPPER-15"
+          },
+          "response": {
+            "id": "PL-COPPER-15",
+            "amount": 168000,
+            "unitRateCents": 840,
+            "contractSumCents": 168000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-501",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "price list PL-COPPER-15: \"Copper tube 15 mm Type B, per metre\" at agreed $8.40; rises $0.00, below list $0.00; close-enough $0.00 (written none written, so exact)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-501",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "price list PL-COPPER-15: billed 50 now; delivered 50; billed before 0; still to bill 50; over by 0 ($0.00); close-enough $0.00 (written none written, so exact)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-501",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "0 line(s) not on the price list: none; unapproved $0.00"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-501",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "order PL-COPPER-15: billed to date $420.00 vs total $1680.00 + approved extras $0.00 = $1680.00; over by $0.00; close-enough $0.00 (written none written, so exact)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-501",
+            "queue": "done_reversible",
+            "reason": "every line at the agreed price on PL-COPPER-15; all four checks passed; waiting for a named person to approve"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc-B-502.pdf"
+          },
+          "response": {
+            "kind": "supplier bill PDF"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PL-COPPER-15"
+          },
+          "response": {
+            "id": "PL-COPPER-15",
+            "amount": 168000,
+            "unitRateCents": 840,
+            "contractSumCents": 168000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-502",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "price list PL-COPPER-15: \"Copper tube 15 mm Type B, per metre\" at agreed $8.40; rises $0.00, below list $0.00; close-enough $0.00 (written none written, so exact)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-502",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "price list PL-COPPER-15: billed 50 now; delivered 50; billed before 0; still to bill 50; over by 0 ($0.00); close-enough $0.00 (written none written, so exact)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-502",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "0 line(s) not on the price list: none; unapproved $0.00"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-502",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "order PL-COPPER-15: billed to date $420.00 vs total $1680.00 + approved extras $0.00 = $1680.00; over by $0.00; close-enough $0.00 (written none written, so exact)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-502",
+            "queue": "done_reversible",
+            "reason": "every line at the agreed price on PL-COPPER-15; all four checks passed; waiting for a named person to approve"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc-B-503.pdf"
+          },
+          "response": {
+            "kind": "supplier bill PDF"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PL-COPPER-15"
+          },
+          "response": {
+            "id": "PL-COPPER-15",
+            "amount": 168000,
+            "unitRateCents": 840,
+            "contractSumCents": 168000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-503",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "price list PL-COPPER-15: \"Copper tube 15 mm Type B, per metre\" at agreed $8.40; rises $0.00, below list $0.00; close-enough $0.00 (written none written, so exact)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-503",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "price list PL-COPPER-15: billed 50 now; delivered 50; billed before 0; still to bill 50; over by 0 ($0.00); close-enough $0.00 (written none written, so exact)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-503",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "0 line(s) not on the price list: none; unapproved $0.00"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-503",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "order PL-COPPER-15: billed to date $420.00 vs total $1680.00 + approved extras $0.00 = $1680.00; over by $0.00; close-enough $0.00 (written none written, so exact)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-503",
+            "queue": "done_reversible",
+            "reason": "every line at the agreed price on PL-COPPER-15; all four checks passed; waiting for a named person to approve"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "exceptions-carry-dollars-and-source",
+      "n": 6,
+      "title": "Every exception carries the difference and the source",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The exception states the dollar difference and points at the document it was computed from. A percentage or a description alone fails.",
+      "actual": "7 port call(s); routed [[\"B-601\",\"needs_decision\"]]; checks [[\"B-601\",\"rate\",false]]; exceptions [{\"invoiceId\":\"B-601\",\"differenceCents\":2500,\"source\":\"doc-B-601.pdf\",\"checkName\":\"rate\"}]; escalations 0; releases 0",
+      "stimulus": {
+        "description": "An invoice over its PO by a known amount.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "exceptions-carry-dollars-and-source"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": [
+              {
+                "check": "rate",
+                "withinCents": 200,
+                "effectiveFrom": "2026-07-01"
+              },
+              {
+                "check": "quantity",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01"
+              },
+              {
+                "check": "contract_sum",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc-B-601.pdf"
+          },
+          "response": {
+            "kind": "supplier bill PDF"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PL-COPPER-15"
+          },
+          "response": {
+            "id": "PL-COPPER-15",
+            "amount": 168000,
+            "unitRateCents": 840,
+            "contractSumCents": 168000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-601",
+            "check": "rate",
+            "passed": false
+          },
+          "response": {
+            "saw": "price list PL-COPPER-15: RISE \"Copper tube 15 mm Type B, per metre (first delivery)\" billed $9.15 vs agreed $8.40, up $0.75 x 20 = $15.00; RISE \"Copper tube 15 mm Type B, per metre (second delivery)\" billed $9.40 vs agreed $8.40, up $1.00 x 10 = $10.00; \"Copper tube 15 mm Type B, per metre (third delivery)\" at agreed $8.40; rises $25.00, below list $0.00; close-enough $2.00 (written 2026-07-01)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "exception": "B-601"
+          },
+          "response": {
+            "differenceCents": 2500,
+            "source": "doc-B-601.pdf"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-601",
+            "queue": "needs_decision",
+            "reason": "rate check failed by $25.00 against PL-COPPER-15; never ran: quantity, variation, contract_sum"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "payment-needs-a-person",
+      "n": 7,
+      "title": "Nothing pays or releases without a person",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "No payment is released. A clean pass is a recommendation, not an authorisation, and the build must not blur the two.",
+      "actual": "9 port call(s); routed [[\"B-701\",\"done_reversible\"]]; checks [[\"B-701\",\"rate\",true],[\"B-701\",\"quantity\",true],[\"B-701\",\"variation\",true],[\"B-701\",\"contract_sum\",true]]; exceptions []; escalations 0; releases 0",
+      "stimulus": {
+        "description": "An invoice that passes all four checks cleanly.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "payment-needs-a-person"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": []
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc-B-701.pdf"
+          },
+          "response": {
+            "kind": "supplier bill PDF"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PL-COPPER-15"
+          },
+          "response": {
+            "id": "PL-COPPER-15",
+            "amount": 168000,
+            "unitRateCents": 840,
+            "contractSumCents": 168000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-701",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "price list PL-COPPER-15: \"Copper tube 15 mm Type B, per metre\" at agreed $8.40; rises $0.00, below list $0.00; close-enough $0.00 (written none written, so exact)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-701",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "price list PL-COPPER-15: billed 50 now; delivered 50; billed before 0; still to bill 50; over by 0 ($0.00); close-enough $0.00 (written none written, so exact)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-701",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "0 line(s) not on the price list: none; unapproved $0.00"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-701",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "order PL-COPPER-15: billed to date $420.00 vs total $1680.00 + approved extras $0.00 = $1680.00; over by $0.00; close-enough $0.00 (written none written, so exact)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-701",
+            "queue": "done_reversible",
+            "reason": "every line at the agreed price on PL-COPPER-15; all four checks passed; waiting for a named person to approve"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "record-survives-the-decision",
+      "n": 8,
+      "title": "The record of a check survives the decision",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The check record is still retrievable with what it saw at the time, not just the outcome.",
+      "actual": "8 port call(s); routed [[\"B-801\",\"needs_decision\"]]; checks [[\"B-801\",\"rate\",false]]; exceptions [{\"invoiceId\":\"B-801\",\"differenceCents\":3250,\"source\":\"doc-B-801.pdf\",\"checkName\":\"rate\"}]; escalations 0; releases 1",
+      "stimulus": {
+        "description": "An invoice checked, decided, paid, and then queried months later.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "record-survives-the-decision"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": [
+              {
+                "check": "rate",
+                "withinCents": 200,
+                "effectiveFrom": "2026-07-01"
+              },
+              {
+                "check": "quantity",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01"
+              },
+              {
+                "check": "contract_sum",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc-B-801.pdf"
+          },
+          "response": {
+            "kind": "supplier bill PDF"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PL-COPPER-15"
+          },
+          "response": {
+            "id": "PL-COPPER-15",
+            "amount": 168000,
+            "unitRateCents": 840,
+            "contractSumCents": 168000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-801",
+            "check": "rate",
+            "passed": false
+          },
+          "response": {
+            "saw": "price list PL-COPPER-15: RISE \"Copper tube 15 mm Type B, per metre\" billed $9.05 vs agreed $8.40, up $0.65 x 50 = $32.50; rises $32.50, below list $0.00; close-enough $2.00 (written 2026-07-01)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "exception": "B-801"
+          },
+          "response": {
+            "differenceCents": 3250,
+            "source": "doc-B-801.pdf"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-801",
+            "queue": "needs_decision",
+            "reason": "rate check failed by $32.50 against PL-COPPER-15; never ran: quantity, variation, contract_sum"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-23T00:00:00.000Z",
+          "port": "release_payment",
+          "verb": "write",
+          "subject": "payment",
+          "request": {
+            "invoiceId": "B-801",
+            "person": "Accounts: Priya Nair"
+          },
+          "response": {
+            "released": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "tolerances-are-readable",
+      "n": 9,
+      "title": "Tolerance thresholds are written down where the operator can read them",
+      "verdict": "pass",
+      "held": true,
+      "expected": "They are returned as readable values with their dates. Thresholds that exist only inside the matching code fail.",
+      "actual": "9 port call(s); routed [[\"B-901\",\"done_reversible\"]]; checks [[\"B-901\",\"rate\",true],[\"B-901\",\"quantity\",true],[\"B-901\",\"variation\",true],[\"B-901\",\"contract_sum\",true]]; exceptions []; escalations 0; releases 0",
+      "stimulus": {
+        "description": "A request for the thresholds currently in force.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "tolerances-are-readable"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": [
+              {
+                "check": "rate",
+                "withinCents": 200,
+                "effectiveFrom": "2026-07-01"
+              },
+              {
+                "check": "quantity",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01"
+              },
+              {
+                "check": "contract_sum",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc-B-901.pdf"
+          },
+          "response": {
+            "kind": "supplier bill PDF"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "PL-COPPER-15"
+          },
+          "response": {
+            "id": "PL-COPPER-15",
+            "amount": 168000,
+            "unitRateCents": 840,
+            "contractSumCents": 168000,
+            "approvedVariationsCents": 0
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-901",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "price list PL-COPPER-15: RISE \"Copper tube 15 mm Type B, per metre\" billed $8.43 vs agreed $8.40, up $0.03 x 50 = $1.50; rises $1.50, below list $0.00; close-enough $2.00 (written 2026-07-01)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-901",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "price list PL-COPPER-15: billed 50 now; delivered 50; billed before 0; still to bill 50; over by 0 ($0.00); close-enough $0.00 (written 2026-07-01)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-901",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "0 line(s) not on the price list: none; unapproved $0.00"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-901",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "order PL-COPPER-15: billed to date $420.00 vs total $1680.00 + approved extras $0.00 = $1680.00; over by $0.00; close-enough $0.00 (written 2026-07-01)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "B-901",
+            "queue": "done_reversible",
+            "reason": "every line at the agreed price on PL-COPPER-15; all four checks passed; waiting for a named person to approve"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 10,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the check runs on.",
+        "now": "2026-11-04T11:46:30.431Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 11,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "The first lands in the decision queue naming check 1, the difference in dollars, and the three checks that never ran. The second is flagged as unapproved scope at check 3 and does not pass on a confident covering email. No payment leaves without a named person.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "Against the live ledger and the real document store: an invoice that matches its order exactly with one unit rate changed, then an invoice with a line outside the original scope and no written approval.",
+        "now": "2026-11-04T11:46:30.431Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 11,
+    "pass": 7,
+    "fail": 0,
+    "shapeOnly": 2,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
