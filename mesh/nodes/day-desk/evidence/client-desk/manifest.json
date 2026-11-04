@@ -1,0 +1,125 @@
+{
+  "spec": "AIP-BS-CLIENT-DESK",
+  "standard": "client-desk-build-standard",
+  "edition": "2026-10-26",
+  "source": "https://aipathway.com.au/explore-ai/client-desk-build-standard",
+  "ran_at": "2026-11-04T12:35:58.787Z",
+  "environment": "stub",
+  "provider": "local.mock_client_desk",
+  "provider_block": {
+    "boundary": {
+      "never": [
+        "give a caller an arrival time the job does not hold",
+        "write a new job for a caller who already has an open one",
+        "tell a caller they are booked when the write came back with no id",
+        "leave a caller on hold or drop them when a transfer is not picked up",
+        "send a status message without a change in the job system behind it, twice for one change, or to anyone but the job's contact",
+        "message a contact who has not agreed to messages",
+        "stand up telephony, disclosure or recording of your own"
+      ],
+      "stays_with_person": [
+        "every transfer once it is answered",
+        "every callback, by the person the roster names",
+        "anything said to an upset customer",
+        "moving the arrival time on the board"
+      ]
+    },
+    "job": "the phone answered in business hours and the customer kept told, from the job record",
+    "skill": "client-desk",
+    "stub": "local.mock_client_desk",
+    "production": "office_voice.front_desk",
+    "product": "Office Voice / Front Desk",
+    "insert": "Booked After Hours",
+    "with_us": {
+      "kind": "point_the_number",
+      "provider": "office_voice.front_desk",
+      "product": "Office Voice / Front Desk",
+      "insert": "Booked After Hours"
+    }
+  },
+  "tally": {
+    "green": 9,
+    "red": 0,
+    "with_us": 1,
+    "evidence_required": 1,
+    "total": 12
+  },
+  "checks": [
+    {
+      "id": "disclosure-first",
+      "n": 1,
+      "title": "Disclosure first, on every daytime call",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "caller-matched-first",
+      "n": 2,
+      "title": "The caller is looked up before anything is written, and an existing job is worked on, not duplicated",
+      "verdict": "pass"
+    },
+    {
+      "id": "new-work-as-after-hours",
+      "n": 3,
+      "title": "New work is written the way Booked After Hours writes it",
+      "verdict": "pass"
+    },
+    {
+      "id": "status-from-the-record",
+      "n": 4,
+      "title": "A status question is answered from the job, or not answered",
+      "verdict": "pass"
+    },
+    {
+      "id": "transfer-with-a-fallback",
+      "n": 5,
+      "title": "A caller who asks for a person is put through, and a missed transfer becomes a callback with a name and a time",
+      "verdict": "pass"
+    },
+    {
+      "id": "update-from-an-event",
+      "n": 6,
+      "title": "Running late, on the way and job complete are sent only when the record changes",
+      "verdict": "pass"
+    },
+    {
+      "id": "one-update-per-change",
+      "n": 7,
+      "title": "One message per change, and a new change gets a new message",
+      "verdict": "pass"
+    },
+    {
+      "id": "contact-and-consent",
+      "n": 8,
+      "title": "An update goes only to the contact on the job, and only with their consent",
+      "verdict": "pass"
+    },
+    {
+      "id": "job-shows-what-was-said",
+      "n": 9,
+      "title": "Every call and every update is written back to the job",
+      "verdict": "pass"
+    },
+    {
+      "id": "write-verified",
+      "n": 10,
+      "title": "A job write with no id back is not a booked job",
+      "verdict": "pass"
+    },
+    {
+      "id": "survives-the-builder",
+      "n": 11,
+      "title": "It survives the builder",
+      "verdict": "evidence_required"
+    },
+    {
+      "id": "pass-test",
+      "n": 12,
+      "title": "The pass test passes",
+      "verdict": "with_us"
+    }
+  ],
+  "next": {
+    "with_us": "Point the number at Office Voice / Front Desk (Booked After Hours). There is no production run of these checks yet: AIPATHWAY_PROVIDER=office_voice.front_desk needs a live port map that is not published, so the stub run is the finished build. Do not stand up telephony of your own.",
+    "evidence_required": "attach what proves each one; not a software check"
+  }
+}
