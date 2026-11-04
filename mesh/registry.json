@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T12:56:41.119Z",
+  "generated_at": "2026-11-04T12:58:27.111Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -9319,6 +9319,104 @@
       ]
     },
     {
+      "slug": "parts-check",
+      "name": "Parts Check",
+      "office_task": "The afternoon before, check every part tomorrow's jobs need against the van and shelf counts, flag stale counts, and raise shortfalls for ordering, never substituting.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "parts-ready"
+      ],
+      "systems_of_record": [
+        "the job system that issues the job_id and holds tomorrow's dispatched board, each job's accepted quote lines and materials (ServiceM8, Simpro, AroFlo, Fergus, or a Tradify export into the sheet)",
+        "the stock sheet or job-system stock locations holding each van's count with the time it was counted, and the shelf",
+        "Material Order's path (the purchasing step that prices, holds and issues the purchase order id)",
+        "the exception desk the business runs (a task list or a sheet)"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "job.updated",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the parts result for tomorrow's date, published by the cut-off every run, quiet or not: every job on the board by job_id with each part on_van, pick_from_shelf (reserved, with its location), ordered (with the purchase order id Material Order returned) or flagged with its reason; plus one message per tech and job carrying the job_id",
+          "readback": "the report store returns a report_id for the date, republished in place on a re-run; each Result row is keyed on (for_date, job_id, catalogue_code) on the seam mirror and reads back by job_id; no report_id back means the run did not publish, and the next scheduled run publishes again"
+        },
+        {
+          "event": "exception.raised",
+          "write": "a flag on the job naming the person who owns it, one reason from the closed list: needs_list_unknown, stock_unknown (van count older than the limit), lead_time_after_job, not_in_stock or order_failed; an equivalent part in stock is named only here, as a suggestion",
+          "readback": "the exception desk returns an exception_id, stored on the line's Result; reading that id back returns the job_id, the part, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "parts.needs_list_unknown",
+          "parts.stock_unknown",
+          "parts.lead_time_after_job",
+          "parts.not_in_stock",
+          "parts.order_failed"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "seam-mirror",
+        "fields": [
+          "seam.job_id",
+          "seam.for_date",
+          "seam.catalogue_code",
+          "seam.status",
+          "seam.reservation_id",
+          "seam.order_external_id",
+          "seam.message_id",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/parts-check"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "parts-ready",
+          "edition": "2026-11-01",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:54:15.500Z",
+          "run_id": "run-1793796855499",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 0,
+          "total": 10
+        }
+      ]
+    },
+    {
       "slug": "parts-quote",
       "name": "Parts Quote",
       "office_task": "When a customer's spare-parts enquiry is logged as a job, draft its quote from our own parts price list, or park it with a reason, and leave it for us to send.",
@@ -13769,6 +13867,110 @@
       ]
     },
     {
+      "slug": "takeoff-quote",
+      "name": "Takeoff Quote",
+      "office_task": "Count the fittings and cable runs on a tender job's current drawings, draft the quote from our own pre-builds and price list, park anything the book misses, and leave it for us to send.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "quote-out"
+      ],
+      "systems_of_record": [
+        "Simpro",
+        "ServiceM8",
+        "Xero (Items as the price list and pre-builds, Quotes)"
+      ],
+      "consumes": [
+        {
+          "event": "job.created",
+          "wake": "webhook"
+        },
+        {
+          "event": "job.updated",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "quote.drafted",
+          "write": "A draft quote on the tender job it was drafted from, ex GST. One line per catalogue item: the pre-build or part id from the business's own price list, the unit it is sold by (each or lm), the quantity taken off the current drawing sheets (a count of that item's symbol, or the summed length of that item's run layer at each sheet's own scale, rounded once to the centimetre), the sheets it came off, and the item's rate as read at draft time. The amount is quantity times rate and nothing else: no waste allowance, no assumed scale, and no pre-build priced from its parts. It is left in draft, editable, for the person who owns quotes; this node has no way to send it.",
+          "readback": "The quote is read back by the id the system returned (Simpro GET /api/v1.0/companies/{companyID}/quotes/{quoteID}, ServiceM8 GET /api_1.0/jobquote/{uuid}.json, Xero GET /api.xro/2.0/Quotes/{QuoteID}) and must carry the job id. No id back is not a write: it raises quote.write_failed."
+        },
+        {
+          "event": "exception.raised",
+          "write": "A parked quote, or a tender sent back because its drawings cannot be counted, as an exception on the job: the park reason from the standard's fixed list (or takeoff_missing, takeoff_unscaled, takeoff_revision_conflict, legend_unit_mismatch), the lines that did price with their catalogue ids and sheets, each symbol or run the book does not cover with its count or length, no total, and exception_owner set to the person the business named for quotes.",
+          "readback": "The exception desk returns an exception_id; reading the job by its id shows the open exception with its exception_owner, and the next hop reads it there and stops."
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "quote.not_in_pricebook",
+          "quote.variation_to_accepted_quote",
+          "quote.discount_requested",
+          "quote.pricebook_unreadable",
+          "quote.takeoff_missing",
+          "quote.takeoff_unscaled",
+          "quote.takeoff_revision_conflict",
+          "quote.legend_unit_mismatch",
+          "quote.write_failed"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.quote_id",
+          "seam.status",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/takeoff-quote"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "quote-out",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:55:12.530Z",
+          "run_id": "run-1793796912528",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 0,
+          "total": 11
+        },
+        {
+          "standard": "cash-seam",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:54:28.636Z",
+          "run_id": "run-1793796868635",
+          "green": 4,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 9
+        }
+      ]
+    },
+    {
       "slug": "task-clock",
       "name": "Task Clock",
       "office_task": "Keep one list of office follow-up tasks on each job, quote or invoice, with an owner and due time from our table, nudge once when one goes late, and leave ticking off to a person.",
@@ -15257,6 +15459,7 @@
     "outgoings-book",
     "outgoings-desk",
     "owing-today",
+    "parts-check",
     "parts-quote",
     "payment-watch",
     "permit-answers",
@@ -15299,6 +15502,7 @@
     "starter-pack",
     "sub-pay-check",
     "swms-desk",
+    "takeoff-quote",
     "task-clock",
     "tenant-inbox",
     "terms-watch",
@@ -15377,6 +15581,12 @@
     {
       "from": "after-hours-desk",
       "to": "swms-desk",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "after-hours-desk",
+      "to": "takeoff-quote",
       "event": "job.created",
       "id": "job_id"
     },
@@ -15466,6 +15676,12 @@
     },
     {
       "from": "crew-board",
+      "to": "parts-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "crew-board",
       "to": "parts-quote",
       "event": "job.updated",
       "id": "job_id"
@@ -15527,6 +15743,12 @@
     {
       "from": "crew-board",
       "to": "swms-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "crew-board",
+      "to": "takeoff-quote",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -15628,6 +15850,12 @@
     },
     {
       "from": "day-desk",
+      "to": "takeoff-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
       "to": "trim-quote",
       "event": "job.created",
       "id": "job_id"
@@ -15712,6 +15940,12 @@
     },
     {
       "from": "day-desk",
+      "to": "parts-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
       "to": "parts-quote",
       "event": "job.updated",
       "id": "job_id"
@@ -15773,6 +16007,12 @@
     {
       "from": "day-desk",
       "to": "swms-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "takeoff-quote",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -15905,6 +16145,12 @@
     {
       "from": "install-book",
       "to": "swms-desk",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "install-book",
+      "to": "takeoff-quote",
       "event": "job.created",
       "id": "job_id"
     },
@@ -16120,6 +16366,12 @@
     },
     {
       "from": "portal-match",
+      "to": "parts-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "portal-match",
       "to": "parts-quote",
       "event": "job.updated",
       "id": "job_id"
@@ -16181,6 +16433,12 @@
     {
       "from": "portal-match",
       "to": "swms-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "portal-match",
+      "to": "takeoff-quote",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -16282,6 +16540,12 @@
     },
     {
       "from": "practice-desk",
+      "to": "parts-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "practice-desk",
       "to": "parts-quote",
       "event": "job.updated",
       "id": "job_id"
@@ -16343,6 +16607,12 @@
     {
       "from": "practice-desk",
       "to": "swms-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "practice-desk",
+      "to": "takeoff-quote",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -16456,6 +16726,12 @@
     },
     {
       "from": "repair-board",
+      "to": "parts-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "repair-board",
       "to": "parts-quote",
       "event": "job.updated",
       "id": "job_id"
@@ -16511,6 +16787,12 @@
     {
       "from": "repair-board",
       "to": "swms-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "repair-board",
+      "to": "takeoff-quote",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -16612,6 +16894,12 @@
     },
     {
       "from": "roof-desk",
+      "to": "takeoff-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "roof-desk",
       "to": "trim-quote",
       "event": "job.created",
       "id": "job_id"
@@ -16702,6 +16990,12 @@
     },
     {
       "from": "route-plan",
+      "to": "parts-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "route-plan",
       "to": "parts-quote",
       "event": "job.updated",
       "id": "job_id"
@@ -16757,6 +17051,12 @@
     {
       "from": "route-plan",
       "to": "swms-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "route-plan",
+      "to": "takeoff-quote",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -16858,6 +17158,12 @@
     },
     {
       "from": "service-due",
+      "to": "takeoff-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "service-due",
       "to": "trim-quote",
       "event": "job.created",
       "id": "job_id"
@@ -16948,6 +17254,12 @@
     },
     {
       "from": "van-board",
+      "to": "parts-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "van-board",
       "to": "parts-quote",
       "event": "job.updated",
       "id": "job_id"
@@ -17009,6 +17321,12 @@
     {
       "from": "van-board",
       "to": "swms-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "van-board",
+      "to": "takeoff-quote",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -17104,6 +17422,12 @@
     },
     {
       "from": "visit-offer",
+      "to": "parts-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-offer",
       "to": "parts-quote",
       "event": "job.updated",
       "id": "job_id"
@@ -17165,6 +17489,12 @@
     {
       "from": "visit-offer",
       "to": "swms-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-offer",
+      "to": "takeoff-quote",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -17260,6 +17590,12 @@
     },
     {
       "from": "visit-round",
+      "to": "parts-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-round",
       "to": "parts-quote",
       "event": "job.updated",
       "id": "job_id"
@@ -17321,6 +17657,12 @@
     {
       "from": "visit-round",
       "to": "swms-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-round",
+      "to": "takeoff-quote",
       "event": "job.updated",
       "id": "job_id"
     },
