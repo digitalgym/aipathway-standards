@@ -1,0 +1,1689 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793792558924",
+  "standard": "invoice-out-build-standard",
+  "spec": "AIP-BS-INVOICE-OUT",
+  "specVersion": "2026-10-05",
+  "environment": "stub",
+  "startedAt": "2026-11-04T11:42:38.914Z",
+  "finishedAt": "2026-11-04T11:42:38.924Z",
+  "results": [
+    {
+      "checkId": "completion-is-the-trigger",
+      "n": 1,
+      "title": "The job's completion is the only trigger",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Two invoices exist and each traces to a job read that showed it complete. An invoice for the open job, or one written before any job was read, fails.",
+      "actual": "9 port call(s); invoices MC-2201-2026M09:draft[SVC-FIP-MTHx1@85] MC-2202-2026M09:draft[SVC-FIP-MTHx2@85]; escalations over_threshold,over_threshold; sends 0",
+      "stimulus": {
+        "description": "Three jobs in the system: two marked complete today, one still open.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "completion-is-the-trigger"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 3,
+            "complete": [
+              "MC-2201-2026M09",
+              "MC-2202-2026M09"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "schedule-2026-07",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "MC-2201-2026M09"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "MC-2201-2026M09",
+            "lines": [
+              "SVC-FIP-MTHx1@85"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Maintenance contract billing period MC-2201-2026M09. Rates from schedule schedule-2026-07"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "Period MC-2201-2026M09, invoice xero-INV1: no release rule set. Waiting for Dana Whitfield"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "MC-2202-2026M09"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "MC-2202-2026M09",
+            "lines": [
+              "SVC-FIP-MTHx2@85"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Maintenance contract billing period MC-2202-2026M09. Rates from schedule schedule-2026-07"
+          },
+          "response": {
+            "id": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "Period MC-2202-2026M09, invoice xero-INV2: no release rule set. Waiting for Dana Whitfield"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "lines-come-from-the-job",
+      "n": 2,
+      "title": "Every invoice line traces to a line on the job",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The invoice carries those three codes and quantities and no others. An extra line, or a missing one with no parked reason, fails.",
+      "actual": "6 port call(s); invoices MC-2301-2026Q3:draft[ATT-SITEx1@95,SVC-FIP-MTHx2@85,CONS-BATTx1@48]; escalations over_threshold; sends 0",
+      "stimulus": {
+        "description": "A complete job with three lines: a callout, two hours of labour and a material.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "lines-come-from-the-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "complete": [
+              "MC-2301-2026Q3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "schedule-2026-07",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "MC-2301-2026Q3"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "MC-2301-2026Q3",
+            "lines": [
+              "ATT-SITEx1@95",
+              "SVC-FIP-MTHx2@85",
+              "CONS-BATTx1@48"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Maintenance contract billing period MC-2301-2026Q3. Rates from schedule schedule-2026-07"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "Period MC-2301-2026Q3, invoice xero-INV1: no release rule set. Waiting for Dana Whitfield"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "rates-only-from-the-book",
+      "n": 3,
+      "title": "Every line is priced from the price book, and a line the book does not cover parks the invoice",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The book is read before the write. Every priced line's rate equals the book's rate for its code. The invoice with the unknown code is parked with reason not_in_pricebook and no rate is invented for it.",
+      "actual": "9 port call(s); invoices MC-2401-2026H2:parked/not_in_pricebook[ATT-SITEx1@95,SVC-EXT-6Mx14@12.5] MC-2402-2026H2:draft[ATT-SITEx1@95,SVC-EML-6Mx22@9]; escalations not_in_pricebook,over_threshold; sends 0",
+      "stimulus": {
+        "description": "A complete job whose lines include one code the price book does not hold.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "rates-only-from-the-book"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "MC-2401-2026H2",
+              "MC-2402-2026H2"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "schedule-2026-07",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "MC-2401-2026H2"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "MC-2401-2026H2",
+            "lines": [
+              "ATT-SITEx1@95",
+              "SVC-EXT-6Mx14@12.5"
+            ],
+            "stage": null,
+            "park": "not_in_pricebook",
+            "notes": "Maintenance contract billing period MC-2401-2026H2. Not in the schedule of rates, left unpriced: SVC-SPR-6M. Rates from schedule schedule-2026-07"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "not_in_pricebook",
+            "detail": "Period MC-2401-2026H2, invoice xero-INV1: not_in_pricebook (SVC-SPR-6M). Owner: Dana Whitfield"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "MC-2402-2026H2"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "MC-2402-2026H2",
+            "lines": [
+              "ATT-SITEx1@95",
+              "SVC-EML-6Mx22@9"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Maintenance contract billing period MC-2402-2026H2. Rates from schedule schedule-2026-07"
+          },
+          "response": {
+            "id": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "Period MC-2402-2026H2, invoice xero-INV2: no release rule set. Waiting for Dana Whitfield"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "variation-needs-a-signature",
+      "n": 4,
+      "title": "A variation is billed only with a signed acceptance attached",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The signed one is invoiced with the acceptance attached as evidence. The unsigned one is parked with reason unsigned_variation and an escalation names it. Billing an unsigned variation fails.",
+      "actual": "10 port call(s); invoices MC-2501-2026Q3:draft[SVC-FIP-MTHx1@85,VAR-HYD-ADDx1@60] MC-2502-2026Q3:parked/unsigned_variation[SVC-FIP-MTHx1@85]; escalations over_threshold,unsigned_variation; sends 0",
+      "stimulus": {
+        "description": "Two complete jobs each carrying a variation line: one with a signed acceptance on file, one without.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "variation-needs-a-signature"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "MC-2501-2026Q3",
+              "MC-2502-2026Q3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "schedule-2026-07",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "MC-2501-2026Q3"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "MC-2501-2026Q3",
+            "lines": [
+              "SVC-FIP-MTHx1@85",
+              "VAR-HYD-ADDx1@60"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Maintenance contract billing period MC-2501-2026Q3. Rates from schedule schedule-2026-07"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "invoiceId": "INV1",
+            "ref": "doc:VAR-2501-signed.pdf"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "Period MC-2501-2026Q3, invoice xero-INV1: no release rule set. Waiting for Dana Whitfield"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "MC-2502-2026Q3"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "MC-2502-2026Q3",
+            "lines": [
+              "SVC-FIP-MTHx1@85"
+            ],
+            "stage": null,
+            "park": "unsigned_variation",
+            "notes": "Maintenance contract billing period MC-2502-2026Q3. Added to the contract with no signed variation, not billed: VAR-HYD-ADD. Rates from schedule schedule-2026-07"
+          },
+          "response": {
+            "id": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "unsigned_variation",
+            "detail": "Period MC-2502-2026Q3, invoice xero-INV2: unsigned_variation (VAR-HYD-ADD). Owner: Dana Whitfield"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "stage-invoice-never-claim",
+      "n": 5,
+      "title": "A job under a building contract is invoiced as a stage invoice, and the claim stays with the builder",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The invoice carries the stage name. No invoice, line or note contains the phrase progress claim. An invoice on a staged job with no stage fails.",
+      "actual": "6 port call(s); invoices MC-2601-2026M09:draft[ATT-SITEx1@95,SVC-FIP-MTHx1@85]; escalations over_threshold; sends 0",
+      "stimulus": {
+        "description": "A complete job carrying a contract stage name.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "stage-invoice-never-claim"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "complete": [
+              "MC-2601-2026M09"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "schedule-2026-07",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "MC-2601-2026M09"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "MC-2601-2026M09",
+            "lines": [
+              "ATT-SITEx1@95",
+              "SVC-FIP-MTHx1@85"
+            ],
+            "stage": "Defects liability period, month 6 of 12",
+            "park": null,
+            "notes": "Maintenance contract billing period MC-2601-2026M09. Stage invoice: Defects liability period, month 6 of 12. Rates from schedule schedule-2026-07"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "Period MC-2601-2026M09, invoice xero-INV1: no release rule set. Waiting for Dana Whitfield"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-invoice-per-job",
+      "n": 6,
+      "title": "One invoice per job, written once, updated on a second event",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Exactly one invoice exists for the job, with an external id, and the second event produced an update or no write. A second invoice, or a null id treated as success, fails.",
+      "actual": "16 port call(s); invoices MC-2702-2026M09:draft[ATT-SITEx1@95,SVC-FIP-MTHx1@85] MC-2701-2026M09:draft[SVC-FIP-MTHx1@85]; escalations write_failed,over_threshold,over_threshold; sends 0",
+      "stimulus": {
+        "description": "The same job's completion event delivered twice.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-invoice-per-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "MC-2701-2026M09",
+              "MC-2702-2026M09"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "schedule-2026-07",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "MC-2701-2026M09"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "MC-2701-2026M09",
+            "lines": 1
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "write_failed",
+            "detail": "Period MC-2701-2026M09: the ledger returned no invoice id, so nothing was written. Owner: Dana Whitfield"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "MC-2702-2026M09"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "MC-2702-2026M09",
+            "lines": [
+              "ATT-SITEx1@95",
+              "SVC-FIP-MTHx1@85"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Maintenance contract billing period MC-2702-2026M09. Rates from schedule schedule-2026-07"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "Period MC-2702-2026M09, invoice xero-INV1: no release rule set. Waiting for Dana Whitfield"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "MC-2701-2026M09",
+              "MC-2702-2026M09"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "schedule-2026-07",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "MC-2701-2026M09"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "MC-2701-2026M09",
+            "lines": [
+              "SVC-FIP-MTHx1@85"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Maintenance contract billing period MC-2701-2026M09. Rates from schedule schedule-2026-07"
+          },
+          "response": {
+            "id": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "Period MC-2701-2026M09, invoice xero-INV2: no release rule set. Waiting for Dana Whitfield"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "MC-2702-2026M09"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "externalId": "xero-INV1"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "written-into-the-ledger",
+      "n": 7,
+      "title": "The invoice exists in the ledger the business runs, with an external id back",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The write returns an external id and the id is stored against the job. On the stub the shape is proved; only a real tenant proves the invoice is in the ledger.",
+      "actual": "6 port call(s); invoices MC-2801-2026H2:draft[ATT-SITEx1@95,SVC-EXT-6Mx8@12.5,SVC-EML-6Mx12@9]; escalations over_threshold; sends 0",
+      "stimulus": {
+        "description": "A complete, fully priced job.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "written-into-the-ledger"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "complete": [
+              "MC-2801-2026H2"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "schedule-2026-07",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "MC-2801-2026H2"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "MC-2801-2026H2",
+            "lines": [
+              "ATT-SITEx1@95",
+              "SVC-EXT-6Mx8@12.5",
+              "SVC-EML-6Mx12@9"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Maintenance contract billing period MC-2801-2026H2. Rates from schedule schedule-2026-07"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "Period MC-2801-2026H2, invoice xero-INV1: no release rule set. Waiting for Dana Whitfield"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "send-is-a-gate",
+      "n": 8,
+      "title": "Nothing is sent without a release by a person, or by a rule a person set with a threshold",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The first is released by the rule and sent. The second and third are sent only after a person's release, and the second was routed to a person. A send with no release fails.",
+      "actual": "13 port call(s); invoices MC-2901-2026M09:sent[SVC-FIP-MTHx1@85] MC-2902-2026Q3:sent[ATT-SITEx1@95,SVC-EXT-6Mx40@12.5,SVC-EML-6Mx30@9]; escalations over_threshold; sends 2",
+      "stimulus": {
+        "description": "Three drafts: one under an auto-release threshold, one over it, one with no rule set.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "send-is-a-gate"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "MC-2901-2026M09",
+              "MC-2902-2026Q3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "schedule-2026-07",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Contract invoices under $500, set by Dana Whitfield",
+            "threshold": 500
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "MC-2901-2026M09"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "MC-2901-2026M09",
+            "lines": [
+              "SVC-FIP-MTHx1@85"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Maintenance contract billing period MC-2901-2026M09. Rates from schedule schedule-2026-07"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "INV1",
+            "person": null,
+            "rule": "Contract invoices under $500, set by Dana Whitfield"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "send": "INV1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "MC-2902-2026Q3"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "MC-2902-2026Q3",
+            "lines": [
+              "ATT-SITEx1@95",
+              "SVC-EXT-6Mx40@12.5",
+              "SVC-EML-6Mx30@9"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Maintenance contract billing period MC-2902-2026Q3. Rates from schedule schedule-2026-07"
+          },
+          "response": {
+            "id": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "Period MC-2902-2026Q3, invoice xero-INV2: 865.00 is over Contract invoices under $500, set by Dana Whitfield (500). Waiting for Dana Whitfield"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T03:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "MC-2902-2026Q3"
+          },
+          "response": {
+            "invoiceId": "INV2",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-09-26T03:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "INV2",
+            "person": "Dana Whitfield",
+            "rule": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T03:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "send": "INV2"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "parked-is-a-queue",
+      "n": 9,
+      "title": "A parked invoice is a queue with a reason and an owner, and nothing parked is sent",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every parked invoice carries a reason and an escalation names it to a person. No parked invoice has a send event.",
+      "actual": "20 port call(s); invoices MC-3001-2026H2:parked/not_in_pricebook[ATT-SITEx1@95] MC-3002-2026Q3:parked/unsigned_variation[SVC-FIP-MTHx1@85]; escalations not_in_pricebook,unsigned_variation,not_in_pricebook; sends 0",
+      "stimulus": {
+        "description": "The parked invoices from the checks above.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "parked-is-a-queue"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "MC-3001-2026H2",
+              "MC-3002-2026Q3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "schedule-2026-07",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Everything, set by Dana Whitfield",
+            "threshold": 1000000
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "MC-3001-2026H2"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "MC-3001-2026H2",
+            "lines": [
+              "ATT-SITEx1@95"
+            ],
+            "stage": null,
+            "park": "not_in_pricebook",
+            "notes": "Maintenance contract billing period MC-3001-2026H2. Not in the schedule of rates, left unpriced: SVC-SPR-6M. Rates from schedule schedule-2026-07"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "not_in_pricebook",
+            "detail": "Period MC-3001-2026H2, invoice xero-INV1: not_in_pricebook (SVC-SPR-6M). Owner: Dana Whitfield"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "MC-3002-2026Q3"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "MC-3002-2026Q3",
+            "lines": [
+              "SVC-FIP-MTHx1@85"
+            ],
+            "stage": null,
+            "park": "unsigned_variation",
+            "notes": "Maintenance contract billing period MC-3002-2026Q3. Added to the contract with no signed variation, not billed: VAR-HYD-ADD. Rates from schedule schedule-2026-07"
+          },
+          "response": {
+            "id": "INV2",
+            "externalId": "xero-INV2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "unsigned_variation",
+            "detail": "Period MC-3002-2026Q3, invoice xero-INV2: unsigned_variation (VAR-HYD-ADD). Owner: Dana Whitfield"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "MC-3001-2026H2",
+              "MC-3002-2026Q3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "schedule-2026-07",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Everything, set by Dana Whitfield",
+            "threshold": 1000000
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "MC-3001-2026H2"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "update": "INV1",
+            "jobId": "MC-3001-2026H2",
+            "lines": 1,
+            "park": "not_in_pricebook"
+          },
+          "response": {
+            "externalId": "xero-INV1",
+            "updates": 1
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "not_in_pricebook",
+            "detail": "Period MC-3001-2026H2, invoice xero-INV1: not_in_pricebook (SVC-SPR-6M). Owner: Dana Whitfield"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "complete": [
+              "MC-3001-2026H2",
+              "MC-3002-2026Q3"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T01:00:00.000Z"
+          },
+          "response": {
+            "edition": "schedule-2026-07",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": {
+            "name": "Everything, set by Dana Whitfield",
+            "threshold": 1000000
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "MC-3001-2026H2"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "MC-3002-2026Q3"
+          },
+          "response": {
+            "invoiceId": "INV2",
+            "externalId": "xero-INV2"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "the-record-by-job",
+      "n": 10,
+      "title": "Job id, invoice id, the lines, the rates read, who released and when it was sent are retrievable by job",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A read by job id returns the invoice, its lines with the rates and the book edition, the release with a name or rule, and the send time. A record missing the release fails.",
+      "actual": "9 port call(s); invoices MC-3101-2026M09:sent[ATT-SITEx1@95,SVC-FIP-MTHx1@85,CONS-BATTx2@48]; escalations over_threshold; sends 1",
+      "stimulus": {
+        "description": "One job invoiced, released and sent.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "the-record-by-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "complete": [
+              "MC-3101-2026M09"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "edition": "schedule-2026-07",
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "releaseRule": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "invoiceFor": "MC-3101-2026M09"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "write_invoice",
+          "verb": "write",
+          "subject": "invoice",
+          "request": {
+            "jobId": "MC-3101-2026M09",
+            "lines": [
+              "ATT-SITEx1@95",
+              "SVC-FIP-MTHx1@85",
+              "CONS-BATTx2@48"
+            ],
+            "stage": null,
+            "park": null,
+            "notes": "Maintenance contract billing period MC-3101-2026M09. Rates from schedule schedule-2026-07"
+          },
+          "response": {
+            "id": "INV1",
+            "externalId": "xero-INV1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "over_threshold",
+            "detail": "Period MC-3101-2026M09, invoice xero-INV1: no release rule set. Waiting for Dana Whitfield"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "MC-3101-2026M09"
+          },
+          "response": {
+            "invoiceId": "INV1",
+            "status": "draft"
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "release": "INV1",
+            "person": "Dana Whitfield",
+            "rule": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "issue_notice",
+          "verb": "say",
+          "subject": "notice",
+          "request": {
+            "send": "INV1"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 11,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the ledger write and the release rule runs on.",
+        "now": "2026-11-04T11:42:38.924Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 12,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "One invoice per job in the ledger with the ledger's id, the variation parked and named, the unknown code parked and not priced, the over-threshold draft waiting for a person, and every sent invoice carrying a release.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "Real completion events on the business's own tenant, driven by marking real jobs complete.",
+        "now": "2026-11-04T11:42:38.924Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 12,
+    "pass": 7,
+    "fail": 0,
+    "shapeOnly": 3,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
