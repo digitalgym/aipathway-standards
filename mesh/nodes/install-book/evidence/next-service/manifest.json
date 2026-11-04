@@ -1,0 +1,143 @@
+{
+  "spec": "AIP-BS-NEXT-SERVICE",
+  "standard": "next-service-build-standard",
+  "edition": "2026-10-24",
+  "source": "https://aipathway.com.au/explore-ai/next-service-build-standard",
+  "ran_at": "2026-11-04T12:19:05.476Z",
+  "environment": "stub",
+  "provider": "local.mock_service_book",
+  "provider_block": {
+    "boundary": {
+      "never": [
+        "type a due date by hand, or use a date somebody typed onto the job",
+        "guess an install date, a model, an equipment type, a schedule or a warranty term the record does not hold",
+        "remind a customer who already has a job open for that asset",
+        "message a customer on a channel they did not agree to, or anyone who asked to stop",
+        "send more than one reminder and one follow-up for a date",
+        "say what a warranty covers, that a repair is covered, or anything about the customer's rights",
+        "write a second booking request for the same asset and date",
+        "pick a time slot or a price"
+      ],
+      "stays_with_person": [
+        "booking the time and pricing the work for every booking request",
+        "writing and changing the service schedule",
+        "fixing a record with a missing install date, model or type",
+        "answering any reply that is not a yes or a stop",
+        "anything about warranty cover or consumer rights"
+      ]
+    },
+    "job": "every unit you installed or serviced gets a reminder before it is due, and a yes becomes one booking request",
+    "skill": "next-service",
+    "stub": "local.mock_service_book",
+    "production": null,
+    "product": null,
+    "insert": null,
+    "with_us": {
+      "kind": "scoped_build",
+      "note": "No hosted step. Writing each yes into the live job system as exactly one booking request against the right customer and asset, safe to retry, is the step not to hand-roll, and it is quoted as a scoped build on the job system the business already runs. Tradify has no public API, so it cannot meet that check live."
+    }
+  },
+  "tally": {
+    "green": 10,
+    "red": 0,
+    "with_us": 1,
+    "evidence_required": 1,
+    "total": 15
+  },
+  "checks": [
+    {
+      "id": "captured-at-completion",
+      "n": 1,
+      "title": "The equipment is taken from the finished job, as recorded",
+      "verdict": "pass"
+    },
+    {
+      "id": "missing-details-to-a-person",
+      "n": 2,
+      "title": "A missing install date, model or equipment type goes to a person",
+      "verdict": "pass"
+    },
+    {
+      "id": "dates-derived-not-stored",
+      "n": 3,
+      "title": "Due dates are worked out from the schedule, never typed in",
+      "verdict": "pass"
+    },
+    {
+      "id": "warranty-from-the-record",
+      "n": 4,
+      "title": "The warranty expiry comes from the term on the record",
+      "verdict": "pass"
+    },
+    {
+      "id": "reminder-ahead-of-the-date",
+      "n": 5,
+      "title": "One reminder, a written lead time ahead of each date",
+      "verdict": "pass"
+    },
+    {
+      "id": "channel-they-agreed-to",
+      "n": 6,
+      "title": "Only on a channel the customer agreed to",
+      "verdict": "pass"
+    },
+    {
+      "id": "already-booked-no-reminder",
+      "n": 7,
+      "title": "Already booked means no reminder",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "one-follow-up-then-stop",
+      "n": 8,
+      "title": "One follow-up if there is no answer, then stop",
+      "verdict": "pass"
+    },
+    {
+      "id": "opt-out-for-good",
+      "n": 9,
+      "title": "A stop is honoured for good, on every asset",
+      "verdict": "pass"
+    },
+    {
+      "id": "warranty-says-only-the-date",
+      "n": 10,
+      "title": "A warranty reminder states the expiry date and nothing about cover",
+      "verdict": "pass"
+    },
+    {
+      "id": "one-booking-request",
+      "n": 11,
+      "title": "A yes becomes one booking request in the job system",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "no-time-no-price",
+      "n": 12,
+      "title": "The build never picks a time or a price",
+      "verdict": "pass"
+    },
+    {
+      "id": "record-by-asset",
+      "n": 13,
+      "title": "Every reminder, reply and booking is on the record, by asset",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "survives-the-builder",
+      "n": 14,
+      "title": "It survives the builder",
+      "verdict": "evidence_required"
+    },
+    {
+      "id": "pass-test",
+      "n": 15,
+      "title": "The pass test passes",
+      "verdict": "with_us"
+    }
+  ],
+  "next": {
+    "with_us": "No hosted step. Writing each yes into the live job system as exactly one booking request against the right customer and asset, safe to retry, is the step not to hand-roll, and it is quoted as a scoped build on the job system the business already runs. Tradify has no public API, so it cannot meet that check live. Send the failing check id for a fixed price; do not build the live step yourself.",
+    "evidence_required": "attach what proves each one; not a software check"
+  }
+}

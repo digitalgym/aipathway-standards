@@ -1,0 +1,53 @@
+{
+  "slug": "install-book",
+  "name": "Install Book",
+  "office_task": "When an install is signed off, put the unit and its warranty on our books from the commissioning record, work out its first service date from our schedule, and remind the customer once.",
+  "verticals": ["trades-building"],
+  "standards": ["next-service"],
+  "systems_of_record": [
+    "the job system that issues the job_id (ServiceM8, Simpro, Fergus, Jobber or AroFlo: the completed install or service job and the equipment the technician recorded on it)",
+    "the asset register that issues the asset_id (each installed unit, with its service records and the reminder history kept against it)"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/install-book" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "webhook", "schedule"],
+  "consumes": [
+    { "event": "job.completed", "wake": "webhook" },
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "job.created",
+      "write": "one booking request in the job system per yes, against the customer and the asset, carrying the customer's reply word for word and no time slot or price; a person books the time and prices the work",
+      "readback": "the job system returns the job id, and reading that job back returns the same customer_id and asset_id before the office is told a request is waiting; an open job already on the asset means nothing new is written; no job that reads back means an exception, not a booking"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the asset or the reply naming the person who owns it: a missing install date, model or equipment type, an equipment type with no schedule row, a customer who agreed to no channel, a reply that is not a yes or a stop, a refused send, or a booking request that did not read back",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the asset_id or reply_id, the kind and the exception_owner; no id back means nothing was raised and the run stops for that asset"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "missing_install_date",
+      "missing_model",
+      "missing_equipment_type",
+      "no_schedule",
+      "no_consent",
+      "unclear_reply",
+      "next_service.send_refused",
+      "next_service.booking_not_read_back",
+      "next_service.record_not_written"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.asset_id", "seam.source_job_id", "seam.reminder_stage", "seam.booking_job_id", "seam.opt_out", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
