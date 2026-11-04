@@ -1,0 +1,58 @@
+# Jobs Weekly: build and conformance harness
+
+Jobs Weekly publishes a trade business's jobs report every Monday at 7:00 am
+AEST, built to AIP-BS-RECURRING-REPORT 2026-10-03. It reads jobs completed in
+the week and open jobs in three age bands (under a week, one to four weeks,
+over four weeks) from the job system (ServiceM8, Simpro, Fergus and the like),
+and approved staff hours by task (install, service and repairs, quoting and
+site visits) from the timesheets. Every figure cites a definition, source and
+as-of time; each audience (owner, site supervisors) gets only its declared
+measures; a figure it could not read publishes as unavailable and its owner is
+told; a rise in aged open jobs past the threshold goes to the named person; a
+correction is only ever a new version by a named person. It never changes a
+job or a timesheet, and whether a view leaves the business stays with a person.
+
+    npm install
+    node run.mjs        # the conformance run; writes manifest.json and envelope.json
+    node mutants.mjs    # proves every scenario goes red for a do-nothing and a broken build
+
+Scaffolded by `npx @aipathway/conformance init recurring-report-build-standard`.
+
+Every check starts red. That is the point: going green is the work, and a green
+run means something because a red one was possible.
+
+## The three files
+
+| file | whose | what |
+|---|---|---|
+| `build.mjs` | yours | the build. The only file that does the job |
+| `scenarios.mjs` | yours | one `holds` per check. Generated with the check's own words |
+| `run.mjs` | ours | fetches the checks, runs, prints. No edits needed |
+
+## This standard
+
+12 checks: 10 provable here on the stub, 1 only in
+production, 1 partial, 1 preconditions needing evidence rather than code.
+
+The checks are fetched at run time from https://aipathway.com.au/explore-ai/recurring-report-build-standard,
+so a correction published there reaches you without a release here.
+
+## The second run
+
+There is no second run for this standard yet. Its live port map is not
+published, so this folder has no `ports.mjs`, and `AIPATHWAY_ENV=production`
+is refused rather than rerunning the stub under a production label. The stub run
+is the whole of what can be proved here.
+
+This standard has no hosted provider, so `conformance connect` does not apply to it.
+
+No hosted step. The production check runs over the business's own sources and definitions register, on its own schedule. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence.
+
+The checks that never go green on the stub report `with_us`.
+
+## Handing this to a coding agent
+
+`AGENTS.md` in this folder is written for one. Point your assistant at this
+directory and it has the standard, the harness and the rule it has to obey.
+
+CC BY 4.0
