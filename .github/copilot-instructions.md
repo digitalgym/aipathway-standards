@@ -38,6 +38,7 @@ Standards in this repo:
 - AIP-BS-REVIEW-REQUEST: skills/review-request/ (Review Request Build Standard)
 - AIP-BS-NEXT-SERVICE: skills/next-service/ (Next Service Build Standard)
 - AIP-BS-FAULT-TRIAGE: skills/fault-triage/ (Fault Triage Build Standard)
+- AIP-BS-PROGRESS-CLAIM-DRAFT: skills/progress-claim-draft/ (Progress Claim Draft Build Standard)
 - AIP-BS-DOCUMENT-FILING: skills/document-filing/ (Document Filing Build Standard)
 - AIP-BS-REMITTANCE-SPLIT: skills/remittance-split/ (Remittance Split Build Standard)
 - AIP-BS-OPEN-HOME-FEEDBACK: skills/open-home-feedback/ (Open Home Feedback Build Standard)
