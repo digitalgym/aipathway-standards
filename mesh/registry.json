@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T11:54:37.142Z",
+  "generated_at": "2026-11-04T11:54:56.576Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -925,6 +925,94 @@
           "environment": "stub",
           "ran_at": "2026-11-03T14:00:00.717Z",
           "run_id": "run-1793714400714",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        }
+      ]
+    },
+    {
+      "slug": "cash-ahead",
+      "name": "Cash Ahead",
+      "office_task": "Every Monday, publish our 13-week cash forecast from the open invoices, bills and payroll, with the assumption behind every line written down, and say so when a line cannot be read.",
+      "verticals": [
+        "b2b-office"
+      ],
+      "standards": [
+        "recurring-report"
+      ],
+      "systems_of_record": [
+        "the ledger (Xero or MYOB): open sales invoices, open bills and the operating bank balance",
+        "the payroll system (Xero Payroll, KeyPay or Employment Hero): the pay calendar and the last finalised pay run",
+        "the system the forecast is published into, which issues the report_id"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "one view of the week's 13-week cash forecast per audience (owner, lender): the opening bank balance and receipts, bill payments and payroll for each of the next thirteen weeks, each line carrying its definition id (which names its assumption), source and as-of time, or published as unavailable with the reason; a correction is a new version superseding the old, with the named person and the reason",
+          "readback": "reading the week's reports back returns each report_id with its version, published_at and published_by; no id back means it was not published and report.publish_failed is raised"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception naming the line's owner or the threshold's person: a source that could not be read, a line with no definition (no named assumption) or two, a threshold that could not be compared, a correction missing a person or reason, or a view that did not read back",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the week, the line, the reason and the exception_owner"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "report.source_unreadable",
+          "report.no_definition",
+          "report.conflicting_definitions",
+          "report.threshold_not_comparable",
+          "report.correction_incomplete",
+          "report.correction_unknown_measure",
+          "report.publish_failed"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.report_id",
+          "seam.period",
+          "seam.version",
+          "seam.supersedes",
+          "seam.published_by",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/cash-ahead"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "recurring-report",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T11:50:45.453Z",
+          "run_id": "run-1793793045452",
           "green": 9,
           "red": 0,
           "with_us": 1,
@@ -10315,6 +10403,7 @@
     "bill-check",
     "billing-match",
     "buy-desk",
+    "cash-ahead",
     "chase-book",
     "chase-desk",
     "chase-list",
