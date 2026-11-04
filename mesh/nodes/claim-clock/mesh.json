@@ -1,0 +1,91 @@
+{
+  "slug": "claim-clock",
+  "name": "Claim Clock",
+  "office_task": "When a subbie's payment claim comes in, work out when our payment schedule is due under that state's security of payment rule, remind the named person, and draft the schedule for them to serve.",
+  "verticals": [
+    "trades-building"
+  ],
+  "standards": [
+    "compliance-calendar"
+  ],
+  "systems_of_record": [
+    "the business's claims register (each subcontractor payment claim on its job, with the date it was served, the state the job is in, and the named person who owns it), the dated security of payment rule set per state, and the document store served payment schedules are filed in"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/claim-clock"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "schedule",
+    "webhook"
+  ],
+  "consumes": [
+    {
+      "event": "document.received",
+      "wake": "webhook"
+    },
+    {
+      "event": "email.received",
+      "wake": "webhook"
+    },
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    },
+    {
+      "event": "exception.closed",
+      "wake": "webhook"
+    }
+  ],
+  "emits": [
+    {
+      "event": "evidence.filed",
+      "write": "the served payment schedule attached to a Done reply, filed as evidence on the claim obligation the Done link names by obligation id, against the job; a reply with no obligation id is never matched on a subbie's name or phone number and is raised instead",
+      "readback": "the claim obligation is read back by its id and must return the same document reference (the message_id and attachment) and a completion date; if it does not, nothing was filed and claim.evidence_not_read_back is raised"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the claim naming the person who owns it, which the exception desk texts to them with the Done link: a schedule coming due with its derived date and rule version, a missed date, a Done with no schedule attached, a claim with no served date, no rule for the state the job is in, a past due date no retained rule version explains, a dated decision to serve no schedule, a drafted schedule awaiting a named release, a release with no named person, silence past the next chase date, or a reply with no obligation id",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the claim obligation id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "claim.schedule_due",
+      "claim.schedule_overdue",
+      "claim.done_without_schedule",
+      "claim.evidence_not_read_back",
+      "claim.done_unmatched",
+      "claim.served_date_unknown",
+      "claim.no_rule_in_force",
+      "claim.history_unexplained",
+      "claim.no_schedule_decided",
+      "claim.schedule_drafted_awaiting_release",
+      "claim.release_refused",
+      "claim.chase_due"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.obligation_ref",
+      "seam.rule_version",
+      "seam.anchor_status",
+      "seam.state",
+      "seam.evidence",
+      "seam.refused_at",
+      "seam.breached_at",
+      "seam.next_chase",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
