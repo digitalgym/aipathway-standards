@@ -1,0 +1,5119 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793796855499",
+  "standard": "parts-ready-build-standard",
+  "spec": "AIP-BS-PARTS-READY",
+  "specVersion": "2026-11-01",
+  "environment": "stub",
+  "startedAt": "2026-11-04T12:54:15.465Z",
+  "finishedAt": "2026-11-04T12:54:15.499Z",
+  "results": [
+    {
+      "checkId": "jobs-come-from-the-board",
+      "n": 1,
+      "title": "Tomorrow's jobs come from the dispatched board, by job id, and a job added later re-runs for that job only",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The board is read before anything is reserved, ordered, sent or published. Every result names a job id that is on the board. The second run reserves, orders, messages and flags only for the added job.",
+      "actual": "43 port call(s); results J101:TV-15=on_van, J102:CART-35=pick_from_shelf, J103:PRV-500=ordered, J104:PAN-90=pick_from_shelf; 1 order request(s); 4 message(s); 0 exception(s); 2 report(s)",
+      "stimulus": {
+        "description": "Three jobs on tomorrow's board. The run goes, a fourth job is added to the board, and the run goes again.",
+        "now": "2026-11-04T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "jobs-come-from-the-board"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {},
+          "response": {
+            "cutoff": "15:00",
+            "van_stale_hours": 24,
+            "exception_owner": "Priya Nair",
+            "utc_offset_minutes": 600
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_board",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "date": "2026-11-05"
+          },
+          "response": [
+            {
+              "job_external_id": "J101",
+              "tech_id": "T-MIA",
+              "date": "2026-11-05",
+              "start": "2026-11-05T07:30:00+10:00",
+              "job_type": "repair",
+              "address": "101 Wattle St, Edge Hill QLD 4870"
+            },
+            {
+              "job_external_id": "J102",
+              "tech_id": "T-SAM",
+              "date": "2026-11-05",
+              "start": "2026-11-05T08:00:00+10:00",
+              "job_type": "repair",
+              "address": "102 Wattle St, Edge Hill QLD 4870"
+            },
+            {
+              "job_external_id": "J103",
+              "tech_id": "T-LENA",
+              "date": "2026-11-05",
+              "start": "2026-11-05T09:00:00+10:00",
+              "job_type": "repair",
+              "address": "103 Wattle St, Edge Hill QLD 4870"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_results",
+          "verb": "read",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_messages",
+          "verb": "read",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_shelf",
+          "verb": "read",
+          "subject": "asset",
+          "request": {},
+          "response": {
+            "as_of": "2026-11-04T04:00:00.000Z",
+            "items": [
+              {
+                "catalogue_code": "CART-35",
+                "on_hand": 2,
+                "reserved": 0,
+                "location": "Bay 3"
+              },
+              {
+                "catalogue_code": "PAN-90",
+                "on_hand": 1,
+                "reserved": 0,
+                "location": "Bay 7"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {},
+          "response": [
+            {
+              "supplier_id": "S-NORTH",
+              "name": "Northside Plumbing Supplies",
+              "lead_hours": 16,
+              "codes": [
+                "TV-15",
+                "FLX-450",
+                "PRV-500",
+                "CART-35",
+                "ISO-15",
+                "PAN-90"
+              ]
+            },
+            {
+              "supplier_id": "S-COAST",
+              "name": "Coastal Hot Water Wholesale",
+              "lead_hours": 72,
+              "codes": [
+                "HWU-315E",
+                "HWU-250G"
+              ]
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "job_external_id": "J101"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job_external_id": "J101"
+          },
+          "response": {
+            "job_external_id": "J101",
+            "quote_lines": [
+              {
+                "catalogue_code": "TV-15",
+                "qty": 1
+              }
+            ],
+            "materials": [],
+            "description": ""
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_van",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tech_id": "T-MIA"
+          },
+          "response": {
+            "tech_id": "T-MIA",
+            "as_of": "2026-11-04T06:45:00+10:00",
+            "lines": [
+              {
+                "catalogue_code": "TV-15",
+                "qty": 2
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "write_result",
+          "verb": "write",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J101",
+            "tech_id": "T-MIA",
+            "catalogue_code": "TV-15",
+            "qty": 1,
+            "status": "on_van"
+          },
+          "response": {
+            "result_id": "RES-1"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "job_external_id": "J102"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job_external_id": "J102"
+          },
+          "response": {
+            "job_external_id": "J102",
+            "quote_lines": [
+              {
+                "catalogue_code": "CART-35",
+                "qty": 1
+              }
+            ],
+            "materials": [],
+            "description": ""
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_van",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tech_id": "T-SAM"
+          },
+          "response": {
+            "tech_id": "T-SAM",
+            "as_of": "2026-11-04T06:45:00+10:00",
+            "lines": []
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "reserve",
+          "verb": "write",
+          "subject": "reservation",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J102",
+            "catalogue_code": "CART-35",
+            "qty": 1
+          },
+          "response": {
+            "reservation_id": "RSV-2",
+            "for_date": "2026-11-05",
+            "job_external_id": "J102",
+            "catalogue_code": "CART-35",
+            "qty": 1,
+            "location": "Bay 3"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "write_result",
+          "verb": "write",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J102",
+            "tech_id": "T-SAM",
+            "catalogue_code": "CART-35",
+            "qty": 1,
+            "status": "pick_from_shelf",
+            "location": "Bay 3",
+            "reservation_id": "RSV-2"
+          },
+          "response": {
+            "result_id": "RES-3"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "job_external_id": "J103"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job_external_id": "J103"
+          },
+          "response": {
+            "job_external_id": "J103",
+            "quote_lines": [
+              {
+                "catalogue_code": "PRV-500",
+                "qty": 1
+              }
+            ],
+            "materials": [],
+            "description": ""
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_van",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tech_id": "T-LENA"
+          },
+          "response": {
+            "tech_id": "T-LENA",
+            "as_of": "2026-11-04T06:45:00+10:00",
+            "lines": []
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "supplier_id": "S-NORTH",
+            "for_date": "2026-11-05",
+            "requested_by": "parts-check",
+            "lines": [
+              {
+                "job_external_id": "J103",
+                "catalogue_code": "PRV-500",
+                "qty": 1
+              }
+            ]
+          },
+          "response": {
+            "po_external_id": "PO-4",
+            "eta": "2026-11-04T20:00:00.000Z",
+            "status": "held_for_release"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "write_result",
+          "verb": "write",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J103",
+            "tech_id": "T-LENA",
+            "catalogue_code": "PRV-500",
+            "qty": 1,
+            "status": "ordered",
+            "supplier_id": "S-NORTH",
+            "po_external_id": "PO-4",
+            "eta": "2026-11-04T20:00:00.000Z"
+          },
+          "response": {
+            "result_id": "RES-5"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "for_date": "2026-11-05",
+            "tech_id": "T-MIA",
+            "job_external_id": "J101",
+            "lines": [
+              {
+                "catalogue_code": "TV-15",
+                "qty": 1,
+                "status": "on_van",
+                "text": "TV-15 x1 is on your van"
+              }
+            ],
+            "body": "Tomorrow, job J101 at 07:30: TV-15 x1 is on your van."
+          },
+          "response": {
+            "message_id": "MSG-6"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "for_date": "2026-11-05",
+            "tech_id": "T-SAM",
+            "job_external_id": "J102",
+            "lines": [
+              {
+                "catalogue_code": "CART-35",
+                "qty": 1,
+                "status": "pick_from_shelf",
+                "location": "Bay 3",
+                "text": "pick up CART-35 x1 from Bay 3, reserved for you"
+              }
+            ],
+            "body": "Tomorrow, job J102 at 08:00: pick up CART-35 x1 from Bay 3, reserved for you."
+          },
+          "response": {
+            "message_id": "MSG-7"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "for_date": "2026-11-05",
+            "tech_id": "T-LENA",
+            "job_external_id": "J103",
+            "lines": [
+              {
+                "catalogue_code": "PRV-500",
+                "qty": 1,
+                "status": "ordered",
+                "eta": "2026-11-04T20:00:00.000Z",
+                "text": "PRV-500 x1 is on order"
+              }
+            ],
+            "body": "Tomorrow, job J103 at 09:00: PRV-500 x1 is on order."
+          },
+          "response": {
+            "message_id": "MSG-8"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "for_date": "2026-11-05",
+            "cutoff": "2026-11-04T05:00:00.000Z",
+            "all_clear": true,
+            "jobs": [
+              {
+                "job_external_id": "J101",
+                "tech_id": "T-MIA",
+                "start": "2026-11-05T07:30:00+10:00",
+                "held": false,
+                "lines": [
+                  {
+                    "catalogue_code": "TV-15",
+                    "status": "on_van"
+                  }
+                ]
+              },
+              {
+                "job_external_id": "J102",
+                "tech_id": "T-SAM",
+                "start": "2026-11-05T08:00:00+10:00",
+                "held": false,
+                "lines": [
+                  {
+                    "catalogue_code": "CART-35",
+                    "status": "pick_from_shelf",
+                    "location": "Bay 3"
+                  }
+                ]
+              },
+              {
+                "job_external_id": "J103",
+                "tech_id": "T-LENA",
+                "start": "2026-11-05T09:00:00+10:00",
+                "held": false,
+                "lines": [
+                  {
+                    "catalogue_code": "PRV-500",
+                    "status": "ordered",
+                    "po_external_id": "PO-4"
+                  }
+                ]
+              }
+            ],
+            "counts": {
+              "on_van": 1,
+              "pick_from_shelf": 1,
+              "ordered": 1,
+              "flagged": 0
+            }
+          },
+          "response": {
+            "report_id": "RPT-9",
+            "published_at": "2026-11-04T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {},
+          "response": {
+            "cutoff": "15:00",
+            "van_stale_hours": 24,
+            "exception_owner": "Priya Nair",
+            "utc_offset_minutes": 600
+          }
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_board",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "date": "2026-11-05"
+          },
+          "response": [
+            {
+              "job_external_id": "J101",
+              "tech_id": "T-MIA",
+              "date": "2026-11-05",
+              "start": "2026-11-05T07:30:00+10:00",
+              "job_type": "repair",
+              "address": "101 Wattle St, Edge Hill QLD 4870"
+            },
+            {
+              "job_external_id": "J102",
+              "tech_id": "T-SAM",
+              "date": "2026-11-05",
+              "start": "2026-11-05T08:00:00+10:00",
+              "job_type": "repair",
+              "address": "102 Wattle St, Edge Hill QLD 4870"
+            },
+            {
+              "job_external_id": "J103",
+              "tech_id": "T-LENA",
+              "date": "2026-11-05",
+              "start": "2026-11-05T09:00:00+10:00",
+              "job_type": "repair",
+              "address": "103 Wattle St, Edge Hill QLD 4870"
+            },
+            {
+              "job_external_id": "J104",
+              "tech_id": "T-MIA",
+              "date": "2026-11-05",
+              "start": "2026-11-05T11:00:00+10:00",
+              "job_type": "repair",
+              "address": "104 Wattle St, Edge Hill QLD 4870"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_results",
+          "verb": "read",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05"
+          },
+          "response": [
+            {
+              "for_date": "2026-11-05",
+              "job_external_id": "J101",
+              "tech_id": "T-MIA",
+              "catalogue_code": "TV-15",
+              "qty": 1,
+              "status": "on_van",
+              "result_id": "RES-1"
+            },
+            {
+              "for_date": "2026-11-05",
+              "job_external_id": "J102",
+              "tech_id": "T-SAM",
+              "catalogue_code": "CART-35",
+              "qty": 1,
+              "status": "pick_from_shelf",
+              "location": "Bay 3",
+              "reservation_id": "RSV-2",
+              "result_id": "RES-3"
+            },
+            {
+              "for_date": "2026-11-05",
+              "job_external_id": "J103",
+              "tech_id": "T-LENA",
+              "catalogue_code": "PRV-500",
+              "qty": 1,
+              "status": "ordered",
+              "supplier_id": "S-NORTH",
+              "po_external_id": "PO-4",
+              "eta": "2026-11-04T20:00:00.000Z",
+              "result_id": "RES-5"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_messages",
+          "verb": "read",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05"
+          },
+          "response": [
+            {
+              "for_date": "2026-11-05",
+              "tech_id": "T-MIA",
+              "job_external_id": "J101",
+              "lines": [
+                {
+                  "catalogue_code": "TV-15",
+                  "qty": 1,
+                  "status": "on_van",
+                  "text": "TV-15 x1 is on your van"
+                }
+              ],
+              "body": "Tomorrow, job J101 at 07:30: TV-15 x1 is on your van.",
+              "message_id": "MSG-6",
+              "sent_at": "2026-11-04T04:00:00.000Z"
+            },
+            {
+              "for_date": "2026-11-05",
+              "tech_id": "T-SAM",
+              "job_external_id": "J102",
+              "lines": [
+                {
+                  "catalogue_code": "CART-35",
+                  "qty": 1,
+                  "status": "pick_from_shelf",
+                  "location": "Bay 3",
+                  "text": "pick up CART-35 x1 from Bay 3, reserved for you"
+                }
+              ],
+              "body": "Tomorrow, job J102 at 08:00: pick up CART-35 x1 from Bay 3, reserved for you.",
+              "message_id": "MSG-7",
+              "sent_at": "2026-11-04T04:00:00.000Z"
+            },
+            {
+              "for_date": "2026-11-05",
+              "tech_id": "T-LENA",
+              "job_external_id": "J103",
+              "lines": [
+                {
+                  "catalogue_code": "PRV-500",
+                  "qty": 1,
+                  "status": "ordered",
+                  "eta": "2026-11-04T20:00:00.000Z",
+                  "text": "PRV-500 x1 is on order"
+                }
+              ],
+              "body": "Tomorrow, job J103 at 09:00: PRV-500 x1 is on order.",
+              "message_id": "MSG-8",
+              "sent_at": "2026-11-04T04:00:00.000Z"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_shelf",
+          "verb": "read",
+          "subject": "asset",
+          "request": {},
+          "response": {
+            "as_of": "2026-11-04T04:30:00.000Z",
+            "items": [
+              {
+                "catalogue_code": "CART-35",
+                "on_hand": 2,
+                "reserved": 1,
+                "location": "Bay 3"
+              },
+              {
+                "catalogue_code": "PAN-90",
+                "on_hand": 1,
+                "reserved": 0,
+                "location": "Bay 7"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {},
+          "response": [
+            {
+              "supplier_id": "S-NORTH",
+              "name": "Northside Plumbing Supplies",
+              "lead_hours": 16,
+              "codes": [
+                "TV-15",
+                "FLX-450",
+                "PRV-500",
+                "CART-35",
+                "ISO-15",
+                "PAN-90"
+              ]
+            },
+            {
+              "supplier_id": "S-COAST",
+              "name": "Coastal Hot Water Wholesale",
+              "lead_hours": 72,
+              "codes": [
+                "HWU-315E",
+                "HWU-250G"
+              ]
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "job_external_id": "J101"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job_external_id": "J101"
+          },
+          "response": {
+            "job_external_id": "J101",
+            "quote_lines": [
+              {
+                "catalogue_code": "TV-15",
+                "qty": 1
+              }
+            ],
+            "materials": [],
+            "description": ""
+          }
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "job_external_id": "J102"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job_external_id": "J102"
+          },
+          "response": {
+            "job_external_id": "J102",
+            "quote_lines": [
+              {
+                "catalogue_code": "CART-35",
+                "qty": 1
+              }
+            ],
+            "materials": [],
+            "description": ""
+          }
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "job_external_id": "J103"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job_external_id": "J103"
+          },
+          "response": {
+            "job_external_id": "J103",
+            "quote_lines": [
+              {
+                "catalogue_code": "PRV-500",
+                "qty": 1
+              }
+            ],
+            "materials": [],
+            "description": ""
+          }
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "job_external_id": "J104"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job_external_id": "J104"
+          },
+          "response": {
+            "job_external_id": "J104",
+            "quote_lines": [
+              {
+                "catalogue_code": "PAN-90",
+                "qty": 1
+              }
+            ],
+            "materials": [],
+            "description": ""
+          }
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_van",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tech_id": "T-MIA"
+          },
+          "response": {
+            "tech_id": "T-MIA",
+            "as_of": "2026-11-04T06:45:00+10:00",
+            "lines": [
+              {
+                "catalogue_code": "TV-15",
+                "qty": 2
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "reserve",
+          "verb": "write",
+          "subject": "reservation",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J104",
+            "catalogue_code": "PAN-90",
+            "qty": 1
+          },
+          "response": {
+            "reservation_id": "RSV-10",
+            "for_date": "2026-11-05",
+            "job_external_id": "J104",
+            "catalogue_code": "PAN-90",
+            "qty": 1,
+            "location": "Bay 7"
+          }
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "write_result",
+          "verb": "write",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J104",
+            "tech_id": "T-MIA",
+            "catalogue_code": "PAN-90",
+            "qty": 1,
+            "status": "pick_from_shelf",
+            "location": "Bay 7",
+            "reservation_id": "RSV-10"
+          },
+          "response": {
+            "result_id": "RES-11"
+          }
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "for_date": "2026-11-05",
+            "tech_id": "T-MIA",
+            "job_external_id": "J104",
+            "lines": [
+              {
+                "catalogue_code": "PAN-90",
+                "qty": 1,
+                "status": "pick_from_shelf",
+                "location": "Bay 7",
+                "text": "pick up PAN-90 x1 from Bay 7, reserved for you"
+              }
+            ],
+            "body": "Tomorrow, job J104 at 11:00: pick up PAN-90 x1 from Bay 7, reserved for you."
+          },
+          "response": {
+            "message_id": "MSG-12"
+          }
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "for_date": "2026-11-05",
+            "cutoff": "2026-11-04T05:00:00.000Z",
+            "all_clear": true,
+            "jobs": [
+              {
+                "job_external_id": "J101",
+                "tech_id": "T-MIA",
+                "start": "2026-11-05T07:30:00+10:00",
+                "held": false,
+                "lines": [
+                  {
+                    "catalogue_code": "TV-15",
+                    "status": "on_van"
+                  }
+                ]
+              },
+              {
+                "job_external_id": "J102",
+                "tech_id": "T-SAM",
+                "start": "2026-11-05T08:00:00+10:00",
+                "held": false,
+                "lines": [
+                  {
+                    "catalogue_code": "CART-35",
+                    "status": "pick_from_shelf",
+                    "location": "Bay 3"
+                  }
+                ]
+              },
+              {
+                "job_external_id": "J103",
+                "tech_id": "T-LENA",
+                "start": "2026-11-05T09:00:00+10:00",
+                "held": false,
+                "lines": [
+                  {
+                    "catalogue_code": "PRV-500",
+                    "status": "ordered",
+                    "po_external_id": "PO-4"
+                  }
+                ]
+              },
+              {
+                "job_external_id": "J104",
+                "tech_id": "T-MIA",
+                "start": "2026-11-05T11:00:00+10:00",
+                "held": false,
+                "lines": [
+                  {
+                    "catalogue_code": "PAN-90",
+                    "status": "pick_from_shelf",
+                    "location": "Bay 7"
+                  }
+                ]
+              }
+            ],
+            "counts": {
+              "on_van": 1,
+              "pick_from_shelf": 2,
+              "ordered": 1,
+              "flagged": 0
+            }
+          },
+          "response": {
+            "report_id": "RPT-9",
+            "published_at": "2026-11-04T04:30:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "needs-come-from-the-record",
+      "n": 2,
+      "title": "What a job needs comes from the record, and a job with no needs list is flagged, never guessed",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The needs are read for each job before anything is written for it. The job with no needs list has one exception, needs_list_unknown, with an owner, and nothing reserved, ordered or listed on a tech's message for it. The template job's lines are the template's.",
+      "actual": "23 port call(s); results J201:TV-15=on_van, J202:CART-35=on_van, J203:null=flagged(needs_list_unknown); 0 order request(s); 2 message(s); 1 exception(s); 1 report(s)",
+      "stimulus": {
+        "description": "Tomorrow's board holds a job with quote lines, a job whose needs come from its type's template, and a job with no quote lines, no materials and no template for its type.",
+        "now": "2026-11-04T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "needs-come-from-the-record"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {},
+          "response": {
+            "cutoff": "15:00",
+            "van_stale_hours": 24,
+            "exception_owner": "Priya Nair",
+            "utc_offset_minutes": 600
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_board",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "date": "2026-11-05"
+          },
+          "response": [
+            {
+              "job_external_id": "J201",
+              "tech_id": "T-MIA",
+              "date": "2026-11-05",
+              "start": "2026-11-05T07:30:00+10:00",
+              "job_type": "hot_water_swap",
+              "address": "201 Wattle St, Edge Hill QLD 4870"
+            },
+            {
+              "job_external_id": "J202",
+              "tech_id": "T-SAM",
+              "date": "2026-11-05",
+              "start": "2026-11-05T08:00:00+10:00",
+              "job_type": "tap_service",
+              "address": "202 Wattle St, Edge Hill QLD 4870"
+            },
+            {
+              "job_external_id": "J203",
+              "tech_id": "T-LENA",
+              "date": "2026-11-05",
+              "start": "2026-11-05T09:00:00+10:00",
+              "job_type": "investigate",
+              "address": "203 Wattle St, Edge Hill QLD 4870"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_results",
+          "verb": "read",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_messages",
+          "verb": "read",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_shelf",
+          "verb": "read",
+          "subject": "asset",
+          "request": {},
+          "response": {
+            "as_of": "2026-11-04T04:00:00.000Z",
+            "items": [
+              {
+                "catalogue_code": "CART-35",
+                "on_hand": 2,
+                "reserved": 0,
+                "location": "Bay 3"
+              },
+              {
+                "catalogue_code": "PAN-90",
+                "on_hand": 1,
+                "reserved": 0,
+                "location": "Bay 7"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {},
+          "response": [
+            {
+              "supplier_id": "S-NORTH",
+              "name": "Northside Plumbing Supplies",
+              "lead_hours": 16,
+              "codes": [
+                "TV-15",
+                "FLX-450",
+                "PRV-500",
+                "CART-35",
+                "ISO-15",
+                "PAN-90"
+              ]
+            },
+            {
+              "supplier_id": "S-COAST",
+              "name": "Coastal Hot Water Wholesale",
+              "lead_hours": 72,
+              "codes": [
+                "HWU-315E",
+                "HWU-250G"
+              ]
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "job_external_id": "J201"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job_external_id": "J201"
+          },
+          "response": {
+            "job_external_id": "J201",
+            "quote_lines": [
+              {
+                "catalogue_code": "TV-15",
+                "qty": 1
+              }
+            ],
+            "materials": [],
+            "description": ""
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_van",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tech_id": "T-MIA"
+          },
+          "response": {
+            "tech_id": "T-MIA",
+            "as_of": "2026-11-04T06:45:00+10:00",
+            "lines": [
+              {
+                "catalogue_code": "TV-15",
+                "qty": 2
+              },
+              {
+                "catalogue_code": "FLX-450",
+                "qty": 4
+              },
+              {
+                "catalogue_code": "HWU-315E",
+                "qty": 1
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "write_result",
+          "verb": "write",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J201",
+            "tech_id": "T-MIA",
+            "catalogue_code": "TV-15",
+            "qty": 1,
+            "status": "on_van"
+          },
+          "response": {
+            "result_id": "RES-1"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "job_external_id": "J202"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job_external_id": "J202"
+          },
+          "response": {
+            "job_external_id": "J202",
+            "quote_lines": [],
+            "materials": [],
+            "description": ""
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_template",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "job_type": "tap_service"
+          },
+          "response": [
+            {
+              "catalogue_code": "CART-35",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_van",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tech_id": "T-SAM"
+          },
+          "response": {
+            "tech_id": "T-SAM",
+            "as_of": "2026-11-04T06:45:00+10:00",
+            "lines": [
+              {
+                "catalogue_code": "CART-35",
+                "qty": 2
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "write_result",
+          "verb": "write",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J202",
+            "tech_id": "T-SAM",
+            "catalogue_code": "CART-35",
+            "qty": 1,
+            "status": "on_van"
+          },
+          "response": {
+            "result_id": "RES-2"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "job_external_id": "J203"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job_external_id": "J203"
+          },
+          "response": {
+            "job_external_id": "J203",
+            "quote_lines": [],
+            "materials": [],
+            "description": "Leak under the kitchen sink, probably needs a new flexi and an isolation valve"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_template",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "job_type": "investigate"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J203",
+            "tech_id": "T-LENA",
+            "catalogue_code": null,
+            "reason": "needs_list_unknown",
+            "owner": "Priya Nair"
+          },
+          "response": {
+            "exception_id": "EXC-3"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "write_result",
+          "verb": "write",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J203",
+            "tech_id": "T-LENA",
+            "catalogue_code": null,
+            "status": "flagged",
+            "reason": "needs_list_unknown",
+            "exception_id": "EXC-3"
+          },
+          "response": {
+            "result_id": "RES-4"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "for_date": "2026-11-05",
+            "tech_id": "T-MIA",
+            "job_external_id": "J201",
+            "lines": [
+              {
+                "catalogue_code": "TV-15",
+                "qty": 1,
+                "status": "on_van",
+                "text": "TV-15 x1 is on your van"
+              }
+            ],
+            "body": "Tomorrow, job J201 at 07:30: TV-15 x1 is on your van."
+          },
+          "response": {
+            "message_id": "MSG-5"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "for_date": "2026-11-05",
+            "tech_id": "T-SAM",
+            "job_external_id": "J202",
+            "lines": [
+              {
+                "catalogue_code": "CART-35",
+                "qty": 1,
+                "status": "on_van",
+                "text": "CART-35 x1 is on your van"
+              }
+            ],
+            "body": "Tomorrow, job J202 at 08:00: CART-35 x1 is on your van."
+          },
+          "response": {
+            "message_id": "MSG-6"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "for_date": "2026-11-05",
+            "cutoff": "2026-11-04T05:00:00.000Z",
+            "all_clear": false,
+            "jobs": [
+              {
+                "job_external_id": "J201",
+                "tech_id": "T-MIA",
+                "start": "2026-11-05T07:30:00+10:00",
+                "held": false,
+                "lines": [
+                  {
+                    "catalogue_code": "TV-15",
+                    "status": "on_van"
+                  }
+                ]
+              },
+              {
+                "job_external_id": "J202",
+                "tech_id": "T-SAM",
+                "start": "2026-11-05T08:00:00+10:00",
+                "held": false,
+                "lines": [
+                  {
+                    "catalogue_code": "CART-35",
+                    "status": "on_van"
+                  }
+                ]
+              },
+              {
+                "job_external_id": "J203",
+                "tech_id": "T-LENA",
+                "start": "2026-11-05T09:00:00+10:00",
+                "held": false,
+                "lines": [
+                  {
+                    "catalogue_code": null,
+                    "status": "flagged",
+                    "reason": "needs_list_unknown"
+                  }
+                ]
+              }
+            ],
+            "counts": {
+              "on_van": 2,
+              "pick_from_shelf": 0,
+              "ordered": 0,
+              "flagged": 1
+            }
+          },
+          "response": {
+            "report_id": "RPT-7",
+            "published_at": "2026-11-04T04:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "stock-is-read-with-an-as-of",
+      "n": 3,
+      "title": "Van stock is read with the time it was counted, and a count older than the limit is flagged, not trusted",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Each van is read. The fresh van's job reports its part on_van. The stale van's job reports nothing on_van, and each of its lines has a stock_unknown exception with an owner.",
+      "actual": "20 port call(s); results J301:TV-15=on_van, J302:PRV-500=flagged(stock_unknown), J302:FLX-450=flagged(stock_unknown); 0 order request(s); 2 message(s); 2 exception(s); 1 report(s)",
+      "stimulus": {
+        "description": "Two techs: one van counted this morning, one van last counted three days ago. Each has a job tomorrow whose part the van count shows.",
+        "now": "2026-11-04T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "stock-is-read-with-an-as-of"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {},
+          "response": {
+            "cutoff": "15:00",
+            "van_stale_hours": 24,
+            "exception_owner": "Priya Nair",
+            "utc_offset_minutes": 600
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_board",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "date": "2026-11-05"
+          },
+          "response": [
+            {
+              "job_external_id": "J301",
+              "tech_id": "T-MIA",
+              "date": "2026-11-05",
+              "start": "2026-11-05T07:30:00+10:00",
+              "job_type": "repair",
+              "address": "301 Wattle St, Edge Hill QLD 4870"
+            },
+            {
+              "job_external_id": "J302",
+              "tech_id": "T-LENA",
+              "date": "2026-11-05",
+              "start": "2026-11-05T08:00:00+10:00",
+              "job_type": "repair",
+              "address": "302 Wattle St, Edge Hill QLD 4870"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_results",
+          "verb": "read",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_messages",
+          "verb": "read",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_shelf",
+          "verb": "read",
+          "subject": "asset",
+          "request": {},
+          "response": {
+            "as_of": "2026-11-04T04:00:00.000Z",
+            "items": [
+              {
+                "catalogue_code": "CART-35",
+                "on_hand": 2,
+                "reserved": 0,
+                "location": "Bay 3"
+              },
+              {
+                "catalogue_code": "PAN-90",
+                "on_hand": 1,
+                "reserved": 0,
+                "location": "Bay 7"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {},
+          "response": [
+            {
+              "supplier_id": "S-NORTH",
+              "name": "Northside Plumbing Supplies",
+              "lead_hours": 16,
+              "codes": [
+                "TV-15",
+                "FLX-450",
+                "PRV-500",
+                "CART-35",
+                "ISO-15",
+                "PAN-90"
+              ]
+            },
+            {
+              "supplier_id": "S-COAST",
+              "name": "Coastal Hot Water Wholesale",
+              "lead_hours": 72,
+              "codes": [
+                "HWU-315E",
+                "HWU-250G"
+              ]
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "job_external_id": "J301"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job_external_id": "J301"
+          },
+          "response": {
+            "job_external_id": "J301",
+            "quote_lines": [
+              {
+                "catalogue_code": "TV-15",
+                "qty": 1
+              }
+            ],
+            "materials": [],
+            "description": ""
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_van",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tech_id": "T-MIA"
+          },
+          "response": {
+            "tech_id": "T-MIA",
+            "as_of": "2026-11-04T06:45:00+10:00",
+            "lines": [
+              {
+                "catalogue_code": "TV-15",
+                "qty": 2
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "write_result",
+          "verb": "write",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J301",
+            "tech_id": "T-MIA",
+            "catalogue_code": "TV-15",
+            "qty": 1,
+            "status": "on_van"
+          },
+          "response": {
+            "result_id": "RES-1"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "job_external_id": "J302"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job_external_id": "J302"
+          },
+          "response": {
+            "job_external_id": "J302",
+            "quote_lines": [
+              {
+                "catalogue_code": "PRV-500",
+                "qty": 1
+              },
+              {
+                "catalogue_code": "FLX-450",
+                "qty": 2
+              }
+            ],
+            "materials": [],
+            "description": ""
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_van",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tech_id": "T-LENA"
+          },
+          "response": {
+            "tech_id": "T-LENA",
+            "as_of": "2026-11-01T16:00:00+10:00",
+            "lines": [
+              {
+                "catalogue_code": "PRV-500",
+                "qty": 1
+              },
+              {
+                "catalogue_code": "FLX-450",
+                "qty": 4
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J302",
+            "tech_id": "T-LENA",
+            "catalogue_code": "PRV-500",
+            "reason": "stock_unknown",
+            "owner": "Priya Nair",
+            "van_as_of": "2026-11-01T16:00:00+10:00"
+          },
+          "response": {
+            "exception_id": "EXC-2"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "write_result",
+          "verb": "write",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J302",
+            "tech_id": "T-LENA",
+            "catalogue_code": "PRV-500",
+            "qty": 1,
+            "status": "flagged",
+            "reason": "stock_unknown",
+            "exception_id": "EXC-2"
+          },
+          "response": {
+            "result_id": "RES-3"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J302",
+            "tech_id": "T-LENA",
+            "catalogue_code": "FLX-450",
+            "reason": "stock_unknown",
+            "owner": "Priya Nair",
+            "van_as_of": "2026-11-01T16:00:00+10:00"
+          },
+          "response": {
+            "exception_id": "EXC-4"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "write_result",
+          "verb": "write",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J302",
+            "tech_id": "T-LENA",
+            "catalogue_code": "FLX-450",
+            "qty": 2,
+            "status": "flagged",
+            "reason": "stock_unknown",
+            "exception_id": "EXC-4"
+          },
+          "response": {
+            "result_id": "RES-5"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "for_date": "2026-11-05",
+            "tech_id": "T-MIA",
+            "job_external_id": "J301",
+            "lines": [
+              {
+                "catalogue_code": "TV-15",
+                "qty": 1,
+                "status": "on_van",
+                "text": "TV-15 x1 is on your van"
+              }
+            ],
+            "body": "Tomorrow, job J301 at 07:30: TV-15 x1 is on your van."
+          },
+          "response": {
+            "message_id": "MSG-6"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "for_date": "2026-11-05",
+            "tech_id": "T-LENA",
+            "job_external_id": "J302",
+            "lines": [
+              {
+                "catalogue_code": "PRV-500",
+                "qty": 1,
+                "status": "flagged",
+                "reason": "stock_unknown",
+                "text": "PRV-500 x1: flagged (stock_unknown), a person is on it"
+              },
+              {
+                "catalogue_code": "FLX-450",
+                "qty": 2,
+                "status": "flagged",
+                "reason": "stock_unknown",
+                "text": "FLX-450 x2: flagged (stock_unknown), a person is on it"
+              }
+            ],
+            "body": "Tomorrow, job J302 at 08:00: PRV-500 x1: flagged (stock_unknown), a person is on it; FLX-450 x2: flagged (stock_unknown), a person is on it."
+          },
+          "response": {
+            "message_id": "MSG-7"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "for_date": "2026-11-05",
+            "cutoff": "2026-11-04T05:00:00.000Z",
+            "all_clear": false,
+            "jobs": [
+              {
+                "job_external_id": "J301",
+                "tech_id": "T-MIA",
+                "start": "2026-11-05T07:30:00+10:00",
+                "held": false,
+                "lines": [
+                  {
+                    "catalogue_code": "TV-15",
+                    "status": "on_van"
+                  }
+                ]
+              },
+              {
+                "job_external_id": "J302",
+                "tech_id": "T-LENA",
+                "start": "2026-11-05T08:00:00+10:00",
+                "held": false,
+                "lines": [
+                  {
+                    "catalogue_code": "PRV-500",
+                    "status": "flagged",
+                    "reason": "stock_unknown"
+                  },
+                  {
+                    "catalogue_code": "FLX-450",
+                    "status": "flagged",
+                    "reason": "stock_unknown"
+                  }
+                ]
+              }
+            ],
+            "counts": {
+              "on_van": 1,
+              "pick_from_shelf": 0,
+              "ordered": 0,
+              "flagged": 2
+            }
+          },
+          "response": {
+            "report_id": "RPT-8",
+            "published_at": "2026-11-04T04:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "reserve-before-order",
+      "n": 4,
+      "title": "Shelf stock is reserved to the job before anything is ordered",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The shelf read precedes the first reservation or order request. The part is reserved against the job, appears on no order request, and the job's result says pick_from_shelf with the location.",
+      "actual": "13 port call(s); results J401:CART-35=pick_from_shelf; 0 order request(s); 1 message(s); 0 exception(s); 1 report(s)",
+      "stimulus": {
+        "description": "A job tomorrow whose part is not on the tech's van but is on the shelf at a named location.",
+        "now": "2026-11-04T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "reserve-before-order"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {},
+          "response": {
+            "cutoff": "15:00",
+            "van_stale_hours": 24,
+            "exception_owner": "Priya Nair",
+            "utc_offset_minutes": 600
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_board",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "date": "2026-11-05"
+          },
+          "response": [
+            {
+              "job_external_id": "J401",
+              "tech_id": "T-SAM",
+              "date": "2026-11-05",
+              "start": "2026-11-05T08:00:00+10:00",
+              "job_type": "repair",
+              "address": "401 Wattle St, Edge Hill QLD 4870"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_results",
+          "verb": "read",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_messages",
+          "verb": "read",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_shelf",
+          "verb": "read",
+          "subject": "asset",
+          "request": {},
+          "response": {
+            "as_of": "2026-11-04T04:00:00.000Z",
+            "items": [
+              {
+                "catalogue_code": "CART-35",
+                "on_hand": 2,
+                "reserved": 0,
+                "location": "Bay 3"
+              },
+              {
+                "catalogue_code": "PAN-90",
+                "on_hand": 1,
+                "reserved": 0,
+                "location": "Bay 7"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {},
+          "response": [
+            {
+              "supplier_id": "S-NORTH",
+              "name": "Northside Plumbing Supplies",
+              "lead_hours": 16,
+              "codes": [
+                "TV-15",
+                "FLX-450",
+                "PRV-500",
+                "CART-35",
+                "ISO-15",
+                "PAN-90"
+              ]
+            },
+            {
+              "supplier_id": "S-COAST",
+              "name": "Coastal Hot Water Wholesale",
+              "lead_hours": 72,
+              "codes": [
+                "HWU-315E",
+                "HWU-250G"
+              ]
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "job_external_id": "J401"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job_external_id": "J401"
+          },
+          "response": {
+            "job_external_id": "J401",
+            "quote_lines": [
+              {
+                "catalogue_code": "CART-35",
+                "qty": 1
+              }
+            ],
+            "materials": [],
+            "description": ""
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_van",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tech_id": "T-SAM"
+          },
+          "response": {
+            "tech_id": "T-SAM",
+            "as_of": "2026-11-04T06:45:00+10:00",
+            "lines": [
+              {
+                "catalogue_code": "FLX-450",
+                "qty": 2
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "reserve",
+          "verb": "write",
+          "subject": "reservation",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J401",
+            "catalogue_code": "CART-35",
+            "qty": 1
+          },
+          "response": {
+            "reservation_id": "RSV-1",
+            "for_date": "2026-11-05",
+            "job_external_id": "J401",
+            "catalogue_code": "CART-35",
+            "qty": 1,
+            "location": "Bay 3"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "write_result",
+          "verb": "write",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J401",
+            "tech_id": "T-SAM",
+            "catalogue_code": "CART-35",
+            "qty": 1,
+            "status": "pick_from_shelf",
+            "location": "Bay 3",
+            "reservation_id": "RSV-1"
+          },
+          "response": {
+            "result_id": "RES-2"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "for_date": "2026-11-05",
+            "tech_id": "T-SAM",
+            "job_external_id": "J401",
+            "lines": [
+              {
+                "catalogue_code": "CART-35",
+                "qty": 1,
+                "status": "pick_from_shelf",
+                "location": "Bay 3",
+                "text": "pick up CART-35 x1 from Bay 3, reserved for you"
+              }
+            ],
+            "body": "Tomorrow, job J401 at 08:00: pick up CART-35 x1 from Bay 3, reserved for you."
+          },
+          "response": {
+            "message_id": "MSG-3"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "for_date": "2026-11-05",
+            "cutoff": "2026-11-04T05:00:00.000Z",
+            "all_clear": true,
+            "jobs": [
+              {
+                "job_external_id": "J401",
+                "tech_id": "T-SAM",
+                "start": "2026-11-05T08:00:00+10:00",
+                "held": false,
+                "lines": [
+                  {
+                    "catalogue_code": "CART-35",
+                    "status": "pick_from_shelf",
+                    "location": "Bay 3"
+                  }
+                ]
+              }
+            ],
+            "counts": {
+              "on_van": 0,
+              "pick_from_shelf": 1,
+              "ordered": 0,
+              "flagged": 0
+            }
+          },
+          "response": {
+            "report_id": "RPT-4",
+            "published_at": "2026-11-04T04:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "order-only-through-material-order",
+      "n": 5,
+      "title": "A shortfall is ordered only through Material Order, one request per supplier per run, and a second run orders nothing again",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The first run makes exactly one order request to that supplier carrying both jobs' lines, each line naming its job. The second run makes no order request. Each job's result is ordered with the purchase order id that came back.",
+      "actual": "29 port call(s); results J501:PRV-500=ordered, J502:ISO-15=ordered; 1 order request(s); 2 message(s); 0 exception(s); 2 report(s)",
+      "stimulus": {
+        "description": "Two jobs tomorrow whose parts are held nowhere, both from the same supplier. The run goes twice, half an hour apart.",
+        "now": "2026-11-04T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "order-only-through-material-order"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {},
+          "response": {
+            "cutoff": "15:00",
+            "van_stale_hours": 24,
+            "exception_owner": "Priya Nair",
+            "utc_offset_minutes": 600
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_board",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "date": "2026-11-05"
+          },
+          "response": [
+            {
+              "job_external_id": "J501",
+              "tech_id": "T-MIA",
+              "date": "2026-11-05",
+              "start": "2026-11-05T07:30:00+10:00",
+              "job_type": "repair",
+              "address": "501 Wattle St, Edge Hill QLD 4870"
+            },
+            {
+              "job_external_id": "J502",
+              "tech_id": "T-LENA",
+              "date": "2026-11-05",
+              "start": "2026-11-05T09:00:00+10:00",
+              "job_type": "repair",
+              "address": "502 Wattle St, Edge Hill QLD 4870"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_results",
+          "verb": "read",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_messages",
+          "verb": "read",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_shelf",
+          "verb": "read",
+          "subject": "asset",
+          "request": {},
+          "response": {
+            "as_of": "2026-11-04T04:00:00.000Z",
+            "items": [
+              {
+                "catalogue_code": "CART-35",
+                "on_hand": 2,
+                "reserved": 0,
+                "location": "Bay 3"
+              },
+              {
+                "catalogue_code": "PAN-90",
+                "on_hand": 1,
+                "reserved": 0,
+                "location": "Bay 7"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {},
+          "response": [
+            {
+              "supplier_id": "S-NORTH",
+              "name": "Northside Plumbing Supplies",
+              "lead_hours": 16,
+              "codes": [
+                "TV-15",
+                "FLX-450",
+                "PRV-500",
+                "CART-35",
+                "ISO-15",
+                "PAN-90"
+              ]
+            },
+            {
+              "supplier_id": "S-COAST",
+              "name": "Coastal Hot Water Wholesale",
+              "lead_hours": 72,
+              "codes": [
+                "HWU-315E",
+                "HWU-250G"
+              ]
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "job_external_id": "J501"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job_external_id": "J501"
+          },
+          "response": {
+            "job_external_id": "J501",
+            "quote_lines": [
+              {
+                "catalogue_code": "PRV-500",
+                "qty": 1
+              }
+            ],
+            "materials": [],
+            "description": ""
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_van",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tech_id": "T-MIA"
+          },
+          "response": {
+            "tech_id": "T-MIA",
+            "as_of": "2026-11-04T06:45:00+10:00",
+            "lines": []
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "job_external_id": "J502"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job_external_id": "J502"
+          },
+          "response": {
+            "job_external_id": "J502",
+            "quote_lines": [
+              {
+                "catalogue_code": "ISO-15",
+                "qty": 2
+              }
+            ],
+            "materials": [],
+            "description": ""
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_van",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tech_id": "T-LENA"
+          },
+          "response": {
+            "tech_id": "T-LENA",
+            "as_of": "2026-11-04T06:45:00+10:00",
+            "lines": []
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "supplier_id": "S-NORTH",
+            "for_date": "2026-11-05",
+            "requested_by": "parts-check",
+            "lines": [
+              {
+                "job_external_id": "J501",
+                "catalogue_code": "PRV-500",
+                "qty": 1
+              },
+              {
+                "job_external_id": "J502",
+                "catalogue_code": "ISO-15",
+                "qty": 2
+              }
+            ]
+          },
+          "response": {
+            "po_external_id": "PO-1",
+            "eta": "2026-11-04T20:00:00.000Z",
+            "status": "held_for_release"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "write_result",
+          "verb": "write",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J501",
+            "tech_id": "T-MIA",
+            "catalogue_code": "PRV-500",
+            "qty": 1,
+            "status": "ordered",
+            "supplier_id": "S-NORTH",
+            "po_external_id": "PO-1",
+            "eta": "2026-11-04T20:00:00.000Z"
+          },
+          "response": {
+            "result_id": "RES-2"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "write_result",
+          "verb": "write",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J502",
+            "tech_id": "T-LENA",
+            "catalogue_code": "ISO-15",
+            "qty": 2,
+            "status": "ordered",
+            "supplier_id": "S-NORTH",
+            "po_external_id": "PO-1",
+            "eta": "2026-11-04T20:00:00.000Z"
+          },
+          "response": {
+            "result_id": "RES-3"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "for_date": "2026-11-05",
+            "tech_id": "T-MIA",
+            "job_external_id": "J501",
+            "lines": [
+              {
+                "catalogue_code": "PRV-500",
+                "qty": 1,
+                "status": "ordered",
+                "eta": "2026-11-04T20:00:00.000Z",
+                "text": "PRV-500 x1 is on order"
+              }
+            ],
+            "body": "Tomorrow, job J501 at 07:30: PRV-500 x1 is on order."
+          },
+          "response": {
+            "message_id": "MSG-4"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "for_date": "2026-11-05",
+            "tech_id": "T-LENA",
+            "job_external_id": "J502",
+            "lines": [
+              {
+                "catalogue_code": "ISO-15",
+                "qty": 2,
+                "status": "ordered",
+                "eta": "2026-11-04T20:00:00.000Z",
+                "text": "ISO-15 x2 is on order"
+              }
+            ],
+            "body": "Tomorrow, job J502 at 09:00: ISO-15 x2 is on order."
+          },
+          "response": {
+            "message_id": "MSG-5"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "for_date": "2026-11-05",
+            "cutoff": "2026-11-04T05:00:00.000Z",
+            "all_clear": true,
+            "jobs": [
+              {
+                "job_external_id": "J501",
+                "tech_id": "T-MIA",
+                "start": "2026-11-05T07:30:00+10:00",
+                "held": false,
+                "lines": [
+                  {
+                    "catalogue_code": "PRV-500",
+                    "status": "ordered",
+                    "po_external_id": "PO-1"
+                  }
+                ]
+              },
+              {
+                "job_external_id": "J502",
+                "tech_id": "T-LENA",
+                "start": "2026-11-05T09:00:00+10:00",
+                "held": false,
+                "lines": [
+                  {
+                    "catalogue_code": "ISO-15",
+                    "status": "ordered",
+                    "po_external_id": "PO-1"
+                  }
+                ]
+              }
+            ],
+            "counts": {
+              "on_van": 0,
+              "pick_from_shelf": 0,
+              "ordered": 2,
+              "flagged": 0
+            }
+          },
+          "response": {
+            "report_id": "RPT-6",
+            "published_at": "2026-11-04T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {},
+          "response": {
+            "cutoff": "15:00",
+            "van_stale_hours": 24,
+            "exception_owner": "Priya Nair",
+            "utc_offset_minutes": 600
+          }
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_board",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "date": "2026-11-05"
+          },
+          "response": [
+            {
+              "job_external_id": "J501",
+              "tech_id": "T-MIA",
+              "date": "2026-11-05",
+              "start": "2026-11-05T07:30:00+10:00",
+              "job_type": "repair",
+              "address": "501 Wattle St, Edge Hill QLD 4870"
+            },
+            {
+              "job_external_id": "J502",
+              "tech_id": "T-LENA",
+              "date": "2026-11-05",
+              "start": "2026-11-05T09:00:00+10:00",
+              "job_type": "repair",
+              "address": "502 Wattle St, Edge Hill QLD 4870"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_results",
+          "verb": "read",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05"
+          },
+          "response": [
+            {
+              "for_date": "2026-11-05",
+              "job_external_id": "J501",
+              "tech_id": "T-MIA",
+              "catalogue_code": "PRV-500",
+              "qty": 1,
+              "status": "ordered",
+              "supplier_id": "S-NORTH",
+              "po_external_id": "PO-1",
+              "eta": "2026-11-04T20:00:00.000Z",
+              "result_id": "RES-2"
+            },
+            {
+              "for_date": "2026-11-05",
+              "job_external_id": "J502",
+              "tech_id": "T-LENA",
+              "catalogue_code": "ISO-15",
+              "qty": 2,
+              "status": "ordered",
+              "supplier_id": "S-NORTH",
+              "po_external_id": "PO-1",
+              "eta": "2026-11-04T20:00:00.000Z",
+              "result_id": "RES-3"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_messages",
+          "verb": "read",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05"
+          },
+          "response": [
+            {
+              "for_date": "2026-11-05",
+              "tech_id": "T-MIA",
+              "job_external_id": "J501",
+              "lines": [
+                {
+                  "catalogue_code": "PRV-500",
+                  "qty": 1,
+                  "status": "ordered",
+                  "eta": "2026-11-04T20:00:00.000Z",
+                  "text": "PRV-500 x1 is on order"
+                }
+              ],
+              "body": "Tomorrow, job J501 at 07:30: PRV-500 x1 is on order.",
+              "message_id": "MSG-4",
+              "sent_at": "2026-11-04T04:00:00.000Z"
+            },
+            {
+              "for_date": "2026-11-05",
+              "tech_id": "T-LENA",
+              "job_external_id": "J502",
+              "lines": [
+                {
+                  "catalogue_code": "ISO-15",
+                  "qty": 2,
+                  "status": "ordered",
+                  "eta": "2026-11-04T20:00:00.000Z",
+                  "text": "ISO-15 x2 is on order"
+                }
+              ],
+              "body": "Tomorrow, job J502 at 09:00: ISO-15 x2 is on order.",
+              "message_id": "MSG-5",
+              "sent_at": "2026-11-04T04:00:00.000Z"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_shelf",
+          "verb": "read",
+          "subject": "asset",
+          "request": {},
+          "response": {
+            "as_of": "2026-11-04T04:30:00.000Z",
+            "items": [
+              {
+                "catalogue_code": "CART-35",
+                "on_hand": 2,
+                "reserved": 0,
+                "location": "Bay 3"
+              },
+              {
+                "catalogue_code": "PAN-90",
+                "on_hand": 1,
+                "reserved": 0,
+                "location": "Bay 7"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {},
+          "response": [
+            {
+              "supplier_id": "S-NORTH",
+              "name": "Northside Plumbing Supplies",
+              "lead_hours": 16,
+              "codes": [
+                "TV-15",
+                "FLX-450",
+                "PRV-500",
+                "CART-35",
+                "ISO-15",
+                "PAN-90"
+              ]
+            },
+            {
+              "supplier_id": "S-COAST",
+              "name": "Coastal Hot Water Wholesale",
+              "lead_hours": 72,
+              "codes": [
+                "HWU-315E",
+                "HWU-250G"
+              ]
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "job_external_id": "J501"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job_external_id": "J501"
+          },
+          "response": {
+            "job_external_id": "J501",
+            "quote_lines": [
+              {
+                "catalogue_code": "PRV-500",
+                "qty": 1
+              }
+            ],
+            "materials": [],
+            "description": ""
+          }
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "job_external_id": "J502"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job_external_id": "J502"
+          },
+          "response": {
+            "job_external_id": "J502",
+            "quote_lines": [
+              {
+                "catalogue_code": "ISO-15",
+                "qty": 2
+              }
+            ],
+            "materials": [],
+            "description": ""
+          }
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "for_date": "2026-11-05",
+            "cutoff": "2026-11-04T05:00:00.000Z",
+            "all_clear": true,
+            "jobs": [
+              {
+                "job_external_id": "J501",
+                "tech_id": "T-MIA",
+                "start": "2026-11-05T07:30:00+10:00",
+                "held": false,
+                "lines": [
+                  {
+                    "catalogue_code": "PRV-500",
+                    "status": "ordered",
+                    "po_external_id": "PO-1"
+                  }
+                ]
+              },
+              {
+                "job_external_id": "J502",
+                "tech_id": "T-LENA",
+                "start": "2026-11-05T09:00:00+10:00",
+                "held": false,
+                "lines": [
+                  {
+                    "catalogue_code": "ISO-15",
+                    "status": "ordered",
+                    "po_external_id": "PO-1"
+                  }
+                ]
+              }
+            ],
+            "counts": {
+              "on_van": 0,
+              "pick_from_shelf": 0,
+              "ordered": 2,
+              "flagged": 0
+            }
+          },
+          "response": {
+            "report_id": "RPT-6",
+            "published_at": "2026-11-04T04:30:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "lead-time-decides",
+      "n": 6,
+      "title": "A part that cannot arrive before the job is flagged with the reason, not ordered and hoped for",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The supplier list is read before any order request. The overnight part is ordered. The slow part is on no order request, and has one lead_time_after_job exception naming its job, with an owner.",
+      "actual": "19 port call(s); results J602:HWU-315E=flagged(lead_time_after_job), J601:PRV-500=ordered; 1 order request(s); 2 message(s); 1 exception(s); 1 report(s)",
+      "stimulus": {
+        "description": "Two parts held nowhere: one from a supplier who delivers overnight, one from a supplier whose lead time is three days.",
+        "now": "2026-11-04T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "lead-time-decides"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {},
+          "response": {
+            "cutoff": "15:00",
+            "van_stale_hours": 24,
+            "exception_owner": "Priya Nair",
+            "utc_offset_minutes": 600
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_board",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "date": "2026-11-05"
+          },
+          "response": [
+            {
+              "job_external_id": "J601",
+              "tech_id": "T-MIA",
+              "date": "2026-11-05",
+              "start": "2026-11-05T07:30:00+10:00",
+              "job_type": "repair",
+              "address": "601 Wattle St, Edge Hill QLD 4870"
+            },
+            {
+              "job_external_id": "J602",
+              "tech_id": "T-LENA",
+              "date": "2026-11-05",
+              "start": "2026-11-05T08:00:00+10:00",
+              "job_type": "hot_water_swap",
+              "address": "602 Wattle St, Edge Hill QLD 4870"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_results",
+          "verb": "read",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_messages",
+          "verb": "read",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_shelf",
+          "verb": "read",
+          "subject": "asset",
+          "request": {},
+          "response": {
+            "as_of": "2026-11-04T04:00:00.000Z",
+            "items": [
+              {
+                "catalogue_code": "CART-35",
+                "on_hand": 2,
+                "reserved": 0,
+                "location": "Bay 3"
+              },
+              {
+                "catalogue_code": "PAN-90",
+                "on_hand": 1,
+                "reserved": 0,
+                "location": "Bay 7"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {},
+          "response": [
+            {
+              "supplier_id": "S-NORTH",
+              "name": "Northside Plumbing Supplies",
+              "lead_hours": 16,
+              "codes": [
+                "TV-15",
+                "FLX-450",
+                "PRV-500",
+                "CART-35",
+                "ISO-15",
+                "PAN-90"
+              ]
+            },
+            {
+              "supplier_id": "S-COAST",
+              "name": "Coastal Hot Water Wholesale",
+              "lead_hours": 72,
+              "codes": [
+                "HWU-315E",
+                "HWU-250G"
+              ]
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "job_external_id": "J601"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job_external_id": "J601"
+          },
+          "response": {
+            "job_external_id": "J601",
+            "quote_lines": [
+              {
+                "catalogue_code": "PRV-500",
+                "qty": 1
+              }
+            ],
+            "materials": [],
+            "description": ""
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_van",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tech_id": "T-MIA"
+          },
+          "response": {
+            "tech_id": "T-MIA",
+            "as_of": "2026-11-04T06:45:00+10:00",
+            "lines": []
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "job_external_id": "J602"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job_external_id": "J602"
+          },
+          "response": {
+            "job_external_id": "J602",
+            "quote_lines": [
+              {
+                "catalogue_code": "HWU-315E",
+                "qty": 1
+              }
+            ],
+            "materials": [],
+            "description": ""
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_van",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tech_id": "T-LENA"
+          },
+          "response": {
+            "tech_id": "T-LENA",
+            "as_of": "2026-11-04T06:45:00+10:00",
+            "lines": []
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J602",
+            "tech_id": "T-LENA",
+            "catalogue_code": "HWU-315E",
+            "reason": "lead_time_after_job",
+            "owner": "Priya Nair"
+          },
+          "response": {
+            "exception_id": "EXC-1"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "write_result",
+          "verb": "write",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J602",
+            "tech_id": "T-LENA",
+            "catalogue_code": "HWU-315E",
+            "qty": 1,
+            "status": "flagged",
+            "reason": "lead_time_after_job",
+            "exception_id": "EXC-1"
+          },
+          "response": {
+            "result_id": "RES-2"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "write_order",
+          "verb": "write",
+          "subject": "order",
+          "request": {
+            "supplier_id": "S-NORTH",
+            "for_date": "2026-11-05",
+            "requested_by": "parts-check",
+            "lines": [
+              {
+                "job_external_id": "J601",
+                "catalogue_code": "PRV-500",
+                "qty": 1
+              }
+            ]
+          },
+          "response": {
+            "po_external_id": "PO-3",
+            "eta": "2026-11-04T20:00:00.000Z",
+            "status": "held_for_release"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "write_result",
+          "verb": "write",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J601",
+            "tech_id": "T-MIA",
+            "catalogue_code": "PRV-500",
+            "qty": 1,
+            "status": "ordered",
+            "supplier_id": "S-NORTH",
+            "po_external_id": "PO-3",
+            "eta": "2026-11-04T20:00:00.000Z"
+          },
+          "response": {
+            "result_id": "RES-4"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "for_date": "2026-11-05",
+            "tech_id": "T-LENA",
+            "job_external_id": "J602",
+            "lines": [
+              {
+                "catalogue_code": "HWU-315E",
+                "qty": 1,
+                "status": "flagged",
+                "reason": "lead_time_after_job",
+                "text": "HWU-315E x1: flagged (lead_time_after_job), a person is on it"
+              }
+            ],
+            "body": "Tomorrow, job J602 at 08:00: HWU-315E x1: flagged (lead_time_after_job), a person is on it."
+          },
+          "response": {
+            "message_id": "MSG-5"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "for_date": "2026-11-05",
+            "tech_id": "T-MIA",
+            "job_external_id": "J601",
+            "lines": [
+              {
+                "catalogue_code": "PRV-500",
+                "qty": 1,
+                "status": "ordered",
+                "eta": "2026-11-04T20:00:00.000Z",
+                "text": "PRV-500 x1 is on order"
+              }
+            ],
+            "body": "Tomorrow, job J601 at 07:30: PRV-500 x1 is on order."
+          },
+          "response": {
+            "message_id": "MSG-6"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "for_date": "2026-11-05",
+            "cutoff": "2026-11-04T05:00:00.000Z",
+            "all_clear": false,
+            "jobs": [
+              {
+                "job_external_id": "J601",
+                "tech_id": "T-MIA",
+                "start": "2026-11-05T07:30:00+10:00",
+                "held": false,
+                "lines": [
+                  {
+                    "catalogue_code": "PRV-500",
+                    "status": "ordered",
+                    "po_external_id": "PO-3"
+                  }
+                ]
+              },
+              {
+                "job_external_id": "J602",
+                "tech_id": "T-LENA",
+                "start": "2026-11-05T08:00:00+10:00",
+                "held": false,
+                "lines": [
+                  {
+                    "catalogue_code": "HWU-315E",
+                    "status": "flagged",
+                    "reason": "lead_time_after_job"
+                  }
+                ]
+              }
+            ],
+            "counts": {
+              "on_van": 0,
+              "pick_from_shelf": 0,
+              "ordered": 1,
+              "flagged": 1
+            }
+          },
+          "response": {
+            "report_id": "RPT-7",
+            "published_at": "2026-11-04T04:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "no-silent-substitution",
+      "n": 7,
+      "title": "An equivalent part is a suggestion on the flag, never a change to the order, the reservation or the tech's list",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every reserved, ordered and messaged line carries a code on that job's needs list. The part is flagged. If an equivalent is named, it is named only on the exception.",
+      "actual": "14 port call(s); results J701:HWU-315E=flagged(lead_time_after_job), J701:FLX-450=on_van; 0 order request(s); 1 message(s); 1 exception(s); 1 report(s)",
+      "stimulus": {
+        "description": "A part that cannot arrive in time, while the tech's van holds a part marked as able to stand in for it.",
+        "now": "2026-11-04T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "no-silent-substitution"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {},
+          "response": {
+            "cutoff": "15:00",
+            "van_stale_hours": 24,
+            "exception_owner": "Priya Nair",
+            "utc_offset_minutes": 600
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_board",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "date": "2026-11-05"
+          },
+          "response": [
+            {
+              "job_external_id": "J701",
+              "tech_id": "T-MIA",
+              "date": "2026-11-05",
+              "start": "2026-11-05T07:30:00+10:00",
+              "job_type": "hot_water_swap",
+              "address": "701 Wattle St, Edge Hill QLD 4870"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_results",
+          "verb": "read",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_messages",
+          "verb": "read",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_shelf",
+          "verb": "read",
+          "subject": "asset",
+          "request": {},
+          "response": {
+            "as_of": "2026-11-04T04:00:00.000Z",
+            "items": [
+              {
+                "catalogue_code": "CART-35",
+                "on_hand": 2,
+                "reserved": 0,
+                "location": "Bay 3"
+              },
+              {
+                "catalogue_code": "PAN-90",
+                "on_hand": 1,
+                "reserved": 0,
+                "location": "Bay 7"
+              },
+              {
+                "catalogue_code": "HWU-250G",
+                "on_hand": 1,
+                "reserved": 0,
+                "location": "Bay 1",
+                "stands_in_for": [
+                  "HWU-315E"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {},
+          "response": [
+            {
+              "supplier_id": "S-NORTH",
+              "name": "Northside Plumbing Supplies",
+              "lead_hours": 16,
+              "codes": [
+                "TV-15",
+                "FLX-450",
+                "PRV-500",
+                "CART-35",
+                "ISO-15",
+                "PAN-90"
+              ]
+            },
+            {
+              "supplier_id": "S-COAST",
+              "name": "Coastal Hot Water Wholesale",
+              "lead_hours": 72,
+              "codes": [
+                "HWU-315E",
+                "HWU-250G"
+              ]
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "job_external_id": "J701"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job_external_id": "J701"
+          },
+          "response": {
+            "job_external_id": "J701",
+            "quote_lines": [
+              {
+                "catalogue_code": "HWU-315E",
+                "qty": 1
+              },
+              {
+                "catalogue_code": "FLX-450",
+                "qty": 2
+              }
+            ],
+            "materials": [],
+            "description": ""
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_van",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tech_id": "T-MIA"
+          },
+          "response": {
+            "tech_id": "T-MIA",
+            "as_of": "2026-11-04T06:45:00+10:00",
+            "lines": [
+              {
+                "catalogue_code": "FLX-450",
+                "qty": 4
+              },
+              {
+                "catalogue_code": "HWU-250G",
+                "qty": 1,
+                "stands_in_for": [
+                  "HWU-315E"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J701",
+            "tech_id": "T-MIA",
+            "catalogue_code": "HWU-315E",
+            "reason": "lead_time_after_job",
+            "owner": "Priya Nair",
+            "suggestion": {
+              "equivalent": "HWU-250G",
+              "where": "van",
+              "note": "a person decides; nothing was reserved, ordered or listed for it"
+            }
+          },
+          "response": {
+            "exception_id": "EXC-1"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "write_result",
+          "verb": "write",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J701",
+            "tech_id": "T-MIA",
+            "catalogue_code": "HWU-315E",
+            "qty": 1,
+            "status": "flagged",
+            "reason": "lead_time_after_job",
+            "exception_id": "EXC-1"
+          },
+          "response": {
+            "result_id": "RES-2"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "write_result",
+          "verb": "write",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J701",
+            "tech_id": "T-MIA",
+            "catalogue_code": "FLX-450",
+            "qty": 2,
+            "status": "on_van"
+          },
+          "response": {
+            "result_id": "RES-3"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "for_date": "2026-11-05",
+            "tech_id": "T-MIA",
+            "job_external_id": "J701",
+            "lines": [
+              {
+                "catalogue_code": "HWU-315E",
+                "qty": 1,
+                "status": "flagged",
+                "reason": "lead_time_after_job",
+                "text": "HWU-315E x1: flagged (lead_time_after_job), a person is on it"
+              },
+              {
+                "catalogue_code": "FLX-450",
+                "qty": 2,
+                "status": "on_van",
+                "text": "FLX-450 x2 is on your van"
+              }
+            ],
+            "body": "Tomorrow, job J701 at 07:30: HWU-315E x1: flagged (lead_time_after_job), a person is on it; FLX-450 x2 is on your van."
+          },
+          "response": {
+            "message_id": "MSG-4"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "for_date": "2026-11-05",
+            "cutoff": "2026-11-04T05:00:00.000Z",
+            "all_clear": false,
+            "jobs": [
+              {
+                "job_external_id": "J701",
+                "tech_id": "T-MIA",
+                "start": "2026-11-05T07:30:00+10:00",
+                "held": false,
+                "lines": [
+                  {
+                    "catalogue_code": "HWU-315E",
+                    "status": "flagged",
+                    "reason": "lead_time_after_job"
+                  },
+                  {
+                    "catalogue_code": "FLX-450",
+                    "status": "on_van"
+                  }
+                ]
+              }
+            ],
+            "counts": {
+              "on_van": 1,
+              "pick_from_shelf": 0,
+              "ordered": 0,
+              "flagged": 1
+            }
+          },
+          "response": {
+            "report_id": "RPT-5",
+            "published_at": "2026-11-04T04:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "tech-told-once",
+      "n": 8,
+      "title": "Each tech is told once per job, with the job id: what is on the van, what to pick up and where",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "Across both runs, each tech and job pair appears in exactly one message. The first tech's message lists the van part for the job id; the second's lists the shelf part with its location.",
+      "actual": "29 port call(s); results J801:TV-15=on_van, J802:CART-35=pick_from_shelf; 0 order request(s); 2 message(s); 0 exception(s); 2 report(s)",
+      "stimulus": {
+        "description": "Two techs with jobs tomorrow, one part on a van and one on the shelf. The run goes twice.",
+        "now": "2026-11-04T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "tech-told-once"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {},
+          "response": {
+            "cutoff": "15:00",
+            "van_stale_hours": 24,
+            "exception_owner": "Priya Nair",
+            "utc_offset_minutes": 600
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_board",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "date": "2026-11-05"
+          },
+          "response": [
+            {
+              "job_external_id": "J801",
+              "tech_id": "T-MIA",
+              "date": "2026-11-05",
+              "start": "2026-11-05T07:30:00+10:00",
+              "job_type": "repair",
+              "address": "801 Wattle St, Edge Hill QLD 4870"
+            },
+            {
+              "job_external_id": "J802",
+              "tech_id": "T-SAM",
+              "date": "2026-11-05",
+              "start": "2026-11-05T08:00:00+10:00",
+              "job_type": "repair",
+              "address": "802 Wattle St, Edge Hill QLD 4870"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_results",
+          "verb": "read",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_messages",
+          "verb": "read",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_shelf",
+          "verb": "read",
+          "subject": "asset",
+          "request": {},
+          "response": {
+            "as_of": "2026-11-04T04:00:00.000Z",
+            "items": [
+              {
+                "catalogue_code": "CART-35",
+                "on_hand": 2,
+                "reserved": 0,
+                "location": "Bay 3"
+              },
+              {
+                "catalogue_code": "PAN-90",
+                "on_hand": 1,
+                "reserved": 0,
+                "location": "Bay 7"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {},
+          "response": [
+            {
+              "supplier_id": "S-NORTH",
+              "name": "Northside Plumbing Supplies",
+              "lead_hours": 16,
+              "codes": [
+                "TV-15",
+                "FLX-450",
+                "PRV-500",
+                "CART-35",
+                "ISO-15",
+                "PAN-90"
+              ]
+            },
+            {
+              "supplier_id": "S-COAST",
+              "name": "Coastal Hot Water Wholesale",
+              "lead_hours": 72,
+              "codes": [
+                "HWU-315E",
+                "HWU-250G"
+              ]
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "job_external_id": "J801"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job_external_id": "J801"
+          },
+          "response": {
+            "job_external_id": "J801",
+            "quote_lines": [
+              {
+                "catalogue_code": "TV-15",
+                "qty": 1
+              }
+            ],
+            "materials": [],
+            "description": ""
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_van",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tech_id": "T-MIA"
+          },
+          "response": {
+            "tech_id": "T-MIA",
+            "as_of": "2026-11-04T06:45:00+10:00",
+            "lines": [
+              {
+                "catalogue_code": "TV-15",
+                "qty": 2
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "write_result",
+          "verb": "write",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J801",
+            "tech_id": "T-MIA",
+            "catalogue_code": "TV-15",
+            "qty": 1,
+            "status": "on_van"
+          },
+          "response": {
+            "result_id": "RES-1"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "job_external_id": "J802"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job_external_id": "J802"
+          },
+          "response": {
+            "job_external_id": "J802",
+            "quote_lines": [
+              {
+                "catalogue_code": "CART-35",
+                "qty": 1
+              }
+            ],
+            "materials": [],
+            "description": ""
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_van",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tech_id": "T-SAM"
+          },
+          "response": {
+            "tech_id": "T-SAM",
+            "as_of": "2026-11-04T06:45:00+10:00",
+            "lines": []
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "reserve",
+          "verb": "write",
+          "subject": "reservation",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J802",
+            "catalogue_code": "CART-35",
+            "qty": 1
+          },
+          "response": {
+            "reservation_id": "RSV-2",
+            "for_date": "2026-11-05",
+            "job_external_id": "J802",
+            "catalogue_code": "CART-35",
+            "qty": 1,
+            "location": "Bay 3"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "write_result",
+          "verb": "write",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J802",
+            "tech_id": "T-SAM",
+            "catalogue_code": "CART-35",
+            "qty": 1,
+            "status": "pick_from_shelf",
+            "location": "Bay 3",
+            "reservation_id": "RSV-2"
+          },
+          "response": {
+            "result_id": "RES-3"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "for_date": "2026-11-05",
+            "tech_id": "T-MIA",
+            "job_external_id": "J801",
+            "lines": [
+              {
+                "catalogue_code": "TV-15",
+                "qty": 1,
+                "status": "on_van",
+                "text": "TV-15 x1 is on your van"
+              }
+            ],
+            "body": "Tomorrow, job J801 at 07:30: TV-15 x1 is on your van."
+          },
+          "response": {
+            "message_id": "MSG-4"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "for_date": "2026-11-05",
+            "tech_id": "T-SAM",
+            "job_external_id": "J802",
+            "lines": [
+              {
+                "catalogue_code": "CART-35",
+                "qty": 1,
+                "status": "pick_from_shelf",
+                "location": "Bay 3",
+                "text": "pick up CART-35 x1 from Bay 3, reserved for you"
+              }
+            ],
+            "body": "Tomorrow, job J802 at 08:00: pick up CART-35 x1 from Bay 3, reserved for you."
+          },
+          "response": {
+            "message_id": "MSG-5"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "for_date": "2026-11-05",
+            "cutoff": "2026-11-04T05:00:00.000Z",
+            "all_clear": true,
+            "jobs": [
+              {
+                "job_external_id": "J801",
+                "tech_id": "T-MIA",
+                "start": "2026-11-05T07:30:00+10:00",
+                "held": false,
+                "lines": [
+                  {
+                    "catalogue_code": "TV-15",
+                    "status": "on_van"
+                  }
+                ]
+              },
+              {
+                "job_external_id": "J802",
+                "tech_id": "T-SAM",
+                "start": "2026-11-05T08:00:00+10:00",
+                "held": false,
+                "lines": [
+                  {
+                    "catalogue_code": "CART-35",
+                    "status": "pick_from_shelf",
+                    "location": "Bay 3"
+                  }
+                ]
+              }
+            ],
+            "counts": {
+              "on_van": 1,
+              "pick_from_shelf": 1,
+              "ordered": 0,
+              "flagged": 0
+            }
+          },
+          "response": {
+            "report_id": "RPT-6",
+            "published_at": "2026-11-04T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {},
+          "response": {
+            "cutoff": "15:00",
+            "van_stale_hours": 24,
+            "exception_owner": "Priya Nair",
+            "utc_offset_minutes": 600
+          }
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_board",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "date": "2026-11-05"
+          },
+          "response": [
+            {
+              "job_external_id": "J801",
+              "tech_id": "T-MIA",
+              "date": "2026-11-05",
+              "start": "2026-11-05T07:30:00+10:00",
+              "job_type": "repair",
+              "address": "801 Wattle St, Edge Hill QLD 4870"
+            },
+            {
+              "job_external_id": "J802",
+              "tech_id": "T-SAM",
+              "date": "2026-11-05",
+              "start": "2026-11-05T08:00:00+10:00",
+              "job_type": "repair",
+              "address": "802 Wattle St, Edge Hill QLD 4870"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_results",
+          "verb": "read",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05"
+          },
+          "response": [
+            {
+              "for_date": "2026-11-05",
+              "job_external_id": "J801",
+              "tech_id": "T-MIA",
+              "catalogue_code": "TV-15",
+              "qty": 1,
+              "status": "on_van",
+              "result_id": "RES-1"
+            },
+            {
+              "for_date": "2026-11-05",
+              "job_external_id": "J802",
+              "tech_id": "T-SAM",
+              "catalogue_code": "CART-35",
+              "qty": 1,
+              "status": "pick_from_shelf",
+              "location": "Bay 3",
+              "reservation_id": "RSV-2",
+              "result_id": "RES-3"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_messages",
+          "verb": "read",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05"
+          },
+          "response": [
+            {
+              "for_date": "2026-11-05",
+              "tech_id": "T-MIA",
+              "job_external_id": "J801",
+              "lines": [
+                {
+                  "catalogue_code": "TV-15",
+                  "qty": 1,
+                  "status": "on_van",
+                  "text": "TV-15 x1 is on your van"
+                }
+              ],
+              "body": "Tomorrow, job J801 at 07:30: TV-15 x1 is on your van.",
+              "message_id": "MSG-4",
+              "sent_at": "2026-11-04T04:00:00.000Z"
+            },
+            {
+              "for_date": "2026-11-05",
+              "tech_id": "T-SAM",
+              "job_external_id": "J802",
+              "lines": [
+                {
+                  "catalogue_code": "CART-35",
+                  "qty": 1,
+                  "status": "pick_from_shelf",
+                  "location": "Bay 3",
+                  "text": "pick up CART-35 x1 from Bay 3, reserved for you"
+                }
+              ],
+              "body": "Tomorrow, job J802 at 08:00: pick up CART-35 x1 from Bay 3, reserved for you.",
+              "message_id": "MSG-5",
+              "sent_at": "2026-11-04T04:00:00.000Z"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_shelf",
+          "verb": "read",
+          "subject": "asset",
+          "request": {},
+          "response": {
+            "as_of": "2026-11-04T04:30:00.000Z",
+            "items": [
+              {
+                "catalogue_code": "CART-35",
+                "on_hand": 2,
+                "reserved": 1,
+                "location": "Bay 3"
+              },
+              {
+                "catalogue_code": "PAN-90",
+                "on_hand": 1,
+                "reserved": 0,
+                "location": "Bay 7"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {},
+          "response": [
+            {
+              "supplier_id": "S-NORTH",
+              "name": "Northside Plumbing Supplies",
+              "lead_hours": 16,
+              "codes": [
+                "TV-15",
+                "FLX-450",
+                "PRV-500",
+                "CART-35",
+                "ISO-15",
+                "PAN-90"
+              ]
+            },
+            {
+              "supplier_id": "S-COAST",
+              "name": "Coastal Hot Water Wholesale",
+              "lead_hours": 72,
+              "codes": [
+                "HWU-315E",
+                "HWU-250G"
+              ]
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "job_external_id": "J801"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job_external_id": "J801"
+          },
+          "response": {
+            "job_external_id": "J801",
+            "quote_lines": [
+              {
+                "catalogue_code": "TV-15",
+                "qty": 1
+              }
+            ],
+            "materials": [],
+            "description": ""
+          }
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "job_external_id": "J802"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job_external_id": "J802"
+          },
+          "response": {
+            "job_external_id": "J802",
+            "quote_lines": [
+              {
+                "catalogue_code": "CART-35",
+                "qty": 1
+              }
+            ],
+            "materials": [],
+            "description": ""
+          }
+        },
+        {
+          "at": "2026-11-04T04:30:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "for_date": "2026-11-05",
+            "cutoff": "2026-11-04T05:00:00.000Z",
+            "all_clear": true,
+            "jobs": [
+              {
+                "job_external_id": "J801",
+                "tech_id": "T-MIA",
+                "start": "2026-11-05T07:30:00+10:00",
+                "held": false,
+                "lines": [
+                  {
+                    "catalogue_code": "TV-15",
+                    "status": "on_van"
+                  }
+                ]
+              },
+              {
+                "job_external_id": "J802",
+                "tech_id": "T-SAM",
+                "start": "2026-11-05T08:00:00+10:00",
+                "held": false,
+                "lines": [
+                  {
+                    "catalogue_code": "CART-35",
+                    "status": "pick_from_shelf",
+                    "location": "Bay 3"
+                  }
+                ]
+              }
+            ],
+            "counts": {
+              "on_van": 1,
+              "pick_from_shelf": 1,
+              "ordered": 0,
+              "flagged": 0
+            }
+          },
+          "response": {
+            "report_id": "RPT-6",
+            "published_at": "2026-11-04T04:30:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "publishes-by-the-cutoff",
+      "n": 9,
+      "title": "The run publishes by the cut-off whether or not it found anything, and every flag goes to the exceptions queue with an owner",
+      "verdict": "pass",
+      "held": true,
+      "expected": "One result is published for tomorrow's date, at or before the cut-off, with every job on the board in it. Every exception raised, in any scenario, names an owner.",
+      "actual": "quiet board: 17 port call(s); results J901:TV-15=on_van, J902:PRV-500=on_van; 0 order request(s); 2 message(s); 0 exception(s); 1 report(s) | busy board: 24 port call(s); results J911:null=flagged(needs_list_unknown), J912:PRV-500=flagged(stock_unknown), J913:HWU-315E=flagged(lead_time_after_job); 0 order request(s); 2 message(s); 3 exception(s); 1 report(s)",
+      "stimulus": {
+        "description": "A board where every part tomorrow is already on the van.",
+        "now": "2026-11-04T04:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "publishes-by-the-cutoff"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {},
+          "response": {
+            "cutoff": "15:00",
+            "van_stale_hours": 24,
+            "exception_owner": "Priya Nair",
+            "utc_offset_minutes": 600
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_board",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "date": "2026-11-05"
+          },
+          "response": [
+            {
+              "job_external_id": "J901",
+              "tech_id": "T-MIA",
+              "date": "2026-11-05",
+              "start": "2026-11-05T07:30:00+10:00",
+              "job_type": "repair",
+              "address": "901 Wattle St, Edge Hill QLD 4870"
+            },
+            {
+              "job_external_id": "J902",
+              "tech_id": "T-LENA",
+              "date": "2026-11-05",
+              "start": "2026-11-05T09:00:00+10:00",
+              "job_type": "repair",
+              "address": "902 Wattle St, Edge Hill QLD 4870"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_results",
+          "verb": "read",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_messages",
+          "verb": "read",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_shelf",
+          "verb": "read",
+          "subject": "asset",
+          "request": {},
+          "response": {
+            "as_of": "2026-11-04T04:00:00.000Z",
+            "items": [
+              {
+                "catalogue_code": "CART-35",
+                "on_hand": 2,
+                "reserved": 0,
+                "location": "Bay 3"
+              },
+              {
+                "catalogue_code": "PAN-90",
+                "on_hand": 1,
+                "reserved": 0,
+                "location": "Bay 7"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {},
+          "response": [
+            {
+              "supplier_id": "S-NORTH",
+              "name": "Northside Plumbing Supplies",
+              "lead_hours": 16,
+              "codes": [
+                "TV-15",
+                "FLX-450",
+                "PRV-500",
+                "CART-35",
+                "ISO-15",
+                "PAN-90"
+              ]
+            },
+            {
+              "supplier_id": "S-COAST",
+              "name": "Coastal Hot Water Wholesale",
+              "lead_hours": 72,
+              "codes": [
+                "HWU-315E",
+                "HWU-250G"
+              ]
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "job_external_id": "J901"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job_external_id": "J901"
+          },
+          "response": {
+            "job_external_id": "J901",
+            "quote_lines": [
+              {
+                "catalogue_code": "TV-15",
+                "qty": 1
+              }
+            ],
+            "materials": [],
+            "description": ""
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_van",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tech_id": "T-MIA"
+          },
+          "response": {
+            "tech_id": "T-MIA",
+            "as_of": "2026-11-04T06:45:00+10:00",
+            "lines": [
+              {
+                "catalogue_code": "TV-15",
+                "qty": 2
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "write_result",
+          "verb": "write",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J901",
+            "tech_id": "T-MIA",
+            "catalogue_code": "TV-15",
+            "qty": 1,
+            "status": "on_van"
+          },
+          "response": {
+            "result_id": "RES-1"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "job_external_id": "J902"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job_external_id": "J902"
+          },
+          "response": {
+            "job_external_id": "J902",
+            "quote_lines": [
+              {
+                "catalogue_code": "PRV-500",
+                "qty": 1
+              }
+            ],
+            "materials": [],
+            "description": ""
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_van",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tech_id": "T-LENA"
+          },
+          "response": {
+            "tech_id": "T-LENA",
+            "as_of": "2026-11-04T06:45:00+10:00",
+            "lines": [
+              {
+                "catalogue_code": "PRV-500",
+                "qty": 1
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "write_result",
+          "verb": "write",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J902",
+            "tech_id": "T-LENA",
+            "catalogue_code": "PRV-500",
+            "qty": 1,
+            "status": "on_van"
+          },
+          "response": {
+            "result_id": "RES-2"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "for_date": "2026-11-05",
+            "tech_id": "T-MIA",
+            "job_external_id": "J901",
+            "lines": [
+              {
+                "catalogue_code": "TV-15",
+                "qty": 1,
+                "status": "on_van",
+                "text": "TV-15 x1 is on your van"
+              }
+            ],
+            "body": "Tomorrow, job J901 at 07:30: TV-15 x1 is on your van."
+          },
+          "response": {
+            "message_id": "MSG-3"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "for_date": "2026-11-05",
+            "tech_id": "T-LENA",
+            "job_external_id": "J902",
+            "lines": [
+              {
+                "catalogue_code": "PRV-500",
+                "qty": 1,
+                "status": "on_van",
+                "text": "PRV-500 x1 is on your van"
+              }
+            ],
+            "body": "Tomorrow, job J902 at 09:00: PRV-500 x1 is on your van."
+          },
+          "response": {
+            "message_id": "MSG-4"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "for_date": "2026-11-05",
+            "cutoff": "2026-11-04T05:00:00.000Z",
+            "all_clear": true,
+            "jobs": [
+              {
+                "job_external_id": "J901",
+                "tech_id": "T-MIA",
+                "start": "2026-11-05T07:30:00+10:00",
+                "held": false,
+                "lines": [
+                  {
+                    "catalogue_code": "TV-15",
+                    "status": "on_van"
+                  }
+                ]
+              },
+              {
+                "job_external_id": "J902",
+                "tech_id": "T-LENA",
+                "start": "2026-11-05T09:00:00+10:00",
+                "held": false,
+                "lines": [
+                  {
+                    "catalogue_code": "PRV-500",
+                    "status": "on_van"
+                  }
+                ]
+              }
+            ],
+            "counts": {
+              "on_van": 2,
+              "pick_from_shelf": 0,
+              "ordered": 0,
+              "flagged": 0
+            }
+          },
+          "response": {
+            "report_id": "RPT-5",
+            "published_at": "2026-11-04T04:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {},
+          "response": {
+            "cutoff": "15:00",
+            "van_stale_hours": 24,
+            "exception_owner": "Priya Nair",
+            "utc_offset_minutes": 600
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_board",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "date": "2026-11-05"
+          },
+          "response": [
+            {
+              "job_external_id": "J911",
+              "tech_id": "T-MIA",
+              "date": "2026-11-05",
+              "start": "2026-11-05T07:30:00+10:00",
+              "job_type": "investigate",
+              "address": "911 Wattle St, Edge Hill QLD 4870"
+            },
+            {
+              "job_external_id": "J912",
+              "tech_id": "T-LENA",
+              "date": "2026-11-05",
+              "start": "2026-11-05T08:00:00+10:00",
+              "job_type": "repair",
+              "address": "912 Wattle St, Edge Hill QLD 4870"
+            },
+            {
+              "job_external_id": "J913",
+              "tech_id": "T-SAM",
+              "date": "2026-11-05",
+              "start": "2026-11-05T09:00:00+10:00",
+              "job_type": "hot_water_swap",
+              "address": "913 Wattle St, Edge Hill QLD 4870"
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_results",
+          "verb": "read",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_messages",
+          "verb": "read",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_shelf",
+          "verb": "read",
+          "subject": "asset",
+          "request": {},
+          "response": {
+            "as_of": "2026-11-04T04:00:00.000Z",
+            "items": [
+              {
+                "catalogue_code": "CART-35",
+                "on_hand": 2,
+                "reserved": 0,
+                "location": "Bay 3"
+              },
+              {
+                "catalogue_code": "PAN-90",
+                "on_hand": 1,
+                "reserved": 0,
+                "location": "Bay 7"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {},
+          "response": [
+            {
+              "supplier_id": "S-NORTH",
+              "name": "Northside Plumbing Supplies",
+              "lead_hours": 16,
+              "codes": [
+                "TV-15",
+                "FLX-450",
+                "PRV-500",
+                "CART-35",
+                "ISO-15",
+                "PAN-90"
+              ]
+            },
+            {
+              "supplier_id": "S-COAST",
+              "name": "Coastal Hot Water Wholesale",
+              "lead_hours": 72,
+              "codes": [
+                "HWU-315E",
+                "HWU-250G"
+              ]
+            }
+          ]
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "job_external_id": "J911"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job_external_id": "J911"
+          },
+          "response": {
+            "job_external_id": "J911",
+            "quote_lines": [],
+            "materials": [],
+            "description": ""
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_template",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "job_type": "investigate"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J911",
+            "tech_id": "T-MIA",
+            "catalogue_code": null,
+            "reason": "needs_list_unknown",
+            "owner": "Priya Nair"
+          },
+          "response": {
+            "exception_id": "EXC-1"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "write_result",
+          "verb": "write",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J911",
+            "tech_id": "T-MIA",
+            "catalogue_code": null,
+            "status": "flagged",
+            "reason": "needs_list_unknown",
+            "exception_id": "EXC-1"
+          },
+          "response": {
+            "result_id": "RES-2"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "job_external_id": "J912"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job_external_id": "J912"
+          },
+          "response": {
+            "job_external_id": "J912",
+            "quote_lines": [
+              {
+                "catalogue_code": "PRV-500",
+                "qty": 1
+              }
+            ],
+            "materials": [],
+            "description": ""
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_van",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tech_id": "T-LENA"
+          },
+          "response": {
+            "tech_id": "T-LENA",
+            "as_of": "2026-11-01T16:00:00+10:00",
+            "lines": [
+              {
+                "catalogue_code": "PRV-500",
+                "qty": 1
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J912",
+            "tech_id": "T-LENA",
+            "catalogue_code": "PRV-500",
+            "reason": "stock_unknown",
+            "owner": "Priya Nair",
+            "van_as_of": "2026-11-01T16:00:00+10:00"
+          },
+          "response": {
+            "exception_id": "EXC-3"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "write_result",
+          "verb": "write",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J912",
+            "tech_id": "T-LENA",
+            "catalogue_code": "PRV-500",
+            "qty": 1,
+            "status": "flagged",
+            "reason": "stock_unknown",
+            "exception_id": "EXC-3"
+          },
+          "response": {
+            "result_id": "RES-4"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "job_external_id": "J913"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "job_external_id": "J913"
+          },
+          "response": {
+            "job_external_id": "J913",
+            "quote_lines": [
+              {
+                "catalogue_code": "HWU-315E",
+                "qty": 1
+              }
+            ],
+            "materials": [],
+            "description": ""
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "read_van",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "tech_id": "T-SAM"
+          },
+          "response": {
+            "tech_id": "T-SAM",
+            "as_of": "2026-11-04T06:45:00+10:00",
+            "lines": []
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J913",
+            "tech_id": "T-SAM",
+            "catalogue_code": "HWU-315E",
+            "reason": "lead_time_after_job",
+            "owner": "Priya Nair"
+          },
+          "response": {
+            "exception_id": "EXC-5"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "write_result",
+          "verb": "write",
+          "subject": "seam",
+          "request": {
+            "for_date": "2026-11-05",
+            "job_external_id": "J913",
+            "tech_id": "T-SAM",
+            "catalogue_code": "HWU-315E",
+            "qty": 1,
+            "status": "flagged",
+            "reason": "lead_time_after_job",
+            "exception_id": "EXC-5"
+          },
+          "response": {
+            "result_id": "RES-6"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "for_date": "2026-11-05",
+            "tech_id": "T-LENA",
+            "job_external_id": "J912",
+            "lines": [
+              {
+                "catalogue_code": "PRV-500",
+                "qty": 1,
+                "status": "flagged",
+                "reason": "stock_unknown",
+                "text": "PRV-500 x1: flagged (stock_unknown), a person is on it"
+              }
+            ],
+            "body": "Tomorrow, job J912 at 08:00: PRV-500 x1: flagged (stock_unknown), a person is on it."
+          },
+          "response": {
+            "message_id": "MSG-7"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "for_date": "2026-11-05",
+            "tech_id": "T-SAM",
+            "job_external_id": "J913",
+            "lines": [
+              {
+                "catalogue_code": "HWU-315E",
+                "qty": 1,
+                "status": "flagged",
+                "reason": "lead_time_after_job",
+                "text": "HWU-315E x1: flagged (lead_time_after_job), a person is on it"
+              }
+            ],
+            "body": "Tomorrow, job J913 at 09:00: HWU-315E x1: flagged (lead_time_after_job), a person is on it."
+          },
+          "response": {
+            "message_id": "MSG-8"
+          }
+        },
+        {
+          "at": "2026-11-04T04:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "for_date": "2026-11-05",
+            "cutoff": "2026-11-04T05:00:00.000Z",
+            "all_clear": false,
+            "jobs": [
+              {
+                "job_external_id": "J911",
+                "tech_id": "T-MIA",
+                "start": "2026-11-05T07:30:00+10:00",
+                "held": false,
+                "lines": [
+                  {
+                    "catalogue_code": null,
+                    "status": "flagged",
+                    "reason": "needs_list_unknown"
+                  }
+                ]
+              },
+              {
+                "job_external_id": "J912",
+                "tech_id": "T-LENA",
+                "start": "2026-11-05T08:00:00+10:00",
+                "held": false,
+                "lines": [
+                  {
+                    "catalogue_code": "PRV-500",
+                    "status": "flagged",
+                    "reason": "stock_unknown"
+                  }
+                ]
+              },
+              {
+                "job_external_id": "J913",
+                "tech_id": "T-SAM",
+                "start": "2026-11-05T09:00:00+10:00",
+                "held": false,
+                "lines": [
+                  {
+                    "catalogue_code": "HWU-315E",
+                    "status": "flagged",
+                    "reason": "lead_time_after_job"
+                  }
+                ]
+              }
+            ],
+            "counts": {
+              "on_van": 0,
+              "pick_from_shelf": 0,
+              "ordered": 0,
+              "flagged": 3
+            }
+          },
+          "response": {
+            "report_id": "RPT-9",
+            "published_at": "2026-11-04T04:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 10,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "The first tech's message lists the part as on the van. The second says pick it up from the shelf, and the shelf shows it reserved to the job. The third has a purchase order drafted through Material Order, or, if the lead time misses the slot, a flag naming the job. Change nothing and re-run: no second order and no second message.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "The business's own job system, its real van counts and shelf, a real supplier account through Material Order, and the techs' own phones.",
+        "now": "2026-11-04T12:54:15.499Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 10,
+    "pass": 7,
+    "fail": 0,
+    "shapeOnly": 2,
+    "withUs": 1,
+    "evidenceRequired": 0
+  }
+}
