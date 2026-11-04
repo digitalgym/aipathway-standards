@@ -1,0 +1,85 @@
+{
+  "slug": "test-sheet-check",
+  "name": "Test Sheet Check",
+  "office_task": "When a job's test result sheet comes in, check every test is filled in and in range before the certificate is written, and put any failed or blank test in front of the licensed electrician.",
+  "verticals": [
+    "fire-electrical"
+  ],
+  "standards": [
+    "rejected-pack"
+  ],
+  "systems_of_record": [
+    "the job system that issues the job_id the test sheet belongs to (ServiceM8, Simpro or Tradify's job export)",
+    "the mail system that issues the message_id the test sheet arrived on (the office's Gmail or Outlook mailbox)",
+    "the document store that holds the filed original sheet (SharePoint, OneDrive or Google Drive)",
+    "the exception desk the business runs, holding each stopped test sheet with its named owner"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/test-sheet-check"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "webhook"
+  ],
+  "consumes": [
+    {
+      "event": "email.received",
+      "wake": "webhook"
+    },
+    {
+      "event": "job.completed",
+      "wake": "webhook"
+    },
+    {
+      "event": "exception.closed",
+      "wake": "webhook"
+    }
+  ],
+  "emits": [
+    {
+      "event": "evidence.filed",
+      "write": "the test result sheet from the message, filed against the job by its job_id, with each reading (insulation resistance, earth continuity, polarity, circuit connections, fault loop impedance, RCD trip time where an RCD is in scope) as a graph field carrying its confidence, the instrument serial and calibration date, every written not-applicable with its rule, the queue after the eight checks in order, the certificate due date derived from the dated rule, and the as-of date; after the licensed electrician releases it, the self-contained test record the certificate is written from",
+      "readback": "reading the job by its job_id from the job system returns the filed sheet with the message_id and seam.queue, seam.failed_check, seam.certificate_due and seam.as_of; no document back with that message_id means it was not filed and the run raises an exception instead"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the job naming the licensed electrician who tested it: the first check that failed (the sheet is for another job, a licence or the instrument's calibration out of date, no procedure loaded, a blank test, a reading out of range, or two contractor licence numbers), readings waiting for a person to confirm, or a test record waiting for the electrician's named release",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the job_id, the message_id, the failed check with its reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "testsheet.wrong_job",
+      "testsheet.licence_or_calibration_lapsed",
+      "testsheet.no_procedure_for_state",
+      "testsheet.test_blank",
+      "testsheet.reading_out_of_range",
+      "testsheet.two_licence_numbers",
+      "testsheet.yellow_readings",
+      "testsheet.awaiting_release"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.job_id",
+      "seam.message_id",
+      "seam.queue",
+      "seam.failed_check",
+      "seam.rule_version",
+      "seam.certificate_due",
+      "seam.as_of",
+      "seam.accepted_by",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
