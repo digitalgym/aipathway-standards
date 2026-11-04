@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T12:42:50.435Z",
+  "generated_at": "2026-11-04T12:43:03.065Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -12131,6 +12131,116 @@
       ]
     },
     {
+      "slug": "site-test-check",
+      "name": "Site Test Check",
+      "office_task": "When a fire service visit is done, check each test against the site's asset register, hold any with no tagged asset or tag photo, and draft the site report for the person who signs.",
+      "verticals": [
+        "fire-electrical"
+      ],
+      "standards": [
+        "fire-service-pack-standard"
+      ],
+      "systems_of_record": [
+        "the job system that issues the job_id (Simpro, ServiceM8 or similar: the completed service visit, its test results and attachments)",
+        "the asset register that issues the asset_id (every extinguisher, hydrant, fire door and exit light on the site, by the tag printed on it)",
+        "the document store that issues the report_id (the site's pack folder in SharePoint or Google Drive)",
+        "the exception desk the business runs (a sheet, a task list or a ticket queue)"
+      ],
+      "consumes": [
+        {
+          "event": "job.completed",
+          "wake": "webhook"
+        },
+        {
+          "event": "job.updated",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "The site's service report, compiled at request time from the bound service records only (never from a template), marked DRAFT and unsigned, naming who may attest and the retention period from the dated rule for the site's state, written into the site's pack folder for the Fire Safety Advisor or the person the state names to check and sign. It is only written when every test on the visit bound cleanly and every asset due on the visit has a test.",
+          "readback": "The document store returns a report_id; reading that id back returns the job_id, the site id and the service record ids the report was built from. No id back is not a write: report.held is raised with a named owner and the run stops."
+        },
+        {
+          "event": "exception.raised",
+          "write": "An exception on the visit naming the person who owns it: a tag that resolves to no asset or to two, an asset not on this site's register, no obligation named, no result entered, the wrong evidence for the asset class, an uncoded defect, an exit or emergency light closed without its test sheet, a missing tag photograph (unbound, with its age), an asset due on the visit with no test, an isolation without a revisit date or past it, and the held report itself.",
+          "readback": "The exception desk returns an exception_id; reading it back returns the job_id, the asset_id, the reason and the exception_owner. No id back means nothing was raised and the run stops."
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "asset.unresolved",
+          "asset.not_on_site_register",
+          "asset.not_tested",
+          "record.no_obligation",
+          "result.missing",
+          "evidence.wrong_for_class",
+          "defect.uncoded",
+          "record.refused",
+          "record.unbound",
+          "close.refused",
+          "isolation.no_revisit",
+          "isolation.recorded",
+          "isolation.lapsed",
+          "report.held"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.records",
+          "seam.queue",
+          "seam.report_id",
+          "seam.report_status",
+          "seam.exception_open",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/site-test-check"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "fire-service-pack-standard",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:37:29.888Z",
+          "run_id": "run-1793795849883",
+          "green": 11,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 0,
+          "total": 12
+        }
+      ]
+    },
+    {
       "slug": "software-audit",
       "name": "Software Audit",
       "office_task": "Each month, publish what we pay for software on bills and company cards, with owners and renewals due, and flag duplicates and unused ones to a named person, every figure sourced.",
@@ -14155,6 +14265,7 @@
     "service-due",
     "sign-in-follow-up",
     "site-orders",
+    "site-test-check",
     "software-audit",
     "spend-watch",
     "stage-billing",
@@ -14358,6 +14469,12 @@
     {
       "from": "crew-board",
       "to": "site-orders",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "crew-board",
+      "to": "site-test-check",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -14574,6 +14691,12 @@
     {
       "from": "day-desk",
       "to": "site-orders",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "site-test-check",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -14813,6 +14936,12 @@
     },
     {
       "from": "job-sheet",
+      "to": "site-test-check",
+      "event": "job.completed",
+      "id": "job_id"
+    },
+    {
+      "from": "job-sheet",
       "to": "stage-billing",
       "event": "job.completed",
       "id": "job_id"
@@ -14940,6 +15069,12 @@
     {
       "from": "practice-desk",
       "to": "site-orders",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "practice-desk",
+      "to": "site-test-check",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -15095,6 +15230,12 @@
     },
     {
       "from": "repair-board",
+      "to": "site-test-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "repair-board",
       "to": "trim-quote",
       "event": "job.updated",
       "id": "job_id"
@@ -15311,6 +15452,12 @@
     },
     {
       "from": "route-plan",
+      "to": "site-test-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "route-plan",
       "to": "trim-quote",
       "event": "job.updated",
       "id": "job_id"
@@ -15533,6 +15680,12 @@
     },
     {
       "from": "van-board",
+      "to": "site-test-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "van-board",
       "to": "trim-quote",
       "event": "job.updated",
       "id": "job_id"
@@ -15671,6 +15824,12 @@
     },
     {
       "from": "visit-offer",
+      "to": "site-test-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-offer",
       "to": "trim-quote",
       "event": "job.updated",
       "id": "job_id"
@@ -15804,6 +15963,12 @@
     {
       "from": "visit-round",
       "to": "site-orders",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-round",
+      "to": "site-test-check",
       "event": "job.updated",
       "id": "job_id"
     },
