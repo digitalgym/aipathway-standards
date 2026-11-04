@@ -1,0 +1,51 @@
+{
+  "slug": "client-site-report",
+  "name": "Client Site Report",
+  "office_task": "Each month, publish each commercial client a report on their sites: jobs done, assets overdue, open defects and services due next, every line traced to its record, for their account manager to send.",
+  "verticals": ["fire-electrical"],
+  "standards": ["recurring-report"],
+  "systems_of_record": [
+    "the job system (such as Simpro) that holds each site's completed jobs and logged defects, issuing the job_id",
+    "the asset register that holds each site's fire and electrical assets with their AS 1851 or AS/NZS 3760 service dates, issuing the asset_id",
+    "the business's report store or client portal the report is published into, which issues the report_id"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/client-site-report" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "report.published",
+      "write": "one view of the month's report per audience: each client sees only its own sites, the service manager sees every site; each line carries its definition id, source and as-of time, and a correction is a new version superseding the old with the named person and the reason. Sending a client's view to the client stays with their account manager",
+      "readback": "reading the month's reports back from the report store returns each report_id with its version, audience, published_at and published_by; no id back means it was not published and an exception is raised"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception naming the definition's owner or the threshold's person: a source that could not be read, a line with no definition or two, a threshold that could not be compared, or an incomplete correction",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the month, the measure, the reason and the exception_owner"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "report.source_unreadable",
+      "report.no_definition",
+      "report.conflicting_definitions",
+      "report.threshold_not_comparable",
+      "report.correction_incomplete",
+      "report.correction_unknown_measure",
+      "report.publish_failed"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.report_id", "seam.period", "seam.version", "seam.supersedes", "seam.published_by", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
