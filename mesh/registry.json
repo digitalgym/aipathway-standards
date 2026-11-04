@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T12:49:41.729Z",
+  "generated_at": "2026-11-04T12:52:56.894Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -3514,6 +3514,103 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 10
+        }
+      ]
+    },
+    {
+      "slug": "deal-match",
+      "name": "Deal Match",
+      "office_task": "Every morning, check each CRM deal against its Simpro quote by quote id, show each difference in value, stage, customer or contact with both values, and change one only once a person accepts it.",
+      "verticals": [
+        "b2b-office",
+        "trades-building"
+      ],
+      "standards": [
+        "two-records"
+      ],
+      "systems_of_record": [
+        "the CRM (holds each sales deal, carries the Simpro quote id, and owns the contact name and contact email)",
+        "Simpro (issues the quote id and owns the quote value ex GST, the quote stage and the Simpro customer id the quote is raised against)"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the morning deal-to-quote report where sales administration opens it: the pair contract it ran under, the key it joined on (simpro_quote_id), the owner per field, and the counts matched, within tolerance, mismatched, orphaned and corrected, published every run including the all-clear",
+          "readback": "the report store returns a report_id, and reading that id back returns the contract id, the five counts and the published time; no id back means the run did not publish and the owner is told"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the quote naming the person who owns it: an open difference with the CRM value, the Simpro value and the owning system's value side by side awaiting acceptance, a deal or quote with no partner, a value gap over the threshold, a run over the mismatch rate, or an accepted change whose write returned no id",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the simpro quote_id, the field, both values and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "deal_match.contract_missing",
+          "deal_match.owner_missing",
+          "deal_match.difference_open",
+          "deal_match.orphan",
+          "deal_match.over_threshold",
+          "deal_match.mismatch_rate",
+          "deal_match.write_not_read_back"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "seam-mirror",
+        "fields": [
+          "seam.quote_id",
+          "seam.contract_id",
+          "seam.run_id",
+          "seam.difference_status",
+          "seam.value_crm",
+          "seam.value_simpro",
+          "seam.owner_value",
+          "seam.correction_accepted_by",
+          "seam.correction_written_id",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/deal-match"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "two-records",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:50:41.634Z",
+          "run_id": "run-1793796641633",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
         }
       ]
     },
@@ -12542,6 +12639,109 @@
       ]
     },
     {
+      "slug": "site-drop",
+      "name": "Site Drop",
+      "office_task": "File every site photo, chat update and bit of paperwork the crew send onto the right job by the job number they wrote on it, and park anything with no clear job for a named person.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "document-filing"
+      ],
+      "systems_of_record": [
+        "the job system that issues the job_id and the purchase order (order_id) each item is filed on, e.g. Simpro, ServiceM8, AroFlo or Fergus",
+        "the crew chat or office mobile the photos and updates come in on, e.g. a WhatsApp group exported to the office inbox",
+        "Xero, for customer and supplier contacts"
+      ],
+      "consumes": [
+        {
+          "event": "document.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        }
+      ],
+      "emits": [
+        {
+          "event": "evidence.filed",
+          "write": "the original photo, chat update or document attached unaltered to the one job or purchase order its written number names, with a docket, quote or invoice's details typed into blank fields only, and the job_id carried",
+          "readback": "the job system returns the attachment id on the job or order; reading it back by its id returns the attachment, its fingerprint and the entered fields; no id back means it was not filed and an exception is raised"
+        },
+        {
+          "event": "report.published",
+          "write": "the daily close: arrived, filed, parked and duplicates, with the open exceptions oldest first, published on quiet days too",
+          "readback": "the system the close is published into returns a report_id, and reading it back returns the day and counts that add up"
+        },
+        {
+          "event": "exception.raised",
+          "write": "one parked item on the filing list with its closed-list reason, the field, both values where they disagree, and the named owner",
+          "readback": "the exception list returns an exception_id, and reading it back returns the arrival, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "filing.no_id",
+          "filing.two_matches",
+          "filing.no_match",
+          "filing.unreadable_field",
+          "filing.does_not_add_up",
+          "filing.conflicts_with_record",
+          "filing.unknown_kind"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.arrival_id",
+          "seam.file_hash",
+          "seam.job_id",
+          "seam.order_id",
+          "seam.filing_state",
+          "seam.exception_owner",
+          "seam.cleared_by"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/site-drop"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "document-filing",
+          "edition": "2026-10-24",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:50:01.262Z",
+          "run_id": "run-1793796601261",
+          "green": 10,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 14
+        }
+      ]
+    },
+    {
       "slug": "site-orders",
       "name": "Site Orders",
       "office_task": "Turn the build's material list into one purchase order per supplier, from stock first and the supplier's own prices, and match every delivery docket back.",
@@ -14808,6 +15008,7 @@
     "danger-tag-desk",
     "day-desk",
     "deadline-desk",
+    "deal-match",
     "defect-desk",
     "defect-quote",
     "delivery-billing",
@@ -14893,6 +15094,7 @@
     "seller-weekly",
     "service-due",
     "sign-in-follow-up",
+    "site-drop",
     "site-orders",
     "site-test-check",
     "software-audit",
