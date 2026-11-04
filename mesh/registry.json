@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T13:05:23.891Z",
+  "generated_at": "2026-11-04T13:07:07.252Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -5057,6 +5057,106 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 13
+        }
+      ]
+    },
+    {
+      "slug": "fault-desk",
+      "name": "Fault Desk",
+      "office_task": "Before we send a tech, check each fault call, text or alarm against our written fault list, give only our own reset steps, and book one job with what was tried.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "fault-triage"
+      ],
+      "systems_of_record": [
+        "the job system that issues the job_id (ServiceM8 or Simpro, written over its API; on Tradify a person writes the job from the triage log)",
+        "the fault list the business writes, one sheet or SharePoint list with an edition per upload, read before every triage and never written by the bot",
+        "the asset register that issues the asset_id and names each customer's model",
+        "the office's message system (Gmail or Outlook), whose drafts folder holds every written reply for a named person to send",
+        "the task list the office runs (Google Tasks, Planner or a sheet), which issues the exception_id for each parked alarm or failed job write"
+      ],
+      "consumes": [
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "call.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "job.created",
+          "write": "one job in the job system for a fault that cannot be fixed from a written procedure, or whose procedure the customer said did not work: emergency, routine or unclassified, carrying the fault matched, the outcome, the fault list edition, the steps tried and what the customer said, so the tech knows before they leave",
+          "readback": "the job system returns the job_id, and reading that id back returns the job with its triage block; no id back means nothing was written, and a named person is raised (and for an emergency, handed the call at once)"
+        },
+        {
+          "event": "job.updated",
+          "write": "the triage added to the customer's job that is already open, marked as a duplicate of it, instead of a second job",
+          "readback": "reading the open job_id back returns the new triage note on it; no id back means nothing was written and a named person is raised"
+        },
+        {
+          "event": "exception.raised",
+          "write": "a task naming the service coordinator: a monitoring alarm the fault list leaves to a person or cannot place, or a job write that returned no id",
+          "readback": "the task list returns an exception_id, and reading that id back returns the intake, the asset, the list edition and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "fault.alert_left_to_person",
+          "fault.alert_unplaced",
+          "fault.job_write_failed"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "triage.outcome",
+          "triage.matched_fault_id",
+          "triage.edition",
+          "triage.steps_tried",
+          "triage.customer_said",
+          "triage.duplicate_of",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/fault-desk"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "fault-triage",
+          "edition": "2026-11-01",
+          "environment": "stub",
+          "ran_at": "2026-11-04T13:03:45.839Z",
+          "run_id": "run-1793797425838",
+          "green": 5,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 0,
+          "total": 10
         }
       ]
     },
@@ -15810,6 +15910,7 @@
     "estimate-desk",
     "expense-check",
     "fact-library",
+    "fault-desk",
     "feed-match",
     "fire-code-desk",
     "fire-round-watch",
@@ -16488,6 +16589,282 @@
       "to": "terms-watch",
       "event": "payment.received",
       "id": "payment_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "crew-board",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "defect-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "design-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "estimate-desk",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "manual-desk",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "measure-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "parts-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "proposal-desk",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "quote-desk",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "repair-board",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "route-plan",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "swms-desk",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "takeoff-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "trim-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "van-board",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "visit-offer",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "visit-round",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "arrival-brief",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "buy-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "crew-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "danger-tag-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "day-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "defect-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "design-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "estimate-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "hours-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "measure-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "order-release",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "parts-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "parts-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "proposal-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "quote-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "repair-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "retention-book",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "review-ask",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "route-plan",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "safety-cert-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "site-orders",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "site-test-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "swms-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "takeoff-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "trim-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "van-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "van-stock",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "visit-offer",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
+      "to": "visit-round",
+      "event": "job.updated",
+      "id": "job_id"
     },
     {
       "from": "install-book",
