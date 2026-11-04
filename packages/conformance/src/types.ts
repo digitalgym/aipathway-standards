@@ -141,6 +141,38 @@ export const ALL_PORTS = [
   "read_sale",
   "draft_message",
   "send_message",
+  // Client Memory (2026-10-29). Three ports, because the gap between them is
+  // where the person stands. `propose_memory` is the only write an agent
+  // makes: a proposal waiting for a person. `write_memory` records a person's
+  // decision on a proposal, and carries who made it and when. `read_memory`
+  // reads the approved slice for one client id, which is what every other
+  // standard reads instead of re-discovering a preference.
+  "read_memory",
+  "propose_memory",
+  "write_memory",
+  // Job Close (2026-11-01). `close_job` writes the tech's job card (work done,
+  // priced lines, photos) into the job system once, keyed by an intent id, and
+  // returns the job system's own ids. A WRITE of the job, never a create: no
+  // port anywhere lets a close make a job.
+  "close_job",
+  // Job Close and Exception Desk (2026-11-01), shared. `raise_exception` puts
+  // one item a build could not decide on the one exceptions queue, with the
+  // job id, the reason and a named owner. A record with an owner, which a
+  // chat message is not.
+  "raise_exception",
+  "list_exceptions",
+  // Progress Claim Draft (2026-11-05). `read_acceptance` reads the account
+  // owner's recorded acceptance of the waiver and indemnity, with the version
+  // of the wording now published. `read_contract` reads the contract sum, the
+  // schedule of values and what was claimed before out of the contract
+  // record. `read_assessment` reads a person's percent complete for a period,
+  // with who and when: deliberately a READ, because the build never decides
+  // percent complete. `draft_claim` writes a draft that is held for a person;
+  // there is no port that serves, sends, lodges or certifies one.
+  "read_acceptance",
+  "read_contract",
+  "read_assessment",
+  "draft_claim",
   // the run itself
   "rank",
   "gate",
@@ -213,6 +245,19 @@ export const PORT_SHAPE: Record<Port, { verb: PortVerb; subject: string }> = {
   read_sale: { verb: "read", subject: "sale" },
   draft_message: { verb: "write", subject: "draft" },
   send_message: { verb: "say", subject: "message" },
+  read_memory: { verb: "read", subject: "memory" },
+  propose_memory: { verb: "write", subject: "proposal" },
+  write_memory: { verb: "write", subject: "memory" },
+  // Job Close (2026-11-01)
+  close_job: { verb: "write", subject: "job" },
+  // Job Close and Exception Desk (2026-11-01), shared
+  raise_exception: { verb: "write", subject: "exception" },
+  list_exceptions: { verb: "read", subject: "exception" },
+  // Progress Claim Draft (2026-11-05)
+  read_acceptance: { verb: "read", subject: "acceptance" },
+  read_contract: { verb: "read", subject: "contract" },
+  read_assessment: { verb: "read", subject: "assessment" },
+  draft_claim: { verb: "write", subject: "claim_draft" },
   // attach
   evidence: { verb: "attach", subject: "evidence" },
   cite: { verb: "attach", subject: "citation" },

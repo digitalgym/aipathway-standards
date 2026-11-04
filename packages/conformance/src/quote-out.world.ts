@@ -44,6 +44,43 @@ export interface QuoteJob {
   isVariation?: boolean;
   /** The customer has asked for a discount. Never priced here. */
   wantsDiscount?: boolean;
+  /**
+   * Quote this job as options: the key of the business's own tier map entry
+   * for this kind of work (checks 11 to 14). Absent means one set of lines,
+   * exactly as before options existed.
+   */
+  optionsFrom?: string;
+  /** The option labels on this job's quote, set by the world once it is drafted. */
+  quoteOptions?: string[];
+  /**
+   * The option the customer picked, marked by a person (`markChosen`). A
+   * build reads it; it never sets it. Check 14 turns on it.
+   */
+  chosenOption?: string;
+}
+
+/**
+ * One row of the business's tier map: which catalogue lines make one option
+ * for one kind of work. The business keeps it (a sheet tab, a list) and names
+ * the options itself: Good, Better and Best by default, renamed as it likes.
+ * The model never chooses the lines and never invents a tier (check 13).
+ */
+export interface TierRule {
+  /** The kind of work this rule is for, matched against `QuoteJob.optionsFrom`. */
+  key: string;
+  label: string;
+  catalogueIds: string[];
+}
+
+/** Never more than three options on one quote. Two is the fewest that is a choice. */
+export const MAX_OPTIONS = 3;
+export const MIN_OPTIONS = 2;
+
+/** One named option inside one quote. Lines only from the book, so its total is the book's. */
+export interface QuoteOption {
+  label: string;
+  lines: QuoteLine[];
+  total: number;
 }
 
 /** A line in the customer's own price list. The only sanctioned source of a rate. */
@@ -64,7 +101,18 @@ export interface Quote {
   id: string;
   jobId: string;
   lines: QuoteLine[];
+  /**
+   * The sum of `lines`. On a quote with options it is 0: each option carries
+   * its own total, and no sum of options is a price anyone could accept.
+   */
   total: number;
+  /**
+   * Set when the job was quoted as options: two or three named tiers inside
+   * this one quote. Still one quote per job (check 11).
+   */
+  options?: QuoteOption[];
+  /** Marked by a person once the customer picks one. Never by a build. */
+  chosenOption?: string;
   /** The only state this world can produce. There is no "sent". */
   state: "draft";
   /** Set when a second pass keeps (returns) the existing quote rather than creating one. */
@@ -85,6 +133,11 @@ export const PARK_REASONS = [
   "variation_to_accepted_quote",
   "discount_requested",
   "pricebook_unreadable",
+  // Options (checks 11 and 13). The job asked for options and the business's
+  // tier map has no usable entry for its work, or the entry names more than
+  // three. The build never fills the gap with tiers of its own.
+  "no_tier_map",
+  "too_many_options",
 ] as const;
 export type ParkReason = (typeof PARK_REASONS)[number];
 
@@ -95,9 +148,23 @@ export interface QuotePorts {
   readJob(jobId: string): QuoteJob | null;
   /** Read at draft time. A build that caches this fails check 10. */
   readPricebook(): PriceItem[];
-  /** Create the draft in their system. Returns null if the write was not verified. */
+  /**
+   * The business's own tier map for one kind of work, in its order. Part of
+   * the book, so it speaks through `read_pricebook`. Empty when the business
+   * keeps no entry for that work, which parks the quote (check 13).
+   */
+  readTierMap(key: string): TierRule[];
+  /**
+   * Create the draft in their system. Returns null if the write was not
+   * verified. With `options`, one quote carrying each named option; `lines`
+   * is then empty, because the lines live in the options.
+   */
   draftQuote(
-    input: { jobId: string; lines: QuoteLine[] },
+    input: {
+      jobId: string;
+      lines: QuoteLine[];
+      options?: Array<{ label: string; lines: QuoteLine[] }>;
+    },
     intentId: string,
   ): Quote | null;
   /** The second pass. Keeps (returns) the existing quote and records duplicate_of. */
@@ -110,6 +177,8 @@ export interface QuoteWorldOptions {
   now?: Date;
   jobs?: QuoteJob[];
   pricebook?: PriceItem[];
+  /** The business's tier map. Empty unless a scenario quotes options. */
+  tierMap?: TierRule[];
   /** Make the next draft return no id, to exercise check 6. */
   failNextWrite?: boolean;
 }
@@ -122,6 +191,7 @@ export class QuoteWorld {
 
   private readonly jobs: QuoteJob[];
   private pricebook: PriceItem[];
+  private readonly tierMap: TierRule[];
   private clock: Date;
   private seq = 0;
   private failNextWrite: boolean;
@@ -130,6 +200,7 @@ export class QuoteWorld {
     this.clock = opts.now ?? new Date("2026-09-21T23:00:00.000Z");
     this.jobs = (opts.jobs ?? []).map((j) => ({ ...j }));
     this.pricebook = (opts.pricebook ?? []).map((p) => ({ ...p }));
+    this.tierMap = (opts.tierMap ?? []).map((t) => ({ ...t, catalogueIds: [...t.catalogueIds] }));
     this.failNextWrite = opts.failNextWrite ?? false;
   }
 
@@ -146,6 +217,19 @@ export class QuoteWorld {
   changePrice(catalogueId: string, rate: number): void {
     const item = this.pricebook.find((p) => p.catalogueId === catalogueId);
     if (item) item.rate = rate;
+  }
+
+  /**
+   * The customer picked an option and a person marked it. Check 14's stimulus.
+   * The runner does this, never the build: choosing for the customer is the
+   * one thing a quoting build must not be able to do.
+   */
+  markChosen(jobId: string, label: string): void {
+    const job = this.jobById(jobId);
+    if (!job) return;
+    job.chosenOption = label;
+    const quote = this.quotes.find((q) => q.jobId === jobId);
+    if (quote) quote.chosenOption = label;
   }
 
   jobById(id: string): QuoteJob | undefined {
@@ -167,7 +251,9 @@ export class QuoteWorld {
     return {
       quote,
       job: this.jobById(quote.jobId),
-      catalogueIds: quote.lines.map((l) => l.catalogueId),
+      catalogueIds: (quote.options ? quote.options.flatMap((o) => o.lines) : quote.lines).map(
+        (l) => l.catalogueId,
+      ),
       calls: this.calls,
     };
   }
@@ -195,9 +281,19 @@ export class QuoteWorld {
         this.record(
           "read_job",
           { jobId },
-          job ? { id: job.id, source: job.source, quoteId: job.quoteId ?? null } : null,
+          job
+            ? {
+                id: job.id,
+                source: job.source,
+                quoteId: job.quoteId ?? null,
+                ...(job.optionsFrom ? { optionsFrom: job.optionsFrom } : {}),
+                ...(job.chosenOption ? { chosenOption: job.chosenOption } : {}),
+              }
+            : null,
         );
-        return job ? { ...job } : null;
+        return job
+          ? { ...job, ...(job.quoteOptions ? { quoteOptions: [...job.quoteOptions] } : {}) }
+          : null;
       },
 
       readPricebook: () => {
@@ -208,25 +304,52 @@ export class QuoteWorld {
         return snapshot;
       },
 
+      readTierMap: (key) => {
+        const rules = this.tierMap
+          .filter((t) => t.key === key)
+          .map((t) => ({ ...t, catalogueIds: [...t.catalogueIds] }));
+        this.record("read_pricebook", { tierMap: key }, { options: rules.map((r) => r.label) });
+        return rules;
+      },
+
       draftQuote: (input, intentId) => {
         if (this.failNextWrite) {
           this.failNextWrite = false;
           this.record("draft_quote", { ...input, intentId }, { id: null }, intentId);
           return null;
         }
-        const total = input.lines.reduce((sum, l) => sum + l.rate, 0);
+        const sum = (lines: QuoteLine[]) => lines.reduce((s, l) => s + l.rate, 0);
+        const options = input.options?.map((o) => ({
+          label: o.label,
+          lines: o.lines.map((l) => ({ ...l })),
+          total: sum(o.lines),
+        }));
+        const total = options ? 0 : sum(input.lines);
         const created: Quote = {
           id: `Q${++this.seq}`,
           jobId: input.jobId,
-          lines: input.lines.map((l) => ({ ...l })),
+          lines: options ? [] : input.lines.map((l) => ({ ...l })),
           total,
+          ...(options ? { options } : {}),
           state: "draft",
           updates: 0,
         };
         this.quotes.push(created);
         const job = this.jobById(input.jobId);
-        if (job) job.quoteId = created.id;
-        this.record("draft_quote", { ...input, intentId }, { id: created.id, total }, intentId);
+        if (job) {
+          job.quoteId = created.id;
+          if (options) job.quoteOptions = options.map((o) => o.label);
+        }
+        this.record(
+          "draft_quote",
+          { ...input, intentId },
+          {
+            id: created.id,
+            total,
+            ...(options ? { options: options.map((o) => ({ label: o.label, total: o.total })) } : {}),
+          },
+          intentId,
+        );
         return { ...created };
       },
 

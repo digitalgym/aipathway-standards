@@ -102,7 +102,7 @@ package is the harness. The site is the standard.
 
 ## The standards
 
-27 of them, each one a job that leaks money in an Australian small business or
+40 of them, each one a job that leaks money in an Australian small business or
 network. Every one publishes its checks as data at the same `/checks.json` path.
 
 | Standard | The job |
@@ -134,6 +134,19 @@ network. Every one publishes its checks as data at the same `/checks.json` path.
 | [price-one-pager](https://aipathway.com.au/explore-ai/price-one-pager-build-standard) | The vendor sees where the price came from, and the record proves it later |
 | [open-home-feedback](https://aipathway.com.au/explore-ai/open-home-feedback-build-standard) | Every open-home attendee followed up with your yes, and the vendor told what buyers said |
 | [just-sold-pack](https://aipathway.com.au/explore-ai/just-sold-pack-build-standard) | A sale nearby told to the neighbours, every message approved by a person |
+| [review-request](https://aipathway.com.au/explore-ai/review-request-build-standard) | Every customer asked for a review the same way once the job is finished, never filtered by score |
+| [next-service](https://aipathway.com.au/explore-ai/next-service-build-standard) | Service and warranty dates derived from a schedule, a reminder with consent, one booking request per yes |
+| [document-filing](https://aipathway.com.au/explore-ai/document-filing-build-standard) | Every arriving document on its record by the number printed on it, or on one list for a person |
+| [remittance-split](https://aipathway.com.au/explore-ai/remittance-split-build-standard) | One deposit split across its invoices as one batch equal to it, held whole until every line is explained |
+| [client-desk](https://aipathway.com.au/explore-ai/client-desk-build-standard) | The phone answered in business hours and the customer kept told, every time from the job record |
+| [virtual-admin](https://aipathway.com.au/explore-ai/virtual-admin-build-standard) | The whole office admin role: the desk and the money path on one job, a complaint on the phone stops the invoice |
+| [client-memory](https://aipathway.com.au/explore-ai/client-memory-build-standard) | What the business knows about each client: the AI proposes, a person approves, every standard reads it by client id |
+| [job-close](https://aipathway.com.au/explore-ai/job-close-build-standard) | The job card filled in from site: priced only from the book, confirmed by the tech, written once, then complete |
+| [job-brief](https://aipathway.com.au/explore-ai/job-brief-build-standard) | A morning brief per tech built only from the job system, every line citing its record, nothing guessed |
+| [exception-desk](https://aipathway.com.au/explore-ai/exception-desk-build-standard) | Everything every standard parks, in one queue with a record id, an owner and a clock, closed only by a person |
+| [parts-ready](https://aipathway.com.au/explore-ai/parts-ready-build-standard) | Tomorrow's jobs checked against the van and the shelf the afternoon before, a shortfall ordered through Material Order or flagged, nothing substituted |
+| [fault-triage](https://aipathway.com.au/explore-ai/fault-triage-build-standard) | Every fault sorted against your written list: fixed on the phone only from a written procedure, a job when someone has to go, anything unsafe to the emergency path |
+| [progress-claim-draft](https://aipathway.com.au/explore-ai/progress-claim-draft-build-standard) | Draft: the month's progress claim drafted from the schedule, the site assessment and signed variations, behind a recorded waiver, and held for the builder to serve |
 
 ## Also available
 
