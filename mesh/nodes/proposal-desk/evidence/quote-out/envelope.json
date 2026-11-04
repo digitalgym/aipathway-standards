@@ -1,0 +1,1065 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793793433925",
+  "standard": "quote-out-build-standard",
+  "spec": "AIP-BS-QUOTE-OUT",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-04T11:57:13.919Z",
+  "finishedAt": "2026-11-04T11:57:13.925Z",
+  "results": [
+    {
+      "checkId": "job-is-the-trigger",
+      "n": 1,
+      "title": "A job is the only trigger",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Each draft is preceded by a read of the job it came from and carries that job's id. No draft appears without one.",
+      "actual": "8 port call(s): read_job, read_pricebook, draft_quote, notify, read_job, read_pricebook, draft_quote, notify; 2 quote(s), 0 escalation(s), 2 alert(s)",
+      "stimulus": {
+        "description": "A job created by an after-hours call, and a second job created from an overnight web form.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "job-is-the-trigger"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "PRJ-2201"
+          },
+          "response": {
+            "id": "PRJ-2201",
+            "source": "call",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "PRJ-2201",
+            "lines": [
+              {
+                "catalogueId": "ONB-NEW",
+                "description": "New client onboarding and ATO agent nomination",
+                "rate": 19800
+              },
+              {
+                "catalogueId": "IND-ITR",
+                "description": "Individual income tax return",
+                "rate": 38500
+              }
+            ],
+            "intentId": "PRJ-2201:quote-out:proposal-desk"
+          },
+          "response": {
+            "id": "Q1",
+            "total": 58300
+          },
+          "intentId": "PRJ-2201:quote-out:proposal-desk"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "proposals-partner",
+            "jobId": "PRJ-2201",
+            "reason": "ready_to_release:Q1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "PRJ-2202"
+          },
+          "response": {
+            "id": "PRJ-2202",
+            "source": "form",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "PRJ-2202",
+            "lines": [
+              {
+                "catalogueId": "ONB-NEW",
+                "description": "New client onboarding and ATO agent nomination",
+                "rate": 19800
+              },
+              {
+                "catalogueId": "TR-ITR",
+                "description": "Trust tax return and distribution resolution",
+                "rate": 187000
+              }
+            ],
+            "intentId": "PRJ-2202:quote-out:proposal-desk"
+          },
+          "response": {
+            "id": "Q2",
+            "total": 206800
+          },
+          "intentId": "PRJ-2202:quote-out:proposal-desk"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "proposals-partner",
+            "jobId": "PRJ-2202",
+            "reason": "ready_to_release:Q2"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "pricebook-is-the-only-source",
+      "n": 2,
+      "title": "The price list is the only source of a rate",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A read of the price list precedes the draft, and every priced line carries the catalogue id it came from.",
+      "actual": "4 port call(s): read_job, read_pricebook, draft_quote, notify; 1 quote(s), 0 escalation(s), 1 alert(s)",
+      "stimulus": {
+        "description": "A job whose work maps cleanly to three catalogue items.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "pricebook-is-the-only-source"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "PRJ-2301"
+          },
+          "response": {
+            "id": "PRJ-2301",
+            "source": "form",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "PRJ-2301",
+            "lines": [
+              {
+                "catalogueId": "ONB-NEW",
+                "description": "New client onboarding and ATO agent nomination",
+                "rate": 19800
+              },
+              {
+                "catalogueId": "CO-FS-ITR",
+                "description": "Company financial statements and income tax return",
+                "rate": 264000
+              },
+              {
+                "catalogueId": "BAS-QTR",
+                "description": "Quarterly BAS preparation and lodgement",
+                "rate": 45000
+              },
+              {
+                "catalogueId": "BAS-QTR",
+                "description": "Quarterly BAS preparation and lodgement",
+                "rate": 45000
+              },
+              {
+                "catalogueId": "BAS-QTR",
+                "description": "Quarterly BAS preparation and lodgement",
+                "rate": 45000
+              },
+              {
+                "catalogueId": "BAS-QTR",
+                "description": "Quarterly BAS preparation and lodgement",
+                "rate": 45000
+              }
+            ],
+            "intentId": "PRJ-2301:quote-out:proposal-desk"
+          },
+          "response": {
+            "id": "Q1",
+            "total": 463800
+          },
+          "intentId": "PRJ-2301:quote-out:proposal-desk"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "proposals-partner",
+            "jobId": "PRJ-2301",
+            "reason": "ready_to_release:Q1"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "unpriceable-is-parked",
+      "n": 3,
+      "title": "What cannot be priced is parked",
+      "verdict": "pass",
+      "held": true,
+      "expected": "No draft is created. An escalate call carries a park reason from the fixed list and the unmatched line, and no invented rate appears anywhere in the trace.",
+      "actual": "3 port call(s): read_job, read_pricebook, escalate; 0 quote(s), 1 escalation(s), 0 alert(s)",
+      "stimulus": {
+        "description": "A job needing one catalogue item and one thing the price list does not cover.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "unpriceable-is-parked"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "PRJ-2401"
+          },
+          "response": {
+            "id": "PRJ-2401",
+            "source": "call",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "not_in_pricebook",
+            "detail": "{\"job_id\":\"PRJ-2401\",\"exception_owner\":\"proposals-partner\",\"lines\":[{\"catalogueId\":\"TR-ITR\",\"description\":\"Trust tax return and distribution resolution\",\"rate\":187000}],\"unmatched\":[{\"description\":\"Group restructure advice\",\"park_reason\":\"not_in_pricebook\"}],\"total_ex_gst\":null}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "no-variation-pricing",
+      "n": 4,
+      "title": "Variations and discounts stay with a person",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Both escalate with a typed reason. Neither produces a draft.",
+      "actual": "4 port call(s): read_job, escalate, read_job, escalate; 0 quote(s), 2 escalation(s), 0 alert(s)",
+      "stimulus": {
+        "description": "A job flagged as a variation to an accepted quote, then a job carrying a request for a discount.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "no-variation-pricing"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "PRJ-2501"
+          },
+          "response": {
+            "id": "PRJ-2501",
+            "source": "call",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "variation_to_accepted_quote",
+            "detail": "{\"job_id\":\"PRJ-2501\",\"exception_owner\":\"proposals-partner\",\"lines\":[],\"unmatched\":[],\"total_ex_gst\":null}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "PRJ-2502"
+          },
+          "response": {
+            "id": "PRJ-2502",
+            "source": "form",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "discount_requested",
+            "detail": "{\"job_id\":\"PRJ-2502\",\"exception_owner\":\"proposals-partner\",\"lines\":[],\"unmatched\":[],\"total_ex_gst\":null}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-quote-per-job",
+      "n": 5,
+      "title": "One quote per job",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Exactly one quote exists in the world the runner owns. The second pass returned the same quote carrying duplicate_of, not a create.",
+      "actual": "6 port call(s): read_job, read_pricebook, draft_quote, notify, read_job, draft_quote; 1 quote(s), 0 escalation(s), 1 alert(s)",
+      "stimulus": {
+        "description": "The same job reaching the standard twice: once from the call, once from the follow-up email minutes later.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-quote-per-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "PRJ-2601"
+          },
+          "response": {
+            "id": "PRJ-2601",
+            "source": "form",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "PRJ-2601",
+            "lines": [
+              {
+                "catalogueId": "ONB-NEW",
+                "description": "New client onboarding and ATO agent nomination",
+                "rate": 19800
+              },
+              {
+                "catalogueId": "IND-ITR",
+                "description": "Individual income tax return",
+                "rate": 38500
+              }
+            ],
+            "intentId": "PRJ-2601:quote-out:proposal-desk"
+          },
+          "response": {
+            "id": "Q1",
+            "total": 58300
+          },
+          "intentId": "PRJ-2601:quote-out:proposal-desk"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "proposals-partner",
+            "jobId": "PRJ-2601",
+            "reason": "ready_to_release:Q1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-22T08:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "PRJ-2601"
+          },
+          "response": {
+            "id": "PRJ-2601",
+            "source": "form",
+            "quoteId": "Q1"
+          }
+        },
+        {
+          "at": "2026-09-22T08:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "update": "Q1",
+            "intentId": "PRJ-2601:quote-out:proposal-desk"
+          },
+          "response": {
+            "id": "Q1"
+          },
+          "intentId": "PRJ-2601:quote-out:proposal-desk"
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "draft-quote-verified",
+      "n": 6,
+      "title": "The write is verified",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A notify call follows the failed write, and the job is not reported as quoted.",
+      "actual": "4 port call(s): read_job, read_pricebook, draft_quote, notify; 0 quote(s), 0 escalation(s), 1 alert(s)",
+      "stimulus": {
+        "description": "The runner seeds the stub to return a null external_id on the quote write.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "draft-quote-verified"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "PRJ-2701"
+          },
+          "response": {
+            "id": "PRJ-2701",
+            "source": "call",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "PRJ-2701",
+            "lines": [
+              {
+                "catalogueId": "CO-FS-ITR",
+                "description": "Company financial statements and income tax return",
+                "rate": 264000
+              }
+            ],
+            "intentId": "PRJ-2701:quote-out:proposal-desk"
+          },
+          "response": {
+            "id": null
+          },
+          "intentId": "PRJ-2701:quote-out:proposal-desk"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "proposals-partner",
+            "jobId": "PRJ-2701",
+            "reason": "write_failed"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "draft-never-sends",
+      "n": 7,
+      "title": "The draft does not send itself",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The quote is written in a draft state and surfaced for a person to release. No send port appears in the trace at all.",
+      "actual": "4 port call(s): read_job, read_pricebook, draft_quote, notify; 1 quote(s), 0 escalation(s), 1 alert(s)",
+      "stimulus": {
+        "description": "A job that prices cleanly from the price list.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "draft-never-sends"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "PRJ-2801"
+          },
+          "response": {
+            "id": "PRJ-2801",
+            "source": "form",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "PRJ-2801",
+            "lines": [
+              {
+                "catalogueId": "IND-ITR",
+                "description": "Individual income tax return",
+                "rate": 38500
+              },
+              {
+                "catalogueId": "BAS-QTR",
+                "description": "Quarterly BAS preparation and lodgement",
+                "rate": 45000
+              },
+              {
+                "catalogueId": "BAS-QTR",
+                "description": "Quarterly BAS preparation and lodgement",
+                "rate": 45000
+              },
+              {
+                "catalogueId": "BAS-QTR",
+                "description": "Quarterly BAS preparation and lodgement",
+                "rate": 45000
+              },
+              {
+                "catalogueId": "BAS-QTR",
+                "description": "Quarterly BAS preparation and lodgement",
+                "rate": 45000
+              }
+            ],
+            "intentId": "PRJ-2801:quote-out:proposal-desk"
+          },
+          "response": {
+            "id": "Q1",
+            "total": 218500
+          },
+          "intentId": "PRJ-2801:quote-out:proposal-desk"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "proposals-partner",
+            "jobId": "PRJ-2801",
+            "reason": "ready_to_release:Q1"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "quote-is-not-ours",
+      "n": 8,
+      "title": "The quote lives in their system",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The quote is retrievable from the system of record by its own id, carrying the lines and total that were drafted.",
+      "actual": "4 port call(s): read_job, read_pricebook, draft_quote, notify; 1 quote(s), 0 escalation(s), 1 alert(s)",
+      "stimulus": {
+        "description": "A priced job, then a retrieval of the quote from the system of record.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "quote-is-not-ours"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "PRJ-2901"
+          },
+          "response": {
+            "id": "PRJ-2901",
+            "source": "call",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "PRJ-2901",
+            "lines": [
+              {
+                "catalogueId": "TR-ITR",
+                "description": "Trust tax return and distribution resolution",
+                "rate": 187000
+              },
+              {
+                "catalogueId": "IND-ITR",
+                "description": "Individual income tax return",
+                "rate": 38500
+              }
+            ],
+            "intentId": "PRJ-2901:quote-out:proposal-desk"
+          },
+          "response": {
+            "id": "Q1",
+            "total": 225500
+          },
+          "intentId": "PRJ-2901:quote-out:proposal-desk"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "proposals-partner",
+            "jobId": "PRJ-2901",
+            "reason": "ready_to_release:Q1"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "log-survives",
+      "n": 9,
+      "title": "The log survives",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "One quote_id returns the source job, the ordered port calls, the catalogue ids used and the outcome as one object.",
+      "actual": "4 port call(s): read_job, read_pricebook, draft_quote, notify; 1 quote(s), 0 escalation(s), 1 alert(s)",
+      "stimulus": {
+        "description": "Any completed draft, then a retrieval by quote_id.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "log-survives"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "PRJ-3001"
+          },
+          "response": {
+            "id": "PRJ-3001",
+            "source": "form",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "PRJ-3001",
+            "lines": [
+              {
+                "catalogueId": "ONB-NEW",
+                "description": "New client onboarding and ATO agent nomination",
+                "rate": 19800
+              },
+              {
+                "catalogueId": "PAY-STP",
+                "description": "Payroll setup and Single Touch Payroll reporting",
+                "rate": 66000
+              }
+            ],
+            "intentId": "PRJ-3001:quote-out:proposal-desk"
+          },
+          "response": {
+            "id": "Q1",
+            "total": 85800
+          },
+          "intentId": "PRJ-3001:quote-out:proposal-desk"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "proposals-partner",
+            "jobId": "PRJ-3001",
+            "reason": "ready_to_release:Q1"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "pricebook-is-current",
+      "n": 10,
+      "title": "The price list was read, not remembered",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The read returns the changed rate and the draft carries it, or the quote parks. The superseded rate appears nowhere on the draft.",
+      "actual": "8 port call(s): read_job, read_pricebook, draft_quote, notify, read_job, read_pricebook, draft_quote, notify; 2 quote(s), 0 escalation(s), 2 alert(s)",
+      "stimulus": {
+        "description": "A draft raised after the price list has changed in the system of record.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "pricebook-is-current"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "PRJ-3101"
+          },
+          "response": {
+            "id": "PRJ-3101",
+            "source": "form",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "PRJ-3101",
+            "lines": [
+              {
+                "catalogueId": "BAS-QTR",
+                "description": "Quarterly BAS preparation and lodgement",
+                "rate": 45000
+              }
+            ],
+            "intentId": "PRJ-3101:quote-out:proposal-desk"
+          },
+          "response": {
+            "id": "Q1",
+            "total": 45000
+          },
+          "intentId": "PRJ-3101:quote-out:proposal-desk"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "proposals-partner",
+            "jobId": "PRJ-3101",
+            "reason": "ready_to_release:Q1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-22T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "PRJ-3102"
+          },
+          "response": {
+            "id": "PRJ-3102",
+            "source": "form",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-22T01:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-22T01:00:00.000Z"
+          },
+          "response": {
+            "items": 6
+          }
+        },
+        {
+          "at": "2026-09-22T01:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "PRJ-3102",
+            "lines": [
+              {
+                "catalogueId": "BAS-QTR",
+                "description": "Quarterly BAS preparation and lodgement",
+                "rate": 49500
+              }
+            ],
+            "intentId": "PRJ-3102:quote-out:proposal-desk"
+          },
+          "response": {
+            "id": "Q2",
+            "total": 49500
+          },
+          "intentId": "PRJ-3102:quote-out:proposal-desk"
+        },
+        {
+          "at": "2026-09-22T01:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "proposals-partner",
+            "jobId": "PRJ-3102",
+            "reason": "ready_to_release:Q2"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 11,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "Run 1 wrote nothing and parked with not_in_pricebook, carrying the priced lines, no total and no invented rate. Run 2 left one real draft quote in that tenant against real catalogue ids. Run 3 kept that quote rather than creating a second, carrying duplicate_of.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "A real job, from a ServiceM8 or Simpro tenant or held by the build when the books are in Xero alone, run once with a line not in the price list and then twice without it.",
+        "now": "2026-11-04T11:57:13.925Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 11,
+    "pass": 7,
+    "fail": 0,
+    "shapeOnly": 3,
+    "withUs": 1,
+    "evidenceRequired": 0
+  }
+}
