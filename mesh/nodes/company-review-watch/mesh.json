@@ -1,0 +1,52 @@
+{
+  "slug": "company-review-watch",
+  "name": "Company Review Watch",
+  "office_task": "Keep each client company's ASIC annual review and officeholder change dates worked out from dated rules, draft the client reminder before late fees start, and file the proof.",
+  "verticals": ["accounting-bookkeeping"],
+  "standards": ["compliance-calendar"],
+  "systems_of_record": ["the practice's obligation register (its client company calendar, dated rule set and the document store ASIC confirmations and fee receipts are filed in)"],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/company-review-watch" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "email.received", "wake": "webhook" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "evidence.filed",
+      "write": "an ASIC confirmation (a paid annual review fee receipt or a lodged officeholder change) attached to an email, filed as evidence of completion on the client obligation it names by obligation id; an email with no obligation id is never matched on a company name or ACN text and is raised instead",
+      "readback": "the obligation is read back by its id and must return the same evidence reference (the message_id and attachment) and a completion date; if it does not, nothing was filed and review.evidence_not_read_back is raised"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the client obligation naming the person who owns it: an unknown review or change date, no rule in force, a past date no retained rule version explains, a 'paid' or 'lodged' email with no document, a director's dated refusal, a breach, a drafted client reminder awaiting a named release, a release with no named person, silence past the next chase date, or an email with no obligation id",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the obligation id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "review.anchor_unknown",
+      "review.no_rule_in_force",
+      "review.history_unexplained",
+      "review.completion_without_evidence",
+      "review.evidence_not_read_back",
+      "review.refusal_recorded",
+      "review.breached",
+      "review.reminder_drafted_awaiting_release",
+      "review.release_refused",
+      "review.chase_due",
+      "review.email_unmatched"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.obligation_ref", "seam.rule_version", "seam.anchor_status", "seam.state", "seam.evidence", "seam.refused_at", "seam.breached_at", "seam.next_chase", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
