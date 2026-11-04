@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T12:28:29.309Z",
+  "generated_at": "2026-11-04T12:31:35.869Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -10273,6 +10273,108 @@
       ]
     },
     {
+      "slug": "review-ask",
+      "name": "Review Ask",
+      "office_task": "After each finished job, line up the same Google review message for every customer, one reminder then stop, hold jobs with an open callback or dispute, and a person releases each batch.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "review-request"
+      ],
+      "systems_of_record": [
+        "the job system that issues the job_id and holds its status, callbacks, invoice dispute and complaint (ServiceM8, Simpro, Fergus, Jobber or AroFlo)",
+        "the SMS or email account the business owns (the ask, the reminder and the reply, by message_id)",
+        "the review record and the exception desk the business runs (a sheet or a list that issues the exception_id)"
+      ],
+      "consumes": [
+        {
+          "event": "job.completed",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "job.updated",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "evidence.filed",
+          "write": "each ask and reminder a named person released, filed against its job in the review record: the job_id, the customer, the channel, the exact body, the message_id and who released it; each reply filed against the job it answers, word for word",
+          "readback": "the SMS or email account returns a message_id for the send, and reading the review record back by job_id returns that message_id with the body and the releaser; no message_id back means nothing was sent, and a send_failed exception is raised"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the job naming the owner: held for an open callback, a disputed invoice or an open complaint; no mobile and no email on record; a send that did not return an id; or a written message that offers something or names stars",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the job_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "review.open_callback",
+          "review.invoice_disputed",
+          "review.open_complaint",
+          "review.no_way_to_reach",
+          "review.send_failed",
+          "review.message_breaks_the_standard"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "seam-mirror",
+        "fields": [
+          "seam.job_id",
+          "seam.ask_status",
+          "seam.asked_at",
+          "seam.reminded_at",
+          "seam.hold_reason",
+          "seam.released_by",
+          "seam.message_id",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/review-ask"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "review-request",
+          "edition": "2026-10-24",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:28:19.986Z",
+          "run_id": "run-1793795299984",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 14
+        }
+      ]
+    },
+    {
       "slug": "ring-list",
       "name": "Ring List",
       "office_task": "Every weekday morning, tell me who to ring today from my own database, why each one, with a short opener drafted, and nothing past the do-not-call flags.",
@@ -13119,6 +13221,7 @@
     "rental-safety-watch",
     "repair-board",
     "retention-book",
+    "review-ask",
     "ring-list",
     "roof-desk",
     "route-plan",
@@ -13276,6 +13379,12 @@
     {
       "from": "crew-board",
       "to": "retention-book",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "crew-board",
+      "to": "review-ask",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -13491,6 +13600,12 @@
     },
     {
       "from": "job-sheet",
+      "to": "review-ask",
+      "event": "job.completed",
+      "id": "job_id"
+    },
+    {
+      "from": "job-sheet",
       "to": "safety-cert-desk",
       "event": "job.completed",
       "id": "job_id"
@@ -13588,6 +13703,12 @@
     {
       "from": "practice-desk",
       "to": "retention-book",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "practice-desk",
+      "to": "review-ask",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -13719,6 +13840,12 @@
     },
     {
       "from": "repair-board",
+      "to": "review-ask",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "repair-board",
       "to": "route-plan",
       "event": "job.updated",
       "id": "job_id"
@@ -13905,6 +14032,12 @@
     },
     {
       "from": "route-plan",
+      "to": "review-ask",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "route-plan",
       "to": "safety-cert-desk",
       "event": "job.updated",
       "id": "job_id"
@@ -14085,6 +14218,12 @@
     },
     {
       "from": "van-board",
+      "to": "review-ask",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "van-board",
       "to": "route-plan",
       "event": "job.updated",
       "id": "job_id"
@@ -14199,6 +14338,12 @@
     },
     {
       "from": "visit-offer",
+      "to": "review-ask",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-offer",
       "to": "route-plan",
       "event": "job.updated",
       "id": "job_id"
@@ -14308,6 +14453,12 @@
     {
       "from": "visit-round",
       "to": "retention-book",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-round",
+      "to": "review-ask",
       "event": "job.updated",
       "id": "job_id"
     },
