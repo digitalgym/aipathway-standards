@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T12:09:21.515Z",
+  "generated_at": "2026-11-04T12:11:19.252Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -7123,6 +7123,120 @@
       ]
     },
     {
+      "slug": "outgoings-desk",
+      "name": "Outgoings Desk",
+      "office_task": "Each year, when a commercial tenant's outgoings are reconciled, work out their share from the lease, draft the recovery invoice in Xero, park any unclear share, and hold it for the manager.",
+      "verticals": [
+        "property"
+      ],
+      "standards": [
+        "invoice-out"
+      ],
+      "systems_of_record": [
+        "the property management system that holds each commercial lease, its recoverable outgoings and the tenant's share, and issues one outgoings reconciliation record per tenancy per outgoings year (carried as job_id, with the tenancy_id on it), which the property manager marks final",
+        "the building's outgoings schedule for the year, actual and budget per category, kept as the agency's Xero items for that building",
+        "Xero, which issues the invoice_id"
+      ],
+      "consumes": [
+        {
+          "event": "job.completed",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "invoice.raised",
+          "write": "One draft recovery invoice in Xero per tenancy per outgoings year, referenced job:<reconciliation id>, one line per outgoings category the reconciliation carries at the tenant's lease share of that year's actual, less the same share of the budget the tenant paid instalments on, every figure read from the year's outgoings schedule at draft time and the signed deed of variation attached for any share changed mid-year. Xero applies GST from the items. A second final event updates the same draft.",
+          "readback": "Xero returns the InvoiceID; GET /api.xro/2.0/Invoices/{InvoiceID} must return the invoice with Reference job:<reconciliation id>, and that id is stamped on the reconciliation as seam.invoice_id. No id back is not a write: it raises invoice.write_failed and the run stops."
+        },
+        {
+          "event": "invoice.sent",
+          "write": "The recovery invoice leaves only after the property manager releases it by name, or under a rule and threshold they wrote down (none by default); the release and the send time are recorded against the reconciliation. The bot never approves or emails in Xero itself.",
+          "readback": "GET /api.xro/2.0/Invoices/{InvoiceID} returns it AUTHORISED and sent to the tenant's contact, and the reconciliation read by its id shows seam.released_by (a person or a rule) before the send time. A send with no release on the record is refused."
+        },
+        {
+          "event": "exception.raised",
+          "write": "A parked or waiting recovery as an exception on the reconciliation: the reason from the standard's list (not_in_pricebook for a category the year's schedule does not hold or a share the lease does not record, unsigned_variation, write_failed), over_threshold for a draft waiting on the manager, or credit_due when instalments already cover the share, with the reconciliation id, the invoice id, the categories left unbilled and exception_owner set to the property manager named for outgoings.",
+          "readback": "The exception desk returns an exception_id, and reading it back returns the job_id, the invoice_id, the reason and the exception_owner; the next run reads it there and stops until exception.closed."
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "invoice.not_in_pricebook",
+          "invoice.unsigned_variation",
+          "invoice.write_failed",
+          "invoice.over_threshold",
+          "invoice.credit_due"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.invoice_id",
+          "seam.quote_id",
+          "seam.book_edition",
+          "seam.status",
+          "seam.park_reason",
+          "seam.released_by",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/outgoings-desk"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "invoice-out",
+          "edition": "2026-10-05",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:06:31.733Z",
+          "run_id": "run-1793793991731",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        },
+        {
+          "standard": "cash-seam",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:08:16.690Z",
+          "run_id": "run-1793794096688",
+          "green": 4,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 9
+        }
+      ]
+    },
+    {
       "slug": "owing-today",
       "name": "Owing Today",
       "office_task": "Every morning, show me who owes us money, biggest first, with a polite or firmer reminder already written for each one, and I send them.",
@@ -9497,6 +9611,114 @@
       ]
     },
     {
+      "slug": "safety-cert-desk",
+      "name": "Safety Cert Desk",
+      "office_task": "When a smoke alarm and RCD job is done, draft the property's compliance pack from the tech's results for our licensed electrician to sign, and hold it if any result is missing.",
+      "verticals": [
+        "fire-electrical"
+      ],
+      "standards": [
+        "fire-service-pack-standard"
+      ],
+      "systems_of_record": [
+        "the job system that issues the job_id (ServiceM8, Simpro or similar: the completed job, its test form results and attachments)",
+        "the asset register that issues the asset_id (each smoke alarm and RCD on the property, by the tag printed on it)",
+        "the exception desk the business runs (a sheet, a task list or a ticket queue)"
+      ],
+      "consumes": [
+        {
+          "event": "job.completed",
+          "wake": "webhook"
+        },
+        {
+          "event": "job.updated",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "evidence.filed",
+          "write": "Each smoke alarm and RCD test filed as a service record on the one asset its tag resolves to, naming the obligation it discharges, the result the electrician recorded and the RCD trip time as a number; then, only when every item bound cleanly, the draft compliance pack, marked DRAFT and unsigned, attached to the job and filed in the property's pack folder for the licensed person to sign and issue.",
+          "readback": "The asset register returns a service record id per test, and reading it back returns the asset_id, the obligation_id and the queue (pass, defect or unbound); the job system returns the attachment id of the draft pack, and reading it back returns the job_id. No id back is not a write: the item is raised as record.refused and the pack waits."
+        },
+        {
+          "event": "exception.raised",
+          "write": "An exception on the job naming the person who owns it: a tag that resolves to no alarm or to two, no obligation named, a missing result, the wrong evidence for the item (a trip time sent as a photo), an uncoded defect, an RCD closed without its test sheet, a missing tag photograph, an isolated circuit without a revisit date or past it, and the held pack itself.",
+          "readback": "The exception desk returns an exception_id, and reading that id back returns the job_id, the asset_id, the reason and the exception_owner. No id back means nothing was raised and the run stops."
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "asset.unresolved",
+          "record.no_obligation",
+          "result.missing",
+          "evidence.wrong_for_class",
+          "defect.uncoded",
+          "close.refused",
+          "record.unbound",
+          "record.refused",
+          "isolation.no_revisit",
+          "isolation.recorded",
+          "isolation.lapsed",
+          "rule.missing_for_state",
+          "pack.held"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.records",
+          "seam.queue",
+          "seam.pack_status",
+          "seam.rule_version",
+          "seam.exception_open",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/safety-cert-desk"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "fire-service-pack-standard",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:09:23.180Z",
+          "run_id": "run-1793794163179",
+          "green": 11,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 0,
+          "total": 12
+        }
+      ]
+    },
+    {
       "slug": "seller-book",
       "name": "Seller Book",
       "office_task": "Each morning, show me which past sellers and appraisals in my own database to text today and why, drafted for my OK, and keep every outcome and follow-up on the contact.",
@@ -11478,6 +11700,7 @@
     "ops-map",
     "order-release",
     "outgoings-book",
+    "outgoings-desk",
     "owing-today",
     "parts-quote",
     "payment-watch",
@@ -11500,6 +11723,7 @@
     "retention-book",
     "ring-list",
     "roof-desk",
+    "safety-cert-desk",
     "seller-book",
     "seller-weekly",
     "sign-in-follow-up",
@@ -11625,6 +11849,12 @@
     {
       "from": "crew-board",
       "to": "retention-book",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "crew-board",
+      "to": "safety-cert-desk",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -11756,6 +11986,12 @@
     },
     {
       "from": "practice-desk",
+      "to": "safety-cert-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "practice-desk",
       "to": "site-orders",
       "event": "job.updated",
       "id": "job_id"
@@ -11852,6 +12088,12 @@
     },
     {
       "from": "repair-board",
+      "to": "safety-cert-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "repair-board",
       "to": "site-orders",
       "event": "job.updated",
       "id": "job_id"
@@ -11996,6 +12238,12 @@
     },
     {
       "from": "van-board",
+      "to": "safety-cert-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "van-board",
       "to": "site-orders",
       "event": "job.updated",
       "id": "job_id"
@@ -12075,6 +12323,12 @@
     {
       "from": "visit-offer",
       "to": "retention-book",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-offer",
+      "to": "safety-cert-desk",
       "event": "job.updated",
       "id": "job_id"
     },
