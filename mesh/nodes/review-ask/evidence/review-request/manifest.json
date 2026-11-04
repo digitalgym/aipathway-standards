@@ -1,0 +1,136 @@
+{
+  "spec": "AIP-BS-REVIEW-REQUEST",
+  "standard": "review-request-build-standard",
+  "edition": "2026-10-24",
+  "source": "https://aipathway.com.au/explore-ai/review-request-build-standard",
+  "ran_at": "2026-11-04T12:28:19.986Z",
+  "environment": "stub",
+  "provider": "local.mock_review_jobs",
+  "provider_block": {
+    "boundary": {
+      "never": [
+        "send the review link only to customers who scored 4 or 5, or send a low scorer anywhere else",
+        "hold or skip an ask because of a score, a predicted mood or anything the customer said",
+        "send anything to a customer after they reply, or a second reminder",
+        "write, draft, suggest or post a review, or reply to one on Google",
+        "offer a discount, voucher, draw or anything else in exchange for a review",
+        "ask a customer who opted out, on any later job",
+        "ask about a job the job system does not show as finished"
+      ],
+      "stays_with_person": [
+        "answering every Google review, good and bad",
+        "calling a customer who scored 1 to 3",
+        "closing a callback, settling a dispute or closing a complaint in the job system",
+        "writing the message, the wait, the reminder interval and the window",
+        "taking a customer off the opt-out list, only if they ask"
+      ]
+    },
+    "job": "every customer asked for a Google review the same way once the job is finished, with low scores sent to the owner to call",
+    "skill": "review-request",
+    "stub": "local.mock_review_jobs",
+    "production": null,
+    "product": null,
+    "insert": null,
+    "with_us": {
+      "kind": "scoped_build",
+      "note": "No hosted product. Reading the job's status, linked callbacks and invoice state from ServiceM8, Simpro, Fergus, Jobber or AroFlo at the moment of sending, and bringing SMS replies and STOPs back from the carrier, run on the business's own job system and messaging account and are quoted as a scoped build."
+    }
+  },
+  "tally": {
+    "green": 9,
+    "red": 0,
+    "with_us": 1,
+    "evidence_required": 1,
+    "total": 14
+  },
+  "checks": [
+    {
+      "id": "trigger-is-the-job-finished",
+      "n": 1,
+      "title": "The ask starts when the job system says the job is finished",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "the-wait-is-written",
+      "n": 2,
+      "title": "The ask waits the written time after the job is finished",
+      "verdict": "pass"
+    },
+    {
+      "id": "same-message-same-link",
+      "n": 3,
+      "title": "Every customer gets the same message and the same review link",
+      "verdict": "pass"
+    },
+    {
+      "id": "not-finished-is-held",
+      "n": 4,
+      "title": "A job that is not really finished is held, with the reason",
+      "verdict": "pass"
+    },
+    {
+      "id": "read-again-before-sending",
+      "n": 5,
+      "title": "The job is read again at the moment of sending",
+      "verdict": "pass"
+    },
+    {
+      "id": "hold-clears-the-same-way",
+      "n": 6,
+      "title": "When the hold clears, the same ask goes the same way",
+      "verdict": "pass"
+    },
+    {
+      "id": "one-ask-per-customer-per-window",
+      "n": 7,
+      "title": "One ask per customer, however many jobs they had",
+      "verdict": "pass"
+    },
+    {
+      "id": "channel-and-opt-out",
+      "n": 8,
+      "title": "Asked only on the channel on record, and a STOP is for good",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "one-reminder-then-stop",
+      "n": 9,
+      "title": "One reminder if nothing comes back, then stop",
+      "verdict": "pass"
+    },
+    {
+      "id": "low-score-alerts-the-owner",
+      "n": 10,
+      "title": "A low score tells the owner to call, and changes nothing for the customer",
+      "verdict": "pass"
+    },
+    {
+      "id": "never-makes-up-or-rewards-a-review",
+      "n": 11,
+      "title": "It never makes up, rewards or answers a review",
+      "verdict": "pass"
+    },
+    {
+      "id": "the-record-by-job",
+      "n": 12,
+      "title": "Every ask, reminder, reply, hold and alert is on the record by job",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "survives-the-builder",
+      "n": 13,
+      "title": "It survives the builder",
+      "verdict": "evidence_required"
+    },
+    {
+      "id": "pass-test",
+      "n": 14,
+      "title": "The pass test passes",
+      "verdict": "with_us"
+    }
+  ],
+  "next": {
+    "with_us": "No hosted product. Reading the job's status, linked callbacks and invoice state from ServiceM8, Simpro, Fergus, Jobber or AroFlo at the moment of sending, and bringing SMS replies and STOPs back from the carrier, run on the business's own job system and messaging account and are quoted as a scoped build. Send the failing check id for a fixed price; do not build the live step yourself.",
+    "evidence_required": "attach what proves each one; not a software check"
+  }
+}
