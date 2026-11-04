@@ -1,0 +1,60 @@
+{
+  "slug": "job-sheet",
+  "name": "Job Sheet",
+  "office_task": "When the tech finishes on site, fill in the job card from what they sent, priced only from our price book, and save it to the job once they reply yes.",
+  "verticals": ["trades-building"],
+  "standards": ["job-close"],
+  "systems_of_record": [
+    "ServiceM8 or Simpro (the job, its assigned tech, its quote, its materials, notes and attachments)",
+    "the business's own price book (ServiceM8 materials, the Simpro catalogue or the Xero item list)",
+    "the exception desk the business runs"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/job-sheet" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "webhook", "schedule"],
+  "consumes": [
+    { "event": "email.received", "wake": "webhook" },
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "job.completed",
+      "write": "the confirmed job card on the job_id the tech named: the work done, each part as a price book line at the book's price at the write, the labour line and the photos, written once under close:<tenant>:<job_id>:<capture>, then the job status set to Completed",
+      "readback": "the card write returns the job system's ids for the note, each material and each photo; only then is the status set, and reading the job back by job_id returns status Completed with the card under that intent id. No ids back means not written: write_failed is raised and the retry carries the same intent id"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the job naming its owner: a job number the job system does not hold, a sender not assigned to the job, a part not in the book or matching two lines, a variation the quote did not cover, a draft the tech did not confirm within two hours, or a write with no ids back",
+      "readback": "the exception desk returns an exception_id, and reading the job's exceptions back by job_id returns it with the reason, the tech's words exactly and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "close.no_job",
+      "close.not_assigned",
+      "close.not_in_book",
+      "close.ambiguous",
+      "close.variation",
+      "close.not_confirmed",
+      "close.write_failed"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.job_id",
+      "seam.close_intent_id",
+      "seam.close_draft_id",
+      "seam.close_confirmed_by",
+      "seam.close_external_ids",
+      "seam.close_status",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
