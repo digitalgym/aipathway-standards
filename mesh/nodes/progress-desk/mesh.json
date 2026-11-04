@@ -1,0 +1,58 @@
+{
+  "slug": "progress-desk",
+  "name": "Progress Desk",
+  "office_task": "Each month, draft every builder contract's progress claim from the schedule, the project manager's site walk and the signed variations, and hold it for the project manager to sign and serve.",
+  "verticals": ["trades-building"],
+  "standards": ["progress-claim-draft"],
+  "systems_of_record": [
+    "the builder's contract record (Simpro, Buildxact, a SharePoint list or the claims sheet the builder runs) that holds each contract's sum, schedule of values and what was claimed before, the project manager's site assessment per line per month, the signed variations and the waiver acceptance, and issues the contract record's id (carried as job_id) and the held draft's id (carried as report_id)"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/progress-desk" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "report.published",
+      "write": "One claim draft per contract per month, written into the contract record and keyed contract:<contract id>:<period>: every schedule line with its scheduled value, the percent complete the project manager entered this month with their name and the date, value to date, claimed before and this claim in cents, totals that are the sums of the lines, each signed variation with its signed acceptance attached, the waiver version, and the words \"DRAFT: not a payment claim until reviewed and served by you\". It is held for the contract's named project manager. A second run in the month updates the same draft. It states no due date, payment schedule, retention or adjudication, and nothing is served, sent or lodged by the bot; the project manager releases it, then signs and serves the claim.",
+      "readback": "The contract record returns the draft's id; reading the claim back by contract id and period must return that id with the marker, the lines and the hold for the project manager, and it is stamped on the contract as seam.report_id. No id back is not a write: it raises an exception with reason write_failed and the run stops for that contract."
+    },
+    {
+      "event": "exception.raised",
+      "write": "A parked draft or a stopped run as an exception on the contract record: the reason (no_waiver_acceptance, schedule_mismatch, no_assessment, unsigned_variation, below_previous or write_failed), the contract id, the period, the lines left out, and exception_owner set to the contract's project manager, or to the account owner for no_waiver_acceptance.",
+      "readback": "The exception desk returns an exception_id, and reading it back returns the contract id, the period, the reason and the exception_owner; the next run reads it there and does not release or re-park around it until exception.closed."
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "claim.no_waiver_acceptance",
+      "claim.schedule_mismatch",
+      "claim.no_assessment",
+      "claim.unsigned_variation",
+      "claim.below_previous",
+      "claim.write_failed"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.job_id",
+      "seam.report_id",
+      "seam.period",
+      "seam.waiver_version",
+      "seam.status",
+      "seam.park_reason",
+      "seam.held_for",
+      "seam.released_by",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
