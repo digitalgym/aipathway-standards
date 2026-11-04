@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T12:53:09.851Z",
+  "generated_at": "2026-11-04T12:56:21.680Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -4052,6 +4052,107 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 12
+        }
+      ]
+    },
+    {
+      "slug": "design-quote",
+      "name": "Design Quote",
+      "office_task": "When a customer accepts their solar or heat-pump design and it is on the job, draft the job's quote lines from our own price book, or park it with a reason, and leave it for us to send.",
+      "verticals": [
+        "fire-electrical"
+      ],
+      "standards": [
+        "quote-out"
+      ],
+      "systems_of_record": [
+        "Simpro",
+        "ServiceM8",
+        "Xero (Items as the price book, Quotes)"
+      ],
+      "consumes": [
+        {
+          "event": "job.created",
+          "wake": "webhook"
+        },
+        {
+          "event": "job.updated",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "quote.drafted",
+          "write": "A draft quote on the job the accepted design is attached to, ex GST, carrying the design's id. One line per equipment or install item on the accepted design: the catalogue id from the business's own price book, the whole-number count from the design, and that item's sell-rate as read at draft time. The amount is count times rate and nothing else; the design tool's own prices are never used, and no STC or rebate deduction is applied. It is left in draft, editable, for the person who owns quotes; this node has no way to send it.",
+          "readback": "The quote is read back by the id the system returned (Simpro GET /api/v1.0/companies/{companyID}/quotes/{quoteID}, ServiceM8 GET /api_1.0/jobquote/{uuid}.json, Xero GET /api.xro/2.0/Quotes/{QuoteID}) and must carry the job id. No id back is not a write: it raises quote.write_failed."
+        },
+        {
+          "event": "exception.raised",
+          "write": "A parked quote, or a job sent back for its design, as an exception on the job: the park reason from the standard's fixed list (or design_quantity_not_whole), the design id, the lines that did price with their catalogue ids, the items that did not, no total, and exception_owner set to the person the business named for quotes.",
+          "readback": "The exception desk returns an exception_id; reading the job by its id shows the open exception with its exception_owner, and the next hop reads it there and stops."
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "quote.not_in_pricebook",
+          "quote.variation_to_accepted_quote",
+          "quote.discount_requested",
+          "quote.pricebook_unreadable",
+          "quote.design_quantity_not_whole",
+          "quote.write_failed"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.quote_id",
+          "seam.status",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/design-quote"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "quote-out",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:53:25.980Z",
+          "run_id": "run-1793796805978",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 0,
+          "total": 11
+        },
+        {
+          "standard": "cash-seam",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:52:53.665Z",
+          "run_id": "run-1793796773663",
+          "green": 4,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 9
         }
       ]
     },
@@ -15013,6 +15114,7 @@
     "defect-quote",
     "delivery-billing",
     "deposit-match",
+    "design-quote",
     "docket-billing",
     "docs-due",
     "draw-match",
@@ -15132,6 +15234,12 @@
     },
     {
       "from": "after-hours-desk",
+      "to": "design-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "after-hours-desk",
       "to": "estimate-desk",
       "event": "job.created",
       "id": "job_id"
@@ -15229,6 +15337,12 @@
     {
       "from": "crew-board",
       "to": "defect-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "crew-board",
+      "to": "design-quote",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -15366,6 +15480,12 @@
     },
     {
       "from": "day-desk",
+      "to": "design-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
       "to": "estimate-desk",
       "event": "job.created",
       "id": "job_id"
@@ -15463,6 +15583,12 @@
     {
       "from": "day-desk",
       "to": "defect-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "design-quote",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -15631,6 +15757,12 @@
     {
       "from": "install-book",
       "to": "defect-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "install-book",
+      "to": "design-quote",
       "event": "job.created",
       "id": "job_id"
     },
@@ -15864,6 +15996,12 @@
     },
     {
       "from": "portal-match",
+      "to": "design-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "portal-match",
       "to": "estimate-desk",
       "event": "job.updated",
       "id": "job_id"
@@ -16015,6 +16153,12 @@
     {
       "from": "practice-desk",
       "to": "defect-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "practice-desk",
+      "to": "design-quote",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -16188,6 +16332,12 @@
     },
     {
       "from": "repair-board",
+      "to": "design-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "repair-board",
       "to": "estimate-desk",
       "event": "job.updated",
       "id": "job_id"
@@ -16314,6 +16464,12 @@
     },
     {
       "from": "roof-desk",
+      "to": "design-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "roof-desk",
       "to": "estimate-desk",
       "event": "job.created",
       "id": "job_id"
@@ -16417,6 +16573,12 @@
     {
       "from": "route-plan",
       "to": "defect-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "route-plan",
+      "to": "design-quote",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -16548,6 +16710,12 @@
     },
     {
       "from": "service-due",
+      "to": "design-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "service-due",
       "to": "estimate-desk",
       "event": "job.created",
       "id": "job_id"
@@ -16651,6 +16819,12 @@
     {
       "from": "van-board",
       "to": "defect-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "van-board",
+      "to": "design-quote",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -16806,6 +16980,12 @@
     },
     {
       "from": "visit-offer",
+      "to": "design-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-offer",
       "to": "estimate-desk",
       "event": "job.updated",
       "id": "job_id"
@@ -16951,6 +17131,12 @@
     {
       "from": "visit-round",
       "to": "defect-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-round",
+      "to": "design-quote",
       "event": "job.updated",
       "id": "job_id"
     },
