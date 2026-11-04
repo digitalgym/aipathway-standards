@@ -22,7 +22,7 @@ Every other plan in this set makes a SharePoint list the book. This one does not
 
 ## In short
 
-- **What this is**: A build plan for the quote out standard on Microsoft 365. Five lists, four flows, seven measures, and deliberately no quote document anywhere in the tenant.
+- **What this is**: A build plan for the quote out standard on Microsoft 365. Seven lists, four flows, seven measures, and deliberately no quote document anywhere in the tenant.
 - **The core rule**: The quote is created in the job system against the price list already in it. These lists hold the queue and the log, never the copy that counts.
 - **What it does not do**: There is no send step, because the standard has no send port. A person releases the draft in the system they already open every morning.
 - **The hard part**: The read at draft time. A catalogue synced into a list is fast, tidy, and silently wrong the week after the office puts an increase through.
@@ -47,6 +47,15 @@ LIST  Jobs                  (a key and a clock, not the job)
   CustomerRef     Text
   ReceivedAt      DateTime        the clock the whole build is about
   QuoteId         Text            blank means nothing has been drafted yet
+  OptionsFrom     Text            a Work in TierMap, for good, better and best; blank is one set of lines
+  ChosenOption    Text            typed by a person when the customer picks; never by the flow
+
+LIST  TierMap               (the business's own tiers. No rate column, ever.)
+  Work            Text            indexed, REQUIRED. the kind of job a Jobs row names in OptionsFrom
+  OptionLabel     Text            REQUIRED. Good, Better, Best, or their own names. Two or three per Work.
+  Position        Number          the order the options are shown in
+  CatalogueId     Text            REQUIRED. Their id, not a description. No discount lines.
+  Quantity        Number
 
 LIST  Quotes                (one per job. Never two.)
   QuoteId         Text            indexed. Ours, stable across retries.
@@ -59,11 +68,20 @@ LIST  Quotes                (one per job. Never two.)
   DraftedAt       DateTime        stamped only when ExternalId arrives
   LastAttemptAt   DateTime
 
+LIST  QuoteOptions          (two or three inside one quote. Never four.)
+  QuoteId         Text            indexed, REQUIRED. the one quote these belong to
+  OptionLabel     Text            REQUIRED. copied from TierMap, never written by the flow
+  ExternalId      Text            theirs: the option inside the quote, or its own draft where the system holds one set of lines per quote
+  TotalExGst      Currency        this option alone. No sum of options is a price.
+  State           Choice          draft | chosen | closed
+                                  chosen and closed are set by a person; there is no sent value
+
 LIST  QuoteLines            (every priced line, and its provenance)
   QuoteId         Text            indexed
   CatalogueId     Text            REQUIRED. Their id, not a description.
   Description     Text
   Quantity        Number
+  OptionLabel     Text            blank on a quote with no options
   UnitRate        Currency        read at draft time, never remembered
   PricebookReadAt DateTime        REQUIRED. Older than the draft is a bug.
 
@@ -71,7 +89,8 @@ LIST  Unmatched             (the park queue. No rate column, ever.)
   QuoteId         Text            indexed
   Description     Text            the work the book does not cover
   ParkReason      Choice          not_in_pricebook
-                                  | variation_to_accepted_quote | discount_requested | pricebook_unreadable
+                                  | variation_to_accepted_quote | discount_requested | pricebook_unreadable | no_tier_map | too_many_options
+  OptionLabel     Text            the option the unpriceable line was in
   OpenedAt        DateTime
   Owner           Person
   ResolvedAt      DateTime        blank means the quote is still parked
@@ -213,7 +232,7 @@ The flows work like a typist who prepares the letter and leaves it on your desk 
 
 What each connection is for.
 
-- **SharePoint, this one site.** Read and write on the five lists. It is the only place in Microsoft 365 the flows write, and it has no document library.
+- **SharePoint, this one site.** Read and write on the seven lists. It is the only place in Microsoft 365 the flows write, and it has no document library.
 - **The job, read.** The only trigger for a quote. From ServiceM8 or Simpro through a custom connector or the HTTP action, both premium in Power Automate, or through Office Voice’s `read_job`. A Tradify job comes from its enquiry email or job export, because Tradify has no public API and no Zapier app.
 - **An Office Voice key, for the draft into Xero.** Called from the flow at `https://office-voice.com/api/mcp` with a bearer key made on the Keys page in Office Voice. “Read the book” covers `read_pricebook`, your Xero Items read fresh at draft time. “Write drafts and notes” covers `draft_quote`, which takes catalogue ids and quantities, never a rate. Leave “Queue calls” off: this build rings nobody. Quote drafting stays off until the owner reconnects Xero with it on.
 - **Teams.** To post the park queue and any write that came back without an id, to the channel the owner watches.
@@ -233,7 +252,7 @@ Why not have Copilot write the quote in Word? It will produce a tidy quote in a 
 
 ## 7. The order to build it in
 
-1. Create the five lists. Index JobRef and QuoteId on every one of them.
+1. Create the seven lists. Index JobRef and QuoteId wherever they appear, and Work on TierMap. TierMap and QuoteOptions are only for sending good, better and best options on one quote: the business fills TierMap, the flow only reads it, and a person marks the chosen option and closes the others.
 2. Build Flow 1 and let it run for a week doing nothing else. What you get on day one is a countable list of jobs with no quote against them and how long they have been that way, which is the argument the rest of the build is worth making.
 3. Build Flow 2 with only the parking half. Every job parks with not_in_pricebook. It is useless as a quoting engine and immediately useful as a work queue, and it cannot invent a rate because it cannot price at all.
 4. Build Flow 4 so the park queue has a named owner before anything can reach it. A queue nobody owns produces the same outcome as no queue.

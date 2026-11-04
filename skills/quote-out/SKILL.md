@@ -1,6 +1,6 @@
 ---
 name: quote-out
-description: The open build standard for turning a job that already exists into a quote: the job as the only trigger, the customer's own price list as the only source of a rate, work the book does not cover parked rather than estimated, one quote per job across every intake door, the draft written into ServiceM8, Simpro or Xero rather than rendered by the agent, sending left with a person, and a pass test staged on a real tenant that a stub cannot fake. Use when building, reviewing or auditing this workflow. Carries the AIP-BS-QUOTE-OUT open standard, free to implement under CC BY 4.0.
+description: The open build standard for turning a job that already exists into a quote: the job as the only trigger, the customer's own price list as the only source of a rate, work the book does not cover parked rather than estimated, one quote per job across every intake door with up to three good, better and best options inside it from the business's own tier map, the draft written into ServiceM8, Simpro or Xero rather than rendered by the agent, sending left with a person, and a pass test staged on a real tenant that a stub cannot fake. Use when building, reviewing or auditing this workflow. Carries the AIP-BS-QUOTE-OUT open standard, free to implement under CC BY 4.0.
 license: CC-BY-4.0
 # The constitution. Loaded with the skill, not read from the essay. What a
 # build to this standard must never do, and what stays with a person.
@@ -17,9 +17,9 @@ stays_with_person:
 
 # Quote Out Build Standard
 
-**Spec:** AIP-BS-QUOTE-OUT · **Version:** 2026-10-03 · **Canonical:** https://aipathway.com.au/explore-ai/quote-out-build-standard
+**Spec:** AIP-BS-QUOTE-OUT · **Version:** 2026-11-05 · **Canonical:** https://aipathway.com.au/explore-ai/quote-out-build-standard
 
-The open build standard for turning a job that already exists into a quote: the job as the only trigger, the customer's own price list as the only source of a rate, work the book does not cover parked rather than estimated, one quote per job across every intake door, the draft written into ServiceM8, Simpro or Xero rather than rendered by the agent, sending left with a person, and a pass test staged on a real tenant that a stub cannot fake.
+The open build standard for turning a job that already exists into a quote: the job as the only trigger, the customer's own price list as the only source of a rate, work the book does not cover parked rather than estimated, one quote per job across every intake door with up to three good, better and best options inside it from the business's own tier map, the draft written into ServiceM8, Simpro or Xero rather than rendered by the agent, sending left with a person, and a pass test staged on a real tenant that a stub cannot fake.
 
 ## Read the standard first
 
@@ -28,7 +28,7 @@ before writing code. It is about 3,000 words and it is the whole job: the
 checks in order, the objects with their fields, what must never be automated,
 and a pass test.
 
-For the current version, fetch https://aipathway.com.au/explore-ai/quote-out-build-standard.md. This copy is 2026-10-03.
+For the current version, fetch https://aipathway.com.au/explore-ai/quote-out-build-standard.md. This copy is 2026-11-05.
 
 The checks are also structured data, so you do not have to infer a test plan from
 the prose: https://aipathway.com.au/explore-ai/quote-out-build-standard/checks.json gives each check a stable id, the ports it
@@ -102,7 +102,7 @@ skill asserts.
 
 ## Attribution
 
-AIP-BS-QUOTE-OUT, 2026-10-03, AI Pathway, https://aipathway.com.au/explore-ai/quote-out-build-standard
+AIP-BS-QUOTE-OUT, 2026-11-05, AI Pathway, https://aipathway.com.au/explore-ai/quote-out-build-standard
 
 Licensed CC BY 4.0. Free to implement, including commercially. If you build to
 this standard, cite the spec ID: a workflow built to a shared standard can be
