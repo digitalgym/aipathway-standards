@@ -1,0 +1,82 @@
+{
+  "slug": "price-creep",
+  "name": "Price Creep",
+  "office_task": "Check every line price on each supplier bill against the price we agreed with that supplier, flag every rise in dollars before anyone approves it, and put it in front of a named person.",
+  "verticals": [
+    "trades-building"
+  ],
+  "standards": [
+    "invoice-check"
+  ],
+  "systems_of_record": [
+    "Xero or MYOB (the ledger that issues the bill_id and holds the supplier bills)",
+    "the agreed supplier price list or trade account schedule of rates, by its reference, in the ledger or the job system (Simpro, ServiceM8 or similar)",
+    "the document store holding the bill PDFs and any written approval for an item not on the price list"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/price-creep"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "webhook",
+    "schedule"
+  ],
+  "consumes": [
+    {
+      "event": "bill.received",
+      "wake": "webhook"
+    },
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    },
+    {
+      "event": "exception.closed",
+      "wake": "webhook"
+    }
+  ],
+  "emits": [
+    {
+      "event": "bill.checked",
+      "write": "a check note on the supplier bill in the ledger: every line priced against the agreed price list it names, each rise or drop in dollars, the tolerance in force with its date, the other three checks (delivered quantity, items not on the list, order total), and the bill placed in the done-and-reversible list for a named person to approve. Nothing is approved or paid",
+      "readback": "reading the bill by its bill_id from the ledger (Xero GET /api.xro/2.0/Invoices/{bill_id}/History, or the MYOB bill's journal memo) returns the check note with the four results and seam.queue = done_reversible; no note back means it was not written and the bill is raised as an exception instead"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the bill naming the person who owns it: the first check that failed and the checks that never ran, the price rise in dollars line by line, the price list it was read against, the bill PDF, and its queue (needs a decision for a price rise, quantity or order-total overrun; waiting on the supplier for a missing bill PDF; or blocked: no price list named, or an item not on the list with no written approval)",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the bill_id, the failed check, the dollar difference, the source document and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "price.no_bill_document",
+      "price.no_price_list",
+      "price.rise",
+      "price.billed_over_delivered",
+      "price.item_not_on_list",
+      "price.order_total_overrun"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.bill_id",
+      "seam.price_list_ref",
+      "seam.queue",
+      "seam.failed_check",
+      "seam.never_ran",
+      "seam.difference",
+      "seam.tolerance_version",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
