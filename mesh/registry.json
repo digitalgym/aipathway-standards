@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T12:15:11.660Z",
+  "generated_at": "2026-11-04T12:17:06.056Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -310,6 +310,95 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 10
+        }
+      ]
+    },
+    {
+      "slug": "agreement-chase",
+      "name": "Agreement Chase",
+      "office_task": "Before a new commercial customer's first job, chase their signed service agreement and rate sheet, file each the day it comes back, and hand a no, a dispute or a silent customer to a named person.",
+      "verticals": [
+        "b2b-office"
+      ],
+      "standards": [
+        "follow-up"
+      ],
+      "systems_of_record": [
+        "the onboarding register, one open item per document owed on the new customer's first job (the job system such as ServiceM8 or Simpro, or a SharePoint list or Google Sheet kept beside it), which issues the job_id and the item id",
+        "the accounts mailbox (Outlook or Gmail) the signed agreement and rate sheet come back to, which issues the message_id"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "evidence.filed",
+          "write": "the signed service agreement or signed rate sheet filed as evidence against its open item on the customer's first job, which marks the item arrived so the office can confirm the first job",
+          "readback": "reading the item back by its id returns status arrived with the arrival's evidence reference, which names the message_id of the email that carried the signed copy and the job_id it belongs to; no evidence reference back means it was not filed, and the item gets no touch until a person looks"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an escalation on the item naming the cadence's person: the customer said no, disputed the agreement or a rate, or asked us to stop, or the item reached its cap with nothing back, carrying every touch so far",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the item id, the job_id, the reason, the touch history and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "followup.declined",
+          "followup.dispute",
+          "followup.cap_reached"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.item_id",
+          "seam.item_status",
+          "seam.touches",
+          "seam.outcome",
+          "seam.evidence_ref",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/agreement-chase"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "follow-up",
+          "edition": "2026-10-05",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:15:01.376Z",
+          "run_id": "run-1793794501375",
+          "green": 10,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 13
         }
       ]
     },
@@ -11059,6 +11148,107 @@
       ]
     },
     {
+      "slug": "test-sheet-check",
+      "name": "Test Sheet Check",
+      "office_task": "When a job's test result sheet comes in, check every test is filled in and in range before the certificate is written, and put any failed or blank test in front of the licensed electrician.",
+      "verticals": [
+        "fire-electrical"
+      ],
+      "standards": [
+        "rejected-pack"
+      ],
+      "systems_of_record": [
+        "the job system that issues the job_id the test sheet belongs to (ServiceM8, Simpro or Tradify's job export)",
+        "the mail system that issues the message_id the test sheet arrived on (the office's Gmail or Outlook mailbox)",
+        "the document store that holds the filed original sheet (SharePoint, OneDrive or Google Drive)",
+        "the exception desk the business runs, holding each stopped test sheet with its named owner"
+      ],
+      "consumes": [
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "job.completed",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "evidence.filed",
+          "write": "the test result sheet from the message, filed against the job by its job_id, with each reading (insulation resistance, earth continuity, polarity, circuit connections, fault loop impedance, RCD trip time where an RCD is in scope) as a graph field carrying its confidence, the instrument serial and calibration date, every written not-applicable with its rule, the queue after the eight checks in order, the certificate due date derived from the dated rule, and the as-of date; after the licensed electrician releases it, the self-contained test record the certificate is written from",
+          "readback": "reading the job by its job_id from the job system returns the filed sheet with the message_id and seam.queue, seam.failed_check, seam.certificate_due and seam.as_of; no document back with that message_id means it was not filed and the run raises an exception instead"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the job naming the licensed electrician who tested it: the first check that failed (the sheet is for another job, a licence or the instrument's calibration out of date, no procedure loaded, a blank test, a reading out of range, or two contractor licence numbers), readings waiting for a person to confirm, or a test record waiting for the electrician's named release",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the job_id, the message_id, the failed check with its reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "testsheet.wrong_job",
+          "testsheet.licence_or_calibration_lapsed",
+          "testsheet.no_procedure_for_state",
+          "testsheet.test_blank",
+          "testsheet.reading_out_of_range",
+          "testsheet.two_licence_numbers",
+          "testsheet.yellow_readings",
+          "testsheet.awaiting_release"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.message_id",
+          "seam.queue",
+          "seam.failed_check",
+          "seam.rule_version",
+          "seam.certificate_due",
+          "seam.as_of",
+          "seam.accepted_by",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/test-sheet-check"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "rejected-pack",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:12:08.692Z",
+          "run_id": "run-1793794328690",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 0,
+          "total": 13
+        }
+      ]
+    },
+    {
       "slug": "timesheet-billing",
       "name": "Timesheet Billing",
       "office_task": "When a client's timesheet period closes, draft its invoice in Xero from the hours at our rate card, park what it cannot price, and hold it for a named person to release.",
@@ -11935,6 +12125,7 @@
     "after-hours-desk",
     "ageing-monday",
     "agent-rules-desk",
+    "agreement-chase",
     "arrears-desk",
     "backflow-watch",
     "balance-proof",
@@ -12036,6 +12227,7 @@
     "sub-pay-check",
     "tenant-inbox",
     "terms-watch",
+    "test-sheet-check",
     "timesheet-billing",
     "trim-quote",
     "van-board",
@@ -12283,6 +12475,12 @@
     {
       "from": "job-sheet",
       "to": "safety-cert-desk",
+      "event": "job.completed",
+      "id": "job_id"
+    },
+    {
+      "from": "job-sheet",
+      "to": "test-sheet-check",
       "event": "job.completed",
       "id": "job_id"
     },
