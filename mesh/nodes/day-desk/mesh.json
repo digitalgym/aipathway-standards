@@ -1,0 +1,52 @@
+{
+  "slug": "day-desk",
+  "name": "Day Desk",
+  "office_task": "Answers our phone during the day, looks the caller up, tells an existing customer when we're coming off their job, and writes new work as one job.",
+  "verticals": ["trades-building"],
+  "standards": ["client-desk"],
+  "systems_of_record": ["ServiceM8", "Simpro"],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/day-desk" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["office-voice-front-desk", "node", "webhook"],
+  "consumes": [
+    { "event": "call.received", "wake": "webhook" },
+    { "event": "job.updated", "wake": "webhook" },
+    { "event": "job.completed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "job.created",
+      "write": "one job per new caller with no open job: the caller's own words and a type from the fixed list (emergency, routine, quote, unclassified)",
+      "readback": "the job system returns the job id (ServiceM8 job uuid, Simpro job ID) and the job is read back by that id before the caller is told they are booked; no id back means no booking, no job.created, and a callback task to the person on duty"
+    },
+    {
+      "event": "job.updated",
+      "write": "a note on the job for every call (what the caller said and what they were told, by call id), and a drafted running-late, on-the-way or job-complete update waiting for a named person to release it; a released update is sent to the job's contact and noted on the job by the event that caused it",
+      "readback": "the note and the draft are read back on the job by its job id; a send counts only once the job shows the update_sent note with the change it was for"
+    },
+    {
+      "event": "exception.raised",
+      "write": "a callback task owned by the person the roster names: a transfer nobody picked up, a job with no arrival time, a job write that came back with no id, or a caller on a job with an open exception",
+      "readback": "the task desk returns an exception_id, and reading it back returns the job_id (or the caller's number when no job was written), the owner and the due-by time; no id back means the caller is not told a callback is coming"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "transfer_unanswered",
+      "no_arrival_time_on_job",
+      "status_question_no_open_job",
+      "job_write_failed",
+      "job_readback_failed",
+      "caller_on_job_with_open_exception"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.job_id", "seam.call_id", "seam.update_change_key", "seam.update_released_by", "seam.callback_owner", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
