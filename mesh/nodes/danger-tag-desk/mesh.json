@@ -1,0 +1,89 @@
+{
+  "slug": "danger-tag-desk",
+  "name": "Danger Tag Desk",
+  "office_task": "When a tech tags an appliance Danger Do Not Use, note it on the job, draft the written notice to the owner or managing agent that day, and hand it to a named person to send and follow up.",
+  "verticals": [
+    "fire-electrical",
+    "trades-building"
+  ],
+  "standards": [
+    "exception-desk"
+  ],
+  "systems_of_record": [
+    "the job system that issues the job_id (ServiceM8, Simpro, AroFlo or Fergus), where the tag and the notice are recorded",
+    "the ledger that issues the invoice_id (Xero), for items raised against an invoice",
+    "the exception desk the business runs (a sheet with Raise and Routing tabs, a SharePoint list, or Office Voice's queue), which issues the exception_id",
+    "Gmail or Outlook drafts, where the written notice waits for the named person"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/danger-tag-desk"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "webhook",
+    "schedule"
+  ],
+  "consumes": [
+    {
+      "event": "job.updated",
+      "wake": "webhook"
+    },
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    },
+    {
+      "event": "exception.closed",
+      "wake": "webhook"
+    }
+  ],
+  "emits": [
+    {
+      "event": "exception.raised",
+      "write": "One item per job and type on the exception desk: a danger tag lands as type other with the danger_tag label kept in its reason, the tag photo as evidence, the owner and the same-day clock from the routing table, and the notice on the job record plus a drafted written notice to the property owner or managing agent for that owner to send. Raises from other surfaces are typed from the closed list the same way.",
+      "readback": "the exception desk returns an exception_id, and reading it back returns the job_id (or invoice_id), the type, the reason, the due time and the exception_owner; the job note reads back by its note id on the job. No id back means nothing was raised: the raiser is told and the run stops"
+    },
+    {
+      "event": "report.published",
+      "write": "the morning summary, once a day at the set time and also when nothing is open: open items by type and by owner, the overdue ones, the labels that arrived as other, and the jobs with a danger tag still open",
+      "readback": "the place the office reads it (an email, a Teams channel or a sheet tab) returns a report_id for that day, and a second run that morning reads it back and publishes nothing"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "danger_tag",
+      "parts_shortfall",
+      "price_not_in_book",
+      "write_failed",
+      "address_unresolved",
+      "promise_broken",
+      "dispute",
+      "hardship",
+      "other"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.job_id",
+      "seam.exception_id",
+      "seam.exception_type",
+      "seam.exception_owner",
+      "seam.due_at",
+      "seam.raise_count",
+      "seam.stop_chase",
+      "seam.escalated_at",
+      "seam.notice_note_id",
+      "seam.notice_draft_id"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
