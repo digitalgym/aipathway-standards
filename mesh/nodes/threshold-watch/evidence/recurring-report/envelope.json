@@ -1,0 +1,4891 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793797064201",
+  "standard": "recurring-report-build-standard",
+  "spec": "AIP-BS-RECURRING-REPORT",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-04T12:57:44.190Z",
+  "finishedAt": "2026-11-04T12:57:44.201Z",
+  "results": [
+    {
+      "checkId": "every-figure-has-a-definition",
+      "n": 1,
+      "title": "Every figure on the report names a definition in the register",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every figure with a value cites a definition id the register holds, for the same measure. The undefined measure is published with no value and reason no_definition. A valued figure with no definition, or one citing a definition for a different measure, fails.",
+      "actual": "job_gross_margin_pct=31.4 def=DEF-job_gross_margin_pct; debtors_total=184250 def=DEF-debtors_total; debtors_over_sixty_days=22410 def=DEF-debtors_over_sixty_days; cash_at_bank=no_definition def=null",
+      "stimulus": {
+        "description": "A register holding three definitions, and an audience whose declared measures include a fourth the register does not define.",
+        "now": "2026-11-01T20:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "every-figure-has-a-definition"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W45"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W45"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "simpro",
+            "queryRef": "jobs.completed_gross_margin_pct",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 31.4,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "job_gross_margin_pct",
+            "definitionId": "DEF-job_gross_margin_pct",
+            "source": "simpro",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT1"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.outstanding_total",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 184250,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_total",
+            "definitionId": "DEF-debtors_total",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT2"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.outstanding_over_60_days",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 22410,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_over_sixty_days",
+            "definitionId": "DEF-debtors_over_sixty_days",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT3"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "report.no_definition",
+            "detail": "cash_at_bank for 2026-W45: the register does not define it, so it is published as unavailable"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W45",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "job_gross_margin_pct",
+                "value": 31.4,
+                "unavailable": null,
+                "definition": "DEF-job_gross_margin_pct",
+                "source": "simpro",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_total",
+                "value": 184250,
+                "unavailable": null,
+                "definition": "DEF-debtors_total",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_over_sixty_days",
+                "value": 22410,
+                "unavailable": null,
+                "definition": "DEF-debtors_over_sixty_days",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "cash_at_bank",
+                "value": null,
+                "unavailable": "no_definition",
+                "definition": null,
+                "source": null,
+                "asOf": null
+              }
+            ],
+            "narrative": "Key numbers for 2026-W45, from the job system and the ledger. job_gross_margin_pct is 31.4. debtors_total is 184250. debtors_over_sixty_days is 22410. cash_at_bank is unavailable this week (no_definition) and its owner has been told.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT4",
+            "version": 1,
+            "publishedAt": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-definition-per-measure",
+      "n": 2,
+      "title": "One definition of every measure, computed once per period and reused",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The register holds one definition for the measure. The source is read once for that measure and period, and both views carry the same value citing the same definition. A second read of the same query and period fails.",
+      "actual": "1 read(s); owner=22410, accountant=22410",
+      "stimulus": {
+        "description": "Two audiences that both carry the same measure over the same period.",
+        "now": "2026-11-01T20:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-definition-per-measure"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W45"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner",
+              "accountant"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W45"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "simpro",
+            "queryRef": "jobs.completed_gross_margin_pct",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 31.4,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "job_gross_margin_pct",
+            "definitionId": "DEF-job_gross_margin_pct",
+            "source": "simpro",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT1"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.outstanding_total",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 184250,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_total",
+            "definitionId": "DEF-debtors_total",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT2"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.outstanding_over_60_days",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 22410,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_over_sixty_days",
+            "definitionId": "DEF-debtors_over_sixty_days",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT3"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "bank.closing_balance",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 96300,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "cash_at_bank",
+            "definitionId": "DEF-cash_at_bank",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT4"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W45",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "job_gross_margin_pct",
+                "value": 31.4,
+                "unavailable": null,
+                "definition": "DEF-job_gross_margin_pct",
+                "source": "simpro",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_total",
+                "value": 184250,
+                "unavailable": null,
+                "definition": "DEF-debtors_total",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_over_sixty_days",
+                "value": 22410,
+                "unavailable": null,
+                "definition": "DEF-debtors_over_sixty_days",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "cash_at_bank",
+                "value": 96300,
+                "unavailable": null,
+                "definition": "DEF-cash_at_bank",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              }
+            ],
+            "narrative": "Key numbers for 2026-W45, from the job system and the ledger. job_gross_margin_pct is 31.4. debtors_total is 184250. debtors_over_sixty_days is 22410. cash_at_bank is 96300.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT5",
+            "version": 1,
+            "publishedAt": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W45",
+            "audienceId": "accountant",
+            "figures": [
+              {
+                "measure": "debtors_over_sixty_days",
+                "value": 22410,
+                "unavailable": null,
+                "definition": "DEF-debtors_over_sixty_days",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              }
+            ],
+            "narrative": "Key numbers for 2026-W45, from the job system and the ledger. debtors_over_sixty_days is 22410.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT6",
+            "version": 1,
+            "publishedAt": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "source-and-as-of-on-every-figure",
+      "n": 3,
+      "title": "Every figure carries the source it was read from and the time it was read",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every valued figure carries a source and an as-of time, and the as-of time equals the one the recorded read of that source returned for that query and period. A figure with neither, or one whose as-of time matches no read, fails.",
+      "actual": "job_gross_margin_pct@simpro/2026-11-01T21:06:00.000Z; debtors_total@xero/2026-11-01T21:06:00.000Z; debtors_over_sixty_days@xero/2026-11-01T21:06:00.000Z; cash_at_bank@xero/2026-11-01T21:06:00.000Z",
+      "stimulus": {
+        "description": "Definitions over two sources, a ledger and a job system, for one period.",
+        "now": "2026-11-01T20:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "source-and-as-of-on-every-figure"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W45"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W45"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "simpro",
+            "queryRef": "jobs.completed_gross_margin_pct",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 31.4,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "job_gross_margin_pct",
+            "definitionId": "DEF-job_gross_margin_pct",
+            "source": "simpro",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT1"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.outstanding_total",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 184250,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_total",
+            "definitionId": "DEF-debtors_total",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT2"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.outstanding_over_60_days",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 22410,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_over_sixty_days",
+            "definitionId": "DEF-debtors_over_sixty_days",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT3"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "bank.closing_balance",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 96300,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "cash_at_bank",
+            "definitionId": "DEF-cash_at_bank",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT4"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W45",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "job_gross_margin_pct",
+                "value": 31.4,
+                "unavailable": null,
+                "definition": "DEF-job_gross_margin_pct",
+                "source": "simpro",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_total",
+                "value": 184250,
+                "unavailable": null,
+                "definition": "DEF-debtors_total",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_over_sixty_days",
+                "value": 22410,
+                "unavailable": null,
+                "definition": "DEF-debtors_over_sixty_days",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "cash_at_bank",
+                "value": 96300,
+                "unavailable": null,
+                "definition": "DEF-cash_at_bank",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              }
+            ],
+            "narrative": "Key numbers for 2026-W45, from the job system and the ledger. job_gross_margin_pct is 31.4. debtors_total is 184250. debtors_over_sixty_days is 22410. cash_at_bank is 96300.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT5",
+            "version": 1,
+            "publishedAt": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "publishes-on-schedule-regardless",
+      "n": 4,
+      "title": "The report publishes at the scheduled time whether or not anything changed",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A report exists for each period, published at or after its scheduled time and not before, and the second is published although nothing changed. A missing period, or a report published before its time, fails.",
+      "actual": "2026-W45: 2026-11-01T21:06:00.000Z (due 2026-11-01T21:00:00.000Z); 2026-W46: 2026-11-08T21:06:00.000Z (due 2026-11-08T21:00:00.000Z)",
+      "stimulus": {
+        "description": "Two scheduled periods with the same source values in both, and the clock advanced to each scheduled time in turn.",
+        "now": "2026-11-01T20:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "publishes-on-schedule-regardless"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-01T20:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W45",
+              "2026-W46"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-01T20:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-01T20:30:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-01T20:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-11-01T20:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W45",
+              "2026-W46"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W45"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "simpro",
+            "queryRef": "jobs.completed_gross_margin_pct",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 31.4,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "job_gross_margin_pct",
+            "definitionId": "DEF-job_gross_margin_pct",
+            "source": "simpro",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT1"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.outstanding_total",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 184250,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_total",
+            "definitionId": "DEF-debtors_total",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT2"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.outstanding_over_60_days",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 22410,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_over_sixty_days",
+            "definitionId": "DEF-debtors_over_sixty_days",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT3"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "bank.closing_balance",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 96300,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "cash_at_bank",
+            "definitionId": "DEF-cash_at_bank",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT4"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W45",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "job_gross_margin_pct",
+                "value": 31.4,
+                "unavailable": null,
+                "definition": "DEF-job_gross_margin_pct",
+                "source": "simpro",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_total",
+                "value": 184250,
+                "unavailable": null,
+                "definition": "DEF-debtors_total",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_over_sixty_days",
+                "value": 22410,
+                "unavailable": null,
+                "definition": "DEF-debtors_over_sixty_days",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "cash_at_bank",
+                "value": 96300,
+                "unavailable": null,
+                "definition": "DEF-cash_at_bank",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              }
+            ],
+            "narrative": "Key numbers for 2026-W45, from the job system and the ledger. job_gross_margin_pct is 31.4. debtors_total is 184250. debtors_over_sixty_days is 22410. cash_at_bank is 96300.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT5",
+            "version": 1,
+            "publishedAt": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-08T20:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W45",
+              "2026-W46"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T20:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-08T20:30:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T20:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-11-08T20:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W45"
+          },
+          "response": {
+            "ids": [
+              "RPT5@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T20:30:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W45",
+              "2026-W46"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W45"
+          },
+          "response": {
+            "ids": [
+              "RPT5@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W46"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W45"
+          },
+          "response": {
+            "ids": [
+              "RPT5@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "simpro",
+            "queryRef": "jobs.completed_gross_margin_pct",
+            "period": "2026-W46"
+          },
+          "response": {
+            "ok": true,
+            "value": 31.4,
+            "asOf": "2026-11-08T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "job_gross_margin_pct",
+            "definitionId": "DEF-job_gross_margin_pct",
+            "source": "simpro",
+            "asOf": "2026-11-08T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT6"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.outstanding_total",
+            "period": "2026-W46"
+          },
+          "response": {
+            "ok": true,
+            "value": 184250,
+            "asOf": "2026-11-08T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_total",
+            "definitionId": "DEF-debtors_total",
+            "source": "xero",
+            "asOf": "2026-11-08T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT7"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.outstanding_over_60_days",
+            "period": "2026-W46"
+          },
+          "response": {
+            "ok": true,
+            "value": 22410,
+            "asOf": "2026-11-08T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_over_sixty_days",
+            "definitionId": "DEF-debtors_over_sixty_days",
+            "source": "xero",
+            "asOf": "2026-11-08T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT8"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "bank.closing_balance",
+            "period": "2026-W46"
+          },
+          "response": {
+            "ok": true,
+            "value": 96300,
+            "asOf": "2026-11-08T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "cash_at_bank",
+            "definitionId": "DEF-cash_at_bank",
+            "source": "xero",
+            "asOf": "2026-11-08T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT9"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W46",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "job_gross_margin_pct",
+                "value": 31.4,
+                "unavailable": null,
+                "definition": "DEF-job_gross_margin_pct",
+                "source": "simpro",
+                "asOf": "2026-11-08T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_total",
+                "value": 184250,
+                "unavailable": null,
+                "definition": "DEF-debtors_total",
+                "source": "xero",
+                "asOf": "2026-11-08T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_over_sixty_days",
+                "value": 22410,
+                "unavailable": null,
+                "definition": "DEF-debtors_over_sixty_days",
+                "source": "xero",
+                "asOf": "2026-11-08T21:06:00.000Z"
+              },
+              {
+                "measure": "cash_at_bank",
+                "value": 96300,
+                "unavailable": null,
+                "definition": "DEF-cash_at_bank",
+                "source": "xero",
+                "asOf": "2026-11-08T21:06:00.000Z"
+              }
+            ],
+            "narrative": "Key numbers for 2026-W46, from the job system and the ledger. job_gross_margin_pct is 31.4, the same as the prior week. debtors_total is 184250, the same as the prior week. debtors_over_sixty_days is 22410, the same as the prior week. cash_at_bank is 96300, the same as the prior week.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT10",
+            "version": 1,
+            "publishedAt": "2026-11-08T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "cannot-compute-says-so",
+      "n": 5,
+      "title": "A figure whose source could not be read publishes as unavailable, with the reason",
+      "verdict": "pass",
+      "held": true,
+      "expected": "In the second period the figure over the broken source has no value and a reason naming the failure, and an escalation names the figure. Its first-period value appearing in the second period, or a null value with no reason, fails.",
+      "actual": "W46 margin: null (source_unreadable: simpro source_unreachable); 1 escalation(s); 1 notification(s)",
+      "stimulus": {
+        "description": "Two periods over two sources, with one source made unreadable before the second period's run.",
+        "now": "2026-11-01T20:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "cannot-compute-says-so"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W45",
+              "2026-W46"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W45"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "simpro",
+            "queryRef": "jobs.completed_gross_margin_pct",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 31.4,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "job_gross_margin_pct",
+            "definitionId": "DEF-job_gross_margin_pct",
+            "source": "simpro",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT1"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.outstanding_total",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 184250,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_total",
+            "definitionId": "DEF-debtors_total",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT2"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.outstanding_over_60_days",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 22410,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_over_sixty_days",
+            "definitionId": "DEF-debtors_over_sixty_days",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT3"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "bank.closing_balance",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 96300,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "cash_at_bank",
+            "definitionId": "DEF-cash_at_bank",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT4"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W45",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "job_gross_margin_pct",
+                "value": 31.4,
+                "unavailable": null,
+                "definition": "DEF-job_gross_margin_pct",
+                "source": "simpro",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_total",
+                "value": 184250,
+                "unavailable": null,
+                "definition": "DEF-debtors_total",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_over_sixty_days",
+                "value": 22410,
+                "unavailable": null,
+                "definition": "DEF-debtors_over_sixty_days",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "cash_at_bank",
+                "value": 96300,
+                "unavailable": null,
+                "definition": "DEF-cash_at_bank",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              }
+            ],
+            "narrative": "Key numbers for 2026-W45, from the job system and the ledger. job_gross_margin_pct is 31.4. debtors_total is 184250. debtors_over_sixty_days is 22410. cash_at_bank is 96300.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT5",
+            "version": 1,
+            "publishedAt": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W45",
+              "2026-W46"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W45"
+          },
+          "response": {
+            "ids": [
+              "RPT5@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W46"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W45"
+          },
+          "response": {
+            "ids": [
+              "RPT5@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "simpro",
+            "queryRef": "jobs.completed_gross_margin_pct",
+            "period": "2026-W46"
+          },
+          "response": {
+            "ok": false,
+            "reason": "source_unreachable"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "report.source_unreadable",
+            "detail": "job_gross_margin_pct for 2026-W46: simpro could not be read (source_unreachable). Published as unavailable. Owner: Tom Walsh (operations manager)"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "person": "Tom Walsh (operations manager)",
+            "measure": "job_gross_margin_pct",
+            "period": "2026-W46",
+            "detail": "job_gross_margin_pct is unavailable on the 2026-W46 key numbers: source_unreadable: simpro source_unreachable"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.outstanding_total",
+            "period": "2026-W46"
+          },
+          "response": {
+            "ok": true,
+            "value": 191870,
+            "asOf": "2026-11-08T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_total",
+            "definitionId": "DEF-debtors_total",
+            "source": "xero",
+            "asOf": "2026-11-08T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT6"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.outstanding_over_60_days",
+            "period": "2026-W46"
+          },
+          "response": {
+            "ok": true,
+            "value": 35980,
+            "asOf": "2026-11-08T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_over_sixty_days",
+            "definitionId": "DEF-debtors_over_sixty_days",
+            "source": "xero",
+            "asOf": "2026-11-08T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT7"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "bank.closing_balance",
+            "period": "2026-W46"
+          },
+          "response": {
+            "ok": true,
+            "value": 78150,
+            "asOf": "2026-11-08T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "cash_at_bank",
+            "definitionId": "DEF-cash_at_bank",
+            "source": "xero",
+            "asOf": "2026-11-08T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT8"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W46",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "job_gross_margin_pct",
+                "value": null,
+                "unavailable": "source_unreadable: simpro source_unreachable",
+                "definition": null,
+                "source": null,
+                "asOf": null
+              },
+              {
+                "measure": "debtors_total",
+                "value": 191870,
+                "unavailable": null,
+                "definition": "DEF-debtors_total",
+                "source": "xero",
+                "asOf": "2026-11-08T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_over_sixty_days",
+                "value": 35980,
+                "unavailable": null,
+                "definition": "DEF-debtors_over_sixty_days",
+                "source": "xero",
+                "asOf": "2026-11-08T21:06:00.000Z"
+              },
+              {
+                "measure": "cash_at_bank",
+                "value": 78150,
+                "unavailable": null,
+                "definition": "DEF-cash_at_bank",
+                "source": "xero",
+                "asOf": "2026-11-08T21:06:00.000Z"
+              }
+            ],
+            "narrative": "Key numbers for 2026-W46, from the job system and the ledger. job_gross_margin_pct is unavailable this week (source_unreadable: simpro source_unreachable) and its owner has been told. debtors_total is 191870, higher than the prior week. debtors_over_sixty_days is 35980, higher than the prior week. cash_at_bank is 78150, lower than the prior week.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT9",
+            "version": 1,
+            "publishedAt": "2026-11-08T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "no-narrative-invents-a-number",
+      "n": 6,
+      "title": "Prose on the report describes figures that exist and never states a number they do not carry",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every number in every published narrative equals a value on that report's figure list, or is the period label. A percentage or a difference the figures do not carry fails, whether or not it happens to be arithmetically right.",
+      "actual": "2026-W45/owner: invented []; 2026-W45/accountant: invented []; 2026-W46/owner: invented []; 2026-W46/accountant: invented []",
+      "stimulus": {
+        "description": "Two periods where the second's figures move against the first, so a comparison is tempting to write.",
+        "now": "2026-11-01T20:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "no-narrative-invents-a-number"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W45",
+              "2026-W46"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner",
+              "accountant"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W45"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "simpro",
+            "queryRef": "jobs.completed_gross_margin_pct",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 31.4,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "job_gross_margin_pct",
+            "definitionId": "DEF-job_gross_margin_pct",
+            "source": "simpro",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT1"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.outstanding_total",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 184250,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_total",
+            "definitionId": "DEF-debtors_total",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT2"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.outstanding_over_60_days",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 22410,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_over_sixty_days",
+            "definitionId": "DEF-debtors_over_sixty_days",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT3"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "bank.closing_balance",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 96300,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "cash_at_bank",
+            "definitionId": "DEF-cash_at_bank",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT4"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W45",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "job_gross_margin_pct",
+                "value": 31.4,
+                "unavailable": null,
+                "definition": "DEF-job_gross_margin_pct",
+                "source": "simpro",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_total",
+                "value": 184250,
+                "unavailable": null,
+                "definition": "DEF-debtors_total",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_over_sixty_days",
+                "value": 22410,
+                "unavailable": null,
+                "definition": "DEF-debtors_over_sixty_days",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "cash_at_bank",
+                "value": 96300,
+                "unavailable": null,
+                "definition": "DEF-cash_at_bank",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              }
+            ],
+            "narrative": "Key numbers for 2026-W45, from the job system and the ledger. job_gross_margin_pct is 31.4. debtors_total is 184250. debtors_over_sixty_days is 22410. cash_at_bank is 96300.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT5",
+            "version": 1,
+            "publishedAt": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W45",
+            "audienceId": "accountant",
+            "figures": [
+              {
+                "measure": "debtors_total",
+                "value": 184250,
+                "unavailable": null,
+                "definition": "DEF-debtors_total",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_over_sixty_days",
+                "value": 22410,
+                "unavailable": null,
+                "definition": "DEF-debtors_over_sixty_days",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "cash_at_bank",
+                "value": 96300,
+                "unavailable": null,
+                "definition": "DEF-cash_at_bank",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              }
+            ],
+            "narrative": "Key numbers for 2026-W45, from the job system and the ledger. debtors_total is 184250. debtors_over_sixty_days is 22410. cash_at_bank is 96300.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT6",
+            "version": 1,
+            "publishedAt": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W45",
+              "2026-W46"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner",
+              "accountant"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W45"
+          },
+          "response": {
+            "ids": [
+              "RPT5@v1",
+              "RPT6@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W46"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W45"
+          },
+          "response": {
+            "ids": [
+              "RPT5@v1",
+              "RPT6@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "simpro",
+            "queryRef": "jobs.completed_gross_margin_pct",
+            "period": "2026-W46"
+          },
+          "response": {
+            "ok": true,
+            "value": 24.8,
+            "asOf": "2026-11-08T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "job_gross_margin_pct",
+            "definitionId": "DEF-job_gross_margin_pct",
+            "source": "simpro",
+            "asOf": "2026-11-08T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT7"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.outstanding_total",
+            "period": "2026-W46"
+          },
+          "response": {
+            "ok": true,
+            "value": 191870,
+            "asOf": "2026-11-08T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_total",
+            "definitionId": "DEF-debtors_total",
+            "source": "xero",
+            "asOf": "2026-11-08T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT8"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.outstanding_over_60_days",
+            "period": "2026-W46"
+          },
+          "response": {
+            "ok": true,
+            "value": 35980,
+            "asOf": "2026-11-08T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_over_sixty_days",
+            "definitionId": "DEF-debtors_over_sixty_days",
+            "source": "xero",
+            "asOf": "2026-11-08T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT9"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "bank.closing_balance",
+            "period": "2026-W46"
+          },
+          "response": {
+            "ok": true,
+            "value": 78150,
+            "asOf": "2026-11-08T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "cash_at_bank",
+            "definitionId": "DEF-cash_at_bank",
+            "source": "xero",
+            "asOf": "2026-11-08T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT10"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "person": "Tom Walsh (operations manager)",
+            "measure": "job_gross_margin_pct",
+            "period": "2026-W46",
+            "detail": "job_gross_margin_pct moved down past the threshold you set (5 week on week). 2026-W45: 31.4 (as of 2026-11-01T21:06:00.000Z, report RPT5). 2026-W46: 24.8 (definition DEF-job_gross_margin_pct, simpro, as of 2026-11-08T21:06:00.000Z). What to do about it is yours."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "person": "Megan Clarke (director)",
+            "measure": "debtors_over_sixty_days",
+            "period": "2026-W46",
+            "detail": "debtors_over_sixty_days moved up past the threshold you set (10000 week on week). 2026-W45: 22410 (as of 2026-11-01T21:06:00.000Z, report RPT5). 2026-W46: 35980 (definition DEF-debtors_over_sixty_days, xero, as of 2026-11-08T21:06:00.000Z). What to do about it is yours."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W46",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "job_gross_margin_pct",
+                "value": 24.8,
+                "unavailable": null,
+                "definition": "DEF-job_gross_margin_pct",
+                "source": "simpro",
+                "asOf": "2026-11-08T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_total",
+                "value": 191870,
+                "unavailable": null,
+                "definition": "DEF-debtors_total",
+                "source": "xero",
+                "asOf": "2026-11-08T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_over_sixty_days",
+                "value": 35980,
+                "unavailable": null,
+                "definition": "DEF-debtors_over_sixty_days",
+                "source": "xero",
+                "asOf": "2026-11-08T21:06:00.000Z"
+              },
+              {
+                "measure": "cash_at_bank",
+                "value": 78150,
+                "unavailable": null,
+                "definition": "DEF-cash_at_bank",
+                "source": "xero",
+                "asOf": "2026-11-08T21:06:00.000Z"
+              }
+            ],
+            "narrative": "Key numbers for 2026-W46, from the job system and the ledger. job_gross_margin_pct is 24.8, lower than the prior week. debtors_total is 191870, higher than the prior week. debtors_over_sixty_days is 35980, higher than the prior week. cash_at_bank is 78150, lower than the prior week.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT11",
+            "version": 1,
+            "publishedAt": "2026-11-08T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W46",
+            "audienceId": "accountant",
+            "figures": [
+              {
+                "measure": "debtors_total",
+                "value": 191870,
+                "unavailable": null,
+                "definition": "DEF-debtors_total",
+                "source": "xero",
+                "asOf": "2026-11-08T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_over_sixty_days",
+                "value": 35980,
+                "unavailable": null,
+                "definition": "DEF-debtors_over_sixty_days",
+                "source": "xero",
+                "asOf": "2026-11-08T21:06:00.000Z"
+              },
+              {
+                "measure": "cash_at_bank",
+                "value": 78150,
+                "unavailable": null,
+                "definition": "DEF-cash_at_bank",
+                "source": "xero",
+                "asOf": "2026-11-08T21:06:00.000Z"
+              }
+            ],
+            "narrative": "Key numbers for 2026-W46, from the job system and the ledger. debtors_total is 191870, higher than the prior week. debtors_over_sixty_days is 35980, higher than the prior week. cash_at_bank is 78150, lower than the prior week.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT12",
+            "version": 1,
+            "publishedAt": "2026-11-08T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "variance-thresholds-route-to-a-person",
+      "n": 7,
+      "title": "A figure past its declared threshold against the prior period notifies a named person that run",
+      "verdict": "pass",
+      "held": true,
+      "expected": "In the second period's run a notification names that person and that measure. No notification in the first period, where there is nothing to compare. A crossing with no notification, or one sent to nobody in particular, fails.",
+      "actual": "Tom Walsh (operations manager) / job_gross_margin_pct / 2026-W46 at 2026-11-08T21:06:00.000Z; Megan Clarke (director) / debtors_over_sixty_days / 2026-W46 at 2026-11-08T21:06:00.000Z",
+      "stimulus": {
+        "description": "A threshold on one measure with a named person, and two periods whose second value moves past it.",
+        "now": "2026-11-01T20:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "variance-thresholds-route-to-a-person"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W45",
+              "2026-W46"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W45"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "simpro",
+            "queryRef": "jobs.completed_gross_margin_pct",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 31.4,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "job_gross_margin_pct",
+            "definitionId": "DEF-job_gross_margin_pct",
+            "source": "simpro",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT1"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.outstanding_total",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 184250,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_total",
+            "definitionId": "DEF-debtors_total",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT2"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.outstanding_over_60_days",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 22410,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_over_sixty_days",
+            "definitionId": "DEF-debtors_over_sixty_days",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT3"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "bank.closing_balance",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 96300,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "cash_at_bank",
+            "definitionId": "DEF-cash_at_bank",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT4"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W45",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "job_gross_margin_pct",
+                "value": 31.4,
+                "unavailable": null,
+                "definition": "DEF-job_gross_margin_pct",
+                "source": "simpro",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_total",
+                "value": 184250,
+                "unavailable": null,
+                "definition": "DEF-debtors_total",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_over_sixty_days",
+                "value": 22410,
+                "unavailable": null,
+                "definition": "DEF-debtors_over_sixty_days",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "cash_at_bank",
+                "value": 96300,
+                "unavailable": null,
+                "definition": "DEF-cash_at_bank",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              }
+            ],
+            "narrative": "Key numbers for 2026-W45, from the job system and the ledger. job_gross_margin_pct is 31.4. debtors_total is 184250. debtors_over_sixty_days is 22410. cash_at_bank is 96300.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT5",
+            "version": 1,
+            "publishedAt": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W45",
+              "2026-W46"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W45"
+          },
+          "response": {
+            "ids": [
+              "RPT5@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W46"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W45"
+          },
+          "response": {
+            "ids": [
+              "RPT5@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "simpro",
+            "queryRef": "jobs.completed_gross_margin_pct",
+            "period": "2026-W46"
+          },
+          "response": {
+            "ok": true,
+            "value": 24.8,
+            "asOf": "2026-11-08T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "job_gross_margin_pct",
+            "definitionId": "DEF-job_gross_margin_pct",
+            "source": "simpro",
+            "asOf": "2026-11-08T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT6"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.outstanding_total",
+            "period": "2026-W46"
+          },
+          "response": {
+            "ok": true,
+            "value": 191870,
+            "asOf": "2026-11-08T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_total",
+            "definitionId": "DEF-debtors_total",
+            "source": "xero",
+            "asOf": "2026-11-08T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT7"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.outstanding_over_60_days",
+            "period": "2026-W46"
+          },
+          "response": {
+            "ok": true,
+            "value": 35980,
+            "asOf": "2026-11-08T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_over_sixty_days",
+            "definitionId": "DEF-debtors_over_sixty_days",
+            "source": "xero",
+            "asOf": "2026-11-08T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT8"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "bank.closing_balance",
+            "period": "2026-W46"
+          },
+          "response": {
+            "ok": true,
+            "value": 78150,
+            "asOf": "2026-11-08T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "cash_at_bank",
+            "definitionId": "DEF-cash_at_bank",
+            "source": "xero",
+            "asOf": "2026-11-08T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT9"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "person": "Tom Walsh (operations manager)",
+            "measure": "job_gross_margin_pct",
+            "period": "2026-W46",
+            "detail": "job_gross_margin_pct moved down past the threshold you set (5 week on week). 2026-W45: 31.4 (as of 2026-11-01T21:06:00.000Z, report RPT5). 2026-W46: 24.8 (definition DEF-job_gross_margin_pct, simpro, as of 2026-11-08T21:06:00.000Z). What to do about it is yours."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "person": "Megan Clarke (director)",
+            "measure": "debtors_over_sixty_days",
+            "period": "2026-W46",
+            "detail": "debtors_over_sixty_days moved up past the threshold you set (10000 week on week). 2026-W45: 22410 (as of 2026-11-01T21:06:00.000Z, report RPT5). 2026-W46: 35980 (definition DEF-debtors_over_sixty_days, xero, as of 2026-11-08T21:06:00.000Z). What to do about it is yours."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W46",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "job_gross_margin_pct",
+                "value": 24.8,
+                "unavailable": null,
+                "definition": "DEF-job_gross_margin_pct",
+                "source": "simpro",
+                "asOf": "2026-11-08T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_total",
+                "value": 191870,
+                "unavailable": null,
+                "definition": "DEF-debtors_total",
+                "source": "xero",
+                "asOf": "2026-11-08T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_over_sixty_days",
+                "value": 35980,
+                "unavailable": null,
+                "definition": "DEF-debtors_over_sixty_days",
+                "source": "xero",
+                "asOf": "2026-11-08T21:06:00.000Z"
+              },
+              {
+                "measure": "cash_at_bank",
+                "value": 78150,
+                "unavailable": null,
+                "definition": "DEF-cash_at_bank",
+                "source": "xero",
+                "asOf": "2026-11-08T21:06:00.000Z"
+              }
+            ],
+            "narrative": "Key numbers for 2026-W46, from the job system and the ledger. job_gross_margin_pct is 24.8, lower than the prior week. debtors_total is 191870, higher than the prior week. debtors_over_sixty_days is 35980, higher than the prior week. cash_at_bank is 78150, lower than the prior week.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT10",
+            "version": 1,
+            "publishedAt": "2026-11-08T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "audience-gets-its-own-view",
+      "n": 8,
+      "title": "Each audience sees the figures declared for it and nothing else",
+      "verdict": "pass",
+      "held": true,
+      "expected": "For each audience a report exists whose figure measures are exactly the audience's declared measures. A figure outside the declaration, or a declared measure absent, fails.",
+      "actual": "owner: [job_gross_margin_pct, debtors_total, debtors_over_sixty_days, cash_at_bank]; accountant: [debtors_total, debtors_over_sixty_days, cash_at_bank]",
+      "stimulus": {
+        "description": "Two audiences: one declared for every measure, one declared for a subset.",
+        "now": "2026-11-01T20:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "audience-gets-its-own-view"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W45"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner",
+              "accountant"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W45"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "simpro",
+            "queryRef": "jobs.completed_gross_margin_pct",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 31.4,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "job_gross_margin_pct",
+            "definitionId": "DEF-job_gross_margin_pct",
+            "source": "simpro",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT1"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.outstanding_total",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 184250,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_total",
+            "definitionId": "DEF-debtors_total",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT2"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.outstanding_over_60_days",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 22410,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_over_sixty_days",
+            "definitionId": "DEF-debtors_over_sixty_days",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT3"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "bank.closing_balance",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 96300,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "cash_at_bank",
+            "definitionId": "DEF-cash_at_bank",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT4"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W45",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "job_gross_margin_pct",
+                "value": 31.4,
+                "unavailable": null,
+                "definition": "DEF-job_gross_margin_pct",
+                "source": "simpro",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_total",
+                "value": 184250,
+                "unavailable": null,
+                "definition": "DEF-debtors_total",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_over_sixty_days",
+                "value": 22410,
+                "unavailable": null,
+                "definition": "DEF-debtors_over_sixty_days",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "cash_at_bank",
+                "value": 96300,
+                "unavailable": null,
+                "definition": "DEF-cash_at_bank",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              }
+            ],
+            "narrative": "Key numbers for 2026-W45, from the job system and the ledger. job_gross_margin_pct is 31.4. debtors_total is 184250. debtors_over_sixty_days is 22410. cash_at_bank is 96300.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT5",
+            "version": 1,
+            "publishedAt": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W45",
+            "audienceId": "accountant",
+            "figures": [
+              {
+                "measure": "debtors_total",
+                "value": 184250,
+                "unavailable": null,
+                "definition": "DEF-debtors_total",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_over_sixty_days",
+                "value": 22410,
+                "unavailable": null,
+                "definition": "DEF-debtors_over_sixty_days",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "cash_at_bank",
+                "value": 96300,
+                "unavailable": null,
+                "definition": "DEF-cash_at_bank",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              }
+            ],
+            "narrative": "Key numbers for 2026-W45, from the job system and the ledger. debtors_total is 184250. debtors_over_sixty_days is 22410. cash_at_bank is 96300.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT6",
+            "version": 1,
+            "publishedAt": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "corrections-are-a-new-version",
+      "n": 9,
+      "title": "A published figure changes only by a named person publishing a new version with the reason",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "A gate call names the person and the reason before a new version is published. The new version supersedes the first and carries the person and the reason; the first version is unchanged and marked superseded. An in-place amendment of a published report fails.",
+      "actual": "RPT5 v1 superseded by schedule; RPT11 v2 published by Priya Shah (bookkeeper); 0 in-place amendment(s)",
+      "stimulus": {
+        "description": "One period published, then a named person asks for one figure to be corrected, with a reason.",
+        "now": "2026-11-01T20:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "corrections-are-a-new-version"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W45"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W45"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "simpro",
+            "queryRef": "jobs.completed_gross_margin_pct",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 31.4,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "job_gross_margin_pct",
+            "definitionId": "DEF-job_gross_margin_pct",
+            "source": "simpro",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT1"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.outstanding_total",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 184250,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_total",
+            "definitionId": "DEF-debtors_total",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT2"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.outstanding_over_60_days",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 22410,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_over_sixty_days",
+            "definitionId": "DEF-debtors_over_sixty_days",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT3"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "bank.closing_balance",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 96300,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "cash_at_bank",
+            "definitionId": "DEF-cash_at_bank",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT4"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W45",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "job_gross_margin_pct",
+                "value": 31.4,
+                "unavailable": null,
+                "definition": "DEF-job_gross_margin_pct",
+                "source": "simpro",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_total",
+                "value": 184250,
+                "unavailable": null,
+                "definition": "DEF-debtors_total",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_over_sixty_days",
+                "value": 22410,
+                "unavailable": null,
+                "definition": "DEF-debtors_over_sixty_days",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "cash_at_bank",
+                "value": 96300,
+                "unavailable": null,
+                "definition": "DEF-cash_at_bank",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              }
+            ],
+            "narrative": "Key numbers for 2026-W45, from the job system and the ledger. job_gross_margin_pct is 31.4. debtors_total is 184250. debtors_over_sixty_days is 22410. cash_at_bank is 96300.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT5",
+            "version": 1,
+            "publishedAt": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W45"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W45"
+          },
+          "response": {
+            "ids": [
+              "RPT5@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W45"
+          },
+          "response": {
+            "ids": [
+              "RPT5@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "correction": "RPT5",
+            "person": "Priya Shah (bookkeeper)",
+            "reason": "INV-4127 was paid on Friday and reconciled after the read"
+          },
+          "response": {
+            "approved": true
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "job_gross_margin_pct",
+            "definitionId": "DEF-job_gross_margin_pct",
+            "source": "simpro",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT7"
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_total",
+            "definitionId": "DEF-debtors_total",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT8"
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_over_sixty_days",
+            "definitionId": "DEF-debtors_over_sixty_days",
+            "source": "correction COR6 by Priya Shah (bookkeeper)",
+            "asOf": "2026-11-01T23:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT9"
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "cash_at_bank",
+            "definitionId": "DEF-cash_at_bank",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT10"
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W45",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "job_gross_margin_pct",
+                "value": 31.4,
+                "unavailable": null,
+                "definition": "DEF-job_gross_margin_pct",
+                "source": "simpro",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_total",
+                "value": 184250,
+                "unavailable": null,
+                "definition": "DEF-debtors_total",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_over_sixty_days",
+                "value": 18760,
+                "unavailable": null,
+                "definition": "DEF-debtors_over_sixty_days",
+                "source": "correction COR6 by Priya Shah (bookkeeper)",
+                "asOf": "2026-11-01T23:06:00.000Z"
+              },
+              {
+                "measure": "cash_at_bank",
+                "value": 96300,
+                "unavailable": null,
+                "definition": "DEF-cash_at_bank",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              }
+            ],
+            "narrative": "Key numbers for 2026-W45, from the job system and the ledger. job_gross_margin_pct is 31.4. debtors_total is 184250. debtors_over_sixty_days is 18760. cash_at_bank is 96300. This version corrects debtors_over_sixty_days and was published by Priya Shah (bookkeeper).",
+            "supersedes": "RPT5",
+            "by": "Priya Shah (bookkeeper)",
+            "reason": "INV-4127 was paid on Friday and reconciled after the read"
+          },
+          "response": {
+            "id": "RPT11",
+            "version": 2,
+            "publishedAt": "2026-11-01T23:06:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "the-record-by-period",
+      "n": 10,
+      "title": "For any period: the figures, definitions, sources, as-of times, versions and who published, retrievable",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A read by period returns every version of every view. Each valued figure carries a definition id, a source and an as-of time. Each version carries who published it and, for a correction, the reason. A record missing any of those fails.",
+      "actual": "owner v1 superseded by schedule; accountant v1 superseded by schedule; accountant v2 published by Priya Shah (bookkeeper); owner v2 published by Priya Shah (bookkeeper)",
+      "stimulus": {
+        "description": "One period published to two audiences, then corrected once.",
+        "now": "2026-11-01T20:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "the-record-by-period"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W45"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner",
+              "accountant"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W45"
+          },
+          "response": {
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "simpro",
+            "queryRef": "jobs.completed_gross_margin_pct",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 31.4,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "job_gross_margin_pct",
+            "definitionId": "DEF-job_gross_margin_pct",
+            "source": "simpro",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT1"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.outstanding_total",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 184250,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_total",
+            "definitionId": "DEF-debtors_total",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT2"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "invoices.outstanding_over_60_days",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 22410,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_over_sixty_days",
+            "definitionId": "DEF-debtors_over_sixty_days",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT3"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "xero",
+            "queryRef": "bank.closing_balance",
+            "period": "2026-W45"
+          },
+          "response": {
+            "ok": true,
+            "value": 96300,
+            "asOf": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "cash_at_bank",
+            "definitionId": "DEF-cash_at_bank",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT4"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W45",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "job_gross_margin_pct",
+                "value": 31.4,
+                "unavailable": null,
+                "definition": "DEF-job_gross_margin_pct",
+                "source": "simpro",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_total",
+                "value": 184250,
+                "unavailable": null,
+                "definition": "DEF-debtors_total",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_over_sixty_days",
+                "value": 22410,
+                "unavailable": null,
+                "definition": "DEF-debtors_over_sixty_days",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "cash_at_bank",
+                "value": 96300,
+                "unavailable": null,
+                "definition": "DEF-cash_at_bank",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              }
+            ],
+            "narrative": "Key numbers for 2026-W45, from the job system and the ledger. job_gross_margin_pct is 31.4. debtors_total is 184250. debtors_over_sixty_days is 22410. cash_at_bank is 96300.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT5",
+            "version": 1,
+            "publishedAt": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W45",
+            "audienceId": "accountant",
+            "figures": [
+              {
+                "measure": "debtors_total",
+                "value": 184250,
+                "unavailable": null,
+                "definition": "DEF-debtors_total",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_over_sixty_days",
+                "value": 22410,
+                "unavailable": null,
+                "definition": "DEF-debtors_over_sixty_days",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "cash_at_bank",
+                "value": 96300,
+                "unavailable": null,
+                "definition": "DEF-cash_at_bank",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              }
+            ],
+            "narrative": "Key numbers for 2026-W45, from the job system and the ledger. debtors_total is 184250. debtors_over_sixty_days is 22410. cash_at_bank is 96300.",
+            "supersedes": null,
+            "by": null,
+            "reason": null
+          },
+          "response": {
+            "id": "RPT6",
+            "version": 1,
+            "publishedAt": "2026-11-01T21:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T21:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "schedule"
+          },
+          "response": {
+            "periods": [
+              "2026-W45"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "definitions"
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "audiences": true
+          },
+          "response": {
+            "ids": [
+              "owner",
+              "accountant"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "thresholds"
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W45"
+          },
+          "response": {
+            "ids": [
+              "RPT5@v1",
+              "RPT6@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "register": "corrections"
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "reports": "2026-W45"
+          },
+          "response": {
+            "ids": [
+              "RPT5@v1",
+              "RPT6@v1"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "correction": "RPT6",
+            "person": "Priya Shah (bookkeeper)",
+            "reason": "INV-4127 was paid on Friday and reconciled after the read"
+          },
+          "response": {
+            "approved": true
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_total",
+            "definitionId": "DEF-debtors_total",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT8"
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_over_sixty_days",
+            "definitionId": "DEF-debtors_over_sixty_days",
+            "source": "correction COR7 by Priya Shah (bookkeeper)",
+            "asOf": "2026-11-01T23:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT9"
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "cash_at_bank",
+            "definitionId": "DEF-cash_at_bank",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT10"
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W45",
+            "audienceId": "accountant",
+            "figures": [
+              {
+                "measure": "debtors_total",
+                "value": 184250,
+                "unavailable": null,
+                "definition": "DEF-debtors_total",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_over_sixty_days",
+                "value": 18760,
+                "unavailable": null,
+                "definition": "DEF-debtors_over_sixty_days",
+                "source": "correction COR7 by Priya Shah (bookkeeper)",
+                "asOf": "2026-11-01T23:06:00.000Z"
+              },
+              {
+                "measure": "cash_at_bank",
+                "value": 96300,
+                "unavailable": null,
+                "definition": "DEF-cash_at_bank",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              }
+            ],
+            "narrative": "Key numbers for 2026-W45, from the job system and the ledger. debtors_total is 184250. debtors_over_sixty_days is 18760. cash_at_bank is 96300. This version corrects debtors_over_sixty_days and was published by Priya Shah (bookkeeper).",
+            "supersedes": "RPT6",
+            "by": "Priya Shah (bookkeeper)",
+            "reason": "INV-4127 was paid on Friday and reconciled after the read"
+          },
+          "response": {
+            "id": "RPT11",
+            "version": 2,
+            "publishedAt": "2026-11-01T23:06:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "correction": "RPT5",
+            "person": "Priya Shah (bookkeeper)",
+            "reason": "INV-4127 was paid on Friday and reconciled after the read"
+          },
+          "response": {
+            "approved": true
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "job_gross_margin_pct",
+            "definitionId": "DEF-job_gross_margin_pct",
+            "source": "simpro",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT12"
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_total",
+            "definitionId": "DEF-debtors_total",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT13"
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "debtors_over_sixty_days",
+            "definitionId": "DEF-debtors_over_sixty_days",
+            "source": "correction COR7 by Priya Shah (bookkeeper)",
+            "asOf": "2026-11-01T23:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT14"
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "measure": "cash_at_bank",
+            "definitionId": "DEF-cash_at_bank",
+            "source": "xero",
+            "asOf": "2026-11-01T21:06:00.000Z"
+          },
+          "response": {
+            "id": "CIT15"
+          }
+        },
+        {
+          "at": "2026-11-01T23:06:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "period": "2026-W45",
+            "audienceId": "owner",
+            "figures": [
+              {
+                "measure": "job_gross_margin_pct",
+                "value": 31.4,
+                "unavailable": null,
+                "definition": "DEF-job_gross_margin_pct",
+                "source": "simpro",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_total",
+                "value": 184250,
+                "unavailable": null,
+                "definition": "DEF-debtors_total",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              },
+              {
+                "measure": "debtors_over_sixty_days",
+                "value": 18760,
+                "unavailable": null,
+                "definition": "DEF-debtors_over_sixty_days",
+                "source": "correction COR7 by Priya Shah (bookkeeper)",
+                "asOf": "2026-11-01T23:06:00.000Z"
+              },
+              {
+                "measure": "cash_at_bank",
+                "value": 96300,
+                "unavailable": null,
+                "definition": "DEF-cash_at_bank",
+                "source": "xero",
+                "asOf": "2026-11-01T21:06:00.000Z"
+              }
+            ],
+            "narrative": "Key numbers for 2026-W45, from the job system and the ledger. job_gross_margin_pct is 31.4. debtors_total is 184250. debtors_over_sixty_days is 18760. cash_at_bank is 96300. This version corrects debtors_over_sixty_days and was published by Priya Shah (bookkeeper).",
+            "supersedes": "RPT5",
+            "by": "Priya Shah (bookkeeper)",
+            "reason": "INV-4127 was paid on Friday and reconciled after the read"
+          },
+          "response": {
+            "id": "RPT16",
+            "version": 2,
+            "publishedAt": "2026-11-01T23:06:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 11,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the definitions and the schedule runs on.",
+        "now": "2026-11-04T12:57:44.201Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 12,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "Both periods published at their scheduled time. The figure over the offline source is unavailable with the reason and its owner told. The crossed threshold notified its person. The correction exists as a new version with a name and a reason, and the first version is still readable.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "Two real scheduled periods on the business's own sources, with one source taken offline before the second run and one correction requested by a named person.",
+        "now": "2026-11-04T12:57:44.201Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 12,
+    "pass": 9,
+    "fail": 0,
+    "shapeOnly": 1,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
