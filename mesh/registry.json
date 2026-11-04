@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T11:43:35.266Z",
+  "generated_at": "2026-11-04T11:45:23.757Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -1826,6 +1826,118 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 13
+        }
+      ]
+    },
+    {
+      "slug": "contract-billing",
+      "name": "Contract Billing",
+      "office_task": "When a maintenance contract's billing period closes, draft the client's service invoice in Xero at our schedule of rates, park what it cannot price, and hold it for a named person.",
+      "verticals": [
+        "fire-electrical"
+      ],
+      "standards": [
+        "invoice-out"
+      ],
+      "systems_of_record": [
+        "the job system that holds each maintenance contract and closes one billing-period record per contract per cycle on its billing date (Simpro, ServiceM8 or the fire maintenance system the business runs), issuing the period's id (carried as job_id)",
+        "Xero, which issues the invoice_id"
+      ],
+      "consumes": [
+        {
+          "event": "job.completed",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "invoice.raised",
+          "write": "One draft invoice in Xero per closed billing period, referenced job:<period id> (and the stage when the period sits under a building contract), every line a scheduled service, attendance or consumable the period carries, every rate read from the schedule of rates at draft time, and the client's signed variation attached for any asset added mid-term. A second close event updates the same draft.",
+          "readback": "Xero returns the InvoiceID; GET /api.xro/2.0/Invoices/{InvoiceID} must return the invoice with Reference job:<period id>, and that id is stamped on the period as seam.invoice_id. No id back is not a write: it raises invoice.write_failed and the run stops."
+        },
+        {
+          "event": "invoice.sent",
+          "write": "The invoice leaves only after a release naming the accounts officer, or naming the rule they wrote down and showing the total is under its threshold; the release and the send time are recorded against the period. The bot never approves or emails in Xero itself.",
+          "readback": "GET /api.xro/2.0/Invoices/{InvoiceID} returns it AUTHORISED and sent to the contact, and the period read by its id shows seam.released_by (a person or a rule) before the send time. A send with no release on the record is refused."
+        },
+        {
+          "event": "exception.raised",
+          "write": "A parked or waiting invoice as an exception on the billing period: the reason from the standard's list (not_in_pricebook, unsigned_variation, write_failed) or over_threshold, the period id, the invoice id, the codes left unpriced or unsigned, and exception_owner set to the person the business named for contract billing.",
+          "readback": "The exception desk returns an exception_id, and reading it back returns the job_id, the invoice_id, the reason and the exception_owner; the next run reads it there and stops until exception.closed."
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "invoice.not_in_pricebook",
+          "invoice.unsigned_variation",
+          "invoice.write_failed",
+          "invoice.over_threshold"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.invoice_id",
+          "seam.quote_id",
+          "seam.book_edition",
+          "seam.status",
+          "seam.park_reason",
+          "seam.released_by",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/contract-billing"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "invoice-out",
+          "edition": "2026-10-05",
+          "environment": "stub",
+          "ran_at": "2026-11-04T11:42:38.926Z",
+          "run_id": "run-1793792558924",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        },
+        {
+          "standard": "cash-seam",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T11:42:21.037Z",
+          "run_id": "run-1793792541036",
+          "green": 4,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 9
         }
       ]
     },
@@ -7168,6 +7280,100 @@
       ]
     },
     {
+      "slug": "receipt-chase",
+      "name": "Receipt Chase",
+      "office_task": "Each weekday, find the bank and card lines in Xero with no receipt, ask the person who spent each one for it, attach it when it comes back, and hand a no or a silence to the bookkeeper.",
+      "verticals": [
+        "accounting-bookkeeping"
+      ],
+      "standards": [
+        "follow-up"
+      ],
+      "systems_of_record": [
+        "Xero, where each spend line in the bank feed has its bank transaction id and the receipt is attached to that line",
+        "the receipt register kept beside it, one open item per line with no receipt, owed by the person who spent it",
+        "the practice's mailbox (Gmail or Outlook), where a receipt sent back on the chase thread arrives with its message id"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "evidence.filed",
+          "write": "the receipt (a tax invoice, or a photo of the docket) attached to its bank or card line in Xero by the line's bank transaction id, which marks the register item arrived so the line can be coded and its GST claimed by the bookkeeper",
+          "readback": "reading the line back from Xero by its bank transaction id lists the attachment, and the register item reads back status arrived with an evidence reference naming the message_id the receipt came in on; no attachment back means it was not filed, and the item stays on the register untouched until a person looks"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an escalation on the register item naming the bookkeeper: the spender said no or asked us to stop, disputed the line, or the cap was reached with no receipt, carrying every reminder so far",
+          "readback": "the exception desk returns an exception_id, and reading it back returns the item id, the bank transaction id, the reason, the touch history and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "followup.declined",
+          "followup.dispute",
+          "followup.cap_reached"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.item_id",
+          "seam.bank_transaction_id",
+          "seam.item_status",
+          "seam.touches",
+          "seam.outcome",
+          "seam.evidence_ref",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/receipt-chase"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "follow-up",
+          "edition": "2026-10-05",
+          "environment": "stub",
+          "ran_at": "2026-11-04T11:42:22.220Z",
+          "run_id": "run-1793792542216",
+          "green": 10,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 13
+        }
+      ]
+    },
+    {
       "slug": "renewal-watch",
       "name": "Renewal Watch",
       "office_task": "Keep our licences, insurances and site services on a calendar worked out from each state's rules, file the certificates when they come in, and put anything late in front of a named person.",
@@ -9437,6 +9643,7 @@
     "comp-check",
     "comp-report",
     "consultant-hours",
+    "contract-billing",
     "cover-check",
     "crew-board",
     "deadline-desk",
@@ -9486,6 +9693,7 @@
     "quote-desk",
     "quote-keeper",
     "quote-nudge",
+    "receipt-chase",
     "renewal-watch",
     "rent-watch",
     "repair-board",
