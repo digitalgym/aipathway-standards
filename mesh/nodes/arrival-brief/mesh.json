@@ -1,0 +1,43 @@
+{
+  "slug": "arrival-brief",
+  "name": "Arrival Brief",
+  "office_task": "Each morning, send every tech a brief of their jobs that leads with the dog, key safe, hazards and access, quoting the job record each line came from, and saying what is missing.",
+  "verticals": ["trades-building"],
+  "standards": ["job-brief"],
+  "systems_of_record": [
+    "ServiceM8, Simpro, AroFlo or Fergus (the day's slots, the job, and the site's hazard, access, visit, note, parts, quote and asset records, read by the job's customer id)",
+    "the exception desk the business runs (a task list or a sheet)"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/arrival-brief" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "job.updated", "wake": "webhook" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "report.published",
+      "write": "one brief per tech per day on the channel that tech agreed to (email, SMS, Teams or Google Chat), and again only when one of their slots moves; every line cites the job system record and its date, and nothing is written to the job, slot, quote or note",
+      "readback": "the channel returns a message id as the report_id, which is stored on the delivery row for the tech and day with the slots key; no id back means no delivery is recorded and an exception is raised"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception naming the person who owns it: a tech with no agreed channel (nothing is sent), a slot whose job the job system does not return, or a brief that came back with no message id",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the tech_id or job_id, the kind and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": ["brief.no_agreed_channel", "brief.job_not_found", "brief.send_unconfirmed"],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "seam-mirror",
+    "fields": ["seam.tech_id", "seam.for_date", "seam.slots_key", "seam.report_id", "seam.sent_at", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
