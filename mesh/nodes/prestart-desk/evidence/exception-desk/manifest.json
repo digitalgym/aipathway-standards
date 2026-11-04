@@ -1,0 +1,105 @@
+{
+  "spec": "AIP-BS-EXCEPTION-DESK",
+  "standard": "exception-desk-build-standard",
+  "edition": "2026-11-01",
+  "source": "https://aipathway.com.au/explore-ai/exception-desk-build-standard",
+  "ran_at": "2026-11-04T12:43:09.860Z",
+  "environment": "stub",
+  "provider": "local.mock_exception_queue",
+  "provider_block": {
+    "boundary": {
+      "never": [
+        "close an item on its own judgement: a person closes, with an outcome, unless the owner has switched that type to close itself when its source clears",
+        "take an owner or a due time from the agent that raised the item instead of the routing table",
+        "write a second open item for a record and type that already has one",
+        "write an item with no record id, or one the system of record does not hold",
+        "act on a dispute or a hardship claim, or send anything about one to anyone but its named owner",
+        "escalate an item more than once, or before it is due"
+      ],
+      "stays_with_person": [
+        "closing every item, with the outcome",
+        "writing the routing table: who owns each type, the clock, who it escalates to",
+        "every dispute and hardship claim",
+        "deciding when a label that keeps arriving as other becomes a type"
+      ]
+    },
+    "job": "everything the other standards could not decide, in one queue with an owner and a clock",
+    "skill": "exception-desk",
+    "stub": "local.mock_exception_queue",
+    "production": "office_voice.raise_exception",
+    "product": "Office Voice",
+    "insert": null,
+    "with_us": {
+      "kind": "office_voice_tool",
+      "provider": "office_voice.raise_exception",
+      "product": "Office Voice",
+      "note": "Office Voice holds the one queue: a sheet, a bot or a flow raises items with raise_exception and reads them with list_exceptions, beside the items its own calls hand off. The owner and due time come from the business's routing table, raising the same record and type again updates the open item, and only a person closes an item, with an outcome, on the Exceptions page, unless the owner switched that type to close itself. Office Voice shows which items are overdue but does not yet escalate them, so the escalation stays with the business."
+    }
+  },
+  "tally": {
+    "green": 6,
+    "red": 0,
+    "with_us": 1,
+    "evidence_required": 0,
+    "total": 9
+  },
+  "checks": [
+    {
+      "id": "names-its-record",
+      "n": 1,
+      "title": "Every item names its record by id, read from the system that holds it",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "type-from-the-closed-list",
+      "n": 2,
+      "title": "The type comes from the closed list",
+      "verdict": "pass"
+    },
+    {
+      "id": "owner-and-clock-from-routing",
+      "n": 3,
+      "title": "The owner and the clock come from the routing table, never from the agent that raised it",
+      "verdict": "pass"
+    },
+    {
+      "id": "one-item-per-record-and-type",
+      "n": 4,
+      "title": "One item per record and type: a second raise updates the open item",
+      "verdict": "pass"
+    },
+    {
+      "id": "nothing-auto-closes",
+      "n": 5,
+      "title": "Nothing closes itself: a person closes every item, with an outcome",
+      "verdict": "pass"
+    },
+    {
+      "id": "disputes-stay-with-a-person",
+      "n": 6,
+      "title": "A dispute or a hardship claim is never worked by an agent",
+      "verdict": "pass"
+    },
+    {
+      "id": "overdue-escalates-once",
+      "n": 7,
+      "title": "An overdue item escalates once",
+      "verdict": "pass"
+    },
+    {
+      "id": "daily-summary-even-when-empty",
+      "n": 8,
+      "title": "The daily summary goes out by the set time, including when there is nothing in it",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "pass-test",
+      "n": 9,
+      "title": "The pass test passes",
+      "verdict": "with_us"
+    }
+  ],
+  "next": {
+    "with_us": "Office Voice holds the one queue: a sheet, a bot or a flow raises items with raise_exception and reads them with list_exceptions, beside the items its own calls hand off. The owner and due time come from the business's routing table, raising the same record and type again updates the open item, and only a person closes an item, with an outcome, on the Exceptions page, unless the owner switched that type to close itself. Office Voice shows which items are overdue but does not yet escalate them, so the escalation stays with the business. Call it on the Office Voice MCP (office_voice.raise_exception): the owner mints a key at office-voice.com/app/keys with the scope the tool names, on any Office Voice account. There is no production run of these checks yet, so the stub run is the finished build; AIPATHWAY_PROVIDER=office_voice.raise_exception needs a live port map that is not published. Do not hand-roll the write."
+  }
+}
