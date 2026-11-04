@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T12:01:55.020Z",
+  "generated_at": "2026-11-04T12:02:17.949Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -7916,6 +7916,105 @@
       ]
     },
     {
+      "slug": "proposal-desk",
+      "name": "Proposal Desk",
+      "office_task": "When we open a proposal job for a prospective client, draft their engagement fee quote from our own service price list, or park it with a reason, and hold it for a partner to send.",
+      "verticals": [
+        "accounting-bookkeeping"
+      ],
+      "standards": [
+        "quote-out"
+      ],
+      "systems_of_record": [
+        "Xero Practice Manager (the prospect's proposal job)",
+        "Xero (Items as the service price list, Quotes)"
+      ],
+      "consumes": [
+        {
+          "event": "job.created",
+          "wake": "webhook"
+        },
+        {
+          "event": "job.updated",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "quote.drafted",
+          "write": "A draft fee quote on the prospect's proposal job, one line per service the prospect needs (a quarterly BAS listed four times), every line carrying the service's catalogue id and its fee as read from the practice's price list at draft time, ex GST. It is held in draft for the partner, who agrees the scope and sends it with the engagement letter; this node has no way to send it.",
+          "readback": "The quote is read back by the id Xero returned (GET /api.xro/2.0/Quotes/{QuoteID}) and must carry the proposal job's id in its reference. No id back is not a write: it raises quote.write_failed."
+        },
+        {
+          "event": "exception.raised",
+          "write": "A parked proposal as an exception on the job: the park reason from the standard's fixed list, the services that did price with their catalogue ids, the ones that did not (advisory, restructures, anything bespoke), no total, and exception_owner set to the partner the practice named for proposals.",
+          "readback": "The exception desk returns an exception_id; reading the job by its id shows the open exception with its exception_owner, and the next hop reads it there and stops."
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "quote.not_in_pricebook",
+          "quote.variation_to_accepted_quote",
+          "quote.discount_requested",
+          "quote.pricebook_unreadable",
+          "quote.write_failed"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.quote_id",
+          "seam.status",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/proposal-desk"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "quote-out",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T11:57:13.926Z",
+          "run_id": "run-1793793433925",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 0,
+          "total": 11
+        },
+        {
+          "standard": "cash-seam",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T11:58:37.390Z",
+          "run_id": "run-1793793517389",
+          "green": 4,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 9
+        }
+      ]
+    },
+    {
       "slug": "quote-desk",
       "name": "Quote Desk",
       "office_task": "When a job is booked, draft its quote in our job system from our own price list, or park it with a reason, and leave it for us to send.",
@@ -8335,6 +8434,118 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 13
+        }
+      ]
+    },
+    {
+      "slug": "recharge-desk",
+      "name": "Recharge Desk",
+      "office_task": "Each month, turn the software we pay for on clients' behalf into one draft recharge invoice per client in Xero at our recharge prices, and hold it for a named person to release.",
+      "verticals": [
+        "accounting-bookkeeping"
+      ],
+      "standards": [
+        "invoice-out"
+      ],
+      "systems_of_record": [
+        "the practice's subscription register (a sheet or the practice management system) that holds one recharge period per client per month, with each subscription on it reconciled to the supplier's bill, and issues the period's id (carried as job_id)",
+        "Xero, which issues the invoice_id"
+      ],
+      "consumes": [
+        {
+          "event": "job.completed",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "invoice.raised",
+          "write": "One draft invoice in Xero per client per month, referenced job:<period id> (and the stage under a fixed-fee onboarding agreement), every line one of that client's subscriptions for the month with its register line reference in the notes, every price read from the recharge price list at draft time, and the client's signed approval attached for a seat or upgrade added mid-month. A second close of the same month updates the same draft.",
+          "readback": "Xero returns the InvoiceID; GET /api.xro/2.0/Invoices/{InvoiceID} must return the invoice with Reference job:<period id>, and that id is stamped on the period as seam.invoice_id. No id back is not a write: it raises invoice.write_failed and the run stops."
+        },
+        {
+          "event": "invoice.sent",
+          "write": "The invoice leaves only after a release naming the practice manager, or naming the rule the partner set and showing the total is under its threshold; the release and the send time are recorded against the period.",
+          "readback": "GET /api.xro/2.0/Invoices/{InvoiceID} returns it AUTHORISED and sent to the contact, and the period read by its id shows seam.released_by (a person or a rule) before the send time. A send with no release on the record is refused."
+        },
+        {
+          "event": "exception.raised",
+          "write": "A parked or waiting invoice as an exception on the recharge period: the reason from the standard's fixed list (not_in_pricebook, unsigned_variation, write_failed) or over_threshold, the period id, the invoice id, the codes left unpriced, and exception_owner set to the person the practice named for recharges.",
+          "readback": "The exception desk returns an exception_id, and reading it back returns the job_id, the invoice_id, the reason and the exception_owner; the next run reads it there and stops until exception.closed."
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "invoice.not_in_pricebook",
+          "invoice.unsigned_variation",
+          "invoice.write_failed",
+          "invoice.over_threshold"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.invoice_id",
+          "seam.quote_id",
+          "seam.book_edition",
+          "seam.status",
+          "seam.park_reason",
+          "seam.released_by",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/recharge-desk"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "invoice-out",
+          "edition": "2026-10-05",
+          "environment": "stub",
+          "ran_at": "2026-11-04T11:59:07.202Z",
+          "run_id": "run-1793793547201",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        },
+        {
+          "standard": "cash-seam",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T11:59:08.800Z",
+          "run_id": "run-1793793548798",
+          "green": 4,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 9
         }
       ]
     },
@@ -10866,10 +11077,12 @@
     "price-creep",
     "price-sheet",
     "promise-watch",
+    "proposal-desk",
     "quote-desk",
     "quote-keeper",
     "quote-nudge",
     "receipt-chase",
+    "recharge-desk",
     "renewal-watch",
     "rent-watch",
     "repair-board",
@@ -10910,6 +11123,12 @@
     {
       "from": "after-hours-desk",
       "to": "parts-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "after-hours-desk",
+      "to": "proposal-desk",
       "event": "job.created",
       "id": "job_id"
     },
@@ -10970,6 +11189,12 @@
     {
       "from": "crew-board",
       "to": "parts-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "crew-board",
+      "to": "proposal-desk",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -11095,6 +11320,12 @@
     },
     {
       "from": "practice-desk",
+      "to": "proposal-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "practice-desk",
       "to": "quote-desk",
       "event": "job.updated",
       "id": "job_id"
@@ -11191,6 +11422,12 @@
     },
     {
       "from": "repair-board",
+      "to": "proposal-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "repair-board",
       "to": "quote-desk",
       "event": "job.updated",
       "id": "job_id"
@@ -11246,6 +11483,12 @@
     {
       "from": "roof-desk",
       "to": "parts-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "roof-desk",
+      "to": "proposal-desk",
       "event": "job.created",
       "id": "job_id"
     },
@@ -11317,6 +11560,12 @@
     },
     {
       "from": "van-board",
+      "to": "proposal-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "van-board",
       "to": "quote-desk",
       "event": "job.updated",
       "id": "job_id"
@@ -11390,6 +11639,12 @@
     {
       "from": "visit-offer",
       "to": "parts-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-offer",
+      "to": "proposal-desk",
       "event": "job.updated",
       "id": "job_id"
     },
