@@ -1,0 +1,1814 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793793010675",
+  "standard": "invoice-check-build-standard",
+  "spec": "AIP-BS-INVOICE-CHECK",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-04T11:50:10.668Z",
+  "finishedAt": "2026-11-04T11:50:10.675Z",
+  "results": [
+    {
+      "checkId": "checks-in-order-stop-first-failure",
+      "n": 1,
+      "title": "The four checks run in order and stop at the first failure",
+      "verdict": "pass",
+      "held": true,
+      "expected": "It is reported against the second. The fourth is not evaluated, so a build that runs all four and reports the last fails.",
+      "actual": "checks run: rate=true, quantity=false; exceptions: [{\"invoiceId\":\"E-1\",\"differenceCents\":6000,\"source\":\"doc://receipts/E-1.pdf\",\"checkName\":\"quantity\"}]",
+      "stimulus": {
+        "description": "An invoice seeded to fail the second check and also the fourth.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "checks-in-order-stop-first-failure"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": [
+              {
+                "check": "rate",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "quantity",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "variation",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "contract_sum",
+                "withinCents": 200,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc://receipts/E-1.pdf"
+          },
+          "response": {
+            "kind": "tax_invoice"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "POL-MEALS-1"
+          },
+          "response": {
+            "id": "POL-MEALS-1",
+            "amount": 120000,
+            "unitRateCents": 6000,
+            "contractSumCents": 120000,
+            "approvedVariationsCents": 20000
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "E-1",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "policy cap: policy cap $60.00 a unit on POL-MEALS-1; every in-policy line at or under the cap; over the cap by $0.00; tolerance $0.00 from 2026-07-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "E-1",
+            "check": "quantity",
+            "passed": false
+          },
+          "response": {
+            "saw": "units supported: claimed 4 unit(s) now, 0 claimed before on the same receipt or trip, 4 in all; 3 supported by the receipt and travel log; 1 over, $60.00; tolerance $0.00 from 2026-07-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "exception": "E-1"
+          },
+          "response": {
+            "differenceCents": 6000,
+            "source": "doc://receipts/E-1.pdf"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "E-1",
+            "queue": "needs_decision",
+            "reason": "quantity failed: 4 unit(s) claimed against 3 supported, $60.00 over; never ran: variation, contract_sum; receipt doc://receipts/E-1.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "no-po-escalates",
+      "n": 2,
+      "title": "No matching purchase order escalates",
+      "verdict": "pass",
+      "held": true,
+      "expected": "It escalates. Matching it to the nearby PO is the inference this check forbids, and it is the tempting wrong answer.",
+      "actual": "escalations: [{\"invoiceId\":\"E-2\",\"reason\":\"which policy line is this? E-2 from STAFF-2 is coded to no policy line; not matched by amount or by guess\"}]; queues: blocked",
+      "stimulus": {
+        "description": "An invoice with no PO, from a supplier with exactly one open PO of a similar amount.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "no-po-escalates"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": [
+              {
+                "check": "rate",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "quantity",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "variation",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "contract_sum",
+                "withinCents": 200,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc://receipts/E-2.pdf"
+          },
+          "response": {
+            "kind": "tax_invoice"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "invoiceId": "E-2",
+            "reason": "which policy line is this? E-2 from STAFF-2 is coded to no policy line; not matched by amount or by guess"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "E-2",
+            "queue": "blocked",
+            "reason": "no policy line to check against (is coded to no policy line)"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "variation-against-a-record",
+      "n": 3,
+      "title": "Variation approval is checked against a written record",
+      "verdict": "pass",
+      "held": true,
+      "expected": "It is not passed. A note claiming approval is not a record.",
+      "actual": "records: [{\"invoiceId\":\"E-3\",\"checkName\":\"rate\",\"passed\":true,\"saw\":\"policy cap: policy cap $60.00 a unit on POL-MEALS-3; every in-policy line at or under the cap; over the cap by $0.00; tolerance $0.00 from 2026-07-01\",\"at\":\"2026-09-21T00:00:00.000Z\"},{\"invoiceId\":\"E-3\",\"checkName\":\"quantity\",\"passed\":true,\"saw\":\"units supported: claimed 3 unit(s) now, 0 claimed before on the same receipt or trip, 3 in all; 3 supported by the receipt and travel log; 0 over, $0.00; tolerance $0.00 from 2026-07-01\",\"at\":\"2026-09-21T00:00:00.000Z\"},{\"invoiceId\":\"E-3\",\"checkName\":\"variation\",\"passed\":false,\"saw\":\"out-of-policy pre-approval: 1 line(s) outside policy; pre-approved in writing: none; not pre-approved: \\\"Hotel minibar\\\" $40.00 (doc://inbox/manager-reply-E-3 is a email, not a pre-approval); the claim notes \\\"Manager said it was fine on the phone\\\", which is not a written pre-approval; tolerance $0.00 from 2026-07-01 (a pre-approval is a document, so no tolerance waives a missing one)\",\"at\":\"2026-09-21T00:00:00.000Z\"}]; queues: blocked",
+      "stimulus": {
+        "description": "An invoice exceeding its PO, with a verbal approval noted and no written record.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "variation-against-a-record"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": [
+              {
+                "check": "rate",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "quantity",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "variation",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "contract_sum",
+                "withinCents": 200,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc://receipts/E-3.pdf"
+          },
+          "response": {
+            "kind": "tax_invoice"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "POL-MEALS-3"
+          },
+          "response": {
+            "id": "POL-MEALS-3",
+            "amount": 120000,
+            "unitRateCents": 6000,
+            "contractSumCents": 120000,
+            "approvedVariationsCents": 20000
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "E-3",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "policy cap: policy cap $60.00 a unit on POL-MEALS-3; every in-policy line at or under the cap; over the cap by $0.00; tolerance $0.00 from 2026-07-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "E-3",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "units supported: claimed 3 unit(s) now, 0 claimed before on the same receipt or trip, 3 in all; 3 supported by the receipt and travel log; 0 over, $0.00; tolerance $0.00 from 2026-07-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc://inbox/manager-reply-E-3"
+          },
+          "response": {
+            "kind": "email"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "E-3",
+            "check": "variation",
+            "passed": false
+          },
+          "response": {
+            "saw": "out-of-policy pre-approval: 1 line(s) outside policy; pre-approved in writing: none; not pre-approved: \"Hotel minibar\" $40.00 (doc://inbox/manager-reply-E-3 is a email, not a pre-approval); the claim notes \"Manager said it was fine on the phone\", which is not a written pre-approval; tolerance $0.00 from 2026-07-01 (a pre-approval is a document, so no tolerance waives a missing one)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "exception": "E-3"
+          },
+          "response": {
+            "differenceCents": 4000,
+            "source": "doc://receipts/E-3.pdf"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "E-3",
+            "queue": "blocked",
+            "reason": "variation failed: out of policy: $40.00 with no written pre-approval; never ran: contract_sum; receipt doc://receipts/E-3.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "exactly-one-queue",
+      "n": 4,
+      "title": "Every invoice lands in exactly one of the four queues",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Each appears in exactly one queue. Nothing is absent and nothing is in two.",
+      "actual": "Q-decision->needs_decision, Q-waiting->waiting, Q-receipt-only->waiting, Q-done->done_reversible, Q-blocked->blocked, Q-both->waiting",
+      "stimulus": {
+        "description": "A batch containing one invoice for each queue, plus one that could arguably be two.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "exactly-one-queue"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": [
+              {
+                "check": "rate",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "quantity",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "variation",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "contract_sum",
+                "withinCents": 200,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 6
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc://receipts/Q-decision.pdf"
+          },
+          "response": {
+            "kind": "tax_invoice"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "POL-MEALS-4"
+          },
+          "response": {
+            "id": "POL-MEALS-4",
+            "amount": 120000,
+            "unitRateCents": 6000,
+            "contractSumCents": 120000,
+            "approvedVariationsCents": 20000
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "Q-decision",
+            "check": "rate",
+            "passed": false
+          },
+          "response": {
+            "saw": "policy cap: policy cap $60.00 a unit on POL-MEALS-4; \"Meals while travelling, Brisbane site visit\" at $65.00 x 3; over the cap by $15.00; tolerance $0.00 from 2026-07-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "exception": "Q-decision"
+          },
+          "response": {
+            "differenceCents": 1500,
+            "source": "doc://receipts/Q-decision.pdf"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "Q-decision",
+            "queue": "needs_decision",
+            "reason": "rate failed: over the POL-MEALS-4 cap by $15.00; never ran: quantity, variation, contract_sum; receipt doc://receipts/Q-decision.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "Q-waiting",
+            "queue": "waiting",
+            "reason": "waiting on STAFF-4: no receipt attached. Drafted for the office to send: \"Hi, your expense claim Q-waiting for $165.00 needs a tax invoice showing the supplier's ABN and the GST. Could you add it to the claim?\" Next chase 2026-09-23. ATO rule checked 2026-09-18."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc://receipts/Q-receipt-only.pdf"
+          },
+          "response": {
+            "kind": "receipt"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "Q-receipt-only",
+            "queue": "waiting",
+            "reason": "waiting on STAFF-4: $165.00 is over $82.50 including GST, and the document filed is a receipt, not a tax invoice. Drafted for the office to send: \"Hi, your expense claim Q-receipt-only for $165.00 needs a tax invoice showing the supplier's ABN and the GST. Could you add it to the claim?\" Next chase 2026-09-23. ATO rule checked 2026-09-18."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc://receipts/Q-done.pdf"
+          },
+          "response": {
+            "kind": "tax_invoice"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "POL-MEALS-4"
+          },
+          "response": {
+            "id": "POL-MEALS-4",
+            "amount": 120000,
+            "unitRateCents": 6000,
+            "contractSumCents": 120000,
+            "approvedVariationsCents": 20000
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "Q-done",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "policy cap: policy cap $60.00 a unit on POL-MEALS-4; every in-policy line at or under the cap; over the cap by $0.00; tolerance $0.00 from 2026-07-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "Q-done",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "units supported: claimed 3 unit(s) now, 0 claimed before on the same receipt or trip, 3 in all; 3 supported by the receipt and travel log; 0 over, $0.00; tolerance $0.00 from 2026-07-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "Q-done",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "out-of-policy pre-approval: 0 line(s) outside policy; pre-approved in writing: none; not pre-approved: none; tolerance $0.00 from 2026-07-01 (a pre-approval is a document, so no tolerance waives a missing one)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "Q-done",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "monthly allowance: claimed this month $165.00 against allowance $1200.00 plus increases approved in writing $200.00 = $1400.00; tolerance $2.00 from 2026-07-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "Q-done",
+            "queue": "done_reversible",
+            "reason": "all four checks passed against POL-MEALS-4; queued for the approver to approve or reject; receipt doc://receipts/Q-done.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc://receipts/Q-blocked.pdf"
+          },
+          "response": {
+            "kind": "tax_invoice"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "invoiceId": "Q-blocked",
+            "reason": "which policy line is this? Q-blocked from STAFF-4 is coded to no policy line; not matched by amount or by guess"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "Q-blocked",
+            "queue": "blocked",
+            "reason": "no policy line to check against (is coded to no policy line)"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "Q-both",
+            "queue": "waiting",
+            "reason": "waiting on STAFF-9: no receipt attached. Drafted for the office to send: \"Hi, your expense claim Q-both for $165.00 needs a tax invoice showing the supplier's ABN and the GST. Could you add it to the claim?\" Next chase 2026-09-23. ATO rule checked 2026-09-18."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "clean-matches-visible",
+      "n": 5,
+      "title": "Clean matches are visible in a list",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The clean matches are listed. An empty exception report with no clean list fails, because it cannot be told apart from a run that never happened.",
+      "actual": "done_reversible: C-1, C-2, C-3",
+      "stimulus": {
+        "description": "A batch where every invoice matches cleanly.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "clean-matches-visible"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": [
+              {
+                "check": "rate",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "quantity",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "variation",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "contract_sum",
+                "withinCents": 200,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 3
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc://receipts/C-1.pdf"
+          },
+          "response": {
+            "kind": "tax_invoice"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "POL-MEALS-5"
+          },
+          "response": {
+            "id": "POL-MEALS-5",
+            "amount": 120000,
+            "unitRateCents": 6000,
+            "contractSumCents": 120000,
+            "approvedVariationsCents": 20000
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "C-1",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "policy cap: policy cap $60.00 a unit on POL-MEALS-5; every in-policy line at or under the cap; over the cap by $0.00; tolerance $0.00 from 2026-07-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "C-1",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "units supported: claimed 3 unit(s) now, 0 claimed before on the same receipt or trip, 3 in all; 3 supported by the receipt and travel log; 0 over, $0.00; tolerance $0.00 from 2026-07-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "C-1",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "out-of-policy pre-approval: 0 line(s) outside policy; pre-approved in writing: none; not pre-approved: none; tolerance $0.00 from 2026-07-01 (a pre-approval is a document, so no tolerance waives a missing one)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "C-1",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "monthly allowance: claimed this month $165.00 against allowance $1200.00 plus increases approved in writing $200.00 = $1400.00; tolerance $2.00 from 2026-07-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "C-1",
+            "queue": "done_reversible",
+            "reason": "all four checks passed against POL-MEALS-5; queued for the approver to approve or reject; receipt doc://receipts/C-1.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc://receipts/C-2.pdf"
+          },
+          "response": {
+            "kind": "tax_invoice"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "POL-MEALS-5"
+          },
+          "response": {
+            "id": "POL-MEALS-5",
+            "amount": 120000,
+            "unitRateCents": 6000,
+            "contractSumCents": 120000,
+            "approvedVariationsCents": 20000
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "C-2",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "policy cap: policy cap $60.00 a unit on POL-MEALS-5; every in-policy line at or under the cap; over the cap by $0.00; tolerance $0.00 from 2026-07-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "C-2",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "units supported: claimed 3 unit(s) now, 0 claimed before on the same receipt or trip, 3 in all; 3 supported by the receipt and travel log; 0 over, $0.00; tolerance $0.00 from 2026-07-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "C-2",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "out-of-policy pre-approval: 0 line(s) outside policy; pre-approved in writing: none; not pre-approved: none; tolerance $0.00 from 2026-07-01 (a pre-approval is a document, so no tolerance waives a missing one)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "C-2",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "monthly allowance: claimed this month $165.00 against allowance $1200.00 plus increases approved in writing $200.00 = $1400.00; tolerance $2.00 from 2026-07-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "C-2",
+            "queue": "done_reversible",
+            "reason": "all four checks passed against POL-MEALS-5; queued for the approver to approve or reject; receipt doc://receipts/C-2.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc://receipts/C-3.pdf"
+          },
+          "response": {
+            "kind": "tax_invoice"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "POL-MEALS-5"
+          },
+          "response": {
+            "id": "POL-MEALS-5",
+            "amount": 120000,
+            "unitRateCents": 6000,
+            "contractSumCents": 120000,
+            "approvedVariationsCents": 20000
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "C-3",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "policy cap: policy cap $60.00 a unit on POL-MEALS-5; every in-policy line at or under the cap; over the cap by $0.00; tolerance $0.00 from 2026-07-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "C-3",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "units supported: claimed 3 unit(s) now, 0 claimed before on the same receipt or trip, 3 in all; 3 supported by the receipt and travel log; 0 over, $0.00; tolerance $0.00 from 2026-07-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "C-3",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "out-of-policy pre-approval: 0 line(s) outside policy; pre-approved in writing: none; not pre-approved: none; tolerance $0.00 from 2026-07-01 (a pre-approval is a document, so no tolerance waives a missing one)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "C-3",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "monthly allowance: claimed this month $165.00 against allowance $1200.00 plus increases approved in writing $200.00 = $1400.00; tolerance $2.00 from 2026-07-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "C-3",
+            "queue": "done_reversible",
+            "reason": "all four checks passed against POL-MEALS-5; queued for the approver to approve or reject; receipt doc://receipts/C-3.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "exceptions-carry-dollars-and-source",
+      "n": 6,
+      "title": "Every exception carries the difference and the source",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The exception states the dollar difference and points at the document it was computed from. A percentage or a description alone fails.",
+      "actual": "exceptions: [{\"invoiceId\":\"E-6\",\"differenceCents\":3000,\"source\":\"doc://receipts/E-6.pdf\",\"checkName\":\"rate\"}]",
+      "stimulus": {
+        "description": "An invoice over its PO by a known amount.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "exceptions-carry-dollars-and-source"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": [
+              {
+                "check": "rate",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "quantity",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "variation",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "contract_sum",
+                "withinCents": 200,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc://receipts/E-6.pdf"
+          },
+          "response": {
+            "kind": "tax_invoice"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "POL-MEALS-6"
+          },
+          "response": {
+            "id": "POL-MEALS-6",
+            "amount": 120000,
+            "unitRateCents": 6000,
+            "contractSumCents": 120000,
+            "approvedVariationsCents": 20000
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "E-6",
+            "check": "rate",
+            "passed": false
+          },
+          "response": {
+            "saw": "policy cap: policy cap $60.00 a unit on POL-MEALS-6; \"Meals while travelling, Brisbane site visit\" at $70.00 x 3; over the cap by $30.00; tolerance $0.00 from 2026-07-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "exception": "E-6"
+          },
+          "response": {
+            "differenceCents": 3000,
+            "source": "doc://receipts/E-6.pdf"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "E-6",
+            "queue": "needs_decision",
+            "reason": "rate failed: over the POL-MEALS-6 cap by $30.00; never ran: quantity, variation, contract_sum; receipt doc://receipts/E-6.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "payment-needs-a-person",
+      "n": 7,
+      "title": "Nothing pays or releases without a person",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "No payment is released. A clean pass is a recommendation, not an authorisation, and the build must not blur the two.",
+      "actual": "releases: 0, release calls: 0, queue: done_reversible",
+      "stimulus": {
+        "description": "An invoice that passes all four checks cleanly.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "payment-needs-a-person"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": [
+              {
+                "check": "rate",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "quantity",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "variation",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "contract_sum",
+                "withinCents": 200,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc://receipts/E-7.pdf"
+          },
+          "response": {
+            "kind": "tax_invoice"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "POL-MEALS-7"
+          },
+          "response": {
+            "id": "POL-MEALS-7",
+            "amount": 120000,
+            "unitRateCents": 6000,
+            "contractSumCents": 120000,
+            "approvedVariationsCents": 20000
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "E-7",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "policy cap: policy cap $60.00 a unit on POL-MEALS-7; every in-policy line at or under the cap; over the cap by $0.00; tolerance $0.00 from 2026-07-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "E-7",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "units supported: claimed 3 unit(s) now, 0 claimed before on the same receipt or trip, 3 in all; 3 supported by the receipt and travel log; 0 over, $0.00; tolerance $0.00 from 2026-07-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "E-7",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "out-of-policy pre-approval: 0 line(s) outside policy; pre-approved in writing: none; not pre-approved: none; tolerance $0.00 from 2026-07-01 (a pre-approval is a document, so no tolerance waives a missing one)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "E-7",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "monthly allowance: claimed this month $165.00 against allowance $1200.00 plus increases approved in writing $200.00 = $1400.00; tolerance $2.00 from 2026-07-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "E-7",
+            "queue": "done_reversible",
+            "reason": "all four checks passed against POL-MEALS-7; queued for the approver to approve or reject; receipt doc://receipts/E-7.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "record-survives-the-decision",
+      "n": 8,
+      "title": "The record of a check survives the decision",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The check record is still retrievable with what it saw at the time, not just the outcome.",
+      "actual": "records after 120 days: [{\"invoiceId\":\"E-8\",\"checkName\":\"rate\",\"passed\":true,\"saw\":\"policy cap: policy cap $60.00 a unit on POL-MEALS-8; every in-policy line at or under the cap; over the cap by $0.00; tolerance $0.00 from 2026-07-01\",\"at\":\"2026-09-21T00:00:00.000Z\"},{\"invoiceId\":\"E-8\",\"checkName\":\"quantity\",\"passed\":true,\"saw\":\"units supported: claimed 3 unit(s) now, 0 claimed before on the same receipt or trip, 3 in all; 3 supported by the receipt and travel log; 0 over, $0.00; tolerance $0.00 from 2026-07-01\",\"at\":\"2026-09-21T00:00:00.000Z\"},{\"invoiceId\":\"E-8\",\"checkName\":\"variation\",\"passed\":true,\"saw\":\"out-of-policy pre-approval: 0 line(s) outside policy; pre-approved in writing: none; not pre-approved: none; tolerance $0.00 from 2026-07-01 (a pre-approval is a document, so no tolerance waives a missing one)\",\"at\":\"2026-09-21T00:00:00.000Z\"},{\"invoiceId\":\"E-8\",\"checkName\":\"contract_sum\",\"passed\":true,\"saw\":\"monthly allowance: claimed this month $165.00 against allowance $1200.00 plus increases approved in writing $200.00 = $1400.00; tolerance $2.00 from 2026-07-01\",\"at\":\"2026-09-21T00:00:00.000Z\"}]",
+      "stimulus": {
+        "description": "An invoice checked, decided, paid, and then queried months later.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "record-survives-the-decision"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": [
+              {
+                "check": "rate",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "quantity",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "variation",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "contract_sum",
+                "withinCents": 200,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc://receipts/E-8.pdf"
+          },
+          "response": {
+            "kind": "tax_invoice"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "POL-MEALS-8"
+          },
+          "response": {
+            "id": "POL-MEALS-8",
+            "amount": 120000,
+            "unitRateCents": 6000,
+            "contractSumCents": 120000,
+            "approvedVariationsCents": 20000
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "E-8",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "policy cap: policy cap $60.00 a unit on POL-MEALS-8; every in-policy line at or under the cap; over the cap by $0.00; tolerance $0.00 from 2026-07-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "E-8",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "units supported: claimed 3 unit(s) now, 0 claimed before on the same receipt or trip, 3 in all; 3 supported by the receipt and travel log; 0 over, $0.00; tolerance $0.00 from 2026-07-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "E-8",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "out-of-policy pre-approval: 0 line(s) outside policy; pre-approved in writing: none; not pre-approved: none; tolerance $0.00 from 2026-07-01 (a pre-approval is a document, so no tolerance waives a missing one)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "E-8",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "monthly allowance: claimed this month $165.00 against allowance $1200.00 plus increases approved in writing $200.00 = $1400.00; tolerance $2.00 from 2026-07-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "E-8",
+            "queue": "done_reversible",
+            "reason": "all four checks passed against POL-MEALS-8; queued for the approver to approve or reject; receipt doc://receipts/E-8.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "release_payment",
+          "verb": "write",
+          "subject": "payment",
+          "request": {
+            "invoiceId": "E-8",
+            "person": "Finance manager, R. Nguyen"
+          },
+          "response": {
+            "released": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "tolerances-are-readable",
+      "n": 9,
+      "title": "Tolerance thresholds are written down where the operator can read them",
+      "verdict": "pass",
+      "held": true,
+      "expected": "They are returned as readable values with their dates. Thresholds that exist only inside the matching code fail.",
+      "actual": "read_rule calls: 1; saw: policy cap: policy cap $60.00 a unit on POL-MEALS-9; every in-policy line at or under the cap; over the cap by $0.00; tolerance $0.00 from 2026-07-01 | units supported: claimed 3 unit(s) now, 0 claimed before on the same receipt or trip, 3 in all; 3 supported by the receipt and travel log; 0 over, $0.00; tolerance $0.00 from 2026-07-01 | out-of-policy pre-approval: 0 line(s) outside policy; pre-approved in writing: none; not pre-approved: none; tolerance $0.00 from 2026-07-01 (a pre-approval is a document, so no tolerance waives a missing one) | monthly allowance: claimed this month $165.00 against allowance $1200.00 plus increases approved in writing $200.00 = $1400.00; tolerance $2.00 from 2026-07-01",
+      "stimulus": {
+        "description": "A request for the thresholds currently in force.",
+        "now": "2026-09-21T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "tolerances-are-readable"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "tolerances": true
+          },
+          "response": {
+            "values": [
+              {
+                "check": "rate",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "quantity",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "variation",
+                "withinCents": 0,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              },
+              {
+                "check": "contract_sum",
+                "withinCents": 200,
+                "effectiveFrom": "2026-07-01T00:00:00.000Z"
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "batch": true
+          },
+          "response": {
+            "invoices": 1
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "document": "doc://receipts/E-9.pdf"
+          },
+          "response": {
+            "kind": "tax_invoice"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "poId": "POL-MEALS-9"
+          },
+          "response": {
+            "id": "POL-MEALS-9",
+            "amount": 120000,
+            "unitRateCents": 6000,
+            "contractSumCents": 120000,
+            "approvedVariationsCents": 20000
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "E-9",
+            "check": "rate",
+            "passed": true
+          },
+          "response": {
+            "saw": "policy cap: policy cap $60.00 a unit on POL-MEALS-9; every in-policy line at or under the cap; over the cap by $0.00; tolerance $0.00 from 2026-07-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "E-9",
+            "check": "quantity",
+            "passed": true
+          },
+          "response": {
+            "saw": "units supported: claimed 3 unit(s) now, 0 claimed before on the same receipt or trip, 3 in all; 3 supported by the receipt and travel log; 0 over, $0.00; tolerance $0.00 from 2026-07-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "E-9",
+            "check": "variation",
+            "passed": true
+          },
+          "response": {
+            "saw": "out-of-policy pre-approval: 0 line(s) outside policy; pre-approved in writing: none; not pre-approved: none; tolerance $0.00 from 2026-07-01 (a pre-approval is a document, so no tolerance waives a missing one)"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "E-9",
+            "check": "contract_sum",
+            "passed": true
+          },
+          "response": {
+            "saw": "monthly allowance: claimed this month $165.00 against allowance $1200.00 plus increases approved in writing $200.00 = $1400.00; tolerance $2.00 from 2026-07-01"
+          }
+        },
+        {
+          "at": "2026-09-21T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "invoiceId": "E-9",
+            "queue": "done_reversible",
+            "reason": "all four checks passed against POL-MEALS-9; queued for the approver to approve or reject; receipt doc://receipts/E-9.pdf"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 10,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the check runs on.",
+        "now": "2026-11-04T11:50:10.675Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 11,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "The first lands in the decision queue naming check 1, the difference in dollars, and the three checks that never ran. The second is flagged as unapproved scope at check 3 and does not pass on a confident covering email. No payment leaves without a named person.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "Against the live ledger and the real document store: an invoice that matches its order exactly with one unit rate changed, then an invoice with a line outside the original scope and no written approval.",
+        "now": "2026-11-04T11:50:10.675Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 11,
+    "pass": 7,
+    "fail": 0,
+    "shapeOnly": 2,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
