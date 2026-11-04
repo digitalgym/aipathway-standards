@@ -1,0 +1,3104 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793794880109",
+  "standard": "dispatch-board-build-standard",
+  "spec": "AIP-BS-DISPATCH-BOARD",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-04T12:21:20.097Z",
+  "finishedAt": "2026-11-04T12:21:20.109Z",
+  "results": [
+    {
+      "checkId": "address-verified-before-slot",
+      "n": 1,
+      "title": "No slot until the address resolves",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The resolve call precedes the slot write for the first job and the slot carries the resolved address. No slot exists for the second job. A slot on an unresolved address fails.",
+      "actual": "slots: J101@12 Pakington Street, Geelong West VIC 3218; escalations: J102:address_unresolved:Mei Lin",
+      "stimulus": {
+        "description": "Two jobs in the system: one with an address that resolves, one with an address that does not.",
+        "now": "2026-11-08T19:30:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "address-verified-before-slot"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "ids": [
+              "J101",
+              "J102"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T3"
+            ],
+            "slots": 0,
+            "dispatcher": "Mei Lin"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J101"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J102"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "12 pakington st geelong west"
+          },
+          "response": {
+            "resolved": "12 Pakington Street, Geelong West VIC 3218"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "12 Pakington St"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "jobId": "J102",
+            "reason": "address_unresolved",
+            "owner": "Mei Lin"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "jobId": "J101",
+            "techId": "T3",
+            "start": "2026-11-09T08:00:00.000Z",
+            "end": "2026-11-09T09:00:00.000Z",
+            "address": "12 Pakington Street, Geelong West VIC 3218",
+            "by": {
+              "person": "Mei Lin",
+              "rule": "route-plan:licence+window+least-travel"
+            }
+          },
+          "response": {
+            "id": "S1",
+            "externalId": "js-S1"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C1",
+            "channel": "sms"
+          },
+          "response": {
+            "givenAt": "2026-10-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "to": "C1",
+            "channel": "sms",
+            "slotId": "S1",
+            "bodyRef": "J101:v1:booked"
+          },
+          "response": {
+            "id": "M2",
+            "sentAt": "2026-11-08T19:30:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "slotId": "S1",
+            "ref": "message:M2@2026-11-08T19:30:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T3",
+            "jobId": "J101",
+            "address": "12 Pakington Street, Geelong West VIC 3218",
+            "window": {
+              "from": "2026-11-09T08:00:00.000Z",
+              "to": "2026-11-09T12:00:00.000Z"
+            },
+            "customerSaid": "The shower mixer drips all night."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "licence-is-a-rule-not-a-vibe",
+      "n": 2,
+      "title": "A licence requirement is a rule read from the record, never assumed",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The rule for the code is read before the slot is written and the assigned tech is the one holding the current licence. An assignment to the expired or unlicensed tech fails.",
+      "actual": "slots: J201->T1; rule reads: 1",
+      "stimulus": {
+        "description": "A gas job and three techs: one holding a current gas licence, one whose gas licence has expired, one with no licence at all.",
+        "now": "2026-11-08T19:30:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "licence-is-a-rule-not-a-vibe"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J201"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T2",
+              "T3",
+              "T1"
+            ],
+            "slots": 0,
+            "dispatcher": "Mei Lin"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J201"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "4/30 Ryrie St Geelong"
+          },
+          "response": {
+            "resolved": "Unit 4, 30 Ryrie Street, Geelong VIC 3220"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "licence": "gas"
+          },
+          "response": {
+            "holders": [
+              "T2:expired",
+              "T1:current"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "jobId": "J201",
+            "techId": "T1",
+            "start": "2026-11-09T08:00:00.000Z",
+            "end": "2026-11-09T09:30:00.000Z",
+            "address": "Unit 4, 30 Ryrie Street, Geelong VIC 3220",
+            "by": {
+              "person": "Mei Lin",
+              "rule": "route-plan:licence+window+least-travel"
+            }
+          },
+          "response": {
+            "id": "S1",
+            "externalId": "js-S1"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C1",
+            "channel": "sms"
+          },
+          "response": {
+            "givenAt": "2026-10-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "to": "C1",
+            "channel": "sms",
+            "slotId": "S1",
+            "bodyRef": "J201:v1:booked"
+          },
+          "response": {
+            "id": "M2",
+            "sentAt": "2026-11-08T19:30:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "slotId": "S1",
+            "ref": "message:M2@2026-11-08T19:30:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T1",
+            "jobId": "J201",
+            "address": "Unit 4, 30 Ryrie Street, Geelong VIC 3220",
+            "window": {
+              "from": "2026-11-09T08:00:00.000Z",
+              "to": "2026-11-09T12:00:00.000Z"
+            },
+            "customerSaid": "Annual gas heater service."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "window-and-travel-are-data",
+      "n": 3,
+      "title": "The slot sits inside the customer's window and after the previous job plus travel",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "Each slot is inside its job's window. The second slot starts at or after the first slot's end plus the travel read between the two addresses. A slot that overlaps, or starts before the travel allows, fails.",
+      "actual": "slots: J301 2026-11-09T09:40:00.000Z-2026-11-09T10:40:00.000Z; J302 2026-11-09T08:00:00.000Z-2026-11-09T09:00:00.000Z; J303 2026-11-09T10:50:00.000Z-2026-11-09T11:50:00.000Z",
+      "stimulus": {
+        "description": "Two jobs on one tech with morning windows and a travel table between their resolved addresses.",
+        "now": "2026-11-08T19:30:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "window-and-travel-are-data"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "J301",
+              "J302",
+              "J303"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T3"
+            ],
+            "slots": 0,
+            "dispatcher": "Mei Lin"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J301"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J302"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J303"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "12 pakington st geelong west"
+          },
+          "response": {
+            "resolved": "12 Pakington Street, Geelong West VIC 3218"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "5 Surf Coast Hwy Grovedale"
+          },
+          "response": {
+            "resolved": "5 Surf Coast Highway, Grovedale VIC 3216"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "travel": {
+              "from": "5 Surf Coast Highway, Grovedale VIC 3216",
+              "to": "12 Pakington Street, Geelong West VIC 3218"
+            }
+          },
+          "response": {
+            "ms": 2400000
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "travel": {
+              "from": "12 Pakington Street, Geelong West VIC 3218",
+              "to": "5 Surf Coast Highway, Grovedale VIC 3216"
+            }
+          },
+          "response": {
+            "ms": 2400000
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "77 Bellarine Hwy Newcomb"
+          },
+          "response": {
+            "resolved": "77 Bellarine Highway, Newcomb VIC 3219"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "travel": {
+              "from": "77 Bellarine Highway, Newcomb VIC 3219",
+              "to": "5 Surf Coast Highway, Grovedale VIC 3216"
+            }
+          },
+          "response": {
+            "ms": 2700000
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "travel": {
+              "from": "5 Surf Coast Highway, Grovedale VIC 3216",
+              "to": "77 Bellarine Highway, Newcomb VIC 3219"
+            }
+          },
+          "response": {
+            "ms": 2700000
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "travel": {
+              "from": "77 Bellarine Highway, Newcomb VIC 3219",
+              "to": "12 Pakington Street, Geelong West VIC 3218"
+            }
+          },
+          "response": {
+            "ms": 600000
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "travel": {
+              "from": "12 Pakington Street, Geelong West VIC 3218",
+              "to": "77 Bellarine Highway, Newcomb VIC 3219"
+            }
+          },
+          "response": {
+            "ms": 600000
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "jobId": "J301",
+            "techId": "T3",
+            "start": "2026-11-09T09:40:00.000Z",
+            "end": "2026-11-09T10:40:00.000Z",
+            "address": "12 Pakington Street, Geelong West VIC 3218",
+            "by": {
+              "person": "Mei Lin",
+              "rule": "route-plan:licence+window+least-travel"
+            }
+          },
+          "response": {
+            "id": "S1",
+            "externalId": "js-S1"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C1",
+            "channel": "sms"
+          },
+          "response": {
+            "givenAt": "2026-10-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "to": "C1",
+            "channel": "sms",
+            "slotId": "S1",
+            "bodyRef": "J301:v1:booked"
+          },
+          "response": {
+            "id": "M2",
+            "sentAt": "2026-11-08T19:30:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "slotId": "S1",
+            "ref": "message:M2@2026-11-08T19:30:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T3",
+            "jobId": "J301",
+            "address": "12 Pakington Street, Geelong West VIC 3218",
+            "window": {
+              "from": "2026-11-09T08:00:00.000Z",
+              "to": "2026-11-09T16:00:00.000Z"
+            },
+            "customerSaid": "The shower mixer drips all night."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "jobId": "J302",
+            "techId": "T3",
+            "start": "2026-11-09T08:00:00.000Z",
+            "end": "2026-11-09T09:00:00.000Z",
+            "address": "5 Surf Coast Highway, Grovedale VIC 3216",
+            "by": {
+              "person": "Mei Lin",
+              "rule": "route-plan:licence+window+least-travel"
+            }
+          },
+          "response": {
+            "id": "S3",
+            "externalId": "js-S3"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C2",
+            "channel": "sms"
+          },
+          "response": {
+            "givenAt": "2026-10-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "to": "C2",
+            "channel": "sms",
+            "slotId": "S3",
+            "bodyRef": "J302:v1:booked"
+          },
+          "response": {
+            "id": "M4",
+            "sentAt": "2026-11-08T19:30:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "slotId": "S3",
+            "ref": "message:M4@2026-11-08T19:30:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T3",
+            "jobId": "J302",
+            "address": "5 Surf Coast Highway, Grovedale VIC 3216",
+            "window": {
+              "from": "2026-11-09T08:00:00.000Z",
+              "to": "2026-11-09T16:00:00.000Z"
+            },
+            "customerSaid": "The shower mixer drips all night."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "jobId": "J303",
+            "techId": "T3",
+            "start": "2026-11-09T10:50:00.000Z",
+            "end": "2026-11-09T11:50:00.000Z",
+            "address": "77 Bellarine Highway, Newcomb VIC 3219",
+            "by": {
+              "person": "Mei Lin",
+              "rule": "route-plan:licence+window+least-travel"
+            }
+          },
+          "response": {
+            "id": "S5",
+            "externalId": "js-S5"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C3",
+            "channel": "sms"
+          },
+          "response": {
+            "givenAt": "2026-10-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "to": "C3",
+            "channel": "sms",
+            "slotId": "S5",
+            "bodyRef": "J303:v1:booked"
+          },
+          "response": {
+            "id": "M6",
+            "sentAt": "2026-11-08T19:30:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "slotId": "S5",
+            "ref": "message:M6@2026-11-08T19:30:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T3",
+            "jobId": "J303",
+            "address": "77 Bellarine Highway, Newcomb VIC 3219",
+            "window": {
+              "from": "2026-11-09T08:00:00.000Z",
+              "to": "2026-11-09T16:00:00.000Z"
+            },
+            "customerSaid": "The shower mixer drips all night."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-slot-per-job",
+      "n": 4,
+      "title": "One slot per job, written once, updated on a second event",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Exactly one slot exists for the job, with an external id, and the second event produced an update or no write. The write that returned no id was escalated and nothing was sent about it. A second slot, or a null id treated as success, fails.",
+      "actual": "slots for J401: 1; writes: null,ok; releases: 0,1,1; messages: 1",
+      "stimulus": {
+        "description": "The same job's scheduling event delivered twice, and one write that returns no id.",
+        "now": "2026-11-08T19:30:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-slot-per-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J401"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T3"
+            ],
+            "slots": 0,
+            "dispatcher": "Mei Lin"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J401"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "18 Melbourne Rd Norlane"
+          },
+          "response": {
+            "resolved": "18 Melbourne Road, Norlane VIC 3214"
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J401"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T3"
+            ],
+            "slots": 0,
+            "dispatcher": "Mei Lin"
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J401"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "18 Melbourne Rd Norlane"
+          },
+          "response": {
+            "resolved": "18 Melbourne Road, Norlane VIC 3214"
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "jobId": "J401",
+            "techId": "T3",
+            "start": "2026-11-09T08:00:00.000Z"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "jobId": "J401",
+            "reason": "write_failed",
+            "owner": "Mei Lin"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-08T20:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J401"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T20:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T3"
+            ],
+            "slots": 0,
+            "dispatcher": "Mei Lin"
+          }
+        },
+        {
+          "at": "2026-11-08T20:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J401"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-08T20:30:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "18 Melbourne Rd Norlane"
+          },
+          "response": {
+            "resolved": "18 Melbourne Road, Norlane VIC 3214"
+          }
+        },
+        {
+          "at": "2026-11-08T20:30:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "jobId": "J401",
+            "techId": "T3",
+            "start": "2026-11-09T08:00:00.000Z",
+            "end": "2026-11-09T09:00:00.000Z",
+            "address": "18 Melbourne Road, Norlane VIC 3214",
+            "by": {
+              "person": "Mei Lin",
+              "rule": "route-plan:licence+window+least-travel"
+            }
+          },
+          "response": {
+            "id": "S1",
+            "externalId": "js-S1"
+          }
+        },
+        {
+          "at": "2026-11-08T20:30:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C1",
+            "channel": "sms"
+          },
+          "response": {
+            "givenAt": "2026-10-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T20:30:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "to": "C1",
+            "channel": "sms",
+            "slotId": "S1",
+            "bodyRef": "J401:v1:booked"
+          },
+          "response": {
+            "id": "M2",
+            "sentAt": "2026-11-08T20:30:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T20:30:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "slotId": "S1",
+            "ref": "message:M2@2026-11-08T20:30:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-11-08T20:30:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T3",
+            "jobId": "J401",
+            "address": "18 Melbourne Road, Norlane VIC 3214",
+            "window": {
+              "from": "2026-11-09T08:00:00.000Z",
+              "to": "2026-11-09T12:00:00.000Z"
+            },
+            "customerSaid": "The shower mixer drips all night."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-08T21:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J401"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T21:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T3"
+            ],
+            "slots": 1,
+            "dispatcher": "Mei Lin"
+          }
+        },
+        {
+          "at": "2026-11-08T21:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J401"
+          },
+          "response": {
+            "slotId": "S1",
+            "externalId": "js-S1",
+            "jobVersion": 1
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "emergency-displaces-with-a-person",
+      "n": 5,
+      "title": "An emergency takes a slot only when a named dispatcher accepts the displacement",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "A gate call naming the dispatcher, with an acceptance, precedes the emergency's slot write. The displaced job still has exactly one slot, marked with what displaced it, and it either sits outside the emergency's time or has an escalation naming an owner. An emergency slot with no acceptance, or a displaced job with no slot and no escalation, fails.",
+      "actual": "slots: J502 2026-11-09T13:00:00.000Z-2026-11-09T17:00:00.000Z; J501 2026-11-09T09:30:00.000Z-2026-11-09T11:30:00.000Z displacedBy J503; J503 2026-11-09T08:00:00.000Z-2026-11-09T09:00:00.000Z; gate calls: 1",
+      "stimulus": {
+        "description": "A full board with one tech, then an emergency arriving whose window only that tech's slotted time can meet.",
+        "now": "2026-11-08T19:30:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "emergency-displaces-with-a-person"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "ids": [
+              "J501",
+              "J502"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T1"
+            ],
+            "slots": 0,
+            "dispatcher": "Mei Lin"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J501"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J502"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "5 Surf Coast Hwy Grovedale"
+          },
+          "response": {
+            "resolved": "5 Surf Coast Highway, Grovedale VIC 3216"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "licence": "gas"
+          },
+          "response": {
+            "holders": [
+              "T1:current"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "4/30 Ryrie St Geelong"
+          },
+          "response": {
+            "resolved": "Unit 4, 30 Ryrie Street, Geelong VIC 3220"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "licence": "gas"
+          },
+          "response": {
+            "holders": [
+              "T1:current"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "travel": {
+              "from": "Unit 4, 30 Ryrie Street, Geelong VIC 3220",
+              "to": "5 Surf Coast Highway, Grovedale VIC 3216"
+            }
+          },
+          "response": {
+            "ms": 1800000
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "travel": {
+              "from": "5 Surf Coast Highway, Grovedale VIC 3216",
+              "to": "Unit 4, 30 Ryrie Street, Geelong VIC 3220"
+            }
+          },
+          "response": {
+            "ms": 1800000
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "jobId": "J502",
+            "techId": "T1",
+            "start": "2026-11-09T13:00:00.000Z",
+            "end": "2026-11-09T17:00:00.000Z",
+            "address": "5 Surf Coast Highway, Grovedale VIC 3216",
+            "by": {
+              "person": "Mei Lin",
+              "rule": "route-plan:licence+window+least-travel"
+            }
+          },
+          "response": {
+            "id": "S1",
+            "externalId": "js-S1"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C2",
+            "channel": "sms"
+          },
+          "response": {
+            "givenAt": "2026-10-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "to": "C2",
+            "channel": "sms",
+            "slotId": "S1",
+            "bodyRef": "J502:v1:booked"
+          },
+          "response": {
+            "id": "M2",
+            "sentAt": "2026-11-08T19:30:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "slotId": "S1",
+            "ref": "message:M2@2026-11-08T19:30:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T1",
+            "jobId": "J502",
+            "address": "5 Surf Coast Highway, Grovedale VIC 3216",
+            "window": {
+              "from": "2026-11-09T13:00:00.000Z",
+              "to": "2026-11-09T17:00:00.000Z"
+            },
+            "customerSaid": "New cooktop to connect."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "jobId": "J501",
+            "techId": "T1",
+            "start": "2026-11-09T08:00:00.000Z",
+            "end": "2026-11-09T10:00:00.000Z",
+            "address": "Unit 4, 30 Ryrie Street, Geelong VIC 3220",
+            "by": {
+              "person": "Mei Lin",
+              "rule": "route-plan:licence+window+least-travel"
+            }
+          },
+          "response": {
+            "id": "S3",
+            "externalId": "js-S3"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C1",
+            "channel": "sms"
+          },
+          "response": {
+            "givenAt": "2026-10-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "to": "C1",
+            "channel": "sms",
+            "slotId": "S3",
+            "bodyRef": "J501:v1:booked"
+          },
+          "response": {
+            "id": "M4",
+            "sentAt": "2026-11-08T19:30:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "slotId": "S3",
+            "ref": "message:M4@2026-11-08T19:30:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T1",
+            "jobId": "J501",
+            "address": "Unit 4, 30 Ryrie Street, Geelong VIC 3220",
+            "window": {
+              "from": "2026-11-09T08:00:00.000Z",
+              "to": "2026-11-09T12:00:00.000Z"
+            },
+            "customerSaid": "Gas heater service, recurring."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "J501",
+              "J502",
+              "J503"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T1"
+            ],
+            "slots": 2,
+            "dispatcher": "Mei Lin"
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J501"
+          },
+          "response": {
+            "slotId": "S3",
+            "externalId": "js-S3",
+            "jobVersion": 1
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J502"
+          },
+          "response": {
+            "slotId": "S1",
+            "externalId": "js-S1",
+            "jobVersion": 1
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J503"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "18 Melbourne Rd Norlane"
+          },
+          "response": {
+            "resolved": "18 Melbourne Road, Norlane VIC 3214"
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "licence": "gas"
+          },
+          "response": {
+            "holders": [
+              "T1:current"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "travel": {
+              "from": "Unit 4, 30 Ryrie Street, Geelong VIC 3220",
+              "to": "5 Surf Coast Highway, Grovedale VIC 3216"
+            }
+          },
+          "response": {
+            "ms": 1800000
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "travel": {
+              "from": "18 Melbourne Road, Norlane VIC 3214",
+              "to": "Unit 4, 30 Ryrie Street, Geelong VIC 3220"
+            }
+          },
+          "response": {
+            "ms": 1800000
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "travel": {
+              "from": "Unit 4, 30 Ryrie Street, Geelong VIC 3220",
+              "to": "18 Melbourne Road, Norlane VIC 3214"
+            }
+          },
+          "response": {
+            "ms": 1800000
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "travel": {
+              "from": "5 Surf Coast Highway, Grovedale VIC 3216",
+              "to": "18 Melbourne Road, Norlane VIC 3214"
+            }
+          },
+          "response": {
+            "ms": 1800000
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "travel": {
+              "from": "18 Melbourne Road, Norlane VIC 3214",
+              "to": "5 Surf Coast Highway, Grovedale VIC 3216"
+            }
+          },
+          "response": {
+            "ms": 1800000
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "displace": "S3",
+            "for": "J503"
+          },
+          "response": {
+            "accepted": true,
+            "person": "Mei Lin"
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J501"
+          },
+          "response": {
+            "slotId": "S3",
+            "externalId": "js-S3",
+            "jobVersion": 1
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "jobId": "J503",
+            "techId": "T1",
+            "start": "2026-11-09T08:00:00.000Z",
+            "end": "2026-11-09T09:00:00.000Z",
+            "address": "18 Melbourne Road, Norlane VIC 3214",
+            "by": {
+              "person": "Mei Lin"
+            }
+          },
+          "response": {
+            "id": "S5",
+            "externalId": "js-S5"
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C3",
+            "channel": "sms"
+          },
+          "response": {
+            "givenAt": "2026-10-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "to": "C3",
+            "channel": "sms",
+            "slotId": "S5",
+            "bodyRef": "J503:v1:booked"
+          },
+          "response": {
+            "id": "M6",
+            "sentAt": "2026-11-08T20:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "slotId": "S5",
+            "ref": "message:M6@2026-11-08T20:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T1",
+            "jobId": "J503",
+            "address": "18 Melbourne Road, Norlane VIC 3214",
+            "window": {
+              "from": "2026-11-09T08:00:00.000Z",
+              "to": "2026-11-09T10:00:00.000Z"
+            },
+            "customerSaid": "Strong gas smell near the meter."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "licence": "gas"
+          },
+          "response": {
+            "holders": [
+              "T1:current"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "travel": {
+              "from": "5 Surf Coast Highway, Grovedale VIC 3216",
+              "to": "Unit 4, 30 Ryrie Street, Geelong VIC 3220"
+            }
+          },
+          "response": {
+            "ms": 1800000
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "update": "S3",
+            "jobId": "J501",
+            "techId": "T1",
+            "start": "2026-11-09T09:30:00.000Z",
+            "end": "2026-11-09T11:30:00.000Z",
+            "displacedBy": "J503",
+            "by": {
+              "person": "Mei Lin"
+            }
+          },
+          "response": {
+            "externalId": "js-S3",
+            "updates": 1
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C1",
+            "channel": "sms"
+          },
+          "response": {
+            "givenAt": "2026-10-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "to": "C1",
+            "channel": "sms",
+            "slotId": "S3",
+            "bodyRef": "J501:v1:changed"
+          },
+          "response": {
+            "id": "M7",
+            "sentAt": "2026-11-08T20:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "slotId": "S3",
+            "ref": "message:M7@2026-11-08T20:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T1",
+            "jobId": "J501",
+            "address": "Unit 4, 30 Ryrie Street, Geelong VIC 3220",
+            "window": {
+              "from": "2026-11-09T08:00:00.000Z",
+              "to": "2026-11-09T12:00:00.000Z"
+            },
+            "customerSaid": "Gas heater service, recurring."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "customer-told-once-with-consent",
+      "n": 6,
+      "title": "The customer is told once per slot, on a channel they consented to",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The consenting customer has exactly one message, preceded by a consent check, and none after the second event. The other customer has no message and an escalation names them. A second message, or one sent without consent, fails.",
+      "actual": "messages: C1=1, C2=0; escalations: J602:no_consent",
+      "stimulus": {
+        "description": "Two jobs slotted: one customer with consent recorded for the channel, one with none. The scheduling event is then delivered a second time with nothing changed.",
+        "now": "2026-11-08T19:30:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "customer-told-once-with-consent"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "ids": [
+              "J601",
+              "J602"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T3",
+              "T1"
+            ],
+            "slots": 0,
+            "dispatcher": "Mei Lin"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J601"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J602"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "12 pakington st geelong west"
+          },
+          "response": {
+            "resolved": "12 Pakington Street, Geelong West VIC 3218"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "77 Bellarine Hwy Newcomb"
+          },
+          "response": {
+            "resolved": "77 Bellarine Highway, Newcomb VIC 3219"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "travel": {
+              "from": "77 Bellarine Highway, Newcomb VIC 3219",
+              "to": "12 Pakington Street, Geelong West VIC 3218"
+            }
+          },
+          "response": {
+            "ms": 1800000
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "travel": {
+              "from": "12 Pakington Street, Geelong West VIC 3218",
+              "to": "77 Bellarine Highway, Newcomb VIC 3219"
+            }
+          },
+          "response": {
+            "ms": 1800000
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "jobId": "J601",
+            "techId": "T3",
+            "start": "2026-11-09T08:00:00.000Z",
+            "end": "2026-11-09T09:00:00.000Z",
+            "address": "12 Pakington Street, Geelong West VIC 3218",
+            "by": {
+              "person": "Mei Lin",
+              "rule": "route-plan:licence+window+least-travel"
+            }
+          },
+          "response": {
+            "id": "S1",
+            "externalId": "js-S1"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C1",
+            "channel": "sms"
+          },
+          "response": {
+            "givenAt": "2026-10-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "to": "C1",
+            "channel": "sms",
+            "slotId": "S1",
+            "bodyRef": "J601:v1:booked"
+          },
+          "response": {
+            "id": "M2",
+            "sentAt": "2026-11-08T19:30:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "slotId": "S1",
+            "ref": "message:M2@2026-11-08T19:30:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T3",
+            "jobId": "J601",
+            "address": "12 Pakington Street, Geelong West VIC 3218",
+            "window": {
+              "from": "2026-11-09T08:00:00.000Z",
+              "to": "2026-11-09T12:00:00.000Z"
+            },
+            "customerSaid": "The shower mixer drips all night."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "jobId": "J602",
+            "techId": "T1",
+            "start": "2026-11-09T08:00:00.000Z",
+            "end": "2026-11-09T09:00:00.000Z",
+            "address": "77 Bellarine Highway, Newcomb VIC 3219",
+            "by": {
+              "person": "Mei Lin",
+              "rule": "route-plan:licence+window+least-travel"
+            }
+          },
+          "response": {
+            "id": "S3",
+            "externalId": "js-S3"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C2",
+            "channel": "sms"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "jobId": "J602",
+            "reason": "no_consent",
+            "owner": "Mei Lin"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T1",
+            "jobId": "J602",
+            "address": "77 Bellarine Highway, Newcomb VIC 3219",
+            "window": {
+              "from": "2026-11-09T08:00:00.000Z",
+              "to": "2026-11-09T12:00:00.000Z"
+            },
+            "customerSaid": "The shower mixer drips all night."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-08T20:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 2,
+            "ids": [
+              "J601",
+              "J602"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T20:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T3",
+              "T1"
+            ],
+            "slots": 2,
+            "dispatcher": "Mei Lin"
+          }
+        },
+        {
+          "at": "2026-11-08T20:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J601"
+          },
+          "response": {
+            "slotId": "S1",
+            "externalId": "js-S1",
+            "jobVersion": 1
+          }
+        },
+        {
+          "at": "2026-11-08T20:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J602"
+          },
+          "response": {
+            "slotId": "S3",
+            "externalId": "js-S3",
+            "jobVersion": 1
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "tech-told-with-the-record",
+      "n": 7,
+      "title": "The tech's notification carries the job, the address, the window and what the customer said",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The notification to the assigned tech carries the job id, the resolved address, the window and the customer's words. A notification missing any of those fails.",
+      "actual": "notices: [{\"jobId\":\"J701\",\"address\":\"Unit 4, 30 Ryrie Street, Geelong VIC 3220\",\"window\":{\"from\":\"2026-11-09T09:00:00.000Z\",\"to\":\"2026-11-09T13:00:00.000Z\"},\"customerSaid\":\"Hot water runs cold after five minutes and the unit is making a ticking noise.\",\"body\":\"Stop 1: job J701 at Unit 4, 30 Ryrie Street, Geelong VIC 3220, 2026-11-09T09:00:00.000Z to 2026-11-09T10:00:00.000Z (window 2026-11-09T09:00:00.000Z to 2026-11-09T13:00:00.000Z). Customer said: \\\"Hot water runs cold after five minutes and the unit is making a ticking noise.\\\"\"}]",
+      "stimulus": {
+        "description": "One job slotted whose customer described the fault when booking.",
+        "now": "2026-11-08T19:30:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "tech-told-with-the-record"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J701"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T3"
+            ],
+            "slots": 0,
+            "dispatcher": "Mei Lin"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J701"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "4/30 Ryrie St Geelong"
+          },
+          "response": {
+            "resolved": "Unit 4, 30 Ryrie Street, Geelong VIC 3220"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "jobId": "J701",
+            "techId": "T3",
+            "start": "2026-11-09T09:00:00.000Z",
+            "end": "2026-11-09T10:00:00.000Z",
+            "address": "Unit 4, 30 Ryrie Street, Geelong VIC 3220",
+            "by": {
+              "person": "Mei Lin",
+              "rule": "route-plan:licence+window+least-travel"
+            }
+          },
+          "response": {
+            "id": "S1",
+            "externalId": "js-S1"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C1",
+            "channel": "sms"
+          },
+          "response": {
+            "givenAt": "2026-10-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "to": "C1",
+            "channel": "sms",
+            "slotId": "S1",
+            "bodyRef": "J701:v1:booked"
+          },
+          "response": {
+            "id": "M2",
+            "sentAt": "2026-11-08T19:30:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "slotId": "S1",
+            "ref": "message:M2@2026-11-08T19:30:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T3",
+            "jobId": "J701",
+            "address": "Unit 4, 30 Ryrie Street, Geelong VIC 3220",
+            "window": {
+              "from": "2026-11-09T09:00:00.000Z",
+              "to": "2026-11-09T13:00:00.000Z"
+            },
+            "customerSaid": "Hot water runs cold after five minutes and the unit is making a ticking noise."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "change-propagates-once",
+      "n": 8,
+      "title": "A change to the job moves the slot and tells each affected party exactly once",
+      "verdict": "pass",
+      "held": true,
+      "expected": "After the change, the job still has exactly one slot and it sits inside the new window. Exactly one new message went to the customer and exactly one to the tech. A stale slot, a second slot, or a doubled message fails.",
+      "actual": "slots: J801 2026-11-09T13:00:00.000Z-2026-11-09T14:00:00.000Z v2; since change: sms=1, notify=1",
+      "stimulus": {
+        "description": "A slotted job whose customer window is moved by the runner after the slot is written and the customer told.",
+        "now": "2026-11-08T19:30:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "change-propagates-once"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J801"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T3"
+            ],
+            "slots": 0,
+            "dispatcher": "Mei Lin"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J801"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "77 Bellarine Hwy Newcomb"
+          },
+          "response": {
+            "resolved": "77 Bellarine Highway, Newcomb VIC 3219"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "jobId": "J801",
+            "techId": "T3",
+            "start": "2026-11-09T08:00:00.000Z",
+            "end": "2026-11-09T09:00:00.000Z",
+            "address": "77 Bellarine Highway, Newcomb VIC 3219",
+            "by": {
+              "person": "Mei Lin",
+              "rule": "route-plan:licence+window+least-travel"
+            }
+          },
+          "response": {
+            "id": "S1",
+            "externalId": "js-S1"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C1",
+            "channel": "sms"
+          },
+          "response": {
+            "givenAt": "2026-10-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "to": "C1",
+            "channel": "sms",
+            "slotId": "S1",
+            "bodyRef": "J801:v1:booked"
+          },
+          "response": {
+            "id": "M2",
+            "sentAt": "2026-11-08T19:30:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "slotId": "S1",
+            "ref": "message:M2@2026-11-08T19:30:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T3",
+            "jobId": "J801",
+            "address": "77 Bellarine Highway, Newcomb VIC 3219",
+            "window": {
+              "from": "2026-11-09T08:00:00.000Z",
+              "to": "2026-11-09T10:00:00.000Z"
+            },
+            "customerSaid": "The shower mixer drips all night."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J801"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T3"
+            ],
+            "slots": 1,
+            "dispatcher": "Mei Lin"
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J801"
+          },
+          "response": {
+            "slotId": "S1",
+            "externalId": "js-S1",
+            "jobVersion": 1
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "77 Bellarine Hwy Newcomb"
+          },
+          "response": {
+            "resolved": "77 Bellarine Highway, Newcomb VIC 3219"
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "update": "S1",
+            "jobId": "J801",
+            "techId": "T3",
+            "start": "2026-11-09T13:00:00.000Z",
+            "end": "2026-11-09T14:00:00.000Z",
+            "displacedBy": null,
+            "by": {
+              "person": "Mei Lin",
+              "rule": "route-plan:licence+window+least-travel"
+            }
+          },
+          "response": {
+            "externalId": "js-S1",
+            "updates": 1
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C1",
+            "channel": "sms"
+          },
+          "response": {
+            "givenAt": "2026-10-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "to": "C1",
+            "channel": "sms",
+            "slotId": "S1",
+            "bodyRef": "J801:v2:changed"
+          },
+          "response": {
+            "id": "M3",
+            "sentAt": "2026-11-08T20:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "slotId": "S1",
+            "ref": "message:M3@2026-11-08T20:00:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-11-08T20:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T3",
+            "jobId": "J801",
+            "address": "77 Bellarine Highway, Newcomb VIC 3219",
+            "window": {
+              "from": "2026-11-09T13:00:00.000Z",
+              "to": "2026-11-09T15:00:00.000Z"
+            },
+            "customerSaid": "The shower mixer drips all night."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-08T20:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J801"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T20:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T3"
+            ],
+            "slots": 1,
+            "dispatcher": "Mei Lin"
+          }
+        },
+        {
+          "at": "2026-11-08T20:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J801"
+          },
+          "response": {
+            "slotId": "S1",
+            "externalId": "js-S1",
+            "jobVersion": 2
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "unassignable-is-a-queue",
+      "n": 9,
+      "title": "A job that cannot be slotted is escalated with a reason and an owner",
+      "verdict": "pass",
+      "held": true,
+      "expected": "None of the three has a slot. Each has an escalation carrying the job id, a reason from the list and an owner. A job with no slot and no escalation fails.",
+      "actual": "slots: none; escalations: J903:window_impossible:Mei Lin; J901:no_licensed_tech:Mei Lin; J902:address_unresolved:Mei Lin",
+      "stimulus": {
+        "description": "Three jobs that cannot be slotted: one needing a licence no current tech holds, one whose address does not resolve, one whose window is shorter than the job.",
+        "now": "2026-11-08T19:30:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "unassignable-is-a-queue"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 3,
+            "ids": [
+              "J901",
+              "J902",
+              "J903"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T1",
+              "T2",
+              "T3"
+            ],
+            "slots": 0,
+            "dispatcher": "Mei Lin"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J901"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J902"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J903"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "5 Surf Coast Hwy Grovedale"
+          },
+          "response": {
+            "resolved": "5 Surf Coast Highway, Grovedale VIC 3216"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "jobId": "J903",
+            "reason": "window_impossible",
+            "owner": "Mei Lin"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "18 Melbourne Rd Norlane"
+          },
+          "response": {
+            "resolved": "18 Melbourne Road, Norlane VIC 3214"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "licence": "height"
+          },
+          "response": {
+            "holders": [
+              "T2:expired"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "jobId": "J901",
+            "reason": "no_licensed_tech",
+            "owner": "Mei Lin"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "Behind the bakery on the corner"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "jobId": "J902",
+            "reason": "address_unresolved",
+            "owner": "Mei Lin"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "the-record-by-job",
+      "n": 10,
+      "title": "Who was assigned, when, by whom or by which rule, and what the customer was told are retrievable by job",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A read by job id returns the slot with its tech, start, external id and the person or rule that wrote it, and the confirmation attached as evidence with its sent time. A record missing the author or the message fails.",
+      "actual": "slots: [{\"id\":\"S1\",\"techId\":\"T3\",\"externalId\":\"js-S1\",\"by\":{\"person\":\"Mei Lin\",\"rule\":\"route-plan:licence+window+least-travel\"},\"evidence\":[\"message:M2@2026-11-08T19:30:00.000Z\"]}]; messages: 1",
+      "stimulus": {
+        "description": "One job slotted, the customer confirmed and the tech told.",
+        "now": "2026-11-08T19:30:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "the-record-by-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobs": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "J1001"
+            ]
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "board": true
+          },
+          "response": {
+            "techs": [
+              "T3"
+            ],
+            "slots": 0,
+            "dispatcher": "Mei Lin"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "slotFor": "J1001"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "resolve_address",
+          "verb": "read",
+          "subject": "address",
+          "request": {
+            "raw": "12 pakington st geelong west"
+          },
+          "response": {
+            "resolved": "12 Pakington Street, Geelong West VIC 3218"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "jobId": "J1001",
+            "techId": "T3",
+            "start": "2026-11-09T10:00:00.000Z",
+            "end": "2026-11-09T11:00:00.000Z",
+            "address": "12 Pakington Street, Geelong West VIC 3218",
+            "by": {
+              "person": "Mei Lin",
+              "rule": "route-plan:licence+window+least-travel"
+            }
+          },
+          "response": {
+            "id": "S1",
+            "externalId": "js-S1"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "consent": "C1",
+            "channel": "sms"
+          },
+          "response": {
+            "givenAt": "2026-10-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "to": "C1",
+            "channel": "sms",
+            "slotId": "S1",
+            "bodyRef": "J1001:v1:booked"
+          },
+          "response": {
+            "id": "M2",
+            "sentAt": "2026-11-08T19:30:00.000Z"
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "slotId": "S1",
+            "ref": "message:M2@2026-11-08T19:30:00.000Z"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "techId": "T3",
+            "jobId": "J1001",
+            "address": "12 Pakington Street, Geelong West VIC 3218",
+            "window": {
+              "from": "2026-11-09T10:00:00.000Z",
+              "to": "2026-11-09T14:00:00.000Z"
+            },
+            "customerSaid": "The shower mixer drips all night."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-08T19:30:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "J1001"
+          },
+          "response": {
+            "slots": [
+              "S1"
+            ],
+            "messages": 1
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 11,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the board and the licence rules runs on.",
+        "now": "2026-11-04T12:21:20.109Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 12,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "One slot per job in the job system with its own id, the licence-gated job on the licensed tech only, the emergency slot carrying the dispatcher's acceptance and the displaced job re-slotted, the changed job moved once with one fresh message each, and every customer message on a consented channel.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "Real scheduling events on the business's own tenant, driven by creating and changing real jobs.",
+        "now": "2026-11-04T12:21:20.109Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 12,
+    "pass": 8,
+    "fail": 0,
+    "shapeOnly": 2,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
