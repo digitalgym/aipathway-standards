@@ -1,0 +1,1575 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793793963300",
+  "standard": "multi-site-conformance-build-standard",
+  "spec": "AIP-BS-MULTI-SITE-CONFORMANCE",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-04T12:06:03.291Z",
+  "finishedAt": "2026-11-04T12:06:03.300Z",
+  "results": [
+    {
+      "checkId": "key-contract-versioned",
+      "n": 1,
+      "title": "The key contract is written down and versioned",
+      "verdict": "pass",
+      "held": true,
+      "expected": "It is returned as a versioned document. A convention that exists only in the shape of the data fails.",
+      "actual": "1 contract read(s); findings [{\"segmentId\":\"noosa\",\"kind\":\"schema\",\"detail\":\"record R-1: missing required key(s) job_id, due_date (contract v2.1)\"}]",
+      "stimulus": {
+        "description": "A request for the key contract currently in force.",
+        "now": "2026-09-20T21:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "key-contract-versioned"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "version": "2.1",
+            "effectiveFrom": "2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "segments": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "records": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "recordId": "R-1"
+          },
+          "response": {
+            "accessGroup": "noosa",
+            "typedLabel": "noosa"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "measure": "overdue_rate",
+            "segmentId": "noosa"
+          },
+          "response": {
+            "value": 1,
+            "definition": "obligations past due / obligations due, per segment, per period"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "drift": "noosa"
+          },
+          "response": {
+            "kinds": []
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "findings": 1,
+            "visibleTo": [
+              "noosa",
+              "centre"
+            ]
+          },
+          "response": {
+            "published": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "segments-add-not-fork",
+      "n": 2,
+      "title": "Segments can add fields and cannot rename or fork keys",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The addition is accepted. Both the rename and the fork are refused at validation, not flagged in a report afterwards.",
+      "actual": "accepted 1, refused rename,fork",
+      "stimulus": {
+        "description": "One segment adding a field, one renaming a key, one introducing a second key for the same thing.",
+        "now": "2026-09-20T21:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "segments-add-not-fork"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "segmentId": "noosa",
+            "field": "local_notes",
+            "intent": "add"
+          },
+          "response": {
+            "accepted": true
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "segmentId": "toowoomba",
+            "field": "site_id",
+            "intent": "rename"
+          },
+          "response": {
+            "accepted": false,
+            "why": "a shared key cannot be renamed in one segment"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "multisite.contract_change_requested",
+            "detail": "toowoomba asked to rename site_id: a shared key cannot be renamed in one segment"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "segmentId": "noosa",
+            "field": "job_id",
+            "intent": "fork"
+          },
+          "response": {
+            "accepted": false,
+            "why": "a segment cannot fork a shared key"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "multisite.contract_change_requested",
+            "detail": "noosa asked to fork job_id: a segment cannot fork a shared key"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "version": "2.1",
+            "effectiveFrom": "2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "segments": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "records": true
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "measure": "overdue_rate",
+            "segmentId": "noosa"
+          },
+          "response": {
+            "value": 0,
+            "definition": "obligations past due / obligations due, per segment, per period"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "measure": "overdue_rate",
+            "segmentId": "toowoomba"
+          },
+          "response": {
+            "value": 0,
+            "definition": "obligations past due / obligations due, per segment, per period"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "drift": "noosa"
+          },
+          "response": {
+            "kinds": []
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "findings": 0,
+            "visibleTo": [
+              "noosa",
+              "centre"
+            ]
+          },
+          "response": {
+            "published": true
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "drift": "toowoomba"
+          },
+          "response": {
+            "kinds": []
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "findings": 0,
+            "visibleTo": [
+              "toowoomba",
+              "centre"
+            ]
+          },
+          "response": {
+            "published": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "membership-from-access-group",
+      "n": 3,
+      "title": "Segment membership comes from an access group",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The access group decides. A build that trusts the typed label fails, because that label is how segments drift in the first place.",
+      "actual": "toowoomba: [{\"segmentId\":\"toowoomba\",\"kind\":\"schema\",\"detail\":\"record R-31: missing required key(s) due_date (contract v2.1)\"}]; noosa: []",
+      "stimulus": {
+        "description": "A record whose typed segment label disagrees with its access group.",
+        "now": "2026-09-20T21:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "membership-from-access-group"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "version": "2.1",
+            "effectiveFrom": "2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "segments": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "records": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "recordId": "R-31"
+          },
+          "response": {
+            "accessGroup": "toowoomba",
+            "typedLabel": "noosa"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "recordId": "R-32"
+          },
+          "response": {
+            "accessGroup": "noosa",
+            "typedLabel": "noosa"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "measure": "overdue_rate",
+            "segmentId": "noosa"
+          },
+          "response": {
+            "value": 1,
+            "definition": "obligations past due / obligations due, per segment, per period"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "measure": "overdue_rate",
+            "segmentId": "toowoomba"
+          },
+          "response": {
+            "value": 1,
+            "definition": "obligations past due / obligations due, per segment, per period"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "drift": "noosa"
+          },
+          "response": {
+            "kinds": []
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "findings": 0,
+            "visibleTo": [
+              "noosa",
+              "centre"
+            ]
+          },
+          "response": {
+            "published": true
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "drift": "toowoomba"
+          },
+          "response": {
+            "kinds": []
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "findings": 1,
+            "visibleTo": [
+              "toowoomba",
+              "centre"
+            ]
+          },
+          "response": {
+            "published": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "drift-detected-all-four-kinds",
+      "n": 4,
+      "title": "Drift is detected on a schedule, covering all four kinds",
+      "verdict": "pass",
+      "held": true,
+      "expected": "All four are detected. Detecting only the loud two is the common partial build and it fails here.",
+      "actual": "noosa kinds: schema, gate_bypass, shadow_register, silence",
+      "stimulus": {
+        "description": "One segment seeded with each of the four kinds of drift, and the clock advanced to the scheduled run.",
+        "now": "2026-09-19T21:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "drift-detected-all-four-kinds"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "version": "2.1",
+            "effectiveFrom": "2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "segments": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "records": true
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "measure": "overdue_rate",
+            "segmentId": "noosa"
+          },
+          "response": {
+            "value": 0,
+            "definition": "obligations past due / obligations due, per segment, per period"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "measure": "overdue_rate",
+            "segmentId": "toowoomba"
+          },
+          "response": {
+            "value": 0,
+            "definition": "obligations past due / obligations due, per segment, per period"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "drift": "noosa"
+          },
+          "response": {
+            "kinds": [
+              "schema",
+              "gate_bypass",
+              "shadow_register",
+              "silence"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "findings": 4,
+            "visibleTo": [
+              "noosa",
+              "centre"
+            ]
+          },
+          "response": {
+            "published": true
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "person": "Priya Nair",
+            "detail": "Noosa: 4 drift finding(s) this period (schema, gate_bypass, shadow_register, silence), contract v2.1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "drift": "toowoomba"
+          },
+          "response": {
+            "kinds": []
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "findings": 0,
+            "visibleTo": [
+              "toowoomba",
+              "centre"
+            ]
+          },
+          "response": {
+            "published": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-definition-per-measure",
+      "n": 5,
+      "title": "One definition of every measure, computed once",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Both receive the same number from one computation. Two computations that happen to agree today still fail.",
+      "actual": "measure reads: [{\"measure\":\"overdue_rate\",\"segmentId\":\"noosa\",\"definition\":\"obligations past due / obligations due, per segment, per period\",\"value\":1},{\"measure\":\"overdue_rate\",\"segmentId\":\"toowoomba\",\"definition\":\"obligations past due / obligations due, per segment, per period\",\"value\":1}]",
+      "stimulus": {
+        "description": "Two segments asked for the same measure over the same underlying records.",
+        "now": "2026-09-20T21:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-definition-per-measure"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "version": "2.1",
+            "effectiveFrom": "2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "segments": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "records": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "recordId": "R-51"
+          },
+          "response": {
+            "accessGroup": "noosa",
+            "typedLabel": "noosa"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "recordId": "R-52"
+          },
+          "response": {
+            "accessGroup": "toowoomba",
+            "typedLabel": "toowoomba"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "measure": "overdue_rate",
+            "segmentId": "noosa"
+          },
+          "response": {
+            "value": 1,
+            "definition": "obligations past due / obligations due, per segment, per period"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "measure": "overdue_rate",
+            "segmentId": "toowoomba"
+          },
+          "response": {
+            "value": 1,
+            "definition": "obligations past due / obligations due, per segment, per period"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "drift": "noosa"
+          },
+          "response": {
+            "kinds": []
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "findings": 0,
+            "visibleTo": [
+              "noosa",
+              "centre"
+            ]
+          },
+          "response": {
+            "published": true
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "drift": "toowoomba"
+          },
+          "response": {
+            "kinds": []
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "findings": 0,
+            "visibleTo": [
+              "toowoomba",
+              "centre"
+            ]
+          },
+          "response": {
+            "published": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "report-publishes-regardless",
+      "n": 6,
+      "title": "The report publishes on schedule regardless of the numbers",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The report still publishes, saying so. A build that suppresses an all-clear fails, because silence then means both 'fine' and 'stopped'.",
+      "actual": "2 report(s): [{\"visibleTo\":[\"noosa\",\"centre\"],\"findings\":0},{\"visibleTo\":[\"toowoomba\",\"centre\"],\"findings\":0}]",
+      "stimulus": {
+        "description": "A scheduled run in a period where nothing drifted and nothing breached.",
+        "now": "2026-09-20T21:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "report-publishes-regardless"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "version": "2.1",
+            "effectiveFrom": "2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "segments": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "records": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "recordId": "R-61"
+          },
+          "response": {
+            "accessGroup": "noosa",
+            "typedLabel": "noosa"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "recordId": "R-62"
+          },
+          "response": {
+            "accessGroup": "toowoomba",
+            "typedLabel": "toowoomba"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "measure": "overdue_rate",
+            "segmentId": "noosa"
+          },
+          "response": {
+            "value": 1,
+            "definition": "obligations past due / obligations due, per segment, per period"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "measure": "overdue_rate",
+            "segmentId": "toowoomba"
+          },
+          "response": {
+            "value": 1,
+            "definition": "obligations past due / obligations due, per segment, per period"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "drift": "noosa"
+          },
+          "response": {
+            "kinds": []
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "findings": 0,
+            "visibleTo": [
+              "noosa",
+              "centre"
+            ]
+          },
+          "response": {
+            "published": true
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "drift": "toowoomba"
+          },
+          "response": {
+            "kinds": []
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "findings": 0,
+            "visibleTo": [
+              "toowoomba",
+              "centre"
+            ]
+          },
+          "response": {
+            "published": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "each-segment-sees-its-own",
+      "n": 7,
+      "title": "Each segment sees its own report",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Each segment can read its own findings at the same detail the centre sees. A centre-only report fails.",
+      "actual": "[{\"visibleTo\":[\"noosa\",\"centre\"],\"findings\":[{\"segmentId\":\"noosa\",\"kind\":\"gate_bypass\",\"detail\":\"job J-71 closed with no evidence attached\"}]},{\"visibleTo\":[\"toowoomba\",\"centre\"],\"findings\":[{\"segmentId\":\"toowoomba\",\"kind\":\"schema\",\"detail\":\"record R-72 has status 'Done-ish', not on the closed list\"}]}]",
+      "stimulus": {
+        "description": "A run producing findings for two segments.",
+        "now": "2026-09-20T21:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "each-segment-sees-its-own"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "version": "2.1",
+            "effectiveFrom": "2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "segments": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "records": true
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "measure": "overdue_rate",
+            "segmentId": "noosa"
+          },
+          "response": {
+            "value": 0,
+            "definition": "obligations past due / obligations due, per segment, per period"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "measure": "overdue_rate",
+            "segmentId": "toowoomba"
+          },
+          "response": {
+            "value": 0,
+            "definition": "obligations past due / obligations due, per segment, per period"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "drift": "noosa"
+          },
+          "response": {
+            "kinds": [
+              "gate_bypass"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "findings": 1,
+            "visibleTo": [
+              "noosa",
+              "centre"
+            ]
+          },
+          "response": {
+            "published": true
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "drift": "toowoomba"
+          },
+          "response": {
+            "kinds": [
+              "schema"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "findings": 1,
+            "visibleTo": [
+              "toowoomba",
+              "centre"
+            ]
+          },
+          "response": {
+            "published": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "threshold-routes-to-a-person",
+      "n": 8,
+      "title": "A threshold routes to a named person",
+      "verdict": "pass",
+      "held": true,
+      "expected": "It routes to a named person. A distribution list fails, because nobody on it owns the item.",
+      "actual": "notified [{\"person\":\"Priya Nair\",\"detail\":\"Noosa: 1 drift finding(s) this period (silence), contract v2.1\"}]; escalated [{\"reason\":\"multisite.no_named_owner\",\"detail\":\"Gympie: 1 drift finding(s) this period (shadow_register), contract v2.1; owner \\\"all-branches@network.com.au\\\" is not a named person\"}]",
+      "stimulus": {
+        "description": "A breach crossing a routing threshold.",
+        "now": "2026-09-20T21:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "threshold-routes-to-a-person"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "version": "2.1",
+            "effectiveFrom": "2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "segments": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "records": true
+          },
+          "response": {
+            "count": 0
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "measure": "overdue_rate",
+            "segmentId": "noosa"
+          },
+          "response": {
+            "value": 0,
+            "definition": "obligations past due / obligations due, per segment, per period"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "measure": "overdue_rate",
+            "segmentId": "gympie"
+          },
+          "response": {
+            "value": 0,
+            "definition": "obligations past due / obligations due, per segment, per period"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "drift": "noosa"
+          },
+          "response": {
+            "kinds": [
+              "silence"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "findings": 1,
+            "visibleTo": [
+              "noosa",
+              "centre"
+            ]
+          },
+          "response": {
+            "published": true
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "person": "Priya Nair",
+            "detail": "Noosa: 1 drift finding(s) this period (silence), contract v2.1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "drift": "gympie"
+          },
+          "response": {
+            "kinds": [
+              "shadow_register"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "findings": 1,
+            "visibleTo": [
+              "gympie",
+              "centre"
+            ]
+          },
+          "response": {
+            "published": true
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "multisite.no_named_owner",
+            "detail": "Gympie: 1 drift finding(s) this period (shadow_register), contract v2.1; owner \"all-branches@network.com.au\" is not a named person"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "gates-live-before-first-record",
+      "n": 9,
+      "title": "A new segment's gates are live before its first real record",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The record is validated against the contract. A segment that accepts records before its gates are live fails.",
+      "actual": "gate calls: [[{\"write\":\"R-91\",\"segmentId\":\"caloundra\"},{\"accepted\":false,\"why\":\"gates are not live for this segment\"}],[{\"write\":\"R-92\",\"segmentId\":\"noosa\"},{\"accepted\":false,\"why\":\"missing required fields: job_id, due_date\"}],[{\"write\":\"R-93\",\"segmentId\":\"noosa\"},{\"accepted\":true}]]",
+      "stimulus": {
+        "description": "A new segment created, then a record written to it immediately.",
+        "now": "2026-09-20T21:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "gates-live-before-first-record"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "write": "R-91",
+            "segmentId": "caloundra"
+          },
+          "response": {
+            "accepted": false,
+            "why": "gates are not live for this segment"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "multisite.segment_not_ready",
+            "detail": "caloundra: record R-91 refused, gates not live"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "write": "R-92",
+            "segmentId": "noosa"
+          },
+          "response": {
+            "accepted": false,
+            "why": "missing required fields: job_id, due_date"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "write": "R-93",
+            "segmentId": "noosa"
+          },
+          "response": {
+            "accepted": true
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "version": "2.1",
+            "effectiveFrom": "2026-07-01T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "segments": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "records": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "recordId": "R-93"
+          },
+          "response": {
+            "accessGroup": "noosa",
+            "typedLabel": "noosa"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "measure": "overdue_rate",
+            "segmentId": "noosa"
+          },
+          "response": {
+            "value": 1,
+            "definition": "obligations past due / obligations due, per segment, per period"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "measure": "overdue_rate",
+            "segmentId": "caloundra"
+          },
+          "response": {
+            "value": 0,
+            "definition": "obligations past due / obligations due, per segment, per period"
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "drift": "noosa"
+          },
+          "response": {
+            "kinds": []
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "findings": 0,
+            "visibleTo": [
+              "noosa",
+              "centre"
+            ]
+          },
+          "response": {
+            "published": true
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "read_segment",
+          "verb": "read",
+          "subject": "segment",
+          "request": {
+            "drift": "caloundra"
+          },
+          "response": {
+            "kinds": []
+          }
+        },
+        {
+          "at": "2026-09-20T21:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "findings": 0,
+            "visibleTo": [
+              "caloundra",
+              "centre"
+            ]
+          },
+          "response": {
+            "published": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 10,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the contract and the checks runs on.",
+        "now": "2026-11-04T12:06:03.300Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 11,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "Both findings appear in that segment's own report at the next scheduled run, the rename is refused at the source, and the all-clear publishes on time.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "In a live segment: a record missing a required key or holding an off-list value, a gate bypass (a typed date or work closed without evidence), a real rename attempt, and a real quiet period.",
+        "now": "2026-11-04T12:06:03.300Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 11,
+    "pass": 9,
+    "fail": 0,
+    "shapeOnly": 0,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
