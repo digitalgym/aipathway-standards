@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T12:13:28.140Z",
+  "generated_at": "2026-11-04T12:15:11.660Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -9378,6 +9378,116 @@
       ]
     },
     {
+      "slug": "rental-safety-watch",
+      "name": "Rental Safety Watch",
+      "office_task": "Keep every rental's smoke alarm, gas and hot water valve checks dated from the state's rules, draft the booking before each lapses for the property manager to release, and file the certificate.",
+      "verticals": [
+        "property"
+      ],
+      "standards": [
+        "compliance-calendar"
+      ],
+      "systems_of_record": [
+        "the property management system that issues each rental's asset_id and tenancy_id (its safety check register, dated rule set per state, and the document store the contractor's certificates are filed in)"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "document.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "asset.service_due",
+          "write": "the rental's safety check obligation, moved to Book now from the rule version in force in its state, with the contractor booking (and the tenant's entry notice where the rule needs one) drafted on it and held for the property manager to release; nothing is sent",
+          "readback": "reading the obligation back by its id on the rental's asset_id returns the derived due date, the rule version that produced it and the drafted booking awaiting release; no draft on the read means nothing was written and the run raises an exception"
+        },
+        {
+          "event": "evidence.filed",
+          "write": "the contractor's smoke alarm, gas or tempering valve certificate, filed as evidence on the obligation it names by obligation id and the rental's tenancy_id; a 'done' with no certificate attached is refused, and a file with no obligation id is never matched on an address or a tenant's name",
+          "readback": "the obligation is read back by its id and must return the same evidence reference and a completion date; if it does not, nothing was filed and safety.done_without_certificate is raised"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the obligation naming the person who owns it: a check overdue, a last check date nobody knows, no rule for the rental's state, a past due date no kept rule version explains, a 'done' with no certificate, a landlord's dated refusal, a tenant not home with the second booking drafted and the next chase date, a draft awaiting release, a release with no named person, or a certificate with no obligation id",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the obligation id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "safety.check_overdue",
+          "safety.booking_drafted",
+          "safety.last_check_unknown",
+          "safety.no_rule_for_state",
+          "safety.past_date_unexplained",
+          "safety.done_without_certificate",
+          "safety.owner_declined",
+          "safety.waiting_on_access",
+          "safety.draft_awaiting_release",
+          "safety.release_without_person",
+          "safety.certificate_unmatched"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.asset_id",
+          "seam.tenancy_id",
+          "seam.obligation_ref",
+          "seam.rule_version",
+          "seam.anchor_status",
+          "seam.state",
+          "seam.evidence",
+          "seam.refused_at",
+          "seam.breached_at",
+          "seam.waiting_on",
+          "seam.next_chase",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/rental-safety-watch"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "compliance-calendar",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:13:02.890Z",
+          "run_id": "run-1793794382888",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 10
+        }
+      ]
+    },
+    {
       "slug": "repair-board",
       "name": "Repair Board",
       "office_task": "Send each triaged repair to a licensed trade at a time inside the resident's window, text the resident once, and hand what cannot be placed to the property manager.",
@@ -11910,6 +12020,7 @@
     "recharge-desk",
     "renewal-watch",
     "rent-watch",
+    "rental-safety-watch",
     "repair-board",
     "retention-book",
     "ring-list",
