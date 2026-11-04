@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T12:40:53.774Z",
+  "generated_at": "2026-11-04T12:42:50.435Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -5217,6 +5217,103 @@
       ]
     },
     {
+      "slug": "gas-tally",
+      "name": "Gas Tally",
+      "office_task": "Match the refrigerant log for every cylinder and van to the gas charged and recovered on each job, and list what does not reconcile for the licence holder before the reporting date.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "two-records"
+      ],
+      "systems_of_record": [
+        "Simpro (the job system that issues the job id and holds the refrigerant charged and recovered on each job, against the cylinder used)",
+        "the cylinder log (one line per cylinder per job, by van, as the technician weighed it on the van scale, keyed by the job id and the cylinder id)"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the refrigerant tally for the period, written where the licence holder opens it: the pair contract it ran under, the join key (job id and cylinder id), the master per field, and the counts reconciled, within tolerance, not reconciled, unaccounted for and corrected, published weekly and again ahead of the reporting date, the all-clear included",
+          "readback": "the report store returns a report_id, and reading that id back returns the contract id, the five counts and the published time; no id back means the run did not publish and the owner is told"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the job and cylinder naming the person who owns it: kg charged, kg recovered or refrigerant type that does not reconcile, with the cylinder log's value, the job's value and the master's value side by side; gas on a cylinder line with no job record; gas on a job with no cylinder line; a gap over the threshold in kg; too many lines not reconciled; or an accepted correction whose write returned no id",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the job id, the cylinder id, the reason, both values and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "two-records.contract_missing",
+          "two-records.difference_open",
+          "two-records.orphan_log_line_without_job",
+          "two-records.orphan_job_gas_without_log_line",
+          "two-records.over_threshold_amount",
+          "two-records.mismatch_rate_exceeded",
+          "two-records.write_not_read_back"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "seam-mirror",
+        "fields": [
+          "seam.job_id",
+          "seam.cylinder_id",
+          "seam.contract_id",
+          "seam.run_id",
+          "seam.difference_status",
+          "seam.value_log",
+          "seam.value_job",
+          "seam.master_value",
+          "seam.accepted_by",
+          "seam.written_id",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/gas-tally"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "two-records",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:39:14.957Z",
+          "run_id": "run-1793795954956",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        }
+      ]
+    },
+    {
       "slug": "goods-match",
       "name": "Goods Match",
       "office_task": "Hold every supplier invoice against its purchase order and what was actually received, catch duplicates, and tell finance which queue each one is in.",
@@ -10144,6 +10241,116 @@
       ]
     },
     {
+      "slug": "rack-watch",
+      "name": "Rack Watch",
+      "office_task": "Keep each client warehouse's AS 4084 racking inspection dated from our rules, draft the booking, file every damage finding against its bay, and draft the repair summary for us to send.",
+      "verticals": [
+        "b2b-office"
+      ],
+      "standards": [
+        "compliance-calendar"
+      ],
+      "systems_of_record": [
+        "the racking inspector's register of client warehouse racking installations (its dated rule store per state, and the document store the signed inspection reports are filed in)"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "document.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "asset.service_due",
+          "write": "the installation's inspection obligation, classed Due Soon from the rule version in force for its state, with the client's inspection booking drafted on it and held for a named person to release",
+          "readback": "reading the installation back by its asset_id returns the derived due date, the rule version that produced it and the drafted booking awaiting release; no draft on the read means nothing was written and the run raises an exception"
+        },
+        {
+          "event": "evidence.filed",
+          "write": "the signed inspection report attached to the installation's obligation as its evidence of completion, with each damage finding filed against its bay carrying the inspector's own risk level and repair recommendation, and the client repair summary drafted beside it for a named person to send",
+          "readback": "reading the obligation back returns the document_id of the report as its evidence and the findings by bay; a completion with no report is refused by the register and raised, so nothing reads as inspected on a tick"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the installation naming the person who owns it: an overdue inspection, a red bay, a finding with no risk level or no bay, a last inspection date nobody knows, no rule for the site's state, an inspection reported done with no report, a client's dated refusal, a booking or repair summary awaiting release, or a past due date its rule version can no longer explain",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the installation's asset_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "rack.inspection_overdue",
+          "rack.inspection_due_soon",
+          "rack.red_finding",
+          "rack.finding_unclassified",
+          "rack.finding_without_bay",
+          "rack.repair_summary_awaiting_release",
+          "rack.last_inspection_unknown",
+          "rack.no_rule_for_state",
+          "rack.inspection_without_report",
+          "rack.inspection_declined",
+          "rack.notice_drafted_awaiting_release",
+          "rack.release_refused",
+          "rack.history_unexplained",
+          "rack.report_unmatched"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.asset_id",
+          "seam.rule_version",
+          "seam.anchor_status",
+          "seam.class",
+          "seam.evidence",
+          "seam.findings_by_bay",
+          "seam.refused_at",
+          "seam.breached_at",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/rack-watch"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "compliance-calendar",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:39:54.650Z",
+          "run_id": "run-1793795994648",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 10
+        }
+      ]
+    },
+    {
       "slug": "receipt-chase",
       "name": "Receipt Chase",
       "office_task": "Each weekday, find the bank and card lines in Xero with no receipt, ask the person who spent each one for it, attach it when it comes back, and hand a no or a silence to the bookkeeper.",
@@ -13883,6 +14090,7 @@
     "fire-round-watch",
     "fix-book",
     "folder-brief",
+    "gas-tally",
     "goods-match",
     "handbook-desk",
     "hours-audit",
@@ -13929,6 +14137,7 @@
     "quote-desk",
     "quote-keeper",
     "quote-nudge",
+    "rack-watch",
     "receipt-chase",
     "recharge-desk",
     "renewal-watch",
