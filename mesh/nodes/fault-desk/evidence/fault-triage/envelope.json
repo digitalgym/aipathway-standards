@@ -1,0 +1,4760 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793797425838",
+  "standard": "fault-triage-build-standard",
+  "spec": "AIP-BS-FAULT-TRIAGE",
+  "specVersion": "2026-11-01",
+  "environment": "stub",
+  "startedAt": "2026-11-04T13:03:45.824Z",
+  "finishedAt": "2026-11-04T13:03:45.838Z",
+  "results": [
+    {
+      "checkId": "disclosure-first",
+      "n": 1,
+      "title": "Disclosure first, on every call",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "For each call, the first thing the build does on it is a disclosure naming the AI and the recording, and no turn or question comes before it.",
+      "actual": "21 port call(s); log: I-11=fixed_remotely, I-12=job@J101; alerts 0; drafts 1",
+      "stimulus": {
+        "description": "Two calls and one text, each describing a fault on the list.",
+        "now": "2026-07-14T08:10:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "disclosure-first"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "unread": true
+          },
+          "response": [
+            {
+              "intake_id": "I-11",
+              "source": "call",
+              "customer_external_id": "C-1001",
+              "asset_id": "AS-1",
+              "said_or_sent": "It's showing E4."
+            },
+            {
+              "intake_id": "I-12",
+              "source": "call",
+              "customer_external_id": "C-1002",
+              "asset_id": "AS-2",
+              "said_or_sent": "There's no hot water since this afternoon."
+            },
+            {
+              "intake_id": "I-13",
+              "source": "sms",
+              "customer_external_id": "C-1003",
+              "asset_id": "AS-3",
+              "said_or_sent": "Hi, the heat pump says E4"
+            }
+          ]
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "intake_id": "I-11",
+            "text": "Hi, you're talking to an AI assistant for the office, and this call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "list": "fault_list"
+          },
+          "response": {
+            "edition": "2026-07-01.3",
+            "faults": [
+              {
+                "fault_id": "F-E4",
+                "signals": [
+                  "E4"
+                ],
+                "applies_to": [
+                  "HP-200",
+                  "HP-250"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Turn the isolator switch beside the outdoor unit to OFF.",
+                    "Wait two full minutes.",
+                    "Turn the isolator back to ON, then press the power button on the remote."
+                  ],
+                  "customer_may_do": true,
+                  "success_question": "Is it blowing warm air now?"
+                },
+                "on_alert": "person"
+              },
+              {
+                "fault_id": "F-NOHW",
+                "signals": [
+                  "no hot water"
+                ],
+                "safety": false,
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-FILTER",
+                "signals": [
+                  "F2",
+                  "blocked filter"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Open the front panel of the indoor unit.",
+                    "Slide the filter out and rinse it."
+                  ],
+                  "customer_may_do": false,
+                  "success_question": "Is the F2 gone?"
+                },
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-PILOT",
+                "signals": [
+                  "pilot light"
+                ],
+                "safety": true
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "list_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "customer_external_id": "C-1001",
+            "status": "open"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "asset_id": "AS-1"
+          },
+          "response": {
+            "asset_id": "AS-1",
+            "customer_external_id": "C-1001",
+            "model": "HP-200"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-11",
+            "text": "Turn the isolator switch beside the outdoor unit to OFF."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-11",
+            "text": "Wait two full minutes."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-11",
+            "text": "Turn the isolator back to ON, then press the power button on the remote."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-11",
+            "text": "Is it blowing warm air now?",
+            "ask": true
+          },
+          "response": {
+            "text": "Yes, it's warm now."
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "intake_id": "I-11",
+            "source": "call",
+            "customer_external_id": "C-1001",
+            "said_or_sent": "It's showing E4.",
+            "procedure_edition": "2026-07-01.3",
+            "matched_fault_id": "F-E4",
+            "steps_tried": [
+              "Turn the isolator switch beside the outdoor unit to OFF.",
+              "Wait two full minutes.",
+              "Turn the isolator back to ON, then press the power button on the remote."
+            ],
+            "customer_said": "Yes, it's warm now.",
+            "outcome": "fixed_remotely",
+            "customer_confirmed_fixed": true,
+            "job_external_id": null
+          },
+          "response": {
+            "log_id": "L1"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "intake_id": "I-12",
+            "text": "Hi, you're talking to an AI assistant for the office, and this call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "list": "fault_list"
+          },
+          "response": {
+            "edition": "2026-07-01.3",
+            "faults": [
+              {
+                "fault_id": "F-E4",
+                "signals": [
+                  "E4"
+                ],
+                "applies_to": [
+                  "HP-200",
+                  "HP-250"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Turn the isolator switch beside the outdoor unit to OFF.",
+                    "Wait two full minutes.",
+                    "Turn the isolator back to ON, then press the power button on the remote."
+                  ],
+                  "customer_may_do": true,
+                  "success_question": "Is it blowing warm air now?"
+                },
+                "on_alert": "person"
+              },
+              {
+                "fault_id": "F-NOHW",
+                "signals": [
+                  "no hot water"
+                ],
+                "safety": false,
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-FILTER",
+                "signals": [
+                  "F2",
+                  "blocked filter"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Open the front panel of the indoor unit.",
+                    "Slide the filter out and rinse it."
+                  ],
+                  "customer_may_do": false,
+                  "success_question": "Is the F2 gone?"
+                },
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-PILOT",
+                "signals": [
+                  "pilot light"
+                ],
+                "safety": true
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "list_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "customer_external_id": "C-1002",
+            "status": "open"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "customer_external_id": "C-1002",
+            "open": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "customer_external_id": "C-1002",
+            "asset_id": "AS-2",
+            "type": "routine",
+            "triage": {
+              "outcome": "job",
+              "matched_fault_id": "F-NOHW",
+              "edition": "2026-07-01.3",
+              "said_or_sent": "There's no hot water since this afternoon.",
+              "steps_tried": []
+            },
+            "intentId": "I-12:job:fault-desk"
+          },
+          "response": {
+            "id": "J101"
+          },
+          "intentId": "I-12:job:fault-desk"
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-12",
+            "text": "Thanks. We've put this on job J101 and someone from the office will be in touch to book a time."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "intake_id": "I-12",
+            "source": "call",
+            "customer_external_id": "C-1002",
+            "said_or_sent": "There's no hot water since this afternoon.",
+            "procedure_edition": "2026-07-01.3",
+            "matched_fault_id": "F-NOHW",
+            "outcome": "job",
+            "job_external_id": "J101"
+          },
+          "response": {
+            "log_id": "L2"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "list": "fault_list"
+          },
+          "response": {
+            "edition": "2026-07-01.3",
+            "faults": [
+              {
+                "fault_id": "F-E4",
+                "signals": [
+                  "E4"
+                ],
+                "applies_to": [
+                  "HP-200",
+                  "HP-250"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Turn the isolator switch beside the outdoor unit to OFF.",
+                    "Wait two full minutes.",
+                    "Turn the isolator back to ON, then press the power button on the remote."
+                  ],
+                  "customer_may_do": true,
+                  "success_question": "Is it blowing warm air now?"
+                },
+                "on_alert": "person"
+              },
+              {
+                "fault_id": "F-NOHW",
+                "signals": [
+                  "no hot water"
+                ],
+                "safety": false,
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-FILTER",
+                "signals": [
+                  "F2",
+                  "blocked filter"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Open the front panel of the indoor unit.",
+                    "Slide the filter out and rinse it."
+                  ],
+                  "customer_may_do": false,
+                  "success_question": "Is the F2 gone?"
+                },
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-PILOT",
+                "signals": [
+                  "pilot light"
+                ],
+                "safety": true
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "list_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "customer_external_id": "C-1003",
+            "status": "open"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "asset_id": "AS-3"
+          },
+          "response": {
+            "asset_id": "AS-3",
+            "customer_external_id": "C-1003",
+            "model": "HP-250"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "draft_message",
+          "verb": "write",
+          "subject": "draft",
+          "request": {
+            "intake_id": "I-13",
+            "customer_external_id": "C-1003",
+            "text": "Turn the isolator switch beside the outdoor unit to OFF.\nWait two full minutes.\nTurn the isolator back to ON, then press the power button on the remote.\nIs it blowing warm air now?",
+            "meta": {
+              "outcome": "awaiting_answer",
+              "fault_id": "F-E4",
+              "edition": "2026-07-01.3",
+              "said_or_sent": "Hi, the heat pump says E4",
+              "source": "sms",
+              "asset_id": "AS-3"
+            }
+          },
+          "response": {
+            "draft_id": "D1"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "safety-before-anything",
+      "n": 2,
+      "title": "Anything unsafe goes to the emergency path, before any matching",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "One emergency job exists for the customer, written before the one alert to on-call, which names its number. The repeat call updates that job and alerts nobody. No turn on either call contains a step from any procedure, and both are logged as emergency.",
+      "actual": "14 port call(s); log: I-21=emergency@J101, I-22=emergency@J101; alerts 1; drafts 0",
+      "stimulus": {
+        "description": "A call that gives the heat pump's reset code and, in the same breath, says the caller can smell gas near it. Then a second call from the same customer about the same thing.",
+        "now": "2026-07-14T08:10:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "safety-before-anything"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "unread": true
+          },
+          "response": [
+            {
+              "intake_id": "I-21",
+              "source": "call",
+              "customer_external_id": "C-1001",
+              "asset_id": "AS-1",
+              "said_or_sent": "The heat pump says E4 and I can smell gas near the unit."
+            },
+            {
+              "intake_id": "I-22",
+              "source": "call",
+              "customer_external_id": "C-1001",
+              "asset_id": "AS-1",
+              "said_or_sent": "Ringing back about the E4, it still smells like gas out there."
+            }
+          ]
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "intake_id": "I-21",
+            "text": "Hi, you're talking to an AI assistant for the office, and this call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "list": "fault_list"
+          },
+          "response": {
+            "edition": "2026-07-01.3",
+            "faults": [
+              {
+                "fault_id": "F-E4",
+                "signals": [
+                  "E4"
+                ],
+                "applies_to": [
+                  "HP-200",
+                  "HP-250"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Turn the isolator switch beside the outdoor unit to OFF.",
+                    "Wait two full minutes.",
+                    "Turn the isolator back to ON, then press the power button on the remote."
+                  ],
+                  "customer_may_do": true,
+                  "success_question": "Is it blowing warm air now?"
+                },
+                "on_alert": "person"
+              },
+              {
+                "fault_id": "F-NOHW",
+                "signals": [
+                  "no hot water"
+                ],
+                "safety": false,
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-FILTER",
+                "signals": [
+                  "F2",
+                  "blocked filter"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Open the front panel of the indoor unit.",
+                    "Slide the filter out and rinse it."
+                  ],
+                  "customer_may_do": false,
+                  "success_question": "Is the F2 gone?"
+                },
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-PILOT",
+                "signals": [
+                  "pilot light"
+                ],
+                "safety": true
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "customer_external_id": "C-1001",
+            "open": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "customer_external_id": "C-1001",
+            "asset_id": "AS-1",
+            "type": "emergency",
+            "triage": {
+              "outcome": "emergency",
+              "matched_fault_id": null,
+              "safety_signal": "gas smell",
+              "edition": "2026-07-01.3",
+              "said_or_sent": "The heat pump says E4 and I can smell gas near the unit."
+            },
+            "intentId": "I-21:job:fault-desk"
+          },
+          "response": {
+            "id": "J101"
+          },
+          "intentId": "I-21:job:fault-desk"
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "on-call tech",
+            "jobId": "J101",
+            "reason": "emergency"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-21",
+            "text": "Because of what you've told me, I'm treating this as an emergency. Our on-call tech is being told now. Please keep clear of the unit."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "intake_id": "I-21",
+            "source": "call",
+            "customer_external_id": "C-1001",
+            "said_or_sent": "The heat pump says E4 and I can smell gas near the unit.",
+            "procedure_edition": "2026-07-01.3",
+            "matched_fault_id": null,
+            "outcome": "emergency",
+            "job_external_id": "J101"
+          },
+          "response": {
+            "log_id": "L1"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "intake_id": "I-22",
+            "text": "Hi, you're talking to an AI assistant for the office, and this call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "list": "fault_list"
+          },
+          "response": {
+            "edition": "2026-07-01.3",
+            "faults": [
+              {
+                "fault_id": "F-E4",
+                "signals": [
+                  "E4"
+                ],
+                "applies_to": [
+                  "HP-200",
+                  "HP-250"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Turn the isolator switch beside the outdoor unit to OFF.",
+                    "Wait two full minutes.",
+                    "Turn the isolator back to ON, then press the power button on the remote."
+                  ],
+                  "customer_may_do": true,
+                  "success_question": "Is it blowing warm air now?"
+                },
+                "on_alert": "person"
+              },
+              {
+                "fault_id": "F-NOHW",
+                "signals": [
+                  "no hot water"
+                ],
+                "safety": false,
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-FILTER",
+                "signals": [
+                  "F2",
+                  "blocked filter"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Open the front panel of the indoor unit.",
+                    "Slide the filter out and rinse it."
+                  ],
+                  "customer_may_do": false,
+                  "success_question": "Is the F2 gone?"
+                },
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-PILOT",
+                "signals": [
+                  "pilot light"
+                ],
+                "safety": true
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "customer_external_id": "C-1001",
+            "open": true
+          },
+          "response": {
+            "id": "J101",
+            "type": "emergency"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "update": "J101",
+            "triage": {
+              "outcome": "emergency",
+              "matched_fault_id": null,
+              "safety_signal": "gas smell",
+              "edition": "2026-07-01.3",
+              "said_or_sent": "Ringing back about the E4, it still smells like gas out there."
+            },
+            "duplicate_of": "J101",
+            "intentId": "I-22:job:fault-desk"
+          },
+          "response": {
+            "id": "J101"
+          },
+          "intentId": "I-22:job:fault-desk"
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-22",
+            "text": "Because of what you've told me, I'm treating this as an emergency. Our on-call tech is being told now. Please keep clear of the unit."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "intake_id": "I-22",
+            "source": "call",
+            "customer_external_id": "C-1001",
+            "said_or_sent": "Ringing back about the E4, it still smells like gas out there.",
+            "procedure_edition": "2026-07-01.3",
+            "matched_fault_id": null,
+            "outcome": "emergency",
+            "job_external_id": "J101"
+          },
+          "response": {
+            "log_id": "L2"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "written-list-only",
+      "n": 3,
+      "title": "A fault is matched only to the written list",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The grinding noise is logged as unclassified with no fault matched, and an unclassified job is written with no question asked. No hot water is matched to its entry and becomes a routine job. Every fault id logged is on the list and its signal is in the words.",
+      "actual": "15 port call(s); log: I-31=unclassified@J101, I-32=job@J102; alerts 0; drafts 0",
+      "stimulus": {
+        "description": "A call about a grinding noise that no entry describes, and a call about no hot water, which the list holds with no remote procedure.",
+        "now": "2026-07-14T08:10:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "written-list-only"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "unread": true
+          },
+          "response": [
+            {
+              "intake_id": "I-31",
+              "source": "call",
+              "customer_external_id": "C-1004",
+              "asset_id": "AS-4",
+              "said_or_sent": "There's a grinding noise coming from the outdoor unit."
+            },
+            {
+              "intake_id": "I-32",
+              "source": "call",
+              "customer_external_id": "C-1005",
+              "asset_id": "AS-5",
+              "said_or_sent": "We've had no hot water since lunch."
+            }
+          ]
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "intake_id": "I-31",
+            "text": "Hi, you're talking to an AI assistant for the office, and this call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "list": "fault_list"
+          },
+          "response": {
+            "edition": "2026-07-01.3",
+            "faults": [
+              {
+                "fault_id": "F-E4",
+                "signals": [
+                  "E4"
+                ],
+                "applies_to": [
+                  "HP-200",
+                  "HP-250"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Turn the isolator switch beside the outdoor unit to OFF.",
+                    "Wait two full minutes.",
+                    "Turn the isolator back to ON, then press the power button on the remote."
+                  ],
+                  "customer_may_do": true,
+                  "success_question": "Is it blowing warm air now?"
+                },
+                "on_alert": "person"
+              },
+              {
+                "fault_id": "F-NOHW",
+                "signals": [
+                  "no hot water"
+                ],
+                "safety": false,
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-FILTER",
+                "signals": [
+                  "F2",
+                  "blocked filter"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Open the front panel of the indoor unit.",
+                    "Slide the filter out and rinse it."
+                  ],
+                  "customer_may_do": false,
+                  "success_question": "Is the F2 gone?"
+                },
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-PILOT",
+                "signals": [
+                  "pilot light"
+                ],
+                "safety": true
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "list_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "customer_external_id": "C-1004",
+            "status": "open"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "customer_external_id": "C-1004",
+            "open": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "customer_external_id": "C-1004",
+            "asset_id": "AS-4",
+            "type": "unclassified",
+            "triage": {
+              "outcome": "unclassified",
+              "matched_fault_id": null,
+              "candidates": [],
+              "edition": "2026-07-01.3",
+              "said_or_sent": "There's a grinding noise coming from the outdoor unit."
+            },
+            "intentId": "I-31:job:fault-desk"
+          },
+          "response": {
+            "id": "J101"
+          },
+          "intentId": "I-31:job:fault-desk"
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-31",
+            "text": "Thanks. We've put this on job J101 and someone from the office will be in touch to book a time."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "intake_id": "I-31",
+            "source": "call",
+            "customer_external_id": "C-1004",
+            "said_or_sent": "There's a grinding noise coming from the outdoor unit.",
+            "procedure_edition": "2026-07-01.3",
+            "matched_fault_id": null,
+            "outcome": "unclassified",
+            "job_external_id": "J101"
+          },
+          "response": {
+            "log_id": "L1"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "intake_id": "I-32",
+            "text": "Hi, you're talking to an AI assistant for the office, and this call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "list": "fault_list"
+          },
+          "response": {
+            "edition": "2026-07-01.3",
+            "faults": [
+              {
+                "fault_id": "F-E4",
+                "signals": [
+                  "E4"
+                ],
+                "applies_to": [
+                  "HP-200",
+                  "HP-250"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Turn the isolator switch beside the outdoor unit to OFF.",
+                    "Wait two full minutes.",
+                    "Turn the isolator back to ON, then press the power button on the remote."
+                  ],
+                  "customer_may_do": true,
+                  "success_question": "Is it blowing warm air now?"
+                },
+                "on_alert": "person"
+              },
+              {
+                "fault_id": "F-NOHW",
+                "signals": [
+                  "no hot water"
+                ],
+                "safety": false,
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-FILTER",
+                "signals": [
+                  "F2",
+                  "blocked filter"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Open the front panel of the indoor unit.",
+                    "Slide the filter out and rinse it."
+                  ],
+                  "customer_may_do": false,
+                  "success_question": "Is the F2 gone?"
+                },
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-PILOT",
+                "signals": [
+                  "pilot light"
+                ],
+                "safety": true
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "list_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "customer_external_id": "C-1005",
+            "status": "open"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "customer_external_id": "C-1005",
+            "open": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "customer_external_id": "C-1005",
+            "asset_id": "AS-5",
+            "type": "routine",
+            "triage": {
+              "outcome": "job",
+              "matched_fault_id": "F-NOHW",
+              "edition": "2026-07-01.3",
+              "said_or_sent": "We've had no hot water since lunch.",
+              "steps_tried": []
+            },
+            "intentId": "I-32:job:fault-desk"
+          },
+          "response": {
+            "id": "J102"
+          },
+          "intentId": "I-32:job:fault-desk"
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-32",
+            "text": "Thanks. We've put this on job J102 and someone from the office will be in touch to book a time."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "intake_id": "I-32",
+            "source": "call",
+            "customer_external_id": "C-1005",
+            "said_or_sent": "We've had no hot water since lunch.",
+            "procedure_edition": "2026-07-01.3",
+            "matched_fault_id": "F-NOHW",
+            "outcome": "job",
+            "job_external_id": "J102"
+          },
+          "response": {
+            "log_id": "L2"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "procedure-as-written",
+      "n": 4,
+      "title": "A remote fix only from a written procedure, read as written",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The first hears the procedure's steps word for word and in order. The other two hear no step and each has a job written.",
+      "actual": "29 port call(s); log: I-41=fixed_remotely, I-42=job@J101, I-43=job@J102; alerts 0; drafts 1",
+      "stimulus": {
+        "description": "Three intakes: the reset code on a model the procedure names, the same code on a model it does not name, and a fault whose procedure the business marked as not for customers.",
+        "now": "2026-07-14T08:10:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "procedure-as-written"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "unread": true
+          },
+          "response": [
+            {
+              "intake_id": "I-41",
+              "source": "call",
+              "customer_external_id": "C-1001",
+              "asset_id": "AS-1",
+              "said_or_sent": "It's come up with E4 on the screen."
+            },
+            {
+              "intake_id": "I-42",
+              "source": "call",
+              "customer_external_id": "C-1002",
+              "asset_id": "AS-2",
+              "said_or_sent": "Mine says E4 as well."
+            },
+            {
+              "intake_id": "I-43",
+              "source": "call",
+              "customer_external_id": "C-1004",
+              "asset_id": "AS-4",
+              "said_or_sent": "It's flashing F2, blocked filter I think."
+            },
+            {
+              "intake_id": "I-44",
+              "source": "sms",
+              "customer_external_id": "C-1003",
+              "asset_id": "AS-3",
+              "said_or_sent": "heat pump showing E4, can I fix it myself?"
+            }
+          ]
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "intake_id": "I-41",
+            "text": "Hi, you're talking to an AI assistant for the office, and this call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "list": "fault_list"
+          },
+          "response": {
+            "edition": "2026-07-01.3",
+            "faults": [
+              {
+                "fault_id": "F-E4",
+                "signals": [
+                  "E4"
+                ],
+                "applies_to": [
+                  "HP-200",
+                  "HP-250"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Turn the isolator switch beside the outdoor unit to OFF.",
+                    "Wait two full minutes.",
+                    "Turn the isolator back to ON, then press the power button on the remote."
+                  ],
+                  "customer_may_do": true,
+                  "success_question": "Is it blowing warm air now?"
+                },
+                "on_alert": "person"
+              },
+              {
+                "fault_id": "F-NOHW",
+                "signals": [
+                  "no hot water"
+                ],
+                "safety": false,
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-FILTER",
+                "signals": [
+                  "F2",
+                  "blocked filter"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Open the front panel of the indoor unit.",
+                    "Slide the filter out and rinse it."
+                  ],
+                  "customer_may_do": false,
+                  "success_question": "Is the F2 gone?"
+                },
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-PILOT",
+                "signals": [
+                  "pilot light"
+                ],
+                "safety": true
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "list_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "customer_external_id": "C-1001",
+            "status": "open"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "asset_id": "AS-1"
+          },
+          "response": {
+            "asset_id": "AS-1",
+            "customer_external_id": "C-1001",
+            "model": "HP-200"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-41",
+            "text": "Turn the isolator switch beside the outdoor unit to OFF."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-41",
+            "text": "Wait two full minutes."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-41",
+            "text": "Turn the isolator back to ON, then press the power button on the remote."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-41",
+            "text": "Is it blowing warm air now?",
+            "ask": true
+          },
+          "response": {
+            "text": "Yes, warm air now."
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "intake_id": "I-41",
+            "source": "call",
+            "customer_external_id": "C-1001",
+            "said_or_sent": "It's come up with E4 on the screen.",
+            "procedure_edition": "2026-07-01.3",
+            "matched_fault_id": "F-E4",
+            "steps_tried": [
+              "Turn the isolator switch beside the outdoor unit to OFF.",
+              "Wait two full minutes.",
+              "Turn the isolator back to ON, then press the power button on the remote."
+            ],
+            "customer_said": "Yes, warm air now.",
+            "outcome": "fixed_remotely",
+            "customer_confirmed_fixed": true,
+            "job_external_id": null
+          },
+          "response": {
+            "log_id": "L1"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "intake_id": "I-42",
+            "text": "Hi, you're talking to an AI assistant for the office, and this call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "list": "fault_list"
+          },
+          "response": {
+            "edition": "2026-07-01.3",
+            "faults": [
+              {
+                "fault_id": "F-E4",
+                "signals": [
+                  "E4"
+                ],
+                "applies_to": [
+                  "HP-200",
+                  "HP-250"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Turn the isolator switch beside the outdoor unit to OFF.",
+                    "Wait two full minutes.",
+                    "Turn the isolator back to ON, then press the power button on the remote."
+                  ],
+                  "customer_may_do": true,
+                  "success_question": "Is it blowing warm air now?"
+                },
+                "on_alert": "person"
+              },
+              {
+                "fault_id": "F-NOHW",
+                "signals": [
+                  "no hot water"
+                ],
+                "safety": false,
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-FILTER",
+                "signals": [
+                  "F2",
+                  "blocked filter"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Open the front panel of the indoor unit.",
+                    "Slide the filter out and rinse it."
+                  ],
+                  "customer_may_do": false,
+                  "success_question": "Is the F2 gone?"
+                },
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-PILOT",
+                "signals": [
+                  "pilot light"
+                ],
+                "safety": true
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "list_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "customer_external_id": "C-1002",
+            "status": "open"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "asset_id": "AS-2"
+          },
+          "response": {
+            "asset_id": "AS-2",
+            "customer_external_id": "C-1002",
+            "model": "HP-900"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "customer_external_id": "C-1002",
+            "open": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "customer_external_id": "C-1002",
+            "asset_id": "AS-2",
+            "type": "routine",
+            "triage": {
+              "outcome": "job",
+              "matched_fault_id": "F-E4",
+              "edition": "2026-07-01.3",
+              "said_or_sent": "Mine says E4 as well.",
+              "steps_tried": []
+            },
+            "intentId": "I-42:job:fault-desk"
+          },
+          "response": {
+            "id": "J101"
+          },
+          "intentId": "I-42:job:fault-desk"
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-42",
+            "text": "Thanks. We've put this on job J101 and someone from the office will be in touch to book a time."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "intake_id": "I-42",
+            "source": "call",
+            "customer_external_id": "C-1002",
+            "said_or_sent": "Mine says E4 as well.",
+            "procedure_edition": "2026-07-01.3",
+            "matched_fault_id": "F-E4",
+            "outcome": "job",
+            "job_external_id": "J101"
+          },
+          "response": {
+            "log_id": "L2"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "intake_id": "I-43",
+            "text": "Hi, you're talking to an AI assistant for the office, and this call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "list": "fault_list"
+          },
+          "response": {
+            "edition": "2026-07-01.3",
+            "faults": [
+              {
+                "fault_id": "F-E4",
+                "signals": [
+                  "E4"
+                ],
+                "applies_to": [
+                  "HP-200",
+                  "HP-250"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Turn the isolator switch beside the outdoor unit to OFF.",
+                    "Wait two full minutes.",
+                    "Turn the isolator back to ON, then press the power button on the remote."
+                  ],
+                  "customer_may_do": true,
+                  "success_question": "Is it blowing warm air now?"
+                },
+                "on_alert": "person"
+              },
+              {
+                "fault_id": "F-NOHW",
+                "signals": [
+                  "no hot water"
+                ],
+                "safety": false,
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-FILTER",
+                "signals": [
+                  "F2",
+                  "blocked filter"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Open the front panel of the indoor unit.",
+                    "Slide the filter out and rinse it."
+                  ],
+                  "customer_may_do": false,
+                  "success_question": "Is the F2 gone?"
+                },
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-PILOT",
+                "signals": [
+                  "pilot light"
+                ],
+                "safety": true
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "list_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "customer_external_id": "C-1004",
+            "status": "open"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "customer_external_id": "C-1004",
+            "open": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "customer_external_id": "C-1004",
+            "asset_id": "AS-4",
+            "type": "routine",
+            "triage": {
+              "outcome": "job",
+              "matched_fault_id": "F-FILTER",
+              "edition": "2026-07-01.3",
+              "said_or_sent": "It's flashing F2, blocked filter I think.",
+              "steps_tried": []
+            },
+            "intentId": "I-43:job:fault-desk"
+          },
+          "response": {
+            "id": "J102"
+          },
+          "intentId": "I-43:job:fault-desk"
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-43",
+            "text": "Thanks. We've put this on job J102 and someone from the office will be in touch to book a time."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "intake_id": "I-43",
+            "source": "call",
+            "customer_external_id": "C-1004",
+            "said_or_sent": "It's flashing F2, blocked filter I think.",
+            "procedure_edition": "2026-07-01.3",
+            "matched_fault_id": "F-FILTER",
+            "outcome": "job",
+            "job_external_id": "J102"
+          },
+          "response": {
+            "log_id": "L3"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "list": "fault_list"
+          },
+          "response": {
+            "edition": "2026-07-01.3",
+            "faults": [
+              {
+                "fault_id": "F-E4",
+                "signals": [
+                  "E4"
+                ],
+                "applies_to": [
+                  "HP-200",
+                  "HP-250"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Turn the isolator switch beside the outdoor unit to OFF.",
+                    "Wait two full minutes.",
+                    "Turn the isolator back to ON, then press the power button on the remote."
+                  ],
+                  "customer_may_do": true,
+                  "success_question": "Is it blowing warm air now?"
+                },
+                "on_alert": "person"
+              },
+              {
+                "fault_id": "F-NOHW",
+                "signals": [
+                  "no hot water"
+                ],
+                "safety": false,
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-FILTER",
+                "signals": [
+                  "F2",
+                  "blocked filter"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Open the front panel of the indoor unit.",
+                    "Slide the filter out and rinse it."
+                  ],
+                  "customer_may_do": false,
+                  "success_question": "Is the F2 gone?"
+                },
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-PILOT",
+                "signals": [
+                  "pilot light"
+                ],
+                "safety": true
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "list_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "customer_external_id": "C-1003",
+            "status": "open"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "asset_id": "AS-3"
+          },
+          "response": {
+            "asset_id": "AS-3",
+            "customer_external_id": "C-1003",
+            "model": "HP-250"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "draft_message",
+          "verb": "write",
+          "subject": "draft",
+          "request": {
+            "intake_id": "I-44",
+            "customer_external_id": "C-1003",
+            "text": "Turn the isolator switch beside the outdoor unit to OFF.\nWait two full minutes.\nTurn the isolator back to ON, then press the power button on the remote.\nIs it blowing warm air now?",
+            "meta": {
+              "outcome": "awaiting_answer",
+              "fault_id": "F-E4",
+              "edition": "2026-07-01.3",
+              "said_or_sent": "heat pump showing E4, can I fix it myself?",
+              "source": "sms",
+              "asset_id": "AS-3"
+            }
+          },
+          "response": {
+            "draft_id": "D1"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "fixed-means-they-said-so",
+      "n": 5,
+      "title": "Fixed means the customer said so",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Each is asked the procedure's success question exactly as written. The yes is logged as fixed remotely and confirmed, with no job. The other two each have a job carrying the steps tried.",
+      "actual": "43 port call(s); log: I-51=fixed_remotely, I-52=job@J101, I-53=job@J102, I-54=fixed_remotely; alerts 0; drafts 1",
+      "stimulus": {
+        "description": "Three calls about the reset code: one customer says yes, one says they are not sure, one says nothing.",
+        "now": "2026-07-14T08:10:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "fixed-means-they-said-so"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "unread": true
+          },
+          "response": [
+            {
+              "intake_id": "I-51",
+              "source": "call",
+              "customer_external_id": "C-1001",
+              "asset_id": "AS-1",
+              "said_or_sent": "E4 on the heat pump."
+            },
+            {
+              "intake_id": "I-52",
+              "source": "call",
+              "customer_external_id": "C-1003",
+              "asset_id": "AS-3",
+              "said_or_sent": "It's showing E4."
+            },
+            {
+              "intake_id": "I-53",
+              "source": "call",
+              "customer_external_id": "C-1004",
+              "asset_id": "AS-4",
+              "said_or_sent": "Getting an E4."
+            },
+            {
+              "intake_id": "I-54",
+              "source": "sms",
+              "customer_external_id": "C-1005",
+              "asset_id": "AS-5",
+              "said_or_sent": "E4 on the unit again"
+            }
+          ]
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "intake_id": "I-51",
+            "text": "Hi, you're talking to an AI assistant for the office, and this call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "list": "fault_list"
+          },
+          "response": {
+            "edition": "2026-07-01.3",
+            "faults": [
+              {
+                "fault_id": "F-E4",
+                "signals": [
+                  "E4"
+                ],
+                "applies_to": [
+                  "HP-200",
+                  "HP-250"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Turn the isolator switch beside the outdoor unit to OFF.",
+                    "Wait two full minutes.",
+                    "Turn the isolator back to ON, then press the power button on the remote."
+                  ],
+                  "customer_may_do": true,
+                  "success_question": "Is it blowing warm air now?"
+                },
+                "on_alert": "person"
+              },
+              {
+                "fault_id": "F-NOHW",
+                "signals": [
+                  "no hot water"
+                ],
+                "safety": false,
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-FILTER",
+                "signals": [
+                  "F2",
+                  "blocked filter"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Open the front panel of the indoor unit.",
+                    "Slide the filter out and rinse it."
+                  ],
+                  "customer_may_do": false,
+                  "success_question": "Is the F2 gone?"
+                },
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-PILOT",
+                "signals": [
+                  "pilot light"
+                ],
+                "safety": true
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "list_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "customer_external_id": "C-1001",
+            "status": "open"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "asset_id": "AS-1"
+          },
+          "response": {
+            "asset_id": "AS-1",
+            "customer_external_id": "C-1001",
+            "model": "HP-200"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-51",
+            "text": "Turn the isolator switch beside the outdoor unit to OFF."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-51",
+            "text": "Wait two full minutes."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-51",
+            "text": "Turn the isolator back to ON, then press the power button on the remote."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-51",
+            "text": "Is it blowing warm air now?",
+            "ask": true
+          },
+          "response": {
+            "text": "Yes, it's blowing warm now."
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "intake_id": "I-51",
+            "source": "call",
+            "customer_external_id": "C-1001",
+            "said_or_sent": "E4 on the heat pump.",
+            "procedure_edition": "2026-07-01.3",
+            "matched_fault_id": "F-E4",
+            "steps_tried": [
+              "Turn the isolator switch beside the outdoor unit to OFF.",
+              "Wait two full minutes.",
+              "Turn the isolator back to ON, then press the power button on the remote."
+            ],
+            "customer_said": "Yes, it's blowing warm now.",
+            "outcome": "fixed_remotely",
+            "customer_confirmed_fixed": true,
+            "job_external_id": null
+          },
+          "response": {
+            "log_id": "L1"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "intake_id": "I-52",
+            "text": "Hi, you're talking to an AI assistant for the office, and this call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "list": "fault_list"
+          },
+          "response": {
+            "edition": "2026-07-01.3",
+            "faults": [
+              {
+                "fault_id": "F-E4",
+                "signals": [
+                  "E4"
+                ],
+                "applies_to": [
+                  "HP-200",
+                  "HP-250"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Turn the isolator switch beside the outdoor unit to OFF.",
+                    "Wait two full minutes.",
+                    "Turn the isolator back to ON, then press the power button on the remote."
+                  ],
+                  "customer_may_do": true,
+                  "success_question": "Is it blowing warm air now?"
+                },
+                "on_alert": "person"
+              },
+              {
+                "fault_id": "F-NOHW",
+                "signals": [
+                  "no hot water"
+                ],
+                "safety": false,
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-FILTER",
+                "signals": [
+                  "F2",
+                  "blocked filter"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Open the front panel of the indoor unit.",
+                    "Slide the filter out and rinse it."
+                  ],
+                  "customer_may_do": false,
+                  "success_question": "Is the F2 gone?"
+                },
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-PILOT",
+                "signals": [
+                  "pilot light"
+                ],
+                "safety": true
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "list_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "customer_external_id": "C-1003",
+            "status": "open"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "asset_id": "AS-3"
+          },
+          "response": {
+            "asset_id": "AS-3",
+            "customer_external_id": "C-1003",
+            "model": "HP-250"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-52",
+            "text": "Turn the isolator switch beside the outdoor unit to OFF."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-52",
+            "text": "Wait two full minutes."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-52",
+            "text": "Turn the isolator back to ON, then press the power button on the remote."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-52",
+            "text": "Is it blowing warm air now?",
+            "ask": true
+          },
+          "response": {
+            "text": "I'm not sure, maybe?"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "customer_external_id": "C-1003",
+            "open": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "customer_external_id": "C-1003",
+            "asset_id": "AS-3",
+            "type": "routine",
+            "triage": {
+              "outcome": "job",
+              "matched_fault_id": "F-E4",
+              "edition": "2026-07-01.3",
+              "said_or_sent": "It's showing E4.",
+              "steps_tried": [
+                "Turn the isolator switch beside the outdoor unit to OFF.",
+                "Wait two full minutes.",
+                "Turn the isolator back to ON, then press the power button on the remote."
+              ],
+              "customer_said": "I'm not sure, maybe?"
+            },
+            "intentId": "I-52:job:fault-desk"
+          },
+          "response": {
+            "id": "J101"
+          },
+          "intentId": "I-52:job:fault-desk"
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-52",
+            "text": "Thanks. We've put this on job J101 and someone from the office will be in touch to book a time."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "intake_id": "I-52",
+            "source": "call",
+            "customer_external_id": "C-1003",
+            "said_or_sent": "It's showing E4.",
+            "procedure_edition": "2026-07-01.3",
+            "matched_fault_id": "F-E4",
+            "steps_tried": [
+              "Turn the isolator switch beside the outdoor unit to OFF.",
+              "Wait two full minutes.",
+              "Turn the isolator back to ON, then press the power button on the remote."
+            ],
+            "customer_said": "I'm not sure, maybe?",
+            "outcome": "job",
+            "customer_confirmed_fixed": false,
+            "job_external_id": "J101"
+          },
+          "response": {
+            "log_id": "L2"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "intake_id": "I-53",
+            "text": "Hi, you're talking to an AI assistant for the office, and this call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "list": "fault_list"
+          },
+          "response": {
+            "edition": "2026-07-01.3",
+            "faults": [
+              {
+                "fault_id": "F-E4",
+                "signals": [
+                  "E4"
+                ],
+                "applies_to": [
+                  "HP-200",
+                  "HP-250"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Turn the isolator switch beside the outdoor unit to OFF.",
+                    "Wait two full minutes.",
+                    "Turn the isolator back to ON, then press the power button on the remote."
+                  ],
+                  "customer_may_do": true,
+                  "success_question": "Is it blowing warm air now?"
+                },
+                "on_alert": "person"
+              },
+              {
+                "fault_id": "F-NOHW",
+                "signals": [
+                  "no hot water"
+                ],
+                "safety": false,
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-FILTER",
+                "signals": [
+                  "F2",
+                  "blocked filter"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Open the front panel of the indoor unit.",
+                    "Slide the filter out and rinse it."
+                  ],
+                  "customer_may_do": false,
+                  "success_question": "Is the F2 gone?"
+                },
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-PILOT",
+                "signals": [
+                  "pilot light"
+                ],
+                "safety": true
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "list_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "customer_external_id": "C-1004",
+            "status": "open"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "asset_id": "AS-4"
+          },
+          "response": {
+            "asset_id": "AS-4",
+            "customer_external_id": "C-1004",
+            "model": "HP-200"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-53",
+            "text": "Turn the isolator switch beside the outdoor unit to OFF."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-53",
+            "text": "Wait two full minutes."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-53",
+            "text": "Turn the isolator back to ON, then press the power button on the remote."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-53",
+            "text": "Is it blowing warm air now?",
+            "ask": true
+          },
+          "response": {
+            "text": null
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "customer_external_id": "C-1004",
+            "open": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "customer_external_id": "C-1004",
+            "asset_id": "AS-4",
+            "type": "routine",
+            "triage": {
+              "outcome": "job",
+              "matched_fault_id": "F-E4",
+              "edition": "2026-07-01.3",
+              "said_or_sent": "Getting an E4.",
+              "steps_tried": [
+                "Turn the isolator switch beside the outdoor unit to OFF.",
+                "Wait two full minutes.",
+                "Turn the isolator back to ON, then press the power button on the remote."
+              ],
+              "customer_said": null
+            },
+            "intentId": "I-53:job:fault-desk"
+          },
+          "response": {
+            "id": "J102"
+          },
+          "intentId": "I-53:job:fault-desk"
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-53",
+            "text": "Thanks. We've put this on job J102 and someone from the office will be in touch to book a time."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "intake_id": "I-53",
+            "source": "call",
+            "customer_external_id": "C-1004",
+            "said_or_sent": "Getting an E4.",
+            "procedure_edition": "2026-07-01.3",
+            "matched_fault_id": "F-E4",
+            "steps_tried": [
+              "Turn the isolator switch beside the outdoor unit to OFF.",
+              "Wait two full minutes.",
+              "Turn the isolator back to ON, then press the power button on the remote."
+            ],
+            "customer_said": null,
+            "outcome": "job",
+            "customer_confirmed_fixed": false,
+            "job_external_id": "J102"
+          },
+          "response": {
+            "log_id": "L3"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "list": "fault_list"
+          },
+          "response": {
+            "edition": "2026-07-01.3",
+            "faults": [
+              {
+                "fault_id": "F-E4",
+                "signals": [
+                  "E4"
+                ],
+                "applies_to": [
+                  "HP-200",
+                  "HP-250"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Turn the isolator switch beside the outdoor unit to OFF.",
+                    "Wait two full minutes.",
+                    "Turn the isolator back to ON, then press the power button on the remote."
+                  ],
+                  "customer_may_do": true,
+                  "success_question": "Is it blowing warm air now?"
+                },
+                "on_alert": "person"
+              },
+              {
+                "fault_id": "F-NOHW",
+                "signals": [
+                  "no hot water"
+                ],
+                "safety": false,
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-FILTER",
+                "signals": [
+                  "F2",
+                  "blocked filter"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Open the front panel of the indoor unit.",
+                    "Slide the filter out and rinse it."
+                  ],
+                  "customer_may_do": false,
+                  "success_question": "Is the F2 gone?"
+                },
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-PILOT",
+                "signals": [
+                  "pilot light"
+                ],
+                "safety": true
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "list_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "customer_external_id": "C-1005",
+            "status": "open"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "asset_id": "AS-5"
+          },
+          "response": {
+            "asset_id": "AS-5",
+            "customer_external_id": "C-1005",
+            "model": "HP-200"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "draft_message",
+          "verb": "write",
+          "subject": "draft",
+          "request": {
+            "intake_id": "I-54",
+            "customer_external_id": "C-1005",
+            "text": "Turn the isolator switch beside the outdoor unit to OFF.\nWait two full minutes.\nTurn the isolator back to ON, then press the power button on the remote.\nIs it blowing warm air now?",
+            "meta": {
+              "outcome": "awaiting_answer",
+              "fault_id": "F-E4",
+              "edition": "2026-07-01.3",
+              "said_or_sent": "E4 on the unit again",
+              "source": "sms",
+              "asset_id": "AS-5"
+            }
+          },
+          "response": {
+            "draft_id": "D1"
+          }
+        },
+        {
+          "at": "2026-07-14T08:20:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "draft_id": "D1",
+            "released_by": "Dana Whitfield"
+          },
+          "response": {
+            "message_id": "M-D1"
+          }
+        },
+        {
+          "at": "2026-07-14T08:20:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "unread": true
+          },
+          "response": [
+            {
+              "intake_id": "IN-reply-D1",
+              "source": "sms",
+              "customer_external_id": "C-1005",
+              "in_reply_to": "D1",
+              "said_or_sent": "Yes that fixed it, thanks"
+            }
+          ]
+        },
+        {
+          "at": "2026-07-14T08:20:00.000Z",
+          "port": "read_draft",
+          "verb": "read",
+          "subject": "draft",
+          "request": {
+            "draft_id": "D1"
+          },
+          "response": {
+            "draft_id": "D1",
+            "intake_id": "I-54",
+            "customer_external_id": "C-1005",
+            "text": "Turn the isolator switch beside the outdoor unit to OFF.\nWait two full minutes.\nTurn the isolator back to ON, then press the power button on the remote.\nIs it blowing warm air now?",
+            "meta": {
+              "outcome": "awaiting_answer",
+              "fault_id": "F-E4",
+              "edition": "2026-07-01.3",
+              "said_or_sent": "E4 on the unit again",
+              "source": "sms",
+              "asset_id": "AS-5"
+            },
+            "status": "sent",
+            "released_by": "Dana Whitfield",
+            "sent_at": "2026-07-14T08:20:00.000Z"
+          }
+        },
+        {
+          "at": "2026-07-14T08:20:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "list": "fault_list"
+          },
+          "response": {
+            "edition": "2026-07-01.3",
+            "faults": [
+              {
+                "fault_id": "F-E4",
+                "signals": [
+                  "E4"
+                ],
+                "applies_to": [
+                  "HP-200",
+                  "HP-250"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Turn the isolator switch beside the outdoor unit to OFF.",
+                    "Wait two full minutes.",
+                    "Turn the isolator back to ON, then press the power button on the remote."
+                  ],
+                  "customer_may_do": true,
+                  "success_question": "Is it blowing warm air now?"
+                },
+                "on_alert": "person"
+              },
+              {
+                "fault_id": "F-NOHW",
+                "signals": [
+                  "no hot water"
+                ],
+                "safety": false,
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-FILTER",
+                "signals": [
+                  "F2",
+                  "blocked filter"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Open the front panel of the indoor unit.",
+                    "Slide the filter out and rinse it."
+                  ],
+                  "customer_may_do": false,
+                  "success_question": "Is the F2 gone?"
+                },
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-PILOT",
+                "signals": [
+                  "pilot light"
+                ],
+                "safety": true
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-07-14T08:20:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "intake_id": "I-54",
+            "source": "sms",
+            "customer_external_id": "C-1005",
+            "said_or_sent": "E4 on the unit again",
+            "procedure_edition": "2026-07-01.3",
+            "matched_fault_id": "F-E4",
+            "steps_tried": [
+              "Turn the isolator switch beside the outdoor unit to OFF.",
+              "Wait two full minutes.",
+              "Turn the isolator back to ON, then press the power button on the remote."
+            ],
+            "customer_said": "Yes that fixed it, thanks",
+            "outcome": "fixed_remotely",
+            "customer_confirmed_fixed": true,
+            "job_external_id": null
+          },
+          "response": {
+            "log_id": "L4"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-job-with-the-triage",
+      "n": 6,
+      "title": "One job, written once, carrying what was tried",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The first customer still has one job, updated and marked as a duplicate of the open one. Each write carries the fault matched, the outcome and the list edition, and the failed reset's job carries the steps tried and the customer's answer.",
+      "actual": "20 port call(s); log: I-61=job@J-OPEN-7, I-62=job@J101; alerts 0; drafts 0",
+      "stimulus": {
+        "description": "A customer with a job already open rings about a fault with no remote procedure, and another customer's reset does not work.",
+        "now": "2026-07-14T08:10:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-job-with-the-triage"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "unread": true
+          },
+          "response": [
+            {
+              "intake_id": "I-61",
+              "source": "call",
+              "customer_external_id": "C-1006",
+              "asset_id": "AS-6",
+              "said_or_sent": "No hot water again this morning."
+            },
+            {
+              "intake_id": "I-62",
+              "source": "call",
+              "customer_external_id": "C-1007",
+              "asset_id": "AS-7",
+              "said_or_sent": "The heat pump is on E4."
+            }
+          ]
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "intake_id": "I-61",
+            "text": "Hi, you're talking to an AI assistant for the office, and this call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "list": "fault_list"
+          },
+          "response": {
+            "edition": "2026-07-01.3",
+            "faults": [
+              {
+                "fault_id": "F-E4",
+                "signals": [
+                  "E4"
+                ],
+                "applies_to": [
+                  "HP-200",
+                  "HP-250"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Turn the isolator switch beside the outdoor unit to OFF.",
+                    "Wait two full minutes.",
+                    "Turn the isolator back to ON, then press the power button on the remote."
+                  ],
+                  "customer_may_do": true,
+                  "success_question": "Is it blowing warm air now?"
+                },
+                "on_alert": "person"
+              },
+              {
+                "fault_id": "F-NOHW",
+                "signals": [
+                  "no hot water"
+                ],
+                "safety": false,
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-FILTER",
+                "signals": [
+                  "F2",
+                  "blocked filter"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Open the front panel of the indoor unit.",
+                    "Slide the filter out and rinse it."
+                  ],
+                  "customer_may_do": false,
+                  "success_question": "Is the F2 gone?"
+                },
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-PILOT",
+                "signals": [
+                  "pilot light"
+                ],
+                "safety": true
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "list_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "customer_external_id": "C-1006",
+            "status": "open"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "customer_external_id": "C-1006",
+            "open": true
+          },
+          "response": {
+            "id": "J-OPEN-7",
+            "type": "routine"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "update": "J-OPEN-7",
+            "triage": {
+              "outcome": "job",
+              "matched_fault_id": "F-NOHW",
+              "edition": "2026-07-01.3",
+              "said_or_sent": "No hot water again this morning.",
+              "steps_tried": []
+            },
+            "duplicate_of": "J-OPEN-7",
+            "intentId": "I-61:job:fault-desk"
+          },
+          "response": {
+            "id": "J-OPEN-7"
+          },
+          "intentId": "I-61:job:fault-desk"
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-61",
+            "text": "Thanks. We've put this on job J-OPEN-7 and someone from the office will be in touch to book a time."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "intake_id": "I-61",
+            "source": "call",
+            "customer_external_id": "C-1006",
+            "said_or_sent": "No hot water again this morning.",
+            "procedure_edition": "2026-07-01.3",
+            "matched_fault_id": "F-NOHW",
+            "outcome": "job",
+            "job_external_id": "J-OPEN-7"
+          },
+          "response": {
+            "log_id": "L1"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "intake_id": "I-62",
+            "text": "Hi, you're talking to an AI assistant for the office, and this call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "list": "fault_list"
+          },
+          "response": {
+            "edition": "2026-07-01.3",
+            "faults": [
+              {
+                "fault_id": "F-E4",
+                "signals": [
+                  "E4"
+                ],
+                "applies_to": [
+                  "HP-200",
+                  "HP-250"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Turn the isolator switch beside the outdoor unit to OFF.",
+                    "Wait two full minutes.",
+                    "Turn the isolator back to ON, then press the power button on the remote."
+                  ],
+                  "customer_may_do": true,
+                  "success_question": "Is it blowing warm air now?"
+                },
+                "on_alert": "person"
+              },
+              {
+                "fault_id": "F-NOHW",
+                "signals": [
+                  "no hot water"
+                ],
+                "safety": false,
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-FILTER",
+                "signals": [
+                  "F2",
+                  "blocked filter"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Open the front panel of the indoor unit.",
+                    "Slide the filter out and rinse it."
+                  ],
+                  "customer_may_do": false,
+                  "success_question": "Is the F2 gone?"
+                },
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-PILOT",
+                "signals": [
+                  "pilot light"
+                ],
+                "safety": true
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "list_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "customer_external_id": "C-1007",
+            "status": "open"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "asset_id": "AS-7"
+          },
+          "response": {
+            "asset_id": "AS-7",
+            "customer_external_id": "C-1007",
+            "model": "HP-200"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-62",
+            "text": "Turn the isolator switch beside the outdoor unit to OFF."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-62",
+            "text": "Wait two full minutes."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-62",
+            "text": "Turn the isolator back to ON, then press the power button on the remote."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-62",
+            "text": "Is it blowing warm air now?",
+            "ask": true
+          },
+          "response": {
+            "text": "No, it's still showing E4."
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "customer_external_id": "C-1007",
+            "open": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "customer_external_id": "C-1007",
+            "asset_id": "AS-7",
+            "type": "routine",
+            "triage": {
+              "outcome": "job",
+              "matched_fault_id": "F-E4",
+              "edition": "2026-07-01.3",
+              "said_or_sent": "The heat pump is on E4.",
+              "steps_tried": [
+                "Turn the isolator switch beside the outdoor unit to OFF.",
+                "Wait two full minutes.",
+                "Turn the isolator back to ON, then press the power button on the remote."
+              ],
+              "customer_said": "No, it's still showing E4."
+            },
+            "intentId": "I-62:job:fault-desk"
+          },
+          "response": {
+            "id": "J101"
+          },
+          "intentId": "I-62:job:fault-desk"
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-62",
+            "text": "Thanks. We've put this on job J101 and someone from the office will be in touch to book a time."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "intake_id": "I-62",
+            "source": "call",
+            "customer_external_id": "C-1007",
+            "said_or_sent": "The heat pump is on E4.",
+            "procedure_edition": "2026-07-01.3",
+            "matched_fault_id": "F-E4",
+            "steps_tried": [
+              "Turn the isolator switch beside the outdoor unit to OFF.",
+              "Wait two full minutes.",
+              "Turn the isolator back to ON, then press the power button on the remote."
+            ],
+            "customer_said": "No, it's still showing E4.",
+            "outcome": "job",
+            "customer_confirmed_fixed": false,
+            "job_external_id": "J101"
+          },
+          "response": {
+            "log_id": "L2"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "alert-is-a-door",
+      "n": 7,
+      "title": "An alert opens an intake, it does not decide",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The reset code and the unknown code each write no job, alert nobody and are parked on the exception queue. The blocked filter writes one routine job and alerts nobody.",
+      "actual": "14 port call(s); log: I-71=parked, I-72=job@J101, I-73=parked; alerts 0; drafts 0",
+      "stimulus": {
+        "description": "Three alerts: the reset code, which the list leaves to a person; a blocked filter, which the list marks as a job; and a code no entry holds.",
+        "now": "2026-07-14T08:10:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "alert-is-a-door"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "unread": true
+          },
+          "response": [
+            {
+              "intake_id": "I-71",
+              "source": "alert",
+              "customer_external_id": "C-1001",
+              "asset_id": "AS-1",
+              "said_or_sent": "fault code E4"
+            },
+            {
+              "intake_id": "I-72",
+              "source": "alert",
+              "customer_external_id": "C-1004",
+              "asset_id": "AS-4",
+              "said_or_sent": "fault code F2 blocked filter"
+            },
+            {
+              "intake_id": "I-73",
+              "source": "alert",
+              "customer_external_id": "C-1005",
+              "asset_id": "AS-5",
+              "said_or_sent": "fault code E99"
+            }
+          ]
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "list": "fault_list"
+          },
+          "response": {
+            "edition": "2026-07-01.3",
+            "faults": [
+              {
+                "fault_id": "F-E4",
+                "signals": [
+                  "E4"
+                ],
+                "applies_to": [
+                  "HP-200",
+                  "HP-250"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Turn the isolator switch beside the outdoor unit to OFF.",
+                    "Wait two full minutes.",
+                    "Turn the isolator back to ON, then press the power button on the remote."
+                  ],
+                  "customer_may_do": true,
+                  "success_question": "Is it blowing warm air now?"
+                },
+                "on_alert": "person"
+              },
+              {
+                "fault_id": "F-NOHW",
+                "signals": [
+                  "no hot water"
+                ],
+                "safety": false,
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-FILTER",
+                "signals": [
+                  "F2",
+                  "blocked filter"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Open the front panel of the indoor unit.",
+                    "Slide the filter out and rinse it."
+                  ],
+                  "customer_may_do": false,
+                  "success_question": "Is the F2 gone?"
+                },
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-PILOT",
+                "signals": [
+                  "pilot light"
+                ],
+                "safety": true
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "list_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "customer_external_id": "C-1001",
+            "status": "open"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "reason": "fault.alert_left_to_person",
+            "intake_id": "I-71",
+            "asset_id": "AS-1",
+            "customer_external_id": "C-1001",
+            "matched_fault_id": "F-E4",
+            "edition": "2026-07-01.3",
+            "exception_owner": "Dana Whitfield (service coordinator)"
+          },
+          "response": {
+            "exception_id": "EX-1"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "intake_id": "I-71",
+            "source": "alert",
+            "customer_external_id": "C-1001",
+            "said_or_sent": "fault code E4",
+            "procedure_edition": "2026-07-01.3",
+            "matched_fault_id": "F-E4",
+            "outcome": "parked",
+            "job_external_id": null,
+            "exception_id": "EX-1"
+          },
+          "response": {
+            "log_id": "L1"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "list": "fault_list"
+          },
+          "response": {
+            "edition": "2026-07-01.3",
+            "faults": [
+              {
+                "fault_id": "F-E4",
+                "signals": [
+                  "E4"
+                ],
+                "applies_to": [
+                  "HP-200",
+                  "HP-250"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Turn the isolator switch beside the outdoor unit to OFF.",
+                    "Wait two full minutes.",
+                    "Turn the isolator back to ON, then press the power button on the remote."
+                  ],
+                  "customer_may_do": true,
+                  "success_question": "Is it blowing warm air now?"
+                },
+                "on_alert": "person"
+              },
+              {
+                "fault_id": "F-NOHW",
+                "signals": [
+                  "no hot water"
+                ],
+                "safety": false,
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-FILTER",
+                "signals": [
+                  "F2",
+                  "blocked filter"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Open the front panel of the indoor unit.",
+                    "Slide the filter out and rinse it."
+                  ],
+                  "customer_may_do": false,
+                  "success_question": "Is the F2 gone?"
+                },
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-PILOT",
+                "signals": [
+                  "pilot light"
+                ],
+                "safety": true
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "list_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "customer_external_id": "C-1004",
+            "status": "open"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "customer_external_id": "C-1004",
+            "open": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "customer_external_id": "C-1004",
+            "asset_id": "AS-4",
+            "type": "routine",
+            "triage": {
+              "outcome": "job",
+              "matched_fault_id": "F-FILTER",
+              "edition": "2026-07-01.3",
+              "said_or_sent": "fault code F2 blocked filter"
+            },
+            "intentId": "I-72:job:fault-desk"
+          },
+          "response": {
+            "id": "J101"
+          },
+          "intentId": "I-72:job:fault-desk"
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "intake_id": "I-72",
+            "source": "alert",
+            "customer_external_id": "C-1004",
+            "said_or_sent": "fault code F2 blocked filter",
+            "procedure_edition": "2026-07-01.3",
+            "matched_fault_id": "F-FILTER",
+            "outcome": "job",
+            "job_external_id": "J101"
+          },
+          "response": {
+            "log_id": "L2"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "list": "fault_list"
+          },
+          "response": {
+            "edition": "2026-07-01.3",
+            "faults": [
+              {
+                "fault_id": "F-E4",
+                "signals": [
+                  "E4"
+                ],
+                "applies_to": [
+                  "HP-200",
+                  "HP-250"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Turn the isolator switch beside the outdoor unit to OFF.",
+                    "Wait two full minutes.",
+                    "Turn the isolator back to ON, then press the power button on the remote."
+                  ],
+                  "customer_may_do": true,
+                  "success_question": "Is it blowing warm air now?"
+                },
+                "on_alert": "person"
+              },
+              {
+                "fault_id": "F-NOHW",
+                "signals": [
+                  "no hot water"
+                ],
+                "safety": false,
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-FILTER",
+                "signals": [
+                  "F2",
+                  "blocked filter"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Open the front panel of the indoor unit.",
+                    "Slide the filter out and rinse it."
+                  ],
+                  "customer_may_do": false,
+                  "success_question": "Is the F2 gone?"
+                },
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-PILOT",
+                "signals": [
+                  "pilot light"
+                ],
+                "safety": true
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "list_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "customer_external_id": "C-1005",
+            "status": "open"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "reason": "fault.alert_unplaced",
+            "intake_id": "I-73",
+            "asset_id": "AS-5",
+            "customer_external_id": "C-1005",
+            "matched_fault_id": null,
+            "edition": "2026-07-01.3",
+            "exception_owner": "Dana Whitfield (service coordinator)"
+          },
+          "response": {
+            "exception_id": "EX-2"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "intake_id": "I-73",
+            "source": "alert",
+            "customer_external_id": "C-1005",
+            "said_or_sent": "fault code E99",
+            "procedure_edition": "2026-07-01.3",
+            "matched_fault_id": null,
+            "outcome": "parked",
+            "job_external_id": null,
+            "exception_id": "EX-2"
+          },
+          "response": {
+            "log_id": "L3"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "every-triage-logged",
+      "n": 8,
+      "title": "Every triage is logged with the list edition it used",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "There is exactly one log entry per intake, each naming the list edition that was read, the source, the words exactly, the outcome, and the same job number the job system returned.",
+      "actual": "27 port call(s); log: I-81=fixed_remotely, I-82=job@J101, I-83=unclassified@J102, I-84=parked; alerts 0; drafts 1",
+      "stimulus": {
+        "description": "A run with a fix that worked, a job, a text and an alert.",
+        "now": "2026-07-14T08:10:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "every-triage-logged"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "unread": true
+          },
+          "response": [
+            {
+              "intake_id": "I-81",
+              "source": "call",
+              "customer_external_id": "C-1001",
+              "asset_id": "AS-1",
+              "said_or_sent": "E4 showing on the heat pump."
+            },
+            {
+              "intake_id": "I-82",
+              "source": "call",
+              "customer_external_id": "C-1005",
+              "asset_id": "AS-5",
+              "said_or_sent": "No hot water at all."
+            },
+            {
+              "intake_id": "I-83",
+              "source": "sms",
+              "customer_external_id": "C-1004",
+              "asset_id": "AS-4",
+              "said_or_sent": "There's a rattle from the outdoor unit since last night"
+            },
+            {
+              "intake_id": "I-84",
+              "source": "alert",
+              "customer_external_id": "C-1003",
+              "asset_id": "AS-3",
+              "said_or_sent": "fault code E4"
+            }
+          ]
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "intake_id": "I-81",
+            "text": "Hi, you're talking to an AI assistant for the office, and this call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "list": "fault_list"
+          },
+          "response": {
+            "edition": "2026-07-01.3",
+            "faults": [
+              {
+                "fault_id": "F-E4",
+                "signals": [
+                  "E4"
+                ],
+                "applies_to": [
+                  "HP-200",
+                  "HP-250"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Turn the isolator switch beside the outdoor unit to OFF.",
+                    "Wait two full minutes.",
+                    "Turn the isolator back to ON, then press the power button on the remote."
+                  ],
+                  "customer_may_do": true,
+                  "success_question": "Is it blowing warm air now?"
+                },
+                "on_alert": "person"
+              },
+              {
+                "fault_id": "F-NOHW",
+                "signals": [
+                  "no hot water"
+                ],
+                "safety": false,
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-FILTER",
+                "signals": [
+                  "F2",
+                  "blocked filter"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Open the front panel of the indoor unit.",
+                    "Slide the filter out and rinse it."
+                  ],
+                  "customer_may_do": false,
+                  "success_question": "Is the F2 gone?"
+                },
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-PILOT",
+                "signals": [
+                  "pilot light"
+                ],
+                "safety": true
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "list_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "customer_external_id": "C-1001",
+            "status": "open"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "asset_id": "AS-1"
+          },
+          "response": {
+            "asset_id": "AS-1",
+            "customer_external_id": "C-1001",
+            "model": "HP-200"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-81",
+            "text": "Turn the isolator switch beside the outdoor unit to OFF."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-81",
+            "text": "Wait two full minutes."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-81",
+            "text": "Turn the isolator back to ON, then press the power button on the remote."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-81",
+            "text": "Is it blowing warm air now?",
+            "ask": true
+          },
+          "response": {
+            "text": "Yep, all good."
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "intake_id": "I-81",
+            "source": "call",
+            "customer_external_id": "C-1001",
+            "said_or_sent": "E4 showing on the heat pump.",
+            "procedure_edition": "2026-07-01.3",
+            "matched_fault_id": "F-E4",
+            "steps_tried": [
+              "Turn the isolator switch beside the outdoor unit to OFF.",
+              "Wait two full minutes.",
+              "Turn the isolator back to ON, then press the power button on the remote."
+            ],
+            "customer_said": "Yep, all good.",
+            "outcome": "fixed_remotely",
+            "customer_confirmed_fixed": true,
+            "job_external_id": null
+          },
+          "response": {
+            "log_id": "L1"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "intake_id": "I-82",
+            "text": "Hi, you're talking to an AI assistant for the office, and this call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "list": "fault_list"
+          },
+          "response": {
+            "edition": "2026-07-01.3",
+            "faults": [
+              {
+                "fault_id": "F-E4",
+                "signals": [
+                  "E4"
+                ],
+                "applies_to": [
+                  "HP-200",
+                  "HP-250"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Turn the isolator switch beside the outdoor unit to OFF.",
+                    "Wait two full minutes.",
+                    "Turn the isolator back to ON, then press the power button on the remote."
+                  ],
+                  "customer_may_do": true,
+                  "success_question": "Is it blowing warm air now?"
+                },
+                "on_alert": "person"
+              },
+              {
+                "fault_id": "F-NOHW",
+                "signals": [
+                  "no hot water"
+                ],
+                "safety": false,
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-FILTER",
+                "signals": [
+                  "F2",
+                  "blocked filter"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Open the front panel of the indoor unit.",
+                    "Slide the filter out and rinse it."
+                  ],
+                  "customer_may_do": false,
+                  "success_question": "Is the F2 gone?"
+                },
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-PILOT",
+                "signals": [
+                  "pilot light"
+                ],
+                "safety": true
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "list_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "customer_external_id": "C-1005",
+            "status": "open"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "customer_external_id": "C-1005",
+            "open": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "customer_external_id": "C-1005",
+            "asset_id": "AS-5",
+            "type": "routine",
+            "triage": {
+              "outcome": "job",
+              "matched_fault_id": "F-NOHW",
+              "edition": "2026-07-01.3",
+              "said_or_sent": "No hot water at all.",
+              "steps_tried": []
+            },
+            "intentId": "I-82:job:fault-desk"
+          },
+          "response": {
+            "id": "J101"
+          },
+          "intentId": "I-82:job:fault-desk"
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-82",
+            "text": "Thanks. We've put this on job J101 and someone from the office will be in touch to book a time."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "intake_id": "I-82",
+            "source": "call",
+            "customer_external_id": "C-1005",
+            "said_or_sent": "No hot water at all.",
+            "procedure_edition": "2026-07-01.3",
+            "matched_fault_id": "F-NOHW",
+            "outcome": "job",
+            "job_external_id": "J101"
+          },
+          "response": {
+            "log_id": "L2"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "list": "fault_list"
+          },
+          "response": {
+            "edition": "2026-07-01.3",
+            "faults": [
+              {
+                "fault_id": "F-E4",
+                "signals": [
+                  "E4"
+                ],
+                "applies_to": [
+                  "HP-200",
+                  "HP-250"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Turn the isolator switch beside the outdoor unit to OFF.",
+                    "Wait two full minutes.",
+                    "Turn the isolator back to ON, then press the power button on the remote."
+                  ],
+                  "customer_may_do": true,
+                  "success_question": "Is it blowing warm air now?"
+                },
+                "on_alert": "person"
+              },
+              {
+                "fault_id": "F-NOHW",
+                "signals": [
+                  "no hot water"
+                ],
+                "safety": false,
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-FILTER",
+                "signals": [
+                  "F2",
+                  "blocked filter"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Open the front panel of the indoor unit.",
+                    "Slide the filter out and rinse it."
+                  ],
+                  "customer_may_do": false,
+                  "success_question": "Is the F2 gone?"
+                },
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-PILOT",
+                "signals": [
+                  "pilot light"
+                ],
+                "safety": true
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "list_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "customer_external_id": "C-1004",
+            "status": "open"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "customer_external_id": "C-1004",
+            "open": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "customer_external_id": "C-1004",
+            "asset_id": "AS-4",
+            "type": "unclassified",
+            "triage": {
+              "outcome": "unclassified",
+              "matched_fault_id": null,
+              "candidates": [],
+              "edition": "2026-07-01.3",
+              "said_or_sent": "There's a rattle from the outdoor unit since last night"
+            },
+            "intentId": "I-83:job:fault-desk"
+          },
+          "response": {
+            "id": "J102"
+          },
+          "intentId": "I-83:job:fault-desk"
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "draft_message",
+          "verb": "write",
+          "subject": "draft",
+          "request": {
+            "intake_id": "I-83",
+            "customer_external_id": "C-1004",
+            "text": "Thanks. We've put this on job J102 and someone from the office will be in touch to book a time.",
+            "meta": {
+              "outcome": "unclassified"
+            }
+          },
+          "response": {
+            "draft_id": "D1"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "intake_id": "I-83",
+            "source": "sms",
+            "customer_external_id": "C-1004",
+            "said_or_sent": "There's a rattle from the outdoor unit since last night",
+            "procedure_edition": "2026-07-01.3",
+            "matched_fault_id": null,
+            "outcome": "unclassified",
+            "job_external_id": "J102"
+          },
+          "response": {
+            "log_id": "L3"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "list": "fault_list"
+          },
+          "response": {
+            "edition": "2026-07-01.3",
+            "faults": [
+              {
+                "fault_id": "F-E4",
+                "signals": [
+                  "E4"
+                ],
+                "applies_to": [
+                  "HP-200",
+                  "HP-250"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Turn the isolator switch beside the outdoor unit to OFF.",
+                    "Wait two full minutes.",
+                    "Turn the isolator back to ON, then press the power button on the remote."
+                  ],
+                  "customer_may_do": true,
+                  "success_question": "Is it blowing warm air now?"
+                },
+                "on_alert": "person"
+              },
+              {
+                "fault_id": "F-NOHW",
+                "signals": [
+                  "no hot water"
+                ],
+                "safety": false,
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-FILTER",
+                "signals": [
+                  "F2",
+                  "blocked filter"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Open the front panel of the indoor unit.",
+                    "Slide the filter out and rinse it."
+                  ],
+                  "customer_may_do": false,
+                  "success_question": "Is the F2 gone?"
+                },
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-PILOT",
+                "signals": [
+                  "pilot light"
+                ],
+                "safety": true
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "list_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "customer_external_id": "C-1003",
+            "status": "open"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "reason": "fault.alert_left_to_person",
+            "intake_id": "I-84",
+            "asset_id": "AS-3",
+            "customer_external_id": "C-1003",
+            "matched_fault_id": "F-E4",
+            "edition": "2026-07-01.3",
+            "exception_owner": "Dana Whitfield (service coordinator)"
+          },
+          "response": {
+            "exception_id": "EX-1"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "intake_id": "I-84",
+            "source": "alert",
+            "customer_external_id": "C-1003",
+            "said_or_sent": "fault code E4",
+            "procedure_edition": "2026-07-01.3",
+            "matched_fault_id": "F-E4",
+            "outcome": "parked",
+            "job_external_id": null,
+            "exception_id": "EX-1"
+          },
+          "response": {
+            "log_id": "L4"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "no-price",
+      "n": 9,
+      "title": "A price question goes to a person",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A handover with reason price_requested and the transcript is made, and no turn on the call contains a dollar amount.",
+      "actual": "15 port call(s); log: I-91=job@J101; alerts 0; drafts 0",
+      "stimulus": {
+        "description": "A caller gives the reset code and asks what a callout costs.",
+        "now": "2026-07-14T08:10:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "no-price"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_inbox",
+          "verb": "read",
+          "subject": "message",
+          "request": {
+            "unread": true
+          },
+          "response": [
+            {
+              "intake_id": "I-91",
+              "source": "call",
+              "customer_external_id": "C-1001",
+              "asset_id": "AS-1",
+              "said_or_sent": "It says E4. And how much is a callout if you have to come out?"
+            }
+          ]
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "intake_id": "I-91",
+            "text": "Hi, you're talking to an AI assistant for the office, and this call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "list": "fault_list"
+          },
+          "response": {
+            "edition": "2026-07-01.3",
+            "faults": [
+              {
+                "fault_id": "F-E4",
+                "signals": [
+                  "E4"
+                ],
+                "applies_to": [
+                  "HP-200",
+                  "HP-250"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Turn the isolator switch beside the outdoor unit to OFF.",
+                    "Wait two full minutes.",
+                    "Turn the isolator back to ON, then press the power button on the remote."
+                  ],
+                  "customer_may_do": true,
+                  "success_question": "Is it blowing warm air now?"
+                },
+                "on_alert": "person"
+              },
+              {
+                "fault_id": "F-NOHW",
+                "signals": [
+                  "no hot water"
+                ],
+                "safety": false,
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-FILTER",
+                "signals": [
+                  "F2",
+                  "blocked filter"
+                ],
+                "safety": false,
+                "remote_procedure": {
+                  "steps": [
+                    "Open the front panel of the indoor unit.",
+                    "Slide the filter out and rinse it."
+                  ],
+                  "customer_may_do": false,
+                  "success_question": "Is the F2 gone?"
+                },
+                "on_alert": "job"
+              },
+              {
+                "fault_id": "F-PILOT",
+                "signals": [
+                  "pilot light"
+                ],
+                "safety": true
+              }
+            ]
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "list_exceptions",
+          "verb": "read",
+          "subject": "exception",
+          "request": {
+            "customer_external_id": "C-1001",
+            "status": "open"
+          },
+          "response": []
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-91",
+            "text": "Someone from the office will come back to you about cost."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "intake_id": "I-91",
+            "reason": "price_requested",
+            "transcript": [
+              {
+                "who": "customer",
+                "text": "It says E4. And how much is a callout if you have to come out?"
+              }
+            ]
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_asset",
+          "verb": "read",
+          "subject": "asset",
+          "request": {
+            "asset_id": "AS-1"
+          },
+          "response": {
+            "asset_id": "AS-1",
+            "customer_external_id": "C-1001",
+            "model": "HP-200"
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-91",
+            "text": "Turn the isolator switch beside the outdoor unit to OFF."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-91",
+            "text": "Wait two full minutes."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-91",
+            "text": "Turn the isolator back to ON, then press the power button on the remote."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-91",
+            "text": "Is it blowing warm air now?",
+            "ask": true
+          },
+          "response": {
+            "text": "No, still E4."
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "customer_external_id": "C-1001",
+            "open": true
+          },
+          "response": null
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "write_job",
+          "verb": "write",
+          "subject": "job",
+          "request": {
+            "customer_external_id": "C-1001",
+            "asset_id": "AS-1",
+            "type": "routine",
+            "triage": {
+              "outcome": "job",
+              "matched_fault_id": "F-E4",
+              "edition": "2026-07-01.3",
+              "said_or_sent": "It says E4. And how much is a callout if you have to come out?",
+              "steps_tried": [
+                "Turn the isolator switch beside the outdoor unit to OFF.",
+                "Wait two full minutes.",
+                "Turn the isolator back to ON, then press the power button on the remote."
+              ],
+              "customer_said": "No, still E4."
+            },
+            "intentId": "I-91:job:fault-desk"
+          },
+          "response": {
+            "id": "J101"
+          },
+          "intentId": "I-91:job:fault-desk"
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "intake_id": "I-91",
+            "text": "Thanks. We've put this on job J101 and someone from the office will be in touch to book a time."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-07-14T08:10:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "intake_id": "I-91",
+            "source": "call",
+            "customer_external_id": "C-1001",
+            "said_or_sent": "It says E4. And how much is a callout if you have to come out?",
+            "procedure_edition": "2026-07-01.3",
+            "matched_fault_id": "F-E4",
+            "steps_tried": [
+              "Turn the isolator switch beside the outdoor unit to OFF.",
+              "Wait two full minutes.",
+              "Turn the isolator back to ON, then press the power button on the remote."
+            ],
+            "customer_said": "No, still E4.",
+            "outcome": "job",
+            "customer_confirmed_fixed": false,
+            "job_external_id": "J101"
+          },
+          "response": {
+            "log_id": "L1"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 10,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "The live job system holds one emergency job and two routine jobs carrying their triage, on-call received one alert, and the log holds four entries naming the list edition, one of them a confirmed remote fix with no job.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "Four real calls to the business's own number, after the fault list is loaded, from the tester's own phone.",
+        "now": "2026-11-04T13:03:45.838Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 10,
+    "pass": 5,
+    "fail": 0,
+    "shapeOnly": 4,
+    "withUs": 1,
+    "evidenceRequired": 0
+  }
+}
