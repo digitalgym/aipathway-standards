@@ -1,0 +1,65 @@
+{
+  "slug": "swms-desk",
+  "name": "SWMS Desk",
+  "office_task": "Draft each job's SWMS or risk assessment from its scope and our approved templates, list who on the crew has not signed, and hold the pack until the supervisor accepts it.",
+  "verticals": ["trades-building"],
+  "standards": ["rejected-pack"],
+  "systems_of_record": [
+    "the job system that issues the job_id the pre-start pack belongs to, with its scope, site, start date, supervisor and crew (Simpro, ServiceM8 or Tradify's job export)",
+    "the document store that holds the approved SWMS and risk assessment templates and receives the accepted pre-start pack (SharePoint, OneDrive or Google Drive)",
+    "the exception desk the business runs, holding each held or failed pre-start pack with its named owner"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/swms-desk" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "webhook", "schedule"],
+  "consumes": [
+    { "event": "job.created", "wake": "webhook" },
+    { "event": "job.updated", "wake": "webhook" },
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "report.published",
+      "write": "the job's pre-start pack, written into the job's folder in the document store only after the supervisor accepts it by name: the SWMS for each item of high risk construction work under WHS Regulation 2011 (Qld) s291 drafted from the approved template, the general job risk assessment, every written does-not-apply with its rule, the sign-on sheet showing each worker on the crew signed the current revision, the on-site review date derived from the dated rule, the as-of date and the version record naming who accepted it",
+      "readback": "the document store returns a report_id, and reading that id back returns the job_id, the SWMS revision, seam.queue, seam.accepted_by and seam.as_of; no report_id back means nothing was published and the run raises an exception instead"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the job naming its supervisor: a pack on hold because a worker has not signed the current revision or an approved template is missing, the first check that failed (no supervisor or site on the job, insurance or a worker's ticket lapsed, a scope that does not say whether high risk work is involved, two ABNs on one pack), scope fields waiting for a person to confirm, or a pack waiting for the supervisor's named acceptance",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the job_id, the reason, the unsigned workers where there are any and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "swms.hold_missing",
+      "swms.identity",
+      "swms.tickets",
+      "swms.applicability",
+      "swms.field_reuse",
+      "swms.source_and_as_of",
+      "swms.yellow_scope",
+      "swms.awaiting_acceptance"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.job_id",
+      "seam.swms_rev",
+      "seam.queue",
+      "seam.failed_check",
+      "seam.unsigned",
+      "seam.rule_version",
+      "seam.review_due",
+      "seam.as_of",
+      "seam.accepted_by",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
