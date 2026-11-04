@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T11:45:47.745Z",
+  "generated_at": "2026-11-04T11:47:25.718Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -1938,6 +1938,112 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 9
+        }
+      ]
+    },
+    {
+      "slug": "cost-desk",
+      "name": "Cost Desk",
+      "office_task": "Put each supplier bill on its job by the order number printed on it, so the job's cost is current, and list every bill with no clear job for a named person.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "document-filing"
+      ],
+      "systems_of_record": [
+        "the job system that issues the job_id and the purchase order (order_id) each bill is filed on, e.g. Simpro, ServiceM8, AroFlo or Fergus",
+        "Xero, for supplier contacts and statements"
+      ],
+      "consumes": [
+        {
+          "event": "document.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        }
+      ],
+      "emits": [
+        {
+          "event": "evidence.filed",
+          "write": "the original bill, docket or paperwork attached unaltered to the one purchase order or job its printed number names, with the bill number and total typed into blank fields only, and the job_id carried",
+          "readback": "the job system returns the attachment id on the order or job; reading the order back by its id returns the attachment, its fingerprint and the entered fields; no id back means it was not filed and an exception is raised"
+        },
+        {
+          "event": "report.published",
+          "write": "the daily close: arrived, filed, on the list and duplicates, with the open exceptions oldest first, published on quiet days too",
+          "readback": "the system the close is published into returns a report_id, and reading it back returns the day and counts that add up"
+        },
+        {
+          "event": "exception.raised",
+          "write": "one exception on the filing list for a document that cannot be filed with confidence, with its closed-list reason, the field, both values where they disagree, and the named owner",
+          "readback": "the exception desk returns an exception_id, and reading it back returns the arrival, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "filing.no_id",
+          "filing.two_matches",
+          "filing.no_match",
+          "filing.unreadable_field",
+          "filing.does_not_add_up",
+          "filing.conflicts_with_record",
+          "filing.unknown_kind"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.arrival_id",
+          "seam.file_hash",
+          "seam.order_id",
+          "seam.job_id",
+          "seam.filing_state",
+          "seam.exception_owner",
+          "seam.cleared_by"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/cost-desk"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "document-filing",
+          "edition": "2026-10-24",
+          "environment": "stub",
+          "ran_at": "2026-11-04T11:44:24.812Z",
+          "run_id": "run-1793792664811",
+          "green": 10,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 14
         }
       ]
     },
@@ -9751,6 +9857,7 @@
     "comp-report",
     "consultant-hours",
     "contract-billing",
+    "cost-desk",
     "cover-check",
     "crew-board",
     "deadline-desk",
