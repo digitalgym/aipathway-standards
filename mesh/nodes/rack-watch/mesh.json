@@ -1,0 +1,72 @@
+{
+  "slug": "rack-watch",
+  "name": "Rack Watch",
+  "office_task": "Keep each client warehouse's AS 4084 racking inspection dated from our rules, draft the booking, file every damage finding against its bay, and draft the repair summary for us to send.",
+  "verticals": ["b2b-office"],
+  "standards": ["compliance-calendar"],
+  "systems_of_record": [
+    "the racking inspector's register of client warehouse racking installations (its dated rule store per state, and the document store the signed inspection reports are filed in)"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/rack-watch" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "document.received", "wake": "webhook" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "asset.service_due",
+      "write": "the installation's inspection obligation, classed Due Soon from the rule version in force for its state, with the client's inspection booking drafted on it and held for a named person to release",
+      "readback": "reading the installation back by its asset_id returns the derived due date, the rule version that produced it and the drafted booking awaiting release; no draft on the read means nothing was written and the run raises an exception"
+    },
+    {
+      "event": "evidence.filed",
+      "write": "the signed inspection report attached to the installation's obligation as its evidence of completion, with each damage finding filed against its bay carrying the inspector's own risk level and repair recommendation, and the client repair summary drafted beside it for a named person to send",
+      "readback": "reading the obligation back returns the document_id of the report as its evidence and the findings by bay; a completion with no report is refused by the register and raised, so nothing reads as inspected on a tick"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the installation naming the person who owns it: an overdue inspection, a red bay, a finding with no risk level or no bay, a last inspection date nobody knows, no rule for the site's state, an inspection reported done with no report, a client's dated refusal, a booking or repair summary awaiting release, or a past due date its rule version can no longer explain",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the installation's asset_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "rack.inspection_overdue",
+      "rack.inspection_due_soon",
+      "rack.red_finding",
+      "rack.finding_unclassified",
+      "rack.finding_without_bay",
+      "rack.repair_summary_awaiting_release",
+      "rack.last_inspection_unknown",
+      "rack.no_rule_for_state",
+      "rack.inspection_without_report",
+      "rack.inspection_declined",
+      "rack.notice_drafted_awaiting_release",
+      "rack.release_refused",
+      "rack.history_unexplained",
+      "rack.report_unmatched"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.asset_id",
+      "seam.rule_version",
+      "seam.anchor_status",
+      "seam.class",
+      "seam.evidence",
+      "seam.findings_by_bay",
+      "seam.refused_at",
+      "seam.breached_at",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
