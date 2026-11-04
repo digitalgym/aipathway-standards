@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T12:22:18.949Z",
+  "generated_at": "2026-11-04T12:22:31.176Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -10410,6 +10410,107 @@
       ]
     },
     {
+      "slug": "service-due",
+      "name": "Service Due",
+      "office_task": "When a job is done, keep its equipment on our register, work out each unit's service and warranty dates from our schedule, draft reminders for us to release, and turn a yes into one booking request.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "next-service"
+      ],
+      "systems_of_record": [
+        "the job system that issues the job_id (ServiceM8, Simpro, Fergus, Jobber or AroFlo) and the equipment register on it that issues the asset_id"
+      ],
+      "consumes": [
+        {
+          "event": "job.completed",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "asset.service_due",
+          "write": "on the asset in the register: the service or warranty date worked out from the written schedule row (or the warranty term on the record) on this run, with the reminder drafted onto the morning list for a named person to release, never a stored due date",
+          "readback": "reading the asset back by its asset_id returns its history with the drafted entry, the derived date and the schedule row that produced it; no entry on the read means nothing was written and the run raises an exception"
+        },
+        {
+          "event": "job.created",
+          "write": "one booking request in the job system after a customer's yes, against that customer and asset, carrying their reply word for word, with no time and no price; the office is told its job number to book and price it",
+          "readback": "the job system returns the job number and reading that job back returns the same asset_id and customer; the open jobs for the asset are read before every write, so a second yes or a second run finds the first request and writes nothing"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the asset naming the person who owns it: a missing install date, model or equipment type, an equipment type with no schedule row, a customer who agreed to neither SMS nor email, a reply that is not a yes or a stop, or a write that did not read back",
+          "readback": "the exception desk returns an exception_id, and reading the asset back shows it open with its kind; an open exception stops every reminder for that asset until the named person clears it"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "missing_install_date",
+          "missing_model",
+          "missing_equipment_type",
+          "no_schedule",
+          "no_consent",
+          "unclear_reply",
+          "write_failed",
+          "send_refused"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.asset_id",
+          "seam.source_job_id",
+          "seam.history",
+          "seam.booking_job_id",
+          "seam.opt_out",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/service-due"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "next-service",
+          "edition": "2026-10-24",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:18:54.766Z",
+          "run_id": "run-1793794734764",
+          "green": 10,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 15
+        }
+      ]
+    },
+    {
       "slug": "sign-in-follow-up",
       "name": "Sign-In Follow-Up",
       "office_task": "Take the open-home sign-in sheet, follow up only the people who said yes with a message I approved, sort their replies, and draft the vendor's report from them.",
@@ -12428,6 +12529,7 @@
     "safety-cert-desk",
     "seller-book",
     "seller-weekly",
+    "service-due",
     "sign-in-follow-up",
     "site-orders",
     "software-audit",
@@ -12703,6 +12805,12 @@
     {
       "from": "job-sheet",
       "to": "safety-cert-desk",
+      "event": "job.completed",
+      "id": "job_id"
+    },
+    {
+      "from": "job-sheet",
+      "to": "service-due",
       "event": "job.completed",
       "id": "job_id"
     },
@@ -12996,6 +13104,66 @@
     },
     {
       "from": "roof-desk",
+      "to": "visit-round",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "service-due",
+      "to": "crew-board",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "service-due",
+      "to": "estimate-desk",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "service-due",
+      "to": "parts-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "service-due",
+      "to": "proposal-desk",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "service-due",
+      "to": "quote-desk",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "service-due",
+      "to": "repair-board",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "service-due",
+      "to": "trim-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "service-due",
+      "to": "van-board",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "service-due",
+      "to": "visit-offer",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "service-due",
       "to": "visit-round",
       "event": "job.created",
       "id": "job_id"
