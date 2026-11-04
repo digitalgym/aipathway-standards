@@ -1,0 +1,1675 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793830981244",
+  "standard": "progress-claim-draft-build-standard",
+  "spec": "AIP-BS-PROGRESS-CLAIM-DRAFT",
+  "specVersion": "2026-11-05",
+  "environment": "stub",
+  "startedAt": "2026-11-04T22:23:01.235Z",
+  "finishedAt": "2026-11-04T22:23:01.244Z",
+  "results": [
+    {
+      "checkId": "waiver-accepted-first",
+      "n": 1,
+      "title": "Nothing is drafted until the account owner has accepted the waiver and indemnity, at the version now published",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The acceptance is read before any draft write. No claim is drafted, and an escalation with reason no_waiver_acceptance names the version needed. A draft written with no acceptance read, or against an old version, fails.",
+      "actual": "0 draft write(s); escalations: no_waiver_acceptance",
+      "stimulus": {
+        "description": "Two contracts ready to claim, and an acceptance on file that names a person and a role but was recorded against an earlier version of the wording.",
+        "now": "2026-11-30T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "waiver-accepted-first"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_acceptance",
+          "verb": "read",
+          "subject": "acceptance",
+          "request": {
+            "acceptance": true
+          },
+          "response": {
+            "current": "v2",
+            "onFileVersion": "v1"
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "no_waiver_acceptance",
+            "detail": "Account owner: nothing is drafted until the waiver and indemnity version v2 is accepted with a name, role and date; the acceptance on file is for version v1."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "contract-figures-from-the-record",
+      "n": 2,
+      "title": "The contract sum, the schedule of values and what was claimed before come only from the contract record",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The contract record is read before the first draft write. Every drafted line's scheduled value and claimed-before figure equal the record's. The contract that does not add up is parked with reason schedule_mismatch.",
+      "actual": "C-201 held 3 line(s); C-202 parked (schedule_mismatch) 2 line(s)",
+      "stimulus": {
+        "description": "Two contracts: one whose schedule adds up to its contract sum, and one whose schedule falls short of it.",
+        "now": "2026-11-30T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "contract-figures-from-the-record"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_acceptance",
+          "verb": "read",
+          "subject": "acceptance",
+          "request": {
+            "acceptance": true
+          },
+          "response": {
+            "current": "v2",
+            "onFileVersion": "v2"
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "contracts": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "claimFor": "C-201",
+            "period": "2026-11"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_assessment",
+          "verb": "read",
+          "subject": "assessment",
+          "request": {
+            "contractId": "C-201"
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "draft_claim",
+          "verb": "write",
+          "subject": "claim_draft",
+          "request": {
+            "contractId": "C-201",
+            "period": "2026-11",
+            "marker": "DRAFT: not a payment claim until reviewed and served by you",
+            "lines": [
+              "SLAB:100%=0",
+              "FRAME:100%=7500000",
+              "LOCKUP:40%=10000000"
+            ],
+            "park": null,
+            "notes": "Held for Sam Ruiz to check, sign and serve."
+          },
+          "response": {
+            "id": "PC1",
+            "externalId": "book-PC1"
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "hold": "PC1",
+            "to": "Sam Ruiz",
+            "reason": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "claimFor": "C-202",
+            "period": "2026-11"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_assessment",
+          "verb": "read",
+          "subject": "assessment",
+          "request": {
+            "contractId": "C-202"
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "draft_claim",
+          "verb": "write",
+          "subject": "claim_draft",
+          "request": {
+            "contractId": "C-202",
+            "period": "2026-11",
+            "marker": "DRAFT: not a payment claim until reviewed and served by you",
+            "lines": [
+              "SITE:100%=4000000",
+              "STRUCT:25%=5000000"
+            ],
+            "park": "schedule_mismatch",
+            "notes": "Parked for Sam Ruiz: the schedule of values does not add up to the contract sum. Lines left out: ."
+          },
+          "response": {
+            "id": "PC2",
+            "externalId": "book-PC2"
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "hold": "PC2",
+            "to": "Sam Ruiz",
+            "reason": "schedule_mismatch"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "percent-from-a-person",
+      "n": 3,
+      "title": "Percent complete comes only from a person's site assessment for this period, with who and when",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The draft is parked with reason no_assessment and no line carries a percent from any period but this one. Every drafted percent equals this period's entry for its line and carries the assessor's name and date.",
+      "actual": "parked (no_assessment): SLAB 100%, FRAME 80%",
+      "stimulus": {
+        "description": "A contract with three schedule lines: two assessed this period by the project manager, the third assessed only last period.",
+        "now": "2026-11-30T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "percent-from-a-person"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_acceptance",
+          "verb": "read",
+          "subject": "acceptance",
+          "request": {
+            "acceptance": true
+          },
+          "response": {
+            "current": "v2",
+            "onFileVersion": "v2"
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "contracts": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "claimFor": "C-301",
+            "period": "2026-11"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_assessment",
+          "verb": "read",
+          "subject": "assessment",
+          "request": {
+            "contractId": "C-301"
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "draft_claim",
+          "verb": "write",
+          "subject": "claim_draft",
+          "request": {
+            "contractId": "C-301",
+            "period": "2026-11",
+            "marker": "DRAFT: not a payment claim until reviewed and served by you",
+            "lines": [
+              "SLAB:100%=0",
+              "FRAME:80%=4500000"
+            ],
+            "park": "no_assessment",
+            "notes": "Parked for Sam Ruiz: a line has no percent complete for this month with a name and a date. Lines left out: LOCKUP (not assessed this month)."
+          },
+          "response": {
+            "id": "PC1",
+            "externalId": "book-PC1"
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "hold": "PC1",
+            "to": "Sam Ruiz",
+            "reason": "no_assessment"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "variation-needs-a-signature",
+      "n": 4,
+      "title": "A variation is included only with the client's signed acceptance attached",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The signed one is drafted with its acceptance attached as evidence. The unsigned one is parked with reason unsigned_variation, its variation is not drafted, and a hold names the reason. Drafting an unsigned variation fails.",
+      "actual": "C-401 held evidence 1; C-402 parked (unsigned_variation) evidence 0",
+      "stimulus": {
+        "description": "Two contracts each carrying a variation line: one with a signed acceptance on file, one without.",
+        "now": "2026-11-30T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "variation-needs-a-signature"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_acceptance",
+          "verb": "read",
+          "subject": "acceptance",
+          "request": {
+            "acceptance": true
+          },
+          "response": {
+            "current": "v2",
+            "onFileVersion": "v2"
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "contracts": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "claimFor": "C-401",
+            "period": "2026-11"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_assessment",
+          "verb": "read",
+          "subject": "assessment",
+          "request": {
+            "contractId": "C-401"
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "draft_claim",
+          "verb": "write",
+          "subject": "claim_draft",
+          "request": {
+            "contractId": "C-401",
+            "period": "2026-11",
+            "marker": "DRAFT: not a payment claim until reviewed and served by you",
+            "lines": [
+              "SLAB:100%=0",
+              "FRAME:100%=7500000",
+              "LOCKUP:40%=10000000",
+              "V1:100%=1200000"
+            ],
+            "park": null,
+            "notes": "Held for Sam Ruiz to check, sign and serve."
+          },
+          "response": {
+            "id": "PC1",
+            "externalId": "book-PC1"
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "claimId": "PC1",
+            "ref": "sig://C-401/V1/signed-2026-11-12.pdf"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "hold": "PC1",
+            "to": "Sam Ruiz",
+            "reason": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "claimFor": "C-402",
+            "period": "2026-11"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_assessment",
+          "verb": "read",
+          "subject": "assessment",
+          "request": {
+            "contractId": "C-402"
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "draft_claim",
+          "verb": "write",
+          "subject": "claim_draft",
+          "request": {
+            "contractId": "C-402",
+            "period": "2026-11",
+            "marker": "DRAFT: not a payment claim until reviewed and served by you",
+            "lines": [
+              "SLAB:100%=0",
+              "FRAME:100%=7500000",
+              "LOCKUP:40%=10000000"
+            ],
+            "park": "unsigned_variation",
+            "notes": "Parked for Sam Ruiz: a variation has no signed acceptance from the client. Lines left out: V1 (unsigned)."
+          },
+          "response": {
+            "id": "PC2",
+            "externalId": "book-PC2"
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "hold": "PC2",
+            "to": "Sam Ruiz",
+            "reason": "unsigned_variation"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "cumulative-arithmetic",
+      "n": 5,
+      "title": "This claim is the value to date less what was claimed before, shown line by line and checked to the cent",
+      "verdict": "pass",
+      "held": true,
+      "expected": "On the first, every line's figures hold to the cent and each total equals the sum of its column. The second is parked with reason below_previous and no negative line is drafted.",
+      "actual": "C-501 held this claim 17500167c; C-502 parked (below_previous) this claim 0c",
+      "stimulus": {
+        "description": "A contract with three lines and claims before on two of them, and a second contract where one line's assessed percent is now lower than what was already claimed.",
+        "now": "2026-11-30T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "cumulative-arithmetic"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_acceptance",
+          "verb": "read",
+          "subject": "acceptance",
+          "request": {
+            "acceptance": true
+          },
+          "response": {
+            "current": "v2",
+            "onFileVersion": "v2"
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "contracts": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "claimFor": "C-501",
+            "period": "2026-11"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_assessment",
+          "verb": "read",
+          "subject": "assessment",
+          "request": {
+            "contractId": "C-501"
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "draft_claim",
+          "verb": "write",
+          "subject": "claim_draft",
+          "request": {
+            "contractId": "C-501",
+            "period": "2026-11",
+            "marker": "DRAFT: not a payment claim until reviewed and served by you",
+            "lines": [
+              "SLAB:100%=0",
+              "FRAME:100%=7500000",
+              "LOCKUP:40%=10000000",
+              "PC:50%=167"
+            ],
+            "park": null,
+            "notes": "Held for Sam Ruiz to check, sign and serve."
+          },
+          "response": {
+            "id": "PC1",
+            "externalId": "book-PC1"
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "hold": "PC1",
+            "to": "Sam Ruiz",
+            "reason": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "claimFor": "C-502",
+            "period": "2026-11"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_assessment",
+          "verb": "read",
+          "subject": "assessment",
+          "request": {
+            "contractId": "C-502"
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "draft_claim",
+          "verb": "write",
+          "subject": "claim_draft",
+          "request": {
+            "contractId": "C-502",
+            "period": "2026-11",
+            "marker": "DRAFT: not a payment claim until reviewed and served by you",
+            "lines": [
+              "SITE:100%=0"
+            ],
+            "park": "below_previous",
+            "notes": "Parked for Sam Ruiz: this month's percent puts a line below what was already claimed; whether that is a credit is your call. Lines left out: STRUCT (below what was claimed before)."
+          },
+          "response": {
+            "id": "PC2",
+            "externalId": "book-PC2"
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "hold": "PC2",
+            "to": "Sam Ruiz",
+            "reason": "below_previous"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-claim-per-contract-per-period",
+      "n": 6,
+      "title": "One draft per contract per claim period, written once and updated on a second run",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Exactly one claim exists for the contract and period, with an id, and the second run produced an update or no write. A second claim for the period fails.",
+      "actual": "C-601 1 claim(s), C-602 1 claim(s); escalations: write_failed",
+      "stimulus": {
+        "description": "The same contract and period drafted twice, an hour apart.",
+        "now": "2026-11-30T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-claim-per-contract-per-period"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_acceptance",
+          "verb": "read",
+          "subject": "acceptance",
+          "request": {
+            "acceptance": true
+          },
+          "response": {
+            "current": "v2",
+            "onFileVersion": "v2"
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "contracts": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "claimFor": "C-601",
+            "period": "2026-11"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_assessment",
+          "verb": "read",
+          "subject": "assessment",
+          "request": {
+            "contractId": "C-601"
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "draft_claim",
+          "verb": "write",
+          "subject": "claim_draft",
+          "request": {
+            "contractId": "C-601",
+            "period": "2026-11",
+            "marker": "DRAFT: not a payment claim until reviewed and served by you",
+            "lines": [
+              "SLAB:100%=0",
+              "FRAME:100%=7500000",
+              "LOCKUP:40%=10000000"
+            ],
+            "park": null,
+            "notes": "Held for Sam Ruiz to check, sign and serve."
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "write_failed",
+            "detail": "contract C-601 period 2026-11: the draft did not read back with an id"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "claimFor": "C-602",
+            "period": "2026-11"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_assessment",
+          "verb": "read",
+          "subject": "assessment",
+          "request": {
+            "contractId": "C-602"
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "draft_claim",
+          "verb": "write",
+          "subject": "claim_draft",
+          "request": {
+            "contractId": "C-602",
+            "period": "2026-11",
+            "marker": "DRAFT: not a payment claim until reviewed and served by you",
+            "lines": [
+              "SLAB:100%=0",
+              "FRAME:100%=7500000",
+              "LOCKUP:40%=10000000"
+            ],
+            "park": null,
+            "notes": "Held for Lee Tran to check, sign and serve."
+          },
+          "response": {
+            "id": "PC1",
+            "externalId": "book-PC1"
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "hold": "PC1",
+            "to": "Lee Tran",
+            "reason": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-30T01:00:00.000Z",
+          "port": "read_acceptance",
+          "verb": "read",
+          "subject": "acceptance",
+          "request": {
+            "acceptance": true
+          },
+          "response": {
+            "current": "v2",
+            "onFileVersion": "v2"
+          }
+        },
+        {
+          "at": "2026-11-30T01:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "contracts": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-11-30T01:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "claimFor": "C-601",
+            "period": "2026-11"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-30T01:00:00.000Z",
+          "port": "read_assessment",
+          "verb": "read",
+          "subject": "assessment",
+          "request": {
+            "contractId": "C-601"
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-11-30T01:00:00.000Z",
+          "port": "draft_claim",
+          "verb": "write",
+          "subject": "claim_draft",
+          "request": {
+            "contractId": "C-601",
+            "period": "2026-11",
+            "marker": "DRAFT: not a payment claim until reviewed and served by you",
+            "lines": [
+              "SLAB:100%=0",
+              "FRAME:100%=7500000",
+              "LOCKUP:40%=10000000"
+            ],
+            "park": null,
+            "notes": "Held for Sam Ruiz to check, sign and serve."
+          },
+          "response": {
+            "id": "PC2",
+            "externalId": "book-PC2"
+          }
+        },
+        {
+          "at": "2026-11-30T01:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "hold": "PC2",
+            "to": "Sam Ruiz",
+            "reason": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-30T01:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "claimFor": "C-602",
+            "period": "2026-11"
+          },
+          "response": {
+            "claimId": "PC1",
+            "externalId": "book-PC1"
+          }
+        },
+        {
+          "at": "2026-11-30T01:00:00.000Z",
+          "port": "read_assessment",
+          "verb": "read",
+          "subject": "assessment",
+          "request": {
+            "contractId": "C-602"
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-11-30T01:00:00.000Z",
+          "port": "draft_claim",
+          "verb": "write",
+          "subject": "claim_draft",
+          "request": {
+            "contractId": "C-602",
+            "period": "2026-11",
+            "marker": "DRAFT: not a payment claim until reviewed and served by you",
+            "lines": [
+              "SLAB:100%=0",
+              "FRAME:100%=7500000",
+              "LOCKUP:40%=10000000"
+            ],
+            "park": null,
+            "notes": "Held for Lee Tran to check, sign and serve.",
+            "update": "PC1"
+          },
+          "response": {
+            "externalId": "book-PC1",
+            "updates": 1
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "draft-marker",
+      "n": 7,
+      "title": "Every draft carries the draft marker, and only a person takes it off",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every draft write carried the marker exactly. The released claim lost it only through the person's release, which names them; the other still carries it.",
+      "actual": "C-701 released marker off; C-702 held marker \"DRAFT: not a payment claim until reviewed and served by you\"",
+      "stimulus": {
+        "description": "Two contracts drafted in the period, then the project manager releases one of them.",
+        "now": "2026-11-30T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "draft-marker"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_acceptance",
+          "verb": "read",
+          "subject": "acceptance",
+          "request": {
+            "acceptance": true
+          },
+          "response": {
+            "current": "v2",
+            "onFileVersion": "v2"
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "contracts": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "claimFor": "C-701",
+            "period": "2026-11"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_assessment",
+          "verb": "read",
+          "subject": "assessment",
+          "request": {
+            "contractId": "C-701"
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "draft_claim",
+          "verb": "write",
+          "subject": "claim_draft",
+          "request": {
+            "contractId": "C-701",
+            "period": "2026-11",
+            "marker": "DRAFT: not a payment claim until reviewed and served by you",
+            "lines": [
+              "SLAB:100%=0",
+              "FRAME:100%=7500000",
+              "LOCKUP:40%=10000000"
+            ],
+            "park": null,
+            "notes": "Held for Sam Ruiz to check, sign and serve."
+          },
+          "response": {
+            "id": "PC1",
+            "externalId": "book-PC1"
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "hold": "PC1",
+            "to": "Sam Ruiz",
+            "reason": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "claimFor": "C-702",
+            "period": "2026-11"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_assessment",
+          "verb": "read",
+          "subject": "assessment",
+          "request": {
+            "contractId": "C-702"
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "draft_claim",
+          "verb": "write",
+          "subject": "claim_draft",
+          "request": {
+            "contractId": "C-702",
+            "period": "2026-11",
+            "marker": "DRAFT: not a payment claim until reviewed and served by you",
+            "lines": [
+              "SLAB:100%=0",
+              "FRAME:100%=7500000",
+              "LOCKUP:40%=10000000"
+            ],
+            "park": null,
+            "notes": "Held for Sam Ruiz to check, sign and serve."
+          },
+          "response": {
+            "id": "PC2",
+            "externalId": "book-PC2"
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "hold": "PC2",
+            "to": "Sam Ruiz",
+            "reason": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-30T01:00:00.000Z",
+          "port": "read_acceptance",
+          "verb": "read",
+          "subject": "acceptance",
+          "request": {
+            "acceptance": true
+          },
+          "response": {
+            "current": "v2",
+            "onFileVersion": "v2"
+          }
+        },
+        {
+          "at": "2026-11-30T01:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "contracts": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-11-30T01:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "claimFor": "C-701",
+            "period": "2026-11"
+          },
+          "response": {
+            "claimId": "PC1",
+            "externalId": "book-PC1"
+          }
+        },
+        {
+          "at": "2026-11-30T01:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "claimFor": "C-702",
+            "period": "2026-11"
+          },
+          "response": {
+            "claimId": "PC2",
+            "externalId": "book-PC2"
+          }
+        },
+        {
+          "at": "2026-11-30T01:00:00.000Z",
+          "port": "read_assessment",
+          "verb": "read",
+          "subject": "assessment",
+          "request": {
+            "contractId": "C-702"
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-11-30T01:00:00.000Z",
+          "port": "draft_claim",
+          "verb": "write",
+          "subject": "claim_draft",
+          "request": {
+            "contractId": "C-702",
+            "period": "2026-11",
+            "marker": "DRAFT: not a payment claim until reviewed and served by you",
+            "lines": [
+              "SLAB:100%=0",
+              "FRAME:100%=7500000",
+              "LOCKUP:40%=10000000"
+            ],
+            "park": null,
+            "notes": "Held for Sam Ruiz to check, sign and serve.",
+            "update": "PC2"
+          },
+          "response": {
+            "externalId": "book-PC2",
+            "updates": 1
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "draft-and-hold-only",
+      "n": 8,
+      "title": "The build drafts and holds: it never serves, sends, values work, dates a payment, or touches a payment schedule",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The draft is held. No outbound call appears in the trace, and no line, total or note in the draft speaks of a due date, a payment schedule, retention or adjudication.",
+      "actual": "ports used: read_acceptance, read_contract, read_assessment, draft_claim, evidence, escalate; notes: Held for Sam Ruiz to check, sign and serve.",
+      "stimulus": {
+        "description": "A contract ready to claim, in a world that offers no port to serve, send or lodge anything.",
+        "now": "2026-11-30T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "draft-and-hold-only"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_acceptance",
+          "verb": "read",
+          "subject": "acceptance",
+          "request": {
+            "acceptance": true
+          },
+          "response": {
+            "current": "v2",
+            "onFileVersion": "v2"
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "contracts": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "claimFor": "C-801",
+            "period": "2026-11"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_assessment",
+          "verb": "read",
+          "subject": "assessment",
+          "request": {
+            "contractId": "C-801"
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "draft_claim",
+          "verb": "write",
+          "subject": "claim_draft",
+          "request": {
+            "contractId": "C-801",
+            "period": "2026-11",
+            "marker": "DRAFT: not a payment claim until reviewed and served by you",
+            "lines": [
+              "SLAB:100%=0",
+              "FRAME:100%=7500000",
+              "LOCKUP:40%=10000000",
+              "V1:100%=1200000"
+            ],
+            "park": null,
+            "notes": "Held for Sam Ruiz to check, sign and serve."
+          },
+          "response": {
+            "id": "PC1",
+            "externalId": "book-PC1"
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "claimId": "PC1",
+            "ref": "sig://C-801/V1.pdf"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "hold": "PC1",
+            "to": "Sam Ruiz",
+            "reason": null
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "held-for-the-project-manager",
+      "n": 9,
+      "title": "Every draft is held for the contract's named project manager, with its reason when parked",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Each claim has a hold naming its own contract's project manager, the parked one with reason no_assessment. No hold names the client or anyone else.",
+      "actual": "C-901 held held for Sam Ruiz; C-902 parked held for Lee Tran (no_assessment)",
+      "stimulus": {
+        "description": "Two contracts with different project managers: one ready to claim, one missing this period's assessment.",
+        "now": "2026-11-30T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "held-for-the-project-manager"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_acceptance",
+          "verb": "read",
+          "subject": "acceptance",
+          "request": {
+            "acceptance": true
+          },
+          "response": {
+            "current": "v2",
+            "onFileVersion": "v2"
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "contracts": true
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "claimFor": "C-901",
+            "period": "2026-11"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_assessment",
+          "verb": "read",
+          "subject": "assessment",
+          "request": {
+            "contractId": "C-901"
+          },
+          "response": {
+            "count": 3
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "draft_claim",
+          "verb": "write",
+          "subject": "claim_draft",
+          "request": {
+            "contractId": "C-901",
+            "period": "2026-11",
+            "marker": "DRAFT: not a payment claim until reviewed and served by you",
+            "lines": [
+              "SLAB:100%=0",
+              "FRAME:100%=7500000",
+              "LOCKUP:40%=10000000"
+            ],
+            "park": null,
+            "notes": "Held for Sam Ruiz to check, sign and serve."
+          },
+          "response": {
+            "id": "PC1",
+            "externalId": "book-PC1"
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "hold": "PC1",
+            "to": "Sam Ruiz",
+            "reason": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "claimFor": "C-902",
+            "period": "2026-11"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_assessment",
+          "verb": "read",
+          "subject": "assessment",
+          "request": {
+            "contractId": "C-902"
+          },
+          "response": {
+            "count": 2
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "draft_claim",
+          "verb": "write",
+          "subject": "claim_draft",
+          "request": {
+            "contractId": "C-902",
+            "period": "2026-11",
+            "marker": "DRAFT: not a payment claim until reviewed and served by you",
+            "lines": [
+              "SLAB:100%=0",
+              "FRAME:100%=7500000"
+            ],
+            "park": "no_assessment",
+            "notes": "Parked for Lee Tran: a line has no percent complete for this month with a name and a date. Lines left out: LOCKUP (not assessed this month)."
+          },
+          "response": {
+            "id": "PC2",
+            "externalId": "book-PC2"
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "hold": "PC2",
+            "to": "Lee Tran",
+            "reason": "no_assessment"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "the-record-by-contract",
+      "n": 10,
+      "title": "The contract, the period, every line's figures, where each percent came from, the signed variations and the waiver version are retrievable by contract and period",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A read by contract and period returns the claim with every line's figures, an assessor and a date on every line, the signed acceptance reference, the waiver version, and the release with a name. A record missing any of them fails.",
+      "actual": "C-1001 2026-11 4 line(s), evidence 1, waiver v2, released by Sam Ruiz",
+      "stimulus": {
+        "description": "One contract drafted with a signed variation, then released by the project manager.",
+        "now": "2026-11-30T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "the-record-by-contract"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_acceptance",
+          "verb": "read",
+          "subject": "acceptance",
+          "request": {
+            "acceptance": true
+          },
+          "response": {
+            "current": "v2",
+            "onFileVersion": "v2"
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "contracts": true
+          },
+          "response": {
+            "count": 1
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "claimFor": "C-1001",
+            "period": "2026-11"
+          },
+          "response": null
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "read_assessment",
+          "verb": "read",
+          "subject": "assessment",
+          "request": {
+            "contractId": "C-1001"
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "draft_claim",
+          "verb": "write",
+          "subject": "claim_draft",
+          "request": {
+            "contractId": "C-1001",
+            "period": "2026-11",
+            "marker": "DRAFT: not a payment claim until reviewed and served by you",
+            "lines": [
+              "SLAB:100%=0",
+              "FRAME:100%=7500000",
+              "LOCKUP:40%=10000000",
+              "V1:100%=1200000"
+            ],
+            "park": null,
+            "notes": "Held for Sam Ruiz to check, sign and serve."
+          },
+          "response": {
+            "id": "PC1",
+            "externalId": "book-PC1"
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "claimId": "PC1",
+            "ref": "sig://C-1001/V1.pdf"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-11-30T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "hold": "PC1",
+            "to": "Sam Ruiz",
+            "reason": null
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-30T01:00:00.000Z",
+          "port": "read_contract",
+          "verb": "read",
+          "subject": "contract",
+          "request": {
+            "record": "C-1001",
+            "period": "2026-11"
+          },
+          "response": {
+            "claimId": "PC1",
+            "status": "released"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 11,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the draft, the acceptance record and the assessments runs on.",
+        "now": "2026-11-04T22:23:01.244Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 12,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "One draft per contract for the period, held with the marker and the line-by-line arithmetic; the missing assessment and the unsigned variation parked with their reasons; the released one naming the person; nothing served, sent or dated by the build.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "The builder's real contracts and the project manager's real site assessment for this month, drafted by the build on the builder's own systems.",
+        "now": "2026-11-04T22:23:01.244Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 12,
+    "pass": 8,
+    "fail": 0,
+    "shapeOnly": 2,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
