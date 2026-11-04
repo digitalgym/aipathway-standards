@@ -1,0 +1,95 @@
+{
+  "slug": "manual-desk",
+  "name": "Manual Desk",
+  "office_task": "When a tech on site asks about the unit on their job, show them the page of its install or service manual that covers it, with page and revision, or say we hold no manual for it.",
+  "verticals": [
+    "trades-building"
+  ],
+  "standards": [
+    "knowledge-base"
+  ],
+  "systems_of_record": [
+    "the job system that issues the job_id and records the unit make and model on each job (ServiceM8, Simpro, Tradify, Fergus)",
+    "the shared drive that holds the manufacturers' install and service manuals, commissioning videos and the office's procedures and issues the document_id (Google Drive or SharePoint), left where it is",
+    "the register on that tenant (one Sheet or SharePoint list: a row per source, owner a person, kind, revision and checksum)",
+    "the task list the office runs (Google Tasks, Planner or a sheet), which issues the exception_id for each open question"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/manual-desk"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "schedule",
+    "webhook"
+  ],
+  "consumes": [
+    {
+      "event": "email.received",
+      "wake": "webhook"
+    },
+    {
+      "event": "job.created",
+      "wake": "webhook"
+    },
+    {
+      "event": "document.received",
+      "wake": "webhook"
+    },
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    },
+    {
+      "event": "exception.closed",
+      "wake": "webhook"
+    }
+  ],
+  "emits": [
+    {
+      "event": "report.published",
+      "write": "the manual page sheet for the job, written as one Doc into Jobs/<job_id>/ after a tech's question: the question, and for each page given the register id, the manufacturer's revision and the locator that opens the manual at that page, or the fixed sentence that no manual for the unit is held; nothing composed from the manuals",
+      "readback": "the drive returns the sheet's file id as the report_id, and reading that id back returns the Doc with the job_id and the register ids it lists; no id back means no sheet was published and the run raises an exception to the register keeper"
+    },
+    {
+      "event": "exception.raised",
+      "write": "a task on the office's task list naming the person who owns it, with a due date: a manual revision the office expects and the drive does not hold, a manual for a unit on a job that is not held at all, a manual whose only owner is a team, two copies of one manual waiting for a person to pick the one the office keeps, a customer's note waiting for someone to set who may read it and for how long, a recheck of a manual held only on the manufacturer's portal, or a registered file gone from the drive",
+      "readback": "the task list returns an exception_id, and reading that id back returns what is expected, the owner and the due date; no id back means nothing was raised, and the file stays off the index"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "kb.expected_edition_missing",
+      "kb.owner_not_a_person",
+      "kb.canonical_copy_undecided",
+      "kb.customer_access_undecided",
+      "kb.issuer_recheck_due",
+      "kb.source_gone_from_drive"
+    ],
+    "owner_field": "owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "register.id",
+      "register.kind",
+      "register.owner",
+      "register.location",
+      "register.edition",
+      "register.checksum",
+      "register.retrieved_at",
+      "register.status",
+      "register.duplicate_of",
+      "register.access_list",
+      "register.expires_on",
+      "register.superseded_checksums"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
