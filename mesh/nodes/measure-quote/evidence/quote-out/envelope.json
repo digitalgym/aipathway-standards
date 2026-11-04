@@ -1,0 +1,1195 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793795598440",
+  "standard": "quote-out-build-standard",
+  "spec": "AIP-BS-QUOTE-OUT",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-04T12:33:18.431Z",
+  "finishedAt": "2026-11-04T12:33:18.440Z",
+  "results": [
+    {
+      "checkId": "job-is-the-trigger",
+      "n": 1,
+      "title": "A job is the only trigger",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Each draft is preceded by a read of the job it came from and carries that job's id. No draft appears without one.",
+      "actual": "8 port call(s): read_job, read_pricebook, draft_quote, notify, read_job, read_pricebook, draft_quote, notify; 2 quote(s), 0 escalation(s), 2 alert(s)",
+      "stimulus": {
+        "description": "A job created by an after-hours call, and a second job created from an overnight web form.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "job-is-the-trigger"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-M101"
+          },
+          "response": {
+            "id": "JOB-M101",
+            "source": "call",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 4
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JOB-M101",
+            "lines": [
+              {
+                "catalogueId": "FL-TIMBER-M2",
+                "description": "Engineered timber floor, supply and lay, per m2 (Living)",
+                "room": "Living",
+                "unit": "m2",
+                "quantity": 32.4,
+                "rate": 12500,
+                "amount": 405000,
+                "pricebook_read_at": "2026-09-21T23:00:00.000Z"
+              },
+              {
+                "catalogueId": "FL-SKIRT-LM",
+                "description": "Skirting, supply and fit, per lineal metre (Living)",
+                "room": "Living",
+                "unit": "lm",
+                "quantity": 24.6,
+                "rate": 2800,
+                "amount": 68880,
+                "pricebook_read_at": "2026-09-21T23:00:00.000Z"
+              }
+            ],
+            "total_ex_gst": 473880,
+            "intentId": "JOB-M101:job.created:measure-quote"
+          },
+          "response": {
+            "id": "Q1",
+            "total": 15300
+          },
+          "intentId": "JOB-M101:job.created:measure-quote"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "estimator",
+            "jobId": "JOB-M101",
+            "reason": "ready_to_release:Q1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-M102"
+          },
+          "response": {
+            "id": "JOB-M102",
+            "source": "form",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 4
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JOB-M102",
+            "lines": [
+              {
+                "catalogueId": "FL-TILE-M2",
+                "description": "Floor tiling, lay only, per m2 (Laundry)",
+                "room": "Laundry",
+                "unit": "m2",
+                "quantity": 6.2,
+                "rate": 9500,
+                "amount": 58900,
+                "pricebook_read_at": "2026-09-21T23:00:00.000Z"
+              }
+            ],
+            "total_ex_gst": 58900,
+            "intentId": "JOB-M102:job.created:measure-quote"
+          },
+          "response": {
+            "id": "Q2",
+            "total": 9500
+          },
+          "intentId": "JOB-M102:job.created:measure-quote"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "estimator",
+            "jobId": "JOB-M102",
+            "reason": "ready_to_release:Q2"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "pricebook-is-the-only-source",
+      "n": 2,
+      "title": "The price list is the only source of a rate",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A read of the price list precedes the draft, and every priced line carries the catalogue id it came from.",
+      "actual": "7 port call(s): read_job, read_pricebook, draft_quote, notify, read_job, read_pricebook, notify; 1 quote(s), 0 escalation(s), 2 alert(s)",
+      "stimulus": {
+        "description": "A job whose work maps cleanly to three catalogue items.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "pricebook-is-the-only-source"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-M201"
+          },
+          "response": {
+            "id": "JOB-M201",
+            "source": "call",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 4
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JOB-M201",
+            "lines": [
+              {
+                "catalogueId": "FL-TIMBER-M2",
+                "description": "Engineered timber floor, supply and lay, per m2 (Bed 1)",
+                "room": "Bed 1",
+                "unit": "m2",
+                "quantity": 12.6,
+                "rate": 12500,
+                "amount": 157500,
+                "pricebook_read_at": "2026-09-21T23:00:00.000Z"
+              },
+              {
+                "catalogueId": "FL-TIMBER-M2",
+                "description": "Engineered timber floor, supply and lay, per m2 (Bed 2)",
+                "room": "Bed 2",
+                "unit": "m2",
+                "quantity": 10.8,
+                "rate": 12500,
+                "amount": 135000,
+                "pricebook_read_at": "2026-09-21T23:00:00.000Z"
+              },
+              {
+                "catalogueId": "FL-TILE-M2",
+                "description": "Floor tiling, lay only, per m2 (Ensuite)",
+                "room": "Ensuite",
+                "unit": "m2",
+                "quantity": 4.35,
+                "rate": 9500,
+                "amount": 41325,
+                "pricebook_read_at": "2026-09-21T23:00:00.000Z"
+              },
+              {
+                "catalogueId": "FL-SKIRT-LM",
+                "description": "Skirting, supply and fit, per lineal metre (Bed 1)",
+                "room": "Bed 1",
+                "unit": "lm",
+                "quantity": 14.2,
+                "rate": 2800,
+                "amount": 39760,
+                "pricebook_read_at": "2026-09-21T23:00:00.000Z"
+              },
+              {
+                "catalogueId": "FL-TRIM-EA",
+                "description": "Doorway transition trim, each (Ensuite)",
+                "room": "Ensuite",
+                "unit": "each",
+                "quantity": 1,
+                "rate": 4500,
+                "amount": 4500,
+                "pricebook_read_at": "2026-09-21T23:00:00.000Z"
+              }
+            ],
+            "total_ex_gst": 378085,
+            "intentId": "JOB-M201:job.created:measure-quote"
+          },
+          "response": {
+            "id": "Q1",
+            "total": 41800
+          },
+          "intentId": "JOB-M201:job.created:measure-quote"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "estimator",
+            "jobId": "JOB-M201",
+            "reason": "ready_to_release:Q1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-M202"
+          },
+          "response": {
+            "id": "JOB-M202",
+            "source": "form",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 4
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "estimator",
+            "jobId": "JOB-M202",
+            "reason": "measure_check:FL-SKIRT-LM@Hall:measure_unit_mismatch"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "unpriceable-is-parked",
+      "n": 3,
+      "title": "What cannot be priced is parked",
+      "verdict": "pass",
+      "held": true,
+      "expected": "No draft is created. An escalate call carries a park reason from the fixed list and the unmatched line, and no invented rate appears anywhere in the trace.",
+      "actual": "3 port call(s): read_job, read_pricebook, escalate; 0 quote(s), 1 escalation(s), 0 alert(s)",
+      "stimulus": {
+        "description": "A job needing one catalogue item and one thing the price list does not cover.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "unpriceable-is-parked"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-M301"
+          },
+          "response": {
+            "id": "JOB-M301",
+            "source": "form",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 4
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "not_in_pricebook",
+            "detail": "{\"job_id\":\"JOB-M301\",\"owner\":\"estimator\",\"lines\":[{\"catalogueId\":\"FL-TIMBER-M2\",\"description\":\"Engineered timber floor, supply and lay, per m2 (Kitchen)\",\"room\":\"Kitchen\",\"unit\":\"m2\",\"quantity\":18.5,\"rate\":12500,\"amount\":231250,\"pricebook_read_at\":\"2026-09-21T23:00:00.000Z\"}],\"unmatched\":[{\"room\":\"Kitchen\",\"description\":\"Polished concrete grind and seal\",\"park_reason\":\"not_in_pricebook\"}],\"measure_problems\":[],\"total_ex_gst\":null,\"pricebook_read_at\":\"2026-09-21T23:00:00.000Z\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "no-variation-pricing",
+      "n": 4,
+      "title": "Variations and discounts stay with a person",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Both escalate with a typed reason. Neither produces a draft.",
+      "actual": "4 port call(s): read_job, escalate, read_job, escalate; 0 quote(s), 2 escalation(s), 0 alert(s)",
+      "stimulus": {
+        "description": "A job flagged as a variation to an accepted quote, then a job carrying a request for a discount.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "no-variation-pricing"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-M401"
+          },
+          "response": {
+            "id": "JOB-M401",
+            "source": "call",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "variation_to_accepted_quote",
+            "detail": "{\"job_id\":\"JOB-M401\",\"owner\":\"estimator\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-M402"
+          },
+          "response": {
+            "id": "JOB-M402",
+            "source": "form",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "discount_requested",
+            "detail": "{\"job_id\":\"JOB-M402\",\"owner\":\"estimator\"}"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-quote-per-job",
+      "n": 5,
+      "title": "One quote per job",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Exactly one quote exists in the world the runner owns. The second pass returned the same quote carrying duplicate_of, not a create.",
+      "actual": "6 port call(s): read_job, read_pricebook, draft_quote, notify, read_job, draft_quote; 1 quote(s), 0 escalation(s), 1 alert(s)",
+      "stimulus": {
+        "description": "The same job reaching the standard twice: once from the call, once from the follow-up email minutes later.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-quote-per-job"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-M501"
+          },
+          "response": {
+            "id": "JOB-M501",
+            "source": "call",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 4
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JOB-M501",
+            "lines": [
+              {
+                "catalogueId": "FL-TIMBER-M2",
+                "description": "Engineered timber floor, supply and lay, per m2 (Living)",
+                "room": "Living",
+                "unit": "m2",
+                "quantity": 40,
+                "rate": 12500,
+                "amount": 500000,
+                "pricebook_read_at": "2026-09-21T23:00:00.000Z"
+              },
+              {
+                "catalogueId": "FL-TRIM-EA",
+                "description": "Doorway transition trim, each (Living)",
+                "room": "Living",
+                "unit": "each",
+                "quantity": 2,
+                "rate": 4500,
+                "amount": 9000,
+                "pricebook_read_at": "2026-09-21T23:00:00.000Z"
+              }
+            ],
+            "total_ex_gst": 509000,
+            "intentId": "JOB-M501:job.created:measure-quote"
+          },
+          "response": {
+            "id": "Q1",
+            "total": 17000
+          },
+          "intentId": "JOB-M501:job.created:measure-quote"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "estimator",
+            "jobId": "JOB-M501",
+            "reason": "ready_to_release:Q1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-21T23:07:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-M501"
+          },
+          "response": {
+            "id": "JOB-M501",
+            "source": "call",
+            "quoteId": "Q1"
+          }
+        },
+        {
+          "at": "2026-09-21T23:07:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "update": "Q1",
+            "intentId": "JOB-M501:job.updated:measure-quote"
+          },
+          "response": {
+            "id": "Q1"
+          },
+          "intentId": "JOB-M501:job.updated:measure-quote"
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "draft-quote-verified",
+      "n": 6,
+      "title": "The write is verified",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A notify call follows the failed write, and the job is not reported as quoted.",
+      "actual": "4 port call(s): read_job, read_pricebook, draft_quote, notify; 0 quote(s), 0 escalation(s), 1 alert(s)",
+      "stimulus": {
+        "description": "The runner seeds the stub to return a null external_id on the quote write.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "draft-quote-verified"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-M601"
+          },
+          "response": {
+            "id": "JOB-M601",
+            "source": "call",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 4
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JOB-M601",
+            "lines": [
+              {
+                "catalogueId": "FL-TIMBER-M2",
+                "description": "Engineered timber floor, supply and lay, per m2 (Deck room)",
+                "room": "Deck room",
+                "unit": "m2",
+                "quantity": 15,
+                "rate": 12500,
+                "amount": 187500,
+                "pricebook_read_at": "2026-09-21T23:00:00.000Z"
+              }
+            ],
+            "total_ex_gst": 187500,
+            "intentId": "JOB-M601:job.created:measure-quote"
+          },
+          "response": {
+            "id": null
+          },
+          "intentId": "JOB-M601:job.created:measure-quote"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "estimator",
+            "jobId": "JOB-M601",
+            "reason": "write_failed"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "draft-never-sends",
+      "n": 7,
+      "title": "The draft does not send itself",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The quote is written in a draft state and surfaced for a person to release. No send port appears in the trace at all.",
+      "actual": "4 port call(s): read_job, read_pricebook, draft_quote, notify; 1 quote(s), 0 escalation(s), 1 alert(s)",
+      "stimulus": {
+        "description": "A job that prices cleanly from the price list.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "draft-never-sends"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-M701"
+          },
+          "response": {
+            "id": "JOB-M701",
+            "source": "form",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 4
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JOB-M701",
+            "lines": [
+              {
+                "catalogueId": "FL-TILE-M2",
+                "description": "Floor tiling, lay only, per m2 (Bath)",
+                "room": "Bath",
+                "unit": "m2",
+                "quantity": 6.5,
+                "rate": 9500,
+                "amount": 61750,
+                "pricebook_read_at": "2026-09-21T23:00:00.000Z"
+              },
+              {
+                "catalogueId": "FL-TRIM-EA",
+                "description": "Doorway transition trim, each (Bath)",
+                "room": "Bath",
+                "unit": "each",
+                "quantity": 1,
+                "rate": 4500,
+                "amount": 4500,
+                "pricebook_read_at": "2026-09-21T23:00:00.000Z"
+              }
+            ],
+            "total_ex_gst": 66250,
+            "intentId": "JOB-M701:job.created:measure-quote"
+          },
+          "response": {
+            "id": "Q1",
+            "total": 14000
+          },
+          "intentId": "JOB-M701:job.created:measure-quote"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "estimator",
+            "jobId": "JOB-M701",
+            "reason": "ready_to_release:Q1"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "quote-is-not-ours",
+      "n": 8,
+      "title": "The quote lives in their system",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The quote is retrievable from the system of record by its own id, carrying the lines and total that were drafted.",
+      "actual": "4 port call(s): read_job, read_pricebook, draft_quote, notify; 1 quote(s), 0 escalation(s), 1 alert(s)",
+      "stimulus": {
+        "description": "A priced job, then a retrieval of the quote from the system of record.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "quote-is-not-ours"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-M801"
+          },
+          "response": {
+            "id": "JOB-M801",
+            "source": "call",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 4
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JOB-M801",
+            "lines": [
+              {
+                "catalogueId": "FL-TIMBER-M2",
+                "description": "Engineered timber floor, supply and lay, per m2 (Living)",
+                "room": "Living",
+                "unit": "m2",
+                "quantity": 28.75,
+                "rate": 12500,
+                "amount": 359375,
+                "pricebook_read_at": "2026-09-21T23:00:00.000Z"
+              },
+              {
+                "catalogueId": "FL-SKIRT-LM",
+                "description": "Skirting, supply and fit, per lineal metre (Living)",
+                "room": "Living",
+                "unit": "lm",
+                "quantity": 21.3,
+                "rate": 2800,
+                "amount": 59640,
+                "pricebook_read_at": "2026-09-21T23:00:00.000Z"
+              },
+              {
+                "catalogueId": "FL-TRIM-EA",
+                "description": "Doorway transition trim, each (Entry)",
+                "room": "Entry",
+                "unit": "each",
+                "quantity": 3,
+                "rate": 4500,
+                "amount": 13500,
+                "pricebook_read_at": "2026-09-21T23:00:00.000Z"
+              }
+            ],
+            "total_ex_gst": 432515,
+            "intentId": "JOB-M801:job.created:measure-quote"
+          },
+          "response": {
+            "id": "Q1",
+            "total": 19800
+          },
+          "intentId": "JOB-M801:job.created:measure-quote"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "estimator",
+            "jobId": "JOB-M801",
+            "reason": "ready_to_release:Q1"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "log-survives",
+      "n": 9,
+      "title": "The log survives",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "One quote_id returns the source job, the ordered port calls, the catalogue ids used and the outcome as one object.",
+      "actual": "4 port call(s): read_job, read_pricebook, draft_quote, notify; 1 quote(s), 0 escalation(s), 1 alert(s)",
+      "stimulus": {
+        "description": "Any completed draft, then a retrieval by quote_id.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "log-survives"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-M901"
+          },
+          "response": {
+            "id": "JOB-M901",
+            "source": "form",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 4
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JOB-M901",
+            "lines": [
+              {
+                "catalogueId": "FL-TILE-M2",
+                "description": "Floor tiling, lay only, per m2 (Laundry)",
+                "room": "Laundry",
+                "unit": "m2",
+                "quantity": 5.5,
+                "rate": 9500,
+                "amount": 52250,
+                "pricebook_read_at": "2026-09-21T23:00:00.000Z"
+              },
+              {
+                "catalogueId": "FL-SKIRT-LM",
+                "description": "Skirting, supply and fit, per lineal metre (Laundry)",
+                "room": "Laundry",
+                "unit": "lm",
+                "quantity": 9.4,
+                "rate": 2800,
+                "amount": 26320,
+                "pricebook_read_at": "2026-09-21T23:00:00.000Z"
+              }
+            ],
+            "total_ex_gst": 78570,
+            "intentId": "JOB-M901:job.created:measure-quote"
+          },
+          "response": {
+            "id": "Q1",
+            "total": 12300
+          },
+          "intentId": "JOB-M901:job.created:measure-quote"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "estimator",
+            "jobId": "JOB-M901",
+            "reason": "ready_to_release:Q1"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "pricebook-is-current",
+      "n": 10,
+      "title": "The price list was read, not remembered",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The read returns the changed rate and the draft carries it, or the quote parks. The superseded rate appears nowhere on the draft.",
+      "actual": "8 port call(s): read_job, read_pricebook, draft_quote, notify, read_job, read_pricebook, draft_quote, notify; 2 quote(s), 0 escalation(s), 2 alert(s)",
+      "stimulus": {
+        "description": "A draft raised after the price list has changed in the system of record.",
+        "now": "2026-09-21T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "pricebook-is-current"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-M1001"
+          },
+          "response": {
+            "id": "JOB-M1001",
+            "source": "call",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-21T23:00:00.000Z"
+          },
+          "response": {
+            "items": 4
+          }
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JOB-M1001",
+            "lines": [
+              {
+                "catalogueId": "FL-TIMBER-M2",
+                "description": "Engineered timber floor, supply and lay, per m2 (Living)",
+                "room": "Living",
+                "unit": "m2",
+                "quantity": 10,
+                "rate": 12500,
+                "amount": 125000,
+                "pricebook_read_at": "2026-09-21T23:00:00.000Z"
+              }
+            ],
+            "total_ex_gst": 125000,
+            "intentId": "JOB-M1001:job.created:measure-quote"
+          },
+          "response": {
+            "id": "Q1",
+            "total": 12500
+          },
+          "intentId": "JOB-M1001:job.created:measure-quote"
+        },
+        {
+          "at": "2026-09-21T23:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "estimator",
+            "jobId": "JOB-M1001",
+            "reason": "ready_to_release:Q1"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-22T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "jobId": "JOB-M1002"
+          },
+          "response": {
+            "id": "JOB-M1002",
+            "source": "call",
+            "quoteId": null
+          }
+        },
+        {
+          "at": "2026-09-22T00:00:00.000Z",
+          "port": "read_pricebook",
+          "verb": "read",
+          "subject": "pricebook",
+          "request": {
+            "at": "2026-09-22T00:00:00.000Z"
+          },
+          "response": {
+            "items": 4
+          }
+        },
+        {
+          "at": "2026-09-22T00:00:00.000Z",
+          "port": "draft_quote",
+          "verb": "write",
+          "subject": "quote",
+          "request": {
+            "jobId": "JOB-M1002",
+            "lines": [
+              {
+                "catalogueId": "FL-TIMBER-M2",
+                "description": "Engineered timber floor, supply and lay, per m2 (Living)",
+                "room": "Living",
+                "unit": "m2",
+                "quantity": 10,
+                "rate": 13400,
+                "amount": 134000,
+                "pricebook_read_at": "2026-09-22T00:00:00.000Z"
+              }
+            ],
+            "total_ex_gst": 134000,
+            "intentId": "JOB-M1002:job.created:measure-quote"
+          },
+          "response": {
+            "id": "Q2",
+            "total": 13400
+          },
+          "intentId": "JOB-M1002:job.created:measure-quote"
+        },
+        {
+          "at": "2026-09-22T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "estimator",
+            "jobId": "JOB-M1002",
+            "reason": "ready_to_release:Q2"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 11,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "Run 1 wrote nothing and parked with not_in_pricebook, carrying the priced lines, no total and no invented rate. Run 2 left one real draft quote in that tenant against real catalogue ids. Run 3 kept that quote rather than creating a second, carrying duplicate_of.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "A real job, from a ServiceM8 or Simpro tenant or held by the build when the books are in Xero alone, run once with a line not in the price list and then twice without it.",
+        "now": "2026-11-04T12:33:18.440Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 11,
+    "pass": 7,
+    "fail": 0,
+    "shapeOnly": 3,
+    "withUs": 1,
+    "evidenceRequired": 0
+  }
+}
