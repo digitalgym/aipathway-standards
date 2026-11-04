@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T12:18:58.849Z",
+  "generated_at": "2026-11-04T12:22:18.949Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -12224,6 +12224,109 @@
           "total": 12
         }
       ]
+    },
+    {
+      "slug": "visit-round",
+      "name": "Visit Round",
+      "office_task": "Each period, book the next visit on every maintenance contract with a licensed tech inside the customer's window, and hand lapsed contracts and visits no tech is free for to a named person.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "dispatch-board"
+      ],
+      "systems_of_record": [
+        "the job system that issues the job_id, raises each contract's next visit job and holds its schedule (ServiceM8, Simpro or Jobber)",
+        "the tech licence register the business keeps"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "job.created",
+          "wake": "webhook"
+        },
+        {
+          "event": "job.updated",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "job.updated",
+          "write": "the contract visit's booking on its job: one slot on the job's schedule (licensed tech, start, end, resolved address, the rule or named dispatcher that set it, what displaced it), updated in place when the visit changes and never written twice, with the customer confirmation attached as evidence",
+          "readback": "the job system returns the slot's external id, and reading the job's slot back by job_id returns that external id and the job version it was booked for; no id back is a failed write, escalated as write_failed, and nothing is sent"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an escalation on the visit job naming its owner: a contract that has lapsed (to the contract owner), an address that will not resolve, no tech with a current licence for the work, a window too short for the visit, no tech free in the window, no consent to message the customer, a failed slot write, or a visit moved off by an emergency that could not be re-booked",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the job_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "visit.contract_lapsed",
+          "dispatch.address_unresolved",
+          "dispatch.no_licensed_tech",
+          "dispatch.window_impossible",
+          "dispatch.no_capacity",
+          "dispatch.no_consent",
+          "dispatch.write_failed",
+          "dispatch.displaced"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.contract_id",
+          "seam.slot_external_id",
+          "seam.job_version",
+          "seam.updated_by",
+          "seam.displaced_by",
+          "seam.customer_message_ref",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/visit-round"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "dispatch-board",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:18:38.414Z",
+          "run_id": "run-1793794718411",
+          "green": 8,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        }
+      ]
     }
   ],
   "routable": [
@@ -12341,7 +12444,8 @@
     "variation-chase",
     "vendor-actuals",
     "vendor-pack",
-    "visit-offer"
+    "visit-offer",
+    "visit-round"
   ],
   "edges": [
     {
@@ -12395,6 +12499,12 @@
     {
       "from": "after-hours-desk",
       "to": "visit-offer",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "after-hours-desk",
+      "to": "visit-round",
       "event": "job.created",
       "id": "job_id"
     },
@@ -12491,6 +12601,12 @@
     {
       "from": "crew-board",
       "to": "visit-offer",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "crew-board",
+      "to": "visit-round",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -12705,6 +12821,12 @@
       "id": "job_id"
     },
     {
+      "from": "practice-desk",
+      "to": "visit-round",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
       "from": "quote-desk",
       "to": "quote-keeper",
       "event": "quote.sent",
@@ -12813,6 +12935,12 @@
       "id": "job_id"
     },
     {
+      "from": "repair-board",
+      "to": "visit-round",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
       "from": "roof-desk",
       "to": "crew-board",
       "event": "job.created",
@@ -12863,6 +12991,12 @@
     {
       "from": "roof-desk",
       "to": "visit-offer",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "roof-desk",
+      "to": "visit-round",
       "event": "job.created",
       "id": "job_id"
     },
@@ -12963,6 +13097,12 @@
       "id": "job_id"
     },
     {
+      "from": "van-board",
+      "to": "visit-round",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
       "from": "visit-offer",
       "to": "buy-desk",
       "event": "job.updated",
@@ -13055,6 +13195,114 @@
     {
       "from": "visit-offer",
       "to": "van-stock",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-offer",
+      "to": "visit-round",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-round",
+      "to": "buy-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-round",
+      "to": "crew-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-round",
+      "to": "danger-tag-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-round",
+      "to": "estimate-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-round",
+      "to": "hours-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-round",
+      "to": "order-release",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-round",
+      "to": "parts-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-round",
+      "to": "proposal-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-round",
+      "to": "quote-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-round",
+      "to": "repair-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-round",
+      "to": "retention-book",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-round",
+      "to": "safety-cert-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-round",
+      "to": "site-orders",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-round",
+      "to": "trim-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-round",
+      "to": "van-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-round",
+      "to": "van-stock",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-round",
+      "to": "visit-offer",
       "event": "job.updated",
       "id": "job_id"
     }
