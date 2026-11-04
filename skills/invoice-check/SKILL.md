@@ -97,10 +97,11 @@ skill asserts.
 - 6. The parts that are harder than they look
 - 7. What breaks after it works
 - 8. What It Is Worth
-- 9. The records it keeps, in the shape your developer needs
-- 10. What your developer builds, and the step that needs care
-- 11. What stays with a person
-- 12. A checklist to hold any build or supplier to
+- 9. Connect your accounts inbox and Xero or MYOB for invoice checks, without it paying anyone
+- 10. The records it keeps, in the shape your developer needs
+- 11. What your developer builds, and the step that needs care
+- 12. What stays with a person
+- 13. A checklist to hold any build or supplier to
 
 ## Attribution
 

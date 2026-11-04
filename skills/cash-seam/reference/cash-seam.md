@@ -71,6 +71,27 @@ One handover, the same at every hop
 
 A named event is the trigger and the exception is read first. The filled diamond is the write with its id back and a read by that id, the step not to hand-roll. The loop is the exception: a reason, an owner on the record, and nothing passes it.
 
+## Done for you: the Cash Seam sheet
+
+Every business that quotes, invoices and chases loses a job between two of those steps sooner or later, so we built this standard into a ready-made version: the Cash Seam sheet, a Google Sheet you copy that runs on Office Voice. One row per job, and every hour it tells you where the chain from the call to the chase has stopped, why, and whose it is to fix.
+
+What it does today
+
+- Works before you connect anything: put your jobs on the Chain tab and the callers on the Enquiries tab, and it checks the links as typed.
+- Runs the standard’s checks in order: an id that is really a name or a phone number, a second job for one caller, a quote or invoice with no id, a record that names the wrong job or quote, a send nobody released, an invoice nothing woke, an exception with no owner.
+- Once connected, reads by id through Office Voice: completed jobs and the quote each job is linked to in ServiceM8 or Simpro, and who released each invoice in Xero. It fills blanks and never overwrites what you typed, so a mismatch shows instead of being hidden.
+- Reads the live balance in Xero for every overdue invoice in the same run, and only then tells your chase owner it is ready, by its job, quote and invoice ids. A paid invoice is never handed on.
+- Emails the owner you name for each stage once per job and reason when a chain stops, and holds everything past it.
+- Writes nothing into your job system or Xero, releases nothing and places no calls. The chase is Debtor Chasing’s: its sheet, or Get Paid.
+
+Not yet
+
+- Finding the invoice for a job by itself. Office Voice reads an invoice by its id, not by the job, so the invoice id goes on the Chain tab by hand or from the Invoice Out sheet.
+
+[Make your own copy](https://docs.google.com/spreadsheets/d/17hZKWCqeQJiq_SpnoxIoEVVzOSOoPOjYWjVSZ0g5DAE/copy), then choose **Cash Seam > Connect** and name who owns a record that stops. It runs on Office Voice, so you need an Office Voice subscription; prices are on the [pricing page](https://aipathway.com.au/pricing). If you would rather we set it up for you, that is a fixed-price set-up: [pick a time](https://aipathway.com.au/ai-audit#book).
+
+Rather build it yourself? Everything you need is below, free. Joining it to your own inbox, ledger or a bigger workflow? See joining it to your own system. [the Cash Seam sheet](https://docs.google.com/spreadsheets/d/17hZKWCqeQJiq_SpnoxIoEVVzOSOoPOjYWjVSZ0g5DAE/copy) is held to the pass tests on this page like anything else.
+
 ## 1. What this standard covers
 
 Any business that takes an enquiry, quotes it, does the work, bills it and chases it, with a job system and a ledger underneath. If you are building any two of the four standards below, this is the one that makes them one system instead of four.
@@ -82,7 +103,7 @@ Any business that takes an enquiry, quotes it, does the work, bills it and chase
 
 Each of those passes on its own, and none of them fails if the id dies between two of them. That is the gap. This standard restates nothing the four already say. Every check below is about what crosses from one to the next: the id, the event that wakes the next step, and the exception with a name on it.
 
-What cannot meet it. A job system with no API cannot hand its job id to anything, so the chain cannot start from it. Tradify is the common case: a Tradify business can run Quote Out, Invoice Out and Debtor Chasing from the ledger alone, with the job entered by a person, but not the seam from the call. The standard says so rather than claiming a link that does not exist.
+What cannot meet it. A job system with no API cannot hand its job id to anything, so the chain cannot start from it. Tradify is the common case: it has no public API and no Zapier app, so nothing outside it can read or write a job. We connect it another way: the call lands in Tradify’s enquiries inbox, a person turns the enquiry into a job, and the seam picks up at the ledger, from the invoice id Xero issues once Tradify sends the invoice across. The first hop is a person’s, and the standard says so rather than claiming a link that does not exist.
 
 ## 2. The records it keeps, in the shape your developer needs
 
@@ -158,17 +179,41 @@ The test is a read through the port. A record counts once the job system or the 
 - Deciding two enquiries are the same job when the number does not say so.
 - Everything the four standards it binds already keep with a person: prices, variations, disputes and hardship.
 
+## 7. Connect ServiceM8 or Simpro and Xero so one job number runs from the call to the chase, with nothing sent on its own
+
+The build holds a stamp that only says DRAFT. It reads jobs and invoices by their ids, writes one job per enquiry, drafts the quote and the invoice, and notes a promise to pay on the invoice in Xero. Nothing it writes leaves the office until a person, or a rule a person wrote, releases it. It never records a payment, never approves or voids an invoice, and never changes an amount on one already sent. Revoke its Office Voice key, or remove the connection in your job system, and it is cut off. Your own logins stay yours: you approve each connection on ServiceM8’s, Simpro’s or Xero’s own sign-in page, and the build holds a key, never your password.
+
+What each piece of access is for.
+
+- **Job system, customers and jobs, read.** To find the open job on the caller’s number at intake, the one place a phone number is allowed, and to read every record back by its id.
+- **Job system, jobs, write.** One job per enquiry, and a note on the open job when the same caller rings again.
+- **Xero through Office Voice, “Read the book”.** To read the invoice by its id off the live ledger in the same run as the chase, so a paid invoice is never chased.
+- **Xero through Office Voice, “Write drafts and notes”.** The invoice draft raised from the accepted quote, and a promise to pay noted on the invoice. Drafts and notes only, never a payment.
+- **Office Voice, “Queue calls”.** To hand an overdue invoice to the Get Paid call once your release rule says it may go.
+
+Simpro has no per-permission choice: the connection gets the access of the person who approves it, so approve it as a user whose security group covers customers, jobs and quotes.
+
+1. In Office Voice, connect ServiceM8 or Simpro: sign in on their page and approve.
+2. Click Sign in with Xero and pick the organisation.
+3. Under Keys, create a key for the build with the three boxes above ticked, and keep it like a password.
+4. Name the exception owner for each stage (the job, the quote, the invoice, the chase) and write the release rule for each send.
+5. Run the pass test below: two calls from one phone, through to one chase, then a forced write with no id.
+
+Why not your job system’s own Xero sync, or Xero’s free connector for Claude? Keep the sync if you use it: ServiceM8 and Simpro both send invoices to Xero, and the seam reads the invoice by the id Xero issues. What the sync does not do is stop the chain on an empty id, carry an exception owner, or chase. Xero’s free Claude connector only reads, so it cannot draft the invoice or queue a call, and it moves only while somebody has a chat open, which section 4 rules out as a trigger.
+
+Where it runs. The triggers, the exception owners and the record can sit in Microsoft 365 lists and flows (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/cash-path-on-microsoft-365) lays these out), a small dashboard a coding agent builds from this page, or a routine woken by the job system’s and Xero’s own events. All three are held to the same checks; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
+
 ## Facts that can change, and when we checked them
 
 Checked as at 3 October 2026
 
-Tradify has no public or partner API, confirmed in writing by their support on 10 April 2026. If that changes, the scope in section 1 changes with it.
+Tradify has no public or partner API, confirmed in writing by their support on 10 April 2026, and no Zapier app as at 29 October 2026. If that changes, the route in section 1 changes with it.
 
 Each hop’s hosted step is live on its own page. No end-to-end run of the seam on a real tenant has been published yet, so the provider block below says stub by default.
 
 **Check these against the primary instrument before you rely on them**, and store the date you checked beside the value rather than hard-coding it. This standard tells you the shape and where to look. It is not legal advice and it does not tell you that anything complies.
 
-## 8. What your developer builds, and the step that needs care
+## 9. What your developer builds, and the step that needs care
 
 One step not to hand-roll, and it is the same step at every hop: identity from the system of record, and the authenticated single write into the job system or the ledger that returns its id. Everything else is wiring a coding agent builds against the stub in an afternoon.
 
@@ -191,15 +236,16 @@ stays local                          # yours, and the standard
   - the exception owners per stage, and the release rule
 
 cannot meet the standard
-  - a job system with no API, for the first hop. Ledger-only is the
-    honest route there.
+  - a job system with no API, for the first hop. Tradify has no public
+    API and no Zapier app: the call goes to its enquiries inbox, a
+    person makes the job, and the seam starts at the ledger.
 ```
 
 A vendor selling an end-to-end cash flow is usually selling four screens that each look right. Ask them one thing: when a customer rings twice and pays late, which id is on the chase, and where did it come from?
 
 **The pass test.** On the business’s own job system and ledger, not a sample. Ring the line twice from the same number. Accept the quote that comes out. Mark the job complete. Let the invoice go past its due date. There must be exactly one job, one quote, one invoice and one chase, and each must carry the id of the one before it as the job system or the ledger issued it: the second call attached to the first job, the quote naming the job, the invoice naming the quote and the job, the chase naming the invoice it read off the ledger. Then run it again and force one write to come back with no external id. The chain must stop there, with an escalation naming its owner and nothing released, sent or chased downstream of it. A stub cannot pass this: it issues whatever ids it likes and links whatever it is told to, so a build can agree with itself there and still key the real invoice to a name.
 
-## 9. A checklist to hold any build or supplier to
+## 10. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 
@@ -220,4 +266,5 @@ Hold a DIY build or a vendor to this. If a box is empty, it is not in production
 - The Quote Out Build Standard: the quote drafted from that job
 - The Invoice Out Build Standard: the invoice raised from the accepted quote
 - The Debtor Chasing Build Standard: the chase off the live ledger
+- The Virtual Admin Build Standard: this seam and the daytime desk as one admin role
 - The Two Records Build Standard: when the job system and the ledger disagree anyway

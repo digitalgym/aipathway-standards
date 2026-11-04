@@ -272,7 +272,30 @@ DIVIDE (
 
 Uncomputed Deltas is the measure that separates this from an index, and it works only because blank and zero mean different things: blank is a delta whose affected list was never worked out, zero is one that was and found nothing. Read Acceptance Days next to Change Pending Nodes, because a graph where acceptance takes three weeks is a graph that spends most of its life unable to answer.
 
-## 6. The order to build it in
+## 6. What the flows can reach in your SharePoint, and what they never touch
+
+The flows take the minutes; only the chair signs them. They can write proposed nodes, edges and provenance rows all day, and none of it is the record until a named person approves it. In practice they read the knowledge base register, write the graph lists on one SharePoint site, send accepted sources’ passages to the extraction model, and start approvals. They never set a node live without an approval, never decide a conflict, never edit or delete a source file, and never answer a question.
+
+What each connection is for.
+
+- **SharePoint, the graph site, read and write.** The nine lists. The only place the build writes.
+- **SharePoint, the knowledge base register, read.** Where sources come from, and the checksum Flow 4 compares. The graph never writes to the register.
+- **The extraction model.** Whatever Flow 2 calls, through the HTTP action or a custom connector (both premium in Power Automate). It is sent the passages of an accepted source and nothing else, and its ModelId goes on the ExtractRuns row.
+- **Approvals and Teams.** Accepting a source, a node and a change delta, each with a person’s name written back.
+- **No ledger and no Office Voice.** Nothing in this build touches money or makes a call.
+
+Keep it to the least it needs.
+
+1. Make a service account for the build and create the flows as it, not as the person who built them. Flows and connections owned by a person go with them when they leave.
+2. Put the four flows in a solution and use connection references, so each connection is made once, by the service account, and every flow shares it.
+3. Give the service account edit on the graph site and read on the register, nothing more. An app registration gets Sites.Selected, with write on the graph site and read on the register site.
+4. Restrict edit on Nodes and Edges to the service account and a small group, as the first trap below sets out. That is the part of the gate permissions can hold.
+
+How to cut it off. Turn the flows off and nothing new is proposed, accepted or flagged as changed; what is live stays live and keeps its names. Remove the model’s connection and Flow 2 stops extracting while the rest still runs.
+
+Why not Copilot, or an agent built over the library? Either will answer from whatever passages it finds, and for a first look that is useful. Neither keeps a node a person accepted, a provenance row per fact, or a list of what breaks when an edition is replaced. Those three are the standard, and they are lists a flow can write and a person can sign.
+
+## 7. The order to build it in
 
 1. Write the KeyContract row: version one, the node types and the edge types. Nothing below starts until that row exists.
 2. Create Nodes and Edges with Type as Choice columns, custom values off. Index NodeId, Key, FromNodeId and ToNodeId.
@@ -283,7 +306,7 @@ Uncomputed Deltas is the measure that separates this from an index, and it works
 7. Build Flow 4 and run the pass test on a replaced edition. This is the step the rest of the build exists for.
 8. Connect Power BI. Live Without Provenance and Uncomputed Deltas go on the front page, both at zero, and Conflicts gets its own list view for the person who owns them.
 
-## 7. Four traps specific to this build
+## 8. Four traps specific to this build
 
 ### Claiming a gate SharePoint cannot hold shut
 
@@ -299,9 +322,9 @@ Lists and DAX will do a hop: node to edge to node, which covers scope, supersess
 
 ### Leaving fill-in on the Choice column
 
-SharePoint lets a Choice column accept a value the list does not offer, and it is on by default in some list templates. Leave it on and the first extract that meets something awkward invents a type, the contract silently forks, and the standard's first check is gone with no error anywhere. Turn it off on Type, Queue, Jurisdiction and Method, and check it again after anyone edits the list.
+With fill-in switched on, SharePoint lets a Choice column accept a value the list does not offer, and it is one setting that is easy to turn on and forget. Leave it on and the first extract that meets something awkward invents a type, the contract silently forks, and the standard's first check is gone with no error anywhere. Turn it off on Type, Queue, Jurisdiction and Method, and check it again after anyone edits the list.
 
-## 8. Where the automation stops
+## 9. Where the automation stops
 
 - Accepting a source into the library, which is the approval Flow 1 exists to record rather than to make.
 - Accepting a proposed node or edge as live. A confident extractor is still a proposal.

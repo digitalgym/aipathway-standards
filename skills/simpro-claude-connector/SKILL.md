@@ -94,7 +94,7 @@ skill asserts.
 ## The work, in order
 
 - 1. Claude answers from your Simpro, and you can check every answer
-- 2. You make the key in your own Simpro, and deleting it switches everything off
+- 2. Connect Simpro to Claude on a key you make, without it messaging a customer or moving a job
 - 3. The records it keeps, in the shape your developer needs
 - 4. The checks, in order
 - 5. Seven places a quick setup gives wrong answers

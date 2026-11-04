@@ -150,7 +150,31 @@ Publish on a fixed schedule regardless of the numbers. A report that appears whe
 
 The fourth is the one that decides whether this standard helps or harms. A scoring system that punishes honest recording will get clean numbers within two months and will have destroyed the only instrument you had.
 
-## 8. What your developer builds, and the step that needs care
+## 8. Connect every branch’s systems so the centre sees drift, without it changing a branch’s records
+
+The build is a smoke alarm in every branch: it sounds when something is wrong, and it never puts the fire out itself. It reads each segment’s records and who belongs to which group, and it posts the drift report where each segment already works. It never edits, closes or deletes a branch’s record, never renames a key, and never changes who is in a group. Revoke its key or app connection in each system and the next run reads nothing. Nobody’s login is shared: the build connects with its own key or app registration, never a manager’s username and password.
+
+What each piece of access is for.
+
+- **Group membership, read.** To give every record a segment from the access group it sits in, never from a typed label. That usually lives in Microsoft 365 or Google Workspace.
+- **Each segment’s records, read.** To run the four drift checks against the key contract: missing keys, gates bypassed, records entered in bulk, and silence.
+- **The key contract, read.** The versioned file every check compares against. A person changes it, as a version bump.
+- **One report location per segment, write.** A folder, channel or list each segment already opens, plus the centre’s copy. It is the only thing the build writes.
+
+Where a system lets you choose, give read access to the records and nothing more. Where it only offers full access, the fence is in the build: it contains no call that writes to a record.
+
+1. Write the key contract down and version it: the keys, the required fields and the closed lists.
+2. In each system the segments use, create a key or app connection for the build through that system’s own integration route.
+3. Map each segment to its access group, and name its owner and its coach.
+4. Turn on the key checks in each system’s own field settings, so a renamed key is refused at the source rather than reported later.
+5. Point the report at each segment’s own location and the centre’s, on a fixed day.
+6. Run the pass test below on one segment in a non-production copy.
+
+Why not your franchise or multi-site platform’s own reporting? Keep it for the numbers. It reports what each branch enters, so a branch keeping its real list in a local file looks quiet, not drifting. Before you rely on it, ask two things: what does it show for a branch that entered nothing this month, and does a branch see the same findings the centre sees.
+
+Where it runs. A scheduled flow with the contract and the findings in Microsoft 365 lists (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/multi-site-conformance-on-microsoft-365) lays these out) or a Google Sheet, a small dashboard a coding agent builds from this page, or a routine that runs on the report’s schedule. All three are held to the same checks; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
+
+## 9. What your developer builds, and the step that needs care
 
 This is a build on top of whatever you already run. The only thing worth buying here is the identity you almost certainly already own.
 
@@ -180,7 +204,7 @@ There is no product for this standard and we do not know of a credible one. Fran
 
 **The pass test.** In a non-production copy, take one segment and break the contract two ways. First, create a record that is missing a required key, or put a value in a closed-list field that is not on the list. Second, do something a gate should prevent: type a date the system is supposed to derive, or close a piece of work with its required evidence absent. Then wait for the next scheduled run without touching anything. Both must appear as drift findings against that segment, in the report that segment receives, with enough detail to find the record. Next, try to rename a key in that segment: validation must refuse it at the source, not flag it in a report afterwards. Last, let a period pass with nothing to report: the report must still publish on time, saying so. If a finding is missing, you have a report rather than a control; if findings appear only in the centre’s copy and not the segment’s, you have surveillance rather than a feedback loop, and it will be resented accordingly; if the quiet period goes unreported, silence now means both “fine” and “stopped”.
 
-## 9. A checklist to hold any build or supplier to
+## 10. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 

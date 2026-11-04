@@ -69,16 +69,28 @@ Out of scope: anything Lightning already does inside Simpro, which the [Claude a
 
 Simpro lets its customers connect software to their own account, under its API licence agreement. Read it before you build, as you would any supplier’s terms.
 
-## 2. You make the key in your own Simpro, and deleting it switches everything off
+## 2. Connect Simpro to Claude on a key you make, without it messaging a customer or moving a job
 
-An administrator in your Simpro creates the key. No partner, no marketplace, nobody else’s app:
+Think of the key as the site key you cut for a subcontractor: it opens the whole site, so the rules about what they touch are written down, and you take it back in one step. Treat a Simpro API key the same way, as opening your whole Simpro. The fence is in the build: it reads quotes, jobs, customers and invoices, and at most books one job at Simpro’s first status, and it logs every request where you can read it. It never emails or texts anyone, never moves a job or quote to another status, and never acts on a note inside a record. Delete the key in Simpro and it is cut off. Your own login stays yours: the build connects with its own key, never your username and password.
+
+What each piece of access is for.
+
+- **Quotes, read.** To answer which quotes are still waiting, from the customer’s own stage, not the office’s.
+- **Jobs, read.** To say what a job holds, and to look for an existing job before a booking is saved.
+- **Customers, read.** To match a caller by phone digits and to leave Do Not Call customers off any list to contact.
+- **Invoices, read.** To say who owes what and how late, with the invoice number behind each figure.
+- **Jobs, write, only if you want bookings.** One new job for a caller, at the first status, for a person to take from there. Say no and the build has no write at all.
 
 1. In Simpro, open System, then Setup. API is near the bottom; choose Applications. If it is not there, the login is not an administrator.
 2. Create an application, name it for what it is (“Claude connector”), and choose API Key as the grant type.
 3. Download the key file. It holds the key and your Simpro’s web address.
 4. Give the key to whoever sets up the connection, to store somewhere only your business controls. Never paste it into a chat, an email or a shared document.
+5. Decide whether Claude may book jobs. If not, tell your developer to leave the write out.
+6. Run the pass test below, deleting the key last.
 
-The key opens your whole Simpro, because Simpro does not offer keys that open only part of it. That is why the connection mostly reads, makes one kind of booking at most, and records every request. Deleting the key is the off switch, and the pass test proves it works.
+Why not a ready-made connector? Simpro does not offer one for Claude. A connector sold to you as a hosted service runs on a key someone else holds, between Claude and your customer records. And if what you want is a customer rung when their job slips on the board, that is not this connector, which never contacts anyone: Office Voice makes that running-late call from your Simpro board once you switch it on under Automations.
+
+Where it runs. On a computer or account you own, as an MCP server Claude connects to, or in Microsoft 365 with the key held in a custom connector (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/simpro-connector-on-microsoft-365) lays it out). Both are held to the same checks; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
 
 ## Facts that can change, and when we checked them
 

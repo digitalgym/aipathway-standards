@@ -181,7 +181,31 @@ CALCULATE (
 
 Stale Positions is the one to alert on. Everything else on this page is worthless the moment the refresh quietly stops, and a refresh that stops looks exactly like a quiet week.
 
-## 6. The order to build it in
+## 6. What the flows can reach in your Microsoft 365 and in Xero, and what they never touch
+
+The build gets the office franking machine, not the chequebook. It can stamp and send, and it can write down what happened, but it cannot move a dollar. The flows read what is owed, write the rank, the suppressions and the contact record into one SharePoint site, and send from one shared mailbox. Through Office Voice they can write a promise back to Xero as a note on the invoice and queue a call. Nothing in this build records a payment, changes an amount, or sends, approves or voids an invoice, and no flow opens another site or another inbox. Your own Xero login stays yours: you sign in with Xero once inside Office Voice, and the flows get a key, never your username and password.
+
+What each connection is for.
+
+- **SharePoint, the one site.** To hold Positions, Promises, Suppressions and Contacts. The ranking, the gate and the record live here; the balances do not.
+- **Office Voice, for Xero.** Flows call it with the HTTP action (premium) and a key from office-voice.com/app/keys. **Read the book** feeds Flow 1 the open debtor book. **Write drafts and notes** lets Flow 4 send a promise back, so the follow-up moves to that date. **Queue calls** lets Flow 3 hand over the ranked names; it is off by default and only the account owner can add it. The calls themselves are in section 11 of the standard.
+- **Another ledger, read.** If you are not on Xero, Flow 1 reads a nightly export into a library, or a custom connector or the HTTP action, both premium. Read only, always.
+- **Outlook, the one shared mailbox.** For the emailed reminders Flow 3 sends, from an address the business owns.
+- **Teams, optional.** To post the ranked list and the Stale Positions alert to the person who works the book.
+
+Keep the chequebook in the drawer.
+
+1. Build the flows under a service account, an ordinary licensed account kept for them, not a person who might leave or change their password.
+2. Build them inside a solution, so each connection is a connection reference you can see, swap or remove in one place.
+3. Make the service account a member of the one SharePoint site and no other. If an app registration reads the site instead, grant it Sites.Selected and have an admin add only this site.
+4. Give the service account Send As on the one shared mailbox and no other. If an app registration sends instead, limit it to that mailbox with an Exchange application access policy or RBAC for Applications.
+5. Create the Office Voice key with **Read the book** only, check Flow 1 against Xero’s aged receivables report, then add the other two scopes one at a time. A practice can narrow the key to named client organisations.
+
+How to cut it off. Turn the flows off and nothing ranks or sends. Revoke the Office Voice key and the flows can no longer read Xero, write a note or queue a call. Remove Office Voice from Xero’s connected apps and Office Voice loses Xero too.
+
+Why not connect the flows straight to Xero? You can, with a custom connector or the HTTP action and your own Xero app. Apps created from March 2026 must ask for granular scopes, the flow has to keep its own sign-in alive, and it is one more key into the ledger to scope and watch. For reading the book that is a fair trade. It still rings nobody, and the gate before each call is still yours to build, which this page has already said it will not teach.
+
+## 7. The order to build it in
 
 1. Create the four lists. Index DebtorRef on all of them.
 2. Build Flow 1 against a file export before you buy a connector licence. A nightly CSV is a legitimate first version and it proves the shape.
@@ -191,7 +215,7 @@ Stale Positions is the one to alert on. Everything else on this page is worthles
 6. Build Flow 2, then Flow 4.
 7. Connect Power BI, add the measures, alert on Stale Positions.
 
-## 7. Four traps specific to this build
+## 8. Four traps specific to this build
 
 ### Copying balances into SharePoint
 
@@ -209,7 +233,7 @@ A filtered view is per person and per session. The moment somebody opens the unf
 
 If only successful conversations are written back, the contact history understates itself and the ranking keeps promoting the same names. Write the attempt, then the outcome.
 
-## 8. Where the automation stops
+## 9. Where the automation stops
 
 - Escalating to collections, applying a credit hold, or writing off a debt. Consequential decisions, and they stay with a person.
 - Clearing a suppression. Adding one can be automatic; removing one is a decision with a name and a date on it.

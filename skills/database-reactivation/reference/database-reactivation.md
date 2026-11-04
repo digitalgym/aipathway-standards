@@ -224,14 +224,25 @@ The ready-made version of the daily list is a Google Sheet you copy: a Contacts 
 
 A sale nearby is the strongest reason on the list, and in the sheet it is a column you fill from what you know or from a data source your agency already licenses. No hosted property-data service is offered to other builds, so build against a stub feed.
 
-## 8. The Callbacks Office Voice Can Ring
+## 8. Connect Office Voice to ring back the people who asked, and nobody else
 
-Most of the ranked list is yours to ring, from the daily list in section 7. The one part Office Voice can ring for you is narrow on purpose: a contact who asked to be called back. Everyone else on the list stays your own call.
+Think of the message pad by the office phone. Office Voice only rings the names written on it: the contacts who asked you to call them back. Everyone else on the ranked list stays your own call, from the daily list in section 7. This step is optional and off by default.
 
-This step is optional and off by default. Office Voice places one governed call to one person you already hold a record for, on a stated basis. For this standard the basis is`callback`or`they_asked`: the contact asked you to ring. There is no basis for a prospecting or cold call, so Office Voice refuses those by design, however high the contact scores.
+With its key, Office Voice can hold the contacts you send it and queue one call to each, on a stated basis. For this standard the basis is`callback`or`they_asked`: the contact asked you to ring. It never reads your CRM, never rings a contact you did not hand it, and never makes a prospecting or cold call: there is no basis for one, so it refuses them however high the contact scores. Revoke the key and it is cut off. Your CRM login stays yours: you send contacts with a key, and Office Voice never gets your username and password.
 
-- **What you hand over.** The contact, then one call: who it is, one plain sentence the agent will say, and the basis. Any Office Voice account can do this; it is not a plan feature.
-- **What it checks at dial time.** The Do Not Call Register and your do-not-contact flags, calling hours in the person’s own state, one attempt per person per day, and about ten single calls a day per workspace.
+What each piece of access is for.
+
+- **Write contacts** (`contacts:write`). To hold the contact who asked as a record Office Voice keeps, so a call has a real person and number behind it.
+- **Queue calls** (`campaigns:initiate`). To queue one governed call: who it is, one plain sentence the agent will say, and the basis. It is the only piece that makes a phone ring, and only the account owner can grant it.
+- **Read the record** (`audit:read`). To read back each call, placed or held, and why.
+
+At dial time it checks the Do Not Call Register and your do-not-contact flags, calling hours in the person’s own state, one attempt per person per day, and about ten single calls a day per workspace.
+
+1. In Office Voice, under API keys (office-voice.com/app/keys), create a key with`contacts:write`and`audit:read`only.
+2. Send one contact who asked for a callback, and check it lands with the right name, mobile and state.
+3. As the account owner, tick **Queue calls** on that key.
+4. Hand over only the rows marked “call me back” on the daily list, each with the basis`callback`.
+5. Run the pass test at the end of this section.
 
 Build against a stub until a callback has to actually ring, then change one line:
 
@@ -249,8 +260,6 @@ scopes:
 basis:                  # create_call refuses a call without one
   callback, they_asked  # the contact asked to be rung. Nothing else on this list qualifies
 ```
-
-Keys are per account, under API keys (office-voice.com/app/keys). The dialling scope is granted only by the account owner, by ticking “Allow this to queue calls”. Grant`contacts:write`first and leave the dialling scope off until you have seen a contact land correctly.
 
 ```
 # The Office Voice MCP: https://office-voice.com/api/mcp, bearer key.
@@ -272,6 +281,10 @@ Two details worth knowing before you write the script.`external_ref`on the conta
 **What you cannot stub is section 6, and that is the point.** A queued call is permission to consider a call, not permission to ring. Office Voice checks the do-not-contact flags, the register and the calling hours in the person’s own state at dial time, and a high score cannot promote a contact past any of it.
 
 **The pass test.** Take the highest-scoring contact who asked for a callback, flag it do not contact, and queue the call. It must not be rung, and the record must say why it was not. Run it again with the flag off and the clock at 8:30pm, and it must hold until morning. Both take a minute to stage. Run the same two against your own build. If yours rings, the gate is advice rather than a rule, which is section 6 in one sentence.
+
+Why not an auto-dialler, or your CRM’s own calling add-on? A dialler rings the list it is given, so whoever builds the list decides who gets called, and section 6 becomes a setting someone can switch off. Before you connect one, ask it three things: does it refuse a call with no reason on record, does a do-not-contact flag set in your CRM reach it before the next dial, and does it hold calling hours in the contact’s state rather than yours.
+
+Where it runs. The list itself lives wherever section 7 puts it: your existing tools, a small dashboard, or a morning bot. Building on Microsoft 365: [the lists, the flows and the measures](https://aipathway.com.au/explore-ai/database-reactivation-on-microsoft-365). For the other two, see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
 
 ## 9. Parts That Are Harder Than They Look
 

@@ -159,15 +159,39 @@ CALCULATE (
 
 -- Row level security. Group membership, never a typed name.
 -- role "Segment":  [SegmentId] IN
---   SELECTCOUNT of the segments whose EntraGroup contains
---   USERPRINCIPALNAME(), resolved from a bridge table the
---   drift flow maintains.
+--   the segments whose EntraGroup contains USERPRINCIPALNAME(),
+--   resolved from a bridge table the drift flow maintains.
 -- The centre's role has no filter.
 ```
 
 Weight the score however suits the business, but compute it in one model. The moment two segments can produce their own version of the same number, the weekly conversation stops being about the work and becomes about whose number is right, and that argument never ends.
 
-## 6. The order to build it in
+## 6. What the flows can read across your branches, and what they never change
+
+The flows are a dipstick in every branch’s tank: they check the level and write it down, and they never top it up or drain it. They read each segment site’s lists, the key contract and who is in each Entra group, write DriftFindings in the centre’s site, and post the digest to each segment’s channel. They never edit, close or delete a branch’s record, never change the key contract, and never change who is in a group.
+
+What each connection is for.
+
+- **Each segment site, read.** Every site associated to the hub, for the four drift checks. Nothing on a segment site is written.
+- **The centre’s site.** Read on KeyContract and Segments, write on DriftFindings. That list is the only thing the flows write.
+- **Group membership, read.** To give every record its segment from the Entra group it sits in, never from a typed label.
+- **Teams.** To post each segment’s findings to its own channel, the roll-up to the centre’s, and a message to a coach by name when a segment passes its thresholds.
+- **Power BI, read.** The model, the score and row level security read the lists and write nothing back.
+
+Keep each one to the least it needs.
+
+1. Create a service account for the flows and build them in a solution that account owns, with a named person at the centre as co-owner. A flow owned by a person stops working the day that person leaves, and the digest goes quiet with it.
+2. Create every connection as the service account and use it through the solution’s connection references, so no manager’s own login sits inside a flow.
+3. Give the service account read on each segment site and edit on the centre’s site only. If an app registration is used instead, grant it Sites.Selected, with read on each segment site and write on the centre’s alone.
+4. Let it read group membership and never own a group. An app registration needs GroupMember.Read.All for this, not a permission that writes to groups.
+5. Give the flows no mailbox. The digest posts to Teams channels, so there is no Outlook connection to scope.
+6. Where segments are on their own tenants, the flows read only the centre’s shared site or the agreed extract, as section 1 decided. They get no account inside a franchisee’s tenant.
+
+How to cut it off. Turn the flows off in Power Automate and no more findings or digests are written. Remove the service account from a segment site and the next run reads nothing from that segment. Block sign-in on the service account and every connection it owns stops working.
+
+Why not give the centre’s managers edit access to every branch site? It is quick, and it works on day one. It is also the access that lets a well-meaning manager fix a branch’s row, which hides the very drift this standard exists to show. Give the centre read access and the findings, and leave each branch’s records to the branch.
+
+## 7. The order to build it in
 
 1. Answer the tenancy question. Write the answer down.
 2. Create the hub site and associate the segment sites to it.
@@ -179,7 +203,7 @@ Weight the score however suits the business, but compute it in one model. The mo
 8. Build the model, the score and row level security. Verify a segment user sees only their own.
 9. Build Flow 2 and let it post once while the numbers are still bad. That first ugly digest is the whole culture of this standard.
 
-## 7. Four traps specific to this build
+## 8. Four traps specific to this build
 
 ### Franchisees on their own tenants
 
@@ -197,7 +221,7 @@ It looks identical and it decays immediately. Somebody is moved between branches
 
 A branch that records its problems scores worse than one that hides them. If the score is used punitively you will have clean numbers within two months and no instrument. Read a low score as a question, and watch for a segment whose numbers improve without anything changing.
 
-## 8. Where the automation stops
+## 9. Where the automation stops
 
 - Accepting a local variation as legitimate, and recording why.
 - Changing the key contract, which is a version and a conversation, not an edit.

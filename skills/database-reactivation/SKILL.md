@@ -95,7 +95,7 @@ skill asserts.
 - 5. Cadence, and When to Stop
 - 6. The Gate, Which Is the Step to Not Hand-Roll
 - 7. The Daily Call List: Who Do I Ring Today?
-- 8. The Callbacks Office Voice Can Ring
+- 8. Connect Office Voice to ring back the people who asked, and nobody else
 - 9. Parts That Are Harder Than They Look
 - 10. What It Is Worth
 - 11. What Breaks After It Works

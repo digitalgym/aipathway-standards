@@ -98,8 +98,9 @@ skill asserts.
 - 5. When the job changes
 - 6. Emergencies, and who says so
 - 7. What stays with a person
-- 8. What your developer builds, and the step that needs care
-- 9. A checklist to hold any build or supplier to
+- 8. Connect ServiceM8 or Simpro to the board, without it touching your invoices
+- 9. What your developer builds, and the step that needs care
+- 10. A checklist to hold any build or supplier to
 
 ## Attribution
 

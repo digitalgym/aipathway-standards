@@ -74,9 +74,33 @@ What it does today
 - Drafts the vendor report: counts, price comments word for word, and the themes you tagged. It goes to the vendor only once you type yes against that version.
 - Keeps a record of every draft, send, reply and opt-out in the sheet. The optional call is off; if you turn it on, it asks Office Voice for one call to an attendee who ticked that they would take one.
 
-[Make your own copy](https://docs.google.com/spreadsheets/d/1Qbzmz0Az8cBsCjM9HcxFbIVGsxillCpDImgEzkB-ctc/copy), fill in Listings and Opens, paste the register, and choose **Open-Home Feedback > Run now**. The sheet is free. Only the optional call needs an Office Voice account. If you would rather we set it up for you: [pick a time](https://aipathway.com.au/ai-audit#book).
+[Make your own copy](https://docs.google.com/spreadsheets/d/1Qbzmz0Az8cBsCjM9HcxFbIVGsxillCpDImgEzkB-ctc/copy). The sheet is free. The steps, and what each Google permission is for, are below. If you would rather we set it up for you: [pick a time](https://aipathway.com.au/ai-audit#book).
 
 Rather build it yourself? Everything you need is below, free. Joining it to your own inbox, ledger or a bigger workflow? See joining it to your own system. [the Open-Home Feedback sheet](https://docs.google.com/spreadsheets/d/1Qbzmz0Az8cBsCjM9HcxFbIVGsxillCpDImgEzkB-ctc/copy) is held to the pass tests on this page like anything else.
+
+## Set up the open-home feedback Google Sheet, without letting it email buyers on its own
+
+The sheet holds the pen; you hold the stamp. It reads the one spreadsheet you copied, writes a draft for every attendee who gave consent, files the replies you paste in and drafts the vendor report. It sends none of it until you type yes against that row. It cannot open your Drive, your other spreadsheets or your CRM, it sends no texts and it rings nobody. Nothing runs until you choose Run now, and once the hourly run is on, **Open-Home Feedback > Pause the hourly run** turns it off in one click.
+
+1. [Make your own copy](https://docs.google.com/spreadsheets/d/1Qbzmz0Az8cBsCjM9HcxFbIVGsxillCpDImgEzkB-ctc/copy). The script comes with it and lives in your Google account.
+2. Fill in Listings, with the vendor’s email the approved report goes to, and Opens, with the one question each open asks: interest, the price or the contract.
+3. Paste the register as written. Put yes in consent only where the person agreed at sign-in, and yes in call_ok only where they ticked that they would take a call.
+4. Choose **Open-Home Feedback > Run now**. Google shows “Google hasn’t verified this app” because the script is your own copy, not a published app. Choose Advanced, then Go to Open-Home Feedback, and read the list below before you allow it.
+5. Read each draft on FollowUps and type yes in approved. The next run sends it. A follow-up for someone who left only a mobile is marked for you to send from your phone.
+6. To have it run every hour, choose **Connect…** (below).
+
+What each Google permission is for. Google lists six. Each one has a single job here:
+
+- **See and edit this spreadsheet:** only the copy you made. It reads the register and writes the drafts, the reply classes, the report and the record.
+- **Connect to an external service:** Office Voice, and nothing else, for Connect… and the optional call.
+- **Send email as you:** the follow-ups and the vendor report you approved, and the notes to you about offers, complaints and rows it could not use.
+- **Run while you are away:** the hourly run, once you turn it on.
+- **Display a dialog:** the Connect… window.
+- **See your email address:** to fill in the agent’s email, where offers and complaints go.
+
+Connect…, and what the Office Voice key can do. The sheet shows a link and a code. Open the link, sign in to Office Voice, check the code matches and approve. The sheet picks the key up by itself: nothing is pasted, and the key is never shown in the sheet. The key asks for one permission: to hold an attendee who asked for a call, so a call can be asked for. It cannot dial. The call stays off until voice_step on Settings says on, and even then Office Voice decides at dial time on the AI disclosure, the Do Not Call Register and calling hours. The sheet then asks who the agent is, the person who approves and gets every offer and complaint, and turns on the hourly run.
+
+Why not your CRM’s own follow-up? Use it if it holds the checks in section 4. Before you rely on it, ask it two things: does someone who replied STOP at last month’s listing get nothing this week, and does anything go to a buyer or the vendor before you say yes. We have not tested Rex, Agentbox or VaultRE against this standard. The sheet is for an agent whose CRM cannot show both.
 
 ## 1. What this standard covers
 

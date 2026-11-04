@@ -31,7 +31,7 @@ The standard says what to build and deliberately says nothing about where. This 
 
 Read [the compliance calendar build standard](https://aipathway.com.au/explore-ai/compliance-calendar-build-standard) first. It is the specification and this page is one way to satisfy it. Where the two disagree, the standard wins and this page has a bug. The shared conventions for this stack, and the reasons behind them, are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-What you need in the tenant: a SharePoint site you can create lists in, Power Automate with the standard SharePoint and Approvals connectors (no premium connector is required for this build), and a Power BI workspace with somewhere to publish. Nothing here needs Dataverse.
+What you need in the tenant: a SharePoint site you can create lists in, Power Automate with the standard SharePoint and Approvals connectors (no premium connector is required for this build), and a Power BI workspace with somewhere to publish. No data lives in Dataverse, though building the flows inside a solution (section 6) and calling Flow 3 as a child flow both use the environment’s Dataverse database.
 
 Three things an agent cannot do for you, so decide them first: who owns the site, which security group holds the people allowed to approve a notice, and whether the Power BI workspace already exists. Everything after that is executable.
 
@@ -127,7 +127,9 @@ FLOW 2  Rule change fan-out
   never    do not touch StateChanges. History stays as it was.
 
 FLOW 3  State transition gate
-  trigger  an HTTP or button request, never a manual column edit
+  trigger  a button, or FLOW 4 calling it as a child flow.
+           Never a manual column edit, and not an HTTP trigger,
+           which is premium.
   logic    to done    -> refuse unless an Evidence item exists
                         for this obligation
            to done
@@ -199,7 +201,29 @@ CALCULATE ( COUNTROWS ( Obligations ), Obligations[LateCompletion] = TRUE )
 
 Override Rate is the one to put on the front page. It is the measure that says whether the derive step is being worked around, and a rising line there means the calendar is drifting back to a spreadsheet with extra steps.
 
-## 6. The order to build it in
+## 6. What the flows can reach in your Microsoft 365, and what they never touch
+
+The flows keep the calendar the way a bound logbook is kept: they can add a line, and they cannot tear a page out. They read the rules, write the derived dates, append to the history, and draft each notice for a person to release from one shared mailbox. They never send a notice without an approval, never edit or delete a StateChanges row, never mark an obligation done without evidence, and never read any other site or mailbox. Your own login stays yours: the flows run under their own account, never your username and password.
+
+What each connection is for.
+
+- **SharePoint, the one site.** Rules, read. Obligations, read and write, with DueDate and State written only by the flows. StateChanges, add only. The Evidence library, read, so Flow 3 can refuse a done without a certificate.
+- **Approvals, through Teams or Outlook.** Flow 4 asks the security group allowed to approve a notice, and nothing is sent until one of them answers.
+- **Outlook, one shared mailbox, send.** The released notice goes from a mailbox such as compliance@, so the sent copy sits where the whole team can find it, not in one person’s sent items.
+- **Your property management system, if you want it.** For properties and known anchor dates. A scheduled export loaded into Obligations keeps the build on standard connectors. A custom connector or the HTTP action can read it directly, and both are premium, which changes what section 1 says you need.
+
+Give it the least it needs.
+
+1. Own the flows with a service account, not a person who might leave. A flow owned by someone who leaves stops when their account is switched off.
+2. Build the four flows inside a solution and share connections through its connection references, so nobody’s personal connection ends up inside a flow.
+3. Make the service account a member of this one site and no other, and give it Send As on the one shared mailbox only. If you use an app registration instead, grant it Sites.Selected with only this site added, and limit its mail access to that mailbox with an Exchange application access policy or RBAC for Applications.
+4. Keep the add-only permission level on StateChanges for the service account as well as for people. The flows only ever append, so they never need more.
+
+How to cut it off. Turn off the four flows, or delete their connections in Power Automate. Remove the service account from the site and the mailbox, and delete the app registration’s secret if you used one. Dates stop moving and notices stop drafting, and the history stays exactly as it was.
+
+Why not the compliance reminders in your property management software? Many track due dates and send reminders, and if yours does, keep using it. Ask it two things before you rely on it: when a rule changes, does every future date move by itself, and when a missed check is finally done, does the record still say it was missed. If either answer is no, it is a reminder list, and this build is the calendar under it.
+
+## 7. The order to build it in
 
 The order matters because each step is testable only once the previous one exists. An agent working through this should stop and verify at each numbered point rather than building everything and testing at the end.
 
@@ -213,7 +237,7 @@ The order matters because each step is testable only once the previous one exist
 8. Connect Power BI, add the measures, publish. Add row level security only if more than one group reads it.
 9. Run the pass test below. It is the standard’s own, not a new one.
 
-## 7. Five traps specific to this build
+## 8. Five traps specific to this build
 
 These are not general advice. Each one breaks this particular calendar on this particular stack, and the first one accounts for most abandoned attempts.
 
@@ -237,7 +261,7 @@ An append-only history that can be edited is not a history. Break inheritance on
 
 Use the SharePoint Online list connector on its 2.0 implementation and select columns explicitly. The default pulls every system field including several that break refresh on a schema change, and a model built on the wide table is slow enough that people stop opening it.
 
-## 8. Where the automation stops
+## 9. Where the automation stops
 
 An agent with access to the tenant can create the lists, set the columns, build the flows and write the measures. Being honest about the rest matters more than the demo:
 

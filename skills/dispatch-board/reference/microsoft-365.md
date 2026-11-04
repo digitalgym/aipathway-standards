@@ -30,7 +30,7 @@ The interesting part of a dispatch board is not fitting jobs into a day. It is t
 
 Read [the dispatch board build standard](https://aipathway.com.au/explore-ai/dispatch-board-build-standard) first. It defines its objects, and the lists below are those objects with SharePoint types on them. Shared conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-Decide one thing first: whether your job system can take the slot write and hand back its own id. The standard is explicit that ServiceM8, Simpro and Jobber can take a booked time against a job and that Tradify has no public API, so it cannot. That answer decides what the ExternalId column below means. Where the write exists, ExternalId is the job system’s own id and a blank one is a failed write. Where it does not, the tenant is the board, a person copies the slot across, and the standard says to keep that honest rather than pretend the id came from somewhere.
+Decide one thing first: whether your job system can take the slot write and hand back its own id. The standard is explicit that ServiceM8, Simpro and Jobber can take a booked time against a job and that Tradify has no public API and no Zapier app, so it cannot. That answer decides what the ExternalId column below means. Where the write exists, ExternalId is the job system’s own id and a blank one is a failed write. Where it does not, the tenant is the board, a person copies the slot across, and the standard says to keep that honest rather than pretend the id came from somewhere.
 
 Two inputs this stack does not produce. A resolved address is not something SharePoint or Power Automate can derive: the resolution comes from a person confirming it or from a service outside the tenant, and the column below records which. Travel between two resolved addresses is the same. The standard says travel is read, never guessed, and a table of minutes somebody typed in March is a guess with a column name on it. Know where both come from before you build anything, because a board that fills up on unresolved addresses is worse than an empty one.
 
@@ -228,7 +228,32 @@ AVERAGEX (
 
 Silent Jobs is the front page. Every other number here describes something visible: an escalation you can read, a slot you can see. A job with neither is the one the standard is about, because it looks exactly like a job that does not exist, and the board is full either way.
 
-## 6. The order to build it in
+## 6. What the flows can reach in your Microsoft 365 and your job system, and what they never touch
+
+The build gets a pencil for the diary and no key to the till. The flows read jobs, techs and licences, write one booked time per job into the job system with its id back, keep the board’s seven lists in one SharePoint site, and send one message per version. They never create or edit an invoice or a quote, never change a price, never delete a job, never edit a licence row, and never message a customer on a channel they did not agree to. Your own login stays yours: the flows run under an account kept for them, and the job system sees a key made for the build, never your username and password.
+
+What each connection is for.
+
+- **SharePoint, the one site.** The seven lists, including the two unique columns that carry most of this page.
+- **The job system.** Jobs and staff to read, the schedule to write. In ServiceM8, an API key or app connection; in Simpro, an API key on your company’s own site (yourcompany.simprosuite.com). Reached through a custom connector or the HTTP action, both premium.
+- **Approvals.** So Flow 3 waits for a named dispatcher before an emergency moves anything.
+- **Outlook or the SMS account the business owns.** For Flow 2’s one confirmation to the customer and one message to the tech, sent from a shared address.
+- **Teams, optional.** For escalations and the weekly Silent Jobs post to the dispatcher.
+- **Office Voice, if you run it on ServiceM8 or Simpro.** It needs nothing from these flows. With running-late calls switched on under Automations, it rings the customer when a job moves later on the board, so a slipped day is a call as well as Flow 4’s written message.
+
+Keep the till locked.
+
+1. Build the flows under a service account, an ordinary licensed account kept for them, not a person who might leave or change their password.
+2. Build them inside a solution, so each connection is a connection reference you can see, swap or remove in one place.
+3. Make the service account a member of the one SharePoint site and no other. If an app registration reads the site instead, grant it Sites.Selected and have an admin add only this site.
+4. Give the service account Send As on the one shared mailbox and no other. If an app registration sends instead, limit it to that mailbox with an Exchange application access policy or RBAC for Applications.
+5. In the job system, give the build’s key jobs and staff to read and the schedule to write, and nothing that reaches invoices, quotes or prices.
+
+How to cut it off. Turn the flows off and nothing is slotted or sent. Revoke the build’s key in the job system and it can no longer write a slot. Remove a connection from its connection reference to stop one route and leave the rest running.
+
+Why not Microsoft Bookings or Shifts? Both are good at who works when, and techs may like seeing their day there. Neither writes the slot into your job system and waits for its id, and neither refuses an assignment because a licence lapsed yesterday. Mirror the slots into one if it helps, one way, as the calendar trap below says.
+
+## 7. The order to build it in
 
 1. Settle where a resolved address and a travel figure come from, and write both down. Everything below assumes they arrive.
 2. Create the seven lists. Turn on enforce unique values for Slots.JobRef and Messages.MessageKey before a single row exists, because SharePoint will not turn it on afterwards over data that already breaks it.
@@ -239,7 +264,7 @@ Silent Jobs is the front page. Every other number here describes something visib
 7. Build Flow 3. The approval comes before the write, and the displaced job is handled before the emergency is slotted.
 8. Build Flow 4, then connect Power BI. Silent Jobs goes on the front page and on a weekly post to the dispatcher.
 
-## 7. Four traps specific to this build
+## 8. Four traps specific to this build
 
 ### The slot as a calendar entry
 
@@ -257,7 +282,7 @@ The natural shape is send, then log. It works until the first rerun, resubmit or
 
 Gas: Yes is the column everyone builds first, and it is right for about a year. A licence has an expiry and the rule has to read it on the day of the slot, not on the day somebody typed the tick. One row per tech per code with an ExpiresOn date, filtered at assignment. The tick cannot tell you it lapsed in March.
 
-## 8. Where the automation stops
+## 9. Where the automation stops
 
 - Accepting an emergency displacement. The approval writes a name onto the slot it moved, and that name is the point of the step.
 - Deciding a job is outside the area, or that a window cannot be met. The board raises the escalation; the judgement is a person's.

@@ -64,7 +64,7 @@ Unique values on Reference is the line that holds check 9. A flow that looks for
 
 | The rule | Enforced by | How |
 | --- | --- | --- |
-| It runs on a key the business created, and deleting it stops it | Custom connector connection | The key lives in the connection, owned by a person in the business. It is never typed into a topic, an instruction or a flow variable. Deleting the application in Simpro, or the connection, stops every action. |
+| It runs on a key the business created, and deleting it stops it | Custom connector connection | The key lives in the connection, owned by an account the business controls. It is never typed into a topic, an instruction or a flow variable. Deleting the application in Simpro, or the connection, stops every action. |
 | Every answer is read live | Agent actions, no lists of Simpro data | Each action calls Simpro when the question is asked. There is no list to answer from instead, so the agent has nowhere stale to look. |
 | An answer is built only from fields Simpro returned | Connector operation definitions | Each operation passes columns= with the fields it needs and pageSize up to 250, and Flow 1 follows Result-Pages. The thin default list is never what the agent sees. |
 | Acceptance is the customer-facing stage | The waiting-quotes operation | The operation filters on CustomerStage, and the internal Stage is not even in its response schema, so the agent cannot read the wrong one. |
@@ -104,20 +104,44 @@ FLOW 3  When the key is refused
 
 Flow 1 is the only door to Simpro. An agent action wired straight to the connector skips the log, and the log is what the business reads the day an answer looks wrong.
 
-## 5. The order to build it in
+## 5. What the agent can reach in your Microsoft 365 and your Simpro, and what it never touches
+
+The connection is a library card. It lets the agent read what is on the shelves and, if you allow it, fill in one request slip, and the desk can cancel the card in a minute. It never rewrites a book. The agent reads quotes, jobs, customers and invoices from Simpro live, writes a ConnectorLog row for every request in this one SharePoint site, and at most creates one job at Simpro’s first status. It never emails or texts anyone, never moves a job or quote to another status, and never acts on a note inside a record.
+
+What each connection is for.
+
+- **The Simpro custom connector.** It holds the API key in its connection and defines only the operations the agent needs: the GET requests for quotes, jobs, customers and invoices, each with its columns, and `POST /jobs/` only if the business wants bookings. Custom connectors are premium in Power Automate.
+- **SharePoint, this one site.** Write on ConnectorLog and ConnectorWrites. No list holds a copy of Simpro’s records.
+- **The Copilot Studio agent.** Its actions call Flow 1 and Flow 2, never the connector directly, so every request passes the log.
+- **Teams.** For Flow 3 to tell the connection’s owner that Simpro refused the key.
+
+The agent needs no mailbox. Leave Outlook out, which also means it has no way to email a customer.
+
+Keep each one to the least it needs.
+
+1. Create a service account the business controls, and build the flows in a solution it owns, with the key’s owner as co-owner. A flow owned by whoever built the agent stops working the day they leave. The account needs a Power Automate licence that covers premium connectors; check what your tenant already has.
+2. Create the Simpro connection as that account and use it through the solution’s connection reference. Do not share the connection itself with the agent’s makers: shared, it can be used in any flow they build.
+3. Give the service account access to this one site and no other. If an app registration is used instead, grant it Sites.Selected and give it this site alone.
+4. Make one Simpro API application for this build alone. A Simpro key opens the whole of your Simpro, so the fence is the connector’s definition: no operation that sends, and no Stage in the booking body.
+
+How to cut it off. Delete the application in Simpro and every action is refused at once, which Flow 3 logs. Turn the flows off, or remove the connection, and the agent can reach nothing. Unpublish the agent and nobody can ask it.
+
+Why not a Simpro connector someone else hosts? It runs on a key someone else holds, between your staff and your customer records, and you cannot see what its operations do. This build is a little more work and the key, the operations and the log are all in your own tenant. If what you want is a customer rung when their job slips on the board, that is not this connector, which never contacts anyone: Office Voice makes that running-late call from your Simpro board once you switch it on under Automations.
+
+## 6. The order to build it in
 
 1. Create the API application in Simpro as an administrator, with API Key as the grant type, and download the key file.
-2. Build the custom connector from three or four GET operations, each with its columns and pageSize fixed in the definition, and API key authentication sending the Bearer header.
+2. Build the custom connector from three or four GET operations, each with its columns and pageSize fixed in the definition, and API key authentication on the Authorization header, with the value entered as Bearer followed by the key.
 3. Create the connection as the business owner of the key, and confirm one GET works from the connector's test page.
 4. Create ConnectorLog, then Flow 1, and prove a 401 writes a refused row by testing with a wrong key.
 5. Build the Copilot Studio agent with actions that call Flow 1 only, and instructions that every answer names its Simpro record numbers.
 6. Only if the business wants the write: ConnectorWrites with Reference unique, then Flow 2, and prove a retried booking makes one job.
 
-## 6. Four traps specific to this build
+## 7. Four traps specific to this build
 
 ### Putting the key in the agent
 
-A key pasted into instructions, a topic or a flow variable is readable by everyone who can edit the agent, and it travels with every export. It belongs in the connector's connection, owned by a person in the business.
+A key pasted into instructions, a topic or a flow variable is readable by everyone who can edit the agent, and it travels with every export. It belongs in the connector's connection, owned by an account the business controls.
 
 ### Syncing Simpro into SharePoint to make the agent faster
 
@@ -131,7 +155,7 @@ Simpro returns 30 rows unless asked for more, up to 250. An answer about the old
 
 Job notes are written by staff and customers and come back as text the agent reads. Instruct the agent that record text is data to quote, and give it no action that could carry out what a note says.
 
-## 7. Where the automation stops
+## 8. Where the automation stops
 
 - Creating and deleting the key, and owning the connection that holds it.
 - Moving any job or quote to another stage in Simpro.
@@ -144,6 +168,5 @@ Job notes are written by staff and customers and come back as text the agent rea
 
 - the Simpro Claude connector build standard
 - Using Claude with Simpro: what connects today
-- The standards on Microsoft 365: the hub
 - After hours on Microsoft 365: the call that becomes a Simpro job
 - Building the standards on Microsoft 365

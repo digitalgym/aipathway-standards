@@ -98,7 +98,7 @@ skill asserts.
 - 6. Write-back, and writing once
 - 7. Escalation and the on-call rule
 - 8. Provider and hosting
-- 9. Join It to Your Own System
+- 9. Connect ServiceM8 or Simpro so calls become jobs, without it touching your quotes or invoices
 - 10. The pass test
 - 11. A checklist to hold any build or supplier to
 

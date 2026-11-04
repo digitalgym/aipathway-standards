@@ -223,7 +223,32 @@ CALCULATE ( DISTINCTCOUNT ( Reports[Period] ), Reports[Version] > 1 )
 
 This model reports on the reporting rather than on the business. The figures the lender reads are the rows in the Figures list, published at their time with their as-of on them. A Power BI page over the same list is a fine way for the owner to look at them and it is not the report, because it recomputes when the lists change and a published report does not.
 
-## 6. The order to build it in
+## 6. What the flows can read in your Microsoft 365, your ledger and your job system, and what they never touch
+
+The flows are a paper round: the same paper, to the same doors, at the same time every week, whatever the news, and nobody on the round rewrites last week’s paper. They read each source the register names, write the figures and the reports into this one SharePoint site, and post each version to its audience. They never edit an invoice, a job or a contact, never post a journal, and never change a published report: a correction is a new version by a named person.
+
+What each connection is for.
+
+- **SharePoint, this one site.** Read and write on the six lists. Only the flows’ account contributes to Reports and Figures; everybody else reads.
+- **Your ledger, read.** Xero or MYOB, for the money measures the register defines, through a custom connector or the HTTP action, both premium in Power Automate. Xero gives apps created from March 2026 granular scopes, so ask only for the read scopes your definitions name.
+- **Your job system, read.** ServiceM8, Simpro or whatever runs the work, the same way, for measures like jobs completed in the week.
+- **An Office Voice key with “Read the book”, if the report carries debtors.** Called from the flow at `https://office-voice.com/api/mcp` with a bearer key from the Keys page in Office Voice. It lists what is overdue now and the invoices raised since a date, up to 120 days back. A measure that needs a longer history reads the ledger directly. The report needs nothing else from the key, so leave “Write drafts and notes” and “Queue calls” off.
+- **Teams and one shared reports mailbox.** Teams posts each internal audience’s version and tells a definition’s owner when a source could not be read or a threshold moved. The shared mailbox sends the version to an audience outside the business, such as the lender.
+- **Power BI, read.** It reads the stored figure rows and writes nothing back.
+
+Keep each one to the least it needs.
+
+1. Create a service account for the flows and build them in a solution that account owns, with a named person as co-owner. A flow owned by a person stops working the day that person leaves, and so does the report. If the flows use a premium connector, the account needs a Power Automate licence that covers premium connectors; check what your tenant already has.
+2. Create every connection as the service account and use it through the solution’s connection references, so nobody’s own login sits inside a flow.
+3. Give the service account access to this one site and no other. If an app registration is used instead, grant it Sites.Selected and give it this site alone.
+4. Give the service account Send As on the shared reports mailbox and nothing else. If an app registration sends the mail, limit it to that mailbox with RBAC for Applications in Exchange Online, or the older application access policy.
+5. Connect each source with read access only, and keep each key in its custom connector’s connection, never typed into a flow step.
+
+How to cut it off. Revoke a source’s key, or disconnect it under Connected apps in Xero’s settings, and the next run publishes those figures as unavailable rather than guessing. Turn the flows off in Power Automate and nothing publishes at all, and any period already opened shows in Periods Missed. Block sign-in on the service account and every connection it owns stops working.
+
+Why not a Power BI subscription that emails the report every Monday? It is already in your tenant and it is on time. It sends a snapshot of whatever the model holds, so after a failed refresh it emails last period’s numbers as this period’s, with nothing on the page to say so. It keeps no versions, and it has no way to say unavailable. Keep subscriptions for the owner’s own look at the numbers, and publish the report from the stored rows.
+
+## 7. The order to build it in
 
 1. Write the register with a named owner against every measure. One sentence each: source, query, period, filters. Nothing below is worth building until two people agree on those sentences, which is the part that takes a fortnight.
 2. Create the six lists and set the permissions while the lists are empty: everybody reads Reports and Figures, and only the account the flows run as contributes. Retrofitting this after people have been editing rows is a different and much worse conversation.
@@ -234,7 +259,7 @@ This model reports on the reporting rather than on the business. The figures the
 7. Add the remaining measures, the threshold comparison against the prior published figure, and the narrative assembled from the figure rows.
 8. Build Flow 3, correct a figure, and confirm version one is still readable with its original value. Then connect Power BI over Reports and Figures, with Periods Missed on the front page.
 
-## 7. Four traps specific to this build
+## 8. Four traps specific to this build
 
 ### A refreshing dashboard instead of a published report
 
@@ -252,7 +277,7 @@ Filtering one report per recipient is a view, and a view is per person and per s
 
 If the sentence comes from the same prompt that summarised the data, it will state a percentage nobody computed, printed directly under numbers that were, and the reader has no way to tell them apart. Build the sentence from the figure rows. If a model writes it, give it the figure list and nothing else, and have the flow refuse to publish a narrative carrying a numeral that is not on that list. Checking numerals in a flow expression is fiddly, which is the honest argument for the template.
 
-## 8. Where the automation stops
+## 9. Where the automation stops
 
 - Every correction, published as a new version with their name and the reason. The flow builds the version. It never decides that a figure was wrong.
 - Setting a threshold, and who is told when it is crossed. A threshold with nobody named on it is a column, and it will be read as a control for about a year.

@@ -207,7 +207,30 @@ MAXX (
 
 Ownerless Sources is the one to put on the front page, because it is the only number that describes the part of this project that is actually long. Watch Coverage is the one to read second: a register that is complete and a watch that reads a third of it is a photograph of the drive on the day it was taken.
 
-## 6. The order to build it in
+## 6. What the flows can reach in your SharePoint, and what they never touch
+
+The flows keep the card catalogue, not the books. They walk the shelves the register names, update a card when a book changes, and leave a note for the person whose name is on it. They never take a book off the shelf, rewrite a page, or change who holds a library card. In practice they read the libraries the register covers, write only to the register site, and send the owner an email or a task. They never move, rename, edit or delete a file, never change a permission, and never answer a question.
+
+What each connection is for.
+
+- **SharePoint, the register site, read and write.** Register, Passages, Gaps, WatchRuns and GraphHandovers. The only place the build writes.
+- **SharePoint and OneDrive, the covered libraries, read.** To read each file’s ETag and compare it with the register. Only the libraries the register names, and never the customer material library unless it is registered.
+- **Outlook, one shared mailbox.** To tell an owner their source moved.
+- **Planner or Teams, and Approvals.** The recheck and gap tasks with a due date, and the owner’s approval in Flow 4.
+- **No ledger and no Office Voice.** Nothing in this build touches money or makes a call.
+
+Keep it to the least it needs.
+
+1. Make a service account for the build and create the flows as it, not as the person who ran the inventory. Flows and connections owned by a person go with them when they leave.
+2. Put the four flows in a solution and use connection references, so each connection is made once, by the service account, and every flow shares it.
+3. Give the service account edit on the register site and read on each covered library, nothing more. An app registration gets Sites.Selected, with write on the register site and read on the covered sites.
+4. Give it Send As on the one shared mailbox the owner emails come from. An app registration gets its mail permission scoped to that mailbox with RBAC for Applications in Exchange Online, or an application access policy.
+
+How to cut it off. Turn the flows off and the drive is exactly as it was, because the build never changed it. Remove the service account from a library and that library drops out of the watch, which RowsRead will show on the next WatchRuns row.
+
+Why not give the flows read on every site, or run them as an administrator? It is quicker to set up, and then a flow that walks one register can open every site in the tenant, including the customer material the register keeps out of the index. Read on the named libraries is more clicks once and keeps the watch to what the register says it watches. The standard’s [connect section](https://aipathway.com.au/explore-ai/knowledge-base-build-standard#platform) covers why Copilot over the drive is not the same thing.
+
+## 7. The order to build it in
 
 1. Decide which libraries the register covers and who chases owners. Not the search, and not the chunker.
 2. Create the Register list. Index SourceId and Title, set Owner to People only, and turn fill-in off on Kind.
@@ -218,7 +241,7 @@ Ownerless Sources is the one to put on the front page, because it is the only nu
 7. Create Passages and index only the rows where Indexed is Yes. Open three locators at random and confirm each one lands on the passage it names.
 8. Connect Power BI, then build Flows 3 and 4. Ownerless Sources goes on the front page and is meant to fall.
 
-## 7. Four traps specific to this build
+## 8. Four traps specific to this build
 
 ### Treating the quarantine as an index setting
 
@@ -236,7 +259,7 @@ A scheduled flow reads files the tenant holds. It does not go and look at what a
 
 The tempting build is a view over rows with a blank Location. The standard says a source that should exist and cannot be found is a task with an owner and a due date, and a view has neither. Nobody is ever late for a view, and nobody opens one twice.
 
-## 8. Where the automation stops
+## 9. Where the automation stops
 
 - Owning a source, and answering for it when it moves or goes missing. The Owner column holds a person because somebody has to be asked.
 - Deciding which of two copies is the canonical one. A flow can find the pair. It cannot say which copy the business actually runs on.

@@ -225,7 +225,25 @@ CALCULATE ( COUNTROWS ( Periods ), ISBLANK ( Periods[ReportLink] ) )
 
 Anomaly Rate broken down by Kind is the one to watch over months rather than days. A rising not_allocated line is an allocations problem in the job system, a rising rule_unclear line is an award edition that no longer describes how the business actually rosters, and neither of those is visible from any single period.
 
-## 6. The order to build it in
+## 6. What the flows can reach in your Microsoft 365 and your payroll, and what they never touch
+
+The flows hold the clipboard, never the chequebook. They read the hours, the roster and the allocations, write rows in the one site, and produce one payroll file per period after a person releases it. They never run or approve a pay run, never change a pay rate, an employee’s details or their bank account, and never clear an anomaly without a person.
+
+What each connection is for.
+
+- **SharePoint, the one site.** The eight lists and two libraries in section 2. All four flows read and write there.
+- **Time entries, read only.** From the site app, the kiosk or the job system. Through a custom connector or the HTTP action (both premium), or a scheduled export dropped into a library that Flow 1 reads. Paper sheets are keyed into Entries.
+- **Job allocations, read only.** From the job system into the Allocations list, the same way.
+- **Teams and Approvals.** Flow 3’s card to the anomaly’s owner. The answer lands on the Anomalies row. No mailbox connection is needed.
+- **Payroll: no connection by default.** Flow 4 writes the file into a library, a person loads it, and they key the batch id back. If you want Flow 4 to post timesheets straight into Xero Payroll instead, that is a custom connector or the HTTP action with a Xero app that asks for payroll timesheets and nothing more, and the id comes back from Xero rather than from a person.
+
+Least privilege, in practice. The flows belong to the automation service account, not to the supervisor or the payroll officer, and sit in one solution with connection references. That account is a member of this site only. Any key into the capture app or the job system can read and nothing more. If an app registration is used, give it Sites.Selected on this one site. The full conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365#access).
+
+How to cut it off. Turn off Flow 4 and no file is produced. Remove the connections to the capture app and the job system, or revoke their keys, and nothing more is read. If you connected Xero Payroll, disconnect the app in Xero. The entries, anomalies and cards stay in the site, so last period’s record survives.
+
+Why not a connector app that syncs the timesheet app to payroll? It moves hours across quickly, and that is the problem: hours arrive in payroll before anyone checked them against the roster and the allocations, and the app holds a payroll write that runs on its own schedule rather than on a person’s release. Use one only if it can wait for the release and send nothing else.
+
+## 7. The order to build it in
 
 1. Load the current award edition into Rules as one row with an EffectiveFrom and a blank EffectiveTo, and put the instrument itself in the Instruments library with ClauseLink pointing at it. Until an edition exists, no card can be written and half the standard is untestable.
 2. Create Entries, Roster and Allocations, and land one real period of entries by whatever route the capture app allows. Paper is a valid Source value; it just means somebody keys it.
@@ -236,7 +254,7 @@ Anomaly Rate broken down by Kind is the one to watch over months rather than day
 7. Build Flow 3 so the approval outcome lands on the row. An anomaly cleared anywhere other than on its own row is not cleared.
 8. Build Flow 4 last, with the three refusals before the write, then connect Power BI with Exported Without Release and Cards On A Retired Edition on the front page.
 
-## 7. Four traps specific to this build
+## 8. Four traps specific to this build
 
 ### Adopting the capture app's flags as the anomaly kinds
 
@@ -254,7 +272,7 @@ A grouped view adds up at read time and proves nothing once it is closed, and a 
 
 A scheduled flow runs again by design, and a period that was released on Friday is still released on Saturday. Put unique values on PeriodRef, read ExportExternalId before doing anything, and treat a second release as an update or a refusal. Two batches in payroll is not a flow you can quietly re-run.
 
-## 8. Where the automation stops
+## 9. Where the automation stops
 
 - Every anomaly resolution, with a name, one of approved, corrected or rejected, and a reason in their own words. The queue has no other exit.
 - The release of the period to payroll. There is no threshold and no rule that can stand in for it here, which is the one place this build is stricter than the money side of the house.

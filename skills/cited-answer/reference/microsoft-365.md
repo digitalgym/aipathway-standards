@@ -177,7 +177,30 @@ AVERAGEX (
 
 Do not treat a falling Decline Rate as progress. It falls when the library genuinely improves and also when somebody loosens the retrieval filter, and those are opposite events. Read it against Uncited Answers, which must stay at zero.
 
-## 6. The order to build it in
+## 6. What the flows can reach in your Microsoft 365, and what they never touch
+
+The flows hold a reading-room pass: they may read what is on the reserve shelf and take notes, and nothing leaves the room changed. They read the instruments and clauses on one SharePoint site, write each answer with its source cards to the Answers list, and raise a change for a person to accept. They never edit or delete an instrument file, never accept a change or retire a card on their own, never answer from outside the clause library, and never read your mail or any other site. Your own login stays yours: the flows run under their own account, never your username and password.
+
+What each connection is for.
+
+- **SharePoint, the one site, read and write.** The Instruments library as issued, and the Clauses, SourceCards, Answers and ChangeDeltas lists. Flow 1 only reads clauses and writes answers; Flow 3 is the only one that retires a card, and only after an approval.
+- **Where questions arrive.** Teams or a form for your own staff. A public page on your website reaches the flow through the When an HTTP request is received trigger, which is premium. Either way the Audience field is set by where the question came from, not by what it says.
+- **The model, given the clauses and nothing else.** Whichever model you already pay for, called by a prompt action in Power Automate or by its own API over the HTTP action (premium). It is sent the retrieved clause text to compose from, and it is not called at all when retrieval comes back empty.
+- **The publishers, read.** For the weekly change check in Flow 2. Where a publisher has a page that shows the current edition, the HTTP action can read it. Where it does not, the flow asks a named person to check and record what they found.
+- **Approvals, through Teams or Outlook.** Flow 3 asks the certifier group to accept or reject each change, and records who decided.
+
+Give it the least it needs.
+
+1. Own the flows with a service account, not a person who might leave. A flow owned by someone who leaves stops when their account is switched off.
+2. Build the flows inside a solution and share connections through its connection references, so nobody’s personal connection ends up inside a flow.
+3. Make the service account a member of this one site and no other. If you use an app registration instead, grant it Sites.Selected and add only this site.
+4. Keep any model key or HTTP trigger address in a secret environment variable or a custom connector’s connection, not typed into the flow where anyone who can edit it can read it.
+
+How to cut it off. Turn off the three flows, or delete their connections in Power Automate. Remove the service account from the site, delete the app registration’s secret if you used one, and revoke the model key with its provider. The library, the cards and every answer already given stay on the site, which is what you want if somebody later asks why.
+
+Why not a Copilot Studio agent over the library? It makes a good front door, and an agent can call a Power Automate flow. Let it hand the question to Flow 1, so the decline is decided before anything is written. What it cannot be is the gate itself: answering straight from documents cites a file, not a dated clause, and it has no idea a clause was retired. That is the first trap below.
+
+## 7. The order to build it in
 
 1. Create the library and lists. Index ClauseId.
 2. Load one instrument and split it into clauses. One instrument is enough to prove the shape and small enough to check by hand.
@@ -188,7 +211,7 @@ Do not treat a falling Decline Rate as progress. It falls when the library genui
 7. Build Flows 2 and 3.
 8. Connect Power BI. Uncited Answers on the front page, at zero.
 
-## 7. Four traps specific to this build
+## 8. Four traps specific to this build
 
 ### Assuming Copilot over SharePoint satisfies this
 
@@ -206,7 +229,7 @@ Telling a model to say it does not know is a request, not a gate. The decline mu
 
 When an instrument moves you need the list of answers already given from it. That requires storing the card ids on the answer at the time. Reconstructing it later is exactly the work you will not do in the week it matters.
 
-## 8. Where the automation stops
+## 9. Where the automation stops
 
 - Accepting a change to an instrument, and deciding what it does to existing cards.
 - Resolving a conflict between two live instruments.

@@ -98,7 +98,7 @@ skill asserts.
 - 3. The records it keeps, in the shape your developer needs
 - 4. The checks, in order
 - 5. Search finds, and never answers
-- 6. Building it on Microsoft 365 or Workspace
+- 6. Connect SharePoint or Google Drive so the watch can read every source, without moving or changing a file
 - 7. The handover to the graph
 - 8. What stays with a person
 - 9. What your developer builds, and the step that needs care

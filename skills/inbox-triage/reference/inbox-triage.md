@@ -69,7 +69,7 @@ It sits under [the paper](https://aipathway.com.au/explore-ai/accounts-inbox-aut
 
 What it does not cover. It does not classify well. Whether a build tells a statement from an invoice is the builder’s problem and the stub cannot prove it. What the stub proves is the shape: one kind, off the list, filed to a record, queued with an owner, and nothing sent without a release. A build that classifies badly but conforms still loses nothing, because the wrong kind lands in a queue a person reads. A build that classifies well and files into folders loses things every week.
 
-What cannot meet it. A job system with no API cannot take the filing write, so on Tradify the record side of this standard cannot be met. The message can still be filed against the supplier in Xero and the job reference kept on the item, and the standard says that plainly rather than claiming a write that does not exist.
+What cannot meet it. A job system with no API cannot take the filing write directly. Tradify has no public API and no Zapier app, so on Tradify the message is filed against the supplier in Xero with the Tradify job number kept on the item, or a browser step a person approves attaches it to the job. The standard says which route a build took rather than claiming a write that does not exist.
 
 ## 2. The records it keeps, in the shape your developer needs
 
@@ -182,9 +182,10 @@ stays local                          # yours, and the standard
   - reading the other queue
 
 cannot meet the standard
-  - Tradify, for the job side: no API, so no filing write against a job.
-    Supplier filing in Xero and the job reference on the item is the
-    honest route.
+  - Tradify, for the job side: no public API and no Zapier app, so no
+    direct filing write against a job. File against the supplier in Xero
+    with the Tradify job number on the item, or attach it to the job with
+    a browser step a person approves.
 ```
 
 A vendor selling inbox automation is usually selling the classifier and an auto-reply. Ask them three things: where does a filed message live and under what id, what went out last week that nobody released, and where is last month's spam.
