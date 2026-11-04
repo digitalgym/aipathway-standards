@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T11:50:53.318Z",
+  "generated_at": "2026-11-04T11:52:43.182Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -3402,6 +3402,104 @@
       ]
     },
     {
+      "slug": "expense-check",
+      "name": "Expense Check",
+      "office_task": "Check each staff expense claim has its receipt, a proper tax invoice where the ATO needs one, and fits our expense policy, then queue it for the approver to approve or reject.",
+      "verticals": [
+        "b2b-office"
+      ],
+      "standards": [
+        "invoice-check"
+      ],
+      "systems_of_record": [
+        "Xero or MYOB (the ledger that issues the bill_id for the claim, entered as a draft bill payable to the staff member, and holds the expense policy lines)",
+        "the document store where receipts and written pre-approvals are filed"
+      ],
+      "consumes": [
+        {
+          "event": "bill.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "bill.checked",
+          "write": "the claim's draft bill marked as passing all four checks and queued for the approver, with each check record (policy cap, units supported, out-of-policy pre-approval, monthly allowance), the tolerances in force and the receipt; the bill stays a draft and nothing is reimbursed",
+          "readback": "reading the bill_id back from the ledger returns the bill still in draft with the seam fields seam.queue = done_reversible and seam.tolerance_version; a bill that does not read back as a draft means nothing was queued and the run raises an exception"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception record on the claim naming the person who owns it: the check that failed and the checks that never ran, the difference in dollars, the receipt, and its queue (needs a decision, waiting on the staff member for a receipt or tax invoice with a drafted request, or blocked: no policy line, or an out-of-policy item with no written pre-approval)",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the bill_id, the failed check, the dollar difference, the receipt and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "expense.no_receipt",
+          "expense.not_a_tax_invoice",
+          "expense.no_policy_line",
+          "expense.over_policy_cap",
+          "expense.units_not_supported",
+          "expense.out_of_policy_no_preapproval",
+          "expense.over_monthly_allowance"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.bill_id",
+          "seam.policy_line",
+          "seam.queue",
+          "seam.failed_check",
+          "seam.never_ran",
+          "seam.difference",
+          "seam.tolerance_version",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/expense-check"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "invoice-check",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T11:50:10.677Z",
+          "run_id": "run-1793793010675",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 11
+        }
+      ]
+    },
+    {
       "slug": "fact-library",
       "name": "Fact Library",
       "office_task": "Keep one read-only company knowledge graph that every bot in the fleet asks, where nothing goes live until a named person accepts it and a replaced document takes its answers with it.",
@@ -5581,6 +5679,94 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 9
+        }
+      ]
+    },
+    {
+      "slug": "month-pack",
+      "name": "Month Pack",
+      "office_task": "Each month, put every client's management pack (profit and loss, balance sheet, cash, key ratios) in their folder, every figure sourced and as-of, for the partner to send.",
+      "verticals": [
+        "accounting-bookkeeping"
+      ],
+      "standards": [
+        "recurring-report"
+      ],
+      "systems_of_record": [
+        "each client's ledger (Xero or MYOB): profit and loss, balance sheet and the executive summary ratios for the month",
+        "each client's bank statement: the operating account's closing balance at month end",
+        "the practice's client folder the pack is published into (SharePoint or Google Drive), which issues the report_id"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "one view of the client's monthly pack per audience (reviewing partner, client's owner, client's lender), written into the practice's folder for that client, each figure carrying its definition id, source and as-of time, or published as unavailable with the reason; a correction is a new version superseding the old, with the named person and the reason. Sending it outside the practice stays with the partner",
+          "readback": "reading the client's month back from the folder returns each report_id with its version, published_at and published_by; no id back means it was not published and report.publish_failed is raised"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception naming the definition's owner or the threshold's person: a source that could not be read, a measure with no definition or two, a threshold that could not be compared, a correction missing a person or reason, or a pack that did not read back",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the client, the month, the measure, the reason and the exception_owner"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "report.source_unreadable",
+          "report.no_definition",
+          "report.conflicting_definitions",
+          "report.threshold_not_comparable",
+          "report.correction_incomplete",
+          "report.correction_unknown_measure",
+          "report.publish_failed"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.report_id",
+          "seam.period",
+          "seam.version",
+          "seam.supersedes",
+          "seam.published_by",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/month-pack"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "recurring-report",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T11:50:24.890Z",
+          "run_id": "run-1793793024888",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
         }
       ]
     },
@@ -10058,6 +10244,7 @@
     "drawing-register",
     "dropped-ball",
     "estimate-desk",
+    "expense-check",
     "fact-library",
     "feed-match",
     "fire-code-desk",
@@ -10078,6 +10265,7 @@
     "loan-intake",
     "lodgement-watch",
     "matter-billing",
+    "month-pack",
     "notice-check",
     "nudge-desk",
     "open-home-desk",
