@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T12:49:07.155Z",
+  "generated_at": "2026-11-04T12:49:21.063Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -1968,6 +1968,103 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 10
+        }
+      ]
+    },
+    {
+      "slug": "claim-match",
+      "name": "Claim Match",
+      "office_task": "Each morning, check every insurance repair job against the insurer's claim by claim number, show any missing or different scope, photo or report with both values, and fix only what a person accepts.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "two-records"
+      ],
+      "systems_of_record": [
+        "the job system (Simpro, ServiceM8 or similar: carries the insurer's claim number on the job; owns photos filed and reports lodged)",
+        "the insurer's claim record (the claim portal or its export: issues the claim number; owns the authorised scope, scope version, excess and claim status)"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the run's claim reconciliation report where the insurance works coordinator opens it: the pair contract it ran under, the key it joined on (claim_number), the master per field, and the counts matched, within tolerance, mismatched, orphaned and corrected, published every run including the all-clear",
+          "readback": "the report store returns a report_id, and reading that id back returns the contract id, the five counts and the published time; no id back means the run did not publish and the owner is told"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the claim naming the person who owns it: an open difference with the job value, the insurer value and the master's value side by side awaiting acceptance, photos or a report on the job the insurer does not hold, a claim on one side only, a gap over the threshold amount, a run over the mismatch rate, or an accepted correction whose write returned no id",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the claim_number, the field, both values and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "claim_match.contract_missing",
+          "claim_match.master_missing",
+          "claim_match.difference_open",
+          "claim_match.orphan",
+          "claim_match.over_threshold",
+          "claim_match.mismatch_rate",
+          "claim_match.write_not_read_back"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "seam-mirror",
+        "fields": [
+          "seam.claim_number",
+          "seam.job_id",
+          "seam.contract_id",
+          "seam.run_id",
+          "seam.difference_status",
+          "seam.value_job",
+          "seam.value_insurer",
+          "seam.master_value",
+          "seam.correction_accepted_by",
+          "seam.correction_written_id",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/claim-match"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "two-records",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:45:31.533Z",
+          "run_id": "run-1793796331531",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
         }
       ]
     },
@@ -14696,6 +14793,7 @@
     "chase-list",
     "claim-check",
     "claim-clock",
+    "claim-match",
     "client-review-watch",
     "close-check",
     "comeback-list",
