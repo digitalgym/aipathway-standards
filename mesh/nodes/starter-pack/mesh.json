@@ -1,0 +1,78 @@
+{
+  "slug": "starter-pack",
+  "name": "Starter Pack",
+  "office_task": "Chase each new starter for the TFN declaration, super choice, bank details and work rights evidence they still owe, file each as it arrives, and hold the pack for payroll to set up.",
+  "verticals": [
+    "b2b-office"
+  ],
+  "standards": [
+    "follow-up"
+  ],
+  "systems_of_record": [
+    "the payroll system (Xero Payroll, KeyPay or MYOB), where each new starter has an employee record id before their first pay",
+    "the starter register kept beside it, one open item per document a starter still owes against their employee record, owed by the starter",
+    "the business's mailbox (Gmail or Outlook) and document store, where a document sent back on the chase thread or through the item's upload link arrives with its message id"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/starter-pack"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "schedule",
+    "webhook"
+  ],
+  "consumes": [
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    },
+    {
+      "event": "email.received",
+      "wake": "webhook"
+    },
+    {
+      "event": "exception.closed",
+      "wake": "webhook"
+    }
+  ],
+  "emits": [
+    {
+      "event": "evidence.filed",
+      "write": "the returned document (the signed TFN declaration, the super standard choice form, the bank details form or the right to work evidence) filed against its open item on the starter's employee record, which marks the item arrived; when the last item for a starter is filed the payroll officer is told the pack is complete and held for them, with nothing entered into payroll",
+      "readback": "reading the item back by its id returns status arrived with an evidence reference naming the message_id the document came in on; no evidence reference back means it was not filed, and the item stays on the register with no touch until a person looks"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an escalation on the item naming the payroll officer: the starter said no, disputed it or asked us to stop, or the item reached its cap with nothing back, carrying every touch so far",
+      "readback": "the exception desk returns an exception_id, and reading it back returns the item id, the employee record id, the reason, the touch history and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "followup.declined",
+      "followup.dispute",
+      "followup.cap_reached"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.item_id",
+      "seam.employee_id",
+      "seam.item_status",
+      "seam.touches",
+      "seam.outcome",
+      "seam.evidence_ref",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
