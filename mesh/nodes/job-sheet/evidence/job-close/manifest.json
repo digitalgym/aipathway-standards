@@ -1,0 +1,126 @@
+{
+  "spec": "AIP-BS-JOB-CLOSE",
+  "standard": "job-close-build-standard",
+  "edition": "2026-11-01",
+  "source": "https://aipathway.com.au/explore-ai/job-close-build-standard",
+  "ran_at": "2026-11-04T12:09:48.999Z",
+  "environment": "stub",
+  "provider": "local.mock_job_close",
+  "provider_block": {
+    "boundary": {
+      "never": [
+        "create a job; a close starts from the job id the job system issued",
+        "invent a part, or a price the business's own price book does not hold",
+        "price a variation the quote did not cover",
+        "write a card the assigned tech has not confirmed",
+        "mark a job complete before the write returns the job system's ids",
+        "write a second card for one capture, or mint a new intent id on a retry",
+        "send an invoice"
+      ],
+      "stays_with_person": [
+        "confirming the draft: the assigned tech, from their own phone",
+        "pricing every part parked as not in the book or ambiguous",
+        "pricing every variation, and getting the customer's signature for it",
+        "chasing a tech who has not confirmed, as their supervisor",
+        "fixing a write that failed"
+      ]
+    },
+    "job": "the job card done on site",
+    "skill": "job-close",
+    "stub": "local.mock_job_close",
+    "production": "office_voice.close_job",
+    "product": "Office Voice",
+    "insert": null,
+    "with_us": {
+      "kind": "office_voice_tool",
+      "provider": "office_voice.close_job",
+      "product": "Office Voice",
+      "note": "Office Voice's close_job writes the confirmed card into ServiceM8 once per intent id: the note, the job materials priced from ServiceM8's own catalogue, the photos, then Completed only when every part came back with an id. Lines with no catalogue code are parked on the Exception Desk. A tech can also close by text or picture message to the business's Office Voice number and reply YES. In Simpro it writes the note and the stage today; parts and photos park on the Exception Desk for a person to add. A ServiceM8 connection made before 2 November 2026 is reconnected once to allow materials and attachments."
+    }
+  },
+  "tally": {
+    "green": 5,
+    "red": 0,
+    "with_us": 1,
+    "evidence_required": 1,
+    "total": 12
+  },
+  "checks": [
+    {
+      "id": "job-exists-tech-on-it",
+      "n": 1,
+      "title": "The job exists and this tech is on it",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "verbatim-stored-first",
+      "n": 2,
+      "title": "What the tech said is stored before anything is taken from it",
+      "verdict": "pass"
+    },
+    {
+      "id": "parts-from-the-book",
+      "n": 3,
+      "title": "Every part is a price book line or it is parked",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "variation-never-priced",
+      "n": 4,
+      "title": "A variation is never priced at close",
+      "verdict": "pass"
+    },
+    {
+      "id": "tech-confirms",
+      "n": 5,
+      "title": "The tech confirms the draft before it is written",
+      "verdict": "pass"
+    },
+    {
+      "id": "unconfirmed-to-supervisor",
+      "n": 6,
+      "title": "A draft nobody confirms goes to the tech's supervisor",
+      "verdict": "pass"
+    },
+    {
+      "id": "one-write-ids-back",
+      "n": 7,
+      "title": "One write, with the job system's ids back",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "complete-only-when-written",
+      "n": 8,
+      "title": "The job is marked complete only after the write returns ids",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "parked-to-the-desk",
+      "n": 9,
+      "title": "Every parked item goes to the exceptions queue with an owner",
+      "verdict": "pass"
+    },
+    {
+      "id": "logged-by-job",
+      "n": 10,
+      "title": "The close is on the record, by job",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "survives-the-builder",
+      "n": 11,
+      "title": "It survives the builder",
+      "verdict": "evidence_required"
+    },
+    {
+      "id": "pass-test",
+      "n": 12,
+      "title": "The pass test passes",
+      "verdict": "with_us"
+    }
+  ],
+  "next": {
+    "with_us": "Office Voice's close_job writes the confirmed card into ServiceM8 once per intent id: the note, the job materials priced from ServiceM8's own catalogue, the photos, then Completed only when every part came back with an id. Lines with no catalogue code are parked on the Exception Desk. A tech can also close by text or picture message to the business's Office Voice number and reply YES. In Simpro it writes the note and the stage today; parts and photos park on the Exception Desk for a person to add. A ServiceM8 connection made before 2 November 2026 is reconnected once to allow materials and attachments. Call it on the Office Voice MCP (office_voice.close_job): the owner mints a key at office-voice.com/app/keys with the scope the tool names, on any Office Voice account. There is no production run of these checks yet, so the stub run is the finished build; AIPATHWAY_PROVIDER=office_voice.close_job needs a live port map that is not published. Do not hand-roll the write.",
+    "evidence_required": "attach what proves each one; not a software check"
+  }
+}
