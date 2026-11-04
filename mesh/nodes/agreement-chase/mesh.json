@@ -1,0 +1,42 @@
+{
+  "slug": "agreement-chase",
+  "name": "Agreement Chase",
+  "office_task": "Before a new commercial customer's first job, chase their signed service agreement and rate sheet, file each the day it comes back, and hand a no, a dispute or a silent customer to a named person.",
+  "verticals": ["b2b-office"],
+  "standards": ["follow-up"],
+  "systems_of_record": [
+    "the onboarding register, one open item per document owed on the new customer's first job (the job system such as ServiceM8 or Simpro, or a SharePoint list or Google Sheet kept beside it), which issues the job_id and the item id",
+    "the accounts mailbox (Outlook or Gmail) the signed agreement and rate sheet come back to, which issues the message_id"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/agreement-chase" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "evidence.filed",
+      "write": "the signed service agreement or signed rate sheet filed as evidence against its open item on the customer's first job, which marks the item arrived so the office can confirm the first job",
+      "readback": "reading the item back by its id returns status arrived with the arrival's evidence reference, which names the message_id of the email that carried the signed copy and the job_id it belongs to; no evidence reference back means it was not filed, and the item gets no touch until a person looks"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an escalation on the item naming the cadence's person: the customer said no, disputed the agreement or a rate, or asked us to stop, or the item reached its cap with nothing back, carrying every touch so far",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the item id, the job_id, the reason, the touch history and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": ["followup.declined", "followup.dispute", "followup.cap_reached"],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.job_id", "seam.item_id", "seam.item_status", "seam.touches", "seam.outcome", "seam.evidence_ref", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": null
+}

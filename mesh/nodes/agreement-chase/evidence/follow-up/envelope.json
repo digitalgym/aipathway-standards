@@ -1,0 +1,4260 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1793794501375",
+  "standard": "follow-up-build-standard",
+  "spec": "AIP-BS-FOLLOW-UP",
+  "specVersion": "2026-10-05",
+  "environment": "stub",
+  "startedAt": "2026-11-04T12:15:01.322Z",
+  "finishedAt": "2026-11-04T12:15:01.375Z",
+  "results": [
+    {
+      "checkId": "open-item-is-an-object",
+      "n": 1,
+      "title": "Every thing owed is an open item with a kind, a record, a person and a due date",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every touch traces to an item carrying all four fields. The note receives no touch. A touch on anything that is not an open item fails.",
+      "actual": "5 touch(es) [Q15:email:sent, P13:email:sent, A11:email:sent, R12:email:sent, C14:email:sent]; 0 outcome(s); 0 arrival(s); 0 escalation(s); 0 alert(s)",
+      "stimulus": {
+        "description": "Five well-formed open items of mixed kinds, plus one note somebody typed with no kind, no record and no due date.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "open-item-is-an-object"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 6,
+            "open": [
+              "A11",
+              "R12",
+              "P13",
+              "C14",
+              "Q15",
+              "NOTE9"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 12
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 5
+          },
+          "response": {
+            "order": [
+              "Q15",
+              "P13",
+              "A11",
+              "R12",
+              "C14"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email",
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "Q15"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "Q15",
+            "channel": "email",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "Q15",
+            "channel": "email",
+            "text": "Hi Ben, a quick note from our accounts team: we are still waiting on your decision on our quote for FIRST-JOB-15. We need it on file by 2026-09-28, ahead of your first booked job (FIRST-JOB-15). If it is already on its way, thank you, and please ignore this. Reply STOP and we will not follow up on this again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "po_number"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email",
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "P13"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "P13",
+            "channel": "email",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "P13",
+            "channel": "email",
+            "text": "Hi Liam, a quick note from our accounts team: we are still waiting on your purchase order number for FIRST-JOB-13. We need it on file by 2026-09-28, ahead of your first booked job (FIRST-JOB-13). If it is already on its way, thank you, and please ignore this. Reply STOP and we will not follow up on this again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email",
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "A11"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "A11",
+            "channel": "email",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "A11",
+            "channel": "email",
+            "text": "Hi Anika, a quick note from our accounts team: we are still waiting on the signed service agreement and rate sheet for FIRST-JOB-11. We need it on file by 2026-09-28, ahead of your first booked job (FIRST-JOB-11). If it is already on its way, thank you, and please ignore this. Reply STOP and we will not follow up on this again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email",
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "R12"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "R12",
+            "channel": "email",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "R12",
+            "channel": "email",
+            "text": "Hi Anika, a quick note from our accounts team: we are still waiting on the signed service agreement and rate sheet for FIRST-JOB-12. We need it on file by 2026-09-28, ahead of your first booked job (FIRST-JOB-12). If it is already on its way, thank you, and please ignore this. Reply STOP and we will not follow up on this again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "certificate"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email",
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "C14"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "C14",
+            "channel": "email",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "C14",
+            "channel": "email",
+            "text": "Hi Grace, a quick note from our accounts team: we are still waiting on the certificate we need on file for FIRST-JOB-14. We need it on file by 2026-09-28, ahead of your first booked job (FIRST-JOB-14). If it is already on its way, thank you, and please ignore this. Reply STOP and we will not follow up on this again."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "ranked-by-value-and-age-not-age-alone",
+      "n": 2,
+      "title": "The chase order is value at risk, then days open, never age alone",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The submitted order is by value at risk descending, then by days open. An order that puts the oldest small item first fails.",
+      "actual": "order: A24($38900, 2d) > P25($7600, 1d) > A22($5200, 18d) > R23($5200, 9d) > A21($450, 30d)",
+      "stimulus": {
+        "description": "Five open items where the oldest carries the smallest value and the newest but one carries the largest.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "ranked-by-value-and-age-not-age-alone"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 5,
+            "open": [
+              "A21",
+              "A22",
+              "R23",
+              "A24",
+              "P25"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 5
+          },
+          "response": {
+            "order": [
+              "A24",
+              "P25",
+              "A22",
+              "R23",
+              "A21"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "A24"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "A24",
+            "channel": "email",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "A24",
+            "channel": "email",
+            "text": "Hi Ben, a quick note from our accounts team: we are still waiting on the signed service agreement and rate sheet for FIRST-JOB-24. We need it on file by 2026-09-28, ahead of your first booked job (FIRST-JOB-24). If it is already on its way, thank you, and please ignore this. Reply STOP and we will not follow up on this again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "po_number"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "P25"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "P25",
+            "channel": "email",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "P25",
+            "channel": "email",
+            "text": "Hi Hannah, a quick note from our accounts team: we are still waiting on your purchase order number for FIRST-JOB-25. We need it on file by 2026-09-28, ahead of your first booked job (FIRST-JOB-25). If it is already on its way, thank you, and please ignore this. Reply STOP and we will not follow up on this again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "A22"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "A22",
+            "channel": "email",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "A22",
+            "channel": "email",
+            "text": "Hi Liam, a quick note from our accounts team: we are still waiting on the signed service agreement and rate sheet for FIRST-JOB-22. We need it on file by 2026-09-28, ahead of your first booked job (FIRST-JOB-22). If it is already on its way, thank you, and please ignore this. Reply STOP and we will not follow up on this again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "R23"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "R23",
+            "channel": "email",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "R23",
+            "channel": "email",
+            "text": "Hi Grace, a quick note from our accounts team: we are still waiting on the signed service agreement and rate sheet for FIRST-JOB-23. We need it on file by 2026-09-28, ahead of your first booked job (FIRST-JOB-23). If it is already on its way, thank you, and please ignore this. Reply STOP and we will not follow up on this again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "A21"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "A21",
+            "channel": "email",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "A21",
+            "channel": "email",
+            "text": "Hi Anika, a quick note from our accounts team: we are still waiting on the signed service agreement and rate sheet for FIRST-JOB-21. We need it on file by 2026-09-28, ahead of your first booked job (FIRST-JOB-21). If it is already on its way, thank you, and please ignore this. Reply STOP and we will not follow up on this again."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "cadence-has-a-cap",
+      "n": 3,
+      "title": "Touches per item are capped and spaced, on a written cadence",
+      "verdict": "pass",
+      "held": true,
+      "expected": "No item carries more touches than its cap, no two touches on one item are closer than the gap, and every touch follows a gate decision that allowed it. A touch with no gate decision fails.",
+      "actual": "3 touch(es) [A31:email:sent, A31:email:sent, A31:email:sent]; 0 outcome(s); 0 arrival(s); 1 escalation(s); 1 alert(s)",
+      "stimulus": {
+        "description": "A cadence of three touches, two days apart. The run driven every day for eight days on the same open item.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "cadence-has-a-cap"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "A31"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "A31"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "A31"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "A31",
+            "channel": "email",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "A31",
+            "channel": "email",
+            "text": "Hi Anika, a quick note from our accounts team: we are still waiting on the signed service agreement and rate sheet for FIRST-JOB-31. We need it on file by 2026-09-28, ahead of your first booked job (FIRST-JOB-31). If it is already on its way, thank you, and please ignore this. Reply STOP and we will not follow up on this again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "A31"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "A31"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "A31"
+          },
+          "response": {
+            "touches": 1,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-27T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "A31",
+            "channel": "email",
+            "touchesSoFar": 1
+          },
+          "response": {
+            "allowed": false,
+            "reason": "too_soon"
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "A31"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "A31"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "A31"
+          },
+          "response": {
+            "touches": 1,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "A31",
+            "channel": "email",
+            "touchesSoFar": 1
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "A31",
+            "channel": "email",
+            "text": "Hi Anika, a quick note from our accounts team: we are still waiting on the signed service agreement and rate sheet for FIRST-JOB-31. We need it on file by 2026-09-28, ahead of your first booked job (FIRST-JOB-31). If it is already on its way, thank you, and please ignore this. Reply STOP and we will not follow up on this again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-29T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "A31"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-29T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-29T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-29T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "A31"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-29T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-29T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "A31"
+          },
+          "response": {
+            "touches": 2,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-29T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "A31",
+            "channel": "email",
+            "touchesSoFar": 2
+          },
+          "response": {
+            "allowed": false,
+            "reason": "too_soon"
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "A31"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "A31"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "A31"
+          },
+          "response": {
+            "touches": 2,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "A31",
+            "channel": "email",
+            "touchesSoFar": 2
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "A31",
+            "channel": "email",
+            "text": "Hi Anika, a quick note from our accounts team: we are still waiting on the signed service agreement and rate sheet for FIRST-JOB-31. We need it on file by 2026-09-28, ahead of your first booked job (FIRST-JOB-31). If it is already on its way, thank you, and please ignore this. Reply STOP and we will not follow up on this again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-01T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "A31"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-10-01T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-10-01T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "A31"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "A31"
+          },
+          "response": {
+            "touches": 3,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "A31"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "A31"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "A31"
+          },
+          "response": {
+            "touches": 3,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "itemId": "A31",
+            "reason": "cap_reached",
+            "to": "Michelle Fraser, accounts manager",
+            "history": 3
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "person": "Michelle Fraser, accounts manager",
+            "text": "the signed service agreement and rate sheet for FIRST-JOB-31 (item A31, first job worth $9,400.00) reached the cap of 3 follow-ups with nothing back. Follow-ups so far: email 2026-09-26T00:00:00.000Z sent; email 2026-09-28T00:00:00.000Z sent; email 2026-09-30T00:00:00.000Z sent. Whether the first job goes ahead without it is your call; nothing further goes out from here."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-03T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-10-03T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-10-03T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-10-03T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "channel-follows-consent",
+      "n": 4,
+      "title": "A message goes only on a channel the contact has consented to",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every SMS or email touch has a consent row for that contact and that channel. The email-only contact receives email. A text to them fails.",
+      "actual": "2 touch(es) [A41:email:sent, A42:sms:sent]; 0 outcome(s); 0 arrival(s); 0 escalation(s); 0 alert(s)",
+      "stimulus": {
+        "description": "A cadence whose first channel is SMS, and a contact whose only recorded consent is email.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "channel-follows-consent"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 2,
+            "open": [
+              "A41",
+              "A42"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 2
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "A41",
+              "A42"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms",
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "A41"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "A41",
+            "channel": "email",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "A41",
+            "channel": "email",
+            "text": "Hi Anika, a quick note from our accounts team: we are still waiting on the signed service agreement and rate sheet for FIRST-JOB-41. We need it on file by 2026-09-28, ahead of your first booked job (FIRST-JOB-41). If it is already on its way, thank you, and please ignore this. Reply STOP and we will not follow up on this again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "sms",
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "A42"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "A42",
+            "channel": "sms",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "A42",
+            "channel": "sms",
+            "text": "Hi Liam, a quick note from our accounts team: we are still waiting on the signed service agreement and rate sheet for FIRST-JOB-42. We need it on file by 2026-09-28, ahead of your first booked job (FIRST-JOB-42). If it is already on its way, thank you, and please ignore this. Reply STOP and we will not follow up on this again."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "the-call-discloses-first",
+      "n": 5,
+      "title": "A follow-up call opens with the AI identification and the recording notice",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "For every call, the first turn spoken is the disclosure and it carries both the identification and the recording notice. A call whose first turn is the ask fails.",
+      "actual": "A51 agent: Hi, this is an AI assistant calling for the accounts team. This call is recorded. | A51 agent: I'm calling about the signed service agreement and rate sheet for FIRST-JOB-51. What day can we expect it back? | A51 contact: Should have it back to you in a few days | R52 agent: Hi, this is an AI assistant calling for the accounts team. This call is recorded. | R52 agent: I'm calling about the signed service agreement and rate sheet for FIRST-JOB-52. What day can we expect it back? | R52 contact: Should have it back to you in a few days",
+      "stimulus": {
+        "description": "A cadence whose channel is the call, on two open items.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "the-call-discloses-first"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 2,
+            "open": [
+              "A51",
+              "R52"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "A51",
+              "R52"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "call"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "A51"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "A51",
+            "channel": "call",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "itemId": "A51",
+            "text": "Hi, this is an AI assistant calling for the accounts team. This call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "A51",
+            "text": "I'm calling about the signed service agreement and rate sheet for FIRST-JOB-51. What day can we expect it back?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "A51",
+            "listen": true
+          },
+          "response": {
+            "text": "Should have it back to you in a few days",
+            "heard": "date",
+            "value": "2026-10-02"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "record_promise",
+          "verb": "write",
+          "subject": "promise",
+          "request": {
+            "itemId": "A51",
+            "kind": "date",
+            "value": "2026-10-02"
+          },
+          "response": {
+            "id": "OUT1",
+            "recordedAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "call"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "R52"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "R52",
+            "channel": "call",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "itemId": "R52",
+            "text": "Hi, this is an AI assistant calling for the accounts team. This call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "R52",
+            "text": "I'm calling about the signed service agreement and rate sheet for FIRST-JOB-52. What day can we expect it back?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "R52",
+            "listen": true
+          },
+          "response": {
+            "text": "Should have it back to you in a few days",
+            "heard": "date",
+            "value": "2026-10-02"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "record_promise",
+          "verb": "write",
+          "subject": "promise",
+          "request": {
+            "itemId": "R52",
+            "kind": "date",
+            "value": "2026-10-02"
+          },
+          "response": {
+            "id": "OUT2",
+            "recordedAt": "2026-09-26T00:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "one-ask-one-answer",
+      "n": 6,
+      "title": "The call asks for the one thing owed and records the answer as a date or a decision",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Each call has one ask and one recorded outcome for its item, the first with kind date and a real date as its value, the second with kind decision. A call with no outcome, or an outcome whose value is free text, fails.",
+      "actual": "2 touch(es) [Q62:call:decision, A61:call:date]; 2 outcome(s); 1 arrival(s); 0 escalation(s); 0 alert(s); outcomes Q62=decision:approved, A61=date:2026-10-01",
+      "stimulus": {
+        "description": "Two calls: one where the contact gives a day, one where the contact says the quote is approved.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "one-ask-one-answer"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 2,
+            "open": [
+              "A61",
+              "Q62"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "Q62",
+              "A61"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "quote_decision"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "call"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "Q62"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "Q62",
+            "channel": "call",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "itemId": "Q62",
+            "text": "Hi, this is an AI assistant calling for the accounts team. This call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "Q62",
+            "text": "I'm calling about our quote on FIRST-JOB-62. Are you going ahead with it?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "Q62",
+            "listen": true
+          },
+          "response": {
+            "text": "Yes, that's approved, go ahead",
+            "heard": "decision",
+            "value": "approved"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "record_promise",
+          "verb": "write",
+          "subject": "promise",
+          "request": {
+            "itemId": "Q62",
+            "kind": "decision",
+            "value": "approved"
+          },
+          "response": {
+            "id": "OUT1",
+            "recordedAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "call"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "A61"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "A61",
+            "channel": "call",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "itemId": "A61",
+            "text": "Hi, this is an AI assistant calling for the accounts team. This call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "A61",
+            "text": "I'm calling about the signed service agreement and rate sheet for FIRST-JOB-61. What day can we expect it back?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "A61",
+            "listen": true
+          },
+          "response": {
+            "text": "Our director signs on Thursday, you'll have it by 2026-10-01",
+            "heard": "date",
+            "value": "2026-10-01"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "record_promise",
+          "verb": "write",
+          "subject": "promise",
+          "request": {
+            "itemId": "A61",
+            "kind": "date",
+            "value": "2026-10-01"
+          },
+          "response": {
+            "id": "OUT2",
+            "recordedAt": "2026-09-26T00:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "stops-the-moment-it-arrives",
+      "n": 7,
+      "title": "When the item arrives, the chase stops that run",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The arrival is attached as evidence on the item, the item's status is arrived, and no touch on it carries a time after the arrival. A reminder sent after the document came back fails.",
+      "actual": "1 touch(es) [A71:email:sent]; 0 outcome(s); 1 arrival(s); 0 escalation(s); 0 alert(s); status arrived; evidence outlook:AAMkAD7f-signed-service-agreement-a71.pdf",
+      "stimulus": {
+        "description": "One touch goes out, then the signed variation arrives between runs, then two more runs.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "stops-the-moment-it-arrives"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "A71"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 12
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "A71"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email",
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "A71"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "A71",
+            "channel": "email",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "A71",
+            "channel": "email",
+            "text": "Hi Anika, a quick note from our accounts team: we are still waiting on the signed service agreement and rate sheet for FIRST-JOB-71. We need it on file by 2026-09-28, ahead of your first booked job (FIRST-JOB-71). If it is already on its way, thank you, and please ignore this. Reply STOP and we will not follow up on this again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "A71"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 12
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "itemId": "A71",
+            "ref": "outlook:AAMkAD7f-signed-service-agreement-a71.pdf"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 12
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "disputed-or-declined-stops-and-escalates",
+      "n": 8,
+      "title": "A no, a dispute, or stop contacting me ends the chase and goes to a person",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Both items carry a declined or dispute outcome, an escalation naming a person, and no touch after the outcome. A second touch on either fails.",
+      "actual": "2 touch(es) [R82:call:declined, A81:call:declined]; 2 outcome(s); 0 arrival(s); 2 escalation(s); 2 alert(s); escalated R82->Michelle Fraser, accounts manager (declined), A81->Michelle Fraser, accounts manager (declined)",
+      "stimulus": {
+        "description": "One contact says no on the call; another says stop contacting me. Then two more runs.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "disputed-or-declined-stops-and-escalates"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 2,
+            "open": [
+              "A81",
+              "R82"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 12
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "R82",
+              "A81"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "call",
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "R82"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "R82",
+            "channel": "call",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "itemId": "R82",
+            "text": "Hi, this is an AI assistant calling for the accounts team. This call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "R82",
+            "text": "I'm calling about the signed service agreement and rate sheet for FIRST-JOB-82. What day can we expect it back?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "R82",
+            "listen": true
+          },
+          "response": {
+            "text": "Please stop contacting me about this rate sheet",
+            "heard": "stop"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "record_promise",
+          "verb": "write",
+          "subject": "promise",
+          "request": {
+            "itemId": "R82",
+            "kind": "declined",
+            "value": "stop_contact"
+          },
+          "response": {
+            "id": "OUT1",
+            "recordedAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "R82"
+          },
+          "response": {
+            "touches": 1,
+            "outcomes": 1,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "itemId": "R82",
+            "reason": "declined",
+            "to": "Michelle Fraser, accounts manager",
+            "history": 1
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "person": "Michelle Fraser, accounts manager",
+            "text": "the signed service agreement and rate sheet for FIRST-JOB-82 (item R82, first job worth $9,900.00) the customer said no (\"Please stop contacting me about this rate sheet\"). Follow-ups so far: call 2026-09-26T00:00:00.000Z declined. Whether the first job goes ahead without it is your call; nothing further goes out from here."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "call",
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "A81"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "A81",
+            "channel": "call",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "itemId": "A81",
+            "text": "Hi, this is an AI assistant calling for the accounts team. This call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "A81",
+            "text": "I'm calling about the signed service agreement and rate sheet for FIRST-JOB-81. What day can we expect it back?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "A81",
+            "listen": true
+          },
+          "response": {
+            "text": "No, we won't be signing your agreement, we use our own contract",
+            "heard": "declined"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "record_promise",
+          "verb": "write",
+          "subject": "promise",
+          "request": {
+            "itemId": "A81",
+            "kind": "declined",
+            "value": "declined"
+          },
+          "response": {
+            "id": "OUT2",
+            "recordedAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "A81"
+          },
+          "response": {
+            "touches": 1,
+            "outcomes": 1,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "itemId": "A81",
+            "reason": "declined",
+            "to": "Michelle Fraser, accounts manager",
+            "history": 1
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "person": "Michelle Fraser, accounts manager",
+            "text": "the signed service agreement and rate sheet for FIRST-JOB-81 (item A81, first job worth $4,700.00) the customer said no (\"No, we won't be signing your agreement, we use our own contract\"). Follow-ups so far: call 2026-09-26T00:00:00.000Z declined. Whether the first job goes ahead without it is your call; nothing further goes out from here."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 2,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 12
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 2,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 12
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "never-nags-a-person-who-is-waiting-on-us",
+      "n": 9,
+      "title": "No touch goes out while the ball is with the business",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The items were read, the gate was asked, and that item has no touch. Any touch on it fails.",
+      "actual": "2 touch(es) [A92:email:sent, A92:email:sent]; 0 outcome(s); 0 arrival(s); 0 escalation(s); 0 alert(s); gate on R91: we_owe_them, we_owe_them",
+      "stimulus": {
+        "description": "An open item whose record says the business still owes the contact a revised drawing. Two runs.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "never-nags-a-person-who-is-waiting-on-us"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 2,
+            "open": [
+              "R91",
+              "A92"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 12
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "R91",
+              "A92"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email",
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "R91"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "R91",
+            "channel": "email",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": false,
+            "reason": "we_owe_them"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email",
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "A92"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "A92",
+            "channel": "email",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "A92",
+            "channel": "email",
+            "text": "Hi Liam, a quick note from our accounts team: we are still waiting on the signed service agreement and rate sheet for FIRST-JOB-92. We need it on file by 2026-09-28, ahead of your first booked job (FIRST-JOB-92). If it is already on its way, thank you, and please ignore this. Reply STOP and we will not follow up on this again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 2,
+            "open": [
+              "R91",
+              "A92"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 12
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 2
+          },
+          "response": {
+            "order": [
+              "R91",
+              "A92"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email",
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "R91"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "R91",
+            "channel": "email",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": false,
+            "reason": "we_owe_them"
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email",
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "A92"
+          },
+          "response": {
+            "touches": 1,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "A92",
+            "channel": "email",
+            "touchesSoFar": 1
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "A92",
+            "channel": "email",
+            "text": "Hi Liam, a quick note from our accounts team: we are still waiting on the signed service agreement and rate sheet for FIRST-JOB-92. We need it on file by 2026-09-28, ahead of your first booked job (FIRST-JOB-92). If it is already on its way, thank you, and please ignore this. Reply STOP and we will not follow up on this again."
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "escalates-after-the-cap",
+      "n": 10,
+      "title": "An item still open at the cap goes to a named person with its history, not into a longer loop",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Exactly three touches, then one escalation naming a person and carrying three touches of history, and a notification to that person. A fourth touch, a second escalation, or an escalation with no name fails.",
+      "actual": "3 touch(es) [A101:email:sent, A101:email:sent, A101:email:sent]; 0 outcome(s); 0 arrival(s); 1 escalation(s); 1 alert(s); escalations Michelle Fraser, accounts manager with 3 touch(es)",
+      "stimulus": {
+        "description": "A cadence of three, driven past the cap: five runs at the gap on one item that never arrives.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "escalates-after-the-cap"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "A101"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "A101"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "A101"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "A101",
+            "channel": "email",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "A101",
+            "channel": "email",
+            "text": "Hi Anika, a quick note from our accounts team: we are still waiting on the signed service agreement and rate sheet for FIRST-JOB-101. We need it on file by 2026-09-28, ahead of your first booked job (FIRST-JOB-101). If it is already on its way, thank you, and please ignore this. Reply STOP and we will not follow up on this again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "A101"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "A101"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "A101"
+          },
+          "response": {
+            "touches": 1,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "A101",
+            "channel": "email",
+            "touchesSoFar": 1
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "A101",
+            "channel": "email",
+            "text": "Hi Anika, a quick note from our accounts team: we are still waiting on the signed service agreement and rate sheet for FIRST-JOB-101. We need it on file by 2026-09-28, ahead of your first booked job (FIRST-JOB-101). If it is already on its way, thank you, and please ignore this. Reply STOP and we will not follow up on this again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "A101"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "A101"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "A101"
+          },
+          "response": {
+            "touches": 2,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "A101",
+            "channel": "email",
+            "touchesSoFar": 2
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "A101",
+            "channel": "email",
+            "text": "Hi Anika, a quick note from our accounts team: we are still waiting on the signed service agreement and rate sheet for FIRST-JOB-101. We need it on file by 2026-09-28, ahead of your first booked job (FIRST-JOB-101). If it is already on its way, thank you, and please ignore this. Reply STOP and we will not follow up on this again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "A101"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "A101"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "email"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "A101"
+          },
+          "response": {
+            "touches": 3,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "itemId": "A101",
+            "reason": "cap_reached",
+            "to": "Michelle Fraser, accounts manager",
+            "history": 3
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-02T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "person": "Michelle Fraser, accounts manager",
+            "text": "the signed service agreement and rate sheet for FIRST-JOB-101 (item A101, first job worth $15,600.00) reached the cap of 3 follow-ups with nothing back. Follow-ups so far: email 2026-09-26T00:00:00.000Z sent; email 2026-09-28T00:00:00.000Z sent; email 2026-09-30T00:00:00.000Z sent. Whether the first job goes ahead without it is your call; nothing further goes out from here."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-10-04T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": []
+          }
+        },
+        {
+          "at": "2026-10-04T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-10-04T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-10-04T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "the-record-by-item",
+      "n": 11,
+      "title": "Every touch, its channel, its outcome and the arrival are retrievable by item",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A read by item id returns two touches with their channels and outcomes, the date outcome, and the arrival with its evidence reference. A touch with no outcome, or an arrival with no evidence, fails.",
+      "actual": "touches call:date, sms:sent; arrival outlook:AAMkAD9c-signed-service-agreement-a111.pdf",
+      "stimulus": {
+        "description": "One item: a call that gets a date, a text two days later, then the document arrives.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "the-record-by-item"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "A111"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "A111"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "call",
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "A111"
+          },
+          "response": {
+            "touches": 0,
+            "outcomes": 0,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "A111",
+            "channel": "call",
+            "touchesSoFar": 0
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "disclose",
+          "verb": "say",
+          "subject": "disclosure",
+          "request": {
+            "itemId": "A111",
+            "text": "Hi, this is an AI assistant calling for the accounts team. This call is recorded."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "A111",
+            "text": "I'm calling about the signed service agreement and rate sheet for FIRST-JOB-111. What day can we expect it back?"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "talk",
+          "verb": "say",
+          "subject": "turn",
+          "request": {
+            "itemId": "A111",
+            "listen": true
+          },
+          "response": {
+            "text": "I'll get it signed and back to you by 2026-09-29",
+            "heard": "date",
+            "value": "2026-09-29"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "record_promise",
+          "verb": "write",
+          "subject": "promise",
+          "request": {
+            "itemId": "A111",
+            "kind": "date",
+            "value": "2026-09-29"
+          },
+          "response": {
+            "id": "OUT1",
+            "recordedAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "A111"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 1
+          },
+          "response": {
+            "order": [
+              "A111"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "cadence": "form"
+          },
+          "response": {
+            "maxTouches": 3,
+            "spacingHours": 48,
+            "channels": [
+              "call",
+              "sms"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "record": "A111"
+          },
+          "response": {
+            "touches": 1,
+            "outcomes": 1,
+            "arrived": false
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "itemId": "A111",
+            "channel": "sms",
+            "touchesSoFar": 1
+          },
+          "response": {
+            "allowed": true
+          }
+        },
+        {
+          "at": "2026-09-28T00:00:00.000Z",
+          "port": "send_sms",
+          "verb": "say",
+          "subject": "sms",
+          "request": {
+            "itemId": "A111",
+            "channel": "sms",
+            "text": "Hi Anika, a quick note from our accounts team: we are still waiting on the signed service agreement and rate sheet for FIRST-JOB-111. You mentioned it would be with us by 2026-09-29. If it is already on its way, thank you, and please ignore this. Reply STOP and we will not follow up on this again."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "items": true
+          },
+          "response": {
+            "count": 1,
+            "open": [
+              "A111"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "contacts": true
+          },
+          "response": {
+            "rows": 6
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "read_contacts",
+          "verb": "read",
+          "subject": "contacts",
+          "request": {
+            "consents": true
+          },
+          "response": {
+            "rows": 1
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "itemId": "A111",
+            "ref": "outlook:AAMkAD9c-signed-service-agreement-a111.pdf"
+          },
+          "response": {
+            "attached": true
+          }
+        },
+        {
+          "at": "2026-09-30T00:00:00.000Z",
+          "port": "rank",
+          "verb": "decide",
+          "subject": "order",
+          "request": {
+            "entries": 0
+          },
+          "response": {
+            "order": []
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 12,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the open items and the cadence runs on.",
+        "now": "2026-11-04T12:15:01.375Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 13,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "The arrived item has no touch after its arrival. The no is recorded and with a person. The capped item is escalated once with its history. Each call's recording opens with the disclosure and ends with a recorded outcome.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "Real open items on the business's own records, real contacts on real numbers, the cadence the business wrote down, run over its own days.",
+        "now": "2026-11-04T12:15:01.375Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 13,
+    "pass": 10,
+    "fail": 0,
+    "shapeOnly": 1,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
