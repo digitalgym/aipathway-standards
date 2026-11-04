@@ -1,0 +1,61 @@
+{
+  "slug": "site-test-check",
+  "name": "Site Test Check",
+  "office_task": "When a fire service visit is done, check each test against the site's asset register, hold any with no tagged asset or tag photo, and draft the site report for the person who signs.",
+  "verticals": ["fire-electrical"],
+  "standards": ["fire-service-pack-standard"],
+  "systems_of_record": [
+    "the job system that issues the job_id (Simpro, ServiceM8 or similar: the completed service visit, its test results and attachments)",
+    "the asset register that issues the asset_id (every extinguisher, hydrant, fire door and exit light on the site, by the tag printed on it)",
+    "the document store that issues the report_id (the site's pack folder in SharePoint or Google Drive)",
+    "the exception desk the business runs (a sheet, a task list or a ticket queue)"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/site-test-check" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "webhook", "schedule"],
+  "consumes": [
+    { "event": "job.completed", "wake": "webhook" },
+    { "event": "job.updated", "wake": "webhook" },
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "report.published",
+      "write": "The site's service report, compiled at request time from the bound service records only (never from a template), marked DRAFT and unsigned, naming who may attest and the retention period from the dated rule for the site's state, written into the site's pack folder for the Fire Safety Advisor or the person the state names to check and sign. It is only written when every test on the visit bound cleanly and every asset due on the visit has a test.",
+      "readback": "The document store returns a report_id; reading that id back returns the job_id, the site id and the service record ids the report was built from. No id back is not a write: report.held is raised with a named owner and the run stops."
+    },
+    {
+      "event": "exception.raised",
+      "write": "An exception on the visit naming the person who owns it: a tag that resolves to no asset or to two, an asset not on this site's register, no obligation named, no result entered, the wrong evidence for the asset class, an uncoded defect, an exit or emergency light closed without its test sheet, a missing tag photograph (unbound, with its age), an asset due on the visit with no test, an isolation without a revisit date or past it, and the held report itself.",
+      "readback": "The exception desk returns an exception_id; reading it back returns the job_id, the asset_id, the reason and the exception_owner. No id back means nothing was raised and the run stops."
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "asset.unresolved",
+      "asset.not_on_site_register",
+      "asset.not_tested",
+      "record.no_obligation",
+      "result.missing",
+      "evidence.wrong_for_class",
+      "defect.uncoded",
+      "record.refused",
+      "record.unbound",
+      "close.refused",
+      "isolation.no_revisit",
+      "isolation.recorded",
+      "isolation.lapsed",
+      "report.held"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.job_id", "seam.records", "seam.queue", "seam.report_id", "seam.report_status", "seam.exception_open", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
