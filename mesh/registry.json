@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T12:04:30.768Z",
+  "generated_at": "2026-11-04T12:07:38.619Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -5732,6 +5732,109 @@
       ]
     },
     {
+      "slug": "lease-dates",
+      "name": "Lease Dates",
+      "office_task": "Keep every commercial lease's rent review and option dates worked out from the lease and the state's rules, draft the notice in time for the manager to serve, and file the served copy.",
+      "verticals": [
+        "property"
+      ],
+      "standards": [
+        "compliance-calendar"
+      ],
+      "systems_of_record": [
+        "the property management system that issues the tenancy_id (its commercial lease register, dated rule set and the document store served notices are filed in)"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "evidence.filed",
+          "write": "a served rent review notice, a landlord's option reminder notice or the tenant's option exercise letter, attached to an email, filed as evidence on the lease obligation it names by obligation id and the lease's tenancy_id; an email with no obligation id is never matched on a shop number, tenant name or address and is raised instead",
+          "readback": "the obligation is read back by its id and must return the same evidence reference (the message_id and attachment) and a completion date; if it does not, nothing was filed and lease.copy_not_read_back is raised"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the lease obligation naming the person who owns it: an unknown review or commencement date, no rule in force, a past date no retained rule version explains, a 'served it' email with no copy, a landlord's dated instruction not to review, a missed review or option date, a drafted notice awaiting the manager's release, a release with no named person, silence past the next chase date, or an email with no obligation id",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the obligation id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "lease.anchor_unknown",
+          "lease.no_rule_in_force",
+          "lease.history_unexplained",
+          "lease.served_without_copy",
+          "lease.copy_not_read_back",
+          "lease.refusal_recorded",
+          "lease.date_missed",
+          "lease.notice_drafted_awaiting_release",
+          "lease.release_refused",
+          "lease.reply_overdue",
+          "lease.email_unmatched"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.tenancy_id",
+          "seam.obligation_ref",
+          "seam.rule_version",
+          "seam.anchor_status",
+          "seam.state",
+          "seam.evidence",
+          "seam.refused_at",
+          "seam.breached_at",
+          "seam.next_chase",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/lease-dates"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "compliance-calendar",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:05:29.281Z",
+          "run_id": "run-1793793929280",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 10
+        }
+      ]
+    },
+    {
       "slug": "licence-watch",
       "name": "Licence Watch",
       "office_task": "Each morning, work out when our licences and insurance policies run out from each state's rule, remind the named person with a Done link, and count it renewed only when the new certificate is filed.",
@@ -11255,6 +11358,7 @@
     "job-hours",
     "late-rent-desk",
     "lead-sort",
+    "lease-dates",
     "licence-watch",
     "loan-intake",
     "lodgement-watch",
