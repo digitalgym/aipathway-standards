@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T12:35:25.268Z",
+  "generated_at": "2026-11-04T12:37:06.776Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -7236,6 +7236,108 @@
       ]
     },
     {
+      "slug": "measure-quote",
+      "name": "Measure Quote",
+      "office_task": "When the site measure is on the job (rooms, square metres, lineal metres, counts), draft the quote at our own price-list rates, or park it with a reason, and leave it for us to send.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "quote-out"
+      ],
+      "systems_of_record": [
+        "ServiceM8",
+        "Simpro",
+        "Xero (Items as the price list, Quotes)"
+      ],
+      "consumes": [
+        {
+          "event": "job.created",
+          "wake": "webhook"
+        },
+        {
+          "event": "job.updated",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "quote.drafted",
+          "write": "A draft quote on the job it was drafted from, ex GST. One line per room and item from the site measure: the catalogue id from the business's own price list, the unit that item is sold by (m2, lm or each), the measured quantity, and that item's rate as read at draft time. The amount is quantity times rate and nothing else: no waste allowance, rounding or unit conversion the price list does not carry. It is left in draft, editable, for the person who owns quotes; this node has no way to send it.",
+          "readback": "The quote is read back by the id the system returned (ServiceM8 GET /api_1.0/jobquote/{uuid}.json, Simpro GET /api/v1.0/companies/{companyID}/quotes/{quoteID}, Xero GET /api.xro/2.0/Quotes/{QuoteID}) and must carry the job id. No id back is not a write: it raises quote.write_failed."
+        },
+        {
+          "event": "exception.raised",
+          "write": "A parked quote, or a job sent back for its measure, as an exception on the job: the park reason from the standard's fixed list (or measure_missing, measure_unit_mismatch), the lines that did price with their catalogue ids and rooms, the work that did not, no total, and exception_owner set to the person the business named for quotes.",
+          "readback": "The exception desk returns an exception_id; reading the job by its id shows the open exception with its exception_owner, and the next hop reads it there and stops."
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "quote.not_in_pricebook",
+          "quote.variation_to_accepted_quote",
+          "quote.discount_requested",
+          "quote.pricebook_unreadable",
+          "quote.measure_missing",
+          "quote.measure_unit_mismatch",
+          "quote.write_failed"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.quote_id",
+          "seam.status",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/measure-quote"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "quote-out",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:33:18.442Z",
+          "run_id": "run-1793795598440",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 0,
+          "total": 11
+        },
+        {
+          "standard": "cash-seam",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:33:53.703Z",
+          "run_id": "run-1793795633699",
+          "green": 4,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 9
+        }
+      ]
+    },
+    {
       "slug": "meeting-notes",
       "name": "Meeting Notes",
       "office_task": "After each client meeting, file what the client told us (facts, preferences, standing instructions) on their record as suggestions, for a partner to accept or reject.",
@@ -13495,6 +13597,7 @@
     "lodgement-watch",
     "margin-watch",
     "matter-billing",
+    "measure-quote",
     "meeting-notes",
     "month-pack",
     "notice-check",
@@ -13564,6 +13667,12 @@
     {
       "from": "after-hours-desk",
       "to": "estimate-desk",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "after-hours-desk",
+      "to": "measure-quote",
       "event": "job.created",
       "id": "job_id"
     },
@@ -13648,6 +13757,12 @@
     {
       "from": "crew-board",
       "to": "hours-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "crew-board",
+      "to": "measure-quote",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -13786,6 +13901,12 @@
     {
       "from": "install-book",
       "to": "estimate-desk",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "install-book",
+      "to": "measure-quote",
       "event": "job.created",
       "id": "job_id"
     },
@@ -13983,6 +14104,12 @@
     },
     {
       "from": "practice-desk",
+      "to": "measure-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "practice-desk",
       "to": "order-release",
       "event": "job.updated",
       "id": "job_id"
@@ -14121,6 +14248,12 @@
     },
     {
       "from": "repair-board",
+      "to": "measure-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "repair-board",
       "to": "order-release",
       "event": "job.updated",
       "id": "job_id"
@@ -14217,6 +14350,12 @@
     },
     {
       "from": "roof-desk",
+      "to": "measure-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "roof-desk",
       "to": "parts-quote",
       "event": "job.created",
       "id": "job_id"
@@ -14302,6 +14441,12 @@
     {
       "from": "route-plan",
       "to": "hours-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "route-plan",
+      "to": "measure-quote",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -14403,6 +14548,12 @@
     },
     {
       "from": "service-due",
+      "to": "measure-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "service-due",
       "to": "parts-quote",
       "event": "job.created",
       "id": "job_id"
@@ -14488,6 +14639,12 @@
     {
       "from": "van-board",
       "to": "hours-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "van-board",
+      "to": "measure-quote",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -14613,6 +14770,12 @@
     },
     {
       "from": "visit-offer",
+      "to": "measure-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-offer",
       "to": "order-release",
       "event": "job.updated",
       "id": "job_id"
@@ -14728,6 +14891,12 @@
     {
       "from": "visit-round",
       "to": "hours-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-round",
+      "to": "measure-quote",
       "event": "job.updated",
       "id": "job_id"
     },
