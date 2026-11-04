@@ -1,0 +1,89 @@
+{
+  "slug": "fire-round-watch",
+  "name": "Fire Round Watch",
+  "office_task": "Each morning, work out each site's next monthly, six-monthly and yearly fire service from its written schedule and last visit, draft bookings for a person to release, and flag anything overdue.",
+  "verticals": [
+    "fire-electrical"
+  ],
+  "standards": [
+    "compliance-calendar"
+  ],
+  "systems_of_record": [
+    "the fire protection contractor's asset register of fire systems on each site, with each site's written routine service schedule, its dated rule store per state, and the document store the signed service reports are filed in (Simpro, a job sheet or a register the business keeps)"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/fire-round-watch"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "schedule",
+    "webhook"
+  ],
+  "consumes": [
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    },
+    {
+      "event": "document.received",
+      "wake": "webhook"
+    },
+    {
+      "event": "exception.closed",
+      "wake": "webhook"
+    }
+  ],
+  "emits": [
+    {
+      "event": "asset.service_due",
+      "write": "the system's routine (monthly, six-monthly or yearly), classed Booking drafted from the rule version in force for the site's state, with the visit booking drafted on it and held for a named person to release",
+      "readback": "reading the system back by its asset_id returns each routine's derived due date, the rule version that produced it and the drafted booking awaiting release; no draft on the read means nothing was written and the run raises an exception"
+    },
+    {
+      "event": "evidence.filed",
+      "write": "the signed service report, filed as the completion evidence on the routine it was done for, and on the shorter routines the same report shows done on that visit to the same system",
+      "readback": "reading the routine back by its obligation id returns the evidence reference and the completion date; a report with no document is refused by the register, so no evidence reference on the read means nothing was filed and the run raises an exception"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the routine naming the person who owns it: Overdue, a last visit nobody knows, no rule for the routine in the site's state, a visit reported done with no report, a building owner's dated refusal, a booking or notice drafted and awaiting release, or a past due date its rule version can no longer explain",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the system's asset_id, the routine, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "fireround.routine_overdue",
+      "fireround.booking_drafted_awaiting_release",
+      "fireround.last_visit_unknown",
+      "fireround.no_rule_for_state",
+      "fireround.visit_without_report",
+      "fireround.visit_declined",
+      "fireround.notice_drafted_awaiting_release",
+      "fireround.release_refused",
+      "fireround.history_unexplained",
+      "fireround.report_unmatched"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.asset_id",
+      "seam.rule_version",
+      "seam.anchor_status",
+      "seam.class",
+      "seam.evidence",
+      "seam.refused_at",
+      "seam.breached_at",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
