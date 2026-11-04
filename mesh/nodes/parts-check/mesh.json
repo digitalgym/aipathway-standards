@@ -1,0 +1,45 @@
+{
+  "slug": "parts-check",
+  "name": "Parts Check",
+  "office_task": "The afternoon before, check every part tomorrow's jobs need against the van and shelf counts, flag stale counts, and raise shortfalls for ordering, never substituting.",
+  "verticals": ["trades-building"],
+  "standards": ["parts-ready"],
+  "systems_of_record": [
+    "the job system that issues the job_id and holds tomorrow's dispatched board, each job's accepted quote lines and materials (ServiceM8, Simpro, AroFlo, Fergus, or a Tradify export into the sheet)",
+    "the stock sheet or job-system stock locations holding each van's count with the time it was counted, and the shelf",
+    "Material Order's path (the purchasing step that prices, holds and issues the purchase order id)",
+    "the exception desk the business runs (a task list or a sheet)"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/parts-check" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "job.updated", "wake": "webhook" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "report.published",
+      "write": "the parts result for tomorrow's date, published by the cut-off every run, quiet or not: every job on the board by job_id with each part on_van, pick_from_shelf (reserved, with its location), ordered (with the purchase order id Material Order returned) or flagged with its reason; plus one message per tech and job carrying the job_id",
+      "readback": "the report store returns a report_id for the date, republished in place on a re-run; each Result row is keyed on (for_date, job_id, catalogue_code) on the seam mirror and reads back by job_id; no report_id back means the run did not publish, and the next scheduled run publishes again"
+    },
+    {
+      "event": "exception.raised",
+      "write": "a flag on the job naming the person who owns it, one reason from the closed list: needs_list_unknown, stock_unknown (van count older than the limit), lead_time_after_job, not_in_stock or order_failed; an equivalent part in stock is named only here, as a suggestion",
+      "readback": "the exception desk returns an exception_id, stored on the line's Result; reading that id back returns the job_id, the part, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": ["parts.needs_list_unknown", "parts.stock_unknown", "parts.lead_time_after_job", "parts.not_in_stock", "parts.order_failed"],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "seam-mirror",
+    "fields": ["seam.job_id", "seam.for_date", "seam.catalogue_code", "seam.status", "seam.reservation_id", "seam.order_external_id", "seam.message_id", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": null
+}

@@ -1,0 +1,110 @@
+{
+  "spec": "AIP-BS-PARTS-READY",
+  "standard": "parts-ready-build-standard",
+  "edition": "2026-11-01",
+  "source": "https://aipathway.com.au/explore-ai/parts-ready-build-standard",
+  "ran_at": "2026-11-04T12:54:15.500Z",
+  "environment": "stub",
+  "provider": "local.mock_parts_board",
+  "provider_block": {
+    "boundary": {
+      "never": [
+        "guess what a job needs when the record holds no needs list",
+        "trust a van count older than the business's limit",
+        "write a purchase order outside Material Order's path",
+        "order a part that cannot arrive before the job",
+        "substitute a part, or change a job's parts list, without a person",
+        "order or message twice for one job on a re-run"
+      ],
+      "stays_with_person": [
+        "moving a job, or sourcing a part, when the lead time misses the slot",
+        "accepting an equivalent part",
+        "writing the needs template for each job type",
+        "counting the van",
+        "every flag on the exceptions queue"
+      ]
+    },
+    "job": "the tech opens the van tomorrow and the part is there",
+    "skill": "parts-ready",
+    "stub": "local.mock_parts_board",
+    "production": null,
+    "product": null,
+    "insert": null,
+    "with_us": {
+      "kind": "own_systems",
+      "note": "No hosted step. The check runs on the business's own board, van counts and shelf, and a shortfall is ordered through Material Order's path, whose order write is the builder's until Office Voice's purchase order tools ship. The pass test runs on the business's own systems."
+    }
+  },
+  "tally": {
+    "green": 7,
+    "red": 0,
+    "with_us": 1,
+    "evidence_required": 0,
+    "total": 10
+  },
+  "checks": [
+    {
+      "id": "jobs-come-from-the-board",
+      "n": 1,
+      "title": "Tomorrow's jobs come from the dispatched board, by job id, and a job added later re-runs for that job only",
+      "verdict": "pass"
+    },
+    {
+      "id": "needs-come-from-the-record",
+      "n": 2,
+      "title": "What a job needs comes from the record, and a job with no needs list is flagged, never guessed",
+      "verdict": "pass"
+    },
+    {
+      "id": "stock-is-read-with-an-as-of",
+      "n": 3,
+      "title": "Van stock is read with the time it was counted, and a count older than the limit is flagged, not trusted",
+      "verdict": "pass"
+    },
+    {
+      "id": "reserve-before-order",
+      "n": 4,
+      "title": "Shelf stock is reserved to the job before anything is ordered",
+      "verdict": "pass"
+    },
+    {
+      "id": "order-only-through-material-order",
+      "n": 5,
+      "title": "A shortfall is ordered only through Material Order, one request per supplier per run, and a second run orders nothing again",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "lead-time-decides",
+      "n": 6,
+      "title": "A part that cannot arrive before the job is flagged with the reason, not ordered and hoped for",
+      "verdict": "pass"
+    },
+    {
+      "id": "no-silent-substitution",
+      "n": 7,
+      "title": "An equivalent part is a suggestion on the flag, never a change to the order, the reservation or the tech's list",
+      "verdict": "pass"
+    },
+    {
+      "id": "tech-told-once",
+      "n": 8,
+      "title": "Each tech is told once per job, with the job id: what is on the van, what to pick up and where",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "publishes-by-the-cutoff",
+      "n": 9,
+      "title": "The run publishes by the cut-off whether or not it found anything, and every flag goes to the exceptions queue with an owner",
+      "verdict": "pass"
+    },
+    {
+      "id": "pass-test",
+      "n": 10,
+      "title": "The pass test passes",
+      "verdict": "with_us"
+    }
+  ],
+  "next": {
+    "with_us": "No hosted step. The check runs on the business's own board, van counts and shelf, and a shortfall is ordered through Material Order's path, whose order write is the builder's until Office Voice's purchase order tools ship. The pass test runs on the business's own systems. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence."
+  }
+}
