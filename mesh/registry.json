@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T22:26:52.096Z",
+  "generated_at": "2026-11-04T22:27:36.451Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -15108,6 +15108,108 @@
       ]
     },
     {
+      "slug": "tier-quote",
+      "name": "Tier Quote",
+      "office_task": "When a job is booked, draft one quote with good, better and best options from our own tier list, each line at our own price-list rate, or park it, and leave it for us to send.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "quote-out"
+      ],
+      "systems_of_record": [
+        "ServiceM8",
+        "Simpro",
+        "Xero (Items as the price list, Quotes)"
+      ],
+      "consumes": [
+        {
+          "event": "job.created",
+          "wake": "webhook"
+        },
+        {
+          "event": "job.updated",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "quote.drafted",
+          "write": "One draft quote on the job it was drafted from, ex GST, holding two or three named options (Good, Better and Best unless the business renames them), in the tier list's order and under its labels. Every line in every option is a catalogue id the tier list names for that kind of work, at the rate read from the business's own price list at draft time; each option carries its own total and there is no sum across options. Where the system cannot hold options on one quote, one draft per option carries the job id and the option label and the set counts as the one quote. It is left in draft for the person who owns quotes; this node has no way to send it, mark the customer's choice or void an option.",
+          "readback": "The quote is read back by the id the system returned (ServiceM8 GET /api_1.0/jobquote/{uuid}.json, Simpro GET /api/v1.0/companies/{companyID}/quotes/{quoteID}, Xero GET /api.xro/2.0/Quotes/{QuoteID}) and must carry the job id and every option label. No id back is not a write: it raises quote.write_failed."
+        },
+        {
+          "event": "exception.raised",
+          "write": "A parked quote as an exception on the job: the park reason from the standard's fixed list (not_in_pricebook, variation_to_accepted_quote, discount_requested, pricebook_unreadable, no_tier_map, too_many_options), each option's priced lines, the line that did not price and the option it was in, no total, and exception_owner set to the person the business named for quotes. Once a person marks the option the customer chose, the same owner is told which other options to void or decline.",
+          "readback": "The exception desk returns an exception_id; reading the job by its id shows the open exception with its exception_owner, and the next hop reads it there and stops."
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "quote.not_in_pricebook",
+          "quote.variation_to_accepted_quote",
+          "quote.discount_requested",
+          "quote.pricebook_unreadable",
+          "quote.no_tier_map",
+          "quote.too_many_options",
+          "quote.write_failed"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.quote_id",
+          "seam.status",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/tier-quote"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "quote-out",
+          "edition": "2026-11-05",
+          "environment": "stub",
+          "ran_at": "2026-11-04T22:24:38.013Z",
+          "run_id": "run-1793831078011",
+          "green": 10,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 0,
+          "total": 15
+        },
+        {
+          "standard": "cash-seam",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T22:25:00.114Z",
+          "run_id": "run-1793831100112",
+          "green": 4,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 9
+        }
+      ]
+    },
+    {
       "slug": "timesheet-billing",
       "name": "Timesheet Billing",
       "office_task": "When a client's timesheet period closes, draft its invoice in Xero from the hours at our rate card, park what it cannot price, and hold it for a named person to release.",
@@ -16229,6 +16331,7 @@
     "terms-watch",
     "test-sheet-check",
     "threshold-watch",
+    "tier-quote",
     "timesheet-billing",
     "trim-quote",
     "van-board",
@@ -16315,6 +16418,12 @@
     {
       "from": "after-hours-desk",
       "to": "takeoff-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "after-hours-desk",
+      "to": "tier-quote",
       "event": "job.created",
       "id": "job_id"
     },
@@ -16482,6 +16591,12 @@
     },
     {
       "from": "crew-board",
+      "to": "tier-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "crew-board",
       "to": "trim-quote",
       "event": "job.updated",
       "id": "job_id"
@@ -16585,6 +16700,12 @@
     {
       "from": "day-desk",
       "to": "takeoff-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "tier-quote",
       "event": "job.created",
       "id": "job_id"
     },
@@ -16747,6 +16868,12 @@
     {
       "from": "day-desk",
       "to": "takeoff-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "tier-quote",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -16896,6 +17023,12 @@
     },
     {
       "from": "fault-desk",
+      "to": "tier-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
       "to": "trim-quote",
       "event": "job.created",
       "id": "job_id"
@@ -17064,6 +17197,12 @@
     },
     {
       "from": "fault-desk",
+      "to": "tier-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "fault-desk",
       "to": "trim-quote",
       "event": "job.updated",
       "id": "job_id"
@@ -17167,6 +17306,12 @@
     {
       "from": "install-book",
       "to": "takeoff-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "install-book",
+      "to": "tier-quote",
       "event": "job.created",
       "id": "job_id"
     },
@@ -17460,6 +17605,12 @@
     },
     {
       "from": "portal-match",
+      "to": "tier-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "portal-match",
       "to": "trim-quote",
       "event": "job.updated",
       "id": "job_id"
@@ -17629,6 +17780,12 @@
     {
       "from": "practice-desk",
       "to": "takeoff-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "practice-desk",
+      "to": "tier-quote",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -17814,6 +17971,12 @@
     },
     {
       "from": "repair-board",
+      "to": "tier-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "repair-board",
       "to": "trim-quote",
       "event": "job.updated",
       "id": "job_id"
@@ -17922,6 +18085,12 @@
     },
     {
       "from": "roof-desk",
+      "to": "tier-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "roof-desk",
       "to": "trim-quote",
       "event": "job.created",
       "id": "job_id"
@@ -18079,6 +18248,12 @@
     {
       "from": "route-plan",
       "to": "takeoff-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "route-plan",
+      "to": "tier-quote",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -18192,6 +18367,12 @@
     },
     {
       "from": "service-due",
+      "to": "tier-quote",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "service-due",
       "to": "trim-quote",
       "event": "job.created",
       "id": "job_id"
@@ -18355,6 +18536,12 @@
     {
       "from": "van-board",
       "to": "takeoff-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "van-board",
+      "to": "tier-quote",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -18528,6 +18715,12 @@
     },
     {
       "from": "visit-offer",
+      "to": "tier-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-offer",
       "to": "trim-quote",
       "event": "job.updated",
       "id": "job_id"
@@ -18691,6 +18884,12 @@
     {
       "from": "visit-round",
       "to": "takeoff-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-round",
+      "to": "tier-quote",
       "event": "job.updated",
       "id": "job_id"
     },
