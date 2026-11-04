@@ -255,7 +255,29 @@ statutory_clock:
 
 Nothing above stores a days-in-arrears figure. If your schema has a column for it, the number will be wrong on a Monday after a weekend payment, and the tenant will be chased for money they have paid.
 
-## 11. What your developer builds, and the step that needs care
+## 11. Connect your rent roll so the short list builds itself, without it touching the trust ledger
+
+The build reads your rent roll the way you read a bank statement: every line, and no way to change one. It reads each tenancy’s ledger, paid-to date and notes, and writes the short list, the record of why each tenancy was or was not chased, and any notice as a draft. It never records or reverses a payment, never applies a fee, never serves a notice, and never messages a tenant whose ledger it has not just read. Revoke its key or app connection in your property platform, and its Office Voice key on the Keys page in Office Voice, and it stops. Your own login stays yours: the build connects with its own key, never your username and password.
+
+What each piece of access is for.
+
+- **The tenant ledger, read.** For the paid-to date, receipts, part-payments and the rent period, from PropertyMe, Console Cloud or PropertyTree through its own integration route. Where your platform offers none to you, the daily arrears report export does the same job, read once a day.
+- **Tenancy notes and flags, read.** For the stop conditions: an arrangement, hardship, a dispute, a notice already issued, a pause with its review date.
+- **A drafts folder, write.** For the notice, which waits there until a named person serves it, and for the record. Nothing is written to the ledger.
+- **An Office Voice key with “Queue calls”, if you hand the short list over for calls.** One governed call per tenant, on the basis that you are ringing your own tenant about the tenancy. Office Voice checks the Do Not Call Register and calling hours before it dials. Leave the key out and the build stops at the list, which is still most of the value.
+
+1. Build against the stub until all six stop conditions in section 4 hold.
+2. Connect the rent roll read only, or set up the daily arrears export.
+3. Decide where hardship, arrangements and pauses are recorded, so the build reads them rather than someone’s memory.
+4. Load the thresholds for each state you manage in, as dated rules.
+5. If you want the calls, approve an Office Voice key with “Queue calls”.
+6. Run the pass test below on one tenancy from your own data.
+
+Why not your platform’s own arrears reminders? Keep them: they collect the tenancies that were going to pay anyway. They send on days in arrears. Before you lean on them for more, ask whether a reminder stops for a payment received after the list was built, for a hardship note, and for a tenancy already on the formal path. Those are the three that cost more than the arrears.
+
+Where it runs. A daily flow with the short list and the record in Microsoft 365 lists (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/arrears-on-microsoft-365) lays these out), a small dashboard a coding agent builds from this page, or a routine that wakes each morning after the bank file lands. All three are held to the same checks; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
+
+## 12. What your developer builds, and the step that needs care
 
 Everything in sections 2 to 5 is yours and worth building. The line is the conversation: the moment this stops sending messages and starts talking to a person about their home.
 
@@ -286,7 +308,7 @@ Build against the stub until the message stops being enough. A build that stops 
 
 **The pass test.** Start a chase on a tenancy that is showing arrears. After the first message and before the next, apply a payment in the ledger that clears it. Nothing more may be sent, and the record must say which stop condition caught it. Then push one tenancy past the threshold: the notice is drafted and sits unserved until a named person releases it. As an extra step, re-run the first with the payment reversed and a hardship flag set: again nothing, again with a reason. Each takes a minute to stage from your own data. If a message sends after the payment, your stop conditions are being evaluated once at the start of the sequence rather than before every message, which is section 4 in one sentence. If the notice goes out on its own, section 5 is not built.
 
-## 12. A checklist to hold any build or supplier to
+## 13. A checklist to hold any build or supplier to
 
 - The arrears position is derived every run.
 - Paid-to date drives escalation timing.

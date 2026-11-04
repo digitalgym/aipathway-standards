@@ -268,7 +268,7 @@ Building this on Microsoft 365: [the lists, the flow and the record library](htt
 
 ## Facts that can change, and when we checked them
 
-Checked as at 2026-10-24
+Checked as at 2026-10-29
 
 Underquoting rules differ by state. What follows is a summary of what each regulator says, for an agent deciding which rules to write into the Rules tab. It is not the rules themselves.
 
@@ -276,7 +276,7 @@ Underquoting rules differ by state. What follows is a summary of what each regul
 
 **Victoria: Consumer Affairs Victoria, Estate Agents Act 1980.** The estimated selling price in the sales authority must take into account the 3 most comparable sales, or the 1 or 2 that can be found. In metropolitan Melbourne a comparable has sold in the last 6 months within 2 km; outside it, the last 18 months within 5 km; and it is of a similar standard or condition. The indicative price in the Property Price Statement (formerly the Statement of Information) may not be less than the estimated selling price, the seller’s asking price, or a rejected written offer, and a range is no wider than 10 percent. Agents should keep records of how comparables were chosen. Source: Consumer Affairs Victoria, underquoting information for real estate agents (consumer.vic.gov.au, page last updated 22 October 2026).
 
-**Queensland: Office of Fair Trading, Property Occupations Act 2014.** An agent who gives a seller an opinion of the likely selling price gives a comparative market analysis, which compares at least 3 properties of similar standard sold within 5 km in the last 6 months; where 3 cannot be found, the agent gives the advice in writing and justifies it. For an auction, the agent must not disclose the reserve or a price guide to anyone other than the seller’s side. Sources: Queensland Government, appointing a real estate agent (qld.gov.au), and the Property Occupations Act 2014, sections 215 and 216 (legislation.qld.gov.au).
+**Queensland: Office of Fair Trading, Property Occupations Act 2014.** An agent who gives a seller an opinion of the likely selling price gives a comparative market analysis, which compares at least 3 properties of a similar standard or condition sold within 5 km in the previous 6 months; where one cannot be prepared, the agent gives a written explanation of how the market value was decided. For an auction, the agent must not disclose the reserve, an amount likely to produce a successful bid, or a price guide to anyone other than a person acting for the seller. For a sale other than by auction, the same applies to a likely price or price guide when the seller has instructed the agent not to disclose the price. A range given to a listings site only as a search setting, and not displayed, is allowed. Sources: Queensland Government, appointing a real estate agent (qld.gov.au), and the Property Occupations Act 2014, sections 215 and 216 and the schedule 2 definition of comparative market analysis (legislation.qld.gov.au).
 
 Elsewhere, misleading a buyer or a seller about price is still prohibited under the Australian Consumer Law.
 

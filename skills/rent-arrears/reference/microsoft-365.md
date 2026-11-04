@@ -177,7 +177,32 @@ CALCULATE (
 
 Two of these must be zero and both should be on the front page. Notices Without Approval is a compliance failure. Chased While Paid is the one that produces a complaint, and it is almost always caused by a refresh that quietly stopped rather than by anyone's judgement.
 
-## 6. The order to build it in
+## 6. What the flows can reach in your Microsoft 365 and your rent roll, and what they never touch
+
+The flows can leave a letter on the desk for signing. They cannot post it, and they cannot open the trust account. They read each tenancy’s paid-to date and its stop conditions, write the four lists, send the ordinary messages, and draft a notice that waits for a named person to release it. They never record or reverse a payment, never apply a fee, never serve a notice on a timer, and never message a tenant whose position they have not just re-read. Nothing is written to the ledger.
+
+What each connection is for.
+
+- **SharePoint, the one site.** Rules, Positions, StopConditions and Messages. The flows read and write rows there and nowhere else.
+- **The rent roll, read.** Flow 1’s paid-to dates from PropertyMe, Console Cloud or PropertyTree, through the platform’s own integration route by a custom connector or the HTTP action (both premium in Power Automate). Where the platform offers you no route, the daily arrears report export dropped into a library does the same job, read once a day.
+- **Tenancy notes and flags, read.** For the stop conditions Flow 4 re-reads before every message: an arrangement, hardship, a dispute, a notice already issued.
+- **One shared mailbox, send.** Flow 4’s ordinary messages, from an address the agency owns, so what went out is in one place.
+- **Approvals.** The notice, released only by a response from the approver group you decided on in section 1.
+- **An Office Voice key with “Queue calls”, if you hand the short list over for calls.** Made at /app/keys in Office Voice and called from a flow over its MCP endpoint with the HTTP action. One governed call per tenant; Office Voice checks the Do Not Call Register and calling hours before it dials. Leave the key out and the build stops at the list.
+
+Least privilege, as steps.
+
+1. Own the four flows with a service account, not a property manager who might leave, with a named co-owner.
+2. Build them in one solution on connection references, so the rent roll, SharePoint, mailbox and Approvals connections are each one place to change.
+3. Make the service account a member of the one site and no other. Any app registration gets Sites.Selected on that one site.
+4. Give it Send As on the one shared mailbox. If an app registration sends instead, scope it to that mailbox with an Exchange application access policy or RBAC for Applications.
+5. Give the rent roll connection read access only, on its own key or app connection. On the Office Voice key, tick “Queue calls” and nothing else.
+
+How to cut it off. Turn off the flows in the solution and nothing more is sent. Revoke the build’s key or app connection in your property platform, and delete its Office Voice key on the Keys page in Office Voice. None of these touches the lists, so the record of what was and was not sent stays. The other switches are in [the shared conventions](https://aipathway.com.au/explore-ai/standards-on-microsoft-365#access).
+
+Why not run the flows on a property manager’s own platform login? It is quicker to set up and it can do everything that person can: receipt, reverse, apply a fee, change a tenancy. Those are the things this build must never do, and the flows stop working the day that person leaves. A read-only key of the build’s own, owned by the service account, has neither problem.
+
+## 7. The order to build it in
 
 1. Create the four lists. Index TenancyRef on all of them.
 2. Load Rules for one jurisdiction, with two versions of one step so the effective-date logic has something to choose between.
@@ -188,7 +213,7 @@ Two of these must be zero and both should be on the front page. Notices Without 
 7. Connect Power BI. Put the two must-be-zero measures on the front page and alert on both.
 8. Run the pass test.
 
-## 7. Four traps specific to this build
+## 8. Four traps specific to this build
 
 ### Hardcoding one state's periods
 
@@ -206,7 +231,7 @@ A sequence that checks stop conditions when it begins and then sends four messag
 
 An adaptive card that says a notice is about to go, with a cancel button, is not an approval. The send must not happen unless somebody actively approved, which means the send action is downstream of the approval outcome, not racing it.
 
-## 8. Where the automation stops
+## 9. Where the automation stops
 
 - Issuing any notice with legal effect. Drafted by a flow, released by a named person, always.
 - Deciding that a tenancy moves to a statutory path. The triage proposes it; a property manager owns it.

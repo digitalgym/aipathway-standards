@@ -30,7 +30,7 @@ Power Automate already has the one thing this standard leans on hardest: an appr
 
 Read [the Open-Home Feedback build standard](https://aipathway.com.au/explore-ai/open-home-feedback-build-standard) first. It defines its objects, and the lists below are those objects with SharePoint types on them. Shared conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-Decide whose mailbox the follow-ups come from. The Outlook action sends as the connection’s owner, and replies land there. Make it the agent’s own mailbox or a shared one the agent reads, on a business account, not whoever builds the flow.
+Decide whose mailbox the follow-ups come from. The plain Outlook send action sends as the connection’s owner, the shared mailbox action sends as the shared mailbox, and replies land in whichever one sent. Make it the agent’s own mailbox or a shared one the agent reads, on a business account, not whoever builds the flow.
 
 Then decide how the register gets in. A CRM sign-in export pasted or imported into the Register list is fine; so is the paper sheet typed up. What matters is that consent arrives as the attendee gave it, as yes, no or blank, and that nobody fills a blank in later.
 
@@ -141,7 +141,30 @@ FLOW 3  The weekly vendor report
 
 Flow 2 is the only flow that reads the mailbox, and it has no send action. An agent who wants to answer a reply answers it from Outlook, as themselves.
 
-## 5. The order to build it in
+## 5. What the flows can reach in your Microsoft 365, and why your CRM is not one of them
+
+The flows are handed the visitors’ book off the front table and nothing else in the office. They read who signed in and whether they ticked the box, write a thank-you note for each, and hold every note until the agent signs it. In practice they read and write the five lists on one SharePoint site, send approved follow-ups and vendor reports from one mailbox, and read the replies that come back to it. They never send without an approval, never reply to an offer or a complaint, never text or ring a buyer, and never read or change a contact in the CRM.
+
+What each connection is for.
+
+- **SharePoint, one site.** Register, FollowUps, Replies, OptOuts and VendorReports. Nothing outside that site.
+- **Outlook, one mailbox.** Flow 1 and Flow 3 send from it once approved; Flow 2 reads the replies that land there. Use the shared-mailbox send action if it is a shared mailbox the agent reads.
+- **Approvals and Teams.** The approval on every follow-up and every vendor report, and the posts to the agent about offers, complaints and rows with no consent.
+- **The CRM: no connection.** The register comes in as an export or a typed sheet, imported into the Register list. No flow can read or change a contact in Rex, Agentbox or VaultRE, because none is given a way in.
+- **Office Voice: not in this plan.** If you add the standard’s optional call, the key only holds an attendee who asked for a call. It cannot dial; Office Voice decides at dial time on the AI disclosure, the Do Not Call Register and calling hours.
+
+Keep it to the least it needs.
+
+1. Make a service account for the build and create the flows as it, not as whoever set them up. Flows and connections owned by a person go with them when they leave.
+2. Put the three flows in a solution and use connection references, so each connection is made once, by the service account, and every flow shares it.
+3. Make the service account a member of the one SharePoint site and no other. An app registration gets Sites.Selected and that site only.
+4. If the follow-ups go from a shared mailbox, give the service account Full Access and Send As on that one mailbox. If an app registration reads or sends instead, scope it to that mailbox with RBAC for Applications in Exchange Online, or an application access policy.
+
+How to cut it off. Turn the flows off and nothing drafts or sends. A draft waiting on an approval stays unsent. Remove the service account’s access to the mailbox and the build cannot send at all, while OptOuts and Replies stay where they are.
+
+Why not have Copilot draft the follow-ups from the agent’s inbox? It writes a good thank-you note, and it reads the whole mailbox to do it. It does not read the Consent column, and nothing stops it drafting to someone who replied STOP at last month’s listing. The flows read the register and OptOuts every time because that is all they can read. The standard’s [setup section](https://aipathway.com.au/explore-ai/open-home-feedback-build-standard#connect) covers the Google Sheet version of the same build.
+
+## 6. The order to build it in
 
 1. Create the five lists from the schema, with DraftKey and OptOuts.PersonKey unique.
 2. Build Flow 1 up to the approval, and prove a blank consent row gets no FollowUps row.
@@ -149,7 +172,7 @@ Flow 2 is the only flow that reads the mailbox, and it has no send action. An ag
 4. Build Flow 2 against a test mailbox, and prove STOP writes OptOuts and an offer reaches the agent.
 5. Build Flow 3, and compare its first report against the Replies list by hand before approving it.
 
-## 6. Four traps specific to this build
+## 7. Four traps specific to this build
 
 ### Treating a filled-in mobile as consent
 
@@ -167,7 +190,7 @@ A summary is a sentence nobody said. The report quotes and counts; a person may 
 
 An approval that times out must leave the draft unsent. A timeout that sends is a send nobody approved.
 
-## 7. Where the automation stops
+## 8. Where the automation stops
 
 - Approving each follow-up, and approving each vendor report version.
 - Passing every offer to the vendor, and handling every complaint.

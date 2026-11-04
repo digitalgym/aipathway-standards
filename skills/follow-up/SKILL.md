@@ -98,8 +98,9 @@ skill asserts.
 - 6. The cadence and the cap
 - 7. The call
 - 8. What stays with a person
-- 9. Join It to Your Own System: What to Stub, and What Not to Hand-Roll
-- 10. A checklist to hold any build or supplier to
+- 9. Connect Xero for quote calls, without it touching the price
+- 10. Join It to Your Own System: What to Stub, and What Not to Hand-Roll
+- 11. A checklist to hold any build or supplier to
 
 ## Attribution
 

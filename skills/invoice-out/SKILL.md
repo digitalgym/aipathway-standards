@@ -99,8 +99,9 @@ skill asserts.
 - 5. Builders: a stage invoice, never a claim
 - 6. The release gate
 - 7. What stays with a person
-- 9. Join It to Your Own System: the one write not to hand-roll
-- 10. A checklist to hold any build or supplier to
+- 9. Connect Xero and ServiceM8 or Simpro for draft invoices, without anything being sent
+- 10. What your developer builds: the one write not to hand-roll
+- 11. A checklist to hold any build or supplier to
 
 ## Attribution
 

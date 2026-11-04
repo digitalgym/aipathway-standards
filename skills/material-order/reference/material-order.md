@@ -65,7 +65,7 @@ Stock is read before anything is ordered, because the cheapest material is the o
 
 Any business that orders materials for jobs: plumbers with a wholesaler account, builders with three suppliers and a yard, electricians who keep stock on the van. If a job carries a material list and somebody has to turn it into orders, this applies.
 
-It sits between two standards that exist. The [Quote Out standard](https://aipathway.com.au/explore-ai/quote-out-build-standard) is where the material lines came from, priced only from the book. The [Invoice Check standard](https://aipathway.com.au/explore-ai/invoice-check-build-standard) is where the supplier’s invoice goes next, checked against the order this standard produced. The [material ordering paper](https://aipathway.com.au/explore-ai/material-ordering-trades) is the argument beside it.
+It sits between two standards that exist. The [Quote Out standard](https://aipathway.com.au/explore-ai/quote-out-build-standard) is where the material lines came from, priced only from the book. The [Invoice Check standard](https://aipathway.com.au/explore-ai/invoice-check-build-standard) is where the supplier’s invoice goes next, checked against the order this standard produced. The [material ordering paper](https://aipathway.com.au/explore-ai/material-ordering-trades) is the argument beside it. The [Parts Ready standard](https://aipathway.com.au/explore-ai/parts-ready-build-standard) is the check in front of it: the afternoon before, it holds tomorrow’s jobs against the van and the shelf, and hands only the real shortfalls to this standard to order.
 
 What cannot meet it. A supplier with no catalogue the business can read, only a phone number, cannot be the source of a price. Orders to that supplier park on every line until a person prices them, and the standard says so rather than letting a remembered price through.
 
@@ -150,7 +150,28 @@ The matched delivery is the record the supplier’s invoice should be compared a
 - Accepting a substitution, on site, with their name on the line.
 - Every variance: short, over, wrong, damaged, or a price that moved between catalogue and invoice.
 
-## 7. What your developer builds, and the step that needs care
+## 7. Connect your job system and supplier accounts for orders, without it spending over your limit
+
+The build gets what a fuel card gives a driver: it buys what it is for, from the places you named, up to a limit, and every purchase shows on the statement. It reads the job’s material list, the stock on hand and the supplier’s catalogue, and writes one order per job and supplier. It never releases an order over your threshold, never orders from a supplier you have not approved, never accepts a substitute and never pays the supplier’s invoice. Revoke its key or app connection in the job system and it is cut off. Your own login stays yours: the build connects with its own key or app connection, never your username and password, and it never holds the password to your trade account.
+
+What each piece of access is for.
+
+- **Jobs, read.** For the material list, the start date and the job owner, and to read the job again before writing so a second run finds the first order.
+- **Stock, read and reserve.** So the thirty metres already on the shelf are reserved for the job, not ordered again.
+- **The supplier’s catalogue, read.** The only source of a price and a lead time, read at order time.
+- **Purchase orders, write.** One order per job and supplier, in the job system’s purchasing or the supplier’s ordering, with the id back.
+
+1. In ServiceM8, Simpro, Fergus, Jobber or AroFlo, create a key or app connection for the build through the system’s own integration route.
+2. For each supplier, find out how it takes orders and publishes its catalogue. Where a supplier only offers a website login, the order goes as an email to its orders address from your account, or a browser step a person approves places it.
+3. Write the approved-supplier list and the threshold, with the name of the person who releases anything over it.
+4. Decide who records a delivery against the order, usually the person on site who signs the docket.
+5. Run the pass test below on one real job.
+
+Why not your supplier’s app, or the purchase orders already in your job system? A supplier’s app orders well from that supplier and knows nothing about your shelf, your other suppliers or the job. Your job system’s purchase orders are the right place for the order to live, and where this build writes when the system allows it. Before building around one, check two things: does it stop a second order for the same job and supplier, and does it hold an order over a threshold for a named person. If it does both, use it, and build only the stock read and the delivery match.
+
+Where it runs. A scheduled flow with the orders and deliveries as lists (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/material-orders-on-microsoft-365) lays these out), a Google Sheet with a timer, or a small build a coding agent makes from this page. All are held to the same checks; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
+
+## 8. What your developer builds, and the step that needs care
 
 One step not to hand-roll: the idempotent write of the order into the system the business buys from, with an id back. Everything else a coding agent builds against the stub in an afternoon.
 
@@ -174,7 +195,7 @@ A vendor selling purchasing automation is usually selling the picking list, whic
 
 **The pass test.** On the real job system and a real supplier account. Order one job twice, an hour apart: one order per supplier must exist with the system’s own id, updated not duplicated. Put stock on the shelf for one line: it must be reserved, not ordered. Put a code on the job that no catalogue holds: the order must park with that reason and carry no price for it. Set a threshold and order one job over it: it must wait for a named person, and go out only with their name on the release. Then record a delivery one line short: the variance must be in the queue with an owner. If any of those five is not what happened, the standard is not implemented.
 
-## 8. A checklist to hold any build or supplier to
+## 9. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 
@@ -194,6 +215,7 @@ Hold a DIY build or a vendor to this. If a box is empty, it is not in production
 ## Related reading
 
 - The paper: material lists and supplier ordering
+- The Parts Ready Build Standard: tomorrow’s jobs checked against the van first
 - The Quote Out Build Standard: where the lines came from
 - The Invoice Check Build Standard: where the supplier’s invoice goes
 - The Invoice Out Build Standard: the same release gate, on the money side

@@ -85,7 +85,7 @@ Any business that does work in a job system and bills it from a ledger: a trade 
 
 It sits between two standards that already exist. The [Quote Out standard](https://aipathway.com.au/explore-ai/quote-out-build-standard) ends with a draft quote in the system, priced only from the book. The [Debtor Chasing standard](https://aipathway.com.au/explore-ai/debtor-chasing-build-standard) starts when an invoice is late. This is the middle, and it uses the same refusal as the first: the price book is the only source of a rate, and anything the book does not cover is parked for a person rather than guessed.
 
-What cannot meet it. Tradify has no public API, so nothing can read a completed job from it or write an invoice back. A Tradify business can still run this standard from Xero alone, with the job lines entered by a person, and the standard says that plainly rather than claiming an integration that does not exist.
+Tradify, and the route that works. Tradify has no public API and no Zapier app, so a build cannot read a completed job from it directly. We connect it another way: Tradify’s job export, loaded each day by a browser step a person approves, gives the build the finished jobs and their lines, and the draft is written into Xero the same way as for any other job system. Where nobody wants the export, the lines are entered by a person and the checks still run. The standard says that plainly rather than claiming an integration that does not exist.
 
 The failure this prevents is specific: not the wrong number, but the invoice that did not exist on the day, and the second one that did exist because the job was marked complete twice.
 
@@ -178,13 +178,33 @@ Checked as at 26 September 2026
 
 Security of Payment response windows differ by state and moved in Victoria on 15 April 2026. This standard raises a stage invoice and does not compute or serve a claim; the windows are cited in the Rejected Pack standard, which is where they are dated.
 
-Tradify has no public or partner API, confirmed in writing by their support on 10 April 2026. If that changes, the scope in section 1 changes with it.
+Tradify has no public or partner API, confirmed in writing by their support on 10 April 2026, and no Zapier app as at 29 October 2026. If that changes, the route in section 1 changes with it.
 
 **Check these against the primary instrument before you rely on them**, and store the date you checked beside the value rather than hard-coding it. This standard tells you the shape and where to look. It is not legal advice and it does not tell you that anything complies.
 
-## 9. Join It to Your Own System: the one write not to hand-roll
+## 9. Connect Xero and ServiceM8 or Simpro for draft invoices, without anything being sent
 
-One step not to hand-roll: the authenticated, idempotent write into the ledger, with an id back and a proof. Everything else a coding agent builds against the stub in an afternoon. The default is the hosted step: the owner connects Xero once in a browser, with no developer app and no keys. A coding agent should build to that, and should not write its own Xero connection unless the owner asks for one after hearing this.
+The build writes in pencil, never in pen. It reads the jobs marked complete and the lines on them, and writes one draft invoice per job into Xero, priced by Xero from your own Items. It never approves an invoice, never emails one to a customer, never records a payment and never changes a job. The pen stays with you: you approve and email in Xero. Revoke its Office Voice key and it stops on the next run. Your own logins stay yours: you sign in to Xero, ServiceM8 or Simpro on their own pages and approve the connection, and the build holds one key, never a username and password.
+
+What each piece of access is for.
+
+- **Xero, connected once in Office Voice.** To find the customer’s contact, check every code is one of your Items, and write the draft. Office Voice writes drafts and notes to Xero; it never authorises, sends or records a payment.
+- **ServiceM8 or Simpro, read.** To see which jobs were finished since the last check, and the materials and labour on each. It never edits or closes a job.
+- **An Office Voice key with Read the book and Write drafts and notes.** Read the book lets the build list finished jobs, read a job and read your Items. Write drafts and notes lets it write the draft invoice. Leave Queue calls unticked: this job never rings anyone.
+
+1. Start Office Voice, click Sign in with Xero and pick the organisation. No Xero developer app, no client id or secret.
+2. If your jobs are in ServiceM8 or Simpro, sign in to your own account from Office Voice and approve it. On Simpro, sign in as an employee whose security group can see job costs.
+3. Under Keys, create a key with Read the book and Write drafts and notes ticked, and give it to the build or the Invoice Out sheet. Keep it like a password.
+4. Write down who fixes a parked invoice, and the release rule and threshold if you want one.
+5. Run the pass test below against a Xero demo company first, then against your own Xero.
+
+Why not the invoice button in your job system? ServiceM8 and Simpro can both raise an invoice from a job and send it to Xero, and if someone in the office already does that the day the job finishes, keep doing it. What the button does not do is the rest of this standard: it does not park a variation nobody signed, it does not stop at a code your Xero Items do not hold, and it relies on a person remembering to press it. The build is for the business where the invoice waits until Sunday night.
+
+Where it runs. The Invoice Out sheet above, a scheduled flow on Microsoft 365 (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/invoicing-out-on-microsoft-365) lays out the lists and flows), or a small build a coding agent makes from this page. All are held to the same checks; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
+
+## 10. What your developer builds: the one write not to hand-roll
+
+One step not to hand-roll: the authenticated, idempotent write into the ledger, with an id back and a proof. Everything else a coding agent builds against the stub in an afternoon. The default is the hosted step: the owner connects Xero once in a browser, with no Xero developer app and no Xero client id or secret. A coding agent should build to that, and should not write its own Xero connection unless the owner asks for one after hearing this.
 
 ```
 provider:
@@ -214,8 +234,10 @@ stays local                          # yours, and the standard
   - the variation check and the stage
   - the release rule and its threshold
 
-cannot meet the standard
-  - Tradify, for the job side: no API. Xero-only is the honest route.
+tradify, for the job side
+  - no public API and no Zapier app. The job export, loaded by a browser
+    step a person approves, or lines entered by a person; the draft is
+    written into Xero the same way.
 ```
 
 A vendor selling automated invoicing is usually selling the arithmetic and a PDF. Ask them three things: is the rate ever typed, what happens when the job is marked complete twice, and who released the last invoice that went out.
@@ -269,7 +291,7 @@ Checked against Office Voice on 2 October 2026.
 
 **The pass test.** On a real job system and a real ledger, not a sample. Mark one job complete twice, an hour apart: one invoice must exist in the ledger with the ledger’s own id, and the second event must have updated it or done nothing. Put a variation on a job with no signed acceptance on file: the invoice must park with reason unsigned_variation and a person must be told, and billing it must be impossible until the signature is attached. Put a code on a job that the price book does not hold: the invoice must park with reason not_in_pricebook and carry no rate for that line. Set a release rule with a threshold and complete one job under it and one over it: the first goes out with the rule’s name on the release, the second waits for a person. Then pull the record for any sent invoice by job id: the lines, the book edition, the release and the send time must all be there. If any of those five is not what happened, the standard is not implemented, however good the PDF looks.
 
-## 10. A checklist to hold any build or supplier to
+## 11. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 

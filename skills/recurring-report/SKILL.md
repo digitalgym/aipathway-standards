@@ -98,8 +98,9 @@ skill asserts.
 - 5. The five queues
 - 6. What a sentence on a report may say
 - 7. What stays with a person
-- 8. What your developer builds, and the step that needs care
-- 9. A checklist to hold any build or supplier to
+- 8. Connect Xero and your job system for the Monday report, without it changing a single figure in them
+- 9. What your developer builds, and the step that needs care
+- 10. A checklist to hold any build or supplier to
 
 ## Attribution
 

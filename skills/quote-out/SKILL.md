@@ -96,8 +96,9 @@ skill asserts.
 - 5. The quote object
 - 6. Write-back, and writing once
 - 7. Sending stays with a person
-- 8. Provider and hosting
-- 10. A checklist to hold any build or supplier to
+- 8. Connect Xero so every job gets a draft quote from your own price list, and nothing goes to the customer until you send it
+- 9. Provider and hosting
+- 11. A checklist to hold any build or supplier to
 
 ## Attribution
 

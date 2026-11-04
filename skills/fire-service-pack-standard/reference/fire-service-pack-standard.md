@@ -67,7 +67,7 @@ The specification is [the rejected pack build standard](https://aipathway.com.au
 
 ## 2. The twelve checks, in order
 
-The order is not cosmetic. Identity comes first because every later check is meaningless if it is attached to the wrong thing. A missing electrical certificate is checked before defects are coded, because it stops the close outright. The client-facing document is generated from the record rather than assembled alongside it. These are the same twelve checks, in the same order, as the conformance checklist in section 10.
+The order is not cosmetic. Identity comes first because every later check is meaningless if it is attached to the wrong thing. A missing electrical certificate is checked before defects are coded, because it stops the close outright. The client-facing document is generated from the record rather than assembled alongside it. These are the same twelve checks, in the same order, as the conformance checklist in section 11.
 
 1. **Identity before everything.** A record cannot be created without resolving to exactly one asset. An unresolvable asset is a finding, not a note on the job.
 2. **The visit discharges something.** Every record names the obligation it satisfies. A visit that discharges nothing cannot be counted as coverage.
@@ -91,7 +91,7 @@ The order is not cosmetic. Identity comes first because every later check is mea
 | Blocked | Attended, could not complete: no access, asset missing, site closed | Feeds the access queue. The obligation stays live. Not yet covered by a check below |
 | Unbound | Work marked done with required evidence missing | Not a pass. This is the queue the whole standard exists to make visible |
 
-If you implement one thing from this paper, implement the unbound queue and put its age on a chart. Every business we have looked at believes its number is near zero before it is measured, and the reason is structural rather than cultural: nothing anywhere else in the system has a reason to mention it.
+If you implement one thing from this paper, implement the unbound queue and put its age on a chart. A business that has never measured it tends to assume its number is near zero, and the reason is structural rather than cultural: nothing anywhere else in the system has a reason to mention it.
 
 The blocked queue is part of the shape, but none of the twelve checks tests it yet. A build can pass every check and still lose blocked visits, so look for that queue by hand.
 
@@ -192,7 +192,27 @@ queue:              pass | defect | blocked | unbound
 
 The two fields that carry the whole standard are service_record.asset_id and evidence. If a record can exist without them, the unbound queue in section 3 cannot be built, and unbound work stays invisible.
 
-## 9. What your developer builds, and the step that needs care
+## 9. Connect your job system and document store to the pack, without it signing anything
+
+The build gets the access a filing clerk gets: it can open the drawer and file the sheet, but it has no pen to sign with. It reads completed visits, their photographs and readings, and the asset register, and it files the bound evidence and a draft pack, marked as a draft, in one folder you choose. The issued copy is saved separately, only once a person has signed it. It never marks a result as a pass, never signs or attests, never deletes evidence, and never touches a file outside that folder. Revoke its key in the job system and remove its access to the folder, and it is cut off. Your own login stays yours: the build connects with its own key or app connection, never your username and password.
+
+What each piece of access is for.
+
+- **Jobs and attachments, read.** To see a visit marked done, and the tag photograph, location shot, readings and certificate that came with it.
+- **The asset register, read.** For the asset identity each record binds to, its class and the obligation it discharges.
+- **One pack folder, write.** To file the bound evidence and the pack generated from the record, in the Microsoft 365 or Google Drive store the business already keeps.
+
+1. In ServiceM8, Simpro or the job system you run, create a key or app connection for the build with jobs and attachments to read.
+2. Give the build access to one pack folder or library, not the whole drive.
+3. Load the asset register with a stable id per asset, the same id that is printed on the tag.
+4. Write the required evidence per asset class (section 4) and the jurisdiction values with their source and the date you checked them (section 7).
+5. Run the pass test below on one real completed visit.
+
+Why not the job system’s own forms? Forms in ServiceM8 or Simpro are a good place to capture the photographs and readings, and the build should read from them rather than replace them. Capturing is not binding. Before you rely on a form alone, stage the first leg of the pass test: delete the tag photograph and try to close the job. If it closes, the unbound queue does not exist yet.
+
+Where it runs. A scheduled flow with the register and the queues in Microsoft 365 lists (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/fire-service-pack-on-microsoft-365) lays these out), a small dashboard a coding agent builds from this page, or a routine woken when a job is marked done. All three are held to the same checks; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
+
+## 10. What your developer builds, and the step that needs care
 
 Section 1 points at the parent standard, which names the binding layer as the step not to hand-roll and says plainly that no product covers it. That is still true here. This block exists so an agent does not go looking for one, and does not stand up a second document store beside the one the business already keeps.
 
@@ -222,7 +242,7 @@ Fire and electrical work is licensed work. The build routes and records; it does
 
 **The pass test.** Take one completed visit and delete its tag photograph, then try to close the job: it must not close, and the record must land in unbound rather than pass. Then take a visit where no baseline reading was available and look at the record: the absence must be stored as a recorded non-conformance, not as an empty field, because an empty field and a missing baseline are different facts and only one of them is reportable. Then ask the system for the same asset’s pack twice, once as a Queensland site and once as a Victorian one: if the retention period and the person who may attest do not differ, the jurisdiction is hard-coded somewhere and the build is wrong in at least one state.
 
-## 10. A checklist to hold any build or supplier to
+## 11. A checklist to hold any build or supplier to
 
 A build conforms to this standard when every line is true. Hand it to whoever built yours, including an AI coding agent, and make them answer it.
 

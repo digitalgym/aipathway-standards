@@ -151,6 +151,27 @@ An entry the rule does not plainly cover, a disputed break, a split shift nobody
 - Which award applies to the business, and which clause applies to the odd shift.
 - Any dispute with the person whose hours they are. The check shows the entry; a person has the conversation.
 
+## 7. Connect your timesheets, roster and payroll, without it paying anyone
+
+Think of the check as the timekeeper at the site gate: it writes down who came and went and for which job, and it never hands out the wages. It reads the hours people captured, the roster and the job allocations. Its one write is the released period, sent once into payroll as timesheets. It never runs or approves a pay run, never changes a pay rate, an employee’s details or their bank account, and never clears an anomaly on its own. Disconnect it in payroll, or revoke its key in the job system, and it is cut off. Your own login stays yours: the check connects with its own key or app connection, never your username and password.
+
+What each piece of access is for.
+
+- **Time entries, read.** From the site app, the kiosk or the job system, wherever hours are captured. Paper sheets are keyed into a list first.
+- **Roster, read.** To find the entry on a day the person was not rostered.
+- **Job allocations, read.** From the job system, to find hours booked to a job the person was never on.
+- **Payroll timesheets, write, once per period.** The released hours, with payroll’s own id read back. In Xero, connect an app that asks for payroll timesheets and nothing more; a Xero app created since March 2026 has to ask for narrow permissions anyway. Where payroll has no way in, the export is a file a person uploads, and they record the id payroll gives back.
+
+1. Write down where entries, the roster and the allocations live, and give the check read access to each: a key, an app connection or a scheduled export.
+2. Load the award edition you pay under as a dated rule, with its effective date.
+3. Your developer builds against the stub until the checks in section 4 pass.
+4. Connect payroll with timesheet access only, or set up the export file.
+5. Run the pass test below on a real period before the first export goes live.
+
+Why not your payroll’s own timesheet approval? Use it: approving the period there can be the release. What it does not do is check each entry against the roster and the job allocations, or keep the owner and reason for every anomaly. Some payroll systems apply award rules for you; the check still records which edition each penalty came from, so a changed edition shows up before pay day rather than after.
+
+Where it runs. A scheduled flow with the entries, anomalies and releases in Microsoft 365 lists (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/timesheet-check-on-microsoft-365) lays these out), a small page a coding agent builds from this standard, or a routine woken at the end of each pay period. All are held to the same checks; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
+
 ## Facts that can change, and when we checked them
 
 Checked as at 26 September 2026
@@ -159,7 +180,7 @@ Modern award rates, penalties and allowances change on a schedule set by the Fai
 
 **Check these against the primary instrument before you rely on them**, and store the date you checked beside the value rather than hard-coding it. This standard tells you the shape and where to look. It is not legal advice and it does not tell you that anything complies.
 
-## 8. What your developer builds, and the step that needs care
+## 9. What your developer builds, and the step that needs care
 
 One step not to hand-roll: the release gate and the idempotent export into payroll, with an id back. Everything else a coding agent builds against the stub in an afternoon.
 
@@ -183,7 +204,7 @@ A vendor selling timesheet automation is usually selling the capture and the ari
 
 **The pass test.** On a real period, with the entries people actually captured. Seed two entries for one person that overlap: both must be in the anomaly queue with a supervisor’s name. Seed an entry on a job the person was never allocated: it must be an anomaly, not a line. Retire the current award edition and load the next with a later effective date: the following period must cite the new edition only, and an entry the new edition does not plainly cover must park with the kind rule_unclear. Clear every anomaly as a named person with a reason, release the period as a named person, and run twice an hour apart: exactly one export must exist in payroll with its own id, and the record for any person must show their entries, their anomalies with resolutions, the cards, and the release with a name. If the export exists without a release, or a card cites the retired edition, the standard is not implemented.
 
-## 9. A checklist to hold any build or supplier to
+## 10. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 

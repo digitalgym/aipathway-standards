@@ -97,8 +97,9 @@ skill asserts.
 - 4. The six queues
 - 5. Delivery, and what it feeds
 - 6. What stays with a person
-- 7. What your developer builds, and the step that needs care
-- 8. A checklist to hold any build or supplier to
+- 7. Connect your job system and supplier accounts for orders, without it spending over your limit
+- 8. What your developer builds, and the step that needs care
+- 9. A checklist to hold any build or supplier to
 
 ## Attribution
 

@@ -97,8 +97,9 @@ skill asserts.
 - 5. One score, computed once
 - 6. Training is not a control
 - 7. What stays with a person
-- 8. What your developer builds, and the step that needs care
-- 9. A checklist to hold any build or supplier to
+- 8. Connect every branch’s systems so the centre sees drift, without it changing a branch’s records
+- 9. What your developer builds, and the step that needs care
+- 10. A checklist to hold any build or supplier to
 
 ## Attribution
 

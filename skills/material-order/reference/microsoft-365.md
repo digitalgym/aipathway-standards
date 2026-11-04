@@ -257,7 +257,33 @@ CALCULATE (
 
 Waiting Release Ageing Days is the one that tells you whether the threshold is set anywhere near right. A queue that sits for four days is not a control, it is a job that started without its materials, and the answer is usually to move the number rather than to remove the gate.
 
-## 6. The order to build it in
+## 6. What the flows can reach in your Microsoft 365, your job system and your suppliers, and what they never touch
+
+Think of the flows as the storeman behind the trade counter. They can see the shelf, write the order slip and check what came off the truck against it. They do not hold the chequebook, and they cannot open an account with a new supplier. In practice the flows read the job’s material lines, the Stock list and each supplier’s Catalogue list, write reservations, orders, delivery lines and variances into this one SharePoint site, and hand each released order to the job system or the supplier’s orders address. They never pay a supplier, never set Suppliers.Approved, never accept a substitute, and never hold the password to your trade account.
+
+What each connection is for.
+
+- **SharePoint, this one site.** Read and write on the order lists and the Dockets library. It is the only place in Microsoft 365 the flows write.
+- **Your job system.** Read the job, its material lines, its start date and its owner, and write the purchase order where the system takes one, with its id back into ExternalId. ServiceM8, Simpro and the rest are reached through a custom connector or the HTTP action, both premium in Power Automate. Where there is no API, a nightly export lands the material lines in the lists and the order goes by email.
+- **One shared orders mailbox in Outlook.** To send a released order to a supplier who takes orders by email, and to save emailed dockets into the Dockets library. Never anyone’s own inbox.
+- **Teams and Approvals.** To tell the job owner an order will land after the start date, and to put an over-threshold or unapproved-supplier order in front of the rule’s owner. Both are standard connectors.
+- **Power BI, read.** It reads the lists to draw the measures and writes nothing back.
+
+A supplier’s catalogue arrives as a price file a person lands in the Catalogue list. No flow logs in to a supplier’s website.
+
+Keep each one to the least it needs.
+
+1. Create a service account for the flows and build them in a solution that account owns, with a named person as co-owner. A flow owned by a person stops working the day that person leaves. If the flows use a premium connector, the account needs a Power Automate licence that covers premium connectors; check what your tenant already has.
+2. Create every connection as the service account and use it through the solution’s connection references. Moving from test to live then swaps the connection, not the flow, and nobody’s own login sits inside a flow.
+3. Give the service account access to this one site and no other. If an app registration is used instead, grant it Sites.Selected and give it this site alone, never Sites.ReadWrite.All.
+4. Give the service account Send As on the shared orders mailbox and nothing else. If an app registration sends the mail, limit it to that mailbox with RBAC for Applications in Exchange Online, or the older application access policy.
+5. Make the job system key or app connection for this build alone, through the system’s own integration route, and keep it in the custom connector’s connection, never typed into a flow step.
+
+How to cut it off. Turn the flows off in Power Automate and nothing more is drafted or sent. Remove the connection, or revoke the key in the job system, and the next run cannot read a job. Block sign-in on the service account and every connection it owns stops working.
+
+Why not let Microsoft 365 Copilot place the orders? Copilot reads whatever the signed-in person can open, which in most businesses is far more than one site, and it answers in a chat. It is handy for asking where an order is. It has no unique OrderKey to refuse the second order and no threshold that waits for a named person, and those two are the controls that save the money. Let it read the lists; let the flows write.
+
+## 7. The order to build it in
 
 1. Load Suppliers with Approved set by a person, and load one supplier's Catalogue. One real catalogue proves more than four half-built ones, and the pile of suppliers with no catalogue can wait.
 2. Create Jobs and JobMaterialLines, and get one real job's material list into them from the job system.
@@ -268,7 +294,7 @@ Waiting Release Ageing Days is the one that tells you whether the threshold is s
 7. Build Flow 3, prove the blank ExternalId parks, then add the lead time warning to the same run.
 8. Build Flow 4 last, starting with the docket that matches nothing, then connect Power BI with Sent Without Release and Variances Open by kind on the front page.
 
-## 7. Four traps specific to this build
+## 8. Four traps specific to this build
 
 ### Deriving the order key in a view instead of storing it
 
@@ -286,7 +312,7 @@ A photo attached to an order is a picture of an agreement, not a match. It canno
 
 A Yes/No column records that somebody ticked something. The standard asks for a named person who was on site and could see whether the substitute would do. Make AcceptedBy a Person column, let a blank one hold the line as a variance, and resist the version where the flow ticks it because the quantity matched.
 
-## 8. Where the automation stops
+## 9. Where the automation stops
 
 - The release of any order over the threshold, or to a supplier not on the approved list. The rule covers the small and the familiar; everything else is somebody's decision with their name on it.
 - Approving a supplier in the first place. Approved is a Yes/No a person sets, and no flow should ever write to it.

@@ -143,7 +143,28 @@ The all-clear publishes. A run that says nothing when everything matched is indi
 - Setting a tolerance, and changing one.
 - Deciding an orphan is real: a record that should exist in the other source, or one that should not exist at all.
 
-## 7. What your developer builds, and the step that needs care
+## 7. Connect your job system and your ledger, without it fixing either on its own
+
+Think of the check as a stocktaker: it counts the shelf against the book and lists every gap, and the book only changes when the manager signs the sheet. It reads both sources. Its one write is a correction a named person accepted, into the field the pair contract says that correction may touch. It never edits a record on its own, never deletes one, never merges two customers and never overwrites the value that was there before. Revoke its key or disconnect its app in either system and it is cut off. Your own login stays yours: the check connects with its own key or app connection, never your username and password.
+
+What each piece of access is for.
+
+- **Source A, read.** The job system, the roster or the register: every record carrying the shared id, and the fields the contract compares.
+- **Source B, read.** The ledger, the timesheets or the drive, the same way. If Office Voice is already connected to your Xero, a key with only “Read the book” ticked gives the check your Xero invoices, up to 120 days back, without a second Xero connection.
+- **Bank lines, from an export.** Xero does not give ordinary apps the unreconciled lines on your bank feed; that access is for lenders. When the bank is one of the pair, the check reads a statement export from your bank.
+- **The target, write, accepted corrections only.** One field, one record, keyed so a retry lands once, with the target’s own id read back. Where the target has no way in, the correction is a task with the accepted value, and the person who keys it records the id.
+
+1. Write the pair contract: the two sources, the shared id, the master per field, the tolerance per field.
+2. Give the check read access to both sources: a key, an app connection or a scheduled export.
+3. Give write access to the target only, and only for the fields the contract lets a correction touch. Leave it off entirely if a person will key every fix.
+4. Your developer builds against the stub until the checks in section 4 pass.
+5. Run the pass test below on the real pair.
+
+Why not a sync app that keeps the two in step? A sync app makes the two agree by copying one over the other, field by field, as soon as they differ. That is the Friday fix in the opening paragraph, done every few minutes: the records agree and the value that showed something was wrong is gone. Keep a sync for fields that should simply be copied, and run this check on the fields where a difference means something.
+
+Where it runs. A scheduled flow with the contract, differences and corrections in Microsoft 365 lists (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/two-records-on-microsoft-365) lays these out), a small page a coding agent builds from this standard, or a routine woken on the schedule in the contract. All are held to the same checks; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
+
+## 8. What your developer builds, and the step that needs care
 
 One step not to hand-roll: the accepted correction's write into the target source, with both original values kept. Everything else a coding agent builds against the stub in an afternoon.
 
@@ -167,7 +188,7 @@ A vendor selling reconciliation is usually selling the comparison, which is the 
 
 **The pass test.** On the real pair, not a sample. Seed one mismatch you know about: the run must show both values side by side with the master’s value and change nothing. Delete one record from one side: the run must raise an orphan with a reason and an owner. Accept the seeded correction as a named person: it must be written once into the target with its own id, and both original values must still be readable afterwards. Then run again with nothing changed: the run must publish an all-clear with its counts. If the correction was written before anyone accepted it, or the old value is gone, the standard is not implemented, however tidy the two records look.
 
-## 8. A checklist to hold any build or supplier to
+## 9. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 

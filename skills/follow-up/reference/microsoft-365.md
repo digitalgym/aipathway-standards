@@ -222,7 +222,30 @@ AVERAGEX (
 
 Touched After Arrival is the measure this plan exists to make possible, and the only acceptable reading is zero. Put it on the front page beside Value At Risk Open, because the second number is what the business will look at and the first is what tells you whether the second can be trusted.
 
-## 6. The order to build it in
+## 6. What the flows can reach in your Microsoft 365 and in Xero, and what they never touch
+
+Hand the chaser a clipboard, not the keys to the filing cabinet. The flows carry the open items, the cadence and the arrivals, and a pen to tick each touch off. They read and write the lists on one SharePoint site, watch the one place arrivals land, and send email from one shared mailbox. Through Office Voice they can read the quotes in Xero that nobody has answered and pick up the outcome of the hosted call. They never change a quote’s price or lines, never offer a discount, never record a payment, never send a text, and never open anyone’s own inbox. Nobody’s Xero password goes near a flow: the owner signs in with Xero once inside Office Voice, and the build holds a key.
+
+What each connection is for.
+
+- **SharePoint, one site.** The six lists and two libraries. Flows read OpenItems, Cadences and Consent, and write Rank, Touches, Arrivals and Outcomes. Nothing outside that site.
+- **Outlook, one shared mailbox.** Sends the email touch, and is where Flow 3 watches if arrivals come in by email. The estimator’s own inbox is not part of it.
+- **Teams.** Posts the escalation to the person in EscalateTo. An email does the same job if you would rather not.
+- **Office Voice, over its MCP endpoint.** Called at https://office-voice.com/api/mcp with a bearer key from office-voice.com/app/keys, through the HTTP action or a custom connector (both premium in Power Automate). Read the book lets a flow check the quote in Xero before a touch, so an accepted quote is not chased. Read chases brings the call outcome back for Flow 4. Queue calls is only for a build that sends its own ranked list; switched on in Office Voice, the quote call rings each morning by itself inside the business’s daily call cap.
+
+Keep it to the least it needs.
+
+1. Make a service account for the build and create the flows as it, not as the estimator. Flows and connections owned by a person go with them when they leave.
+2. Put the four flows in a solution and use connection references, so each connection is made once, by the service account, and every flow shares it.
+3. Make the service account a member of the one SharePoint site and no other. If you use an app registration instead of the connector, give it Sites.Selected and grant it that site only.
+4. Give the service account Send As on the one shared mailbox, and Full Access only if Flow 3 watches it. If an app registration sends instead, scope its mail permission to that mailbox with RBAC for Applications in Exchange Online, or an application access policy.
+5. Create the Office Voice key with Read the book and Read chases. Leave Queue calls off until the ranked list is yours.
+
+How to cut it off. Turn the flows off and nothing runs. Remove a connection and the build loses that one piece. Delete the Office Voice key at /app/keys and the flows lose Xero and the call outcomes on the next run; removing Office Voice from Xero’s connected apps cuts Xero off for every key at once.
+
+Why not Copilot in Outlook, across the whole tenant? Copilot will draft a polite nudge well, and it reads whatever the person asking can open. It keeps no register, no cap and no gap, and it does not read the arrival before it writes, which is the one rule this standard is named for. Flows that reach one site and one mailbox do less, and do it the same way every morning. The standard’s [connect section](https://aipathway.com.au/explore-ai/follow-up-build-standard#connect) covers the Office Voice side from the owner’s end.
+
+## 7. The order to build it in
 
 1. Settle where arrivals land, and tell the people who send these things back. Nothing below is safe to run until that is decided.
 2. Create the six lists and two libraries. Turn on enforce unique values for OpenItems.ItemRef and Arrivals.ItemRef before any rows exist.
@@ -233,7 +256,7 @@ Touched After Arrival is the measure this plan exists to make possible, and the 
 7. Build Flow 2, but with the send step replaced by a write to the Sent library. Run it for a week against the real register and read what it would have sent.
 8. Turn the send on, add Flow 4, then connect Power BI. Touched After Arrival goes on the front page.
 
-## 7. Four traps specific to this build
+## 8. Four traps specific to this build
 
 ### There is no text message in this stack
 
@@ -251,7 +274,7 @@ The natural flow shape is: get the item, build the email, then decide whether to
 
 Three touches, forty-eight hours apart is two numbers, and they will end up as literals in a condition because that is the shortest way to write it. Then the cadence belongs to whoever can open the flow, and the standard's line about a person writing it down once becomes a line in a version history. Read MaxTouches and SpacingHours from the Cadences row every run. The person who owns the chase should be able to change it without opening Power Automate.
 
-## 8. Where the automation stops
+## 9. Where the automation stops
 
 - The call itself. The standard names it as the hosted step, with the disclosure, the recording, calling hours, and the lawful basis recorded on every dial (existing-customer follow-up), with a wash against the Do Not Call Register for any number that has none, under it. The quote call always carries that basis, so no wash has run on these calls. None of those is a thing a flow does, and this plan does not show you how to assemble one out of flows and hope.
 - The no, and anything disputed. Whether to ring back, revise the quote or let it go is a conversation, and the customer who says they never agreed to the variation gets a person rather than a third email.

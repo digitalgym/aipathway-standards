@@ -214,7 +214,29 @@ Otherwise nobody can tell a check that found three problems from one that silent
 
 The most valuable output is often check three: making the absence of a written variation approval visible, because that is where the money actually goes.
 
-## 9. The records it keeps, in the shape your developer needs
+## 9. Connect your accounts inbox and Xero or MYOB for invoice checks, without it paying anyone
+
+The build gets the access a proofreader gets: it reads every page and marks what does not agree, and it never signs off the print run. It reads the invoices that land in your accounts inbox, the purchase orders, bills and contacts in Xero or MYOB, and the folder where your written variation approvals live. It files each invoice into one of the four queues and, if you allow it, drafts the bill or the query. It never approves or pays a bill, never changes a purchase order, a rate or a contact, never replies to a supplier on its own and never deletes an email. Remove its connection in Xero or MYOB and in your mailbox and it is cut off. Your own login stays yours: the build connects through Xero’s or MYOB’s own sign-in and your mailbox’s own approval screen, never with your username and password.
+
+**What each piece of access is for.**
+
+- **The accounts inbox, read.** Invoices arrive as attachments from people outside your systems. The build reads them and labels each one once it is filed, so nobody checks it twice.
+- **Purchase orders and contacts, read.** The other half of checks 1, 2 and 4: the agreed rate, the quantity and the contract sum.
+- **Bills, read.** To see whether this invoice is already in the ledger, so the same claim is never checked or drafted twice. If Xero is already connected to Office Voice, a key with Read the book lists the bills in Xero for this read. Office Voice does not read purchase orders, so those still come through the build’s own connection.
+- **The variation approvals, read.** The folder or list where written approvals live, for check 3.
+- **Bills, draft only, if you want it.** To draft a clean match as a bill for a person to approve. The permission that lets an app draft a bill in Xero also lets it approve one, so the stop at draft is in the build, and the pass test checks it.
+
+1. Give the build read access to the accounts inbox, ideally a shared mailbox such as accounts@, through Microsoft’s or Google’s own approval screen.
+2. Connect Xero or MYOB through its own sign-in and ask only for reading purchase orders, bills and contacts, plus drafting bills if you want that. A Xero app created now has to choose Xero’s granular permissions, which makes asking for less straightforward.
+3. Point it at the folder or list where written variation approvals live. If they live in text messages, start the folder now; until then every variation will flag, which is the point.
+4. Write down what close enough means (section 6) and who works each queue.
+5. Run the pass test below on two invoices, then check that no bill the build touched is anything but a draft.
+
+**Why not Xero’s bill capture, Hubdoc or Dext?** They read an invoice into a bill, and they do that well. That is the easy half. They do not know whether a variation line was ever approved, because the approval sits in your site instructions and your texts, not in the ledger, and check 3 is where the money goes. If an app you already pay for matches bills to purchase orders, keep it for checks 1 and 4 and build check 3 beside it.
+
+**Where it runs.** A scheduled flow with the queues as lists (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/checking-invoices-on-microsoft-365) lays these out), a Google Sheet with a timer, or a small dashboard a coding agent builds from this page. All are held to the same checks; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
+
+## 10. The records it keeps, in the shape your developer needs
 
 Sections 2 to 4 in the shape a build needs them. The check result carries which check failed AND which checks never ran, because the order is part of the specification and an exception that does not say where it stopped cannot be acted on.
 
@@ -253,7 +275,7 @@ exception:                          # a record, not a notification
 
 The exception keeps its date and its evidence after it is closed. In an industry that gets audited, a decision without the document that informed it is worth very little eighteen months later.
 
-## 10. What your developer builds, and the step that needs care
+## 11. What your developer builds, and the step that needs care
 
 There is nothing to buy here, and the block says so rather than pointing at something adjacent. The reason is section 6: the hard part is the binding between an invoice line and the approval record, and that binding is specific to how a business already works.
 
@@ -280,7 +302,7 @@ Connect the document store the business already runs rather than moving the docu
 
 **The pass test.** Take an invoice that matches its order exactly and change one unit rate. It must land in the decision queue naming check 1, the difference in dollars, and the three checks that never ran. Then take an invoice with a line outside the original scope and no written approval: it must flag as unapproved scope and must not pass because the supplier’s covering email sounds confident. Both take a minute to stage. If the second one passes, your variation check is reading tone rather than an approval record, which is section 2 in one sentence.
 
-## 11. What stays with a person
+## 12. What stays with a person
 
 This standard finds and files. It does not decide, and the difference is the whole reason anyone trusts the queues six months later.
 
@@ -290,7 +312,7 @@ This standard finds and files. It does not decide, and the difference is the who
 - **Telling a supplier they are wrong.** The build produces the comparison. A person has the conversation.
 - **Accepting a low-confidence extraction.** A marked field is a prompt for a human, never something that promotes itself once nobody looks.
 
-## 12. A checklist to hold any build or supplier to
+## 13. A checklist to hold any build or supplier to
 
 A build conforms to this standard if all of the following are true. Use it on your own implementation, or on one an AI built for you.
 
@@ -310,9 +332,9 @@ A build conforms to this standard if all of the following are true. Use it on yo
 
 Checked as at 18 September 2026
 
-**Security of payment: the response window is per state and it moved this year.** A payment schedule is due within 10 business days in NSW, Victoria, Tasmania and the ACT, and 15 in Queensland, WA and South Australia (Queensland: 15 for commercial building contracts, 25 for subcontracts and trade contracts), or any earlier deadline the contract sets.
+**Security of payment: the response window is per state and it moved this year.** A payment schedule is due within 10 business days in NSW, Victoria, Tasmania and the ACT, and 15 in Queensland, WA and South Australia, or any earlier deadline the contract sets. Queensland separately caps how long payment can take: 15 business days for a commercial building contract and 25 for a subcontract or trade contract. Every state is in the [security of payment deadlines table](https://aipathway.com.au/explore-ai/security-of-payment-deadlines-australia).
 
-**Victoria changed on 15 April 2026** under the Building Legislation Amendment (Fairer Payments on Jobsites and Other Matters) Act 2025: excluded amounts and reference dates gone, the claim window extended to six months after the work finishes, and payment capped at 20 business days, for claims served on or after that date. Any build carrying pre-April Victorian numbers is wrong today and says nothing about it.
+**Victoria changed on 15 April 2026** under the Building Legislation Amendment (Fairer Payments on Jobsites and Other Matters) Act 2025: excluded amounts gone, a monthly claim right, and payment capped at 20 business days, for claims served on or after that date. Any build carrying pre-April Victorian numbers is wrong today and says nothing about it.
 
 **“Business day” is itself jurisdictional.** Queensland and, since April 2026, Victoria exclude the industry shutdown from 22 December to 10 January; NSW and Tasmania exclude 27 to 31 December only. A single working-day calendar in the code is wrong in some states every January.
 

@@ -187,7 +187,29 @@ AVERAGEX ( PackArtifacts, DATEDIFF ( PackArtifacts[AsOf], NOW (), DAY ) )
 
 The two must-be-zero measures are the cheapest audit in this library. An obligation with no citation and a does-not-apply with no reason are both the same failure: somebody decided something and left no way to check it.
 
-## 6. The order to build it in
+## 6. What the flows can reach in your Microsoft 365, and what they never touch
+
+The flows get the key to one filing cabinet, not the key to the office. They read and write the six lists and two libraries on the one SharePoint site this plan builds, read the job system if you connect it, and send the release approval and the expiry warnings to named people. They never open another site, never edit, move or delete a certificate once it is bound, never send a pack to a builder, insurer or regulator, and never release a pack on their own. Your own login stays yours: the flows run under their own account, never your username and password.
+
+What each connection is for.
+
+- **SharePoint, the one site, read and write.** The graph lists, Obligations and PackArtifacts, the Evidence library where certificates are bound, and the Packs library where generated packs land. Nothing outside that site.
+- **Approvals, through Teams or Outlook.** Flow 3 asks the named release group and records who answered. The approval is the only way a pack becomes released.
+- **Outlook or Teams, to warn.** Flow 4 tells the owner that a ticket or a policy is about to expire. It sends to your own people only.
+- **The job system, read, if you want it.** For the work type and the site, which is what applicability runs on. ServiceM8 by an API key or an app connection, Simpro through your company’s own API at its simprosuite.com address, either one by a custom connector or the HTTP action (both premium). Tradify has no public API and no Zapier app, so the flow reads its job export instead. A nightly export into a list also works for the other two and needs no premium licence.
+
+Give it the least it needs.
+
+1. Own the flows with a service account, not a person who might leave. A flow owned by someone who leaves stops when their account is switched off.
+2. Build the flows inside a solution and share connections through its connection references, so nobody’s personal connection ends up inside a flow.
+3. Make the service account a member of this one site and no other. If you use an app registration instead, grant it Sites.Selected and add only this site.
+4. Send warnings from one shared mailbox. If an app registration sends them, limit it to that mailbox with an Exchange application access policy or RBAC for Applications.
+
+How to cut it off. Turn off the four flows, or delete their connections in Power Automate, or remove the service account from the site. Revoke the job system key or app connection on the job system’s side, and delete the app registration’s secret if you used one. The lists and libraries stay where they are, because they are yours.
+
+Why not Copilot over the whole tenant? Copilot can find a certificate and summarise it, and it sees whatever the person asking can see. It has no idea that an artifact is unbound, so it cannot refuse a pack, and the refusal in Flow 2 is what this standard is. Use it to find documents if you have it. The flows that bind, refuse and release are still this build.
+
+## 7. The order to build it in
 
 1. Build Entity, Locations and People first, with one row each. The graph before anything that reads it.
 2. Add Tickets and Cover. Index ExpiresOn now.
@@ -198,7 +220,7 @@ The two must-be-zero measures are the cheapest audit in this library. An obligat
 7. Build Flow 3, then Flow 4.
 8. Connect Power BI. The two must-be-zero measures go on the front page.
 
-## 7. Four traps specific to this build
+## 8. Four traps specific to this build
 
 ### A pack as a folder of PDFs
 
@@ -216,7 +238,7 @@ If the generate step runs and posts a note about missing evidence, packs go out 
 
 By then it is too late: somebody is at a gate. Run expiry on a schedule against the graph, and let the pack's currency be a property of the facts rather than a question asked at handover.
 
-## 8. Where the automation stops
+## 9. Where the automation stops
 
 - Certifying anything, or signing on behalf of a licensed person.
 - Deciding that an obligation does not apply. A flow can require the reason; it cannot supply it.

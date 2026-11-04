@@ -31,7 +31,7 @@ The arithmetic on an invoice is the easy half and it is the half every tool sell
 
 Read [the invoice out build standard](https://aipathway.com.au/explore-ai/invoice-out-build-standard) first. It defines its objects, and the lists below are those objects with SharePoint types on them. Shared conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-Decide one thing first: how this tenant learns that a job is complete. If the job system can send a notification to a mailbox you can monitor, that is your trigger. If it cannot, a scheduled flow reads completions on a cadence and the invoice is late by at most that cadence, which is a number worth choosing on purpose. A Tradify business has neither, and the standard already says so: the job lines are entered by a person and everything below still applies from the Jobs list onwards.
+Decide one thing first: how this tenant learns that a job is complete. If the job system can send a notification to a mailbox you can monitor, that is your trigger. If it cannot, a scheduled flow reads completions on a cadence and the invoice is late by at most that cadence, which is a number worth choosing on purpose. A Tradify business has neither, because Tradify has no public API and no Zapier app, and the standard already says so: the job lines are entered by a person and everything below still applies from the Jobs list onwards.
 
 Then decide where the price book lives and what an edition of it means. The standard asks every rate to come from the book read at draft time, and a book with no edition on it cannot answer the only question that matters six months later, which is which rate was in force when this invoice was drafted.
 
@@ -136,7 +136,8 @@ FLOW 1  Draft on completion
 FLOW 2  Get it into the ledger
   trigger  an Invoices item reaches Status = draft
   logic    hand the row to whatever holds the ledger credentials
-           store what comes back in ExternalId
+           (Office Voice's draft_invoice, by default), and store the
+           id that comes back in ExternalId
            nothing back -> Status = parked, ParkReason = write_failed
   never    treat a successful flow run as a successful write. The run
            finishing and the invoice existing in Xero or MYOB are two
@@ -153,7 +154,11 @@ FLOW 3  Release
 
 FLOW 4  Send, and close the record
   trigger  ReleasedBy or ReleasedByRule is written
-  logic    send from the ledger, then write SentAt
+  logic    the send happens in the ledger, then write SentAt
+           through Office Voice the flow cannot approve or email in
+             Xero: the released invoice goes to the person who released
+             it, they approve and email it in Xero, and their
+             confirmation writes SentAt
   never    touch a parked invoice. Parked never reaches this flow,
            and that is the whole point of parked being a status.
 ```
@@ -204,7 +209,31 @@ DIVIDE (
 
 Book Gaps grouped by code is the measure that pays for the build. Every park with reason not_in_pricebook is a line somebody used to price from memory, and the same three codes will be at the top of that chart every month until someone puts them in the book.
 
-## 6. The order to build it in
+## 6. What the flows can reach in your Microsoft 365 and in Xero, and what they never touch
+
+The flows fill in the invoice pad from the job sheet. They are never handed the till. They read the jobs marked complete and the lines on them, read the price book, write the lists on one SharePoint site, and through Office Voice write one draft invoice per job into Xero. They never approve an invoice, never email one to a customer, never record a payment and never change a job. With Office Voice the send stays with a person in Xero, which is why Flow 4 records the send rather than making it. Nobody’s Xero, ServiceM8 or Simpro password goes near a flow: the owner signs in on each one’s own page inside Office Voice, and the build holds one key.
+
+What each connection is for.
+
+- **SharePoint, one site.** Jobs, JobLines, PriceBook, Invoices, InvoiceLines, ReleaseRules and the SignedAcceptances library. Nothing outside that site.
+- **Office Voice, over its MCP endpoint.** Called at https://office-voice.com/api/mcp with a bearer key from office-voice.com/app/keys, through the HTTP action or a custom connector (both premium in Power Automate). Read the book lists finished jobs from ServiceM8 or Simpro once they are connected in Office Voice, and reads your Xero Items. Write drafts and notes writes the draft invoice, and the id comes back for ExternalId. Leave Queue calls unticked: this job never rings anyone.
+- **Outlook, one shared mailbox.** Only if completion reaches you as a notification email from the job system. The flows send no invoices from it.
+- **Approvals and Teams.** The release in Flow 3, to the person who set the rule.
+- **Tradify: no connection.** It has no public API and no Zapier app, so a person enters the job lines and everything from the Jobs list onwards still applies.
+
+Keep it to the least it needs.
+
+1. Make a service account for the build and create the flows as it, not as the bookkeeper. Flows and connections owned by a person go with them when they leave.
+2. Put the four flows in a solution and use connection references, so each connection, and the Office Voice key, is set once and every flow shares it.
+3. Make the service account a member of the one SharePoint site and no other. An app registration gets Sites.Selected and that site only.
+4. If completion arrives by email, give the service account Full Access to that one shared mailbox. An app registration gets its mail permission scoped to that mailbox with RBAC for Applications in Exchange Online, or an application access policy.
+5. Create the Office Voice key with Read the book and Write drafts and notes only, and keep it like a password.
+
+How to cut it off. Turn the flows off and nothing drafts. Delete the Office Voice key at /app/keys and the flows stop reaching Xero and the job system on the next run; removing Office Voice from Xero’s connected apps cuts Xero off for every key at once. Drafts already in Xero stay drafts until a person approves them.
+
+Why not your own Xero app behind a custom connector? You can. Then you create the Xero app, ask for granular scopes (required for apps created from March 2026), and own the token refresh, the duplicate guard and the recovery when a write’s response is lost, from then on. That is the one write the standard’s [connect section](https://aipathway.com.au/explore-ai/invoice-out-build-standard#connect) says not to hand-roll unless the owner asks for it.
+
+## 7. The order to build it in
 
 1. Stand up PriceBook as a list with an Edition column, even if the first edition is one export out of the job system. A rate with no edition cannot be defended in the conversation this build exists for.
 2. Create Jobs and JobLines and get completion landing in them, by monitored mailbox or by a scheduled read. Until a job arrives with Status complete there is nothing downstream to test.
@@ -215,7 +244,7 @@ Book Gaps grouped by code is the measure that pays for the build. Every park wit
 7. Build Flow 3 with the person's approval only. Add the threshold rule once the person's path works, not before.
 8. Build Flow 4, confirm a parked invoice cannot reach it, then connect Power BI with Sent Without Release on the front page.
 
-## 7. Four traps specific to this build
+## 8. Four traps specific to this build
 
 ### Leaving Rate on a form
 
@@ -233,7 +262,7 @@ The standard is explicit that a null external id is a failed write, not a succes
 
 Approvals keep their own history, and it is a fine audit trail and a terrible record. The outcome must be written onto the Invoices row as ReleasedBy and ReleasedAt in the same flow. The day a customer disputes the bill, the answer has to be readable from the invoice, not from somebody's Teams activity.
 
-## 8. Where the automation stops
+## 9. Where the automation stops
 
 - The release, or the threshold rule that stands in for it. A person writes that number down once, under their own name, and everything over it comes back to them.
 - Pricing a line the book does not hold, and the separate decision about whether it belongs in the book. The park is the ask; nobody automates the answer.

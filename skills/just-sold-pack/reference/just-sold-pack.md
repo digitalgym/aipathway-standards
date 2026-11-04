@@ -179,7 +179,7 @@ The call list is a short list, sized to how many calls the agent can actually ma
 2. **Then the reason.** Same street, then the radius, then a matching owner.
 3. **Then the longest since you last spoke.** Ties only. It never leapfrogs a stronger reason.
 
-The list orders, it never permits. Nobody the gate held is on it, whatever their rank would have been, and the build never rings anyone on it. Calling is off by default, and no hosted product will place these calls: Office Voice rings only people with a lawful basis, such as someone who asked for a call, and a neighbour of a sale has not. So the calls on the list are the agent’s own. If an agency turns calling on in its own build anyway, every call still goes through a gate first: the do-not-call register, calling hours in the contact’s own time, and the AI disclosure at the start.
+The list orders, it never permits. Nobody the gate held is on it, whatever their rank would have been, and the build never rings anyone on it. Calling is off by default, and Office Voice will not place these calls: it rings only people with a lawful basis, such as someone who asked for a call, and a neighbour of a sale has not. So the calls on the list are the agent’s own. If an agency turns calling on in its own build anyway, every call still goes through a gate first: the do-not-call register, calling hours in the contact’s own time, and the AI disclosure at the start.
 
 ## 7. What stays with a person
 
@@ -222,9 +222,9 @@ the hard step: sale facts
     against them
 
 the calls: the agent's own
-  - off by default. No hosted step places them: Office Voice
-    needs a lawful basis for a call, and a neighbour who never
-    asked to be called has none
+  - off by default. Office Voice will not place them: it needs
+    a lawful basis for a call, and a neighbour who never asked
+    to be called has none
   - if an agency turns calling on in its own build: a register
     check, calling hours in the contact's own time, the AI
     disclosure first, and a record of each call

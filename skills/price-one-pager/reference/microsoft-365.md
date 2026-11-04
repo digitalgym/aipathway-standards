@@ -127,7 +127,28 @@ FLOW 2  Give to the vendor
 
 Flow 1 never edits a Versions row it did not just create. An edit is a rebuild, and a rebuild is a new version that needs its own approval.
 
-## 5. The order to build it in
+## 5. What the flows can reach in your Microsoft 365 and your sales data, and what they never touch
+
+The flows use the Shown library the way a shop uses a drop safe: they can put a page in, and they have no way to take one out. They read Rules and Sales on one SharePoint site, write a new Versions row for each build, start the approval, and file the approved page in Shown. They never send anything to the vendor, never set the price, never change a version once it is approved, and never update or delete a file in Shown. They hold no mailbox connection at all, on purpose: the agent gives the page to the vendor. Your own login stays yours: the flows run under their own account, never your username and password.
+
+What each connection is for.
+
+- **SharePoint, the one site.** Rules and Sales, read. Versions, a new row per build. Shown, add only. Nothing outside that site.
+- **Approvals, through Teams or Outlook.** The agent approves each version by name, and gives the reason when the quote sits below the evidence.
+- **The sales source, read.** The sales come from a source the agency already licenses. The plain route is an export loaded into Sales with its Source and SoldOn filled. If your provider offers an API and your licence allows it, a custom connector or the HTTP action (both premium) can read it instead. Check that the licence lets you keep the sales you used on the record, because the record is the point.
+
+Give it the least it needs.
+
+1. Own the flows with a service account, not an agent who might leave. A flow owned by someone who leaves stops when their account is switched off.
+2. Build the flows inside a solution and share connections through its connection references, so nobody’s personal connection ends up inside a flow.
+3. Make the service account a member of this one site and no other. If you use an app registration instead, grant it Sites.Selected and add only this site.
+4. Break inheritance on Shown so agents can read it and only the service account adds to it, and put the retention label on it.
+
+How to cut it off. Turn off the two flows, or delete their connections in Power Automate. Remove the service account from the site, and revoke the data provider key if you used one. Every page already in Shown stays where it is.
+
+Why not the comparable sales report your data provider already gives you? Keep using it to find the sales; it is usually the best source you have. Ask whether it holds the rules you wrote before you looked at the prices, the agent’s estimate kept apart from the range, an approval per version, or a copy of what this vendor was shown on this date. Where it does not, those are what this build adds.
+
+## 6. The order to build it in
 
 1. Create Rules and fill it before anything else.
 2. Create Sales, with PriceStatus as a closed choice and Source required in practice.
@@ -136,7 +157,7 @@ Flow 1 never edits a Versions row it did not just create. An edit is a rebuild, 
 5. Build the approval, then Flow 2 with both guards.
 6. Run the pass test below.
 
-## 6. Four traps specific to this build
+## 7. Four traps specific to this build
 
 ### Filtering Sales in a view and calling it the rules
 
@@ -154,7 +175,7 @@ SharePoint will let you. Turn off editing on approved rows with a flow that copi
 
 A site owner can delete a file. A retention label helps, and it is a setting someone can change. A record that has to survive a dispute is the step the standard says not to hand-roll.
 
-## 7. Where the automation stops
+## 8. Where the automation stops
 
 - The agent's estimate and the price they quote.
 - Approving each version, and the reason when the quote sits below the evidence.

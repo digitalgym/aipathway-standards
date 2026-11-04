@@ -169,8 +169,8 @@ FLOW 3  Write, once
              store the id the target returned in WrittenId
              Runs.Corrected + 1 on the run that raised it
              write failed -> leave WrittenId blank, raise it to the Owner
-  never      live inside FLOW 2. An approval can time out, be reassigned
-             and actioned twice, or be resubmitted from the run history,
+  never      live inside FLOW 2. An approval can time out or be reassigned,
+             and its run can be resubmitted from the run history,
              and each replay writes again. The blank WrittenId is the lock.
 
 FLOW 4  The record by key
@@ -237,7 +237,25 @@ MAX ( Runs[PublishedAt] )
 
 Within Tolerance is the one to watch rather than the one to be pleased about. A field whose comparisons are mostly within tolerance either has a tolerance wider than the thing it was set to absorb, or a systematic difference somebody decided not to look at, and both of those are findings. Written Without Acceptance is a different kind of measure: it is about the build rather than the business, and the day it stops being zero this plan stopped being implemented.
 
-## 6. The order to build it in
+## 6. What the flows can reach in your Microsoft 365, your job system and your ledger, and what they never touch
+
+The flows hold a red pen and no eraser. Flow 1 reads both sources and marks every difference in the site; it holds no write connection to either source at all. Flow 3 alone can write, one accepted field into the target, once. No flow deletes a record, merges two customers, records a payment, or overwrites the value that was there before without keeping it on the Corrections row.
+
+What each connection is for.
+
+- **SharePoint, the one site.** The six lists in section 2. Every flow reads and writes there.
+- **Source A, read only.** Usually the job system. Through a custom connector or the HTTP action (both premium), or a nightly export dropped into a library that Flow 1 reads.
+- **Source B, read only.** Usually the ledger. If Office Voice is already connected to your Xero, Flow 1 can call its MCP endpoint through the HTTP action with a key from /app/keys that has only “Read the book” ticked. That gives your Xero invoices, up to 120 days back, without a second Xero connection. Bank lines come from a statement export, because Xero does not give ordinary apps the unreconciled lines on a bank feed.
+- **The target, write, Flow 3 only.** Its own connection, separate from the read connection Flow 1 uses, with the narrowest permission that can change the fields the contract lets a correction touch. Where the target has no way in, there is no write connection at all, and Flow 3 makes a task for a person.
+- **Teams and Approvals.** Flow 2’s card, with both values and the master’s value side by side.
+
+Least privilege, in practice. All four flows belong to the automation service account and sit in one solution, with the read and write connections as separate connection references, so you can remove the write and keep the comparison running. That account is a member of this site only. If an app registration is used, give it Sites.Selected on this one site. The full conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365#access).
+
+How to cut it off. Turn off Flow 3, or remove its write connection, and nothing more is written while the comparison keeps publishing. Delete the Office Voice key at /app/keys, revoke the job system’s key, or disconnect the app in Xero, and nothing more is read. The differences, corrections and both original values stay in the site.
+
+Why not merge the two in Power Query or Power BI? It is a good way to see the differences, and it writes nothing, which is half of this standard. What it does not keep is a difference as a row with an owner, who accepted the fix, or a lock that makes the fix land once, and each refresh replaces yesterday’s view. Use it to look; use the flows to keep the record.
+
+## 7. The order to build it in
 
 1. Fill ContractFields with the people who own both systems in the room. One row per field that can differ, with an a or a b on every row. This is a conversation rather than a data entry task, and nothing below works until it exists.
 2. Answer whether your tenant can write into the target source at all. If it cannot, Flow 3 becomes a task with the accepted value on it and a person keys the id back. Everything else on this page is unchanged.
@@ -248,11 +266,11 @@ Within Tolerance is the one to watch rather than the one to be pleased about. A 
 7. Build Flow 2. Confirm AcceptedBy came from whoever responded to the approval and not from a text box on the card.
 8. Build Flow 3 with the blank-WrittenId condition in its first version, not added after the first duplicate write. Then connect Power BI, with Written Without Acceptance on the front page.
 
-## 7. Four traps specific to this build
+## 8. Four traps specific to this build
 
 ### Writing inside the approval
 
-The approval action hands you a responder and the next step is right there, so the write goes in the same flow. Approvals can be reassigned and actioned twice, and any run can be resubmitted from its run history, which replays every action after the trigger. The Corrections row with a blank WrittenId is the only thing that makes the second attempt a no-op, and it has to be there in version one. Added after the first duplicate, it arrives one wrong payment late.
+The approval action hands you a responder and the next step is right there, so the write goes in the same flow. Approvals can be reassigned, and any run can be resubmitted from its run history, which replays every action after the trigger. The Corrections row with a blank WrittenId is the only thing that makes the second attempt a no-op, and it has to be there in version one. Added after the first duplicate, it arrives one duplicate write late.
 
 ### Joining on a name because the key is not in both systems
 
@@ -266,7 +284,7 @@ One less lookup, and now a single number absorbs differences on every field. The
 
 This is the fastest growing list in the build, because a matched pair writes nothing and a pair that differs by a cent every night writes a row every night. Deleting them removes the only evidence of a systematic drift, and takes the record-by-key answer with it. Index RunId and Key instead: past the list view threshold an unindexed filter fails outright rather than slowing down, and it fails inside a scheduled flow at two in the morning where nobody is watching.
 
-## 8. Where the automation stops
+## 9. Where the automation stops
 
 - Accepting every correction, with their name on it. The run proposes the master's value. The write triggers on a person, never on a difference existing.
 - Declaring which source is master for each field, once, before the first run. No flow can infer it, and a flow that guesses will guess differently next week.

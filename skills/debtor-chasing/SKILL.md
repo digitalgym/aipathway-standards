@@ -99,7 +99,7 @@ skill asserts.
 - 7. Parts That Are Harder Than They Look
 - 8. What Breaks After It Works
 - 9. What Stays With a Person
-- 11. Join It to Your Own System: Hand Over the Call
+- 11. Connect Xero through Office Voice to make the calls, without it ever recording a payment
 - 12. The Run, Step by Step
 - 13. A checklist to hold any build or supplier to
 

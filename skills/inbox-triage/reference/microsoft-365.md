@@ -30,7 +30,7 @@ The shared mailbox is the one place in this stack where Microsoft has already do
 
 Read [the inbox triage build standard](https://aipathway.com.au/explore-ai/inbox-triage-build-standard) first. It defines its objects, and the lists below are those objects with SharePoint types on them. Shared conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-Decide one thing first: what a message gets filed against. The standard is unambiguous that filing means a record id, never a copy in a folder, so you need to know what ids exist before you design anything. A job system with an API gives you job ids. Xero gives you supplier ids. The standard names Tradify as the case where the job side cannot be met at all, and says the honest route there is supplier filing with the job reference kept on the item. Pick your id space now, because RecordRef below is the column the whole standard turns on and it is the one that cannot be retrofitted.
+Decide one thing first: what a message gets filed against. The standard is unambiguous that filing means a record id, never a copy in a folder, so you need to know what ids exist before you design anything. A job system with an API gives you job ids. Xero gives you supplier ids. Tradify has no public API and no Zapier app, so a build cannot file against a Tradify job directly. The route there is filing against the supplier in Xero with the Tradify job number kept on the item, or a browser step a person approves that attaches it to the job. Pick your id space now, because RecordRef below is the column the whole standard turns on and it is the one that cannot be retrofitted.
 
 Two things this stack does not give you, both named in the traps. There is no action in Power Automate that returns a content hash of a file, so the standard’s hash on the filed attachment and on the quarantined message has no source in the box. And the mail trigger sees the folder you point it at, which means anything Exchange has already filed to Junk is invisible to a build that claims it never deletes a message. Read both before you start, not after the bookkeeper asks where last month’s remittance went.
 
@@ -217,7 +217,31 @@ AVERAGEX (
 
 Acknowledged Complaints is the canary and it belongs on the front page even though it should read zero forever. A measure that is always zero is worth keeping precisely when the day it is not zero is the day somebody sent a cheerful automatic reply to a customer who was already angry.
 
-## 6. The order to build it in
+## 6. What the flows can reach in your mailbox and your job system, and what they never touch
+
+Think of the flows as the mail room. They open every envelope that comes to the one counter, sort it into a pigeonhole with a person’s name on it, and put supplier invoices in the evidence drawer. The mail room has no shredder, and nothing leaves it without a signature. In practice that means they read the one shared mailbox, write the lists and libraries on one SharePoint site, look up a job or supplier id, and send an acknowledgement or a released reply from that mailbox. They never delete a message, never open anyone’s own inbox, and never edit a job, a bill or a payment.
+
+What each connection is for.
+
+- **Outlook, one shared mailbox.** The trigger on new mail, the move of spam to a folder, the acknowledgement, and the released reply in Flow 2. No other mailbox.
+- **SharePoint, one site.** The six lists and three libraries: the item, the raw message, the attachment and its index row. Nothing outside that site.
+- **Approvals and Teams.** The release in Flow 2, and the escalation in Flows 1 and 3 to the person on the Queues row.
+- **The job system.** A custom connector or the HTTP action (both premium in Power Automate) against its API, to find the job id and attach the message to it. ServiceM8 and Simpro both have one. Tradify has no public API and no Zapier app, so for a Tradify business this connection does not exist: file against the supplier in Xero and keep the Tradify job number on the item.
+- **Xero, for supplier ids only.** The flow needs the id, not the ledger. A supplier list refreshed into a lookup list on a schedule is enough; a custom connector or the HTTP action against your own Xero app also works, and is premium. Office Voice is not part of this build: the standard names no hosted step for it.
+
+Keep it to the least it needs.
+
+1. Make a service account for the build and create the flows as it, not as the office manager. Flows and connections owned by a person go with them when they leave.
+2. Put the four flows in a solution and use connection references, so each connection is made once, by the service account, and every flow shares it.
+3. Give the service account Full Access and Send As on the one shared mailbox and nothing else. If an app registration reads the mail instead, scope its mail permission to that mailbox with RBAC for Applications in Exchange Online, or an application access policy.
+4. Make the service account a member of the one SharePoint site and no other. An app registration gets Sites.Selected and that site only.
+5. Give the job system key the least its API offers for reading jobs and attaching a note or file, and decide who else holds Send As on the mailbox (the fourth trap below).
+
+How to cut it off. Turn the flows off and the mailbox goes back to being a mailbox, with every message still in it. Remove the service account’s access to the mailbox in Exchange, or delete the job system key, and the build loses that one piece.
+
+Why not Outlook rules, or Copilot over the whole mailbox? Rules are fine for sorting one person’s inbox, and a rule can move, forward, auto-reply and delete. That is the trouble: a rule acts on one message at a time, so a thread of three is three, there is no owner and no clock, and the delete is one tick away. Copilot can summarise the mailbox and suggest a reply for whoever opens it; it files nothing against a record and keeps no release.
+
+## 7. The order to build it in
 
 1. Settle the id space: which system gives you job ids, which gives you supplier ids, and what happens to a message that matches neither.
 2. Create the six lists and three libraries. Turn on enforce unique values for Items.ThreadKey, Mail.MessageId and Acknowledgements.ThreadKey before any rows exist.
@@ -228,7 +252,7 @@ Acknowledged Complaints is the canary and it belongs on the front page even thou
 7. Build Flow 2. The approval precedes the Releases row and the Releases row precedes the send, with nothing between them.
 8. Build Flows 3 and 4, then connect Power BI. Acknowledged Complaints and Unowned Items go on the front page.
 
-## 7. Four traps specific to this build
+## 8. Four traps specific to this build
 
 ### The hash the standard asks for has nowhere to come from
 
@@ -246,7 +270,7 @@ A Choice column with fill-in enabled is a text column that looks closed. The fir
 
 The release gate is only worth what the send-as permissions are worth. Anyone who can open the shared mailbox in Outlook can reply from it, and the Releases list will never know. That is a permissions decision, not a flow: decide who holds send-as, and accept that the people who keep it are the people whose replies the record cannot vouch for. Reconciling the sent folder against Releases once a week is the cheap version of finding out.
 
-## 8. Where the automation stops
+## 9. Where the automation stops
 
 - Every substantive reply: anything with a price, a date or a decision in it. A person writes or approves the words, and the release carries their name.
 - The complaint, whole. What is said to that customer and when is theirs, and the build's only job is to get it in front of them untouched.

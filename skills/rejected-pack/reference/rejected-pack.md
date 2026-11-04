@@ -216,7 +216,7 @@ A Brisbane council condition is not "QLD paperwork". If you only store state, yo
 
 Awards and WHS variants are not one handbook
 
-Fair Work, plus the state WHS Act, plus the builder's site rules. Three sources. One pack. Do not flatten them.
+Fair Work, plus the state's WHS law (OHS in Victoria), plus the builder's site rules. Three sources. One pack. Do not flatten them.
 
 Extraction without a graph is another inbox
 
@@ -234,7 +234,7 @@ Skip it and you have built unauthorised practice with a nicer layout. The named 
 
 You can DIY the calendar. You can DIY the invoice four-check. You can DIY a proofread before a pack goes out. Plenty of operators should, and the three pieces above tell you how.
 
-The binding layer is the hard step: one graph, official form maps, field reuse across artifacts, a pack that stays current when a rule or a ticket moves, and a named person on the gate. That layer is where a Zap and a Drive stop being enough, and it is the layer that decides whether the pack is still current in September after it passed in March. Build it deliberately, to the checklist in section 15, and expect it to take most of the time.
+The binding layer is the hard step: one graph, official form maps, field reuse across artifacts, a pack that stays current when a rule or a ticket moves, and a named person on the gate. That layer is where a Zap and a Drive stop being enough, and it is the layer that decides whether the pack is still current in September after it passed in March. Build it deliberately, to the checklist in section 16, and expect it to take most of the time.
 
 Highest option, job five
 
@@ -275,7 +275,7 @@ Do not start at “all paperwork”. Start at the set that already rejects packs
 
 | Vertical | First pack | Systems already in the business |
 | --- | --- | --- |
-| QLD and east-coast trades | QBCC, workers comp, public liability, white card, SWMS for the common job types, WHS notices, subcontractor tickets | ServiceM8, Simpro, Tradify, Xero |
+| QLD and east-coast trades | QBCC, workers comp, public liability, white card, SWMS for the common job types, WHS notices, subcontractor tickets | ServiceM8, Simpro, Tradify (read from its job export: no public API), Xero |
 | Construction and builders | The above, plus a site-specific SWMS pack and subcontractor prequal | The job system, plus Microsoft 365: the SharePoint library is where the certificates already live. Connect it, do not replace it. Graph first. |
 | Property management | The Compliance Calendar standard, already published: smoke alarms, pool barriers, minimum housing standards, entry notices. The pack wraps the calendar. | PropertyMe, Console, PropertyTree |
 | Bookkeeping practice (the channel) | A multi-client workspace running the Yellow and Hold queues for trade and property clients | Xero and MYOB practices. Per-client billing, the same motion as Office Voice. |
@@ -286,7 +286,7 @@ BAS, IAS and ASIC annual statements stay with the practice and the registered ag
 
 The roadmap already says QA and compliance come after the pipeline is predictable. Keep that. This is not a first project for a shop that still misses the phone.
 
-- If the leak is missed calls: the Booked After Hours standard. Office Voice Front Desk is the step not to hand-roll. Not this.
+- If the leak is missed calls: the Booked After Hours standard. Office Voice Front Desk, which answers all day, is the step not to hand-roll. Not this.
 - If the leak is unpaid invoices: the Debtor Chasing standard. Office Voice is the step not to hand-roll.
 - If the leak is a quiet database: the Database Reactivation standard. The calls are yours from a daily list; a callback someone asked for is Office Voice’s governed call, the step not to hand-roll.
 - If the leak is packs failing after the work: this standard. A scoped build if the binding layer is the cost.
@@ -357,7 +357,28 @@ pack:                            # handover-shaped, not a folder
 
 The pack is an object, not a directory. If it cannot be handed to an inspector, a builder or an insurer without a scavenger hunt, the build failed however good the documents look.
 
-## 14. What your developer builds, and the step that needs care
+## 14. Connect the library where your licences and certificates sit, and your job system, without it changing a document
+
+The build uses your document library the way a library card does: it reads what is on the shelf, and it never writes in the margins or takes a book home. It reads the certificates, licences and policies where they already sit, reads the work type and site from the job system, and writes one thing: the handover pack for each location, as a new version. It never edits, moves or deletes a certificate, never files with a regulator, never sends a pack to a builder or insurer, and never tells anyone they are compliant. Remove its access in Microsoft 365 or Google, or revoke its key in the job system, and it reads nothing more. Your own login stays yours: the build connects with its own app registration or key, never your username and password.
+
+What each piece of access is for.
+
+- **The certificate library, read.** The SharePoint library, OneDrive folder or Google Drive folder where the licence PDFs and insurance certificates already are, to extract each expiry and number into the graph with where it came from. In Microsoft 365 an app can be limited to the one site with the Sites.Selected permission; in Google, share the one folder.
+- **The job system, read.** For the work type, the site and the people on the job, which is what applicability runs on. ServiceM8 by an API key or an app connection; Simpro through your company’s own API at its simprosuite.com address. Tradify has no public API and no Zapier app, so the build reads its job export each morning instead, or a browser step a person approves reads the job.
+- **Headcount, read.** From payroll or the job system, so a threshold crossed puts new notices into Hold the day it is true.
+- **The handover location, write.** One folder per location, where each accepted version lands beside the last. It is the only thing the build writes.
+
+1. Put the entity, its locations, officers and systems into the business graph.
+2. Give the build read access to the one library or folder where the certificates sit, not the whole tenant or drive.
+3. Connect the job system with the build’s own key or app connection, or set up the Tradify export.
+4. Choose the handover folder for each location, and name the person on the gate.
+5. Run the pass test below against your own data.
+
+Why not a subcontractor compliance app? Many track ticket and insurance expiry well, which is check 2. Ask what they do with check 3: can it write down why a SWMS does not apply to this job, and does it re-derive every due date when a rule changes. If not, it is a reminder service, and the pack still fails at the door.
+
+Where it runs. Lists and flows beside the library in Microsoft 365 (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/binding-the-pack-on-microsoft-365) lays these out), a small dashboard a coding agent builds from this page, or a routine woken when a ticket, a rule or a site changes. All three are held to the same checks; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
+
+## 15. What your developer builds, and the step that needs care
 
 Section 8 names the binding layer as the hard step and says plainly that no product covers it. That stays true here: this block exists to stop an agent going looking for one, and to stop it standing up a document store the business already has.
 
@@ -385,7 +406,7 @@ The build reads from the library the business already keeps, extracts into the g
 
 **The pass test.** Change the trading address once, in the business graph. Every open artifact that carries an address must re-derive, and each one must be able to tell you the rule version and the as-of date behind it. Then take a pack in the fail queue and try to hand it over: it must not be possible. Both take a minute against your own data. If the first leaves a stale address in a generated document, you have a second copy of a fact somewhere, which is section 3 in one sentence; if the second succeeds, the queues are labels rather than states.
 
-## 15. A checklist to hold any build or supplier to
+## 16. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 

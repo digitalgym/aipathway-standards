@@ -54,11 +54,23 @@ https://aipathway.com.au/explore-ai/mesh-directory.
 |---|---|---|
 | `AIP-BS-DATABASE-REACTIVATION` | [`database-reactivation`](skills/database-reactivation/SKILL.md) | Database Reactivation Build Standard |
 | `AIP-BS-PRICE-ONE-PAGER` | [`price-one-pager`](skills/price-one-pager/SKILL.md) | Price One Pager Build Standard |
+| `AIP-BS-REVIEW-REQUEST` | [`review-request`](skills/review-request/SKILL.md) | Review Request Build Standard |
+| `AIP-BS-NEXT-SERVICE` | [`next-service`](skills/next-service/SKILL.md) | Next Service Build Standard |
+| `AIP-BS-FAULT-TRIAGE` | [`fault-triage`](skills/fault-triage/SKILL.md) | Fault Triage Build Standard |
+| `AIP-BS-DOCUMENT-FILING` | [`document-filing`](skills/document-filing/SKILL.md) | Document Filing Build Standard |
+| `AIP-BS-REMITTANCE-SPLIT` | [`remittance-split`](skills/remittance-split/SKILL.md) | Remittance Split Build Standard |
 | `AIP-BS-OPEN-HOME-FEEDBACK` | [`open-home-feedback`](skills/open-home-feedback/SKILL.md) | Open Home Feedback Build Standard |
+| `AIP-BS-JOB-BRIEF` | [`job-brief`](skills/job-brief/SKILL.md) | Job Brief Build Standard |
 | `AIP-BS-DISPATCH-BOARD` | [`dispatch-board`](skills/dispatch-board/SKILL.md) | Dispatch Board Build Standard |
 | `AIP-BS-INBOX-TRIAGE` | [`inbox-triage`](skills/inbox-triage/SKILL.md) | Inbox Triage Build Standard |
 | `AIP-BS-FOLLOW-UP` | [`follow-up`](skills/follow-up/SKILL.md) | Follow Up Build Standard |
 | `AIP-BS-CASH-SEAM` | [`cash-seam`](skills/cash-seam/SKILL.md) | Cash Seam Build Standard |
+| `AIP-BS-CLIENT-DESK` | [`client-desk`](skills/client-desk/SKILL.md) | Client Desk Build Standard |
+| `AIP-BS-VIRTUAL-ADMIN` | [`virtual-admin`](skills/virtual-admin/SKILL.md) | Virtual Admin Build Standard |
+| `AIP-BS-CLIENT-MEMORY` | [`client-memory`](skills/client-memory/SKILL.md) | Client Memory Build Standard |
+| `AIP-BS-JOB-CLOSE` | [`job-close`](skills/job-close/SKILL.md) | Job Close Build Standard |
+| `AIP-BS-EXCEPTION-DESK` | [`exception-desk`](skills/exception-desk/SKILL.md) | Exception Desk Build Standard |
+| `AIP-BS-PARTS-READY` | [`parts-ready`](skills/parts-ready/SKILL.md) | Parts Ready Build Standard |
 | `AIP-BS-SIMPRO-CLAUDE-CONNECTOR` | [`simpro-claude-connector`](skills/simpro-claude-connector/SKILL.md) | Simpro Claude Connector Build Standard |
 | `AIP-BS-JUST-SOLD-PACK` | [`just-sold-pack`](skills/just-sold-pack/SKILL.md) | Just Sold Pack Build Standard |
 | `AIP-BS-TWO-RECORDS` | [`two-records`](skills/two-records/SKILL.md) | Two Records Build Standard |

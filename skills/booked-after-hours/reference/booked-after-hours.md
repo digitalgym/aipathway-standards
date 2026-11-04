@@ -21,7 +21,7 @@ When the checks are green, npx @aipathway/conformance connect gets the hosted pr
 
 ---
 
-An open specification for answering a trade business phone when nobody is there. Build it yourself, hand it to an AI coding agent, or hold whoever built yours to it. Or skip the build: every trade business has a phone that rings after hours, so we built the standard into a product, Front Desk on Office Voice.
+An open specification for answering a trade business phone when nobody is there. Build it yourself, hand it to an AI coding agent, or hold whoever built yours to it. Or skip the build: every trade business has a phone that rings after hours, so we built the standard into a product, Front Desk on Office Voice, which answers during the day as well.
 
 Used by
 
@@ -71,11 +71,11 @@ The order is the specification, and any step that cannot complete escalates rath
 
 ## Done for you: Front Desk
 
-Every trade business has a phone that rings when nobody is there, so we built this standard into a standalone product: Front Desk on Office Voice. It answers your number out of hours, sorts the call into a fixed job type, and writes the job into ServiceM8 or Simpro during the call. It is held to the pass test in section 10 like any other build.
+Every trade business has a phone that rings when nobody is there, so we built this standard into a standalone product: Front Desk on Office Voice. It answers your number all day, or only out of hours if you set it up that way, sorts the call into a fixed job type, and writes the job into ServiceM8 or Simpro during the call. It is held to the pass test in section 10 like any other build.
 
 What it does today
 
-- Answers on your own number, forwarded after hours, and says it is an AI and that the call is recorded before it asks anything.
+- Answers on your own number, forwarded after hours or all day, and says it is an AI and that the call is recorded before it asks anything.
 - Sorts every call into emergency, routine or quote. A call that fits none of them is not written as a job: it takes a message for you.
 - Writes an emergency job into your system first, then puts the caller through to your on-call phone.
 - Rings the on-call once per job. A repeat call about the same job adds a note to it and tells the caller the on-call already has it.
@@ -83,7 +83,7 @@ What it does today
 - Writes one job per caller, not two: a second call about the same problem adds to the open job. Holds the trade heads-up text out of hours unless the job is an emergency.
 - Asks before texting the caller, and sends the booking text only if they say yes. Every hand-off carries a fixed reason (a price question, a complaint, an address it could not confirm), and a job your system did not take is never reported as booked.
 
-Start a 30-day free trial, connect ServiceM8 or Simpro and forward your number after hours; prices are on the [pricing page](https://aipathway.com.au/pricing). If you would rather we set it up for you, that is a fixed-price set-up: [pick a time](https://aipathway.com.au/ai-audit#book).
+Start a 30-day free trial, connect ServiceM8 or Simpro and forward your number, after hours or all day; the steps are in section 9, and prices are on the [pricing page](https://aipathway.com.au/pricing). If you would rather we set it up for you, that is a fixed-price set-up: [pick a time](https://aipathway.com.au/ai-audit#book).
 
 Rather build it yourself? Everything you need is below, free. Joining it to your own inbox, ledger or a bigger workflow? See joining it to your own system. [Front Desk](https://office-voice.com/) is held to the pass tests on this page like anything else.
 
@@ -91,7 +91,7 @@ Rather build it yourself? Everything you need is below, free. Joining it to your
 
 In scope: one inbound voice call, outside business hours, to an Australian trade or field-service business, ending in either a job that exists in the system of record or a deliberate hand-off to a person, with a record of which and why.
 
-Out of scope, deliberately: pricing a job, taking payment, rescheduling existing work, outbound calling of any kind, and daytime overflow. Each is a different standard with different risks, and bundling them is how a specific agent becomes a vague one.
+Out of scope, deliberately: pricing a job, taking payment, rescheduling existing work, outbound calling of any kind, and daytime calls. Each is a different standard with different risks, and bundling them is how a specific agent becomes a vague one. Daytime calls are the [Client Desk standard](https://aipathway.com.au/explore-ai/client-desk-build-standard), on the same Front Desk.
 
 The reason to write this down before building: an agent with no written scope will attempt anything a caller asks, and the failures are silent. Nobody finds out at 9pm. They find out when a van is in the wrong street.
 
@@ -99,7 +99,7 @@ The reason to write this down before building: an agent with no written scope wi
 
 Order is part of the specification, not a suggestion. Two of these are legal obligations and they come first.
 
-1. Identify and disclose. Business name, that this is an AI assistant, and that the call is recorded. Before any question. See section 4 of [the compliance paper](https://aipathway.com.au/explore-ai/ai-compliance-australia#recording) for why Victoria, Tasmania and the ACT decide this for everyone.
+1. Identify and disclose. Business name, that this is an AI assistant, and that the call is recorded. Before any question. See section 4 of [the compliance paper](https://aipathway.com.au/explore-ai/ai-compliance-australia#recording) for why the recording rules differ by state, and why saying it first on every call covers all of them.
 2. Capture the problem in the caller’s words, verbatim, before any classification.
 3. Classify from the fixed list in section 3. No free-text job type ever reaches the job system.
 4. Resolve the address against a lookup, per section 4. A transcribed address is not an address.
@@ -127,7 +127,7 @@ Where a caller’s description does not match any trigger, the classification is
 
 ## 4. The address is verified, never transcribed
 
-Speech recognition on Australian street names, over a phone line, at 9pm, with a distressed caller, is the single most reliable source of error in this workflow. Ashgrove and Ashmore are one vowel apart and eighty kilometres apart.
+Speech recognition on Australian street names, over a phone line, at 9pm, with a distressed caller, is the single most reliable source of error in this workflow. Ashgrove and Ashmore sound alike on a bad line and sit about eighty kilometres apart.
 
 So the rule is: the spoken address is a query, not a value. It goes to an address lookup, the agent reads back the resolved result, and the caller confirms. The resolved address is what reaches the job. If the lookup returns nothing confident, the call escalates rather than writing a best guess.
 
@@ -175,8 +175,9 @@ Write once. Before creating anything, look for an open job on that caller number
 
 Know what your system can actually take. This is where most builds overclaim:
 
-- ServiceM8 has a real OAuth API. A job with a client, address and job type. This is the reference implementation.
-- Tradify has no public or partner API. The sanctioned route is their Enquiries channel: the business enables it in settings, takes a public slug, and a structured email to that slug lands as an _enquiry_. That is a lead for a person to convert, not a booked job, and nothing can be read back. Set `system: tradify_enquiry` and do not report it as booked.
+- ServiceM8 has a real API, reached with an API key or an OAuth app connection. A job with a client, address and job type. This is the reference implementation.
+- Simpro has a per-company API on the business’s own `simprosuite.com` address. A new caller’s job needs a customer and a site before it can exist, so the write is three steps, each with its id back.
+- Tradify has no public or partner API and no Zapier app, so nothing can write a job into it from outside. The sanctioned route is their Enquiries channel: the business enables it in settings, takes a public slug, and a structured email to that slug lands as an _enquiry_. That is a lead for a person to convert, not a booked job, and nothing can be read back. Set `system: tradify_enquiry` and do not report it as booked.
 - Anything else: deliver the outcome object by email or webhook and be honest that the last step is manual.
 
 A null `external_id` is a failed call, not a completed one. Alert on it.
@@ -216,18 +217,32 @@ hosting:
 
 Build against `local.mock_voice` for as long as you like. You only switch the provider over when you want a real phone number, and that is the moment anything is charged. What that costs is on [the pricing page](https://aipathway.com.au/pricing).
 
-## 9. Join It to Your Own System
+## 9. Connect ServiceM8 or Simpro so calls become jobs, without it touching your quotes or invoices
 
-Nothing above required us. If the checks are green against the stub, you have a working build and you are welcome to stop here. This is how the live call joins your own system if you want a real number behind it, in the order it happens, so the decision is not a conversation.
+Nothing above required us. If the checks are green against the stub, you have a working build and you are welcome to stop here. If you want a real number behind it, the live call gets the access a night receptionist gets: a pen for the bookings diary, not the keys to the till. It looks a caller up, reads their open jobs, writes one new job or adds a note to the open one, and puts an emergency through to your on-call phone. It never changes a quote, an invoice or a price, never closes or deletes a job, and never moves another customer’s booking. Remove the Office Voice connection in ServiceM8 or Simpro and it is cut off. Your own login stays yours: you approve the connection on ServiceM8’s or Simpro’s own sign-in page, and Office Voice never sees your password.
 
-1. **An account, and a trial before anything is charged.** Front Desk on Office Voice runs the live call: the AU number, the disclosure and recording notice, the recording itself, write-back to ServiceM8 or Simpro by OAuth, and one job per caller rather than two. Prices are on [the pricing page](https://aipathway.com.au/pricing), and there is a 30-day free trial. The trial is the point: you have a build and a pass test already, so you can prove it on a live number before you pay for one.
-2. **Connect the job system.** ServiceM8 or Simpro, by OAuth, inside the product. Not a key you paste into your build: the write-back is the live step and it authenticates as itself. This is the same `write_job` your scenarios have been asserting against, pointed at the tenant that actually bills.
-3. **The number, which is the part people worry about.** You keep the one you already advertise and forward it after hours. Nothing is ported unless you ask for that, and forwarding is reversible from your own carrier account without us. Answering happens in your business name.
-4. **Set the service area.** Postcodes or a radius, in the product. The out-of-area check reads it, and with none set every address counts as in area, so set it before you forward the number.
+What each piece of access is for.
+
+- **Customers, read and create.** To find the caller by their number, and to add a new caller as a customer so the job has someone to belong to.
+- **Jobs, read.** To find an open job on that number or address before writing, which is what stops the second job in section 6.
+- **Jobs, create and add notes.** To write the one job with its resolved address and job type, and to note a repeat call on the job that already exists.
+- **Your forwarded number and your on-call phone.** To answer in your business name, and to put an emergency through. Nothing else rings your on-call.
+
+Simpro has no per-permission choice: the connection gets the access of the person who approves it, so approve it as a user whose security group covers customers and jobs.
+
+1. **Start a 30-day free trial of Front Desk on Office Voice.** Prices are on [the pricing page](https://aipathway.com.au/pricing). You have a build and a pass test already, so you can prove it on a live number before you pay for one.
+2. **Connect ServiceM8 or Simpro inside the product.** Sign in on their page and approve. Not a key you paste into your build: the write-back is the live step and it authenticates as itself. It is the same `write_job` your scenarios have been asserting against, pointed at the tenant that actually bills.
+3. **Set the service area, the emergency list and the on-call number.** Postcodes or a radius for the area: with none set, every address counts as in area. The emergency triggers are the list from section 3 that your team agrees with.
+4. **Forward your number.** You keep the one you already advertise and forward it after hours, or all day. Nothing is ported unless you ask, and forwarding is reversible from your own carrier account without us.
+5. **Run the pass test in section 10** from your own phone, and check there is exactly one job in ServiceM8 or Simpro afterwards.
+
+Why not an answering service or a general AI receptionist app? Most take a message and email it to you, which is a voicemail with better manners: nobody has written the job, read the address back from a lookup or checked for the job the same caller opened ten minutes ago. Before you connect one, ask it three things: does the job land in your system with its id back, does a second call from the same number make a second job, and does it wake you for a quote request.
 
 What happens to the build you just wrote
 
 It keeps running and it stays yours. Section 8 splits the hosting three ways, and switching the provider only moves the middle one: the board, the queue and the reporting stay on your host, the live call moves to ours, and the system of record was always theirs. The two halves meet in the job system rather than in an integration you have to maintain. Your board reads the jobs; the call writes them.
+
+Where it runs. The board, the queue and the reporting can sit in Microsoft 365 lists (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/after-hours-on-microsoft-365) lays these out), a small dashboard a coding agent builds from this page, or a routine woken by the job system’s own events. All three are held to the same checks; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere). Running Front Desk already? Grok Bot or Claude can read [last night’s calls](https://aipathway.com.au/explore-ai/overnight-calls-grok-bot-claude) from Office Voice and put them on one list each morning.
 
 Then run your own conformance suite again with the provider flipped. The checks that reported `with_us` on the stub are the ones that can finally be evaluated, and check 12 is the whole standard holding at once on live telephony.
 

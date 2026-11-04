@@ -164,7 +164,31 @@ COUNTROWS (
 
 Report Reply Rate and Opt Outs side by side, always. A play that lifts replies while lifting opt-outs faster is burning the list to make a chart look better, and seeing them apart is how that gets missed for a quarter.
 
-## 6. The order to build it in
+## 6. What the flows can reach in your Microsoft 365 and your contact list, and what they never touch
+
+Give the build a temp’s swipe card, not the master key. It opens the one SharePoint site that holds People, Contacts and Suppressions, and the one shared mailbox the openers go out from. The flows read the trigger fields from your CRM or job system, write Play, Rank and every attempt onto the lists, and send from the shared mailbox. They never delete a person, never clear a suppression, never send from anybody’s own mailbox, and never open another site or another inbox. Your own login stays yours: the flows run under an account kept for them, never your username and password.
+
+What each connection is for.
+
+- **SharePoint, the one site.** To read and write the three lists. Play, Rank, the suppressions and the contact record all live here, so this is the connection every flow uses.
+- **Outlook, the one shared mailbox.** To send the opener from an address the business owns, so replies land where more than one person can see them and nothing stops the day somebody leaves.
+- **Your CRM or job system, read.** For the fields each play filters on. Unless the system drops a file, this is a custom connector or the HTTP action, and both are premium. A nightly export into a library is a fair first version.
+- **Teams, optional.** To post the day’s ranked list to the person who works it.
+- **Office Voice, optional and off by default.** To ring back the contacts who asked, and nobody else, as section 8 of the standard sets out. Flow 3 hands those rows over with the HTTP action and a key from office-voice.com/app/keys; the account owner ticks **Queue calls** on that key, and Office Voice still checks the register, the flags and the calling hours at dial time.
+
+Keep the card to one floor.
+
+1. Build the flows under a service account, an ordinary licensed account kept for them, not a person who might leave or change their password.
+2. Build them inside a solution, so each connection is a connection reference: one place to see what the flows reach, and one place to swap or remove it.
+3. Make the service account a member of the one SharePoint site and no other. If an app registration reads the site instead, grant it Sites.Selected and have an admin add only this site.
+4. Give the service account Send As on the one shared mailbox and no other. If an app registration sends instead, limit it to that mailbox with an Exchange application access policy or RBAC for Applications.
+5. Create the Office Voice key, if you use one, with only the scopes the hand-over needs.
+
+How to cut it off. Turn the flows off and nothing is selected, ranked or sent. Remove a connection from its connection reference to stop one route. Revoke the Office Voice key and no callback is queued, whatever the flows do.
+
+Why not a mail merge or a marketing email tool? Either will send the opener well, and either sends to the list it is given. Whoever exports that list decides who hears from you, there is no cooling-off check across plays, and an unanswered attempt is never written down. Use one for the send if you like; Flow 3’s two guards still run before it.
+
+## 7. The order to build it in
 
 1. Create the three lists. Index ContactRef everywhere.
 2. Load Suppressions before People. An empty suppression list on day one is how the first run reaches somebody who asked you not to.
@@ -174,7 +198,7 @@ Report Reply Rate and Opt Outs side by side, always. A play that lifts replies w
 6. Build Flow 1 with that single play, then Flow 2.
 7. Connect Power BI. Put Double Contacts on the front page and expect it to be zero.
 
-## 7. Four traps specific to this build
+## 8. Four traps specific to this build
 
 ### Plays as saved views instead of stored values
 
@@ -192,7 +216,7 @@ If the list of people is exported from a CRM once and then edited in the tenant,
 
 A flow built on somebody's own account stops the day they leave or change their password, and everything it sent is in their sent items rather than a shared record. Use a shared mailbox, and write the record to the list regardless.
 
-## 8. Where the automation stops
+## 9. Where the automation stops
 
 - Deciding a contact is finished with. The system surfaces; a person retires.
 - Clearing a suppression, and never for an opt-out, which has no clearing path at all.

@@ -97,8 +97,9 @@ skill asserts.
 - 4. The checks, in order
 - 5. The four queues
 - 6. What stays with a person
-- 7. What your developer builds, and the step that needs care
-- 8. A checklist to hold any build or supplier to
+- 7. Connect your job system and your ledger, without it fixing either on its own
+- 8. What your developer builds, and the step that needs care
+- 9. A checklist to hold any build or supplier to
 
 ## Attribution
 

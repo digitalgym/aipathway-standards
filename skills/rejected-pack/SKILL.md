@@ -102,8 +102,9 @@ skill asserts.
 - 11. Sequencing against the other four jobs
 - 12. What It Is Worth
 - 13. The three objects, as fields
-- 14. What your developer builds, and the step that needs care
-- 15. A checklist to hold any build or supplier to
+- 14. Connect the library where your licences and certificates sit, and your job system, without it changing a document
+- 15. What your developer builds, and the step that needs care
+- 16. A checklist to hold any build or supplier to
 
 ## Attribution
 

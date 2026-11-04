@@ -53,7 +53,7 @@ Sending. Also variations, discounts, and any line the price list does not cover.
 
 The pass test
 
-Section 9. One real job in a real tenant: once with a line the price list does not cover, then twice without it. A stubbed implementation cannot pass it.
+Section 10. One real job in a real tenant: once with a line the price list does not cover, then twice without it. A stubbed implementation cannot pass it.
 
 The call was answered. The job is in the system. Then it sits there, because the person who can price it was on a roof all day, and by the time they are not, the customer has had two other quotes. Nothing in that sequence is a technology failure. The quote is late because drafting it is nobody’s next action.
 
@@ -67,7 +67,7 @@ One job, one quote
 6. If yes, draft it into ServiceM8, Simpro or Xero. Nothing we hold is the copy that counts.
 7. The step not to hand-roll: did their tenant return an id? If yes, the draft waits for a person to send, because this standard has no send port at all. If no, the null id raises an alert and the job comes back through the same checks, where one quote per job means it is updated rather than duplicated.
 
-Everything left of the filled diamond runs on a laptop with no credentials. The diamond is the swap from the stub to a real tenant, which section 8 calls the step not to hand-roll, and the loop is the second run the pass test requires.
+Everything left of the filled diamond runs on a laptop with no credentials. The diamond is the swap from the stub to a real tenant, which section 9 calls the step not to hand-roll, and the loop is the second run the pass test requires.
 
 ## 1. Scope, and what is out of it
 
@@ -77,7 +77,7 @@ Out of scope: creating the job. That is the [Booked After Hours Build Standard](
 
 Also out of scope, deliberately: pricing judgement. Variations to an accepted quote, discounts, and any line the price list does not cover are parked for a person. A build that estimates its way around a missing catalogue line is not a conforming build, it is a liability with a total on it.
 
-Systems this can be met on: ServiceM8, Simpro and Xero all expose a write for a quote record. Our hosted step (section 8) writes the draft into Xero, priced by Xero from its Items, once the customer on the job is matched to a Xero contact. Without Xero connected, our connector cannot read a ServiceM8 or Simpro price list yet, so the quote parks with `pricebook_unreadable`. Simpro is parts-only either way, because prebuild sell prices are not in its API. Tradify cannot meet this standard: it has no public API, so there is no sanctioned route that creates a quote in it. That is the same position we take on [the trades page](https://aipathway.com.au/trades) about booking a job, and for the same reason.
+Systems this can be met on: ServiceM8, Simpro and Xero all expose a write for a quote record. Our hosted step (section 9) writes the draft into Xero, priced by Xero from its Items, once the customer on the job is matched to a Xero contact. Without Xero connected, our connector cannot read a ServiceM8 or Simpro price list yet, so the quote parks with `pricebook_unreadable`. Simpro is parts-only either way, because prebuild sell prices are not in its API. Tradify has no public API and no Zapier app, so nothing can create a quote record inside Tradify or read its price list. We connect it another way: the build holds the job from Tradify’s enquiry email or job export, and the draft is written into Xero, where Tradify already sends its invoices, priced from your Xero Items. A person sends it from Xero, or a browser step a person approves keys it into Tradify. More on which job system can be written to is on [the trades page](https://aipathway.com.au/trades).
 
 ## 2. The checks, in order
 
@@ -159,9 +159,31 @@ The draft is left in a state a person releases. There is no send port in this st
 
 This is not timidity about automation. It is where the value actually is. The expensive part of a late quote is the hours between the job existing and somebody starting the draft, and that is the part this removes. The thirty seconds a person spends reading a finished draft and pressing send was never the bottleneck, and it is the thirty seconds that keeps a wrong number off a customer’s screen.
 
-## 8. Provider and hosting
+## 8. Connect Xero so every job gets a draft quote from your own price list, and nothing goes to the customer until you send it
 
-Build the whole flow against the stub. Every check except section 9 goes green on your own machine, with no tenant, no credentials and nobody to pay.
+The access works like a quote pad left in your in-tray: the build fills it in from your price list, and it stays there until you send it. Through an Office Voice key it reads the job and your Xero Items, and writes one draft quote into Xero. It never sends a quote, never marks one accepted, never changes a price in your Items, and never touches an invoice or a payment. Revoke the key on the Keys page in Office Voice, or disconnect Office Voice under Connected apps in Xero’s settings, and no more drafts are written. Your own login stays yours: the build holds a key, never your username and password.
+
+What each piece of access is for.
+
+- **“Read the book” on the key.** For `read_job`, the job and the work on it, which is the only trigger for a quote, and `read_pricebook`, your price list read fresh at draft time with its catalogue ids.
+- **“Write drafts and notes” on the key.** For `draft_quote`, which writes one draft against the job. It takes catalogue ids and quantities, never a rate: Xero prices each line from the id.
+- **Quote drafting on the Xero connection.** Off until the owner reconnects Xero with it on. That is the one change Xero is asked to allow.
+
+The key needs nothing else. Leave “Queue calls” off: this standard rings nobody.
+
+1. Build the flow against the stub until every check in section 2 goes green.
+2. Run `npx @aipathway/conformance connect`. The account owner approves the key in a browser, with “Read the book” and “Write drafts and notes”.
+3. Call `get_setup` and open the link it gives to reconnect Xero with quote drafting on.
+4. Call `get_setup` again and check it says the price list reads and quote drafting is granted.
+5. Run the pass test in section 10 on one real job.
+
+Why not Xero’s own Claude connector? It only reads. It can look up your Items, but it cannot write the draft, so someone still keys the quote in, which is the delay this standard removes. And a chat that reads a price list is free to round a rate or estimate a missing line. `draft_quote` accepts only catalogue ids, so it cannot.
+
+Where it runs. A free [Quote Out sheet](https://docs.google.com/spreadsheets/d/1CiK6zGvEld17wMcYDbpknWz0Pk4gqRWn4fA7U2WU_xw/copy) to copy, which reads your price list through Office Voice every hour and asks for one draft per job by catalogue id; a scheduled flow over the jobs list in Microsoft 365 (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/quotes-out-on-microsoft-365) lays it out), a small dashboard a coding agent builds from this page, or a routine woken when a job is created. All four are held to the same checks; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
+
+## 9. Provider and hosting
+
+Build the whole flow against the stub. Every check except section 10 goes green on your own machine, with no tenant, no credentials and nobody to pay.
 
 ```
 // The ports this standard observes. Build against the stub, then flip.
@@ -185,11 +207,11 @@ const live: QuoteOutPorts = await import("./ports.office-voice.mjs");
 
 The swap from `stub` to a real adapter is the only step that needs anything from anybody else: an authenticated tenant, its price list, and a write that vendor will accept. That is the step this standard says not to hand-roll. Ours is `office_voice.draft_quote` on the Office Voice MCP, which writes the draft into Xero. Getting the key for it is one command, `npx @aipathway/conformance connect`: it prints a link and a code, the account owner approves in a browser, and the key lands beside your scaffold. That key does not switch quoting on. Drafting quotes into Xero stays off until the owner reconnects Xero with quote drafting on, and `get_setup` gives the link.
 
-**9. The pass test** Take one real job, from a real ServiceM8 or Simpro tenant, or held by your own build when the books are in Xero alone (Xero has no jobs of its own), and quote it against the real price list in that tenant. The work needs three things from the price list and one thing that is not in it. Run 1: no draft is written, and one parked result carries the three priced lines with their real catalogue ids and the fourth line as `not_in_pricebook`, with no total and nothing sent. Run 2, after a person drops the off-book line: one quote, in draft, in that tenant, with three priced lines. Run 3 repeats run 2 on the same job. There must still be exactly one quote, kept rather than duplicated, carrying `duplicate_of`.
+**10. The pass test** Take one real job, from a real ServiceM8 or Simpro tenant, or held by your own build when the books are in Xero alone (Xero is a ledger, not a job system), and quote it against the real price list in that tenant. The work needs three things from the price list and one thing that is not in it. Run 1: no draft is written, and one parked result carries the three priced lines with their real catalogue ids and the fourth line as `not_in_pricebook`, with no total and nothing sent. Run 2, after a person drops the off-book line: one quote, in draft, in that tenant, with three priced lines. Run 3 repeats run 2 on the same job. There must still be exactly one quote, kept rather than duplicated, carrying `duplicate_of`.
 
 A stub cannot pass this. It cannot authenticate into a tenant it does not have, it cannot be rejected by that vendor’s validation, and it cannot prove the catalogue ids it used are the ones the office actually bills on. If your build passes the second run and fails the third, your write is not idempotent, which is section 6. If it prices the fourth line in the first run, it is not conforming, and that is the one failure on this page that costs real money.
 
-## 10. A checklist to hold any build or supplier to
+## 11. A checklist to hold any build or supplier to
 
 A build conforms to this standard when every line is true. Hand this to whoever built yours, including an AI coding agent, and make them answer it.
 

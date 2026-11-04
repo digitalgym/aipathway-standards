@@ -149,7 +149,29 @@ The same rule this site holds itself to. A number without a source is not on the
 - What a figure means to a lender, a franchisor or a board.
 - Whether a report goes outside the business at all.
 
-## 8. What your developer builds, and the step that needs care
+## 8. Connect Xero and your job system for the Monday report, without it changing a single figure in them
+
+The build is a stocktaker with a clipboard: it counts what is on the shelf and never moves the stock. It reads each source the register names, at a time it writes down, and publishes the report to the places you choose. It never edits an invoice, a job or a contact, never posts a journal, and never changes a published report: a correction is a new version by a named person. Revoke its key, or disconnect it under Connected apps in Xero’s settings, and the next run marks those figures unavailable rather than guessing. Your own login stays yours: the build connects with its own key or app connection, never your username and password.
+
+What each piece of access is for.
+
+- **Your ledger, read.** Xero or MYOB, for the money measures the register defines, such as invoiced revenue less credit notes. Xero now gives new apps granular scopes, so ask only for the read scopes your definitions name.
+- **Your job system, read.** ServiceM8, Simpro or whatever runs the work, for measures like jobs completed in the week.
+- **An Office Voice key with “Read the book”, if the report carries debtors.** It lists what is overdue now and the invoices raised since a date, up to 120 days back. A measure that needs a longer history reads the ledger directly.
+- **One publish location per audience, write.** A folder, channel or mailbox, where each version lands next to the last. It is the only thing the build writes.
+- **A message to a named person.** For a threshold crossed or a source that could not be read.
+
+1. Write the definitions register: each measure’s source, query, period, filters and owner.
+2. Connect each source the register names with read access only, through that system’s own integration route.
+3. Name the audiences, the measures each one sees, and where each report publishes.
+4. Set the thresholds and who is told when one is crossed.
+5. Run the pass test below over two real periods.
+
+Why not Xero’s own Claude connector? It reads, which is all this report needs from Xero, but it answers when someone asks. It keeps no definitions register, publishes nothing on a schedule and keeps no versions, so the Monday report still depends on someone asking the same question the same way every week.
+
+Where it runs. A scheduled flow with the register and the versions in Microsoft 365 lists (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/recurring-report-on-microsoft-365) lays these out) or a Google Sheet, a small dashboard a coding agent builds from this page, or a routine that wakes at the publish time. All three are held to the same checks; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
+
+## 9. What your developer builds, and the step that needs care
 
 No hosted step. The part not to get wrong is the schedule that publishes regardless, with its version history, on your own tenant. The register stays yours. Everything else a coding agent builds against the stub in an afternoon.
 
@@ -173,7 +195,7 @@ A vendor selling a dashboard is selling the refresh, which is the easy half, and
 
 **The pass test.** On real sources, for two periods. Make one source unreadable for the second period: the figure must publish as unavailable with the reason and its owner must be told, and the report must still go out on time. Set a threshold on one measure and cross it: a named person must be told that run. Correct a published figure as a named person: a new version must exist with the reason, the old version must be readable, and nothing edited in place. Then check both periods published at their scheduled time with a source and an as-of time on every figure, and read the commentary for any number that is not on the figure list. If a stale figure showed as current, or a sentence invented one, the standard is not implemented.
 
-## 9. A checklist to hold any build or supplier to
+## 10. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 

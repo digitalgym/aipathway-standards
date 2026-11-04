@@ -32,7 +32,7 @@ Read [the booked after hours build standard](https://aipathway.com.au/explore-ai
 
 Read section 8 of the standard before anything else, because it decides what this page can honestly claim. The AU number, the AI disclosure, the recording notice, the consent timestamp and the calling-hours gate are the live step, and the standard states that step is not self-hostable. Nothing below answers a phone. If you were expecting the lists to do that, stop here.
 
-Then decide the one thing that changes the schema. If a job system already holds the work, Jobs below is a mirror keyed on that system’s own id and the ExternalId column is the id it returned. If there is no usable job system, Jobs is where the job actually lives and ExternalId is its own key. Both are in the standard: ServiceM8 has a real API, Tradify has an enquiries channel and nothing readable back, and anything else is an outcome object delivered by email or webhook with the last step honestly manual. Pick one before you build, because the dedup read in Flow 2 is written against whichever you picked.
+Then decide the one thing that changes the schema. If a job system already holds the work, Jobs below is a mirror keyed on that system’s own id and the ExternalId column is the id it returned. If there is no usable job system, Jobs is where the job actually lives and ExternalId is its own key. Both are in the standard: ServiceM8 and Simpro have real APIs. Tradify has no public API and no Zapier app, so a build cannot read a job back from it: the booking goes in through its enquiries inbox, and your own Jobs list is what stops a duplicate. Anything else is an outcome object delivered by email or webhook with the last step honestly manual. Pick one before you build, because the dedup read in Flow 2 is written against whichever you picked.
 
 ## 2. The lists, with their columns
 
@@ -136,6 +136,8 @@ FLOW 2  Write the job, once
                                     Outcome = escalated,
                                     Escalations reason write_failed
   never    set Outcome = booked anywhere ExternalId is blank.
+  note     if Office Voice is the live step, it writes the job during
+           the call; this flow then only records the id it returns.
 
 FLOW 3  Alert on-call, once
   trigger  a Jobs item is created or modified
@@ -213,7 +215,31 @@ AVERAGEX (
 
 Second Alerts is the one to put on the wall. Everything else on this page describes the build; that measure describes whether the on-call person is still willing to leave their phone on, and the standard is blunt that a system paging somebody for a quote at 11pm deserves to be switched off.
 
-## 6. The order to build it in
+## 6. What the flows can reach in your Microsoft 365 and your job system, and what they never touch
+
+The flows keep the overnight logbook. They write down everything the night produced, which job it became and who was woken, and they never pick up the phone. They read the after-hours mailbox, write the six lists, post one card per emergency job to the on-call channel and queue every hand-back. They never answer or place a call, never hold a recording or a consent record (the transcript is a link out), and never change a quote, an invoice or a price.
+
+What each connection is for.
+
+- **SharePoint, the one site.** Calls, Jobs, Escalations, Alerts, ServiceArea and EmergencyTriggers. The flows read and write rows there and nowhere else.
+- **The after-hours shared mailbox, read.** Flow 1’s trigger: the outcome object arrives there. If the live step posts to the flow instead, the HTTP trigger’s URL is the thing to guard: anyone holding it can start the flow.
+- **Teams, the on-call channel and the queue.** Flow 3’s one card per emergency job, and Flow 4’s escalation cards with the transcript link.
+- **The job system, read, only if Jobs is a mirror.** To match a job by the system’s own id. The job itself is written by the live step, through the connection you approve in ServiceM8 or Simpro (section 9 of the standard). A read from a flow needs a custom connector or the HTTP action, both premium in Power Automate.
+- **Power BI, read.** The seven measures. Nothing in the model writes back.
+
+Least privilege, as steps.
+
+1. Own the four flows with a service account, not the person who happens to be on call this month, with a named co-owner.
+2. Build them in one solution on connection references, so the mailbox, SharePoint, Teams and job system connections are each one place to change.
+3. Make the service account a member of the one site and the on-call team, and nothing wider. Any app registration gets Sites.Selected on that one site.
+4. Give it Full Access to the after-hours shared mailbox only. If an app registration reads it instead, scope that app to the one mailbox with an Exchange application access policy or RBAC for Applications.
+5. Give any job system key read access to jobs and customers only.
+
+How to cut it off. Turn off the flows in the solution and nothing is written or posted. Remove the Office Voice connection in ServiceM8 or Simpro and the live step stops writing jobs. Stop forwarding your number from your own carrier account and the line goes back to you. The other switches are in [the shared conventions](https://aipathway.com.au/explore-ai/standards-on-microsoft-365#access).
+
+Why not let the answering service text the on-call phone itself? Most do, and most do it per call. The frightened customer who rings back in ten minutes is a second text, and nothing checked for the job the first call opened. The Alerts list is keyed on the job, it is yours, and Second Alerts counts every time the guard failed.
+
+## 7. The order to build it in
 
 1. Create Calls and Escalations, and nothing downstream. Land outcome objects in them for a fortnight. What you get is a countable record of what your phone actually does at night, which most businesses are guessing about, and it costs nothing to look at before you build anything that acts.
 2. Load ServiceArea, and get your own team to sign EmergencyTriggers with their names against it. The standard says the agent matches that list rather than reasoning about urgency, so the list has to exist and be agreed before anything classifies.
@@ -224,7 +250,7 @@ Second Alerts is the one to put on the wall. Everything else on this page descri
 7. Connect Power BI. Booked Without An Id, Undisclosed Calls and Second Alerts on the front page, all three alerted.
 8. Run the pass test.
 
-## 7. Four traps specific to this build
+## 8. Four traps specific to this build
 
 ### The emergency triggers typed into a condition
 
@@ -242,7 +268,7 @@ SharePoint is good at holding files and this is the one file not to hold. The re
 
 Flow 1 is an upsert, which is the right shape, and it will quietly replace the caller's first panicked description with their second calmer one. The verbatim is captured before any classification for a reason: it is the only unedited thing in the record. A second call is a second Calls row against the same JobRef, never an edit of the first.
 
-## 8. Where the automation stops
+## 9. Where the automation stops
 
 - Answering the phone. Microsoft 365 has no telephony this standard can use, and the AU number, the disclosure, the recording and the consent stamp are the live step the standard marks not self-hostable.
 - Resolving the address. Nothing in this stack turns a suburb said once and unclearly into a street. What the lists do is refuse to write a job on anything the resolver was not confident about, which is the half of that check this stack can hold.

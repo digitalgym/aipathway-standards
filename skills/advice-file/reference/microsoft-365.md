@@ -269,7 +269,32 @@ CALCULATE (
 
 Completeness takes the required keys from whatever purpose is in filter context, which is why Purpose sits on the file rather than being inferred. Put Files Without An External Id on the front page even though it will read zero for months: it is the number that tells you the day the CRM write started failing quietly, and everything else on the page is wrong from that day on.
 
-## 6. The order to build it in
+## 6. What the flows can reach in your Microsoft 365 and your CRM, and what they never touch
+
+The flows are the file clerk, never the signatory. They file what the client said, write the published fields into the CRM, read the id back, raise one task per gap, and put a finished draft in front of a broker. They never approve a loan, never choose a product, never send a recommendation on their own, never write SentBy, and never clear a breach_suspect finding. The recording itself stays with the vendor that made it: this build receives text with spans and keeps a link to the recording, nothing more.
+
+What each connection is for.
+
+- **SharePoint, the one site.** The nine lists in section 2, and the drafts they point at. The flows read and write rows there and nowhere else in the tenant.
+- **The CRM, create and update the client file.** Flow 2’s one write, and the read that brings the external id back. Through a custom connector or the HTTP action, both premium in Power Automate, on a key or app connection the network issues for the build.
+- **The transcript coming in.** The vendor posts verbatim text and proposed keys to Flow 2. Whatever route it uses, the build only receives; it never calls back into the recording.
+- **Where tasks live.** Flow 3’s one task per gap, with an owner and a due date, in Planner or in the CRM’s own tasks if the network uses those.
+- **Approvals and Teams.** Flow 4’s request to a named broker or credit officer, and the breach_suspect approval to the named compliance person.
+- **One shared mailbox.** The send, after a person has approved it, from an address the office owns.
+
+Least privilege, as steps.
+
+1. Own the four flows with a service account, not a broker who might move offices, with a named person as co-owner.
+2. Build them in one solution on connection references, so the CRM, SharePoint, Approvals and mailbox connections are each one place to change.
+3. Make the service account a member of the one site and no other. Any app registration gets Sites.Selected on that site, never every site.
+4. Give it Send As on the one shared mailbox. If an app registration sends instead, scope it to that mailbox with an Exchange application access policy or RBAC for Applications.
+5. Ask the network for the narrowest CRM access it offers: client files and tasks, not users, settings or lodgement. Never store a broker’s own CRM login in a flow.
+
+How to cut it off. Turn off the flows in the solution. Revoke the build’s CRM key, and Flow 2 fails at the write, which leaves the interview with a blank ExternalId and marked failed rather than complete. The other switches are in [the shared conventions](https://aipathway.com.au/explore-ai/standards-on-microsoft-365#access).
+
+Why not the transcription vendor’s own CRM sync? It usually writes a tidy summary into a notes field, which is the file this standard refuses: the verbatim is gone, the fields are not the published keys, and nothing reads an id back. Ask it three things: does it keep the verbatim and its span, does it write only published keys, and what happens to the file when the write fails.
+
+## 7. The order to build it in
 
 1. Prove the CRM write and the id coming back, with one hard-coded record and nothing else built. If this cannot be done, stop and report it rather than building the rest.
 2. Create FieldKeys and fill it from the network's published contract. Required and Blocks are the two columns everything downstream reads.
@@ -280,7 +305,7 @@ Completeness takes the required keys from whatever purpose is in filter context,
 7. Build Flow 4 with the cards from the panel library. Try to send with a gap open, and confirm it blocks and says which key.
 8. Connect Power BI. Machine Sends and Uncited Drafts on the front page at zero, Completeness by office beside them.
 
-## 7. Four traps specific to this build
+## 8. Four traps specific to this build
 
 ### A column called Complete
 
@@ -298,7 +323,7 @@ Flow 4 controls the path Flow 4 owns. It does not stop a broker opening the draf
 
 Transcription vendors hand back a tidy object of fields, and writing it straight into FileFields feels like the whole job done. The verbatim is gone at that point and the file is hearsay: nothing can show what the client actually said or where in the recording they said it. Write Extracts first with the span, every time, even when the mapper is confident. ExtractId being required on FileFields is what makes that a rule rather than a habit.
 
-## 8. Where the automation stops
+## 9. Where the automation stops
 
 - Recording and transcription consent on the call. The flow records that it was given; it cannot give it.
 - The responsible-lending assessment, and the decision that the loan is not unsuitable.

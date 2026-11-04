@@ -213,7 +213,7 @@ You can build this. What you cannot easily build is the part where it is still t
 
 **Where the Office Voice gate stands today.** AI disclosure at the start of every call, the Do Not Call Register, and calling hours of 9am to 8pm on weekdays and 9am to 5pm on Saturdays, nothing on Sundays, judged in the debtor’s own state (from the Xero contact’s region or postcode; where neither is known, your business’s timezone, with an audit row saying so). Every invoice is re-read from the ledger at dial time: one paid, voided or deleted since it was queued is not rung, and the audit row names the read. Public holidays are blocked for the debtor’s state, national and state.
 
-**The pass test.** Take your top-ranked debtor, mark the invoice paid in the ledger, and let the chase run anyway. They must not be rung, and the audit trail must tell you why not. Run it again with the invoice still open and the clock at 8:30pm, and it must hold until morning. Both take a minute to stage from your own data. Run the same two against whatever you built yourself, and against any provider, us included. If it rings, the gate is advice rather than a rule, which is this section in one sentence. Office Voice today holds the 8:30pm run. It does not yet pass the paid-invoice leg on its own: see the note below.
+**The pass test.** Take your top-ranked debtor, mark the invoice paid in the ledger, and let the chase run anyway. They must not be rung, and the audit trail must tell you why not. Run it again with the invoice still open and the clock at 8:30pm, and it must hold until morning. Both take a minute to stage from your own data. Run the same two against whatever you built yourself, and against any provider, us included. If it rings, the gate is advice rather than a rule, which is this section in one sentence. Office Voice today holds both: it re-reads the invoice from Xero at dial time, and holds the 8:30pm run until morning.
 
 11 to 13 · Build it
 
@@ -221,9 +221,24 @@ You can build this. What you cannot easily build is the part where it is still t
 
 The method above is yours whatever you decide. This is what the hosted call does and does not do today, the shape of the run, and the checklist to hold the result to.
 
-## 11. Join It to Your Own System: Hand Over the Call
+## 11. Connect Xero through Office Voice to make the calls, without it ever recording a payment
 
-Everything above leaves you with a ranked list and an opener for each name. If you want the calls made by Office Voice, which holds the parts of the gate in section 10 that are marked as held, you send it the names and it queues the calls. Build against a stub first. The conformance kit has no live mapping for this standard yet, so the provider line below does not switch your run to a live line. Not yet.
+Think of handing a bookkeeper the aged debtors report and the office phone, while the receipt book stays in your drawer. Office Voice reads your Xero debtor book, rings the customers you rank, and writes a promise to pay back to Xero as a note on the invoice. It never records a payment, never changes an amount, and never sends, approves or voids an invoice. Revoke its key and your build is cut off; remove Office Voice from Xero’s connected apps and Office Voice is too. Your own login stays yours: you sign in with Xero once inside Office Voice, and your build gets a key, never your Xero username and password.
+
+What each piece of access is for.
+
+- **Read the book.** What is outstanding and still needs a decision, so your run ranks the real book rather than last night’s export.
+- **Write drafts and notes.** To send back a promise a debtor gave your office, so the follow-up moves to that date and no call rings before it.
+- **Queue calls.** To hand Office Voice your ranked names. Off by default on a new key, and the only piece that makes a phone ring.
+- **Read chases and the compliance trail.** To see each run, how many were skipped, and why each call was or was not lawful.
+
+1. Start Office Voice, click **Sign in with Xero** and pick the organisation. A practice connects each client organisation.
+2. Under Keys (office-voice.com/app/keys), create a key with **Read the book** only. Pull the open book and check it against Xero’s aged receivables report.
+3. Add **Write drafts and notes**, send one promise a debtor gave your office, and check the note on the invoice and the moved follow-up.
+4. As the account owner, add **Queue calls** and send your ranked names.
+5. Run the pass test in section 10.
+
+Build against a stub first. The conformance kit has no live mapping for this standard yet, so the provider line below does not switch your run to a live line. Not yet.
 
 Calls are placed in the order you send them, so your ranking stands. A promise, a dispute or an opt-out is checked again just before every dial, including a call already queued when the promise arrives. The queue matches invoices 30 or more days overdue; a name you send with nothing that old comes back as unmatched and is not called.
 
@@ -235,7 +250,8 @@ provider:
 
 scopes:
   contacts:read        the open book: what is outstanding and still needs a decision
-  contacts:write       record a promise to pay. Contacts nobody
+  contacts:write       record a promise to pay, written to Xero as a note
+                       on the invoice. Contacts nobody, records no payment
   campaigns:read       chase runs, and how many were skipped
   campaigns:initiate   queue the calls. Off by default on a new key
   audit:read           read back why each contact was or was not lawful
@@ -268,6 +284,10 @@ curl -X POST https://office-voice.com/api/v1/campaigns \
 ```
 
 Dialling stays in the product, and every queued call goes through the gate at dial time: AI disclosure, DNCR, calling hours in the debtor’s own state, and a fresh read of the ledger and of any promise. A single named customer also needs a `basis` (callback, existing_job, existing_invoice or they_asked). The full reference is at [office-voice.com/help/api](https://office-voice.com/help/api).
+
+Why not Xero’s own reminders, or its free connector for Claude? Xero’s invoice reminders send an email on a schedule. That clears the just-late bucket and nothing else: it rings nobody and comes back with no date. Xero’s free connector for Claude only reads, so it can build the ranked list in section 3 but cannot record a promise or queue a single call.
+
+Where it runs. The ranking and the record can live in a sheet or Microsoft 365 lists (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/debtor-chasing-on-microsoft-365) lays these out), a small dashboard, or a scheduled bot. All three are held to the same gate; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
 
 ## 12. The Run, Step by Step
 

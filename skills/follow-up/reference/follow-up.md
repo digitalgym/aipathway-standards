@@ -60,7 +60,7 @@ One open item, owed to arrived
 6. If yes, the touch goes: a text, an email, or the call. The call opens with the AI identification and the recording notice, asks for the one thing owed, and records the answer as a date, a decision, a no or a dispute. That call is the hosted step.
 7. If the answer arrived, or the item went to a person on a no, the chase stops. If not, the next touch comes back through the same gate at the next spacing, up to the cap, and at the cap the item goes to a named person with its history.
 
-The open item is the trigger, and the plain diamond is the gate a builder proves on the stub: not arrived, not owed by us, inside the cap, on a consented channel. The filled diamond is the call, disclosed first with one ask and one recorded answer. The live line is the hosted step, and section 9 says how to join it to your own build. The loop is the cadence, up to the cap.
+The open item is the trigger, and the plain diamond is the gate a builder proves on the stub: not arrived, not owed by us, inside the cap, on a consented channel. The filled diamond is the call, disclosed first with one ask and one recorded answer. The live line is the hosted step, and sections 9 and 10 say how to join it to your own build. The loop is the cadence, up to the cap.
 
 ## Done for you: Get Paid
 
@@ -89,7 +89,7 @@ What is out of scope. Money that is late. An unpaid invoice has a ledger, a due 
 
 It sits after the [Quote Out standard](https://aipathway.com.au/explore-ai/quote-out-build-standard), which produces the quote this chases, and beside [the paper](https://aipathway.com.au/explore-ai/lead-nurture-trades) on following up quotes for trades, which makes the argument for chasing at all. This page is the checks that argument was missing.
 
-What cannot meet it. Tradify has no public API, so open items cannot be read from it and the arrival cannot be seen there. A Tradify business can run this standard from a register kept beside it, a sheet with one row per item, with the arrival marked by a person, and the standard says that plainly rather than claiming an integration that does not exist.
+What cannot meet it. Tradify has no public API and no Zapier app, so open items cannot be read from it live and the arrival cannot be seen there. We connect it another way: open items come in from Tradify’s job export, or a browser step a person approves, onto a register kept beside it, a sheet with one row per item and the arrival marked by a person. The standard says that plainly rather than claiming an integration that does not exist.
 
 The failure this prevents is specific. Not the quote that was never chased, though that too. The reminder that went out after the customer had already said yes, and the fourth text to someone who said no on the phone last week.
 
@@ -187,7 +187,7 @@ The channel follows consent, not convenience. A contact who gave an email addres
 
 Most of the cadence is a text or an email, and those a builder proves on the stub. The call is different. It opens with the disclosure, that this is an AI calling for the business and that the call is recorded, before anything is asked. Then it asks for the one thing owed and nothing else. Then it records the answer as an object: a date, a decision, a no, or a dispute. A sentence in a transcript that somebody will read on Friday is not an answer. A date is.
 
-The call is where the standard stops being provable at home. The stub can show the first turn was the disclosure. Only a live line shows the words were heard. Every dial needs a lawful basis on the record, and a number with none needs a wash against the Do Not Call Register, which takes an agreement a stub cannot hold; the Debtor Chasing standard dates the obligation (as at 3 October 2026). Calling hours need a real clock in the contact’s real day. Those, with the recording as proof, are the hosted step, and section 9 says how to join it to your own build.
+The call is where the standard stops being provable at home. The stub can show the first turn was the disclosure. Only a live line shows the words were heard. Every dial needs a lawful basis on the record, and a number with none needs a wash against the Do Not Call Register, which takes an agreement a stub cannot hold; the Debtor Chasing standard dates the obligation (as at 3 October 2026). Calling hours need a real clock in the contact’s real day. Those, with the recording as proof, are the hosted step, and sections 9 and 10 say how to join it to your own build.
 
 What the call never does: argue with a no, ask a second time after a dispute, or offer a discount, an extension or any concession to get the answer. It records what was said and hands the item to a person. A concession offered by a machine to a customer who was about to say yes anyway is money gone for nothing, and one offered to a customer who had a real complaint is worse.
 
@@ -200,7 +200,27 @@ What the call never does: argue with a no, ask a second time after a dispute, or
 - Writing the cadence: the cap, the gap, the channels and the name at the end of it.
 - Clearing we_owe. Only a person can say the business has done its part.
 
-## 9. Join It to Your Own System: What to Stub, and What Not to Hand-Roll
+## 9. Connect Xero for quote calls, without it touching the price
+
+Think of leaving the office junior a list of open quotes to ring round on a quiet morning: they ask whether it arrived and whether there are questions, and they cannot touch the price. Office Voice reads the quotes you sent from Xero that nobody has accepted or declined, rings the customer, and records the outcome. It never changes a quote’s price or lines, never offers a discount, and never records a payment. Revoke the key and your build is cut off; remove Office Voice from Xero’s connected apps and it is too. Your own login stays yours: you sign in with Xero once inside Office Voice, and your build gets a key, never your Xero username and password.
+
+What each piece of access is for.
+
+- **Xero, through Office Voice.** The sent quotes nobody answered and the contact to ring, read again just before each dial so an accepted quote is not rung.
+- **Read chases.** The outcome of each call, so your register marks the item arrived or declined and the texts and emails stop too.
+- **Queue calls.** Only if your build sends its own ranked list. Off by default on a new key, and the only piece that makes a phone ring.
+
+1. Start Office Voice, click **Sign in with Xero** and pick the organisation.
+2. Switch Get Paid on for quotes, and set the business’s daily call cap.
+3. Under Keys (office-voice.com/app/keys), create a key for your own build with **Read the book** and **Read chases**. Add **Queue calls** only when you send your own ranked list.
+4. Write each call outcome back to your register, so a decision on the call ends the whole cadence, not just the calls.
+5. Run the pass test below on real open items.
+
+Why not Xero’s free connector for Claude, or a follow-up add-on? The connector only reads: it can list the quotes nobody answered, but it cannot ring one or record what the customer said. A follow-up add-on usually sells the reminders, which is the easy half; ask it the three questions in the note under section 10.
+
+Where it runs. The register and the cadence can live in Microsoft 365 lists and flows, with texts going through an SMS service you connect, since Microsoft 365 sends no SMS of its own (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/follow-up-on-microsoft-365) lays these out), a small dashboard a coding agent builds from this page, or a scheduled bot. All three are held to the same checks; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
+
+## 10. Join It to Your Own System: What to Stub, and What Not to Hand-Roll
 
 One step not to hand-roll: the call on a real line, disclosed and recorded, with calling hours and the lawful basis for each dial underneath it. That is the Get Paid quote call. Everything else a coding agent builds against the stub in an afternoon, and this is what you need to join the two.
 
@@ -241,16 +261,17 @@ stays local                          # yours, and the standard
   - the text and the email
   - the stop on arrival, and the escalation to a person
 
-cannot meet the standard
-  - Tradify, for the item side: no API. A register kept beside it is
-    the honest route.
+another route in
+  - Tradify, for the item side: no public API and no Zapier app. The
+    job export, or a browser step a person approves, feeds a register
+    kept beside it.
 ```
 
 A vendor selling automated follow-up is usually selling the reminders. Ask them three things: what stops the sequence the day the document comes back, what happens on the fourth touch, and what the record says the customer answered on the call.
 
 **The pass test.** On real open items with real numbers, not a sample. Put five things the business is actually owed on the register, of at least three kinds, with the value at risk from the record. Run the cadence the business wrote down over its own days. While it runs, have one of the documents actually come back, mid-cadence: that item must show the arrival as evidence and carry no touch after it. Have one contact say no on the call: the item must carry a declined outcome, be with a named person, and receive nothing further. Let one item run past the cap with nothing back: it must be escalated once, to a named person, with every touch listed, and never texted again. Then listen to every call recording: each opens with the AI identification and the recording notice before the ask, and each ends with an outcome on the record that is a date or a decision, not a paragraph. If any of those four is not what happened, the standard is not implemented, however tidy the reminders look.
 
-## 10. A checklist to hold any build or supplier to
+## 11. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 

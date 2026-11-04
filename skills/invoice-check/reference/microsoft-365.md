@@ -156,7 +156,33 @@ CALCULATE ( COUNTROWS ( Invoices ), Invoices[Outcome] = "not_checked" )
 
 Cumulative By Order is the measure the standard is really arguing for. Put it on the front page against each order, because the pattern it shows is invisible in any view built one invoice at a time.
 
-## 6. The order to build it in
+## 6. What the flows can reach in your accounts inbox and your ledger, and what they never touch
+
+The flows work like a stocktaker: they count what arrived against the order book and write down every difference, and they never hold the key to the till. They read the invoices that land in your accounts mailbox, the order or schedule each one is checked against, the bills already in the ledger and the folder of written variation approvals. They write to one SharePoint site and nowhere else. They never approve or pay a bill, never change an order, a rate or a contact, never reply to a supplier and never delete an email. Your own login stays yours: the flows run under their own account and their own keys, never your username and password.
+
+What each connection is for.
+
+- **Outlook, the one shared mailbox, read.** Flow 1 starts when an invoice arrives in accounts@ or whatever your shared accounts mailbox is called. It reads the attachment and marks the email as filed, so nobody checks it twice.
+- **SharePoint, the one site, read and write.** The Originals library, where the invoice is stored unchanged, and the Invoices, CheckResults and Exceptions lists beside it.
+- **The reference, read.** The purchase order, subcontract or schedule of rates each invoice is checked against. If it lives in a list on the same site, nothing more is needed. If it lives in Xero, MYOB or the job system, read it by a custom connector or the HTTP action (both premium), or load a nightly export into a list.
+- **Bills in Xero, read, through Office Voice.** So the same claim is never checked twice. If Xero is already connected to Office Voice, a key with “Read the book” lists the bills, called from the flow over its MCP endpoint with the HTTP action or a custom connector (both premium). Office Voice does not read purchase orders, so those still come through the route above.
+- **The variation approvals, read.** The folder or list where written approvals live, for check 3.
+- **Teams, to announce.** A card that tells the queue owner an exception is waiting. The card is a pointer; the Exceptions row is the record.
+
+This plan drafts no bills. If you add that, read the [standard’s connect section](https://aipathway.com.au/explore-ai/invoice-check-build-standard) first: the stop at draft has to be in the build, and its pass test checks it.
+
+Give it the least it needs.
+
+1. Own the flows with a service account, not a person who might leave. A flow owned by someone who leaves stops when their account is switched off.
+2. Build the flows inside a solution and share connections through its connection references, so nobody’s personal mailbox connection ends up inside a flow.
+3. Give the service account access to the one shared mailbox and the one site, and nothing else. If you use an app registration, limit its mail access to that mailbox with an Exchange application access policy or RBAC for Applications, and grant it Sites.Selected with only this site added.
+4. Create the Office Voice key under Keys with “Read the book” ticked and nothing else. Keep it in a custom connector’s connection or a secret environment variable, not typed into an HTTP action where anyone who can edit the flow can read it.
+
+How to cut it off. Turn off the three flows, or delete their connections in Power Automate. Delete the Office Voice key under Keys, remove the service account from the mailbox and the site, and delete the app registration’s secret if you used one. The originals and the exception history stay on the site.
+
+Why not a bill capture add-on for Xero? Bill capture reads an invoice into a bill, and does it well. It does not run the checks in order and stop at the first failure, it does not know whether a variation was ever approved, and it does not keep the cumulative position across an order. Keep it if you have it. This build sits beside it and checks what it captured.
+
+## 7. The order to build it in
 
 1. Stand up the reference the invoice is checked against. Without it nothing downstream means anything.
 2. Create the library and three lists. Index InvoiceRef everywhere.
@@ -166,7 +192,7 @@ Cumulative By Order is the measure the standard is really arguing for. Put it on
 6. Build Flow 3, and confirm deciding leaves the row readable.
 7. Connect Power BI. Cumulative By Order goes on the front page.
 
-## 7. Four traps specific to this build
+## 8. Four traps specific to this build
 
 ### Running the four checks in parallel
 
@@ -184,7 +210,7 @@ The tidy instinct destroys the only evidence of the pattern. Resolution is two f
 
 If the extraction produces 0.82 and nothing says why, nobody can decide whether to trust it, so they either trust all of them or none. Store the basis in words, in the same row.
 
-## 8. Where the automation stops
+## 9. Where the automation stops
 
 - Approving or rejecting a payment. The workflow produces a difference and evidence; the decision is a person's and it is recorded as theirs.
 - Accepting a variation. That is a commercial decision with contractual consequences.

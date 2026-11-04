@@ -100,8 +100,9 @@ skill asserts.
 - 8. What breaks after it works
 - 9. What It Is Worth
 - 10. The records it keeps, in the shape your developer needs
-- 11. What your developer builds, and the step that needs care
-- 12. A checklist to hold any build or supplier to
+- 11. Connect your rent roll so the short list builds itself, without it touching the trust ledger
+- 12. What your developer builds, and the step that needs care
+- 13. A checklist to hold any build or supplier to
 
 ## Attribution
 

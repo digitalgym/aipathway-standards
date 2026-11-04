@@ -154,20 +154,39 @@ The reason is not caution. A composed answer from a pile cannot say which editio
 
 What search is for, then: a person finding the passage to read, a person finding the duplicate to resolve, and the graph’s extractor finding candidate passages to propose. All three want a locator. None of them wants a paragraph.
 
-## 6. Building it on Microsoft 365 or Workspace
+## 6. Connect SharePoint or Google Drive so the watch can read every source, without moving or changing a file
 
-Nothing in this standard needs a product the business does not already pay for. Both tenants answer every role, and the drive does not move. One limit applies to both: the scheduled watch can only compare what sits on the drive. A source the issuer publishes only on its own site is watched by a recheck task to the owner, so for that source the catch is a person, not software.
+The build does a stocktake, not a shop fit-out. It walks every shelf the register names, counts what is there and writes it on the sheet, and it moves nothing. It reads the files in the libraries or shared drives the register points at, compares each one’s checksum, and writes only to the register and to the owner’s inbox or task list. It never moves, renames, edits or deletes a file, never changes who can open one, and never answers a question. Turn off the flow or the script, or remove its access in your Microsoft or Google account settings, and it stops. Your own login stays yours: the flow or script asks for access on Microsoft’s or Google’s own approval screen, and nobody types a password into it.
+
+What each piece of access is for.
+
+- **The named libraries or shared drives, read.** To fetch each source and compare its checksum with the one on the register.
+- **The register, read and write.** The only thing the build edits: the new checksum, the date it looked, and the status.
+- **Mail and tasks, send.** To tell the owner a source moved, and to raise the recheck task for a source the issuer holds.
+- **Search, as it already is.** Microsoft Search and Drive search only show a person what that person can already open, which is why customer material sits in a library only its access list can open.
+
+1. Make the register: one SharePoint list or one Sheet with the columns in section 3.
+2. Make sure customer material sits where only its access list can open it, so search cannot show it to anyone else. If that means moving a client file out of the policy folder, a person does it.
+3. Create the scheduled Power Automate flow or the time-driven Apps Script, and approve its access on the approval screen.
+4. Set the schedule and check every row has a person as owner, not a team.
+5. Run the pass test below on the real drive.
+
+Why not switch on Copilot or Gemini over the drive? They search the drive and write an answer from what the person asking can already open, and for finding a passage they are useful. They keep no register: nobody is named against a source, nothing notices the week an issuer replaces one, and the answer does not say which edition it used. Section 5 is the reason this standard stops at finding. Put the register under them first and they get better too.
+
+Both tenants answer every role below, and the drive does not move. One limit applies to both: the scheduled watch can only compare what sits on the drive. A source the issuer publishes only on its own site is watched by a recheck task to the owner, so for that source the catch is a person, not software.
 
 | Role | Microsoft 365 | Google Workspace |
 | --- | --- | --- |
 | The drive | SharePoint document libraries and OneDrive, as they are. Nothing moves | Shared drives, as they are. Nothing moves |
 | The register | One SharePoint list: a row per source, the owner a person column, kind a choice column, checksum and edition as text | One Sheet, same columns, owner validated against the directory |
-| The index | Microsoft Search over the libraries the register names, scoped so customer material is not in the shared results | Drive search, or Vertex AI Search over the named folders, with the same scoping |
+| The index | Microsoft Search over the libraries the register names, scoped so customer material is not in the shared results | Drive search over the named shared drives, with the same scoping. Vertex AI Search is an option, billed separately on Google Cloud |
 | The watch | A scheduled Power Automate flow: for each register row, fetch, compare the checksum (the file ETag in the tenant, a content hash where the file is downloaded), update, and post to the owner. For a source published outside the tenant, a recheck task to the owner on the same schedule | A time-driven Apps Script: for each row, fetch, compare the checksum (the Drive file's md5Checksum, or a content hash), update, and email the owner. For a source published outside the drive, a recheck task to the owner on the same schedule |
 | Gaps | Planner or a task list, one task per missing source | Tasks, or a row on a second sheet with a due date |
-| Retention | Retention labels by kind, applied from the register | Vault rules by folder, folders assigned by kind |
+| Retention | Retention labels by kind, applied from the register | Vault retention rules by shared drive, shared drives assigned by kind. Vault comes with Business Plus and above |
 
-The register is a list, not a database, on purpose. A list is what the people who own the sources already open, and an owner who has to log into something new to answer for a source will not. The checks do not care which of the two you are on, because they are asserted through ports rather than against a vendor; see [the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365) for the general shape.
+The register is a list, not a database, on purpose. A list is what the people who own the sources already open, and an owner who has to log into something new to answer for a source will not. The checks do not care which of the two you are on, because they are asserted through ports rather than against a vendor.
+
+Where it runs. The [Microsoft 365 plan](https://aipathway.com.au/explore-ai/knowledge-base-on-microsoft-365) lays out the list, the flow and the labels; [the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365) gives the general shape, and [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere) covers the other ways to run it.
 
 ## 7. The handover to the graph
 
