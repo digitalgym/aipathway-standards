@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T12:46:59.878Z",
+  "generated_at": "2026-11-04T12:48:45.366Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -12970,6 +12970,112 @@
       ]
     },
     {
+      "slug": "swms-desk",
+      "name": "SWMS Desk",
+      "office_task": "Draft each job's SWMS or risk assessment from its scope and our approved templates, list who on the crew has not signed, and hold the pack until the supervisor accepts it.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "rejected-pack"
+      ],
+      "systems_of_record": [
+        "the job system that issues the job_id the pre-start pack belongs to, with its scope, site, start date, supervisor and crew (Simpro, ServiceM8 or Tradify's job export)",
+        "the document store that holds the approved SWMS and risk assessment templates and receives the accepted pre-start pack (SharePoint, OneDrive or Google Drive)",
+        "the exception desk the business runs, holding each held or failed pre-start pack with its named owner"
+      ],
+      "consumes": [
+        {
+          "event": "job.created",
+          "wake": "webhook"
+        },
+        {
+          "event": "job.updated",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the job's pre-start pack, written into the job's folder in the document store only after the supervisor accepts it by name: the SWMS for each item of high risk construction work under WHS Regulation 2011 (Qld) s291 drafted from the approved template, the general job risk assessment, every written does-not-apply with its rule, the sign-on sheet showing each worker on the crew signed the current revision, the on-site review date derived from the dated rule, the as-of date and the version record naming who accepted it",
+          "readback": "the document store returns a report_id, and reading that id back returns the job_id, the SWMS revision, seam.queue, seam.accepted_by and seam.as_of; no report_id back means nothing was published and the run raises an exception instead"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the job naming its supervisor: a pack on hold because a worker has not signed the current revision or an approved template is missing, the first check that failed (no supervisor or site on the job, insurance or a worker's ticket lapsed, a scope that does not say whether high risk work is involved, two ABNs on one pack), scope fields waiting for a person to confirm, or a pack waiting for the supervisor's named acceptance",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the job_id, the reason, the unsigned workers where there are any and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "swms.hold_missing",
+          "swms.identity",
+          "swms.tickets",
+          "swms.applicability",
+          "swms.field_reuse",
+          "swms.source_and_as_of",
+          "swms.yellow_scope",
+          "swms.awaiting_acceptance"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.swms_rev",
+          "seam.queue",
+          "seam.failed_check",
+          "seam.unsigned",
+          "seam.rule_version",
+          "seam.review_due",
+          "seam.as_of",
+          "seam.accepted_by",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/swms-desk"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "rejected-pack",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:46:32.275Z",
+          "run_id": "run-1793796392273",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 0,
+          "total": 13
+        }
+      ]
+    },
+    {
       "slug": "task-clock",
       "name": "Task Clock",
       "office_task": "Keep one list of office follow-up tasks on each job, quote or invoice, with an owner and due time from our table, nudge once when one goes late, and leave ticking off to a person.",
@@ -14492,6 +14598,7 @@
     "stage-billing",
     "starter-pack",
     "sub-pay-check",
+    "swms-desk",
     "task-clock",
     "tenant-inbox",
     "terms-watch",
@@ -14558,6 +14665,12 @@
     {
       "from": "after-hours-desk",
       "to": "route-plan",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "after-hours-desk",
+      "to": "swms-desk",
       "event": "job.created",
       "id": "job_id"
     },
@@ -14701,6 +14814,12 @@
     },
     {
       "from": "crew-board",
+      "to": "swms-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "crew-board",
       "to": "trim-quote",
       "event": "job.updated",
       "id": "job_id"
@@ -14780,6 +14899,12 @@
     {
       "from": "day-desk",
       "to": "route-plan",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
+      "to": "swms-desk",
       "event": "job.created",
       "id": "job_id"
     },
@@ -14923,6 +15048,12 @@
     },
     {
       "from": "day-desk",
+      "to": "swms-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "day-desk",
       "to": "trim-quote",
       "event": "job.updated",
       "id": "job_id"
@@ -15038,6 +15169,12 @@
     {
       "from": "install-book",
       "to": "route-plan",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "install-book",
+      "to": "swms-desk",
       "event": "job.created",
       "id": "job_id"
     },
@@ -15301,6 +15438,12 @@
     },
     {
       "from": "practice-desk",
+      "to": "swms-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "practice-desk",
       "to": "trim-quote",
       "event": "job.updated",
       "id": "job_id"
@@ -15457,6 +15600,12 @@
     },
     {
       "from": "repair-board",
+      "to": "swms-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "repair-board",
       "to": "trim-quote",
       "event": "job.updated",
       "id": "job_id"
@@ -15536,6 +15685,12 @@
     {
       "from": "roof-desk",
       "to": "route-plan",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "roof-desk",
+      "to": "swms-desk",
       "event": "job.created",
       "id": "job_id"
     },
@@ -15679,6 +15834,12 @@
     },
     {
       "from": "route-plan",
+      "to": "swms-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "route-plan",
       "to": "trim-quote",
       "event": "job.updated",
       "id": "job_id"
@@ -15758,6 +15919,12 @@
     {
       "from": "service-due",
       "to": "route-plan",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "service-due",
+      "to": "swms-desk",
       "event": "job.created",
       "id": "job_id"
     },
@@ -15907,6 +16074,12 @@
     },
     {
       "from": "van-board",
+      "to": "swms-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "van-board",
       "to": "trim-quote",
       "event": "job.updated",
       "id": "job_id"
@@ -16051,6 +16224,12 @@
     },
     {
       "from": "visit-offer",
+      "to": "swms-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-offer",
       "to": "trim-quote",
       "event": "job.updated",
       "id": "job_id"
@@ -16190,6 +16369,12 @@
     {
       "from": "visit-round",
       "to": "site-test-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-round",
+      "to": "swms-desk",
       "event": "job.updated",
       "id": "job_id"
     },
