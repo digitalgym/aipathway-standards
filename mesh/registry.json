@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T12:31:35.869Z",
+  "generated_at": "2026-11-04T12:33:22.516Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -2169,6 +2169,100 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 12
+        }
+      ]
+    },
+    {
+      "slug": "comeback-list",
+      "name": "Comeback List",
+      "office_task": "Every weekday morning, pick the past customers from our job history who are due a check-up or have not used us in a year, say why each one, and draft a short text for me to send.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "database-reactivation"
+      ],
+      "systems_of_record": [
+        "the job system (ServiceM8, Simpro, Fergus, Tradify or AroFlo) that holds each customer, their completed jobs with the job_id, the last outcome and the do-not-contact flag",
+        "the place the owner opens each morning (job system tasks, a shared sheet or a morning email), which issues the report_id for each day's list"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the day's list for the owner: at most the cap they set, in rank order, each row with its play, the true reason that qualified it, the job_id of the customer's last completed job, a drafted text of at most 50 words naming the business with a way to opt out, and the last outcome. Drafts only: nothing is sent or dialled",
+          "readback": "the list store returns a report_id for the day's list, and reading that id back returns the same rows in the same order; no id back means no list was published and the run raises an exception"
+        },
+        {
+          "event": "exception.raised",
+          "write": "a thing to sort out, on top of the list and naming the person who owns it: a customer missing name, mobile or site address, or a reply waiting that asks for a price, makes a complaint or asks something the play was not built for",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the customer, the typed reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "comeback.not_ready",
+          "comeback.price_question",
+          "comeback.complaint",
+          "comeback.reply_outside_play",
+          "comeback.list_not_published"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.report_id",
+          "seam.job_id",
+          "seam.play",
+          "seam.trigger",
+          "seam.rank_reason",
+          "seam.last_outcome",
+          "seam.last_outcome_at",
+          "seam.sequence_started_at",
+          "seam.do_not_contact",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/comeback-list"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "database-reactivation",
+          "edition": "2026-10-24",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:30:20.151Z",
+          "run_id": "run-1793795420148",
+          "green": 8,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 14
         }
       ]
     },
@@ -13145,6 +13239,7 @@
     "claim-clock",
     "client-review-watch",
     "close-check",
+    "comeback-list",
     "comp-check",
     "comp-report",
     "company-review-watch",
