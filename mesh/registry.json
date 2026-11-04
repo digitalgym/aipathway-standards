@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T12:22:44.786Z",
+  "generated_at": "2026-11-04T12:24:28.222Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -10202,6 +10202,107 @@
       ]
     },
     {
+      "slug": "route-plan",
+      "name": "Route Plan",
+      "office_task": "Each morning, suggest the order of every tech's jobs and which licensed tech takes each recurring visit so the vans drive less, and book only the lines the dispatcher accepts.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "dispatch-board"
+      ],
+      "systems_of_record": [
+        "the job system that issues the job_id and holds its schedule (ServiceM8, Simpro or Jobber)",
+        "the tech licence register the business keeps"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "job.created",
+          "wake": "webhook"
+        },
+        {
+          "event": "job.updated",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "job.updated",
+          "write": "one slot on the job's schedule for each line the named dispatcher accepted (tech, stop order, start, end, resolved address, the dispatcher who released it and the planning rule, what displaced it), updated in place on a change and never written twice, with the customer confirmation attached as evidence",
+          "readback": "the job system returns the slot's external id, and reading the job's slot back by job_id returns that external id and the job version it was made for; no id back is a failed write, escalated as write_failed, and nothing is sent"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an escalation on the job naming its owner: an address that will not resolve, no tech with a current licence for the job, a window nobody can meet, no room on any licensed tech's run, no consent to message the customer, a failed slot write, or a displaced job that could not be re-planned",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the job_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "dispatch.address_unresolved",
+          "dispatch.no_licensed_tech",
+          "dispatch.window_impossible",
+          "dispatch.no_capacity",
+          "dispatch.no_consent",
+          "dispatch.write_failed",
+          "dispatch.displaced"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.job_id",
+          "seam.slot_external_id",
+          "seam.job_version",
+          "seam.updated_by",
+          "seam.displaced_by",
+          "seam.customer_message_ref",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/route-plan"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "dispatch-board",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-04T12:21:20.110Z",
+          "run_id": "run-1793794880109",
+          "green": 8,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        }
+      ]
+    },
+    {
       "slug": "safety-cert-desk",
       "name": "Safety Cert Desk",
       "office_task": "When a smoke alarm and RCD job is done, draft the property's compliance pack from the tech's results for our licensed electrician to sign, and hold it if any result is missing.",
@@ -12625,6 +12726,7 @@
     "retention-book",
     "ring-list",
     "roof-desk",
+    "route-plan",
     "safety-cert-desk",
     "seller-book",
     "seller-weekly",
@@ -12682,6 +12784,12 @@
     {
       "from": "after-hours-desk",
       "to": "repair-board",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "after-hours-desk",
+      "to": "route-plan",
       "event": "job.created",
       "id": "job_id"
     },
@@ -12766,6 +12874,12 @@
     {
       "from": "crew-board",
       "to": "retention-book",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "crew-board",
+      "to": "route-plan",
       "event": "job.updated",
       "id": "job_id"
     },
@@ -12880,6 +12994,12 @@
     {
       "from": "install-book",
       "to": "repair-board",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "install-book",
+      "to": "route-plan",
       "event": "job.created",
       "id": "job_id"
     },
@@ -13059,6 +13179,12 @@
     },
     {
       "from": "practice-desk",
+      "to": "route-plan",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "practice-desk",
       "to": "safety-cert-desk",
       "event": "job.updated",
       "id": "job_id"
@@ -13173,6 +13299,12 @@
     },
     {
       "from": "repair-board",
+      "to": "route-plan",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "repair-board",
       "to": "safety-cert-desk",
       "event": "job.updated",
       "id": "job_id"
@@ -13251,6 +13383,12 @@
     },
     {
       "from": "roof-desk",
+      "to": "route-plan",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "roof-desk",
       "to": "trim-quote",
       "event": "job.created",
       "id": "job_id"
@@ -13271,6 +13409,114 @@
       "from": "roof-desk",
       "to": "visit-round",
       "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "route-plan",
+      "to": "buy-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "route-plan",
+      "to": "crew-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "route-plan",
+      "to": "danger-tag-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "route-plan",
+      "to": "estimate-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "route-plan",
+      "to": "hours-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "route-plan",
+      "to": "order-release",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "route-plan",
+      "to": "parts-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "route-plan",
+      "to": "proposal-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "route-plan",
+      "to": "quote-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "route-plan",
+      "to": "repair-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "route-plan",
+      "to": "retention-book",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "route-plan",
+      "to": "safety-cert-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "route-plan",
+      "to": "site-orders",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "route-plan",
+      "to": "trim-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "route-plan",
+      "to": "van-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "route-plan",
+      "to": "van-stock",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "route-plan",
+      "to": "visit-offer",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "route-plan",
+      "to": "visit-round",
+      "event": "job.updated",
       "id": "job_id"
     },
     {
@@ -13306,6 +13552,12 @@
     {
       "from": "service-due",
       "to": "repair-board",
+      "event": "job.created",
+      "id": "job_id"
+    },
+    {
+      "from": "service-due",
+      "to": "route-plan",
       "event": "job.created",
       "id": "job_id"
     },
@@ -13401,6 +13653,12 @@
     },
     {
       "from": "van-board",
+      "to": "route-plan",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "van-board",
       "to": "safety-cert-desk",
       "event": "job.updated",
       "id": "job_id"
@@ -13503,6 +13761,12 @@
     },
     {
       "from": "visit-offer",
+      "to": "route-plan",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-offer",
       "to": "safety-cert-desk",
       "event": "job.updated",
       "id": "job_id"
@@ -13600,6 +13864,12 @@
     {
       "from": "visit-round",
       "to": "retention-book",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "visit-round",
+      "to": "route-plan",
       "event": "job.updated",
       "id": "job_id"
     },
