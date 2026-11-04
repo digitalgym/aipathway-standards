@@ -1,0 +1,51 @@
+{
+  "slug": "job-wip",
+  "name": "Job WIP",
+  "office_task": "Every Monday, publish the job profit and work-in-progress report: each open job's quoted value, cost to date and invoiced to date, every figure with its source and the time it was read.",
+  "verticals": ["trades-building"],
+  "standards": ["recurring-report"],
+  "systems_of_record": [
+    "the job system (Simpro, ServiceM8, Fergus and the like): each open job's accepted quote plus approved variations, and its cost to date (labour at cost rate, materials and subcontract bills against the job)",
+    "the ledger (Xero or MYOB): invoices raised against each job's tracking category to date, less credit notes",
+    "the system the report is published into, which issues the report_id"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/job-wip" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "schedule", "webhook"],
+  "consumes": [
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "report.published",
+      "write": "one view of the week's job WIP report per audience (owner with every open job, external accountant with the open-job totals), each figure carrying its definition id, source and as-of time, or published as unavailable with the reason; a correction is a new version superseding the old, released by the named person with the reason",
+      "readback": "reading the week's reports back returns each report_id with its version, published_at and published_by; no id back means it was not published and report.publish_failed is raised"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception naming the definition's owner or the threshold's person: a job system or ledger that could not be read, a measure with no definition or two, a threshold that could not be compared, a correction missing a person or reason, or a view that did not read back",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the week, the measure, the reason and the exception_owner"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "report.source_unreadable",
+      "report.no_definition",
+      "report.conflicting_definitions",
+      "report.threshold_not_comparable",
+      "report.correction_incomplete",
+      "report.correction_unknown_measure",
+      "report.publish_failed"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": ["seam.report_id", "seam.period", "seam.version", "seam.supersedes", "seam.published_by", "seam.exception_owner"]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
