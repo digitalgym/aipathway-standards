@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-04T11:49:13.552Z",
+  "generated_at": "2026-11-04T11:50:53.318Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -526,6 +526,95 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 10
+        }
+      ]
+    },
+    {
+      "slug": "bank-questions",
+      "name": "Bank Questions",
+      "office_task": "Each weekday, ask each client in plain words what their uncategorised bank transactions were, stop when they answer, and turn the answers into coding suggestions for the bookkeeper.",
+      "verticals": [
+        "accounting-bookkeeping"
+      ],
+      "standards": [
+        "follow-up"
+      ],
+      "systems_of_record": [
+        "the practice's register of what each client owes it, one open item per client per period on the client's bookkeeping job (a practice management system such as Xero Practice Manager or FYI, or a register kept beside it)",
+        "Xero, whose bank feed issues the id of each uncategorised bank line the questions are about (read only; nothing is coded or reconciled by this bot)",
+        "the practice's mail system, which issues the message_id of the client's reply carrying the answers"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "evidence.filed",
+          "write": "the client's reply with their answers, filed as evidence against the open item on the client's bookkeeping job, with one coding suggestion per bank line beside it drafted from the practice's own rules for the bookkeeper to accept or change in Xero",
+          "readback": "reading the item back by its id returns status arrived with the evidence reference naming the message_id of the client's reply; no evidence reference back means it was not filed, and the item stays on the register untouched until a person looks"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an escalation on the item naming the cadence's bookkeeper: the client said no, disputed it or asked us to stop, or the item reached its cap with nothing back, carrying every touch so far",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the item id, the reason, the touch history and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "followup.declined",
+          "followup.dispute",
+          "followup.cap_reached"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.item_id",
+          "seam.item_status",
+          "seam.touches",
+          "seam.outcome",
+          "seam.evidence_ref",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/bank-questions"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-04",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "follow-up",
+          "edition": "2026-10-05",
+          "environment": "stub",
+          "ran_at": "2026-11-04T11:48:04.164Z",
+          "run_id": "run-1793792884162",
+          "green": 10,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 13
         }
       ]
     },
@@ -9942,6 +10031,7 @@
     "agent-rules-desk",
     "arrears-desk",
     "backflow-watch",
+    "bank-questions",
     "bill-check",
     "billing-match",
     "buy-desk",
