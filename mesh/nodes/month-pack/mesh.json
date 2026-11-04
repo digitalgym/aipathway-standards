@@ -1,0 +1,72 @@
+{
+  "slug": "month-pack",
+  "name": "Month Pack",
+  "office_task": "Each month, put every client's management pack (profit and loss, balance sheet, cash, key ratios) in their folder, every figure sourced and as-of, for the partner to send.",
+  "verticals": [
+    "accounting-bookkeeping"
+  ],
+  "standards": [
+    "recurring-report"
+  ],
+  "systems_of_record": [
+    "each client's ledger (Xero or MYOB): profit and loss, balance sheet and the executive summary ratios for the month",
+    "each client's bank statement: the operating account's closing balance at month end",
+    "the practice's client folder the pack is published into (SharePoint or Google Drive), which issues the report_id"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/month-pack"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "schedule"
+  ],
+  "consumes": [
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    }
+  ],
+  "emits": [
+    {
+      "event": "report.published",
+      "write": "one view of the client's monthly pack per audience (reviewing partner, client's owner, client's lender), written into the practice's folder for that client, each figure carrying its definition id, source and as-of time, or published as unavailable with the reason; a correction is a new version superseding the old, with the named person and the reason. Sending it outside the practice stays with the partner",
+      "readback": "reading the client's month back from the folder returns each report_id with its version, published_at and published_by; no id back means it was not published and report.publish_failed is raised"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception naming the definition's owner or the threshold's person: a source that could not be read, a measure with no definition or two, a threshold that could not be compared, a correction missing a person or reason, or a pack that did not read back",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the client, the month, the measure, the reason and the exception_owner"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "report.source_unreadable",
+      "report.no_definition",
+      "report.conflicting_definitions",
+      "report.threshold_not_comparable",
+      "report.correction_incomplete",
+      "report.correction_unknown_measure",
+      "report.publish_failed"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.report_id",
+      "seam.period",
+      "seam.version",
+      "seam.supersedes",
+      "seam.published_by",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
