@@ -1,0 +1,78 @@
+{
+  "slug": "intercompany-match",
+  "name": "Intercompany Match",
+  "office_task": "Each month end, match what our group companies say they owe each other across their Xero files, list every difference with both figures, and fix one only once a named person accepts it.",
+  "verticals": [
+    "accounting-bookkeeping"
+  ],
+  "standards": [
+    "two-records"
+  ],
+  "systems_of_record": [
+    "Xero, the issuing company's file (the intercompany invoice and its InvoiceID)",
+    "Xero, the receiving company's file (the bill entered for the same charge, carrying the issuer's InvoiceID as its reference)"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/intercompany-match"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "schedule",
+    "webhook"
+  ],
+  "consumes": [
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    },
+    {
+      "event": "exception.closed",
+      "wake": "webhook"
+    }
+  ],
+  "emits": [
+    {
+      "event": "report.published",
+      "write": "the month-end intercompany run into the group's reconciliation log: the pair contract id, the key it joined on (the issuer's Xero InvoiceID), the master per field, and the five counts (matched, within tolerance, mismatched, orphaned, corrected), the all-clear included",
+      "readback": "the log returns a report_id, and reading that id back returns the run with its contract id and counts; no id back means the run did not publish and the contract owner is told"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the issuer's Xero InvoiceID naming the contract owner: an open difference with both figures and the master's figure awaiting acceptance, an entry in one company's file with no partner in the other, a gap over the threshold amount, a run over the mismatch rate, or an accepted correction whose write returned no id",
+      "readback": "the exception desk returns an exception_id, and reading it back returns the issuer's InvoiceID, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "two_records.no_contract",
+      "two_records.no_master",
+      "two_records.difference_open",
+      "two_records.orphan",
+      "two_records.over_threshold",
+      "two_records.mismatch_rate",
+      "two_records.write_not_read_back"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "seam-mirror",
+    "fields": [
+      "seam.issuer_invoice_id",
+      "seam.contract_id",
+      "seam.difference_status",
+      "seam.value_issuer",
+      "seam.value_receiver",
+      "seam.correction_accepted_by",
+      "seam.correction_written_id",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
