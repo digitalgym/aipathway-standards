@@ -129,6 +129,21 @@ three things a script cannot judge:
   the registry, so this happens without anyone remembering to.
 - **refused:** it fails the gate and is not in the registry at all.
 
+## The Grok Bot version of a node
+
+A node woken by a schedule, an email or a webhook can also be published as a
+Grok Bot template, so an owner adds it with one link. The scripts are in
+[`tools/grok-bot/`](../tools/grok-bot): they put Grok Bot desktop in dev mode,
+build a setup pack from the node's `mesh.json` and its standard's `SKILL.md`,
+publish it, and write `links.bot` and the `grok-bot-template` runtime back into
+`mesh.json`. Nodes that answer or make calls can't be Grok Bots.
+
+Before a link is listed, run `test.cjs` on the bot. It chats with it in the app
+and checks that it drafts and never sends, refuses a key pasted into chat,
+keeps money with a person, and hands back every `stays_with_person` item of
+its standard. This tests the Grok Bot version's behaviour; the conformance run
+is still the test for the coded build.
+
 ## Credit for the original, and removal
 
 - A port must name the original bot, its author and its share link in
