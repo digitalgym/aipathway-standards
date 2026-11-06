@@ -58,6 +58,9 @@ chain. A bot is listed by pull request with a green conformance run, and every
 port credits the bot it came from. See [`mesh/README.md`](mesh/README.md) and
 https://aipathway.com.au/explore-ai/mesh-directory.
 
+[`tools/grok-bot/`](tools/grok-bot) holds the scripts that set up, publish and
+test the directory's Grok Bots by driving the Grok Bot desktop app.
+
 ## The standards
 
 | Spec | Skill | What it builds |
