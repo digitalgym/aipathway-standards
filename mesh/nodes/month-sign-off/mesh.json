@@ -1,0 +1,74 @@
+{
+  "slug": "month-sign-off",
+  "name": "Month Sign-Off",
+  "office_task": "At month end, work each client file's close checklist with the evidence for every item, and put the month to a named person to sign off before anything is posted.",
+  "verticals": [
+    "accounting-bookkeeping"
+  ],
+  "standards": [
+    "month-end-close"
+  ],
+  "systems_of_record": [
+    "each client's ledger, Xero, MYOB Business or QuickBooks Online, through its own sign-in: bank accounts, uncoded and suspense lines, aged receivables and payables against their control accounts, pay runs, the GST control and clearing accounts, manual journals and the lock date. As at 2026-11-12 no ledger reconciles over its API, so reconciling stays with the person",
+    "Xero: bank transactions carry whether they are reconciled, but unreconciled bank feed (statement) lines are not exposed over the Accounting API, so where the statement side cannot be read the bank item is recorded as could not check; the period lock date (PeriodLockDate on Organisation) is read only",
+    "MYOB Business: the Banking/Statement endpoint shows Uncoded and Coded statement lines; the lock date (LockPeriodPriorTo in company preferences) is read only; no aged receivables or payables report endpoint is documented, so those are worked from open invoices and bills or recorded as could not check",
+    "QuickBooks Online: unreconciled bank feed lines are not exposed over the API and reconciled status is not a field on transactions; whether the closing date can be written is unconfirmed in Intuit's reference, so it is treated as read only",
+    "the accruals and prepayments schedule the business keeps, with any amount a person enters for the month",
+    "the practice's close register (a SharePoint or Google Drive folder, or the practice management system) the close pack is written into, which issues the report_id and records the named person's sign-off",
+    "the exception desk the practice runs, which issues the exception_id"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/month-sign-off"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "schedule"
+  ],
+  "consumes": [
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    }
+  ],
+  "emits": [
+    {
+      "event": "report.published",
+      "write": "the month's close pack for one client file, written into the practice's close register for the named reviewer: all eight checklist items (bank, uncoded, receivables, payables, payroll, accruals, tax control, clearing) as pass, fail or could not check, each pass and fail with the ledger read it came from and its as-of time, and the accrual and prepayment journals proposed from the schedule or a person's entry. After the reviewer signs off by name, the pack records each approved journal with the ledger journal id read back, the lock date read back, and the hand-over of the closed month to the Recurring Report",
+      "readback": "reading the client's month back from the register returns the report_id with every item result and its read id; each approved journal reads back from the ledger by its intent id close:<tenant>:<entity>:<period>:<line> in the narration or memo; no id back means it was not written and close.write_failed is raised"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception naming its owner: each uncoded or suspense line to the Uncoded Query queue, once by line id; a schedule line with no amount to the bookkeeper, once; a journal post with no answer to the bookkeeper; and, after sign-off, one task for the reviewer to set the lock date by hand because the ledger's API cannot write it",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the client file, the month, the line or journal it is about, the reason and the exception_owner"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "close.uncoded",
+      "close.no_amount",
+      "close.write_failed",
+      "close.set_lock_date"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.report_id",
+      "seam.period",
+      "seam.signed_off_by",
+      "seam.journal_ids",
+      "seam.lock_date_read_back",
+      "seam.handed_to",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
