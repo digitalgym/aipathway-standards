@@ -17,16 +17,6 @@ next.
 
 Or copy any `skills/<name>/` folder into `.claude/skills/` in your own project.
 
-On ChatGPT or Codex, the same skills install as an OpenAI plugin:
-
-```
-codex plugin marketplace add digitalgym/aipathway-standards
-codex plugin add build-standards@aipathway-standards
-```
-
-In the ChatGPT desktop app, add the marketplace the same way, then install
-`build-standards` from the Plugins Directory under AI Pathway.
-
 Not on Claude? The same rules are in `AGENTS.md` (Codex, Copilot CLI and
 anything that reads the convention), `.cursor/rules/aipathway-standards.mdc`
 (Cursor) and `.github/copilot-instructions.md` (GitHub Copilot). All three
@@ -71,9 +61,9 @@ test the directory's Grok Bots by driving the Grok Bot desktop app.
 | `AIP-BS-NEXT-SERVICE` | [`next-service`](skills/next-service/SKILL.md) | Next Service Build Standard |
 | `AIP-BS-FAULT-TRIAGE` | [`fault-triage`](skills/fault-triage/SKILL.md) | Fault Triage Build Standard |
 | `AIP-BS-PROGRESS-CLAIM-DRAFT` | [`progress-claim-draft`](skills/progress-claim-draft/SKILL.md) | Progress Claim Draft Build Standard |
-| `AIP-BS-TAKEAWAY-ORDERS` | [`takeaway-orders`](skills/takeaway-orders/SKILL.md) | Takeaway Orders Build Standard |
 | `AIP-BS-DOCUMENT-FILING` | [`document-filing`](skills/document-filing/SKILL.md) | Document Filing Build Standard |
 | `AIP-BS-REMITTANCE-SPLIT` | [`remittance-split`](skills/remittance-split/SKILL.md) | Remittance Split Build Standard |
+| `AIP-BS-UNCODED-QUERY` | [`uncoded-query`](skills/uncoded-query/SKILL.md) | Uncoded Query Build Standard |
 | `AIP-BS-OPEN-HOME-FEEDBACK` | [`open-home-feedback`](skills/open-home-feedback/SKILL.md) | Open Home Feedback Build Standard |
 | `AIP-BS-JOB-BRIEF` | [`job-brief`](skills/job-brief/SKILL.md) | Job Brief Build Standard |
 | `AIP-BS-DISPATCH-BOARD` | [`dispatch-board`](skills/dispatch-board/SKILL.md) | Dispatch Board Build Standard |
@@ -87,6 +77,9 @@ test the directory's Grok Bots by driving the Grok Bot desktop app.
 | `AIP-BS-EXCEPTION-DESK` | [`exception-desk`](skills/exception-desk/SKILL.md) | Exception Desk Build Standard |
 | `AIP-BS-PARTS-READY` | [`parts-ready`](skills/parts-ready/SKILL.md) | Parts Ready Build Standard |
 | `AIP-BS-SIMPRO-CLAUDE-CONNECTOR` | [`simpro-claude-connector`](skills/simpro-claude-connector/SKILL.md) | Simpro Claude Connector Build Standard |
+| `AIP-BS-BAS-READY-CHECK` | [`bas-ready-check`](skills/bas-ready-check/SKILL.md) | Bas Ready Check Build Standard |
+| `AIP-BS-TAKEAWAY-ORDERS` | [`takeaway-orders`](skills/takeaway-orders/SKILL.md) | Takeaway Orders Build Standard |
+| `AIP-BS-MONTH-END-CLOSE` | [`month-end-close`](skills/month-end-close/SKILL.md) | Month End Close Build Standard |
 | `AIP-BS-JUST-SOLD-PACK` | [`just-sold-pack`](skills/just-sold-pack/SKILL.md) | Just Sold Pack Build Standard |
 | `AIP-BS-TWO-RECORDS` | [`two-records`](skills/two-records/SKILL.md) | Two Records Build Standard |
 | `AIP-BS-TIMESHEET-CHECK` | [`timesheet-check`](skills/timesheet-check/SKILL.md) | Timesheet Check Build Standard |

@@ -167,6 +167,6 @@ Job notes are written by staff and customers and come back as text the agent rea
 ## Related reading
 
 - the Simpro Claude connector build standard
-- Using Claude with Simpro: what connects today
+- Simpro Claude Connector: How to Connect Them
 - After hours on Microsoft 365: the call that becomes a Simpro job
 - Building the standards on Microsoft 365
