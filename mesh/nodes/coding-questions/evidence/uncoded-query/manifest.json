@@ -1,0 +1,141 @@
+{
+  "spec": "AIP-BS-UNCODED-QUERY",
+  "standard": "uncoded-query-build-standard",
+  "edition": "2026-11-12",
+  "source": "https://aipathway.com.au/explore-ai/uncoded-query-build-standard",
+  "ran_at": "2026-11-12T20:03:56.662Z",
+  "environment": "stub",
+  "provider": "local.mock_client_ledgers",
+  "provider_block": {
+    "boundary": {
+      "never": [
+        "propose or write an account or tax code the client's own chart does not hold, or borrow one from another client",
+        "write a coding no named person has approved, or write anything other than exactly what they approved",
+        "reconcile a bank line, match one, or create a transaction for one",
+        "give tax advice: say whether something is deductible or claimable, or put an account or tax code in front of the client",
+        "ask the client about a line already answered, or send a second question list in the same cycle",
+        "place a call to the client"
+      ],
+      "stays_with_person": [
+        "approving every coding, and changing one before approving it",
+        "reconciling an unreconciled bank line with its approved coding",
+        "every line whose answer fits no account in the client's chart",
+        "following up a client who has not answered after the last reminder, by phone or otherwise",
+        "every tax question the answers raise"
+      ]
+    },
+    "job": "one plain question list a month for the bank lines nobody can code, and an approved coding written once",
+    "skill": "uncoded-query",
+    "stub": "local.mock_client_ledgers",
+    "production": null,
+    "product": null,
+    "insert": null,
+    "with_us": {
+      "kind": "scoped_build",
+      "note": "No hosted product writes a coding. The approval-gated, keyed write into the client's own ledger is built against that ledger's API, quoted as a scoped build. No follow-up call is offered: Office Voice has no lawful basis for one here, so the call stays with the person."
+    }
+  },
+  "tally": {
+    "green": 10,
+    "red": 0,
+    "with_us": 1,
+    "evidence_required": 1,
+    "total": 15
+  },
+  "checks": [
+    {
+      "id": "lines-from-the-ledger",
+      "n": 1,
+      "title": "Only lines the ledger still shows as uncoded are asked about",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "one-list-per-client-per-cycle",
+      "n": 2,
+      "title": "One question list per client per cycle, with every open line in it",
+      "verdict": "pass"
+    },
+    {
+      "id": "plain-question-per-line",
+      "n": 3,
+      "title": "Each line is one plain question with a place to answer it",
+      "verdict": "pass"
+    },
+    {
+      "id": "no-tax-advice",
+      "n": 4,
+      "title": "No tax advice and no bookkeeping words reach the client",
+      "verdict": "pass"
+    },
+    {
+      "id": "never-ask-twice",
+      "n": 5,
+      "title": "A line already answered is never asked about again",
+      "verdict": "pass"
+    },
+    {
+      "id": "reminders-then-a-person",
+      "n": 6,
+      "title": "Reminders on the schedule the practice set, then a person",
+      "verdict": "pass"
+    },
+    {
+      "id": "answer-kept-as-written",
+      "n": 7,
+      "title": "The client's answer is kept word for word, with who and when",
+      "verdict": "pass"
+    },
+    {
+      "id": "proposal-from-chart-and-history",
+      "n": 8,
+      "title": "The proposed coding comes from the client's own chart, and their own history first",
+      "verdict": "pass"
+    },
+    {
+      "id": "never-invents-an-account",
+      "n": 9,
+      "title": "No account or tax code the client's chart lacks is ever proposed or written",
+      "verdict": "pass"
+    },
+    {
+      "id": "approved-before-written",
+      "n": 10,
+      "title": "Nothing is written until a named person approves that exact coding",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "never-reconciles",
+      "n": 11,
+      "title": "The build never reconciles a bank line; a person does",
+      "verdict": "pass"
+    },
+    {
+      "id": "written-once",
+      "n": 12,
+      "title": "An approved coding is written once, however often the build runs",
+      "verdict": "pass"
+    },
+    {
+      "id": "read-back-and-record",
+      "n": 13,
+      "title": "Every write is read back, and a mismatch goes to a person",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "survives-the-builder",
+      "n": 14,
+      "title": "It survives the builder",
+      "verdict": "evidence_required"
+    },
+    {
+      "id": "pass-test",
+      "n": 15,
+      "title": "The pass test passes",
+      "verdict": "with_us"
+    }
+  ],
+  "next": {
+    "with_us": "No hosted product writes a coding. The approval-gated, keyed write into the client's own ledger is built against that ledger's API, quoted as a scoped build. No follow-up call is offered: Office Voice has no lawful basis for one here, so the call stays with the person. Send the failing check id for a fixed price; do not build the live step yourself.",
+    "evidence_required": "attach what proves each one; not a software check"
+  }
+}
