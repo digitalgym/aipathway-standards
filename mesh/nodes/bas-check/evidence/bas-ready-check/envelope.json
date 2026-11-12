@@ -1,0 +1,2105 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1794513790764",
+  "standard": "bas-ready-check-build-standard",
+  "spec": "AIP-BS-BAS-READY-CHECK",
+  "specVersion": "2026-11-12",
+  "environment": "stub",
+  "startedAt": "2026-11-12T20:03:10.744Z",
+  "finishedAt": "2026-11-12T20:03:10.764Z",
+  "results": [
+    {
+      "checkId": "period-from-the-ledger",
+      "n": 1,
+      "title": "The period's transactions come from the ledger, by its own ids and dates",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The build read the ledger for exactly the period set, the list names that period, and no flag cites a transaction dated outside it. The bill after quarter end is on no flag.",
+      "actual": "11 port call(s); 1 list(s) to Jo (bookkeeper); flags: tax_invoice[B2]; not checked: usual_code",
+      "stimulus": {
+        "description": "A quarter with transactions inside it, one bill dated two days after the quarter ends with GST claimed and nothing attached, and settings naming the quarter.",
+        "now": "2026-10-14T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "period-from-the-ledger"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "period": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "capabilities": true
+          },
+          "response": {
+            "attachments": true,
+            "reconciliation": true,
+            "gstReport": true
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxCodes": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "accounts": true
+          },
+          "response": {
+            "count": 10
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "transactions": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "count": 5
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "transactions": {
+              "from": "2026-01-01",
+              "to": "2026-06-30"
+            }
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "gstReport": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "totalSales": 16500,
+            "gstOnSales": 1500,
+            "gstOnPurchases": 239
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "gstReport": {
+              "from": "2025-07-01",
+              "to": "2025-09-30"
+            }
+          },
+          "response": {
+            "totalSales": 16500,
+            "gstOnSales": 1500,
+            "gstOnPurchases": 200
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "movement": {
+              "accountCode": "820",
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "movement": 1261
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "txnId": "B2"
+          },
+          "response": {
+            "txnId": "B2",
+            "date": "2026-07-22",
+            "total": 330
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "to": "Jo (bookkeeper)",
+            "flags": 1,
+            "notChecked": 1
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "every-flag-cites-its-source",
+      "n": 2,
+      "title": "Every flag cites the transaction it came from, and that transaction reads back",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every line flag cites at least one transaction id the world holds in the period, with that transaction's own date and total. Every period flag names the period. A flag with no source, or citing an id that does not exist, fails.",
+      "actual": "13 port call(s); 1 list(s) to Jo (bookkeeper); flags: tax_invoice[B3] no_gst_account[B3] uncoded[B3]; not checked: usual_code",
+      "stimulus": {
+        "description": "The base quarter, with a bill carrying several bait problems at once.",
+        "now": "2026-10-14T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "every-flag-cites-its-source"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "period": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "capabilities": true
+          },
+          "response": {
+            "attachments": true,
+            "reconciliation": true,
+            "gstReport": true
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxCodes": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "accounts": true
+          },
+          "response": {
+            "count": 10
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "transactions": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "count": 5
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "transactions": {
+              "from": "2026-01-01",
+              "to": "2026-06-30"
+            }
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "gstReport": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "totalSales": 16500,
+            "gstOnSales": 1500,
+            "gstOnPurchases": 229
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "gstReport": {
+              "from": "2025-07-01",
+              "to": "2025-09-30"
+            }
+          },
+          "response": {
+            "totalSales": 16500,
+            "gstOnSales": 1500,
+            "gstOnPurchases": 200
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "movement": {
+              "accountCode": "820",
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "movement": 1271
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "txnId": "B3"
+          },
+          "response": {
+            "txnId": "B3",
+            "date": "2026-08-03",
+            "total": 330
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "txnId": "B3"
+          },
+          "response": {
+            "txnId": "B3",
+            "date": "2026-08-03",
+            "total": 330
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "txnId": "B3"
+          },
+          "response": {
+            "txnId": "B3",
+            "date": "2026-08-03",
+            "total": 330
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "to": "Jo (bookkeeper)",
+            "flags": 3,
+            "notChecked": 1
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "tax-invoice-held",
+      "n": 3,
+      "title": "GST claimed above the tax invoice threshold with no tax invoice attached is flagged",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "Exactly one tax_invoice flag, citing the purchase above the threshold with nothing attached. The attached purchase and the small one are on no tax_invoice flag.",
+      "actual": "11 port call(s); 1 list(s) to Jo (bookkeeper); flags: tax_invoice[PB] swing[]; not checked: usual_code",
+      "stimulus": {
+        "description": "Three purchases with GST claimed: one above the threshold with a document attached, one above it with nothing attached, one small one below it with nothing attached.",
+        "now": "2026-10-14T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "tax-invoice-held"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "period": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "capabilities": true
+          },
+          "response": {
+            "attachments": true,
+            "reconciliation": true,
+            "gstReport": true
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxCodes": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "accounts": true
+          },
+          "response": {
+            "count": 10
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "transactions": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "count": 7
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "transactions": {
+              "from": "2026-01-01",
+              "to": "2026-06-30"
+            }
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "gstReport": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "totalSales": 16500,
+            "gstOnSales": 1500,
+            "gstOnPurchases": 284
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "gstReport": {
+              "from": "2025-07-01",
+              "to": "2025-09-30"
+            }
+          },
+          "response": {
+            "totalSales": 16500,
+            "gstOnSales": 1500,
+            "gstOnPurchases": 200
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "movement": {
+              "accountCode": "820",
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "movement": 1216
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "txnId": "PB"
+          },
+          "response": {
+            "txnId": "PB",
+            "date": "2026-08-04",
+            "total": 330
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "to": "Jo (bookkeeper)",
+            "flags": 2,
+            "notChecked": 1
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "code-differs-from-usual",
+      "n": 4,
+      "title": "A GST code that differs from what that supplier or account usually carries is flagged, with the usual code shown",
+      "verdict": "pass",
+      "held": true,
+      "expected": "One usual_code flag cites the GST-free bill and states the usual code and its count. The new supplier's bill is on no usual_code flag. A flag that names a code as correct, or a flag on a supplier with no history, fails.",
+      "actual": "11 port call(s); 1 list(s) to Jo (bookkeeper); flags: usual_code[B4]; not checked: usual_code",
+      "stimulus": {
+        "description": "A supplier coded GST on six bills in the prior two quarters, then coded GST-free on one bill this quarter. A new supplier with one bill and no history.",
+        "now": "2026-10-14T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "code-differs-from-usual"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "period": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "capabilities": true
+          },
+          "response": {
+            "attachments": true,
+            "reconciliation": true,
+            "gstReport": true
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxCodes": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "accounts": true
+          },
+          "response": {
+            "count": 10
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "transactions": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "transactions": {
+              "from": "2026-01-01",
+              "to": "2026-06-30"
+            }
+          },
+          "response": {
+            "count": 7
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "gstReport": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "totalSales": 16500,
+            "gstOnSales": 1500,
+            "gstOnPurchases": 209
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "gstReport": {
+              "from": "2025-07-01",
+              "to": "2025-09-30"
+            }
+          },
+          "response": {
+            "totalSales": 16500,
+            "gstOnSales": 1500,
+            "gstOnPurchases": 200
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "movement": {
+              "accountCode": "820",
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "movement": 1291
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "txnId": "B4"
+          },
+          "response": {
+            "txnId": "B4",
+            "date": "2026-08-05",
+            "total": 440
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "to": "Jo (bookkeeper)",
+            "flags": 1,
+            "notChecked": 1
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "gst-on-no-gst-accounts",
+      "n": 5,
+      "title": "GST claimed on an account the business marked as carrying no GST is flagged",
+      "verdict": "pass",
+      "held": true,
+      "expected": "One no_gst_account flag, citing the bank fee transaction. The repairs line is on no no_gst_account flag.",
+      "actual": "11 port call(s); 1 list(s) to Jo (bookkeeper); flags: no_gst_account[S5]; not checked: usual_code",
+      "stimulus": {
+        "description": "A bank fee line with GST claimed, in an account on the business's no-GST list, and a repairs line with GST claimed in an account not on it.",
+        "now": "2026-10-14T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "gst-on-no-gst-accounts"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "period": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "capabilities": true
+          },
+          "response": {
+            "attachments": true,
+            "reconciliation": true,
+            "gstReport": true
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxCodes": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "accounts": true
+          },
+          "response": {
+            "count": 10
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "transactions": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "transactions": {
+              "from": "2026-01-01",
+              "to": "2026-06-30"
+            }
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "gstReport": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "totalSales": 16500,
+            "gstOnSales": 1500,
+            "gstOnPurchases": 230
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "gstReport": {
+              "from": "2025-07-01",
+              "to": "2025-09-30"
+            }
+          },
+          "response": {
+            "totalSales": 16500,
+            "gstOnSales": 1500,
+            "gstOnPurchases": 200
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "movement": {
+              "accountCode": "820",
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "movement": 1270
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "txnId": "S5"
+          },
+          "response": {
+            "txnId": "S5",
+            "date": "2026-08-31",
+            "total": 11
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "to": "Jo (bookkeeper)",
+            "flags": 1,
+            "notChecked": 1
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "capital-coded-capital",
+      "n": 6,
+      "title": "A purchase in a capital account not coded capital, or the reverse, is flagged when the business reports G10 and G11",
+      "verdict": "pass",
+      "held": true,
+      "expected": "One capital flag citing the plant purchase. Run again with simpler BAS set: no capital flag, and capital appears under not checked.",
+      "actual": "full: 11 port call(s); 1 list(s) to Jo (bookkeeper); flags: capital[B6] swing[]; not checked: usual_code | simpler: 10 port call(s); 1 list(s) to Jo (bookkeeper); flags: swing[]; not checked: usual_code, capital",
+      "stimulus": {
+        "description": "Full reporting. A plant and equipment purchase in the fixed asset account coded with the non-capital GST code, and a repairs bill coded correctly.",
+        "now": "2026-10-14T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "capital-coded-capital"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "period": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "capabilities": true
+          },
+          "response": {
+            "attachments": true,
+            "reconciliation": true,
+            "gstReport": true
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxCodes": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "accounts": true
+          },
+          "response": {
+            "count": 10
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "transactions": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "transactions": {
+              "from": "2026-01-01",
+              "to": "2026-06-30"
+            }
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "gstReport": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "totalSales": 16500,
+            "gstOnSales": 1500,
+            "gstOnPurchases": 639
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "gstReport": {
+              "from": "2025-07-01",
+              "to": "2025-09-30"
+            }
+          },
+          "response": {
+            "totalSales": 16500,
+            "gstOnSales": 1500,
+            "gstOnPurchases": 200
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "movement": {
+              "accountCode": "820",
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "movement": 861
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "txnId": "B6"
+          },
+          "response": {
+            "txnId": "B6",
+            "date": "2026-09-02",
+            "total": 4400
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "to": "Jo (bookkeeper)",
+            "flags": 2,
+            "notChecked": 1
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "unreconciled-and-uncoded",
+      "n": 7,
+      "title": "Transactions inside the period that are unreconciled or carry no tax code are flagged",
+      "verdict": "pass",
+      "held": true,
+      "expected": "One uncoded flag and one unreconciled flag, each citing its own transaction. No reconciled, coded line is flagged under either.",
+      "actual": "12 port call(s); 1 list(s) to Jo (bookkeeper); flags: uncoded[S7] unreconciled[S8]; not checked: usual_code",
+      "stimulus": {
+        "description": "One bank spend line with no tax code, one coded but unreconciled, and the rest reconciled and coded.",
+        "now": "2026-10-14T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "unreconciled-and-uncoded"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "period": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "capabilities": true
+          },
+          "response": {
+            "attachments": true,
+            "reconciliation": true,
+            "gstReport": true
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxCodes": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "accounts": true
+          },
+          "response": {
+            "count": 10
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "transactions": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "transactions": {
+              "from": "2026-01-01",
+              "to": "2026-06-30"
+            }
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "gstReport": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "totalSales": 16500,
+            "gstOnSales": 1500,
+            "gstOnPurchases": 218
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "gstReport": {
+              "from": "2025-07-01",
+              "to": "2025-09-30"
+            }
+          },
+          "response": {
+            "totalSales": 16500,
+            "gstOnSales": 1500,
+            "gstOnPurchases": 200
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "movement": {
+              "accountCode": "820",
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "movement": 1282
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "txnId": "S7"
+          },
+          "response": {
+            "txnId": "S7",
+            "date": "2026-09-10",
+            "total": 165
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "txnId": "S8"
+          },
+          "response": {
+            "txnId": "S8",
+            "date": "2026-09-12",
+            "total": 99
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "to": "Jo (bookkeeper)",
+            "flags": 2,
+            "notChecked": 1
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "swing-against-comparable",
+      "n": 8,
+      "title": "Period totals that swing against the comparable period beyond the business's band are flagged, with both figures",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Exactly one swing flag, for GST on purchases, stating both figures and both periods. Sales and GST on sales are on no swing flag.",
+      "actual": "10 port call(s); 1 list(s) to Jo (bookkeeper); flags: swing[]; not checked: usual_code",
+      "stimulus": {
+        "description": "A comparable quarter where sales and GST on sales are close to this quarter and GST on purchases is far lower, with a band of 25 percent.",
+        "now": "2026-10-14T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "swing-against-comparable"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "period": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "capabilities": true
+          },
+          "response": {
+            "attachments": true,
+            "reconciliation": true,
+            "gstReport": true
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxCodes": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "accounts": true
+          },
+          "response": {
+            "count": 10
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "transactions": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "transactions": {
+              "from": "2026-01-01",
+              "to": "2026-06-30"
+            }
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "gstReport": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "totalSales": 17050,
+            "gstOnSales": 1550,
+            "gstOnPurchases": 492
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "gstReport": {
+              "from": "2025-07-01",
+              "to": "2025-09-30"
+            }
+          },
+          "response": {
+            "totalSales": 16500,
+            "gstOnSales": 1500,
+            "gstOnPurchases": 200
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "movement": {
+              "accountCode": "820",
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "movement": 1058
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "to": "Jo (bookkeeper)",
+            "flags": 1,
+            "notChecked": 1
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "control-account-agrees",
+      "n": 9,
+      "title": "The GST control account's movement for the period is compared with the GST the transactions report, and a difference is flagged",
+      "verdict": "pass",
+      "held": true,
+      "expected": "One control_account flag whose stated difference equals the world's actual difference to the cent, and it cites the journal.",
+      "actual": "11 port call(s); 1 list(s) to Jo (bookkeeper); flags: control_account[J1]; not checked: usual_code",
+      "stimulus": {
+        "description": "A manual journal of $500 posted straight to the GST account inside the quarter, with no tax code.",
+        "now": "2026-10-14T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "control-account-agrees"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "period": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "capabilities": true
+          },
+          "response": {
+            "attachments": true,
+            "reconciliation": true,
+            "gstReport": true
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxCodes": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "accounts": true
+          },
+          "response": {
+            "count": 10
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "transactions": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "count": 5
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "transactions": {
+              "from": "2026-01-01",
+              "to": "2026-06-30"
+            }
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "gstReport": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "totalSales": 16500,
+            "gstOnSales": 1500,
+            "gstOnPurchases": 209
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "gstReport": {
+              "from": "2025-07-01",
+              "to": "2025-09-30"
+            }
+          },
+          "response": {
+            "totalSales": 16500,
+            "gstOnSales": 1500,
+            "gstOnPurchases": 200
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "movement": {
+              "accountCode": "820",
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "movement": 1791
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "txnId": "J1"
+          },
+          "response": {
+            "txnId": "J1",
+            "date": "2026-09-30",
+            "total": 500
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "to": "Jo (bookkeeper)",
+            "flags": 1,
+            "notChecked": 1
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "lists-what-it-could-not-check",
+      "n": 10,
+      "title": "Whatever it could not check is listed, with the reason",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "Not checked names tax_invoice, reconciliation and capital, each with a reason. No tax_invoice, unreconciled or capital flag is raised.",
+      "actual": "10 port call(s); 1 list(s) to Jo (bookkeeper); flags: swing[]; not checked: tax_invoice, usual_code, capital, reconciliation",
+      "stimulus": {
+        "description": "A ledger that cannot read attachments or reconciliation status, on simpler BAS.",
+        "now": "2026-10-14T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "lists-what-it-could-not-check"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "period": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "capabilities": true
+          },
+          "response": {
+            "attachments": false,
+            "reconciliation": false,
+            "gstReport": true
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxCodes": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "accounts": true
+          },
+          "response": {
+            "count": 10
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "transactions": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "count": 7
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "transactions": {
+              "from": "2026-01-01",
+              "to": "2026-06-30"
+            }
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "gstReport": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "totalSales": 16500,
+            "gstOnSales": 1500,
+            "gstOnPurchases": 648
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "gstReport": {
+              "from": "2025-07-01",
+              "to": "2025-09-30"
+            }
+          },
+          "response": {
+            "totalSales": 16500,
+            "gstOnSales": 1500,
+            "gstOnPurchases": 200
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "movement": {
+              "accountCode": "820",
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "movement": 852
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "to": "Jo (bookkeeper)",
+            "flags": 1,
+            "notChecked": 4
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "flags-never-decides",
+      "n": 11,
+      "title": "Read only: one list to the named person, nothing written, nothing lodged, no advice",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Exactly one list published, to the named reviewer. No call in the trace writes anything. No flag's text tells the reader what to change, claim or lodge.",
+      "actual": "13 port call(s); 1 list(s) to Jo (bookkeeper); flags: tax_invoice[B2] usual_code[B4] no_gst_account[S5]; not checked: usual_code",
+      "stimulus": {
+        "description": "The base quarter, run once.",
+        "now": "2026-10-14T22:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "flags-never-decides"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "period": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "capabilities": true
+          },
+          "response": {
+            "attachments": true,
+            "reconciliation": true,
+            "gstReport": true
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxCodes": true
+          },
+          "response": {
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "accounts": true
+          },
+          "response": {
+            "count": 10
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "transactions": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "count": 7
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "transactions": {
+              "from": "2026-01-01",
+              "to": "2026-06-30"
+            }
+          },
+          "response": {
+            "count": 6
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "gstReport": {
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "totalSales": 16500,
+            "gstOnSales": 1500,
+            "gstOnPurchases": 240
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "gstReport": {
+              "from": "2025-07-01",
+              "to": "2025-09-30"
+            }
+          },
+          "response": {
+            "totalSales": 16500,
+            "gstOnSales": 1500,
+            "gstOnPurchases": 200
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "movement": {
+              "accountCode": "820",
+              "from": "2026-07-01",
+              "to": "2026-09-30"
+            }
+          },
+          "response": {
+            "movement": 1260
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "txnId": "B2"
+          },
+          "response": {
+            "txnId": "B2",
+            "date": "2026-07-22",
+            "total": 330
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "txnId": "B4"
+          },
+          "response": {
+            "txnId": "B4",
+            "date": "2026-08-05",
+            "total": 440
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "cite",
+          "verb": "attach",
+          "subject": "citation",
+          "request": {
+            "txnId": "S5"
+          },
+          "response": {
+            "txnId": "S5",
+            "date": "2026-08-31",
+            "total": 11
+          }
+        },
+        {
+          "at": "2026-10-14T22:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "to": "Jo (bookkeeper)",
+            "flags": 3,
+            "notChecked": 1
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 12,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the check runs on.",
+        "now": "2026-11-12T20:03:10.764Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 13,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "The seeded bill is on a tax_invoice flag by its real id. Every cited id reads back from the ledger. The ledger's own history or audit trail for the period shows no change made by the run's connection.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "A real period in the business's own Xero, MYOB Business or QuickBooks Online file, with one seeded bill above the threshold, GST claimed, no attachment.",
+        "now": "2026-11-12T20:03:10.764Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 13,
+    "pass": 9,
+    "fail": 0,
+    "shapeOnly": 2,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
