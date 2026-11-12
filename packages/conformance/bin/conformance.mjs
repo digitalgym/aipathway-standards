@@ -85,7 +85,11 @@ const KNOWN = [
   "exception-desk-build-standard",
   "parts-ready-build-standard",
   "fault-triage-build-standard",
-  "progress-claim-draft-build-standard"
+  "progress-claim-draft-build-standard",
+  "takeaway-orders-build-standard",
+  "uncoded-query-build-standard",
+  "bas-ready-check-build-standard",
+  "month-end-close-build-standard"
 ];
 
 const [cmd, slug] = process.argv.slice(2);

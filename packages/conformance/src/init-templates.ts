@@ -129,6 +129,10 @@ const WORLDS: Record<string, string> = {
   "parts-ready-build-standard": "PartsReadyWorld",
   "fault-triage-build-standard": "FaultTriageWorld",
   "progress-claim-draft-build-standard": "ProgressClaimWorld",
+  "takeaway-orders-build-standard": "TakeawayWorld",
+  "uncoded-query-build-standard": "UncodedQueryWorld",
+  "bas-ready-check-build-standard": "BasWorld",
+  "month-end-close-build-standard": "MonthEndCloseWorld",
 };
 
 /**

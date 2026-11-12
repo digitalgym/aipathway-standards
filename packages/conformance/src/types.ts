@@ -173,6 +173,29 @@ export const ALL_PORTS = [
   "read_contract",
   "read_assessment",
   "draft_claim",
+  // Takeaway Orders (2026-10-27). `read_menu` reads the venue's own menu out of
+  // its till, with the owner's pickup list: deliberately a READ, because the
+  // standard refuses to invent a dish or a price. `request_payment` asks the
+  // venue's own payment provider for a link for one order, and `read_payment`
+  // reads whether it was paid: the kitchen ticket (`write_order`, reused: an
+  // order written into the system the business runs) waits on that read.
+  // `write_booking` writes a table into the venue's booking system; without a
+  // successful one, no table is confirmed.
+  "read_menu",
+  "request_payment",
+  "read_payment",
+  "write_booking",
+  // Month-End Close (2026-11-12). `read_signoff` reads a person's recorded
+  // sign-off of one entity's close for one period, with who, when and which
+  // proposed journals they approved: deliberately a READ, because the build
+  // never signs off. `propose_journal` writes an accrual or prepayment journal
+  // into the close pack for a person to approve; it is not a ledger write.
+  // Posting reuses `write_ledger`. `set_lock_date` writes the period lock
+  // date into the ledger, the one step that cannot be taken back cleanly, so
+  // it is its own port and the trace shows exactly when it was attempted.
+  "read_signoff",
+  "propose_journal",
+  "set_lock_date",
   // the run itself
   "rank",
   "gate",
@@ -258,6 +281,14 @@ export const PORT_SHAPE: Record<Port, { verb: PortVerb; subject: string }> = {
   read_contract: { verb: "read", subject: "contract" },
   read_assessment: { verb: "read", subject: "assessment" },
   draft_claim: { verb: "write", subject: "claim_draft" },
+  read_menu: { verb: "read", subject: "menu" },
+  request_payment: { verb: "write", subject: "payment_request" },
+  read_payment: { verb: "read", subject: "payment" },
+  write_booking: { verb: "write", subject: "booking" },
+  // Month-End Close (2026-11-12)
+  read_signoff: { verb: "read", subject: "signoff" },
+  propose_journal: { verb: "write", subject: "journal_proposal" },
+  set_lock_date: { verb: "write", subject: "lock_date" },
   // attach
   evidence: { verb: "attach", subject: "evidence" },
   cite: { verb: "attach", subject: "citation" },

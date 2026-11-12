@@ -102,7 +102,7 @@ package is the harness. The site is the standard.
 
 ## The standards
 
-40 of them, each one a job that leaks money in an Australian small business or
+44 of them, each one a job that leaks money in an Australian small business or
 network. Every one publishes its checks as data at the same `/checks.json` path.
 
 | Standard | The job |
@@ -147,6 +147,10 @@ network. Every one publishes its checks as data at the same `/checks.json` path.
 | [parts-ready](https://aipathway.com.au/explore-ai/parts-ready-build-standard) | Tomorrow's jobs checked against the van and the shelf the afternoon before, a shortfall ordered through Material Order or flagged, nothing substituted |
 | [fault-triage](https://aipathway.com.au/explore-ai/fault-triage-build-standard) | Every fault sorted against your written list: fixed on the phone only from a written procedure, a job when someone has to go, anything unsafe to the emergency path |
 | [progress-claim-draft](https://aipathway.com.au/explore-ai/progress-claim-draft-build-standard) | Draft: the month's progress claim drafted from the schedule, the site assessment and signed variations, behind a recorded waiver, and held for the builder to serve |
+| [takeaway-orders](https://aipathway.com.au/explore-ai/takeaway-orders-build-standard) | Pickup orders and tables by phone and web chat, paid by link before the kitchen ticket prints |
+| [uncoded-query](https://aipathway.com.au/explore-ai/uncoded-query-build-standard) | One plain question list a month per client for the bank lines nobody can code, a coding suggested from their own chart, and written once only after a person approves it |
+| [bas-ready-check](https://aipathway.com.au/explore-ai/bas-ready-check-build-standard) | Before the BAS is lodged, one list of GST exceptions for the bookkeeper or BAS agent, every flag citing its transaction, read only |
+| [month-end-close](https://aipathway.com.au/explore-ai/month-end-close-build-standard) | Every close item passed, failed or could not check with its evidence, then a person signs off, approved journals post once and the lock date moves forward |
 
 ## Also available
 
