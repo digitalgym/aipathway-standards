@@ -1,0 +1,129 @@
+{
+  "spec": "AIP-BS-MONTH-END-CLOSE",
+  "standard": "month-end-close-build-standard",
+  "edition": "2026-11-12",
+  "source": "https://aipathway.com.au/explore-ai/month-end-close-build-standard",
+  "ran_at": "2026-11-12T20:02:13.511Z",
+  "environment": "stub",
+  "provider": "local.mock_ledger_close",
+  "provider_block": {
+    "boundary": {
+      "never": [
+        "post a journal no person approved in a recorded sign-off",
+        "post an approved journal twice, or retry a post without reading back first",
+        "invent an accrual or prepayment amount; it comes from the schedule the business keeps or a person's entry for the period",
+        "set the lock date before sign-off, or to a date earlier than the one the ledger holds",
+        "mark an item passed without the ledger read it came from",
+        "decide whether a difference is material, or recode an uncoded line"
+      ],
+      "stays_with_person": [
+        "reviewing the close pack and signing off, by name, approving each proposed journal",
+        "keeping the schedule of accruals and prepayments, and entering any amount the schedule does not hold",
+        "whether any difference or failed item matters, and what to do about it",
+        "setting the lock date by hand where the ledger's API cannot write it",
+        "what each uncoded line was, through the Uncoded Query standard"
+      ]
+    },
+    "job": "the month closed the same way every time, signed off, then locked",
+    "skill": "month-end-close",
+    "stub": "local.mock_ledger_close",
+    "production": null,
+    "product": null,
+    "insert": null,
+    "with_us": {
+      "kind": "own_systems",
+      "note": "No hosted step. The build connects straight to the business's own ledger through the ledger's own sign-in, and the production check runs there: the approved journals and the lock date written and read back after a person's sign-off."
+    }
+  },
+  "tally": {
+    "green": 8,
+    "red": 0,
+    "with_us": 1,
+    "evidence_required": 1,
+    "total": 13
+  },
+  "checks": [
+    {
+      "id": "every-item-has-a-result",
+      "n": 1,
+      "title": "Every item on the checklist gets a result",
+      "verdict": "pass"
+    },
+    {
+      "id": "evidence-or-it-did-not-pass",
+      "n": 2,
+      "title": "A pass or a fail carries its evidence",
+      "verdict": "pass"
+    },
+    {
+      "id": "could-not-check-said-plainly",
+      "n": 3,
+      "title": "What could not be read is recorded as could not check",
+      "verdict": "pass"
+    },
+    {
+      "id": "bank-to-the-statement-date",
+      "n": 4,
+      "title": "Every bank account is reconciled to a statement dated at period end",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "uncoded-handed-on",
+      "n": 5,
+      "title": "Uncoded and suspense lines are handed to Uncoded Query, once",
+      "verdict": "pass"
+    },
+    {
+      "id": "accruals-only-from-the-schedule",
+      "n": 6,
+      "title": "An accrual amount comes from the schedule or a person, never a guess",
+      "verdict": "pass"
+    },
+    {
+      "id": "differences-reported-not-judged",
+      "n": 7,
+      "title": "A difference is reported, never judged small enough",
+      "verdict": "pass"
+    },
+    {
+      "id": "nothing-written-before-sign-off",
+      "n": 8,
+      "title": "Nothing is written into the ledger before a person signs off",
+      "verdict": "pass"
+    },
+    {
+      "id": "journals-post-once",
+      "n": 9,
+      "title": "Each approved journal posts exactly once, and is read back",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "lock-date-forward-after-sign-off",
+      "n": 10,
+      "title": "The lock date moves forward to period end, only after sign-off",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "closed-period-handed-on",
+      "n": 11,
+      "title": "The closed period is handed to the Recurring Report, once",
+      "verdict": "pass"
+    },
+    {
+      "id": "survives-the-builder",
+      "n": 12,
+      "title": "It survives the builder",
+      "verdict": "evidence_required"
+    },
+    {
+      "id": "pass-test",
+      "n": 13,
+      "title": "The pass test passes",
+      "verdict": "with_us"
+    }
+  ],
+  "next": {
+    "with_us": "No hosted step. The build connects straight to the business's own ledger through the ledger's own sign-in, and the production check runs there: the approved journals and the lock date written and read back after a person's sign-off. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence.",
+    "evidence_required": "attach what proves each one; not a software check"
+  }
+}
