@@ -1,0 +1,68 @@
+{
+  "slug": "coding-questions",
+  "name": "Coding Questions",
+  "office_task": "Each month, ask each client what their uncoded bank lines were for, suggest a coding from their own accounts, and write it to the ledger once a person approves it.",
+  "verticals": [
+    "accounting-bookkeeping"
+  ],
+  "standards": [
+    "uncoded-query"
+  ],
+  "systems_of_record": [
+    "the client's ledger, Xero, MYOB Business or QuickBooks Online, which issues the id of every uncoded line, the chart of accounts and tax codes, and the coding history. Xero and QuickBooks Online do not expose unreconciled bank feed lines over their APIs, so on those it works from lines parked on a suspense or uncategorised account; MYOB Business's Banking Statement endpoint lists feed lines as Uncoded or Coded. No ledger reconciles over its API, so reconciling stays with a person",
+    "the practice's mail system, which sends each client's one question list and reminders and holds them as sent",
+    "the answer page, which keeps each client's answer against the ledger's line id with who answered and when",
+    "the approval list, where a named person approves or changes each proposed coding",
+    "the exception desk the practice runs, which issues the exception_id of every hand-off"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/coding-questions"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "schedule"
+  ],
+  "consumes": [
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    }
+  ],
+  "emits": [
+    {
+      "event": "exception.raised",
+      "write": "a hand-off naming a person, keyed on the line or the client and the cycle: unanswered (the last reminder went unanswered; the person decides whether to ring), no_account_fits (the answer fits no account in the client's chart; nothing was proposed), reconcile_by_person (an approved coding for a bank line the ledger has not reconciled, with the approved account and tax code), readback_mismatch (the ledger, read back, holds something other than what was approved) or write_failed (the ledger refused the write or never answered)",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the client, the line ids, the reason and the exception_owner; no id back means nothing was raised and the run stops for that client"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "uncoded.unanswered",
+      "uncoded.no_account_fits",
+      "uncoded.reconcile_by_person",
+      "uncoded.readback_mismatch",
+      "uncoded.write_failed"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.line_id",
+      "seam.cycle",
+      "seam.line_status",
+      "seam.approval_id",
+      "seam.write_key",
+      "seam.ledger_coding",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
