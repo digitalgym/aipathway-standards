@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-14T00:31:11.114Z",
+  "generated_at": "2026-11-14T00:31:22.297Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -2466,6 +2466,90 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 12
+        }
+      ]
+    },
+    {
+      "slug": "coding-questions",
+      "name": "Coding Questions",
+      "office_task": "Each month, ask each client what their uncoded bank lines were for, suggest a coding from their own accounts, and write it to the ledger once a person approves it.",
+      "verticals": [
+        "accounting-bookkeeping"
+      ],
+      "standards": [
+        "uncoded-query"
+      ],
+      "systems_of_record": [
+        "the client's ledger, Xero, MYOB Business or QuickBooks Online, which issues the id of every uncoded line, the chart of accounts and tax codes, and the coding history. Xero and QuickBooks Online do not expose unreconciled bank feed lines over their APIs, so on those it works from lines parked on a suspense or uncategorised account; MYOB Business's Banking Statement endpoint lists feed lines as Uncoded or Coded. No ledger reconciles over its API, so reconciling stays with a person",
+        "the practice's mail system, which sends each client's one question list and reminders and holds them as sent",
+        "the answer page, which keeps each client's answer against the ledger's line id with who answered and when",
+        "the approval list, where a named person approves or changes each proposed coding",
+        "the exception desk the practice runs, which issues the exception_id of every hand-off"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        }
+      ],
+      "emits": [
+        {
+          "event": "exception.raised",
+          "write": "a hand-off naming a person, keyed on the line or the client and the cycle: unanswered (the last reminder went unanswered; the person decides whether to ring), no_account_fits (the answer fits no account in the client's chart; nothing was proposed), reconcile_by_person (an approved coding for a bank line the ledger has not reconciled, with the approved account and tax code), readback_mismatch (the ledger, read back, holds something other than what was approved) or write_failed (the ledger refused the write or never answered)",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the client, the line ids, the reason and the exception_owner; no id back means nothing was raised and the run stops for that client"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "uncoded.unanswered",
+          "uncoded.no_account_fits",
+          "uncoded.reconcile_by_person",
+          "uncoded.readback_mismatch",
+          "uncoded.write_failed"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.line_id",
+          "seam.cycle",
+          "seam.line_status",
+          "seam.approval_id",
+          "seam.write_key",
+          "seam.ledger_coding",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/coding-questions"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-14",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "uncoded-query",
+          "edition": "2026-11-12",
+          "environment": "stub",
+          "ran_at": "2026-11-12T20:03:56.662Z",
+          "run_id": "run-1794513836661",
+          "green": 10,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 15
         }
       ]
     },
@@ -16393,6 +16477,7 @@
     "client-review-watch",
     "client-site-report",
     "close-check",
+    "coding-questions",
     "comeback-list",
     "comp-check",
     "comp-report",
