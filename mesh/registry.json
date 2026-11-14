@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-12T11:51:23.422Z",
+  "generated_at": "2026-11-14T00:31:11.114Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -717,7 +717,7 @@
     {
       "slug": "balance-proof",
       "name": "Balance Proof",
-      "office_task": "Each month, tie every balance sheet account in Xero to the statement that supports it, by account id, and list every balance nobody can explain for a named person to clear.",
+      "office_task": "Each month, tie every balance sheet account in Xero, MYOB or QuickBooks to the statement that supports it, by account id, and list every balance nobody can explain for a named person to clear.",
       "verticals": [
         "accounting-bookkeeping"
       ],
@@ -725,8 +725,8 @@
         "two-records"
       ],
       "systems_of_record": [
-        "Xero (the ledger that issues the account id and holds each balance sheet account's month-end balance)",
-        "the practice's support file for the month (bank, loan and hire purchase statements, the ATO integrated client account, payroll liabilities and super reports, the fixed asset register), each document tagged with the Xero account id it supports"
+        "the ledger, Xero, MYOB or QuickBooks Online (it issues the account id and holds each balance sheet account's month-end balance)",
+        "the practice's support file for the month (bank, loan and hire purchase statements, the ATO integrated client account, payroll liabilities and super reports, the fixed asset register), each document tagged with the ledger account id it supports"
       ],
       "consumes": [
         {
@@ -897,6 +897,93 @@
           "ran_at": "2026-11-04T11:48:04.164Z",
           "run_id": "run-1793792884162",
           "green": 10,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 13
+        }
+      ]
+    },
+    {
+      "slug": "bas-check",
+      "name": "BAS Check",
+      "office_task": "Before each BAS is lodged, check each client's file and publish Ready or Not ready with the GST exceptions to fix, each with its transaction and as-of time.",
+      "verticals": [
+        "accounting-bookkeeping"
+      ],
+      "standards": [
+        "bas-ready-check"
+      ],
+      "systems_of_record": [
+        "the ledger (Xero), read only over the Accounting API: the period's transactions with line tax codes, the tax rates, the accounts, whether a transaction has attachments and whether a bank transaction is reconciled. Xero does not lodge a BAS over this API, and the lock date is not writable over it, so locking the period stays with the person (as at 2026-11-12)",
+        "the ledger (MYOB Business), read only over the MYOB Business API: transactions, bills and spend money with tax codes, the tax code list, attachments for spend money and bills, and a tax code summary report. No reconciled status was found, so the reconciliation check is listed as not checked. MYOB does not lodge a BAS over this API, and the lock date is not writable over it, so locking the period stays with the person (as at 2026-11-12)",
+        "the ledger (QuickBooks Online), read only over the QuickBooks Online Accounting API: transactions with tax codes, the tax code list and attachments. No reconciled flag and no Australian GST report were found, so reconciliation is listed as not checked and the figures are worked out from the coded lines. QuickBooks does not lodge a BAS over this API; whether the closing date can be set over it is unconfirmed, so locking the period stays with the person (as at 2026-11-12)",
+        "the system the list is published into (the practice's task list, a shared folder or email), which issues the report_id",
+        "the exception desk the practice runs, which issues the exception_id"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "one BAS Ready Check list per client file per BAS period, to the bookkeeper or BAS agent named in the settings: Ready, or Not ready with the GST exceptions to look at (tax_invoice, usual_code, no_gst_account, capital, uncoded, unreconciled, swing, control_account), each line flag citing the ledger's transaction id with the date and total read back and the as-of time, and a not checked section with the reason for anything the ledger could not be read for. No advice, no corrected code, nothing written to the ledger, nothing lodged",
+          "readback": "reading the period's list back from the system it was published into returns its report_id with the client, the period, the status, the reviewer and published_at; no id back means it was not published and bas.publish_failed is raised"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception naming the reviewer from the settings: the ledger connection could not be read for the period, the settings are missing a period, threshold, band or reviewer, or the list did not read back",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the client, the period, the reason and the exception_owner"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "bas.ledger_unreadable",
+          "bas.settings_incomplete",
+          "bas.publish_failed"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.report_id",
+          "seam.period",
+          "seam.ledger",
+          "seam.status",
+          "seam.reviewer",
+          "seam.as_of",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/bas-check"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-14",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "bas-ready-check",
+          "edition": "2026-11-12",
+          "environment": "stub",
+          "ran_at": "2026-11-12T20:03:10.766Z",
+          "run_id": "run-1794513790764",
+          "green": 9,
           "red": 0,
           "with_us": 1,
           "evidence_required": 1,
@@ -1405,7 +1492,7 @@
     {
       "slug": "chase-book",
       "name": "Chase Book",
-      "office_task": "Every morning, read who owes us from Xero, send one reminder per customer pitched to how late they are, log it on the invoice, and hand disputes and big accounts to a named person.",
+      "office_task": "Every morning, read who owes us from Xero, MYOB or QuickBooks, send one reminder per customer pitched to how late they are, log it on the invoice, and hand disputes and big accounts to a named person.",
       "verticals": [
         "accounting-bookkeeping"
       ],
@@ -1413,7 +1500,7 @@
         "debtor-chasing"
       ],
       "systems_of_record": [
-        "Xero (invoices, contacts and invoice history)",
+        "the ledger, Xero, MYOB or QuickBooks Online (invoices, contacts, and invoice history or notes)",
         "Gmail or Outlook (the reminder thread and the debtor's reply)"
       ],
       "consumes": [
@@ -1441,7 +1528,7 @@
       "emits": [
         {
           "event": "promise.recorded",
-          "write": "A dated promise to pay on the invoice in Xero, taken from the debtor's reply: date (required), amount (may be empty), method if offered and the capture time, as a history note on each invoice it covers. It never overwrites a logged dispute, and the next reminder moves to the promised date.",
+          "write": "A dated promise to pay on the invoice in Xero, taken from the debtor's reply: date (required), amount (may be empty), method if offered and the capture time, as a history note on each invoice it covers (Xero), or added to the invoice's own note without removing what is there (MYOB, QuickBooks). It never overwrites a logged dispute, and the next reminder moves to the promised date.",
           "readback": "GET /api.xro/2.0/Invoices/{InvoiceID}/History returns the note with the promised date and capture time on the invoice_id it was written to. No note back means no promise was recorded: it raises debtor.promise_write_failed."
         },
         {
@@ -2289,7 +2376,7 @@
     {
       "slug": "close-check",
       "name": "Close Check",
-      "office_task": "Each month, check whether a client's Xero file is ready to close and publish Ready or Not ready with the items to fix.",
+      "office_task": "Each month, check whether a client's ledger file (Xero, MYOB or QuickBooks) is ready to close and publish Ready or Not ready with the items to fix.",
       "verticals": [
         "accounting-bookkeeping"
       ],
@@ -2297,7 +2384,7 @@
         "recurring-report"
       ],
       "systems_of_record": [
-        "the ledger (Xero): bank statement lines, draft invoices and bills, the suspense account and tax rates for the month",
+        "the ledger (Xero, MYOB or QuickBooks Online): bank lines, draft invoices and bills where the ledger has drafts, the suspense account and tax rates for the month; Xero and QuickBooks do not expose unreconciled bank-feed lines over their APIs, so on those the bank item is read from the suspense or uncategorised account, and no ledger reconciles over its API",
         "the practice management system (such as Xero Practice Manager or Karbon): the client's month-end close job and its open steps",
         "the system the report is published into, which issues the report_id"
       ],
@@ -6575,7 +6662,7 @@
     {
       "slug": "intercompany-match",
       "name": "Intercompany Match",
-      "office_task": "Each month end, match what our group companies say they owe each other across their Xero files, list every difference with both figures, and fix one only once a named person accepts it.",
+      "office_task": "Each month end, match what our group companies say they owe each other in Xero, MYOB or QuickBooks, list every difference with both figures, and fix one only once a named person accepts it.",
       "verticals": [
         "accounting-bookkeeping"
       ],
@@ -6583,8 +6670,8 @@
         "two-records"
       ],
       "systems_of_record": [
-        "Xero, the issuing company's file (the intercompany invoice and its InvoiceID)",
-        "Xero, the receiving company's file (the bill entered for the same charge, carrying the issuer's InvoiceID as its reference)"
+        "the issuing company's ledger file, Xero, MYOB or QuickBooks Online (the intercompany invoice and its id: the Xero InvoiceID, the MYOB invoice UID or the QuickBooks invoice Id)",
+        "the receiving company's ledger file, Xero, MYOB or QuickBooks Online (the bill entered for the same charge, carrying the issuer's invoice id as its reference)"
       ],
       "consumes": [
         {
@@ -8891,6 +8978,96 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 12
+        }
+      ]
+    },
+    {
+      "slug": "month-sign-off",
+      "name": "Month Sign-Off",
+      "office_task": "At month end, work each client file's close checklist with the evidence for every item, and put the month to a named person to sign off before anything is posted.",
+      "verticals": [
+        "accounting-bookkeeping"
+      ],
+      "standards": [
+        "month-end-close"
+      ],
+      "systems_of_record": [
+        "each client's ledger, Xero, MYOB Business or QuickBooks Online, through its own sign-in: bank accounts, uncoded and suspense lines, aged receivables and payables against their control accounts, pay runs, the GST control and clearing accounts, manual journals and the lock date. As at 2026-11-12 no ledger reconciles over its API, so reconciling stays with the person",
+        "Xero: bank transactions carry whether they are reconciled, but unreconciled bank feed (statement) lines are not exposed over the Accounting API, so where the statement side cannot be read the bank item is recorded as could not check; the period lock date (PeriodLockDate on Organisation) is read only",
+        "MYOB Business: the Banking/Statement endpoint shows Uncoded and Coded statement lines; the lock date (LockPeriodPriorTo in company preferences) is read only; no aged receivables or payables report endpoint is documented, so those are worked from open invoices and bills or recorded as could not check",
+        "QuickBooks Online: unreconciled bank feed lines are not exposed over the API and reconciled status is not a field on transactions; whether the closing date can be written is unconfirmed in Intuit's reference, so it is treated as read only",
+        "the accruals and prepayments schedule the business keeps, with any amount a person enters for the month",
+        "the practice's close register (a SharePoint or Google Drive folder, or the practice management system) the close pack is written into, which issues the report_id and records the named person's sign-off",
+        "the exception desk the practice runs, which issues the exception_id"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the month's close pack for one client file, written into the practice's close register for the named reviewer: all eight checklist items (bank, uncoded, receivables, payables, payroll, accruals, tax control, clearing) as pass, fail or could not check, each pass and fail with the ledger read it came from and its as-of time, and the accrual and prepayment journals proposed from the schedule or a person's entry. After the reviewer signs off by name, the pack records each approved journal with the ledger journal id read back, the lock date read back, and the hand-over of the closed month to the Recurring Report",
+          "readback": "reading the client's month back from the register returns the report_id with every item result and its read id; each approved journal reads back from the ledger by its intent id close:<tenant>:<entity>:<period>:<line> in the narration or memo; no id back means it was not written and close.write_failed is raised"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception naming its owner: each uncoded or suspense line to the Uncoded Query queue, once by line id; a schedule line with no amount to the bookkeeper, once; a journal post with no answer to the bookkeeper; and, after sign-off, one task for the reviewer to set the lock date by hand because the ledger's API cannot write it",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the client file, the month, the line or journal it is about, the reason and the exception_owner"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "close.uncoded",
+          "close.no_amount",
+          "close.write_failed",
+          "close.set_lock_date"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.report_id",
+          "seam.period",
+          "seam.signed_off_by",
+          "seam.journal_ids",
+          "seam.lock_date_read_back",
+          "seam.handed_to",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/month-sign-off"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-14",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "month-end-close",
+          "edition": "2026-11-12",
+          "environment": "stub",
+          "ran_at": "2026-11-12T20:02:13.511Z",
+          "run_id": "run-1794513733510",
+          "green": 8,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 13
         }
       ]
     },
@@ -11847,7 +12024,7 @@
     {
       "slug": "receipt-chase",
       "name": "Receipt Chase",
-      "office_task": "Each weekday, find the bank and card lines in Xero with no receipt, ask the person who spent each one for it, attach it when it comes back, and hand a no or a silence to the bookkeeper.",
+      "office_task": "Each weekday, find the bank and card lines in Xero or QuickBooks with no receipt, ask the person who spent each one for it, attach it when it comes back, and hand a no or a silence to the bookkeeper.",
       "verticals": [
         "accounting-bookkeeping"
       ],
@@ -11855,7 +12032,7 @@
         "follow-up"
       ],
       "systems_of_record": [
-        "Xero, where each spend line in the bank feed has its bank transaction id and the receipt is attached to that line",
+        "the ledger, Xero or QuickBooks Online, where each spend line has its id (the Xero bank transaction id, the QuickBooks Purchase Id) and the receipt is attached to that line (QuickBooks: an Attachable linked to the Purchase)",
         "the receipt register kept beside it, one open item per line with no receipt, owed by the person who spent it",
         "the practice's mailbox (Gmail or Outlook), where a receipt sent back on the chase thread arrives with its message id"
       ],
@@ -16201,6 +16378,7 @@
     "backflow-watch",
     "balance-proof",
     "bank-questions",
+    "bas-check",
     "bill-check",
     "billing-match",
     "branch-drift",
@@ -16277,6 +16455,7 @@
     "measure-quote",
     "meeting-notes",
     "month-pack",
+    "month-sign-off",
     "notice-check",
     "nudge-desk",
     "open-home-desk",
