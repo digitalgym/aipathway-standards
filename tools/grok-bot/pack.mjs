@@ -49,8 +49,16 @@ for (const slug of slugs) {
   const test = answers
     ? "read the five most recent jobs in the job system by id, change nothing, contact no one, and show the owner the list"
     : "read the total of sent invoices past their due date and the three customers who owe the most, change nothing, contact no one, and show the owner the result";
+  // The Office Voice key connects Xero only. A listing that also names MYOB or
+  // QuickBooks gets a fork: those books are connected for the owner by AI
+  // Pathway, and until then the Bot works read only from exported reports.
+  const otherLedgers = ["MYOB", "QuickBooks"].filter((l) => m.systems_of_record.some((s) => s.includes(l)));
+  const ledgerFork = books && otherLedgers.length ? [
+    `First ask which accounting software each client's books are in. Xero: follow steps 1 to 4. ${otherLedgers.join(" or ")}: tell the owner "Office Voice connects Xero only. For ${otherLedgers.join(" and ")} books, AI Pathway connects them for you: https://aipathway.com.au/contact. Until then I can work from the reports you export, read only." Then work only from the exported files they give you: suggest, never write, and say which export each figure came from.`,
+  ] : [];
   const firstRun = books || answers || dials ? [
     `First run, before any real work:`,
+    ...ledgerFork,
     `1. Check whether you have an MCP server called Office Voice. If you do, skip to step 4.`,
     `2. If not, tell the owner: "I work with your systems through an Office Voice key, so your passwords stay with you. Sign up at https://office-voice.com, click Sign in with Xero and pick your organisation. Then under Keys, create a key and tick: ${scopes.join(", ")}."${dials ? " Queue calls needs the Get Paid plan." : ""}${answers ? " Answering your phone after hours is the Booked After Hours add-in in Office Voice; turn it on there." : ""}`,
     `3. When they have the key, add a custom MCP server called Office Voice at https://office-voice.com/api/mcp. It needs an Authorization header: the word Bearer, a space, then the key. Ask for the key with a secure secret card. Never ask them to type it in chat.`,
