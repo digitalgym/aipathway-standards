@@ -1,0 +1,129 @@
+{
+  "spec": "AIP-BS-BAS-READY-CHECK",
+  "standard": "bas-ready-check-build-standard",
+  "edition": "2026-11-12",
+  "source": "https://aipathway.com.au/explore-ai/bas-ready-check-build-standard",
+  "ran_at": "2026-11-12T20:03:10.766Z",
+  "environment": "stub",
+  "provider": "local.mock_ledger_period",
+  "provider_block": {
+    "boundary": {
+      "never": [
+        "write anything to the ledger: no code changed, no journal posted, no attachment added",
+        "lodge a BAS, or prepare one for lodgement",
+        "flag a line without citing the ledger's transaction id",
+        "say what a code should be, what to claim or how to fix a line",
+        "flag on a guess about something the ledger could not be read for",
+        "decide on its own which accounts carry no GST"
+      ],
+      "stays_with_person": [
+        "every flag: whether it is a problem, and what to do about it",
+        "the tax codes, journals and corrections in the ledger",
+        "lodging the BAS, by the business or its registered BAS or tax agent",
+        "the settings: the period, the comparable period, the band, the no-GST accounts and the reviewer",
+        "getting a missing tax invoice from a supplier"
+      ]
+    },
+    "job": "the bookkeeper or BAS agent gets one list of GST exceptions before the period is lodged, every flag traceable to a transaction",
+    "skill": "bas-ready-check",
+    "stub": "local.mock_ledger_period",
+    "production": null,
+    "product": null,
+    "insert": null,
+    "with_us": {
+      "kind": "own_systems",
+      "note": "No hosted step, and no product runs this one. The build connects straight to the business's own Xero, MYOB Business or QuickBooks Online through that ledger's own sign-in and API, read only. The production check runs there: a seeded line caught by its real id, every cited id read back, and the ledger's own audit trail showing the run wrote nothing. Keeping that read authorised every quarter, and each client's history of usual codes, is the step that needs care; it is the business's own, or a scoped build."
+    }
+  },
+  "tally": {
+    "green": 9,
+    "red": 0,
+    "with_us": 1,
+    "evidence_required": 1,
+    "total": 13
+  },
+  "checks": [
+    {
+      "id": "period-from-the-ledger",
+      "n": 1,
+      "title": "The period's transactions come from the ledger, by its own ids and dates",
+      "verdict": "pass"
+    },
+    {
+      "id": "every-flag-cites-its-source",
+      "n": 2,
+      "title": "Every flag cites the transaction it came from, and that transaction reads back",
+      "verdict": "pass"
+    },
+    {
+      "id": "tax-invoice-held",
+      "n": 3,
+      "title": "GST claimed above the tax invoice threshold with no tax invoice attached is flagged",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "code-differs-from-usual",
+      "n": 4,
+      "title": "A GST code that differs from what that supplier or account usually carries is flagged, with the usual code shown",
+      "verdict": "pass"
+    },
+    {
+      "id": "gst-on-no-gst-accounts",
+      "n": 5,
+      "title": "GST claimed on an account the business marked as carrying no GST is flagged",
+      "verdict": "pass"
+    },
+    {
+      "id": "capital-coded-capital",
+      "n": 6,
+      "title": "A purchase in a capital account not coded capital, or the reverse, is flagged when the business reports G10 and G11",
+      "verdict": "pass"
+    },
+    {
+      "id": "unreconciled-and-uncoded",
+      "n": 7,
+      "title": "Transactions inside the period that are unreconciled or carry no tax code are flagged",
+      "verdict": "pass"
+    },
+    {
+      "id": "swing-against-comparable",
+      "n": 8,
+      "title": "Period totals that swing against the comparable period beyond the business's band are flagged, with both figures",
+      "verdict": "pass"
+    },
+    {
+      "id": "control-account-agrees",
+      "n": 9,
+      "title": "The GST control account's movement for the period is compared with the GST the transactions report, and a difference is flagged",
+      "verdict": "pass"
+    },
+    {
+      "id": "lists-what-it-could-not-check",
+      "n": 10,
+      "title": "Whatever it could not check is listed, with the reason",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "flags-never-decides",
+      "n": 11,
+      "title": "Read only: one list to the named person, nothing written, nothing lodged, no advice",
+      "verdict": "pass"
+    },
+    {
+      "id": "survives-the-builder",
+      "n": 12,
+      "title": "It survives the builder",
+      "verdict": "evidence_required"
+    },
+    {
+      "id": "pass-test",
+      "n": 13,
+      "title": "The pass test passes",
+      "verdict": "with_us"
+    }
+  ],
+  "next": {
+    "with_us": "No hosted step, and no product runs this one. The build connects straight to the business's own Xero, MYOB Business or QuickBooks Online through that ledger's own sign-in and API, read only. The production check runs there: a seeded line caught by its real id, every cited id read back, and the ledger's own audit trail showing the run wrote nothing. Keeping that read authorised every quarter, and each client's history of usual codes, is the step that needs care; it is the business's own, or a scoped build. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence.",
+    "evidence_required": "attach what proves each one; not a software check"
+  }
+}

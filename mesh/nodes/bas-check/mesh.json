@@ -1,0 +1,71 @@
+{
+  "slug": "bas-check",
+  "name": "BAS Check",
+  "office_task": "Before each BAS is lodged, check each client's file and publish Ready or Not ready with the GST exceptions to fix, each with its transaction and as-of time.",
+  "verticals": [
+    "accounting-bookkeeping"
+  ],
+  "standards": [
+    "bas-ready-check"
+  ],
+  "systems_of_record": [
+    "the ledger (Xero), read only over the Accounting API: the period's transactions with line tax codes, the tax rates, the accounts, whether a transaction has attachments and whether a bank transaction is reconciled. Xero does not lodge a BAS over this API, and the lock date is not writable over it, so locking the period stays with the person (as at 2026-11-12)",
+    "the ledger (MYOB Business), read only over the MYOB Business API: transactions, bills and spend money with tax codes, the tax code list, attachments for spend money and bills, and a tax code summary report. No reconciled status was found, so the reconciliation check is listed as not checked. MYOB does not lodge a BAS over this API, and the lock date is not writable over it, so locking the period stays with the person (as at 2026-11-12)",
+    "the ledger (QuickBooks Online), read only over the QuickBooks Online Accounting API: transactions with tax codes, the tax code list and attachments. No reconciled flag and no Australian GST report were found, so reconciliation is listed as not checked and the figures are worked out from the coded lines. QuickBooks does not lodge a BAS over this API; whether the closing date can be set over it is unconfirmed, so locking the period stays with the person (as at 2026-11-12)",
+    "the system the list is published into (the practice's task list, a shared folder or email), which issues the report_id",
+    "the exception desk the practice runs, which issues the exception_id"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/bas-check"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "schedule"
+  ],
+  "consumes": [
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    }
+  ],
+  "emits": [
+    {
+      "event": "report.published",
+      "write": "one BAS Ready Check list per client file per BAS period, to the bookkeeper or BAS agent named in the settings: Ready, or Not ready with the GST exceptions to look at (tax_invoice, usual_code, no_gst_account, capital, uncoded, unreconciled, swing, control_account), each line flag citing the ledger's transaction id with the date and total read back and the as-of time, and a not checked section with the reason for anything the ledger could not be read for. No advice, no corrected code, nothing written to the ledger, nothing lodged",
+      "readback": "reading the period's list back from the system it was published into returns its report_id with the client, the period, the status, the reviewer and published_at; no id back means it was not published and bas.publish_failed is raised"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception naming the reviewer from the settings: the ledger connection could not be read for the period, the settings are missing a period, threshold, band or reviewer, or the list did not read back",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the client, the period, the reason and the exception_owner"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "bas.ledger_unreadable",
+      "bas.settings_incomplete",
+      "bas.publish_failed"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.report_id",
+      "seam.period",
+      "seam.ledger",
+      "seam.status",
+      "seam.reviewer",
+      "seam.as_of",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
