@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-18T08:01:10.901Z",
+  "generated_at": "2026-11-18T08:02:12.244Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -9695,6 +9695,120 @@
       ]
     },
     {
+      "slug": "order-confirm-check",
+      "name": "Confirm Check",
+      "office_task": "Check each supplier's order confirmation line by line against our purchase order for price, quantity and delivery date before delivery, and change either side only once the buyer accepts.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "two-records"
+      ],
+      "systems_of_record": [
+        "the job system that issued the purchase order (Simpro, ServiceM8, Tradify, Fergus): issues the order number and each line number; owns the unit price we agreed and the quantity we ordered",
+        "the supplier's order confirmation, filed from the purchasing inbox (Gmail or Outlook, which issues the message_id) against our order number: owns the delivery date the supplier can meet"
+      ],
+      "consumes": [
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the run's order confirmation report where the buyer opens it: the pair contract it ran under, the key it joined on (order_line_id: our order number and line number), the owner per field, and the counts matched, within tolerance, mismatched, orphaned and corrected, published every run including the all-clear",
+          "readback": "the report store returns a report_id, and reading that id back returns the contract id, the five counts and the published time; no id back means the run did not publish and the buyer is told"
+        },
+        {
+          "event": "job.updated",
+          "write": "an accepted correction on the purchase order line on the job, one field (the delivery date the supplier confirmed, which the contract says the supplier owns), with the difference id and the name of the buyer who accepted it, and both original values kept on the difference",
+          "readback": "the job system returns the order id for the write, and reading the order line back returns the accepted date; no id back raises order_confirm_check.write_not_read_back and the buyer keys it by hand"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the order line naming the buyer who owns it: an open difference with our order's value, the confirmation's value and the owning side's value side by side awaiting acceptance (a price or quantity the supplier must reissue is a task carrying the accepted value), a line on one side only, a unit price gap over the threshold amount, a run over the mismatch rate, or an accepted correction whose write returned no id",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the order_line_id, the field, both values and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "order_confirm_check.contract_missing",
+          "order_confirm_check.owner_missing",
+          "order_confirm_check.difference_open",
+          "order_confirm_check.orphan",
+          "order_confirm_check.over_threshold",
+          "order_confirm_check.mismatch_rate",
+          "order_confirm_check.write_not_read_back"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "seam-mirror",
+        "fields": [
+          "seam.order_id",
+          "seam.order_line_id",
+          "seam.job_id",
+          "seam.message_id",
+          "seam.contract_id",
+          "seam.run_id",
+          "seam.difference_status",
+          "seam.value_order",
+          "seam.value_confirmation",
+          "seam.owner_value",
+          "seam.correction_accepted_by",
+          "seam.correction_written_id",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/order-confirm-check"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Check supplier order confirmations against POs with Claude, Gmail and Data Tables",
+        "original_author": "Swaraj Yadav",
+        "share_link": "https://n8n.io/workflows/22345",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-18",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "two-records",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-18T07:58:13.276Z",
+          "run_id": "run-1794988693275",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        }
+      ]
+    },
+    {
       "slug": "order-release",
       "name": "Order Release",
       "office_task": "Turn each job's material list into one purchase order per supplier, and hold any order over the spending limit, or to an unapproved supplier, until a named person releases it.",
@@ -11131,6 +11245,117 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 12
+        }
+      ]
+    },
+    {
+      "slug": "prequal-answers",
+      "name": "Prequal Desk",
+      "office_task": "Draft our answers to a head contractor's prequalification form (insurances, licences, WHS, ABN) only from our own filed documents, citing each one, for a person to send.",
+      "verticals": [
+        "trades-building"
+      ],
+      "standards": [
+        "cited-answer"
+      ],
+      "systems_of_record": [
+        "the mail system that issues the message_id the prequal form arrived on and the released answers went out on (Gmail, Outlook)",
+        "the subcontractor's own document library: certificates of currency (public liability, workers compensation by state), contractor licences by state, the ABN record and the WHS management plan, each held with its policy or licence number, period, state and effective date, with its answer register",
+        "the exception desk the business runs, which issues the exception_id"
+      ],
+      "consumes": [
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "answer.sent",
+          "write": "the drafted form answers, each with its source cards (document, item, policy or licence number and period, state, effective date), sent in reply on the form's thread only after a named person released them on the answer register",
+          "readback": "the mail system returns the reply's message_id, and reading that id back returns the thread it replies in and the answer register id; no id back means it was not sent, and cited.send_unconfirmed is raised to the named owner"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the form's message naming the person who owns it: no project state given, no filed document covers the line, the covering document has expired, two live documents disagree, a renewal waits for a named person to accept it (listing every stored answer that relied on the old one), or the line asks for a compliance statement, declaration or licence-scope judgement",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the message_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "cited.no_jurisdiction",
+          "cited.not_in_library",
+          "cited.document_expired",
+          "cited.decision_for_person",
+          "cited.source_conflict",
+          "cited.change_pending",
+          "cited.acceptance_without_person",
+          "cited.release_refused",
+          "cited.release_without_person",
+          "cited.send_unconfirmed"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "answer.message_id",
+          "answer.queue",
+          "answer.policy",
+          "answer.source_card_ids",
+          "answer.released_by",
+          "source_card.edition",
+          "source_card.jurisdiction",
+          "source_card.effective_from",
+          "change_delta.accepted_by",
+          "change_delta.accepted_on",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "webhook",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/prequal-answers"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Answer vendor security questionnaires with Google Sheets, Drive, Gmail and Gemini",
+        "original_author": "Ali Abdullah",
+        "share_link": "https://n8n.io/workflows/21931",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-18",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "cited-answer",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-18T07:59:09.224Z",
+          "run_id": "run-1794988749223",
+          "green": 7,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 10
         }
       ]
     },
@@ -14734,6 +14959,115 @@
       ]
     },
     {
+      "slug": "supplier-statement-check",
+      "name": "Statement Check",
+      "office_task": "Each month, check every supplier's statement against the bills in Xero, MYOB or QuickBooks by invoice number, and list every gap for a named person to clear.",
+      "verticals": [
+        "accounting-bookkeeping"
+      ],
+      "standards": [
+        "two-records"
+      ],
+      "systems_of_record": [
+        "the ledger, Xero, MYOB or QuickBooks Online (it issues the bill_id and the supplier contact id, holds each bill with the supplier's invoice number as its reference, and records the payments made against it)",
+        "the supplier's monthly statement, received by email or into a watched folder (one line per invoice, carrying the supplier's invoice number, the amount and what the supplier says is still owed)"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "document.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the supplier's statement check for the month, written where the accounts payable person opens it: the pair contract it ran under, the join key (the supplier's invoice number under the ledger's supplier contact id), the master per field, and the counts matched, within tolerance, mismatched, orphaned and corrected, published every run including the all-clear",
+          "readback": "the report store returns a report_id, and reading that id back returns the contract id, the supplier contact id, the five counts and the published time; no id back means the run did not publish and the owner is told"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception on the invoice naming the person who owns it: an open difference with the statement's value, the ledger's value and the master's value side by side, an orphan (an invoice on the statement with no bill in the ledger, or a bill in the ledger the statement does not list), a difference over the threshold amount, a mismatch rate over the declared rate, or an accepted correction whose write returned no id",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the supplier invoice reference, the bill_id where one exists, the reason, both values and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "two-records.contract_missing",
+          "two-records.difference_open",
+          "two-records.orphan_missing_bill",
+          "two-records.orphan_bill_not_on_statement",
+          "two-records.over_threshold_amount",
+          "two-records.mismatch_rate_exceeded",
+          "two-records.write_not_read_back"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "seam-mirror",
+        "fields": [
+          "seam.supplier_contact_id",
+          "seam.supplier_invoice_ref",
+          "seam.bill_id",
+          "seam.period",
+          "seam.contract_id",
+          "seam.run_id",
+          "seam.difference_status",
+          "seam.value_statement",
+          "seam.value_ledger",
+          "seam.master_value",
+          "seam.accepted_by",
+          "seam.written_id",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/supplier-statement-check"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Check vendor statements against a Google Sheets ledger and email a summary",
+        "original_author": "Invoice Ledger",
+        "share_link": "https://n8n.io/workflows/21812",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-18",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "two-records",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-18T07:58:06.226Z",
+          "run_id": "run-1794988686225",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        }
+      ]
+    },
+    {
       "slug": "swms-desk",
       "name": "SWMS Desk",
       "office_task": "Draft each job's SWMS or risk assessment from its scope and our approved templates, list who on the crew has not signed, and hold the pack until the supervisor accepts it.",
@@ -16645,6 +16979,7 @@
     "nudge-desk",
     "open-home-desk",
     "ops-map",
+    "order-confirm-check",
     "order-release",
     "outgoings-book",
     "outgoings-desk",
@@ -16658,6 +16993,7 @@
     "policy-desk",
     "portal-match",
     "practice-desk",
+    "prequal-answers",
     "prestart-desk",
     "price-creep",
     "price-sheet",
@@ -16692,6 +17028,7 @@
     "stage-billing",
     "starter-pack",
     "sub-pay-check",
+    "supplier-statement-check",
     "swms-desk",
     "takeoff-quote",
     "task-clock",
@@ -17825,6 +18162,186 @@
       "from": "job-sheet",
       "to": "timesheet-billing",
       "event": "job.completed",
+      "id": "job_id"
+    },
+    {
+      "from": "order-confirm-check",
+      "to": "arrival-brief",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "order-confirm-check",
+      "to": "buy-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "order-confirm-check",
+      "to": "crew-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "order-confirm-check",
+      "to": "danger-tag-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "order-confirm-check",
+      "to": "day-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "order-confirm-check",
+      "to": "defect-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "order-confirm-check",
+      "to": "design-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "order-confirm-check",
+      "to": "estimate-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "order-confirm-check",
+      "to": "hours-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "order-confirm-check",
+      "to": "measure-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "order-confirm-check",
+      "to": "order-release",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "order-confirm-check",
+      "to": "parts-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "order-confirm-check",
+      "to": "parts-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "order-confirm-check",
+      "to": "proposal-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "order-confirm-check",
+      "to": "quote-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "order-confirm-check",
+      "to": "repair-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "order-confirm-check",
+      "to": "retention-book",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "order-confirm-check",
+      "to": "review-ask",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "order-confirm-check",
+      "to": "route-plan",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "order-confirm-check",
+      "to": "safety-cert-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "order-confirm-check",
+      "to": "site-orders",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "order-confirm-check",
+      "to": "site-test-check",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "order-confirm-check",
+      "to": "swms-desk",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "order-confirm-check",
+      "to": "takeoff-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "order-confirm-check",
+      "to": "tier-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "order-confirm-check",
+      "to": "trim-quote",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "order-confirm-check",
+      "to": "van-board",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "order-confirm-check",
+      "to": "van-stock",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "order-confirm-check",
+      "to": "visit-offer",
+      "event": "job.updated",
+      "id": "job_id"
+    },
+    {
+      "from": "order-confirm-check",
+      "to": "visit-round",
+      "event": "job.updated",
       "id": "job_id"
     },
     {
