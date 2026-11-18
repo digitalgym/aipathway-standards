@@ -1,0 +1,72 @@
+{
+  "slug": "prequal-answers",
+  "name": "Prequal Desk",
+  "office_task": "Draft our answers to a head contractor's prequalification form (insurances, licences, WHS, ABN) only from our own filed documents, citing each one, for a person to send.",
+  "verticals": ["trades-building"],
+  "standards": ["cited-answer"],
+  "systems_of_record": [
+    "the mail system that issues the message_id the prequal form arrived on and the released answers went out on (Gmail, Outlook)",
+    "the subcontractor's own document library: certificates of currency (public liability, workers compensation by state), contractor licences by state, the ABN record and the WHS management plan, each held with its policy or licence number, period, state and effective date, with its answer register",
+    "the exception desk the business runs, which issues the exception_id"
+  ],
+  "links": { "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/prequal-answers" },
+  "maintainer": { "name": "AI Pathway", "github": "digitalgym" },
+  "runtime": ["node", "webhook", "schedule"],
+  "consumes": [
+    { "event": "email.received", "wake": "webhook" },
+    { "event": "schedule.tick", "wake": "schedule" },
+    { "event": "exception.closed", "wake": "webhook" }
+  ],
+  "emits": [
+    {
+      "event": "answer.sent",
+      "write": "the drafted form answers, each with its source cards (document, item, policy or licence number and period, state, effective date), sent in reply on the form's thread only after a named person released them on the answer register",
+      "readback": "the mail system returns the reply's message_id, and reading that id back returns the thread it replies in and the answer register id; no id back means it was not sent, and cited.send_unconfirmed is raised to the named owner"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception on the form's message naming the person who owns it: no project state given, no filed document covers the line, the covering document has expired, two live documents disagree, a renewal waits for a named person to accept it (listing every stored answer that relied on the old one), or the line asks for a compliance statement, declaration or licence-scope judgement",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the message_id, the reason and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "cited.no_jurisdiction",
+      "cited.not_in_library",
+      "cited.document_expired",
+      "cited.decision_for_person",
+      "cited.source_conflict",
+      "cited.change_pending",
+      "cited.acceptance_without_person",
+      "cited.release_refused",
+      "cited.release_without_person",
+      "cited.send_unconfirmed"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "answer.message_id",
+      "answer.queue",
+      "answer.policy",
+      "answer.source_card_ids",
+      "answer.released_by",
+      "source_card.edition",
+      "source_card.jurisdiction",
+      "source_card.effective_from",
+      "change_delta.accepted_by",
+      "change_delta.accepted_on",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": {
+    "original_name": "n8n workflow 21931",
+    "original_author": "Ali Abdullah",
+    "share_link": "https://n8n.io/workflows/21931",
+    "licence_or_permission": "reimplementation"
+  }
+}
