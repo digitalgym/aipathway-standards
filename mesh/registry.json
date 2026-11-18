@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-15T23:51:40.321Z",
+  "generated_at": "2026-11-18T08:01:10.901Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -8116,6 +8116,105 @@
           "with_us": 1,
           "evidence_required": 1,
           "total": 10
+        }
+      ]
+    },
+    {
+      "slug": "lease-renewal-desk",
+      "name": "Lease Renewal Desk",
+      "office_task": "Remind residential tenants their fixed term is ending, chase their answer to the renewal offer the property manager approved, file it, and hand a no or silence to the manager.",
+      "verticals": [
+        "property"
+      ],
+      "standards": [
+        "follow-up"
+      ],
+      "systems_of_record": [
+        "the property management system (PropertyMe, Console Cloud, Property Tree or similar) that issues the tenancy_id and holds the lease end date, the renewal offer the property manager released, and one open item per tenancy for the tenant's answer",
+        "the agency's rentals mailbox (Outlook or Gmail) the signed renewal or notice to vacate comes back to, which issues the message_id"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "email.received",
+          "wake": "webhook"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "evidence.filed",
+          "write": "the tenant's signed renewal or written notice to vacate, filed as evidence against the open item on the tenancy by its tenancy_id, which marks the item arrived and stops every reminder; an email that carries no tenancy_id or item id is never matched on a tenant name, address or phone number",
+          "readback": "reading the item back by its id returns status arrived with the evidence reference, which names the message_id of the email that carried the signed renewal or notice and the tenancy_id; no evidence reference back means nothing was filed, and the item gets no touch until a person looks"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an escalation on the tenancy naming the property manager on the cadence: the tenant said no, disputed the offer or asked us to stop, or the item reached its cap with nothing back, carrying every touch so far",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the item id, the tenancy_id, the reason, the touch history and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "followup.declined",
+          "followup.dispute",
+          "followup.cap_reached"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.tenancy_id",
+          "seam.item_id",
+          "seam.item_status",
+          "seam.touches",
+          "seam.outcome",
+          "seam.evidence_ref",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/lease-renewal-desk"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": {
+        "credited": true,
+        "original_name": "Rental Desk",
+        "original_author": "Branden Troutman",
+        "share_link": "https://x.ai/bot/0havI1dJhzL_gG11rueQN",
+        "licence_or_permission": "reimplementation"
+      },
+      "status": "listed",
+      "listed_at": "2026-11-18",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "follow-up",
+          "edition": "2026-10-05",
+          "environment": "stub",
+          "ran_at": "2026-11-18T07:58:03.910Z",
+          "run_id": "run-1794988683909",
+          "green": 10,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 13
         }
       ]
     },
@@ -16531,6 +16630,7 @@
     "lead-payback",
     "lead-sort",
     "lease-dates",
+    "lease-renewal-desk",
     "licence-watch",
     "loan-intake",
     "lodgement-watch",
