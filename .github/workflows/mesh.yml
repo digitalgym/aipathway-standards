@@ -37,6 +37,7 @@ jobs:
       - name: Validate every node
         run: node mesh/validate.mjs --write
       - name: Commit the registry
+        id: commit
         if: github.event_name != 'pull_request'
         run: |
           if git diff --quiet -- mesh/registry.json; then exit 0; fi
@@ -47,10 +48,25 @@ jobs:
           # main may have moved while this ran. Rebase onto it and rebuild, so
           # the registry pushed is always the one for the newest main.
           for i in 1 2 3; do
-            git push && exit 0
+            git push && { echo "pushed=1" >> "$GITHUB_OUTPUT"; exit 0; }
             git fetch -q origin main && git reset -q --hard origin/main
             node mesh/validate.mjs --write
             if git diff --quiet -- mesh/registry.json; then exit 0; fi
             git add mesh/registry.json && git commit -q -m "mesh: regenerate the registry"
           done
           exit 1
+      # The site caches the registry for a day. Tell it a new one is out, once
+      # raw.githubusercontent.com (its own ~5 minute cache) is serving it.
+      - name: Refresh the directory on aipathway.com.au
+        if: steps.commit.outputs.pushed == '1'
+        env:
+          MESH_REVALIDATE_SECRET: ${{ secrets.MESH_REVALIDATE_SECRET }}
+        run: |
+          if [ -z "$MESH_REVALIDATE_SECRET" ]; then echo "no MESH_REVALIDATE_SECRET, skipping"; exit 0; fi
+          want=$(node -p "require('./mesh/registry.json').generated_at")
+          for i in $(seq 1 24); do
+            got=$(curl -fsS "https://raw.githubusercontent.com/digitalgym/aipathway-standards/main/mesh/registry.json" | node -p "JSON.parse(require('fs').readFileSync(0,'utf8')).generated_at" || true)
+            [ "$got" = "$want" ] && break
+            sleep 20
+          done
+          curl -fsS -X POST -H "Authorization: Bearer $MESH_REVALIDATE_SECRET" https://aipathway.com.au/api/mesh-revalidate
