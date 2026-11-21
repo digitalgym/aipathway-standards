@@ -34,7 +34,7 @@ Get both halves running from their own plans: the daytime desk and the cash path
 
 Then fill Hours, Holidays and Owners. Holidays is the one people forget: a public holiday you close on is after hours, and a flow that only knows weekdays will answer it as the day desk.
 
-One thing to check before you build: **do both of your lines call the same caller lookup?**If the after-hours line writes jobs through one flow and the day line through another, the first fix is to point both at the daytime desk plan’s Flow 1.
+One thing to check before you build: **do both of your lines call the same caller lookup?** If the after-hours line writes jobs through one flow and the day line through another, the first fix is to point both at the daytime desk plan’s Flow 1.
 
 ## 2. The lists, with their columns
 

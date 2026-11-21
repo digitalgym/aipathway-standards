@@ -34,7 +34,7 @@ Fill Routing first: one row per type, with the person who owns it, how many hour
 
 Then decide when the summary is due. Seven in the morning is common; pick the time the office actually starts.
 
-One thing to check before you build: **who can add a row to Closes?**Break permission inheritance on that list so only the office can add items, and the flows’ connection can read it but not write to it. That one setting is what makes a close something no flow can do by itself.
+One thing to check before you build: **who can add a row to Closes?** Break permission inheritance on that list so only the office can add items, and the flows’ connection can read it but not write to it. That one setting is what makes a close something no flow can do by itself.
 
 ## 2. The lists, with their columns
 

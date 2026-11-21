@@ -182,7 +182,7 @@ Think of the new office junior with the client file: they read it before every j
 
 What each piece of access is for.
 
-- **Read the book, on an Office Voice key.** Lets the bot call get_memory for what your calls and your own notes hold about a caller. It comes with Bot Starter at $19a month per business. Office Voice keys that memory by phone number, not the client id on the job, so the bot checks the number belongs to the job’s client and skips it where two clients share one.
+- **Read the book, on an Office Voice key.** Lets the bot call get_memory for what your calls and your own notes hold about a caller. It comes with Bot Starter at $19 a month per business. Office Voice keys that memory by phone number, not the client id on the job, so the bot checks the number belongs to the job’s client and skips it where two clients share one.
 - **Not Write drafts and notes.** That box also allows record_fact, which makes a fact live the moment it is written with no one approving it. A bot that can call it fails check 1. Leave it off on a memory bot’s key.
 - **Your own sheet or SharePoint list, if you host it.** The bot reads approved rows by the job’s client id and adds new rows as proposed. Its connection can add a row but cannot mark one approved: decisions sit in a tab or list only the approvers can write to.
 

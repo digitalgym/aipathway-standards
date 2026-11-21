@@ -72,7 +72,7 @@ What is out of scope. Money in that pays invoices is the [Remittance Split stand
 
 What cannot meet it, and what can. All three cloud ledgers can meet it for lines parked on a suspense or uncategorised account: each lets an app read those transactions and change their coding through its API. None of the three lets an ordinary app reconcile a bank feed line, and Xero and QuickBooks Online do not hand an app the feed lines still waiting to be reconciled at all, so a practice that leaves unknown lines in the feed gets the question lists but keeps the reconciling. MYOB Business does list its feed lines through the API, with an “Uncoded” status, so the questions can come straight from the feed there. A desktop ledger with no cloud API cannot meet the standard, because there is nothing a build can write to. Section 8 has the detail for each.
 
-Is there a ready-made version? Not yet. The build connects straight to each client’s ledger through the ledger’s own sign-in, and no product of ours makes that write. A free Google Sheet version is being prepared, which runs the lists, reminders, suggestions and approvals and leaves the ledger entry to a person. The automated write is yours to build, or a scoped build with us.
+Is there a ready-made version? Not yet. The build connects straight to each client’s ledger through the ledger’s own sign-in, and no product of ours makes that write. A [free Google Sheet version](https://docs.google.com/spreadsheets/d/19tTcI5OXZcig78e3ceA6NA2sEnb5hx1Pg92EFumfJ7Q/copy) runs the lists, reminders, suggestions and approvals and leaves the ledger entry to a person. The automated write is yours to build, or a scoped build with us.
 
 ## 2. Chasing the same client about the same bank lines every month?
 

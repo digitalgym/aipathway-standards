@@ -32,7 +32,7 @@ Check your job system holds what the brief needs: an access note and a hazard no
 
 Then ask each tech which channel they want it on, and fill Techs. A tech with no channel gets nothing, and the owner is told.
 
-One thing to decide before you build: **do customer notes go on the brief at all?**Some businesses want the tech to see “wants a call before arrival”; some would rather a note about an invoice dispute stayed in the office. Flow 2 reads one setting and quotes the notes or leaves them all out.
+One thing to decide before you build: **do customer notes go on the brief at all?** Some businesses want the tech to see “wants a call before arrival”; some would rather a note about an invoice dispute stayed in the office. Flow 2 reads one setting and quotes the notes or leaves them all out.
 
 ## 2. The lists, with their columns
 

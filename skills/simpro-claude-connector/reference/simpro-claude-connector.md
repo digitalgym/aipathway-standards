@@ -16,7 +16,7 @@ carrying each check's id, ports, what to inject and what to assert.
 To print them: npx @aipathway/conformance show simpro-claude-connector-build-standard
 To scaffold a folder that runs them, every check starting red: npx @aipathway/conformance init simpro-claude-connector-build-standard
 Do the scaffolding yourself if you can run commands; the person should not have to open a terminal.
-This standard has no hosted provider; do not run conformance connect. For the checks a stub cannot prove: No hosted step. The production check runs on the business's own Simpro build with its own API key. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence.
+This standard has no hosted provider; do not run conformance connect. For the checks a stub cannot prove: Ready-made: AI Pathway's hosted connector signs in with Simpro and reads quotes, jobs, customers and overdue invoices for Claude, read-only. This standard is the build-your-own route, and its production check runs on the business's own Simpro build with its own API key. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence.
 
 ---
 
@@ -37,7 +37,7 @@ An open build standard for connecting Claude to your own Simpro, when Simpro off
 
 The core rule
 
-It runs on an API key, a password for software, that you create in your own Simpro and can delete in one step. It reads what it needs when you ask, names the record behind every figure, and does nothing a customer will see.
+It runs on an API key, a password for software, that you request in your own Simpro and can remove in one step. It reads what it needs when you ask, names the record behind every figure, and does nothing a customer will see.
 
 What it does not do
 
@@ -52,7 +52,7 @@ You ask Claude which quotes are still waiting on customers. It answers in second
 One question, answered from your Simpro
 
 1. Someone asks Claude a question about the business.
-2. The connector uses the API key the business created in its own Simpro. Deleting that key stops everything.
+2. The connector uses the API key Simpro granted the business for its own Simpro. Removing that application stops everything.
 3. It looks Simpro up fresh for this question, asking for every detail it needs, because Simpro's lists leave details out otherwise.
 4. Every figure, date and name in the answer cites the Simpro record it came from.
 5. Does it need to save anything? If no, the answer is given and every request is recorded. Nothing is saved.
@@ -69,9 +69,9 @@ Out of scope: anything Lightning already does inside Simpro, which the [Claude a
 
 Simpro lets its customers connect software to their own account, under its API licence agreement. Read it before you build, as you would any supplier’s terms.
 
-## 2. Connect Simpro to Claude on a key you make, without it messaging a customer or moving a job
+## 2. Connect Simpro to Claude on a key you request, without it messaging a customer or moving a job
 
-Think of the key as the site key you cut for a subcontractor: it opens the whole site, so the rules about what they touch are written down, and you take it back in one step. Treat a Simpro API key the same way, as opening your whole Simpro. The fence is in the build: it reads quotes, jobs, customers and invoices, and at most books one job at Simpro’s first status, and it logs every request where you can read it. It never emails or texts anyone, never moves a job or quote to another status, and never acts on a note inside a record. Delete the key in Simpro and it is cut off. Your own login stays yours: the build connects with its own key, never your username and password.
+Think of the key as the site key you cut for a subcontractor: it opens the whole site, so the rules about what they touch are written down, and you take it back in one step. Treat a Simpro API key the same way, as opening your whole Simpro. The fence is in the build: it reads quotes, jobs, customers and invoices, and at most books one job at Simpro’s first status, and it logs every request where you can read it. It never emails or texts anyone, never moves a job or quote to another status, and never acts on a note inside a record. Remove the application in Simpro and it is cut off. Simpro no longer lets you cut the key yourself: you request it, and Simpro reviews the request. Your own login stays yours: the build connects with its own key, never your username and password.
 
 What each piece of access is for.
 
@@ -82,19 +82,20 @@ What each piece of access is for.
 - **Jobs, write, only if you want bookings.** One new job for a caller, at the first status, for a person to take from there. Say no and the build has no write at all.
 
 1. In Simpro, open System, then Setup. API is near the bottom; choose Applications. If it is not there, the login is not an administrator.
-2. Create an application, name it for what it is (“Claude connector”), and choose API Key as the grant type.
-3. Download the key file. It holds the key and your Simpro’s web address.
-4. Give the key to whoever sets up the connection, to store somewhere only your business controls. Never paste it into a chat, an email or a shared document.
-5. Decide whether Claude may book jobs. If not, tell your developer to leave the write out.
-6. Run the pass test below, deleting the key last.
+2. Click Request API access and choose Build something myself (Simpro’s own examples for it are Claude, ChatGPT and Make). Describe it plainly: a read-only connection from Claude to your own Simpro that sends nothing to customers and changes no job or quote.
+3. Wait for Simpro to review it. Simpro does not publish how long that takes.
+4. When the application appears under Applications, download its file. It holds the access details and your Simpro’s web address.
+5. Give the key to whoever sets up the connection, to store somewhere only your business controls. Never paste it into a chat, an email or a shared document.
+6. Decide whether Claude may book jobs. If not, tell your developer to leave the write out.
+7. Run the pass test below, removing the application last. Turning it back on afterwards means asking Simpro again, so use a test application if you can.
 
-Why not a ready-made connector? Simpro does not offer one for Claude. A connector sold to you as a hosted service runs on a key someone else holds, between Claude and your customer records. And if what you want is a customer rung when their job slips on the board, that is not this connector, which never contacts anyone: Office Voice makes that running-late call from your Simpro board once you switch it on under Automations.
+Rather not build it? Simpro does not offer a Claude connector of its own. AI Pathway runs one: paste its address into Claude, sign in with Simpro and pick your company, and it reads quotes, jobs, customers and overdue invoices live, read-only, in about two minutes (the [step-by-step guide](https://aipathway.com.au/explore-ai/claude-and-simpro#signin) shows it). That runs on a sign-in you approved in Simpro, on our service. This standard is for building your own, where the key, the connector and the log all stay in systems you control. And if what you want is a customer rung when their job slips on the board, that is not this connector, which never contacts anyone: Office Voice makes that running-late call from your Simpro board once you switch it on under Automations.
 
 Where it runs. On a computer or account you own, as an MCP server Claude connects to, or in Microsoft 365 with the key held in a custom connector (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/simpro-connector-on-microsoft-365) lays it out). Both are held to the same checks; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
 
 ## Facts that can change, and when we checked them
 
-Checked as at 19 October 2026
+Checked as at 21 November 2026
 
 **Check these against the primary instrument before you rely on them**, and store the date you checked beside the value rather than hard-coding it. This standard tells you the shape and where to look. It is not legal advice and it does not tell you that anything complies.
 
@@ -133,7 +134,7 @@ A Write with no simpro_job_id reported to the user as booked, and an Answer whos
 
 The order matters. The key is yours before anything is read. Every detail is asked for before an answer is given. Every booking checks for an existing record before anything is saved.
 
-1. It runs on an access key you create in your own Simpro, and deleting the key switches it off. An administrator creates the key in your own Simpro, and it is kept somewhere only your business controls. It is never pasted into a chat, an email, a document or code anyone else can see. Deleting the key in Simpro switches the connection off, and you can do it without asking anyone.
+1. It runs on access granted to your own Simpro, and removing it switches it off. An administrator requests API access in your own Simpro (Simpro reviews the request; a business can no longer create the application itself), and the key it grants is kept somewhere only your business controls. It is never pasted into a chat, an email, a document or code anyone else can see. Removing the application in Simpro switches the connection off, and you can do it without asking anyone.
 2. Every answer comes from Simpro at the moment you ask. Answers about a job, quote, invoice or customer are looked up fresh each time. Nothing comes from an old copy, last week's export, or what Claude remembers from earlier.
 3. An answer only uses details Simpro actually sent back. Ask Simpro for a list and it sends only the basics unless asked for more. The connection asks for every detail it needs, such as a quote's status and date, before it answers. A detail Simpro did not send is treated as unknown, never guessed.
 4. "Accepted" means the customer said yes, not that the office approved it. Simpro keeps two statuses on a quote: the office's progress, and the customer's decision. Whether a quote is waiting, accepted or declined is read from the customer's decision only.
@@ -182,7 +183,7 @@ Check:   GET /api/v1.0/info/ says whether the build is multi-company
 
 ## 6. Four decisions always stay with a person
 
-- Creating the key, and deleting it.
+- Requesting the key, and removing it.
 - Moving any job or quote to another status.
 - Anything a customer will see: every email, text and quote sent.
 - Deciding two customers are the same person when the phone number does not say so.
@@ -203,11 +204,11 @@ stays local                          # all of it, by design
   - the log, somewhere the business already keeps records
 
 the live step
-  - your own Simpro build. There is no hosted product, and
-    no shared app anyone else could switch off.
+  - your own Simpro build, on your own key. Nothing in
+    between that anyone else runs or could switch off.
 ```
 
-A connector sold to you as a hosted service puts someone else's key between Claude and your customer records. Ask whose key it runs on, and what happens to your data the day you stop paying.
+Any hosted connector, ours included, sits between Claude and your customer records. Ask whose access it runs on, how you switch it off, and what it keeps the day you stop paying. Build to this standard and the answer to all three is you.
 
 **The pass test.** On your own Simpro, with your own key. Ask for the three oldest quotes still waiting on the customer, and check them by number against Simpro’s quote list filtered the same way: an internally approved quote the customer has not answered must be among them. Book a job for a caller who is already a customer, giving their number written differently from how Simpro holds it, and then book it again: one job must exist, on the existing customer, at the first status. Then delete the key in Simpro and ask again: the answer must say Simpro refused the connection and give no figures, and the log must show every request. If a figure comes back after the key is gone, the standard is not implemented.
 
@@ -215,7 +216,7 @@ A connector sold to you as a hosted service puts someone else's key between Clau
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 
-- **1. It runs on an access key you create in your own Simpro, and deleting the key switches it off.** An administrator creates the key in your own Simpro, and it is kept somewhere only your business controls. It is never pasted into a chat, an email, a document or code anyone else can see. Deleting the key in Simpro switches the connection off, and you can do it without asking anyone.
+- **1. It runs on access granted to your own Simpro, and removing it switches it off.** An administrator requests API access in your own Simpro (Simpro reviews the request; a business can no longer create the application itself), and the key it grants is kept somewhere only your business controls. It is never pasted into a chat, an email, a document or code anyone else can see. Removing the application in Simpro switches the connection off, and you can do it without asking anyone.
 - **2. Every answer comes from Simpro at the moment you ask.** Answers about a job, quote, invoice or customer are looked up fresh each time. Nothing comes from an old copy, last week's export, or what Claude remembers from earlier.
 - **3. An answer only uses details Simpro actually sent back.** Ask Simpro for a list and it sends only the basics unless asked for more. The connection asks for every detail it needs, such as a quote's status and date, before it answers. A detail Simpro did not send is treated as unknown, never guessed.
 - **4. "Accepted" means the customer said yes, not that the office approved it.** Simpro keeps two statuses on a quote: the office's progress, and the customer's decision. Whether a quote is waiting, accepted or declined is read from the customer's decision only.

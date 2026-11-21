@@ -34,7 +34,7 @@ Run the cash path first, from its own plan. This plan keys every row to the clie
 
 Then fill Approvers. Two people is usual: the owner and whoever runs the office. A flow’s service account is never on it.
 
-One thing to check before you build: **who can add a row to Decisions?**Break permission inheritance on that list so only the people on Approvers can add items, and the flows’ connection can read it but not write to it. That one setting is what makes an approval something the AI cannot give itself.
+One thing to check before you build: **who can add a row to Decisions?** Break permission inheritance on that list so only the people on Approvers can add items, and the flows’ connection can read it but not write to it. That one setting is what makes an approval something the AI cannot give itself.
 
 ## 2. The lists, with their columns
 

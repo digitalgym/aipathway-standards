@@ -238,7 +238,7 @@ The binding layer is the hard step: one graph, official form maps, field reuse a
 
 Highest option, job five
 
-**None as a product yet.**If a product existed for the binding layer, this standard would name it, the way the debtor standard names Office Voice and the reactivation standard names Office Voice’s governed call for callbacks. It does not, and we are not building one for now. This job is yours to build, to this standard.
+**None as a product yet.** If a product existed for the binding layer, this standard would name it, the way the debtor standard names Office Voice and the reactivation standard names Office Voice’s governed call for callbacks. It does not, and we are not building one for now. This job is yours to build, to this standard.
 
 Use the standard as a checklist if the pack is small and slow-moving. Build the binding layer when the pack is the thing that costs a claim, a licence, or a contractor payment. Call us when the graph spans three systems and a team that will not maintain a Zap.
 

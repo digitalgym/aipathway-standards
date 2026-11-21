@@ -204,7 +204,7 @@ Think of the bot as the apprentice in the passenger seat who fills in the job sh
 
 What each piece of access is for.
 
-- **Read the book, on an Office Voice key.** Lets the bot read the job by its number (read_job) and your price list in Xero (read_pricebook). It comes with Bot Starter at $19a month per business. That is enough for checks 1 to 6: the job, the price, the parking and the tech’s yes.
+- **Read the book, on an Office Voice key.** Lets the bot read the job by its number (read_job) and your price list in Xero (read_pricebook). It comes with Bot Starter at $19 a month per business. That is enough for checks 1 to 6: the job, the price, the parking and the tech’s yes.
 - **The write, on the same key.** Tick **Write drafts and notes** as well, and the bot can call Office Voice’s close_job once the tech says yes. It writes the card, the coded parts and the photos into ServiceM8 once per intent id and marks the job complete only when every piece came back with an id. A part with no code is parked for the office, not written. In Simpro it writes the note and the stage today, and parks the parts and photos for a person to add.
 - **Not ServiceM8’s own connector, for the write.** It can add a note and change a job’s status, but its published list of actions has no job materials or attachments and nothing carries an intent id, so a retry could double the note and the job could be marked complete with no lines behind it. That fails checks 7 and 8.
 
