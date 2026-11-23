@@ -19,7 +19,7 @@
  * It is counted as a touch when it is placed, so a draft the rep never sends
  * still uses up one of the cadence's touches: the cadence can only under-chase,
  * never over-chase. Where the business's written cadence includes a call, the
- * call is the hosted step (Get Paid on Office Voice, outbound.quote_closer);
+ * call is the hosted step (Get Paid on AI Pathway, outbound.quote_closer);
  * this file only proves on the stub that it discloses first, asks for one
  * thing and records one answer. No telephony is written here.
  *

@@ -23,7 +23,7 @@ https://aipathway.com.au/explore-ai/database-reactivation-build-standard
   the play that needs it.
 
 A customer who asked to be rung back is the one call the standard lets a
-machine queue. That is Office Voice's governed `create_call` (basis
+machine queue. That is AI Pathway's governed `create_call` (basis
 `callback`), hosted, off by default, and not built here.
 
 ## How the standard's fields read for a trade business

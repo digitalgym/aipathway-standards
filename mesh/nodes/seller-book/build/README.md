@@ -11,7 +11,7 @@ tomorrow's list is made from it. Built to AIP-BS-DATABASE-REACTIVATION
 a price, never makes or discusses an offer, and never dials. A reply that asks
 what the place is worth, asks for an offer, or complains goes to a person with
 a typed reason. A seller who asks to be rung goes to the top of tomorrow's list
-for the agent; the optional governed callback is Office Voice's `create_call`,
+for the agent; the optional governed callback is AI Pathway's `create_call`,
 hosted and not built here (check 14, `with_us`).
 
 **Australian rules.** A text is a commercial electronic message under the Spam
@@ -96,7 +96,7 @@ published, so this folder has no `ports.mjs`, and `AIPATHWAY_ENV=production`
 is refused rather than rerunning the stub under a production label. The stub run
 is the whole of what can be proved here.
 
-The call to a contact who asked to be rung back is Office Voice's governed single call: create_call, basis callback or they_asked. Everyone else on the list is the agent's own call from the daily list; Office Voice refuses prospecting calls by design. Queue each call with create_call on the Office Voice MCP (office_voice.create_call): the owner mints the key at office-voice.com/app/keys and ticks "Allow this to queue calls", and the dispatcher does the Do Not Call Register check, the calling hours and the one-attempt-a-day limit. There is no production run of these checks yet, so the stub run is the finished build. Do not stand up telephony of your own.
+The call to a contact who asked to be rung back is AI Pathway's governed single call: create_call, basis callback or they_asked. Everyone else on the list is the agent's own call from the daily list; AI Pathway refuses prospecting calls by design. Queue each call with create_call on the AI Pathway MCP (office_voice.create_call): the owner mints the key at connect.aipathway.com.au/app/keys and ticks "Allow this to queue calls", and the dispatcher does the Do Not Call Register check, the calling hours and the one-attempt-a-day limit. There is no production run of these checks yet, so the stub run is the finished build. Do not stand up telephony of your own.
 
 The checks that never go green on the stub report `with_us`.
 

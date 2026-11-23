@@ -431,6 +431,6 @@ export const scenarios = [
   },
 ];
 
-// 14. The pass test runs against the live list with Office Voice's governed
+// 14. The pass test runs against the live list with AI Pathway's governed
 // create_call. It is with_us on the stub and is not built here.
 export const liveScenarios = [];

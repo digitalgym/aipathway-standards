@@ -17,7 +17,7 @@ leaves one log entry naming the list edition.
 
 Narrowed from the job as found: the bot never texts a customer itself. Every
 written reply is a draft a person releases. No video calls. Live calls are
-answered by Office Voice Front Desk with the same fault list; the call branch
+answered by AI Pathway Front Desk with the same fault list; the call branch
 in `build.mjs` is what the stub drives to prove the order, and nothing here
 dials or answers a phone. Prices always go to a person.
 
@@ -55,7 +55,7 @@ published, so this folder has no `ports.mjs`, and `AIPATHWAY_ENV=production`
 is refused rather than rerunning the stub under a production label. The stub run
 is the whole of what can be proved here.
 
-Point the number at Office Voice / Front Desk (Booked After Hours). There is no production run of these checks yet: AIPATHWAY_PROVIDER=office_voice.front_desk needs a live port map that is not published, so the stub run is the finished build. Do not stand up telephony of your own.
+Point the number at AI Pathway / Front Desk (Booked After Hours). There is no production run of these checks yet: AIPATHWAY_PROVIDER=office_voice.front_desk needs a live port map that is not published, so the stub run is the finished build. Do not stand up telephony of your own.
 
 The checks that never go green on the stub report `with_us`.
 

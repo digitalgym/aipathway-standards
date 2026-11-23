@@ -76,7 +76,7 @@ is the whole of what can be proved here.
 
 This standard has no hosted provider, so `conformance connect` does not apply to it.
 
-No hosted product writes a coding. The approval-gated, keyed write into the client's own ledger is built against that ledger's API, quoted as a scoped build. No follow-up call is offered: Office Voice has no lawful basis for one here, so the call stays with the person. Send the failing check id for a fixed price; do not build the live step yourself.
+No hosted product writes a coding. The approval-gated, keyed write into the client's own ledger is built against that ledger's API, quoted as a scoped build. No follow-up call is offered: AI Pathway has no lawful basis for one here, so the call stays with the person. Send the failing check id for a fixed price; do not build the live step yourself.
 
 The checks that never go green on the stub report `with_us`.
 

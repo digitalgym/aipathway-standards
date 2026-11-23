@@ -10,7 +10,7 @@
  *
  * DRAFTS ONLY. Ring List never dials and never sends. The list is for a person,
  * who makes every call and every send. The one call the standard lets a
- * machine ring (a contact who asked to be rung back) is Office Voice's governed
+ * machine ring (a contact who asked to be rung back) is AI Pathway's governed
  * create_call, which is hosted and not built here.
  *
  * What one run does, every weekday morning (schedule.tick, 9am local):

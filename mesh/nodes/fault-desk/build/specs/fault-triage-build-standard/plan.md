@@ -24,5 +24,5 @@ somebody needs to look at the book mid-day.
 ## Provider
 
 Stub only (`node run.mjs`). No production run is offered for this standard yet:
-its live port map is not published. Point the number at Office Voice / Front Desk (Booked After Hours). There is no production run of these checks yet: AIPATHWAY_PROVIDER=office_voice.front_desk needs a live port map that is not published, so the stub run is the finished build. Do not stand up telephony of your own.
+its live port map is not published. Point the number at AI Pathway / Front Desk (Booked After Hours). There is no production run of these checks yet: AIPATHWAY_PROVIDER=office_voice.front_desk needs a live port map that is not published, so the stub run is the finished build. Do not stand up telephony of your own.
 Run `npx @aipathway/conformance show fault-triage-build-standard` for the check list.

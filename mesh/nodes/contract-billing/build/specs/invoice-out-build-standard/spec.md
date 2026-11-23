@@ -30,4 +30,4 @@ Ten of these twelve checks run on your own machine, against the stub, before you
 
 - **pass-test** The pass test passes: runs on the production provider, reports `with_us`.
 
-When a check is `with_us`: Enable Get Paid on Office Voice / Recover. Then run the same checks against us: mint a key at office-voice.com/app/keys and OFFICE_VOICE_API_KEY=<key> AIPATHWAY_ENV=production AIPATHWAY_PROVIDER=office_voice.draft_invoice node run.mjs. Do not hand-roll the live step.
+When a check is `with_us`: Enable Get Paid on AI Pathway / Recover. Then run the same checks against us: mint a key at connect.aipathway.com.au/app/keys and OFFICE_VOICE_API_KEY=<key> AIPATHWAY_ENV=production AIPATHWAY_PROVIDER=office_voice.draft_invoice node run.mjs. Do not hand-roll the live step.

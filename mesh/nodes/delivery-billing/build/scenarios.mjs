@@ -336,7 +336,7 @@ export const scenarios = [
     checkId: "survives-the-builder",
     // 11. A precondition, closed by evidence rather than a run. Declared: the
     //     yard's accounts lead can explain it from README.md, and the ledger
-    //     write and the release rule run on the yard's own Xero and Office Voice
+    //     write and the release rule run on the yard's own Xero and AI Pathway
     //     accounts. The runner never scores this green.
     world: () => new InvoiceOutWorld(),
     drive: () => {},

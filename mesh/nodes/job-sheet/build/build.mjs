@@ -24,7 +24,7 @@
  * prices a variation and never sends an invoice. Completion is the handover:
  * Invoice Out reads the completed job and bills it behind its own release.
  *
- * Everything goes through the ports. Live, the write is Office Voice's
+ * Everything goes through the ports. Live, the write is AI Pathway's
  * close_job; this build does not hand-roll it.
  *
  * `makeBuild(flaw)` exists so the harness can prove each check goes red for a

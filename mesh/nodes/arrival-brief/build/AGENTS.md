@@ -15,7 +15,7 @@ Markdown: https://aipathway.com.au/explore-ai/job-brief-build-standard.md
 4. Run `node run.mjs`. Every check starts red. Go green.
 5. This standard has no hosted provider, and there is no production run for it
    yet: the stub run is the finished build. Do not run `conformance connect`; it
-   gets a key for a provider this standard does not use. No hosted step. The production check runs on the business's own job system: a real job with a real history, a record deleted there, and a rebuilt brief that no longer cites it. Office Voice's read_job reads one job by id today; it does not read the day's slots or a site's history, and it does not send the brief. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence.
+   gets a key for a provider this standard does not use. No hosted step. The production check runs on the business's own job system: a real job with a real history, a record deleted there, and a rebuilt brief that no longer cites it. AI Pathway's read_job reads one job by id today; it does not read the day's slots or a site's history, and it does not send the brief. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence.
 
 ## Await every port call
 
@@ -53,7 +53,7 @@ ports leaves it empty, and the run reports that rather than passing.
 
 Some checks are `with_us`. This standard has no hosted provider for them:
 they need the business's real systems or a person, which a stub cannot hold,
-and the run reports `with_us` rather than failing the build. No hosted step. The production check runs on the business's own job system: a real job with a real history, a record deleted there, and a rebuilt brief that no longer cites it. Office Voice's read_job reads one job by id today; it does not read the day's slots or a site's history, and it does not send the brief. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence.
+and the run reports `with_us` rather than failing the build. No hosted step. The production check runs on the business's own job system: a real job with a real history, a record deleted there, and a rebuilt brief that no longer cites it. AI Pathway's read_job reads one job by id today; it does not read the day's slots or a site's history, and it does not send the brief. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence.
 
 Getting every other check green is the finished job.
 

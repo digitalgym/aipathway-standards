@@ -19,7 +19,7 @@
  * time. A person sends.
  *
  * The live line (the number, the voice, the disclosure audio, the transfer) is
- * Office Voice / Front Desk's. This file is the wiring behind it.
+ * AI Pathway / Front Desk's. This file is the wiring behind it.
  */
 
 const DISCLOSURE =

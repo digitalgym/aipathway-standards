@@ -33,7 +33,7 @@ is the whole of what can be proved here.
 
 This standard has no hosted provider, so `conformance connect` does not apply to it.
 
-The call is Office Voice's live step: it reads the owner's notes for the caller and records what was said with its source. Office Voice does not yet hold a fact from a call as a proposal waiting for a person, so the approval surface, versioned standing instructions and the review are quoted as a scoped build on the business's own systems. Send the failing check id for a fixed price; do not build the live step yourself.
+The call is AI Pathway's live step: it reads the owner's notes for the caller and records what was said with its source. AI Pathway does not yet hold a fact from a call as a proposal waiting for a person, so the approval surface, versioned standing instructions and the review are quoted as a scoped build on the business's own systems. Send the failing check id for a fixed price; do not build the live step yourself.
 
 The checks that never go green on the stub report `with_us`.
 

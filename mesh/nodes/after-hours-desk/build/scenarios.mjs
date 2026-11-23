@@ -270,7 +270,7 @@ export const scenarios = [
 ];
 
 // The checks a stub cannot pass, and is not asked to. These run only in
-// production, against the hosted provider (Office Voice / Front Desk). The
+// production, against the hosted provider (AI Pathway / Front Desk). The
 // world is a placeholder here: run.mjs swaps in the live one.
 export const liveScenarios = [
   {

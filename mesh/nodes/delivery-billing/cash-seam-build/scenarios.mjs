@@ -290,7 +290,7 @@ export const scenarios = [
     checkId: "survives-the-builder",
     // 8. A precondition, closed by evidence. Declared: the yard's accounts lead
     //    can explain it from ../build/README.md, and every hop runs on the
-    //    yard's own job system, Xero and Office Voice accounts.
+    //    yard's own job system, Xero and AI Pathway accounts.
     world: () => new CashSeamWorld(),
     drive: () => {},
     holds: () => false,

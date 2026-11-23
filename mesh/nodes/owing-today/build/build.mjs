@@ -13,7 +13,7 @@
  *
  * It never sends, never dials and never talks to a debtor. The queue it writes
  * is a list of drafts for the person who owns receivables to send from their
- * own phone or inbox. The live call is Get Paid on Office Voice, connected with
+ * own phone or inbox. The live call is Get Paid on AI Pathway, connected with
  * `npx @aipathway/conformance connect`, and is not written here.
  *
  * WHAT WAKES IT. One step per wake, nothing kept between wakes:

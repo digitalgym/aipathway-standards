@@ -28,7 +28,7 @@
  * WHAT STAYS WITH A PERSON. Seller Book never states a price, never makes or
  * discusses an offer, and never sends anything the agent did not OK. It never
  * dials: a seller who asks to be rung goes to the top of tomorrow's list for
- * the agent, and the optional callback on Office Voice is hosted, not built.
+ * the agent, and the optional callback on AI Pathway is hosted, not built.
  *
  * Australian rules, as the standard reads them: a text is a commercial
  * electronic message under the Spam Act 2003, so it goes only to a contact the

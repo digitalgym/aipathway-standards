@@ -4,7 +4,7 @@
  *   OFFICE_VOICE_API_KEY=ovk_live_... AIPATHWAY_ENV=production AIPATHWAY_PROVIDER=office_voice.front_desk node run.mjs
  *
  * This is the second run against US rather than against your own systems.
- * The write-back ports call the Office Voice MCP (find_or_create_job, with the dedupe the standard requires); the call ports throw, because the live call is the step the standard says not to hand-roll and the insert performs it on a real line, not from here. Their checks report with_us.
+ * The write-back ports call the AI Pathway MCP (find_or_create_job, with the dedupe the standard requires); the call ports throw, because the live call is the step the standard says not to hand-roll and the insert performs it on a real line, not from here. Their checks report with_us.
  *
  * Env:
  *   OFFICE_VOICE_API_KEY     a key minted at /app/keys with contacts:read and contacts:write
@@ -18,7 +18,7 @@ const TENANT = process.env.OFFICE_VOICE_TENANT_ID;
 
 let rpcId = 0;
 async function call(tool, args) {
-  if (!KEY) throw new Error("OFFICE_VOICE_API_KEY is not set. Mint one at office-voice.com/app/keys with contacts:read and contacts:write.");
+  if (!KEY) throw new Error("OFFICE_VOICE_API_KEY is not set. Mint one at connect.aipathway.com.au/app/keys with contacts:read and contacts:write.");
   const res = await fetch(MCP_URL, {
     method: "POST",
     headers: { "content-type": "application/json", authorization: `Bearer ${KEY}` },

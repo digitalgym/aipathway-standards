@@ -30,4 +30,4 @@ Ten of these twelve checks run on your own machine, against the stub, before you
 
 - **pass-test** The pass test passes: runs on the production provider, reports `with_us`.
 
-When a check is `with_us`: Point the number at Office Voice / Front Desk (Booked After Hours). There is no production run of these checks yet: AIPATHWAY_PROVIDER=office_voice.front_desk needs a live port map that is not published, so the stub run is the finished build. Do not stand up telephony of your own.
+When a check is `with_us`: Point the number at AI Pathway / Front Desk (Booked After Hours). There is no production run of these checks yet: AIPATHWAY_PROVIDER=office_voice.front_desk needs a live port map that is not published, so the stub run is the finished build. Do not stand up telephony of your own.

@@ -15,7 +15,7 @@ Markdown: https://aipathway.com.au/explore-ai/fault-triage-build-standard.md
 4. Run `node run.mjs`. Every check starts red. Go green.
 5. There is no production run for this standard yet: its live port map is not
    published, so the stub run is the finished build. The live step itself runs on
-   Office Voice / Front Desk (Booked After Hours). Point the number at Office Voice / Front Desk (Booked After Hours). There is no production run of these checks yet: AIPATHWAY_PROVIDER=office_voice.front_desk needs a live port map that is not published, so the stub run is the finished build. Do not stand up telephony of your own.
+   AI Pathway / Front Desk (Booked After Hours). Point the number at AI Pathway / Front Desk (Booked After Hours). There is no production run of these checks yet: AIPATHWAY_PROVIDER=office_voice.front_desk needs a live port map that is not published, so the stub run is the finished build. Do not stand up telephony of your own.
 
 ## Await every port call
 

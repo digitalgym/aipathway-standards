@@ -27,7 +27,7 @@
  *      a pending promise. No score lifts a row past it. Only a named person's
  *      override lifts a pending promise, and nothing lifts the legal holds.
  *   9. Dial: the disclosure and the opener. In production this is the hosted
- *      call (Office Voice / Recover). This build does not do live telephony.
+ *      call (AI Pathway / Recover). This build does not do live telephony.
  *
  * Every effect goes through the ports.
  */

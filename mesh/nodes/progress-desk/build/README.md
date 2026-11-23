@@ -33,7 +33,7 @@ is the whole of what can be proved here.
 
 This standard has no hosted provider, so `conformance connect` does not apply to it.
 
-No hosted step, and none is offered: Office Voice has no progress claim tool. The production check runs on the builder's own contract records and site assessments, and the claim itself is served by the builder. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence.
+No hosted step, and none is offered: AI Pathway has no progress claim tool. The production check runs on the builder's own contract records and site assessments, and the claim itself is served by the builder. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence.
 
 The checks that never go green on the stub report `with_us`.
 

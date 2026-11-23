@@ -10,7 +10,7 @@
  * tried. Every intake leaves one log entry naming the list edition.
  *
  * Texts are drafted, never sent by the bot: a person releases each one from
- * the drafts folder. Live calls are answered by Office Voice Front Desk with
+ * the drafts folder. Live calls are answered by AI Pathway Front Desk with
  * the same list; the call branch here is what the stub drives so the order of
  * the checks can be proved, and nothing in this file dials or answers a phone.
  *

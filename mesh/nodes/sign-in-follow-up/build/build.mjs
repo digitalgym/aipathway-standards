@@ -22,7 +22,7 @@
  *  11. Every consent, send, reply, class, opt-out and report is on the record.
  *  12. The optional call goes only through the gate, only to someone who asked.
  *
- * The live call is Office Voice's governed create_call. Nothing here dials.
+ * The live call is AI Pathway's governed create_call. Nothing here dials.
  */
 
 const DEFAULTS = {

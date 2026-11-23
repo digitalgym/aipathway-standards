@@ -133,6 +133,9 @@ const WORLDS: Record<string, string> = {
   "uncoded-query-build-standard": "UncodedQueryWorld",
   "bas-ready-check-build-standard": "BasWorld",
   "month-end-close-build-standard": "MonthEndCloseWorld",
+  "customer-link-build-standard": "CustomerLinkWorld",
+  "rules-and-holds-build-standard": "RulesHoldsWorld",
+  "hand-off-build-standard": "HandOffWorld",
 };
 
 /**
@@ -756,7 +759,7 @@ export const ports = {
  *
  * THE PRODUCTION GATE. The stub proved the shape; ports.mjs proves the
  * builder's own systems; this proves the hosted insert: the same scenarios
- * drive the same build, and the write-back ports call Office Voice over
+ * drive the same build, and the write-back ports call AI Pathway over
  * Streamable HTTP with the workspace's key. The call ports (resolveAddress,
  * disclose, say, hear, notify, escalate, sendSms) are the live step itself: the insert does
  * them on a real call, not from a test harness, so here they throw with the
@@ -775,10 +778,10 @@ export function officeVoicePortsFile(std: StandardDoc, slug: string): string {
  *
  * This is the second run against US rather than against your own systems.
  * ${comment(map === "QUOTE_PORT_MAP"
-   ? "Every port calls the Office Voice MCP: read_job, read_pricebook and draft_quote are the standard's own verbs, and escalate and notify are recorded as facts against the job so a parked quote leaves a trace. Nothing here names a rate: draft_quote takes catalogue ids and the system of record prices them."
+   ? "Every port calls the AI Pathway MCP: read_job, read_pricebook and draft_quote are the standard's own verbs, and escalate and notify are recorded as facts against the job so a parked quote leaves a trace. Nothing here names a rate: draft_quote takes catalogue ids and the system of record prices them."
    : map === "INVOICE_PORT_MAP"
-     ? "Every port calls the Office Voice MCP: read_job, read_pricebook and draft_invoice are the standard's own verbs. Nothing here names a rate: draft_invoice takes catalogue ids and the ledger prices them. The release and the send are a person's act in the ledger, so here they are recorded as facts against the job rather than performed, and nothing in this file can authorise or send an invoice."
-     : "The write-back ports call the Office Voice MCP (find_or_create_job, with the dedupe the standard requires); the call ports throw, because the live call is the step the standard says not to hand-roll and the insert performs it on a real line, not from here. Their checks report with_us.")}
+     ? "Every port calls the AI Pathway MCP: read_job, read_pricebook and draft_invoice are the standard's own verbs. Nothing here names a rate: draft_invoice takes catalogue ids and the ledger prices them. The release and the send are a person's act in the ledger, so here they are recorded as facts against the job rather than performed, and nothing in this file can authorise or send an invoice."
+     : "The write-back ports call the AI Pathway MCP (find_or_create_job, with the dedupe the standard requires); the call ports throw, because the live call is the step the standard says not to hand-roll and the insert performs it on a real line, not from here. Their checks report with_us.")}
  *
  * Env:
  *   OFFICE_VOICE_API_KEY     a key minted at /app/keys with contacts:read and contacts:write
@@ -795,7 +798,7 @@ export function officeVoicePortsFile(std: StandardDoc, slug: string): string {
  * a draft invoice. Without it draft_invoice answers write_not_verified with
  * that URL, which is check 7 doing its job.` : ""}${map === "QUOTE_PORT_MAP" ? `
  *
- * The job has to exist. Xero has no jobs, so the job lives in Office Voice
+ * The job has to exist. Xero has no jobs, so the job lives in AI Pathway
  * (find_or_create_job made it, or the office did) and your scenarios drive the
  * build with a real id: build(world.ports(), process.env.OFFICE_VOICE_JOB_ID).
  * The office's Xero must be connected with quote drafting on
@@ -809,7 +812,7 @@ const TENANT = process.env.OFFICE_VOICE_TENANT_ID;
 
 let rpcId = 0;
 async function call(tool, args) {
-  if (!KEY) throw new Error("OFFICE_VOICE_API_KEY is not set. Mint one at office-voice.com/app/keys with contacts:read and contacts:write.");
+  if (!KEY) throw new Error("OFFICE_VOICE_API_KEY is not set. Mint one at connect.aipathway.com.au/app/keys with contacts:read and contacts:write.");
   const res = await fetch(MCP_URL, {
     method: "POST",
     headers: { "content-type": "application/json", authorization: \`Bearer \${KEY}\` },
@@ -1060,10 +1063,10 @@ function quotePortsBody(provider: string): string {
     },
 
     readTierMap() {
-      // The tier map is the business's own (check 13). Office Voice prices the
+      // The tier map is the business's own (check 13). AI Pathway prices the
       // options it is sent and holds no tier map, so read it from your own sheet
       // or file and pass the result to draftQuote as options.
-      throw new Error("readTierMap: Office Voice holds no tier map; read it from your own build");
+      throw new Error("readTierMap: AI Pathway holds no tier map; read it from your own build");
     },
 
     async readPricebook() {
@@ -1074,7 +1077,7 @@ function quotePortsBody(provider: string): string {
     },
 
     async draftQuote(input, intentId) {
-      // Options (checks 11 to 14): Office Voice writes one draft per option in
+      // Options (checks 11 to 14): AI Pathway writes one draft per option in
       // Xero, labelled job:<id> / <label>, and parks them priced for a person in
       // ServiceM8 and Simpro. The set is the job's one quote either way.
       if (input.options) {

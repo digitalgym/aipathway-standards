@@ -43,7 +43,7 @@ is the whole of what can be proved here.
 
 This standard has no hosted provider, so `conformance connect` does not apply to it.
 
-No hosted dispatch step. Office Voice already writes the booked time into ServiceM8 and Simpro, one slot per job with the id back, but only inside a Front Desk call, day or night; a board cannot call it and it reads no licences. When a job slips on the ServiceM8 or Simpro board, its running-late call rings the customer, switched on under Automations. For a board, the write into the job system's schedule and the customer message with consent are quoted as a scoped build. Send the failing check id for a fixed price; do not build the live step yourself.
+No hosted dispatch step. AI Pathway already writes the booked time into ServiceM8 and Simpro, one slot per job with the id back, but only inside a Front Desk call, day or night; a board cannot call it and it reads no licences. When a job slips on the ServiceM8 or Simpro board, its running-late call rings the customer, switched on under Automations. For a board, the write into the job system's schedule and the customer message with consent are quoted as a scoped build. Send the failing check id for a fixed price; do not build the live step yourself.
 
 The checks that never go green on the stub report `with_us`.
 

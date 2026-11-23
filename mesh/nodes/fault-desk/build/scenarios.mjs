@@ -360,7 +360,7 @@ export const scenarios = [
 ];
 
 // The pass test is four real calls to the business's own number. It runs only
-// in production, on Office Voice Front Desk, and is reported with_us here.
+// in production, on AI Pathway Front Desk, and is reported with_us here.
 export const liveScenarios = [
   {
     checkId: "pass-test",
