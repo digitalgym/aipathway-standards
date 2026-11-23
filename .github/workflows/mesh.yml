@@ -10,7 +10,7 @@ on:
     paths: ["mesh/**", ".github/workflows/mesh.yml"]
   push:
     branches: [main]
-    paths: ["mesh/**", "skills/**", ".github/workflows/mesh.yml"]
+    paths: ["mesh/**", "skills/**", "tools/grok-bot/instructions.mjs", "tools/bot-skills/**", ".github/workflows/mesh.yml"]
   schedule:
     - cron: "0 20 * * 0"
   workflow_dispatch:
@@ -36,21 +36,26 @@ jobs:
         run: node --test mesh/validate.test.mjs
       - name: Validate every node
         run: node mesh/validate.mjs --write
+      # The Bot Team as a ChatGPT/Codex plugin, one skill per listed bot, from
+      # the registry just written. Regenerated with it so the two never drift.
+      - name: Build the Bot Team skills
+        run: node tools/bot-skills/build.mjs .
       - name: Commit the registry
         if: github.event_name != 'pull_request'
         run: |
-          if git diff --quiet -- mesh/registry.json; then exit 0; fi
+          if [ -z "$(git status --porcelain -- mesh/registry.json plugins/bot-team)" ]; then exit 0; fi
           git config user.name "aipathway-mesh"
           git config user.email "hello@aipathway.com.au"
-          git add mesh/registry.json
-          git commit -m "mesh: regenerate the registry"
+          git add mesh/registry.json plugins/bot-team
+          git commit -m "mesh: regenerate the registry and Bot Team skills"
           # main may have moved while this ran. Rebase onto it and rebuild, so
           # the registry pushed is always the one for the newest main.
           for i in 1 2 3; do
             git push && exit 0
             git fetch -q origin main && git reset -q --hard origin/main
             node mesh/validate.mjs --write
-            if git diff --quiet -- mesh/registry.json; then exit 0; fi
-            git add mesh/registry.json && git commit -q -m "mesh: regenerate the registry"
+            node tools/bot-skills/build.mjs .
+            if [ -z "$(git status --porcelain -- mesh/registry.json plugins/bot-team)" ]; then exit 0; fi
+            git add mesh/registry.json plugins/bot-team && git commit -q -m "mesh: regenerate the registry and Bot Team skills"
           done
           exit 1
