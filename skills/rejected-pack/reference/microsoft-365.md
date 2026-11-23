@@ -31,11 +31,11 @@ This is the parent standard, and it is the one with the most to lose from a casu
 
 Read [the rejected pack build standard](https://aipathway.com.au/explore-ai/rejected-pack-build-standard) first, and its [operator runbook](https://aipathway.com.au/explore-ai/rejected-pack-workflow) if people rather than systems are your constraint. Shared conventions for this stack are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-One thing to be clear about before anyone starts building. The standard names the binding layer as the step not to hand-roll, and unlike some of the others **there is no product for it**. That is not an oversight and this page will not pretend otherwise. It means the binding step deserves the most care, the most testing, and the refusal behaviour built first.
+The standard names the binding layer as the step not to hand-roll, and unlike some of the others **there is no product for it**. That is not an oversight and this page will not pretend otherwise. It means the binding step deserves the most care, the most testing, and the refusal behaviour built first.
 
 ## 2. The lists, with their columns
 
-Six lists and two libraries. The shape looks heavier than the others because it is a graph, and the weight is the point: it is what lets one edit re-derive everything downstream.
+Six lists and two libraries. The shape looks heavier than the others because it is a graph, and the weight is what lets one edit re-derive everything downstream.
 
 ```
 Site: Packs
@@ -189,7 +189,7 @@ The two must-be-zero measures are the cheapest audit in this library. An obligat
 
 ## 6. What the flows can reach in your Microsoft 365, and what they never touch
 
-The flows get the key to one filing cabinet, not the key to the office. They read and write the six lists and two libraries on the one SharePoint site this plan builds, read the job system if you connect it, and send the release approval and the expiry warnings to named people. They never open another site, never edit, move or delete a certificate once it is bound, never send a pack to a builder, insurer or regulator, and never release a pack on their own. Your own login stays yours: the flows run under their own account, never your username and password.
+The flows assemble a complete, current pack and put it in front of the person who releases it. They build it from the records on the one SharePoint site this plan builds, read your job system if you connect it, and warn named people before tickets, insurance or inspections expire. A named person signs off and releases each pack, and what the pack says is yours. Your own login stays yours. The flows run under their own account, never your username and password.
 
 What each connection is for.
 

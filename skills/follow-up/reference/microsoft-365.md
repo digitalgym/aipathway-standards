@@ -22,7 +22,7 @@ Reminders are the easy half and every tool ships them. The standard is about the
 ## In short
 
 - **What this is**: A build plan for the follow-up standard on Microsoft 365. Six lists, two libraries, four flows, six measures, and the call left where the standard puts it.
-- **The core rule**: The chase run opens by reading Arrivals and dropping those items from the set. Not as a condition before the send: as the first thing the flow does, before anything is ranked or composed.
+- **The core rule**: The chase run opens by reading Arrivals and dropping those items from the set. That read is the first thing the flow does, before anything is ranked or composed, rather than a condition before the send.
 - **What it does not do**: Microsoft 365 sends email. It does not send a text and it does not place a disclosed, recorded call. The standard names the call as the hosted step, and this plan does not pretend a flow can be one.
 - **The hard part**: Knowing the document came back when it landed somewhere the tenant does not watch, and keeping the cap and the gap in a list a person can edit rather than in a flow only the builder can open.
 
@@ -224,14 +224,14 @@ Touched After Arrival is the measure this plan exists to make possible, and the 
 
 ## 6. What the flows can reach in your Microsoft 365 and in Xero, and what they never touch
 
-Hand the chaser a clipboard, not the keys to the filing cabinet. The flows carry the open items, the cadence and the arrivals, and a pen to tick each touch off. They read and write the lists on one SharePoint site, watch the one place arrivals land, and send email from one shared mailbox. Through Office Voice they can read the quotes in Xero that nobody has answered and pick up the outcome of the hosted call. They never change a quote’s price or lines, never offer a discount, never record a payment, never send a text, and never open anyone’s own inbox. Nobody’s Xero password goes near a flow: the owner signs in with Xero once inside Office Voice, and the build holds a key.
+The flows chase what a customer still owes you back, until it arrives. They keep the open items and the cadence in one SharePoint site, send each touch from one shared mailbox, watch where arrivals land, and pick up the outcome of a call on a quote in Xero nobody has answered. A no, anything disputed, dropping an item and any concession stay with you. Nobody’s Xero password goes near a flow: the owner signs in with Xero once inside AI Pathway, and the build holds a key.
 
 What each connection is for.
 
 - **SharePoint, one site.** The six lists and two libraries. Flows read OpenItems, Cadences and Consent, and write Rank, Touches, Arrivals and Outcomes. Nothing outside that site.
 - **Outlook, one shared mailbox.** Sends the email touch, and is where Flow 3 watches if arrivals come in by email. The estimator’s own inbox is not part of it.
 - **Teams.** Posts the escalation to the person in EscalateTo. An email does the same job if you would rather not.
-- **Office Voice, over its MCP endpoint.** Called at https://office-voice.com/api/mcp with a bearer key from office-voice.com/app/keys, through the HTTP action or a custom connector (both premium in Power Automate). Read the book lets a flow check the quote in Xero before a touch, so an accepted quote is not chased. Read chases brings the call outcome back for Flow 4. Queue calls is only for a build that sends its own ranked list; switched on in Office Voice, the quote call rings each morning by itself inside the business’s daily call cap.
+- **AI Pathway, over its MCP endpoint.** Called at https://connect.aipathway.com.au/api/mcp with a bearer key from connect.aipathway.com.au/app/keys, through the HTTP action or a custom connector (both premium in Power Automate). Read the book lets a flow check the quote in Xero before a touch, so an accepted quote is not chased. Read chases brings the call outcome back for Flow 4. Queue calls is only for a build that sends its own ranked list; switched on in AI Pathway, the quote call rings each morning by itself inside the business’s daily call cap.
 
 Keep it to the least it needs.
 
@@ -239,11 +239,11 @@ Keep it to the least it needs.
 2. Put the four flows in a solution and use connection references, so each connection is made once, by the service account, and every flow shares it.
 3. Make the service account a member of the one SharePoint site and no other. If you use an app registration instead of the connector, give it Sites.Selected and grant it that site only.
 4. Give the service account Send As on the one shared mailbox, and Full Access only if Flow 3 watches it. If an app registration sends instead, scope its mail permission to that mailbox with RBAC for Applications in Exchange Online, or an application access policy.
-5. Create the Office Voice key with Read the book and Read chases. Leave Queue calls off until the ranked list is yours.
+5. Create your AI Pathway key with Read the book and Read chases. Leave Queue calls off until the ranked list is yours.
 
-How to cut it off. Turn the flows off and nothing runs. Remove a connection and the build loses that one piece. Delete the Office Voice key at /app/keys and the flows lose Xero and the call outcomes on the next run; removing Office Voice from Xero’s connected apps cuts Xero off for every key at once.
+How to cut it off. Turn the flows off and nothing runs. Remove a connection and the build loses that one piece. Delete your AI Pathway key at connect.aipathway.com.au/app/keys and the flows lose Xero and the call outcomes on the next run; removing AI Pathway from Xero’s connected apps cuts Xero off for every key at once.
 
-Why not Copilot in Outlook, across the whole tenant? Copilot will draft a polite nudge well, and it reads whatever the person asking can open. It keeps no register, no cap and no gap, and it does not read the arrival before it writes, which is the one rule this standard is named for. Flows that reach one site and one mailbox do less, and do it the same way every morning. The standard’s [connect section](https://aipathway.com.au/explore-ai/follow-up-build-standard#connect) covers the Office Voice side from the owner’s end.
+Why not Copilot in Outlook, across the whole tenant? Copilot will draft a polite nudge well, and it reads whatever the person asking can open. It keeps no register, no cap and no gap, and it does not read the arrival before it writes, which is the one rule this standard is named for. Flows that reach one site and one mailbox do less, and do it the same way every morning. The standard’s [connect section](https://aipathway.com.au/explore-ai/follow-up-build-standard#connect) covers the AI Pathway side from the owner’s end.
 
 ## 7. The order to build it in
 
@@ -264,7 +264,7 @@ Microsoft 365 sends email. It does not send SMS. If a Cadences row names sms as 
 
 ### The arrival the tenant cannot see
 
-The stop only works on arrivals that land where the build is watching. A variation signed in the customer's own portal, a certificate emailed to somebody's personal address, a PO number given over the phone and written on a pad: each of those is an arrival that will not reach Arrivals, and the reminder goes out the morning after. This is the one failure the standard is named for. The fix is not technical: it is deciding on one destination and saying so, then having Flow 3 watch that one place.
+The stop only works on arrivals that land where the build is watching. A variation signed in the customer's own portal, a certificate emailed to somebody's personal address, a PO number given over the phone and written on a pad: each of those is an arrival that will not reach Arrivals, and the reminder goes out the morning after. This is the one failure the standard is named for. The fix is to decide on one destination, say so, then have Flow 3 watch that one place.
 
 ### Composing the message before the gate
 

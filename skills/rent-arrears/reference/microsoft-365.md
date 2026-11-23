@@ -83,7 +83,7 @@ LIST  Messages              (append only)
   Blocked         Text            the stop condition that stopped it
 ```
 
-Messages records drafts that were never sent, with the stop condition that stopped them. That is not bookkeeping: if a tenancy ever reaches a tribunal, the record of what you did not send is as useful as the record of what you did.
+Messages records drafts that were never sent, with the stop condition that stopped them. If a tenancy ever reaches a tribunal, the record of what you did not send is as useful as the record of what you did.
 
 ## 3. Every check, and what enforces it
 
@@ -179,7 +179,7 @@ Two of these must be zero and both should be on the front page. Notices Without 
 
 ## 6. What the flows can reach in your Microsoft 365 and your rent roll, and what they never touch
 
-The flows can leave a letter on the desk for signing. They cannot post it, and they cannot open the trust account. They read each tenancy’s paid-to date and its stop conditions, write the four lists, send the ordinary messages, and draft a notice that waits for a named person to release it. They never record or reverse a payment, never apply a fee, never serve a notice on a timer, and never message a tenant whose position they have not just re-read. Nothing is written to the ledger.
+The flows chase rent that’s behind, and draft the notice when one is due. They read each tenancy’s paid-to date and its stop conditions, send the ordinary messages, and draft a notice for a named person to release. Notices and breach steps, hardship, anything headed to a tribunal, and who may promise what stay with you.
 
 What each connection is for.
 
@@ -188,7 +188,7 @@ What each connection is for.
 - **Tenancy notes and flags, read.** For the stop conditions Flow 4 re-reads before every message: an arrangement, hardship, a dispute, a notice already issued.
 - **One shared mailbox, send.** Flow 4’s ordinary messages, from an address the agency owns, so what went out is in one place.
 - **Approvals.** The notice, released only by a response from the approver group you decided on in section 1.
-- **An Office Voice key with “Queue calls”, if you hand the short list over for calls.** Made at /app/keys in Office Voice and called from a flow over its MCP endpoint with the HTTP action. One governed call per tenant; Office Voice checks the Do Not Call Register and calling hours before it dials. Leave the key out and the build stops at the list.
+- **An AI Pathway key with “Queue calls”, if you hand the short list over for calls.** Made at connect.aipathway.com.au/app/keys and called from a flow over its MCP endpoint with the HTTP action. One governed call per tenant; we check the Do Not Call Register and calling hours before it dials. Leave the key out and the build stops at the list.
 
 Least privilege, as steps.
 
@@ -196,9 +196,9 @@ Least privilege, as steps.
 2. Build them in one solution on connection references, so the rent roll, SharePoint, mailbox and Approvals connections are each one place to change.
 3. Make the service account a member of the one site and no other. Any app registration gets Sites.Selected on that one site.
 4. Give it Send As on the one shared mailbox. If an app registration sends instead, scope it to that mailbox with an Exchange application access policy or RBAC for Applications.
-5. Give the rent roll connection read access only, on its own key or app connection. On the Office Voice key, tick “Queue calls” and nothing else.
+5. Give the rent roll connection read access only, on its own key or app connection. On the AI Pathway key, tick “Queue calls” and nothing else.
 
-How to cut it off. Turn off the flows in the solution and nothing more is sent. Revoke the build’s key or app connection in your property platform, and delete its Office Voice key on the Keys page in Office Voice. None of these touches the lists, so the record of what was and was not sent stays. The other switches are in [the shared conventions](https://aipathway.com.au/explore-ai/standards-on-microsoft-365#access).
+How to cut it off. Turn off the flows in the solution and nothing more is sent. Revoke the build’s key or app connection in your property platform, and delete its AI Pathway key at connect.aipathway.com.au/app/keys. None of these touches the lists, so the record of what was and was not sent stays. The other switches are in [the shared conventions](https://aipathway.com.au/explore-ai/standards-on-microsoft-365#access).
 
 Why not run the flows on a property manager’s own platform login? It is quicker to set up and it can do everything that person can: receipt, reverse, apply a fee, change a tenancy. Those are the things this build must never do, and the flows stop working the day that person leaves. A read-only key of the build’s own, owned by the service account, has neither problem.
 

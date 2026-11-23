@@ -17,14 +17,14 @@ Used by
 - Business Systems Analyst
 - Compliance Officer
 
-The standard says the file is the product and the assistant may write into it without being the source of anything in it. On this stack that is mostly a matter of which list a value came from, and it is enforceable. The part that is not is the sentence saying the CRM record is the file. If the network runs on a broking platform your tenant cannot write to, this build gives you a very tidy second register, which the standard is explicit is worse than none.
+The standard says the file is the product and the assistant may write into it without being the source of anything in it. On this stack that is mostly a matter of which list a value came from, and it is enforceable. The sentence saying the CRM record is the file is not. If the network runs on a broking platform your tenant cannot write to, this build gives you a very tidy second register, and the standard is explicit that a second register is worse than none.
 
 ## In short
 
 - **What this is**: A build plan for the advice file standard on Microsoft 365. Nine lists, four flows, a Power BI page, and a recording and mapping step you buy rather than build.
 - **The core rule**: Required keys for the purpose, minus the keys present, every time somebody asks. A column called Complete is the exact defect the standard exists to make unrepresentable.
 - **What it does not do**: It fills the file, attaches a card and names the gap. It does not approve a loan, select a product or certify anything, and SentBy holds a person.
-- **The hard part**: Not the transcription. Getting a verified write into the system the broker already opens, and getting an external id back that proves it landed.
+- **The hard part**: Getting a verified write into the system the broker already opens, and getting an external id back that proves it landed.
 
 ## 1. Before you start
 
@@ -271,7 +271,7 @@ Completeness takes the required keys from whatever purpose is in filter context,
 
 ## 6. What the flows can reach in your Microsoft 365 and your CRM, and what they never touch
 
-The flows are the file clerk, never the signatory. They file what the client said, write the published fields into the CRM, read the id back, raise one task per gap, and put a finished draft in front of a broker. They never approve a loan, never choose a product, never send a recommendation on their own, never write SentBy, and never clear a breach_suspect finding. The recording itself stays with the vendor that made it: this build receives text with spans and keeps a link to the recording, nothing more.
+The flows build the client file and put a finished draft in front of a broker. They file what the client said, write it into your CRM, check it saved, and raise one task for each gap. The lending assessment and the recommendation the client gets are yours, and so is waiving a gap or escalating a suspected breach.
 
 What each connection is for.
 

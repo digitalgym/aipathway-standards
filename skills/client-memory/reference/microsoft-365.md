@@ -17,7 +17,7 @@ Used by
 - Business Systems Analyst
 - AI Officer
 
-Most businesses already have client memory: a note in the job system, a line in someone’s head, an instruction the AI picked up on a call. This plan puts it in one list, keyed to the client id your job system issued, and adds the one thing those places lack: a row only a named person can add that says yes.
+Most businesses already have client memory: a note in the job system, a line in someone’s head, an instruction the AI picked up on a call. This plan puts it in one list, keyed to the client id your job system issued. It also adds what none of those places has, a row that says yes, which only a named person can add.
 
 ## In short
 
@@ -144,13 +144,13 @@ Flow 2 is the only flow that writes a status other than proposed, and it only ev
 
 ## 5. What the flows can reach in your Microsoft 365, and what they never touch
 
-The flows are the junior with the client file: they read it before every job and leave sticky notes, and only the people on Approvers write in it. They read and write the five lists on one SharePoint site and send the owner email from one shared mailbox. Flow 1 only ever creates proposed rows. Flow 2 changes a status only from a Decisions row a person added. Flow 3 writes one review row and nothing else. No flow approves its own proposal, edits an approved row, deletes a row, or matches a client by name, and none of them opens anyone’s own inbox.
+The flows keep each client’s standing instructions in front of every job, and only your approvers decide what goes in. They read the client’s file before every job, suggest new items as they come up, and write a review for you to act on. Your approvers accept or reject every suggestion and settle any two instructions that clash, and you act on whatever the review flags.
 
 What each connection is for.
 
 - **SharePoint, the ClientMemory site.** MemoryItems, Approvers, Decisions, DecisionOutcomes and MemoryReviews. The flows read Decisions and never write to it; what Flow 2 did with each decision goes to DecisionOutcomes. The quote, invoice and chase flows from the cash path read MemoryItems here, by client id and approved only. Nothing outside the site.
 - **Outlook, one shared mailbox.** Tells the owner when a decision is refused and sends the monthly review.
-- **Office Voice, over its MCP endpoint, if the calls feed Flow 1.** Called at https://office-voice.com/api/mcp with a bearer key from office-voice.com/app/keys, through the HTTP action or a custom connector (both premium in Power Automate). Read the book lets Flow 1 read what a call heard with get_memory. Leave Write drafts and notes off: it would let a flow record a fact as live, with no one approving it.
+- **AI Pathway, over its MCP endpoint, if the calls feed Flow 1.** Called at https://connect.aipathway.com.au/api/mcp with a bearer key from connect.aipathway.com.au/app/keys, through the HTTP action or a custom connector (both premium in Power Automate). Read the book lets Flow 1 read what a call heard with get_memory. Leave Write drafts and notes off: it would let a flow record a fact as live, with no one approving it.
 
 Keep it to the least it needs.
 
@@ -159,9 +159,9 @@ Keep it to the least it needs.
 3. Make the service account a member of the ClientMemory site and no other, or, with an app registration, give it Sites.Selected on that site only.
 4. Break inheritance on Decisions so only the people on Approvers can add items, and give the service account read on it and nothing more.
 5. Give the service account Send As on the one shared mailbox. If an app registration sends instead, scope its mail permission to that mailbox with RBAC for Applications in Exchange Online, or an application access policy.
-6. If calls feed Flow 1, create the Office Voice key with Read the book only.
+6. If calls feed Flow 1, create the AI Pathway key with Read the book only.
 
-How to cut it off. Turn the flows off and nothing proposes, commits or reviews; what is approved stays approved. Delete the Office Voice key at /app/keys and Flow 1 stops hearing the calls on its next run. Take the service account out of the site and every flow loses the memory at once.
+How to cut it off. Turn the flows off and nothing proposes, commits or reviews; what is approved stays approved. Delete the AI Pathway key at connect.aipathway.com.au/app/keys and Flow 1 stops hearing the calls on its next run. Take the service account out of the site and every flow loses the memory at once.
 
 ## 6. The order to build it in
 

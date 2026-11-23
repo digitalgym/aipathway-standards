@@ -69,7 +69,7 @@ A business, or a bookkeeper or accounting practice working for one, that closes 
 
 Out of scope. Year-end adjustments, tax returns and lodgement, payroll itself, and coding transactions. An uncoded line is handed to the [Uncoded Query](https://aipathway.com.au/explore-ai/uncoded-query-build-standard) standard, which asks the person who knows what it was. Whether a difference matters is the reviewer’s call, never the build’s.
 
-How it connects. Straight to your ledger, through the ledger’s own sign-in and API, approved by you. No product of ours sits between the build and your accounts, and Office Voice is not the ledger connection.
+How it connects. Straight to your ledger, through the ledger’s own sign-in and API, approved by you. No product of ours sits between the build and your accounts, and AI Pathway is not the ledger connection.
 
 What cannot meet it, and where a person steps in. All three ledgers below let an app read what the checklist needs and post a journal. None of them, as far as their own API references show, lets an app set the lock date: Xero and MYOB Business publish it as read only, and Intuit’s reference does not confirm a write for QuickBooks Online. So on all three today the lock step stays with a person: the build raises one task for the reviewer to set it, then reads it back before the month counts as closed. Where a ledger cannot give the statement balance or an aged report to an app, that item is recorded as could not check, or worked out from the open invoices and bills, never assumed.
 
@@ -172,7 +172,7 @@ The reviewer reads the pack, accepts the differences, and signs off approving bo
 
 ## 6. Writing into your accounts, once
 
-This is the step not to hand-roll, and the reason the standard exists. Each approved journal carries the intent id `close:<tenant>:<entity>:<period>:<line>` in its narration or memo, and in the ledger’s idempotency key or request id where it has one. Before any retry the build reads the journals back and looks for that id. A post with no answer is not a post: it is raised to the bookkeeper and tried again only after the read back. Like a cheque book stub, the id is how you know the cheque was already written.
+This is the step not to hand-roll, and the reason the standard exists. Each approved journal carries the intent id `close:<tenant>:<entity>:<period>:<line>` in its narration or memo, and in the ledger’s idempotency key or request id where it has one. Before any retry the build reads the journals back and looks for that id. A post with no answer does not count as posted. It is raised to the bookkeeper and tried again only after the read back. Like a cheque book stub, the id is how you know the cheque was already written.
 
 The lock date is written last, only after the journals read back, and only forward: if the ledger already holds a later date, the build leaves it alone. Where the ledger’s API cannot write it, the build raises one task for the reviewer and waits for the read back. The month counts as closed only when the lock date reads back at the period end or later.
 

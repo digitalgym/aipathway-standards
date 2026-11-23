@@ -32,7 +32,7 @@ Read [the knowledge graph build standard](https://aipathway.com.au/explore-ai/kn
 
 Write the key contract and give it a version before the first extract, and write it as Choice columns rather than as a diagram. Node types and edge types are closed lists at each version, which on this platform means a Choice column with custom values turned off. That one setting is the difference between a contract and a convention, and it is easier to set on an empty list than on one that has already grown a RELATED_TO.
 
-Second, decide where sources come from. The standard says the graph takes its sources from the register, never from a fresh upload, so if you have not built the knowledge base yet, that is the prior job and this build will be waiting on it. The RegisterId column below is not decoration: a source row with a blank one has skipped a standard.
+Second, decide where sources come from. The standard says the graph takes its sources from the register, never from a fresh upload, so if you have not built the knowledge base yet, that is the prior job and this build will be waiting on it. A source row with a blank RegisterId, the column below, has skipped a standard.
 
 ## 2. The lists, with their columns
 
@@ -274,7 +274,7 @@ Uncomputed Deltas is the measure that separates this from an index, and it works
 
 ## 6. What the flows can reach in your SharePoint, and what they never touch
 
-The flows take the minutes; only the chair signs them. They can write proposed nodes, edges and provenance rows all day, and none of it is the record until a named person approves it. In practice they read the knowledge base register, write the graph lists on one SharePoint site, send accepted sources’ passages to the extraction model, and start approvals. They never set a node live without an approval, never decide a conflict, never edit or delete a source file, and never answer a question.
+The flows propose the facts for your knowledge graph, for a person to accept. They read the knowledge base register, send passages from the accepted sources to the extraction model, write each proposed fact, how it links to others and where it came from to one SharePoint site, and start an approval. A named person accepts each one before it counts, and any conflict between two facts is yours to resolve.
 
 What each connection is for.
 
@@ -282,7 +282,7 @@ What each connection is for.
 - **SharePoint, the knowledge base register, read.** Where sources come from, and the checksum Flow 4 compares. The graph never writes to the register.
 - **The extraction model.** Whatever Flow 2 calls, through the HTTP action or a custom connector (both premium in Power Automate). It is sent the passages of an accepted source and nothing else, and its ModelId goes on the ExtractRuns row.
 - **Approvals and Teams.** Accepting a source, a node and a change delta, each with a person’s name written back.
-- **No ledger and no Office Voice.** Nothing in this build touches money or makes a call.
+- **No ledger and no AI Pathway key.** Nothing in this build touches money or makes a call.
 
 Keep it to the least it needs.
 

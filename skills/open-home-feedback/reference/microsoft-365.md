@@ -143,7 +143,7 @@ Flow 2 is the only flow that reads the mailbox, and it has no send action. An ag
 
 ## 5. What the flows can reach in your Microsoft 365, and why your CRM is not one of them
 
-The flows are handed the visitors’ book off the front table and nothing else in the office. They read who signed in and whether they ticked the box, write a thank-you note for each, and hold every note until the agent signs it. In practice they read and write the five lists on one SharePoint site, send approved follow-ups and vendor reports from one mailbox, and read the replies that come back to it. They never send without an approval, never reply to an offer or a complaint, never text or ring a buyer, and never read or change a contact in the CRM.
+The flows follow up everyone who came to the open home, and report back to the vendor. They read who signed in and whether they ticked the box, write a thank-you note for each, and send the follow-ups and vendor reports from one mailbox, reading the replies that come back to it. You approve each follow-up and each vendor report before it goes, and any offer, complaint or reply they can’t sort comes to you.
 
 What each connection is for.
 
@@ -151,7 +151,7 @@ What each connection is for.
 - **Outlook, one mailbox.** Flow 1 and Flow 3 send from it once approved; Flow 2 reads the replies that land there. Use the shared-mailbox send action if it is a shared mailbox the agent reads.
 - **Approvals and Teams.** The approval on every follow-up and every vendor report, and the posts to the agent about offers, complaints and rows with no consent.
 - **The CRM: no connection.** The register comes in as an export or a typed sheet, imported into the Register list. No flow can read or change a contact in Rex, Agentbox or VaultRE, because none is given a way in.
-- **Office Voice: not in this plan.** If you add the standard’s optional call, the key only holds an attendee who asked for a call. It cannot dial; Office Voice decides at dial time on the AI disclosure, the Do Not Call Register and calling hours.
+- **AI Pathway: not in this plan.** If you add the standard’s optional call, the key only holds an attendee who asked for a call. It cannot dial; AI Pathway decides at dial time on the AI disclosure, the Do Not Call Register and calling hours.
 
 Keep it to the least it needs.
 

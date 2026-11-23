@@ -18,7 +18,7 @@ Used by
 - Compliance Officer
 - Quality Manager
 
-This is the build plan most likely to be read by somebody who believes they have already done it, because the tenant comes with an assistant and the assistant answers questions about documents. The distance between that and this standard is the distance between a citation and a dated clause, and it is the whole distance.
+This is the build plan most likely to be read by somebody who believes they have already done it, because the tenant comes with an assistant and the assistant answers questions about documents. The gap between that and this standard is the gap between a citation and a dated clause.
 
 ## In short
 
@@ -90,7 +90,7 @@ An Answer with Queue = answered and no SourceCardIds should not
 be representable. Enforce it in the flow, not in a review.
 ```
 
-SourceCardIds is stored as a value on the answer rather than derived when somebody looks. That is the entire mechanism by which you can later list every answer that relied on an instrument that has just changed.
+SourceCardIds is stored as a value on the answer rather than derived when somebody looks. That is how you can later list every answer that relied on an instrument that has just changed.
 
 ## 3. Every check, and what enforces it
 
@@ -179,7 +179,7 @@ Do not treat a falling Decline Rate as progress. It falls when the library genui
 
 ## 6. What the flows can reach in your Microsoft 365, and what they never touch
 
-The flows hold a reading-room pass: they may read what is on the reserve shelf and take notes, and nothing leaves the room changed. They read the instruments and clauses on one SharePoint site, write each answer with its source cards to the Answers list, and raise a change for a person to accept. They never edit or delete an instrument file, never accept a change or retire a card on their own, never answer from outside the clause library, and never read your mail or any other site. Your own login stays yours: the flows run under their own account, never your username and password.
+The flows answer your staff from your rules, with the source attached. They read the instruments and clauses on one SharePoint site, write each answer with its source cards, and raise any change to a rule for a person to accept. You accept every change, settle any clash between two instruments, and sign anything that carries a licence number. Your own login stays yours: the flows run under their own account, never your username and password.
 
 What each connection is for.
 
@@ -215,7 +215,7 @@ Why not a Copilot Studio agent over the library? It makes a good front door, and
 
 ### Assuming Copilot over SharePoint satisfies this
 
-It does not, and this is the most important line on the page. A document-grounded assistant cites the file it drew on. This standard is about a clause, an edition, a jurisdiction and an effective date, and about a superseded clause being unable to produce a live answer. Nothing in a general document assistant knows that a clause was retired. The clause library and the card layer are yours to build whichever assistant sits on top.
+It does not. A document-grounded assistant cites the file it drew on. This standard is about a clause, an edition, a jurisdiction and an effective date, and about a superseded clause being unable to produce a live answer. Nothing in a general document assistant knows that a clause was retired. The clause library and the card layer are yours to build whichever assistant sits on top.
 
 ### The instrument library as the only store
 

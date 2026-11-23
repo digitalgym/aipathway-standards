@@ -46,7 +46,7 @@ The hard part
 
 Not the maths. Live sales you can trace to where they were recorded, and a record of exactly what the vendor was shown on what date that is still there if they dispute the price.
 
-The vendor asks where the number came from. You remember three sales, roughly, and one of them was a unit. Six months later the campaign has run long, the vendor says you promised more, and nobody can say which sales were on the page you handed over, or whether they were sales at all. The fix is not a better estimate. It is a page whose numbers can each be followed back to a sale, with your own view kept apart, and a copy of it that nobody can change.
+The vendor asks where the number came from. You remember three sales, roughly, and one of them was a unit. Six months later the campaign has run long, the vendor says you promised more, and nobody can say which sales were on the page you handed over, or whether they were sales at all. The fix is a page whose numbers can each be followed back to a sale, with your own view kept apart, and a copy of it that nobody can change.
 
 One appraisal, rules to record
 
@@ -95,7 +95,7 @@ What cannot meet it. A build with no sales source it can name. Sales remembered,
 
 ## 2. The selection rules
 
-Write the rules down before you look at a single price. A rule chosen after the prices are on screen is a rule chosen to reach a number, and that is the page a vendor disputes. These are starting values, not the standard: the standard is that there are rules, that they are read first, and that the page prints them.
+Write the rules down before you look at a single price. A rule chosen after the prices are on screen is a rule chosen to reach a number, and that is the page a vendor disputes. These are starting values. The standard is that there are rules, that they are read first, and that the page prints them.
 
 | Rule | A starting value | Why |
 | --- | --- | --- |

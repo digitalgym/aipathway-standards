@@ -25,7 +25,7 @@ The standard says what to build and deliberately says nothing about where. This 
 - **What this is**: A build plan for one standard on one stack: three lists, one library, four flows, six measures, in the order they have to be built.
 - **The core rule**: The derive step is the whole standard. If a person can type a due date and nothing notices, the rest of this is decoration.
 - **What it does not do**: No legal notice leaves on a timer. The escalation flow drafts and asks; a person releases it.
-- **The hard part**: Not the logic. The write-back loop, which is the reason most attempts at this are abandoned in the first week.
+- **The hard part**: The write-back loop, which is the reason most attempts at this are abandoned in the first week.
 
 ## 1. Before you start
 
@@ -203,7 +203,7 @@ Override Rate is the one to put on the front page. It is the measure that says w
 
 ## 6. What the flows can reach in your Microsoft 365, and what they never touch
 
-The flows keep the calendar the way a bound logbook is kept: they can add a line, and they cannot tear a page out. They read the rules, write the derived dates, append to the history, and draft each notice for a person to release from one shared mailbox. They never send a notice without an approval, never edit or delete a StateChanges row, never mark an obligation done without evidence, and never read any other site or mailbox. Your own login stays yours: the flows run under their own account, never your username and password.
+The flows keep your compliance dates and draft each notice in time. They read your rules, work out each due date, keep a history of every change, and draft each notice from one shared mailbox. You release every notice, accept each new obligation, and decide any cross-border question. Your own login stays yours: the flows run under their own account, never your username and password.
 
 What each connection is for.
 
@@ -239,7 +239,7 @@ The order matters because each step is testable only once the previous one exist
 
 ## 8. Five traps specific to this build
 
-These are not general advice. Each one breaks this particular calendar on this particular stack, and the first one accounts for most abandoned attempts.
+Each one breaks this particular calendar on this particular stack, and the first one accounts for most abandoned attempts.
 
 ### The derive flow re-triggers itself
 
@@ -263,7 +263,7 @@ Use the SharePoint Online list connector on its 2.0 implementation and select co
 
 ## 9. Where the automation stops
 
-An agent with access to the tenant can create the lists, set the columns, build the flows and write the measures. Being honest about the rest matters more than the demo:
+An agent with access to the tenant can create the lists, set the columns, build the flows and write the measures. The rest still needs a person:
 
 - Creating the site, and any tenant-level consent, needs somebody with the administrative role. Nothing here should be built by granting an agent that role.
 - Publishing a Power BI model and assigning workspace access is a licensed human action, at least the first time.

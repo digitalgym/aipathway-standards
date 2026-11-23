@@ -17,7 +17,7 @@ Used by
 - Office Manager
 - Operations Manager
 
-Section 8 of the standard splits this build three ways and the split is not commercial, it is regulatory. The number, the disclosure, the recording and the consent ledger are the live step, and the standard marks that step not self-hostable. The system of record is whatever job system already runs. The board, the queue and the reporting are yours, and this plan is that third part. Build it and you own the evidence that the other two are behaving.
+Section 8 of the standard splits this build three ways, and the reason is regulatory. The number, the disclosure, the recording and the consent ledger are the live step, and the standard marks that step not self-hostable. The system of record is whatever job system already runs. The board, the queue and the reporting are yours, and this plan is that third part. Build it and you own the evidence that the other two are behaving.
 
 ## In short
 
@@ -98,7 +98,7 @@ Calls holds ProblemVerbatim and Jobs holds the classification, which looks like 
 
 | The rule | Enforced by | How |
 | --- | --- | --- |
-| Disclosure and the recording notice happen before the first question | Measure, not a gate | The call is not in Microsoft 365, so nothing here can enforce it. DisclosureAt and RecordingConsentAt arrive on the outcome object and a must-be-zero measure counts calls without them. That is auditing the obligation, not holding it, and the difference matters. |
+| Disclosure and the recording notice happen before the first question | Measure, not a gate | The call is not in Microsoft 365, so nothing here can enforce it. DisclosureAt and RecordingConsentAt arrive on the outcome object and a must-be-zero measure counts calls without them. That is auditing the obligation, not holding it. |
 | No free text reaches the job system | Choice columns | Classification carries the four values and Jobs.Type the three. There is no fifth to write, and an unclassified call produces no Jobs row at all. |
 | The resolved value is read back, confirmed, and is what gets written | Intake flow | Jobs.Address copies from AddressResolved and no branch anywhere reads AddressSpoken. Confidence below high writes no job and raises address_unresolved instead. |
 | Out-of-area calls are told so and create no job | ServiceArea list | The resolved locality is looked up before the Jobs row exists. Absent from the list is out of area, because a radius calculated in a flow is a guess with arithmetic on it. |
@@ -136,7 +136,7 @@ FLOW 2  Write the job, once
                                     Outcome = escalated,
                                     Escalations reason write_failed
   never    set Outcome = booked anywhere ExternalId is blank.
-  note     if Office Voice is the live step, it writes the job during
+  note     if AI Pathway is the live step, it writes the job during
            the call; this flow then only records the id it returns.
 
 FLOW 3  Alert on-call, once
@@ -217,7 +217,7 @@ Second Alerts is the one to put on the wall. Everything else on this page descri
 
 ## 6. What the flows can reach in your Microsoft 365 and your job system, and what they never touch
 
-The flows keep the overnight logbook. They write down everything the night produced, which job it became and who was woken, and they never pick up the phone. They read the after-hours mailbox, write the six lists, post one card per emergency job to the on-call channel and queue every hand-back. They never answer or place a call, never hold a recording or a consent record (the transcript is a link out), and never change a quote, an invoice or a price.
+The flows keep the record of every after-hours call. They read the after-hours mailbox, note which job each call became and who was woken, post each emergency job to the on-call channel, and queue every hand-back. Once an emergency is passed on, your on-call person decides what happens next, and any price or quote stays with you.
 
 What each connection is for.
 
@@ -235,7 +235,7 @@ Least privilege, as steps.
 4. Give it Full Access to the after-hours shared mailbox only. If an app registration reads it instead, scope that app to the one mailbox with an Exchange application access policy or RBAC for Applications.
 5. Give any job system key read access to jobs and customers only.
 
-How to cut it off. Turn off the flows in the solution and nothing is written or posted. Remove the Office Voice connection in ServiceM8 or Simpro and the live step stops writing jobs. Stop forwarding your number from your own carrier account and the line goes back to you. The other switches are in [the shared conventions](https://aipathway.com.au/explore-ai/standards-on-microsoft-365#access).
+How to cut it off. Turn off the flows in the solution and nothing is written or posted. Remove the AI Pathway connection in ServiceM8 or Simpro and the live step stops writing jobs. Stop forwarding your number from your own carrier account and the line goes back to you. The other switches are in [the shared conventions](https://aipathway.com.au/explore-ai/standards-on-microsoft-365#access).
 
 Why not let the answering service text the on-call phone itself? Most do, and most do it per call. The frightened customer who rings back in ten minutes is a second text, and nothing checked for the job the first call opened. The Alerts list is keyed on the job, it is yours, and Second Alerts counts every time the guard failed.
 

@@ -158,7 +158,7 @@ No flow has a send-to-sender step or a delete step. The only message out is Flow
 
 ## 5. What the flows can reach in your Microsoft 365 and your job system, and what they never touch
 
-Think of the mail-room sorter: opens the post, puts each piece in exactly one pigeonhole, and has no key to the safe. The flows read the one shared mailbox and the one photos folder, keep the originals and the lists in one SharePoint site, look a record up in the job system by its printed number, attach the original and enter a blank field. They never reply to anyone, never delete an email or a file, never overwrite a value the record already holds, never approve or pay, and never open another mailbox or site. Your own login stays yours: the flows run under an account kept for them, and the job system sees a key made for the build, never your username and password.
+The flows file each document that comes in against its job. They read the shared mailbox and the photos folder, find the record in your job system by the number printed on the document, attach the original and fill in any blank field. Anything they can’t match comes to you on one exceptions list, and every reply and every decision to pay stays yours. Your own login stays yours. The flows run under an account kept for them, and the job system sees a key made for the build, never your username and password.
 
 What each connection is for.
 

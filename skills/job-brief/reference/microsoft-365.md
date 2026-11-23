@@ -138,7 +138,7 @@ Flow 2 has no step that writes words of its own about a customer. Everything on 
 
 ## 5. What the flows can reach in your Microsoft 365, and what they never touch
 
-Think of the flows as the office junior who reads the job file before the tech leaves and writes down only what is in it. Flow 1 reads the job system and writes the five record lists. Flow 2 reads those lists and writes one Briefs row and one Teams post per tech. Neither writes to the job system, and neither opens anyone’s inbox.
+The flows give every tech each site’s history before the day starts. They read each job’s history from your job system and post one brief per tech in Teams, with every line naming the record it came from. What goes in the job notes stays yours, and so does whether customer notes appear on the brief. Anything the brief shows as missing is the tech’s to ask the customer about on site.
 
 What each connection is for.
 

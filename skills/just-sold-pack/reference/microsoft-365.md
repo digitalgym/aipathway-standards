@@ -139,7 +139,7 @@ Flow 2 is triggered by the approval itself, not by a schedule, so the gap betwee
 
 ## 5. What the flows can reach in your Microsoft 365 and your CRM, and what they never touch
 
-The flows address the envelopes; a person drops each one in the post box. Flow 1 reads the sale and the contacts and writes draft rows in the site. Flow 2 sends one email from the shared mailbox, and only for a row a person approved. Neither flow edits or deletes a contact in the CRM, changes a consent or do-not-contact flag, places a call, or sends from anybody’s own mailbox. Office Voice is not connected here: the standard keeps the calls with the agent.
+The flows write to the neighbours when a home nearby sells. They read the sale and your contacts and draft one message for each neighbour. You approve each one before it goes, and the personal calls stay yours.
 
 What each connection is for.
 

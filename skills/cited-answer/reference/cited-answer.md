@@ -45,9 +45,9 @@ It does not certify, sign, or decide compliance. It finds the clause and shows i
 
 The hard part
 
-Not the retrieval. The week the rule changes, and every answer you already gave that was true on the day.
+The week the rule changes, and every answer you already gave that was true on the day.
 
-Every business with a compliance obligation ends up with the same question asked forty times a week. What does the standard require for this asset, this site, this state. An assistant is an obvious answer, and a confident wrong answer about a rule someone signs against is worse than no assistant at all. The difference is not the model. It is whether the thing is allowed to answer without a citation.
+Every business with a compliance obligation ends up with the same question asked forty times a week. What does the standard require for this asset, this site, this state. An assistant is an obvious answer, and a confident wrong answer about a rule someone signs against is worse than no assistant at all. Whether the thing is allowed to answer without a citation matters more than the model.
 
 One question, end to end
 
@@ -67,7 +67,7 @@ Any assistant that answers questions about a body of rules where being wrong has
 
 It does not cover assistants that draft, summarise or rewrite your own material. Those have their own failure modes and none of them are this one. The distinguishing feature here is that the truth lives outside your business, it is versioned, and it moves without telling you.
 
-The failure this prevents is specific and it is not hallucination in general. It is the answer that was correct eighteen months ago, delivered today with the same confidence, because the model learned the rule rather than reading it.
+The failure this prevents is narrower than hallucination in general. It is the answer that was correct eighteen months ago, delivered today with the same confidence, because the model learned the rule rather than reading it.
 
 ## 2. The records it keeps, in the shape your developer needs
 

@@ -128,7 +128,7 @@ Flow 2 has no AI step that writes its own words about a transaction. Evidence an
 
 ## 5. What the flows can reach in your Microsoft 365, and what they never touch
 
-Think of the flows as a junior who reads the ledger with a highlighter and is not allowed a pen. Flow 1 reads the ledger and writes the Lines, TaxCodes and Accounts lists. Flow 2 reads those lists and writes one Exceptions row per finding, then emails the reviewer a link. Neither writes to the ledger.
+The flows give your bookkeeper one list of things to look at before the BAS goes in. They read your ledger, write one row for each thing worth a look, every line pointing at the transaction it came from, and email the reviewer a link. Whether a flag is a problem, any correction in the ledger, and lodging the BAS stay with your bookkeeper or BAS agent.
 
 What each connection is for.
 

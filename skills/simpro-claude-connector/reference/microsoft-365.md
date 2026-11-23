@@ -106,7 +106,7 @@ Flow 1 is the only door to Simpro. An agent action wired straight to the connect
 
 ## 5. What the agent can reach in your Microsoft 365 and your Simpro, and what it never touches
 
-The connection is a library card. It lets the agent read what is on the shelves and, if you allow it, fill in one request slip, and the desk can cancel the card in a minute. It never rewrites a book. The agent reads quotes, jobs, customers and invoices from Simpro live, writes a ConnectorLog row for every request in this one SharePoint site, and at most creates one job at Simpro’s first status. It never emails or texts anyone, never moves a job or quote to another status, and never acts on a note inside a record.
+The agent answers from your live Simpro. It reads quotes, jobs, customers and invoices from Simpro, logs every request in this one SharePoint site, and, if you allow it, creates one new job at Simpro’s first status. You move every job and quote along, and anything a customer sees is yours.
 
 What each connection is for.
 
@@ -120,13 +120,13 @@ The agent needs no mailbox. Leave Outlook out, which also means it has no way to
 Keep each one to the least it needs.
 
 1. Create a service account the business controls, and build the flows in a solution it owns, with the key’s owner as co-owner. A flow owned by whoever built the agent stops working the day they leave. The account needs a Power Automate licence that covers premium connectors; check what your tenant already has.
-2. Create the Simpro connection as that account and use it through the solution’s connection reference. Do not share the connection itself with the agent’s makers: shared, it can be used in any flow they build.
+2. Create the Simpro connection as that account and use it through the solution’s connection reference. Do not share the connection itself with the agent’s makers. Once shared, it can be used in any flow they build.
 3. Give the service account access to this one site and no other. If an app registration is used instead, grant it Sites.Selected and give it this site alone.
 4. Request one Simpro API application for this build alone. A Simpro key opens the whole of your Simpro, so the fence is the connector’s definition: no operation that sends, and no Stage in the booking body.
 
 How to cut it off. Remove the application in Simpro and every action is refused at once, which Flow 3 logs. Turn the flows off, or remove the connection, and the agent can reach nothing. Unpublish the agent and nobody can ask it.
 
-Why not a Simpro connector someone else hosts? You can: AI Pathway’s [Simpro sign-in for Claude](https://aipathway.com.au/explore-ai/claude-and-simpro#signin) takes about two minutes. But it runs on our service, between your staff and your customer records. This build is a little more work, and the key, the operations and the log are all in your own tenant. If what you want is a customer rung when their job slips on the board, that is not this connector, which never contacts anyone: Office Voice makes that running-late call from your Simpro board once you switch it on under Automations.
+Why not a Simpro connector someone else hosts? You can: AI Pathway’s [Simpro sign-in for Claude](https://aipathway.com.au/explore-ai/claude-and-simpro#signin) takes about two minutes. But it runs on our service, between your staff and your customer records. This build is a little more work, and the key, the operations and the log are all in your own tenant. If what you want is a customer rung when their job slips on the board, that is not this connector, which never contacts anyone. AI Pathway makes that running-late call from your Simpro board once you switch it on under Automations.
 
 ## 6. The order to build it in
 

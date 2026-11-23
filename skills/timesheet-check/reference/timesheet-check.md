@@ -67,7 +67,7 @@ Any business where hours are captured somewhere other than the payroll system: a
 
 It covers the check, not the pay. Interpreting which award clause applies to an unusual shift is a question for a person with a cited rule in front of them, and the shape of that question is the [Cited Answer standard](https://aipathway.com.au/explore-ai/cited-answer-build-standard). This standard reads a dated rule, cites it, and parks what it does not plainly cover. The [timesheet paper](https://aipathway.com.au/explore-ai/timesheet-payroll-trades) is the argument beside it.
 
-The failure this prevents is specific. Not the wrong number on one sheet. The period that reached payroll with an anomaly nobody looked at, a penalty from an edition that had lapsed, and no name on the release.
+It prevents a specific failure: the period that reached payroll with an anomaly nobody looked at, a penalty from an edition that had lapsed, and no name on the release.
 
 ## 2. The closed list of anomalies
 
@@ -153,7 +153,7 @@ An entry the rule does not plainly cover, a disputed break, a split shift nobody
 
 ## 7. Connect your timesheets, roster and payroll, without it paying anyone
 
-Think of the check as the timekeeper at the site gate: it writes down who came and went and for which job, and it never hands out the wages. It reads the hours people captured, the roster and the job allocations. Its one write is the released period, sent once into payroll as timesheets. It never runs or approves a pay run, never changes a pay rate, an employee’s details or their bank account, and never clears an anomaly on its own. Disconnect it in payroll, or revoke its key in the job system, and it is cut off. Your own login stays yours: the check connects with its own key or app connection, never your username and password.
+It checks every hour before it reaches payroll. It matches the hours people captured against the roster and the jobs they were booked to, and once you release the period it sends those hours into payroll as timesheets, once. Every odd hour comes to you to clear, you release each period, and which award applies is your call. Your own login stays yours: the check connects with its own key or app connection, never your username and password.
 
 What each piece of access is for.
 
@@ -168,7 +168,7 @@ What each piece of access is for.
 4. Connect payroll with timesheet access only, or set up the export file.
 5. Run the pass test below on a real period before the first export goes live.
 
-Why not your payroll’s own timesheet approval? Use it: approving the period there can be the release. What it does not do is check each entry against the roster and the job allocations, or keep the owner and reason for every anomaly. Some payroll systems apply award rules for you; the check still records which edition each penalty came from, so a changed edition shows up before pay day rather than after.
+Why not your payroll’s own timesheet approval? Use it: approving the period there can be the release. It does not check each entry against the roster and the job allocations, or keep the owner and reason for every anomaly. Some payroll systems apply award rules for you; the check still records which edition each penalty came from, so a changed edition shows up before pay day rather than after.
 
 Where it runs. A scheduled flow with the entries, anomalies and releases in Microsoft 365 lists (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/timesheet-check-on-microsoft-365) lays these out), a small page a coding agent builds from this standard, or a routine woken at the end of each pay period. All are held to the same checks; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
 

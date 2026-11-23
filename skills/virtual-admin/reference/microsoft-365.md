@@ -114,7 +114,7 @@ Three reads added to flows that already exist, and one new flow. If the change t
 
 ## 5. What the flows can reach in your Microsoft 365 and your job system, and what they never touch
 
-This plan gives the flows a temp’s swipe card: it opens the diary and the filing room, and it does not open the safe. The flows read your hours, holidays and owners, write a hold on a job, note it on the job, and send one list at the close. They never raise or change an invoice, never record a payment, never close a job, and never ring anyone. The money moves in the cash path plan’s own flows, on their own connection, and this plan only adds a read that can stop them. It adds no new connection to the ledger at all.
+The flows work to your hours and stop the invoice and chase on a job with a complaint. They read your hours, holidays and owners, put a hold on a job when a caller complains or disputes, note it on the job, and send one list at the close. You set the hours, holidays and owners, and every complaint, dispute and line on that list goes to the owner you named for it.
 
 What each connection is for.
 

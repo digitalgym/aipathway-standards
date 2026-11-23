@@ -16,7 +16,7 @@ carrying each check's id, ports, what to inject and what to assert.
 To print them: npx @aipathway/conformance show progress-claim-draft-build-standard
 To scaffold a folder that runs them, every check starting red: npx @aipathway/conformance init progress-claim-draft-build-standard
 Do the scaffolding yourself if you can run commands; the person should not have to open a terminal.
-This standard has no hosted provider; do not run conformance connect. For the checks a stub cannot prove: No hosted step, and none is offered: Office Voice has no progress claim tool. The production check runs on the builder's own contract records and site assessments, and the claim itself is served by the builder. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence.
+This standard has no hosted provider; do not run conformance connect. For the checks a stub cannot prove: No hosted step, and none is offered: AI Pathway has no progress claim tool. The production check runs on the builder's own contract records and site assessments, and the claim itself is served by the builder. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence.
 
 ---
 
@@ -61,7 +61,7 @@ One contract's month, from the site walk to the held draft
 7. Is every line assessed this month, does the schedule add up, is every variation signed, and is no line below what was claimed before? If yes, the draft is held for the project manager with the words DRAFT: not a payment claim until reviewed and served by you.
 8. If no, the draft is parked with its reason, for the project manager. Nothing is ever served, sent or dated by the build.
 
-The filled diamond is the waiver: without it, nothing is drafted. Every figure after it is one a person entered or signed, and the end of the line is a draft held for your project manager, never a claim sent to your client.
+The filled diamond is the waiver. Without it, nothing is drafted. Every figure after it is one a person entered or signed, and the end of the line is a draft held for your project manager, never a claim sent to your client.
 
 ## 1. What this standard covers
 
@@ -71,7 +71,7 @@ Out of scope. Everything that makes a draft into a claim and everything after it
 
 What cannot meet it. A build where no person enters percent complete. A percent taken from hours booked, costs to date, last month’s figure or a model’s estimate fails check 3 by design. Any system that can hold a schedule of values per contract and a dated percent per line per month can meet it, and a spreadsheet can.
 
-No product runs it. Office Voice has no progress claim tool and does not draft claims. The standard runs on your own systems: the sheet, Microsoft 365 or your own code, in section 8.
+No product runs it. We have no progress claim tool and do not draft claims. The standard runs on your own systems: the sheet, Microsoft 365 or your own code, in section 8.
 
 ## 2. The waiver you accept first
 
@@ -186,7 +186,7 @@ Checked as at 5 November 2026
 
 Queensland. Read from the [Building Industry Fairness (Security of Payment) Act 2017](https://www.legislation.qld.gov.au/view/whole/html/inforce/current/act-2017-043), the version in force from 28 April 2026. Under section 68(1) a payment claim for a progress payment is a written document that identifies the construction work or related goods and services it relates to, states the amount claimed, requests payment of that amount, and includes any other information prescribed by regulation. Under section 68(3) a document bearing the word “invoice” is taken to request payment.
 
-Section 75(4) says a claimant cannot make more than one payment claim for each reference date under the contract. This standard’s one draft per contract per period is a draft rule, not a reading of your reference dates: matching the period to your contract’s reference date is yours. Under section 75(6) and (7), where there is a subcontract for the progress payment and your contract is not itself a subcontract, the claim must be accompanied by a supporting statement about paying your subcontractors. The draft does not prepare one.
+Section 75(4) says a claimant cannot make more than one payment claim for each reference date under the contract. This standard’s one draft per contract per period is a draft rule, not a reading of your reference dates. Matching the period to your contract’s reference date is yours. Under section 75(6) and (7), where there is a subcontract for the progress payment and your contract is not itself a subcontract, the claim must be accompanied by a supporting statement about paying your subcontractors. The draft does not prepare one.
 
 Other states differ, including on whether a claim must say it is made under the Act. See the state table rather than this page.
 
@@ -211,7 +211,7 @@ The same checks and the same pass test on each. Two rules hold whichever you pic
 
 ## 9. Join It to Your Own System: What to Stub, and What Not to Hand-Roll
 
-There is no hosted step, and none is sold: Office Voice has no progress claim tool, and serving the claim is yours. The parts that need care are the waiver gate before the first draft, a percent that only ever comes from a person, and the claimed-before figure that stops the same work being claimed twice. All of it runs against the stub, and the production check runs on your own records.
+There is no hosted step, and none is sold: we have no progress claim tool, and serving the claim is yours. The parts that need care are the waiver gate before the first draft, a percent that only ever comes from a person, and the claimed-before figure that stops the same work being claimed twice. All of it runs against the stub, and the production check runs on your own records.
 
 ```
 provider:
@@ -240,7 +240,7 @@ no port exists for
 
 Anyone selling software that does your progress claims should be able to answer one question: show me who entered each percent on last month's claim, and when.
 
-**The pass test.** On your own contract records and your project manager’s real site assessment, not a sample. Accept the waiver at the current version. Take three contracts: one fully assessed this month, one with a line nobody assessed this month, and one with a variation nobody signed. Draft the month twice. There is one draft per contract: the first held with DRAFT at the top and sums that match yours by hand, the second parked as no_assessment, the third parked as unsigned_variation. Release the first: the marker comes off and your name is on it. Nothing was sent, served or dated by the build. A stub cannot pass this: on a stub the percent is a field the runner wrote. Only your own records prove each percent came from your project manager’s walk this month and the schedule is the signed contract’s.
+**The pass test.** On your own contract records and your project manager’s real site assessment, not a sample. Accept the waiver at the current version. Take three contracts: one fully assessed this month, one with a line nobody assessed this month, and one with a variation nobody signed. Draft the month twice. There is one draft per contract: the first held with DRAFT at the top and sums that match yours by hand, the second parked as no_assessment, the third parked as unsigned_variation. Release the first: the marker comes off and your name is on it. Nothing was sent, served or dated by the build. A stub cannot pass this. On a stub the percent is a field the runner wrote. Only your own records prove each percent came from your project manager’s walk this month and the schedule is the signed contract’s.
 
 ## 10. A checklist to hold any build or supplier to
 

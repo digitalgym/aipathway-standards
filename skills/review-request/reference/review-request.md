@@ -45,7 +45,7 @@ It never filters customers by score, never offers anything for a review, never w
 
 The hard part
 
-Not the message. Reading the job system at the moment of sending, so a job with an open callback or a disputed invoice waits, and catching the reply that comes back from a real phone days later.
+Reading the job system at the moment of sending, so a job with an open callback or a disputed invoice waits, and catching the reply that comes back from a real phone days later.
 
 Forty jobs went out the door this month and most of those customers were happy. Three left a review. Nobody asked the others while the invoice was still open in front of them, because the asking competes with getting to the next job, so it happens in the quiet weeks and never in the busy ones. The one customer who was annoyed needed no prompting at all.
 
@@ -167,7 +167,7 @@ One message, written once by the business. For example: “Hi Ana, thanks for ha
 
 At most one ask per customer in the window the business writes down, thirty days say, and never two for one job. A customer with three jobs in a week hears from you once. The one reminder goes only if nothing came back and nobody marked a review as posted, after the written interval, with the same link. A reply, a STOP or a marked review stops it, and there is never a third message.
 
-A reply of 1, 2 or 3 sends the owner a text straight away, with the job, the customer and their words, so they can ring while it is still fixable. That is good service, not reputation management: the customer still has the same link as everyone else, nothing asks them not to post, and nothing routes them anywhere else. A STOP is recorded against the customer and honoured on every later job.
+A reply of 1, 2 or 3 sends the owner a text straight away, with the job, the customer and their words, so they can ring while it is still fixable. That is good service. The customer still has the same link as everyone else, nothing asks them not to post, and nothing routes them anywhere else. A STOP is recorded against the customer and honoured on every later job.
 
 ## 7. What stays with a person
 
@@ -182,7 +182,7 @@ The build must never write a review, suggest the wording or the stars, or offer 
 
 ## 8. Connect ServiceM8, Simpro or Jobber for review requests, without it touching your jobs
 
-The build gets the access a meter reader gets: it reads the dial and never opens the switchboard. It reads a job’s status, its linked callbacks and its invoice state, and sends one message from your own SMS or email account. It never edits or closes a job, never changes an invoice, never posts or answers a review, and never messages a customer who replied STOP. Revoke its key in your job system and it is cut off. Your own login stays yours: the build connects with its own key or app connection, never your username and password.
+It asks the customer on every finished job for a Google review. It checks the job is finished, with no open callback or disputed invoice, and sends one message from your own SMS or email account. You write the message and answer every review, and a customer who scores 1 to 3 is yours to call. Your own login stays yours. The build connects with its own key or app connection, never your username and password.
 
 What each piece of access is for.
 

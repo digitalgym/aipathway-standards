@@ -136,7 +136,7 @@ What a good office admin does for a builder or a trade, and where each piece is 
 | The desk and the money on one record | Virtual Admin (this standard) |
 | Being the person the customer knows | A person. Not a standard, and not something to automate. |
 
-The last row matters. The reason a good admin is worth having is that customers deal with one person who knows their job. Software can make sure that person, or anyone covering for them, sees the whole job in one place. It cannot be that person.
+The last row matters. A good admin is worth having because customers deal with one person who knows their job. Software can make sure that person, or anyone covering for them, sees the whole job in one place. It cannot be that person.
 
 ## 5. The order to build it in
 
@@ -173,8 +173,8 @@ provider:
   production: none                       # scoped build, not a product
 
 the live steps                       # each named on its own standard
-  - both desks, day and after hours: Office Voice Front Desk
-  - the invoice draft and the chase: Office Voice Recover, sold as
+  - both desks, day and after hours: AI Pathway Front Desk
+  - the invoice draft and the chase: AI Pathway Recover, sold as
     Get Paid
 
 stays local                          # yours, and the standard

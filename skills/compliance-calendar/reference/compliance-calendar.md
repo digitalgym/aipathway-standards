@@ -44,7 +44,7 @@ It does not decide. It surfaces what is due, drafts the action, and escalates wh
 
 The hard part
 
-Not the dates. The owner who declines the work, and the obligation that stays live anyway.
+The owner who declines the work, and the obligation that stays live anyway.
 
 Most compliance calendars are a spreadsheet of due dates. They work until a rule changes, and then every date in the column is wrong and nobody can tell which ones. The difference between a calendar and a list of dates is that a calendar stores the rule and derives the date. That single decision is most of this specification.
 
@@ -58,7 +58,7 @@ One obligation, end to end
 6. If yes, the notice goes out and the work is booked.
 7. Evidence on file? If yes, the obligation closes and stays provable later. If no, it sits in state 3, waiting on someone, carrying who, since when, and the next chase date, which is drafted and released the same way.
 
-A due date is not a fact about a property, it is a rule applied to an anchor, and both sides move. The filled diamond is the release: drafted, never sent, and a person lets it go.
+A due date is a rule applied to an anchor, and both sides move. The filled diamond is the release: drafted, never sent, and a person lets it go.
 
 ## 1. What this standard covers
 

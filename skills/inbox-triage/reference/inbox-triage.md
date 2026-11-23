@@ -45,7 +45,7 @@ It does not reply with a price, a date or a decision unless a named person relea
 
 The hard part
 
-Not the classifier. The write that attaches a message to the right job or supplier by id, in a system that is not yours, and the gate that stops a fluent reply going out because it looked fine. Those two are the step not to hand-roll.
+The write that attaches a message to the right job or supplier by id, in a system that is not yours, and the gate that stops a fluent reply going out because it looked fine. Those two are the step not to hand-roll.
 
 The supplier invoice was in the inbox on Monday. So was the quote request, the customer saying the gate code had changed, the statement, and the one from the customer who was not happy with the finish. By Friday the invoice had been paid twice from two copies in two folders, the quote request had an automatic reply promising a date nobody had checked, and the complaint had a cheerful acknowledgement on it. None of that is a volume problem. It is the inbox being read by a thing that files by copying and answers by guessing.
 
@@ -146,7 +146,7 @@ The complaint is the case that proves the gate. It gets no acknowledgement, not 
 
 One thread is one item. Before a build raises an item it reads whether the thread already has one, and a follow-up is added to that item rather than raised beside it. The pass test asks for a real thread of three messages held as one, because two items for one conversation is how a customer gets answered twice with different answers, or not at all because each item looked like somebody else’s.
 
-Spam is filed to quarantine with its hash, where a person can find it. The machine never deletes a message, spam included, because the day the classifier calls a real remittance spam is the day the business needs to get it back. Quarantine is a queue with an owner like any other. It is just one that is read monthly rather than daily.
+Spam is filed to quarantine with its hash, where a person can find it. The machine never deletes a message, spam included, because the day the classifier calls a real remittance spam is the day the business needs to get it back. Quarantine is a queue with an owner like any other, read monthly rather than daily.
 
 The clock belongs to the kind. A complaint has hours, a quote request has a day, a statement has a week, and the business sets those once. An item still open when its clock runs out is escalated to the owner’s manager by name. It does not turn red in a dashboard nobody opens; it turns up in front of a second person.
 

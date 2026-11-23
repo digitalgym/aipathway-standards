@@ -45,7 +45,7 @@ It surfaces drift and scores it consistently. What to do about a branch that kee
 
 The hard part
 
-Not the detection. Publishing the same report every week in the month everyone would rather it went quiet.
+Publishing the same report every week in the month everyone would rather it went quiet.
 
 A head office can specify a process perfectly and roll it out to fourteen branches, and within a quarter there will be fourteen spreadsheets. This is not a discipline problem and it does not respond to more training. It happens because the local version is faster for the person using it, and nothing in the system ever tells anybody it has happened.
 
@@ -59,13 +59,13 @@ How the centre sees fourteen places
 6. If yes, route it to a named person rather than another all-branch email.
 7. Finding resolved? If yes, it closes and appears on the next report. If no, it stays open with an owner and is scored again on the next run.
 
-The contract comes first because every later check compares against it. The report publishes on schedule either way: the failure this prevents is invisibility, not non-compliance.
+The contract comes first because every later check compares against it. The report publishes on schedule either way, because the failure this prevents is invisibility rather than non-compliance.
 
 ## 1. What this standard covers
 
 Any business running the same operating process in more than one place under more than one manager. Franchise networks, branch networks, multi-entity groups, and any business where a region has enough autonomy to choose its own tools. It sits above the other standards rather than beside them: you implement a compliance calendar or a rejected pack first, and this is how that survives being deployed to fourteen places.
 
-The failure it prevents is not non-compliance. It is invisibility. A branch working entirely outside the system looks identical, on every report the centre has, to a branch with nothing happening, and both look better than a branch that is honestly recording its problems.
+The failure it prevents is invisibility. A branch working entirely outside the system looks identical, on every report the centre has, to a branch with nothing happening, and both look better than a branch that is honestly recording its problems.
 
 ## 2. The records it keeps, in the shape your developer needs
 
@@ -152,7 +152,7 @@ The fourth is the one that decides whether this standard helps or harms. A scori
 
 ## 8. Connect every branch’s systems so the centre sees drift, without it changing a branch’s records
 
-The build is a smoke alarm in every branch: it sounds when something is wrong, and it never puts the fire out itself. It reads each segment’s records and who belongs to which group, and it posts the drift report where each segment already works. It never edits, closes or deletes a branch’s record, never renames a key, and never changes who is in a group. Revoke its key or app connection in each system and the next run reads nothing. Nobody’s login is shared: the build connects with its own key or app registration, never a manager’s username and password.
+It shows the centre which branches have drifted, and where. It reads each branch’s records and who belongs to which group, and posts the drift report where each branch already works. Every conversation with a branch that crosses a threshold is yours, and so is deciding whether a local difference is legitimate or a low score is a real problem. Nobody’s login is shared: the build connects with its own key or app registration, never a manager’s username and password.
 
 What each piece of access is for.
 

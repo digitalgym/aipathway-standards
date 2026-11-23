@@ -45,7 +45,7 @@ It does not approve a loan, select a product or certify best interests. It fills
 
 The hard part
 
-Not the transcription. The week the lender changes the policy, and every answer already given that was true on the day, sitting in a model that cannot forget.
+Transcription is the easy bit. The hard part is the week the lender changes the policy, with every answer already given that was true on the day sitting in a model that cannot forget.
 
 A named model trained on the network is not a file. Record the interview, map fields not vibes, cite the live lender clause, leave a task with an owner, and score the office off the book it actually holds. The custom model is the part you do not train.
 
@@ -67,7 +67,7 @@ Any network that sells regulated advice or credit assistance off a shared panel,
 
 It does not cover a chatbot on the website, a general assistant over the shared drive, or a fine-tune of the aggregator’s documents. Those have their own failure modes. The distinguishing feature here is that the truth lives in three places that move independently: the client’s circumstances, the lender’s current policy, and the network’s own operating rules.
 
-The failure this prevents is specific. It is not hallucination in general. It is the recommendation that was compliant eighteen months ago, delivered today with the same confidence, because the model learned the panel rather than reading it.
+The failure this prevents is narrower than hallucination in general. It is the recommendation that was compliant eighteen months ago, delivered today with the same confidence, because the model learned the panel rather than reading it.
 
 The worked example. In September 2026 Yellow Brick Road described a suite of agents trained on the network’s own data and rolled across its brokers: record the client call, populate the profile, flag missing information, raise follow-ups, search lender policy, coach the broker, later coach the pipeline. That is a fair product brief. It is not a standard. A standard names the objects, the order of the checks, the step you do not hand-roll, and the test a stub cannot fake. Decomposed, that brief is four jobs and one network control, and three of them are already published here.
 
@@ -190,7 +190,7 @@ If two offices can both be “using the assistant” and produce files that cann
 
 ## 7. What stays with a person
 
-These are not conservative defaults. They are the parts where an Australian credit licensee carries an obligation a machine cannot hold.
+These are the parts where an Australian credit licensee carries an obligation a machine cannot hold.
 
 - Recording and transcription consent on the call.
 - The responsible-lending assessment and the decision that the loan is not unsuitable.

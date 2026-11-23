@@ -34,7 +34,7 @@ Fill Routing first: one row per type, with the person who owns it, how many hour
 
 Then decide when the summary is due. Seven in the morning is common; pick the time the office actually starts.
 
-One thing to check before you build: **who can add a row to Closes?** Break permission inheritance on that list so only the office can add items, and the flows’ connection can read it but not write to it. That one setting is what makes a close something no flow can do by itself.
+Before you build, check who can add a row to Closes. Break permission inheritance on that list so only the office can add items, and the flows’ connection can read it but not write to it. That one setting is what makes a close something no flow can do by itself.
 
 ## 2. The lists, with their columns
 
@@ -150,7 +150,7 @@ Flow 2 is the only flow that sets Status closed, and it only ever does so from a
 
 ## 5. What the flows can reach in your Microsoft 365, and what they never touch
 
-The flows are the office’s in-tray: anything can drop a note in it, and only a person takes one out. They read and write the four lists on one SharePoint site, read each record’s id from your job system or Xero before a row is written, and post one summary a day to one Teams channel. No flow closes a row, deletes one, changes an owner Routing did not give it, or messages a customer.
+The flows keep everything the other flows couldn’t decide in one list, each item with an owner and a due time. They write each item to one SharePoint site, checked against its record in your job system or Xero, and post one summary a day to Teams. A person closes each item and records the outcome, and every dispute or hardship claim goes to its named owner. You decide who owns each kind of item.
 
 What each connection is for.
 

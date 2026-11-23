@@ -17,7 +17,7 @@ Used by
 - Business Systems Analyst
 - Scheduling Coordinator
 
-Most businesses already know what tomorrow’s jobs need: it is on the quote. What nobody does at 2pm is hold that list against the van. This plan puts the board, the needs, the van counts and the shelf in one SharePoint site, and runs the check every afternoon before the techs knock off.
+Most businesses already know what tomorrow’s jobs need. It is on the quote. Nobody holds that list against the van at 2pm. This plan puts the board, the needs, the van counts and the shelf in one SharePoint site, and runs the check every afternoon before the techs knock off.
 
 ## In short
 
@@ -151,7 +151,7 @@ Flow 1 never writes a purchase order. If the Material Order flow is off, shortfa
 
 ## 5. What the flows can reach in your Microsoft 365, and what they never touch
 
-The flows are the storeman with a clipboard at 2pm: they read the run sheet, check the vans and the shelf, put a tag on what is reserved, and hand the order slip to purchasing. They read and write the eight lists on one SharePoint site, call the Material Order flow, and post in Teams to each tech. They never write a purchase order, never change a job’s parts, and never reserve or list a part that is not on the job.
+The flows get tomorrow’s parts ready the afternoon before. At 2pm they check tomorrow’s jobs against the vans and the shelf, reserve what is on hand, send anything short to purchasing, and tell each tech in Teams what to pick up. Anything flagged, like a part that can’t arrive in time or an equivalent part, comes to you to decide.
 
 What each connection is for.
 

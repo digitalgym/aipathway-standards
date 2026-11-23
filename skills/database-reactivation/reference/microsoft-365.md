@@ -166,7 +166,7 @@ Report Reply Rate and Opt Outs side by side, always. A play that lifts replies w
 
 ## 6. What the flows can reach in your Microsoft 365 and your contact list, and what they never touch
 
-Give the build a temp’s swipe card, not the master key. It opens the one SharePoint site that holds People, Contacts and Suppressions, and the one shared mailbox the openers go out from. The flows read the trigger fields from your CRM or job system, write Play, Rank and every attempt onto the lists, and send from the shared mailbox. They never delete a person, never clear a suppression, never send from anybody’s own mailbox, and never open another site or another inbox. Your own login stays yours: the flows run under an account kept for them, never your username and password.
+The flows put your old contact list to work again. They read the trigger fields from your CRM or job system, rank who to contact first, and send each first message from one shared mailbox. You decide what may be promised on a call. Your own login stays yours. The flows run under an account kept for them, never your username and password.
 
 What each connection is for.
 
@@ -174,7 +174,7 @@ What each connection is for.
 - **Outlook, the one shared mailbox.** To send the opener from an address the business owns, so replies land where more than one person can see them and nothing stops the day somebody leaves.
 - **Your CRM or job system, read.** For the fields each play filters on. Unless the system drops a file, this is a custom connector or the HTTP action, and both are premium. A nightly export into a library is a fair first version.
 - **Teams, optional.** To post the day’s ranked list to the person who works it.
-- **Office Voice, optional and off by default.** To ring back the contacts who asked, and nobody else, as section 8 of the standard sets out. Flow 3 hands those rows over with the HTTP action and a key from office-voice.com/app/keys; the account owner ticks **Queue calls** on that key, and Office Voice still checks the register, the flags and the calling hours at dial time.
+- **AI Pathway calls, optional and off by default.** To ring back the contacts who asked, and nobody else, as section 8 of the standard sets out. Flow 3 hands those rows over with the HTTP action and a key from connect.aipathway.com.au/app/keys; the account owner ticks **Queue calls** on that key, and AI Pathway still checks the register, the flags and the calling hours at dial time.
 
 Keep the card to one floor.
 
@@ -182,9 +182,9 @@ Keep the card to one floor.
 2. Build them inside a solution, so each connection is a connection reference: one place to see what the flows reach, and one place to swap or remove it.
 3. Make the service account a member of the one SharePoint site and no other. If an app registration reads the site instead, grant it Sites.Selected and have an admin add only this site.
 4. Give the service account Send As on the one shared mailbox and no other. If an app registration sends instead, limit it to that mailbox with an Exchange application access policy or RBAC for Applications.
-5. Create the Office Voice key, if you use one, with only the scopes the hand-over needs.
+5. Create the AI Pathway key, if you use one, with only the scopes the hand-over needs.
 
-How to cut it off. Turn the flows off and nothing is selected, ranked or sent. Remove a connection from its connection reference to stop one route. Revoke the Office Voice key and no callback is queued, whatever the flows do.
+How to cut it off. Turn the flows off and nothing is selected, ranked or sent. Remove a connection from its connection reference to stop one route. Revoke the AI Pathway key and no callback is queued, whatever the flows do.
 
 Why not a mail merge or a marketing email tool? Either will send the opener well, and either sends to the list it is given. Whoever exports that list decides who hears from you, there is no cooling-off check across plays, and an unanswered attempt is never written down. Use one for the send if you like; Flow 3’s two guards still run before it.
 

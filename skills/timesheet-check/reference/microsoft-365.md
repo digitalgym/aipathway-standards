@@ -32,7 +32,7 @@ Read [the timesheet check build standard](https://aipathway.com.au/explore-ai/ti
 
 Decide one thing first: where the allocations come from. The standard asks every entry to name a job the person was allocated on that day, and that is a fact the job system holds, not the timesheet app. If the job system can be read on a schedule into an Allocations list, build it there. If it cannot, the honest version is a supervisor keeping allocations in the list by hand, and you should know that before you promise the not_allocated check.
 
-Then settle how the award is held. Not as a formula and not as a rate typed on a person’s record: as rows in a Rules list, one per edition, each with an effective from and an effective to, with the instrument itself in a document library behind it. Everything the standard says about citing an edition and refusing a retired one follows from that shape, and nothing recovers it later.
+Then settle how the award is held: as rows in a Rules list, one per edition, each with an effective from and an effective to, with the instrument itself in a document library behind it. A formula, or a rate typed on a person’s record, will not do. Everything the standard says about citing an edition and refusing a retired one follows from that shape, and nothing recovers it later.
 
 ## 2. The lists, with their columns
 
@@ -133,7 +133,7 @@ Worker is a Person column everywhere, not a name in a Text field. Two spellings 
 | A retired rule edition cannot apply to the next period | Rules.EffectiveFrom and EffectiveTo | Flow 2 selects the edition whose effective window contains the entry date. A retired edition cannot be selected, so the 1 July change happens by loading a row rather than by editing a formula. |
 | An entry the rule does not plainly cover is parked for a person | Kind = rule_unclear | No card is written, no penalty is applied, and the entry is not a line. The build never picks between two clauses, because that is the decision that ends up in front of a tribunal. |
 | An anomaly leaves the queue only with a name and a reason | Approval, DecidedBy and Reason | The approval outcome is written back as DecidedBy, Decision and Reason. An anomaly with a Decision and no DecidedBy is the record the standard says should not be writable. |
-| Nothing reaches payroll without a release by a named person | Periods.ReleasedBy, Flow 4 | Flow 4 checks open anomalies first and ReleasedBy second, and does nothing if either fails. There is no threshold and no rule that can stand in here: this release is always a person's. |
+| Nothing reaches payroll without a release by a named person | Periods.ReleasedBy, Flow 4 | Flow 4 checks open anomalies first and ReleasedBy second, and does nothing if either fails. There is no threshold and no rule that can stand in here. This release is always a person's. |
 
 ## 4. The four flows
 
@@ -227,7 +227,7 @@ Anomaly Rate broken down by Kind is the one to watch over months rather than day
 
 ## 6. What the flows can reach in your Microsoft 365 and your payroll, and what they never touch
 
-The flows hold the clipboard, never the chequebook. They read the hours, the roster and the allocations, write rows in the one site, and produce one payroll file per period after a person releases it. They never run or approve a pay run, never change a pay rate, an employee’s details or their bank account, and never clear an anomaly without a person.
+The flows check every hour before it reaches payroll. They match the hours against the roster and the jobs people were booked to, keep their notes in the one site, and produce one payroll file per period once you release it. Every odd hour comes to you to clear, and you release each period.
 
 What each connection is for.
 
@@ -241,7 +241,7 @@ Least privilege, in practice. The flows belong to the automation service account
 
 How to cut it off. Turn off Flow 4 and no file is produced. Remove the connections to the capture app and the job system, or revoke their keys, and nothing more is read. If you connected Xero Payroll, disconnect the app in Xero. The entries, anomalies and cards stay in the site, so last period’s record survives.
 
-Why not a connector app that syncs the timesheet app to payroll? It moves hours across quickly, and that is the problem: hours arrive in payroll before anyone checked them against the roster and the allocations, and the app holds a payroll write that runs on its own schedule rather than on a person’s release. Use one only if it can wait for the release and send nothing else.
+Why not a connector app that syncs the timesheet app to payroll? It moves hours across quickly, which is the problem. Hours arrive in payroll before anyone checked them against the roster and the allocations, and the app holds a payroll write that runs on its own schedule rather than on a person’s release. Use one only if it can wait for the release and send nothing else.
 
 ## 7. The order to build it in
 

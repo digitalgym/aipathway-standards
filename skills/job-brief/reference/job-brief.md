@@ -16,7 +16,7 @@ carrying each check's id, ports, what to inject and what to assert.
 To print them: npx @aipathway/conformance show job-brief-build-standard
 To scaffold a folder that runs them, every check starting red: npx @aipathway/conformance init job-brief-build-standard
 Do the scaffolding yourself if you can run commands; the person should not have to open a terminal.
-This standard has no hosted provider; do not run conformance connect. For the checks a stub cannot prove: No hosted step. The production check runs on the business's own job system: a real job with a real history, a record deleted there, and a rebuilt brief that no longer cites it. Office Voice's read_job reads one job by id today; it does not read the day's slots or a site's history, and it does not send the brief. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence.
+This standard has no hosted provider; do not run conformance connect. For the checks a stub cannot prove: No hosted step. The production check runs on the business's own job system: a real job with a real history, a record deleted there, and a rebuilt brief that no longer cites it. AI Pathway's read_job reads one job by id today; it does not read the day's slots or a site's history, and it does not send the brief. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence.
 
 ---
 
@@ -59,7 +59,7 @@ From the day's slots to one brief per tech
 6. If it does, the line is the record's own words, or the first part of them cut with an ellipsis, with its record id and date beside it.
 7. Have the tech's slots changed since the last brief they were sent today? If not, nothing is sent. If so, or if it is the first brief of the day, one brief goes on the channel the tech agreed to.
 
-The steps across the top are the free part: read the slots, read each job’s own customer records, put hazards and access first. The filled diamond is the rule that makes the brief safe to hand a tech: a line with no record and no date is dropped.
+The steps across the top are the free part: read the slots, read each job’s own customer records, put hazards and access first. The filled diamond is the rule that makes the brief safe to hand a tech. A line with no record and no date is dropped.
 
 ## 1. What this standard covers
 
@@ -185,7 +185,7 @@ Nothing is written back. The build has no port that changes a job, a slot, a quo
 
 The same checks and the same pass test hold whichever way you run it. Five ways, and what is ready today in each:
 
-- **Done for you, on Office Voice.** Not today. Office Voice can read one job by its id with read_job, but it does not list a day’s slots, read a site’s history or quotes, or send the brief. So nothing here is sold as an Office Voice step, and no call is involved: a brief is a message to your own staff.
+- **Done for you, from AI Pathway.** Not today. AI Pathway can read one job by its id with read_job, but it does not list a day’s slots, read a site’s history or quotes, or send the brief. So nothing here is sold as an AI Pathway step, and no call is involved: a brief is a message to your own staff.
 - **Your own bot: Grok Bot or Claude.** The natural fit. A scheduled prompt at 5:30 each morning, reading ServiceM8 through its official connector, with check 2 pasted in as the rule: “Every line names the record it came from and that record’s date. A line you cannot point to a record for is left out. Quote notes; never sum up a customer.” The ServiceM8 connector is set up the same way as in [chasing ServiceM8 quotes with a Grok Bot or Claude](https://aipathway.com.au/explore-ai/chase-servicem8-quotes-grok-bot-claude). On Simpro, the bot reads through a connector built to the [Simpro Claude Connector standard](https://aipathway.com.au/explore-ai/simpro-claude-connector-build-standard). One limit to know: a bot’s own memory is not a record, so it must read fresh each morning and never carry yesterday’s brief forward.
 - **Google Workspace, the default.** A copyable Google Sheet is built: paste the day’s slots and the site records from your job system’s export, and it emails each tech their brief from 5am, again only when a slot moves, with every line ending in its record and date. It is coming to this page; it calls nothing outside the spreadsheet and writes nothing back.
 - **Microsoft 365.** The [Microsoft 365 plan](https://aipathway.com.au/explore-ai/morning-brief-on-microsoft-365) lays out six SharePoint lists, a flow that copies from the job system each morning and a flow that posts each tech their brief in Teams.
@@ -252,7 +252,7 @@ Building this on Microsoft 365: [the lists, the copy flow and the brief flow](ht
 
 Checked as at 1 November 2026
 
-**Office Voice.** Its MCP endpoint offers read_job, which reads one job by its id from the connected job system. It has no tool that lists a day’s slots by tech, reads a site’s history or open quotes, or sends a brief to a tech.
+**AI Pathway.** Its MCP endpoint offers read_job, which reads one job by its id from the connected job system. It has no tool that lists a day’s slots by tech, reads a site’s history or open quotes, or sends a brief to a tech.
 
 **ServiceM8.** Hosts an official connector at api.servicem8.com/mcp that an AI assistant signs in to. Simpro, AroFlo and Fergus have APIs a build can read through; Tradify has no public API.
 

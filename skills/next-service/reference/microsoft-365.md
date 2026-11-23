@@ -157,7 +157,7 @@ Flow 4 claims the SharePoint row before it calls the job system, because the job
 
 ## 5. What the flows can reach in your Microsoft 365 and your job system, and what they never touch
 
-The flows work like the reminder card from the dentist: it says when you are due and how to book, and the receptionist still picks the time. They read finished jobs and the open jobs on each unit, keep the equipment, reminders, opt-outs and booking requests in this one SharePoint site, send each reminder from one shared mailbox, and write each yes into the job system as one booking request. They never set a time or a price, never say what a warranty covers, never message a customer on OptOuts or on a channel they did not agree to, and never delete from OptOuts.
+The flows remind each customer when a unit is due for a service, and turn a yes into a booking request. They read your finished jobs and the open jobs on each unit, send each reminder from one shared mailbox, and write each yes into your job system as one booking request. You pick the time and the price for every booking, and any other reply, or any question about a warranty, comes to you.
 
 What each connection is for.
 
@@ -167,7 +167,7 @@ What each connection is for.
 - **An SMS sender, only for customers who agreed to texts.** Microsoft 365 sends no SMS of its own, so a text goes through an SMS provider’s connector or the HTTP action, with replies coming back to Flow 3.
 - **Teams.** To post exceptions, unclear replies and each new job number for a person to book.
 
-A customer who rings instead of replying reaches whoever answers your phone. If that is Office Voice’s Front Desk, it answers all day; that call sits outside these flows.
+A customer who rings instead of replying reaches whoever answers your phone. If that is Front Desk from AI Pathway, it answers all day; that call sits outside these flows.
 
 Keep each one to the least it needs.
 
