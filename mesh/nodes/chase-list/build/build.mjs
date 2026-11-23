@@ -41,7 +41,7 @@
  * Every effect goes through the ports. The gate is the port, not a helper this
  * file re-implements: calling hours in the debtor's zone, state public
  * holidays and the stop on payment are the gate's, and the Do Not Call
- * Register wash is the hosted provider's (Get Paid on Office Voice), which is
+ * Register wash is the hosted provider's (Get Paid on AI Pathway), which is
  * why this node never dials.
  */
 

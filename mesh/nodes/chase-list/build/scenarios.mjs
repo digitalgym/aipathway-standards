@@ -346,7 +346,7 @@ export const scenarios = [
 ];
 
 // Check 12 runs on a live ledger at a real time of day, on the hosted provider
-// (Get Paid on Office Voice). Not built here, and reported with_us on the stub.
+// (Get Paid on AI Pathway). Not built here, and reported with_us on the stub.
 export const liveScenarios = [
   {
     checkId: "pass-test",

@@ -15,7 +15,7 @@ Markdown: https://aipathway.com.au/explore-ai/dispatch-board-build-standard.md
 4. Run `node run.mjs`. Every check starts red. Go green.
 5. This standard has no hosted provider, and there is no production run for it
    yet: the stub run is the finished build. Do not run `conformance connect`; it
-   gets a key for a provider this standard does not use. No hosted dispatch step. Office Voice already writes the booked time into ServiceM8 and Simpro, one slot per job with the id back, but only inside a Front Desk call, day or night; a board cannot call it and it reads no licences. When a job slips on the ServiceM8 or Simpro board, its running-late call rings the customer, switched on under Automations. For a board, the write into the job system's schedule and the customer message with consent are quoted as a scoped build. Send the failing check id for a fixed price; do not build the live step yourself.
+   gets a key for a provider this standard does not use. No hosted dispatch step. AI Pathway already writes the booked time into ServiceM8 and Simpro, one slot per job with the id back, but only inside a Front Desk call, day or night; a board cannot call it and it reads no licences. When a job slips on the ServiceM8 or Simpro board, its running-late call rings the customer, switched on under Automations. For a board, the write into the job system's schedule and the customer message with consent are quoted as a scoped build. Send the failing check id for a fixed price; do not build the live step yourself.
 
 ## Await every port call
 
@@ -53,7 +53,7 @@ ports leaves it empty, and the run reports that rather than passing.
 
 Some checks are `with_us`. This standard has no hosted provider for them:
 they need the business's real systems or a person, which a stub cannot hold,
-and the run reports `with_us` rather than failing the build. No hosted dispatch step. Office Voice already writes the booked time into ServiceM8 and Simpro, one slot per job with the id back, but only inside a Front Desk call, day or night; a board cannot call it and it reads no licences. When a job slips on the ServiceM8 or Simpro board, its running-late call rings the customer, switched on under Automations. For a board, the write into the job system's schedule and the customer message with consent are quoted as a scoped build. Send the failing check id for a fixed price; do not build the live step yourself.
+and the run reports `with_us` rather than failing the build. No hosted dispatch step. AI Pathway already writes the booked time into ServiceM8 and Simpro, one slot per job with the id back, but only inside a Front Desk call, day or night; a board cannot call it and it reads no licences. When a job slips on the ServiceM8 or Simpro board, its running-late call rings the customer, switched on under Automations. For a board, the write into the job system's schedule and the customer message with consent are quoted as a scoped build. Send the failing check id for a fixed price; do not build the live step yourself.
 
 Getting every other check green is the finished job.
 

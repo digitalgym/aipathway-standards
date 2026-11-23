@@ -5,7 +5,7 @@
  * `conformance connect`: get a key from the hosted provider without leaving
  * the terminal, and find out what the account still needs.
  *
- * THE SHAPE. Office Voice has a device-code flow for API keys. We ask for a key
+ * THE SHAPE. AI Pathway has a device-code flow for API keys. We ask for a key
  * naming the scopes a conformance run needs, print a link and a code, and poll.
  * The owner opens the link, signs in, checks the code matches, approves. The
  * key comes back exactly once and is written to `.env` beside the scaffold,

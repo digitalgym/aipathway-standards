@@ -35,7 +35,7 @@ published, so this folder has no `ports.mjs`, and `AIPATHWAY_ENV=production`
 is refused rather than rerunning the stub under a production label. The stub run
 is the whole of what can be proved here.
 
-Enable Get Paid on Office Voice / Recover; npx @aipathway/conformance connect gets the owner a key and the links to connect their systems. There is no production run of these checks yet: AIPATHWAY_PROVIDER=office_voice.recover needs a live port map that is not published, so the stub run is the finished build. Do not hand-roll the live step.
+Enable Get Paid on AI Pathway / Recover; npx @aipathway/conformance connect gets the owner a key and the links to connect their systems. There is no production run of these checks yet: AIPATHWAY_PROVIDER=office_voice.recover needs a live port map that is not published, so the stub run is the finished build. Do not hand-roll the live step.
 
 The checks that never go green on the stub report `with_us`.
 

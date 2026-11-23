@@ -11,7 +11,7 @@
  * never dials. It hands the owner a short list, and the owner sends each
  * message from their own phone or job system and marks what happened. A
  * customer who asked to be rung back is the only call the standard lets a
- * machine queue, and that is Office Voice's governed create_call, hosted and
+ * machine queue, and that is AI Pathway's governed create_call, hosted and
  * not built here.
  *
  * HOW THE STANDARD'S FIELDS READ FOR A TRADE BUSINESS. The world keeps the

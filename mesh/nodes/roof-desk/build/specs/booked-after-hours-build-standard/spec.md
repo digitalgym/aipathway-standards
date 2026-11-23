@@ -30,4 +30,4 @@ Eleven of these twelve checks run on your own machine, against the stub, before 
 
 - **pass-test** The pass test passes: runs on the production provider, reports `with_us`.
 
-When a check is `with_us`: Point the number at Office Voice / Front Desk (Booked After Hours). Then run the same checks against us: mint a key at office-voice.com/app/keys and OFFICE_VOICE_API_KEY=<key> AIPATHWAY_ENV=production AIPATHWAY_PROVIDER=office_voice.front_desk node run.mjs. Do not stand up telephony of your own.
+When a check is `with_us`: Point the number at AI Pathway / Front Desk (Booked After Hours). Then run the same checks against us: mint a key at connect.aipathway.com.au/app/keys and OFFICE_VOICE_API_KEY=<key> AIPATHWAY_ENV=production AIPATHWAY_PROVIDER=office_voice.front_desk node run.mjs. Do not stand up telephony of your own.

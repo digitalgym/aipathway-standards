@@ -89,7 +89,10 @@ const KNOWN = [
   "takeaway-orders-build-standard",
   "uncoded-query-build-standard",
   "bas-ready-check-build-standard",
-  "month-end-close-build-standard"
+  "month-end-close-build-standard",
+  "customer-link-build-standard",
+  "rules-and-holds-build-standard",
+  "hand-off-build-standard"
 ];
 
 const [cmd, slug] = process.argv.slice(2);

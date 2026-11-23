@@ -9,7 +9,7 @@
  *
  * THE ONE RULE. Everything this build does to the outside world goes through
  * the ports it is handed. The live call itself (the number, the disclosure
- * audio, the recording, the write-back tenant) is Office Voice / Front Desk;
+ * audio, the recording, the write-back tenant) is AI Pathway / Front Desk;
  * this file is the logic that runs behind those ports.
  *
  * Mesh: woken by `call.received` (call_id + caller number). On a new job the

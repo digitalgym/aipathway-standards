@@ -363,7 +363,7 @@ export const scenarios = [
 ];
 
 // Production only. On the stub the runner reports it as with_us; the live step
-// is the hosted draft_invoice on Office Voice, which this repo does not build.
+// is the hosted draft_invoice on AI Pathway, which this repo does not build.
 export const liveScenarios = [
   {
     checkId: "pass-test",

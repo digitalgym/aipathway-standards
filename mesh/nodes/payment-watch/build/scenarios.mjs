@@ -328,7 +328,7 @@ export const scenarios = [
 
 // The check a stub cannot pass, and is not asked to: a real ledger, a real
 // clock and a real number. It runs with the hosted provider (Get Paid on
-// Office Voice). Payment Watch never dials, so it is not written here.
+// AI Pathway). Payment Watch never dials, so it is not written here.
 export const liveScenarios = [
   {
     checkId: "pass-test",

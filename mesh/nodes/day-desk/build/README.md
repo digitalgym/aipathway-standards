@@ -19,7 +19,7 @@ AIP-BS-CLIENT-DESK (the Client Desk Build Standard, 2026-10-26).
 - Every call and every message is filed to the job.
 
 The live line (the number, the voice, the disclosure audio and the transfer)
-is Office Voice / Front Desk. Nothing here stands up telephony.
+is AI Pathway / Front Desk. Nothing here stands up telephony.
 
 | file | what |
 |---|---|
@@ -65,7 +65,7 @@ published, so this folder has no `ports.mjs`, and `AIPATHWAY_ENV=production`
 is refused rather than rerunning the stub under a production label. The stub run
 is the whole of what can be proved here.
 
-Point the number at Office Voice / Front Desk (Booked After Hours). There is no production run of these checks yet: AIPATHWAY_PROVIDER=office_voice.front_desk needs a live port map that is not published, so the stub run is the finished build. Do not stand up telephony of your own.
+Point the number at AI Pathway / Front Desk (Booked After Hours). There is no production run of these checks yet: AIPATHWAY_PROVIDER=office_voice.front_desk needs a live port map that is not published, so the stub run is the finished build. Do not stand up telephony of your own.
 
 The checks that never go green on the stub report `with_us`.
 

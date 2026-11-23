@@ -422,6 +422,6 @@ export const scenarios = [
 
 // Check 14, the pass test, runs only against the live list at a real time.
 // On the stub the runner reports it as with_us. Seller Book never dials; the
-// one call the standard lets a machine place is Office Voice's governed
+// one call the standard lets a machine place is AI Pathway's governed
 // create_call, which is hosted and not built here.
 export const liveScenarios = [];

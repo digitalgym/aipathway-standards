@@ -4,7 +4,7 @@
  *   OFFICE_VOICE_API_KEY=ovk_live_... AIPATHWAY_ENV=production AIPATHWAY_PROVIDER=office_voice.draft_invoice node run.mjs
  *
  * This is the second run against US rather than against your own systems.
- * Every port calls the Office Voice MCP: read_job, read_pricebook and draft_invoice are the standard's own verbs. Nothing here names a rate: draft_invoice takes catalogue ids and the ledger prices them. The release and the send are a person's act in the ledger, so here they are recorded as facts against the job rather than performed, and nothing in this file can authorise or send an invoice.
+ * Every port calls the AI Pathway MCP: read_job, read_pricebook and draft_invoice are the standard's own verbs. Nothing here names a rate: draft_invoice takes catalogue ids and the ledger prices them. The release and the send are a person's act in the ledger, so here they are recorded as facts against the job rather than performed, and nothing in this file can authorise or send an invoice.
  *
  * Env:
  *   OFFICE_VOICE_API_KEY     a key minted at /app/keys with contacts:read and contacts:write
@@ -28,7 +28,7 @@ const TENANT = process.env.OFFICE_VOICE_TENANT_ID;
 
 let rpcId = 0;
 async function call(tool, args) {
-  if (!KEY) throw new Error("OFFICE_VOICE_API_KEY is not set. Mint one at office-voice.com/app/keys with contacts:read and contacts:write.");
+  if (!KEY) throw new Error("OFFICE_VOICE_API_KEY is not set. Mint one at connect.aipathway.com.au/app/keys with contacts:read and contacts:write.");
   const res = await fetch(MCP_URL, {
     method: "POST",
     headers: { "content-type": "application/json", authorization: `Bearer ${KEY}` },

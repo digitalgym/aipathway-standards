@@ -242,7 +242,7 @@ export async function build(ports, config = {}) {
  * is a stop condition, handing to a person. It never negotiates: a proposal is
  * captured and passed on, not agreed.
  *
- * The live conversation is the hosted step (Office Voice / Recover); this is
+ * The live conversation is the hosted step (AI Pathway / Recover); this is
  * the gate around it, so the same rules hold whoever does the talking.
  */
 export async function converse(ports, tenancyId, replies = [], config = {}) {

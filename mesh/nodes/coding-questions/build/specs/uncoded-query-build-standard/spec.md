@@ -33,4 +33,4 @@ Thirteen of these fifteen checks run on your own machine, against the stub, befo
 
 - **pass-test** The pass test passes: not provable on the stub, reports `with_us`; the live step is quoted as a scoped build.
 
-When a check is `with_us`: No hosted product writes a coding. The approval-gated, keyed write into the client's own ledger is built against that ledger's API, quoted as a scoped build. No follow-up call is offered: Office Voice has no lawful basis for one here, so the call stays with the person. Send the failing check id for a fixed price; do not build the live step yourself.
+When a check is `with_us`: No hosted product writes a coding. The approval-gated, keyed write into the client's own ledger is built against that ledger's API, quoted as a scoped build. No follow-up call is offered: AI Pathway has no lawful basis for one here, so the call stays with the person. Send the failing check id for a fixed price; do not build the live step yourself.

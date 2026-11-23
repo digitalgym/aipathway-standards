@@ -15,7 +15,7 @@ Markdown: https://aipathway.com.au/explore-ai/client-memory-build-standard.md
 4. Run `node run.mjs`. Every check starts red. Go green.
 5. This standard has no hosted provider, and there is no production run for it
    yet: the stub run is the finished build. Do not run `conformance connect`; it
-   gets a key for a provider this standard does not use. The call is Office Voice's live step: it reads the owner's notes for the caller and records what was said with its source. Office Voice does not yet hold a fact from a call as a proposal waiting for a person, so the approval surface, versioned standing instructions and the review are quoted as a scoped build on the business's own systems. Send the failing check id for a fixed price; do not build the live step yourself.
+   gets a key for a provider this standard does not use. The call is AI Pathway's live step: it reads the owner's notes for the caller and records what was said with its source. AI Pathway does not yet hold a fact from a call as a proposal waiting for a person, so the approval surface, versioned standing instructions and the review are quoted as a scoped build on the business's own systems. Send the failing check id for a fixed price; do not build the live step yourself.
 
 ## Await every port call
 
@@ -53,7 +53,7 @@ ports leaves it empty, and the run reports that rather than passing.
 
 Some checks are `with_us`. This standard has no hosted provider for them:
 they need the business's real systems or a person, which a stub cannot hold,
-and the run reports `with_us` rather than failing the build. The call is Office Voice's live step: it reads the owner's notes for the caller and records what was said with its source. Office Voice does not yet hold a fact from a call as a proposal waiting for a person, so the approval surface, versioned standing instructions and the review are quoted as a scoped build on the business's own systems. Send the failing check id for a fixed price; do not build the live step yourself.
+and the run reports `with_us` rather than failing the build. The call is AI Pathway's live step: it reads the owner's notes for the caller and records what was said with its source. AI Pathway does not yet hold a fact from a call as a proposal waiting for a person, so the approval surface, versioned standing instructions and the review are quoted as a scoped build on the business's own systems. Send the failing check id for a fixed price; do not build the live step yourself.
 
 Getting every other check green is the finished job.
 

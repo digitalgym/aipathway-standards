@@ -373,7 +373,7 @@ export const scenarios = [
     checkId: "survives-the-builder",
     // A precondition: the runner reports it as evidence_required and never
     // scores it on the build's say-so. Declared: AI Pathway maintains it, and it
-    // runs on the business's own Office Voice account and job system.
+    // runs on the business's own AI Pathway account and job system.
     world: () => new JobWorld(),
     drive: async () => {},
     holds: () => false,

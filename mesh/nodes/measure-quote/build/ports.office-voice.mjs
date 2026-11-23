@@ -4,14 +4,14 @@
  *   OFFICE_VOICE_API_KEY=ovk_live_... AIPATHWAY_ENV=production AIPATHWAY_PROVIDER=office_voice.draft_quote node run.mjs
  *
  * This is the second run against US rather than against your own systems.
- * Every port calls the Office Voice MCP: read_job, read_pricebook and draft_quote are the standard's own verbs, and escalate and notify are recorded as facts against the job so a parked quote leaves a trace. Nothing here names a rate: draft_quote takes catalogue ids and the system of record prices them.
+ * Every port calls the AI Pathway MCP: read_job, read_pricebook and draft_quote are the standard's own verbs, and escalate and notify are recorded as facts against the job so a parked quote leaves a trace. Nothing here names a rate: draft_quote takes catalogue ids and the system of record prices them.
  *
  * Env:
  *   OFFICE_VOICE_API_KEY     a key minted at /app/keys with contacts:read and contacts:write
  *   OFFICE_VOICE_MCP_URL     default https://office-voice.com/api/mcp
  *   OFFICE_VOICE_TENANT_ID   only when the key reaches several orgs
  *
- * The job has to exist. Xero has no jobs, so the job lives in Office Voice
+ * The job has to exist. Xero has no jobs, so the job lives in AI Pathway
  * (find_or_create_job made it, or the office did) and your scenarios drive the
  * build with a real id: build(world.ports(), process.env.OFFICE_VOICE_JOB_ID).
  * The office's Xero must be connected with quote drafting on
@@ -25,7 +25,7 @@ const TENANT = process.env.OFFICE_VOICE_TENANT_ID;
 
 let rpcId = 0;
 async function call(tool, args) {
-  if (!KEY) throw new Error("OFFICE_VOICE_API_KEY is not set. Mint one at office-voice.com/app/keys with contacts:read and contacts:write.");
+  if (!KEY) throw new Error("OFFICE_VOICE_API_KEY is not set. Mint one at connect.aipathway.com.au/app/keys with contacts:read and contacts:write.");
   const res = await fetch(MCP_URL, {
     method: "POST",
     headers: { "content-type": "application/json", authorization: `Bearer ${KEY}` },

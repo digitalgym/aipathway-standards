@@ -15,7 +15,7 @@ Markdown: https://aipathway.com.au/explore-ai/uncoded-query-build-standard.md
 4. Run `node run.mjs`. Every check starts red. Go green.
 5. This standard has no hosted provider, and there is no production run for it
    yet: the stub run is the finished build. Do not run `conformance connect`; it
-   gets a key for a provider this standard does not use. No hosted product writes a coding. The approval-gated, keyed write into the client's own ledger is built against that ledger's API, quoted as a scoped build. No follow-up call is offered: Office Voice has no lawful basis for one here, so the call stays with the person. Send the failing check id for a fixed price; do not build the live step yourself.
+   gets a key for a provider this standard does not use. No hosted product writes a coding. The approval-gated, keyed write into the client's own ledger is built against that ledger's API, quoted as a scoped build. No follow-up call is offered: AI Pathway has no lawful basis for one here, so the call stays with the person. Send the failing check id for a fixed price; do not build the live step yourself.
 
 ## Await every port call
 
@@ -53,7 +53,7 @@ ports leaves it empty, and the run reports that rather than passing.
 
 Some checks are `with_us`. This standard has no hosted provider for them:
 they need the business's real systems or a person, which a stub cannot hold,
-and the run reports `with_us` rather than failing the build. No hosted product writes a coding. The approval-gated, keyed write into the client's own ledger is built against that ledger's API, quoted as a scoped build. No follow-up call is offered: Office Voice has no lawful basis for one here, so the call stays with the person. Send the failing check id for a fixed price; do not build the live step yourself.
+and the run reports `with_us` rather than failing the build. No hosted product writes a coding. The approval-gated, keyed write into the client's own ledger is built against that ledger's API, quoted as a scoped build. No follow-up call is offered: AI Pathway has no lawful basis for one here, so the call stays with the person. Send the failing check id for a fixed price; do not build the live step yourself.
 
 Getting every other check green is the finished job.
 

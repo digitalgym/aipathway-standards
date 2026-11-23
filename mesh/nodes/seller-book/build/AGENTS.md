@@ -15,7 +15,7 @@ Markdown: https://aipathway.com.au/explore-ai/database-reactivation-build-standa
 4. Run `node run.mjs`. Every check starts red. Go green.
 5. There is no production run for this standard yet: its live port map is not
    published, so the stub run is the finished build. The live step itself runs on
-   Office Voice. The call to a contact who asked to be rung back is Office Voice's governed single call: create_call, basis callback or they_asked. Everyone else on the list is the agent's own call from the daily list; Office Voice refuses prospecting calls by design. Queue each call with create_call on the Office Voice MCP (office_voice.create_call): the owner mints the key at office-voice.com/app/keys and ticks "Allow this to queue calls", and the dispatcher does the Do Not Call Register check, the calling hours and the one-attempt-a-day limit. There is no production run of these checks yet, so the stub run is the finished build. Do not stand up telephony of your own.
+   AI Pathway. The call to a contact who asked to be rung back is AI Pathway's governed single call: create_call, basis callback or they_asked. Everyone else on the list is the agent's own call from the daily list; AI Pathway refuses prospecting calls by design. Queue each call with create_call on the AI Pathway MCP (office_voice.create_call): the owner mints the key at connect.aipathway.com.au/app/keys and ticks "Allow this to queue calls", and the dispatcher does the Do Not Call Register check, the calling hours and the one-attempt-a-day limit. There is no production run of these checks yet, so the stub run is the finished build. Do not stand up telephony of your own.
 
 ## Await every port call
 

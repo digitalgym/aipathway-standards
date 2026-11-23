@@ -23,5 +23,5 @@ somebody needs to look at the book mid-day.
 ## Provider
 
 Stub only (`node run.mjs`). No production run is offered for this standard yet:
-its live port map is not published. It has no hosted provider. The call is Office Voice's live step: it reads the owner's notes for the caller and records what was said with its source. Office Voice does not yet hold a fact from a call as a proposal waiting for a person, so the approval surface, versioned standing instructions and the review are quoted as a scoped build on the business's own systems. Send the failing check id for a fixed price; do not build the live step yourself.
+its live port map is not published. It has no hosted provider. The call is AI Pathway's live step: it reads the owner's notes for the caller and records what was said with its source. AI Pathway does not yet hold a fact from a call as a proposal waiting for a person, so the approval surface, versioned standing instructions and the review are quoted as a scoped build on the business's own systems. Send the failing check id for a fixed price; do not build the live step yourself.
 Run `npx @aipathway/conformance show client-memory-build-standard` for the check list.

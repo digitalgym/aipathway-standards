@@ -102,7 +102,7 @@ package is the harness. The site is the standard.
 
 ## The standards
 
-44 of them, each one a job that leaks money in an Australian small business or
+47 of them, each one a job that leaks money in an Australian small business or
 network. Every one publishes its checks as data at the same `/checks.json` path.
 
 | Standard | The job |
@@ -150,6 +150,9 @@ network. Every one publishes its checks as data at the same `/checks.json` path.
 | [takeaway-orders](https://aipathway.com.au/explore-ai/takeaway-orders-build-standard) | Pickup orders and tables by phone and web chat, paid by link before the kitchen ticket prints |
 | [uncoded-query](https://aipathway.com.au/explore-ai/uncoded-query-build-standard) | One plain question list a month per client for the bank lines nobody can code, a coding suggested from their own chart, and written once only after a person approves it |
 | [bas-ready-check](https://aipathway.com.au/explore-ai/bas-ready-check-build-standard) | Before the BAS is lodged, one list of GST exceptions for the bookkeeper or BAS agent, every flag citing its transaction, read only |
+| [customer-link](https://aipathway.com.au/explore-ai/customer-link-build-standard) | Which records in which systems are one customer, proposed on a strong key, linked by a person, read by every standard |
+| [rules-and-holds](https://aipathway.com.au/explore-ai/rules-and-holds-build-standard) | The business's limits, release lists, do-not-contact list, contact hours and stage holders written once and read by every bot, with anything over a limit held for a named person |
+| [hand-off](https://aipathway.com.au/explore-ai/hand-off-build-standard) | Every step hands a job to the next as one envelope of refs, one holder at a time, a repeated event does nothing, and every hand-over kept in a log anyone can read |
 | [month-end-close](https://aipathway.com.au/explore-ai/month-end-close-build-standard) | Every close item passed, failed or could not check with its evidence, then a person signs off, approved journals post once and the lock date moves forward |
 
 ## Also available

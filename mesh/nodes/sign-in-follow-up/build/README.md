@@ -13,7 +13,7 @@ unanswered, and drafts the vendor report for the agent to approve.
 
 What it does not do: send anything on its own say-so, follow up a row with no
 consent at sign-in, or dial. The optional call stays off until the agent turns
-it on, and the live call is Office Voice's governed `create_call`. Sends are
+it on, and the live call is AI Pathway's governed `create_call`. Sends are
 keyed on the draft id, so a repeated run cannot send a second copy.
 
     npm install
@@ -45,7 +45,7 @@ published, so this folder has no `ports.mjs`, and `AIPATHWAY_ENV=production`
 is refused rather than rerunning the stub under a production label. The stub run
 is the whole of what can be proved here.
 
-The optional call is Office Voice's governed single call: create_call, basis they_asked, only to an attendee who asked to be called, and off unless the agent turns it on. The consent and unsubscribe record at volume, and a record of who said what that survives a vendor dispute, are not a product and are quoted as a scoped build. Queue each call with create_call on the Office Voice MCP (office_voice.create_call): the owner mints the key at office-voice.com/app/keys and ticks "Allow this to queue calls", and the dispatcher does the Do Not Call Register check, the calling hours and the one-attempt-a-day limit. There is no production run of these checks yet, so the stub run is the finished build. Do not stand up telephony of your own.
+The optional call is AI Pathway's governed single call: create_call, basis they_asked, only to an attendee who asked to be called, and off unless the agent turns it on. The consent and unsubscribe record at volume, and a record of who said what that survives a vendor dispute, are not a product and are quoted as a scoped build. Queue each call with create_call on the AI Pathway MCP (office_voice.create_call): the owner mints the key at connect.aipathway.com.au/app/keys and ticks "Allow this to queue calls", and the dispatcher does the Do Not Call Register check, the calling hours and the one-attempt-a-day limit. There is no production run of these checks yet, so the stub run is the finished build. Do not stand up telephony of your own.
 
 The checks that never go green on the stub report `with_us`.
 

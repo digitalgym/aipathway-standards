@@ -26,4 +26,4 @@ Six of these eight checks run on your own machine, against the stub, before you 
 
 - **pass-test** The pass test passes: not provable on the stub, reports `with_us`; the live step is quoted as a scoped build.
 
-When a check is `with_us`: The call is Office Voice's live step: it reads the owner's notes for the caller and records what was said with its source. Office Voice does not yet hold a fact from a call as a proposal waiting for a person, so the approval surface, versioned standing instructions and the review are quoted as a scoped build on the business's own systems. Send the failing check id for a fixed price; do not build the live step yourself.
+When a check is `with_us`: The call is AI Pathway's live step: it reads the owner's notes for the caller and records what was said with its source. AI Pathway does not yet hold a fact from a call as a proposal waiting for a person, so the approval surface, versioned standing instructions and the review are quoted as a scoped build on the business's own systems. Send the failing check id for a fixed price; do not build the live step yourself.

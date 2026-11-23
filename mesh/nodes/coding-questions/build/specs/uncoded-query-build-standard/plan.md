@@ -24,5 +24,5 @@ somebody needs to look at the book mid-day.
 ## Provider
 
 Stub only (`node run.mjs`). No production run is offered for this standard yet:
-its live port map is not published. It has no hosted provider. No hosted product writes a coding. The approval-gated, keyed write into the client's own ledger is built against that ledger's API, quoted as a scoped build. No follow-up call is offered: Office Voice has no lawful basis for one here, so the call stays with the person. Send the failing check id for a fixed price; do not build the live step yourself.
+its live port map is not published. It has no hosted provider. No hosted product writes a coding. The approval-gated, keyed write into the client's own ledger is built against that ledger's API, quoted as a scoped build. No follow-up call is offered: AI Pathway has no lawful basis for one here, so the call stays with the person. Send the failing check id for a fixed price; do not build the live step yourself.
 Run `npx @aipathway/conformance show uncoded-query-build-standard` for the check list.

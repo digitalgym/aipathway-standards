@@ -37,7 +37,7 @@ is the whole of what can be proved here.
 
 This standard has no hosted provider, so `conformance connect` does not apply to it.
 
-No hosted step. The check runs on the business's own board, van counts and shelf, and a shortfall is ordered through Material Order's path, whose order write is the builder's until Office Voice's purchase order tools ship. The pass test runs on the business's own systems. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence.
+No hosted step. The check runs on the business's own board, van counts and shelf, and a shortfall is ordered through Material Order's path, whose order write is the builder's until AI Pathway's purchase order tools ship. The pass test runs on the business's own systems. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence.
 
 The checks that never go green on the stub report `with_us`.
 
