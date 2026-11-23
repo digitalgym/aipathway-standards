@@ -47,7 +47,7 @@ The hard part
 
 Not the query. The measure that means one thing to the owner and another to the bookkeeper, and the figure that quietly repeated last month because the feed was down.
 
-The report said revenue was up. It was last month’s figure, because the feed had been down since Thursday and the spreadsheet kept the old cell. The commentary underneath said up eleven percent, a number nobody could find on the page. The lender read it. That is not a reporting problem. It is a report with no definitions, no sources and no way to say it did not know.
+The report said revenue was up. It was last month’s figure, because the feed had been down since Thursday and the spreadsheet kept the old cell. The commentary underneath said up eleven percent, a number nobody could find on the page. The lender read it. The report had no definitions, no sources and no way to say it did not know.
 
 One period, definitions to published
 
@@ -67,7 +67,7 @@ Any report produced on a schedule from systems the business runs: the Monday num
 
 The rule that a measure has one definition computed once comes from the [Multi-Site Conformance standard](https://aipathway.com.au/explore-ai/multi-site-conformance-build-standard), where it stops branches computing the same thing differently. Here it stops the owner and the bookkeeper doing the same. Any sentence about what a rule requires is the [Cited Answer standard](https://aipathway.com.au/explore-ai/cited-answer-build-standard)’s job, with a card. The [accounts admin paper](https://aipathway.com.au/explore-ai/accounts-admin-automation) is the closest argument beside it.
 
-The failure this prevents is specific. Not a wrong number. A number nobody can trace, on a report that went out late or not at all the week it mattered, with prose underneath that said something the figures did not.
+The failure this prevents is a number nobody can trace, on a report that went out late or not at all the week it mattered, with prose underneath that said something the figures did not.
 
 ## 2. The definitions register
 
@@ -151,13 +151,13 @@ The same rule this site holds itself to. A number without a source is not on the
 
 ## 8. Connect Xero and your job system for the Monday report, without it changing a single figure in them
 
-The build is a stocktaker with a clipboard: it counts what is on the shelf and never moves the stock. It reads each source the register names, at a time it writes down, and publishes the report to the places you choose. It never edits an invoice, a job or a contact, never posts a journal, and never changes a published report: a correction is a new version by a named person. Revoke its key, or disconnect it under Connected apps in Xero’s settings, and the next run marks those figures unavailable rather than guessing. Your own login stays yours: the build connects with its own key or app connection, never your username and password.
+It writes your regular report from the figures you already keep. It reads Xero, your job system and your sheets, and publishes the report when and where you say. You make any correction, and you decide whether a report goes outside the business. Your own login stays yours: the build connects with its own key or app connection, never your username and password.
 
 What each piece of access is for.
 
 - **Your ledger, read.** Xero or MYOB, for the money measures the register defines, such as invoiced revenue less credit notes. Xero now gives new apps granular scopes, so ask only for the read scopes your definitions name.
 - **Your job system, read.** ServiceM8, Simpro or whatever runs the work, for measures like jobs completed in the week.
-- **An Office Voice key with “Read the book”, if the report carries debtors.** It lists what is overdue now and the invoices raised since a date, up to 120 days back. A measure that needs a longer history reads the ledger directly.
+- **An AI Pathway key with “Read the book”, if the report carries debtors.** It lists what is overdue now and the invoices raised since a date, up to 120 days back. A measure that needs a longer history reads the ledger directly.
 - **One publish location per audience, write.** A folder, channel or mailbox, where each version lands next to the last. It is the only thing the build writes.
 - **A message to a named person.** For a threshold crossed or a source that could not be read.
 

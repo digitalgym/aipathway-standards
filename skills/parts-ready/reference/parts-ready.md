@@ -16,7 +16,7 @@ carrying each check's id, ports, what to inject and what to assert.
 To print them: npx @aipathway/conformance show parts-ready-build-standard
 To scaffold a folder that runs them, every check starting red: npx @aipathway/conformance init parts-ready-build-standard
 Do the scaffolding yourself if you can run commands; the person should not have to open a terminal.
-This standard has no hosted provider; do not run conformance connect. For the checks a stub cannot prove: No hosted step. The check runs on the business's own board, van counts and shelf, and a shortfall is ordered through Material Order's path, whose order write is the builder's until Office Voice's purchase order tools ship. The pass test runs on the business's own systems. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence.
+This standard has no hosted provider; do not run conformance connect. For the checks a stub cannot prove: No hosted step. The check runs on the business's own board, van counts and shelf, and a shortfall is ordered through Material Order's path, whose order write is the builder's until AI Pathway's purchase order tools ship. The pass test runs on the business's own systems. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence.
 
 ---
 
@@ -74,15 +74,15 @@ What can meet it, and what cannot. The board and the needs have to be readable b
 
 ## 2. Where the needs and the stock come from, and why nobody guesses
 
-The needs, in this order. The accepted quote’s lines, because that is what the customer agreed to. If the quote has none, the materials on the job itself. If the job has none, a template you write once per job type: a hot water swap needs the unit, two flexi hoses and a tempering valve. A job with none of the three is flagged needs_list_unknown, and a person looks at it. The build never reads the job description and decides what the job probably needs: a guessed list looks finished, and the tech trusts it.
+The needs, in this order. The accepted quote’s lines, because that is what the customer agreed to. If the quote has none, the materials on the job itself. If the job has none, a template you write once per job type: a hot water swap needs the unit, two flexi hoses and a tempering valve. A job with none of the three is flagged needs_list_unknown, and a person looks at it. The build never reads the job description and decides what the job probably needs. A guessed list looks finished, and the tech trusts it.
 
-The van, with when it was counted. Every van count carries the time it was taken. A count older than your limit (24 hours unless you set another) is stock_unknown: none of that van’s parts are reported as on the van, and each of the job’s lines is flagged so a person can ask the tech. Keeping the count cheap is the whole game: a weekly count on Friday afternoon, and each finished job’s parts taken off the van as the job is closed.
+The van, with when it was counted. Every van count carries the time it was taken. A count older than your limit (24 hours unless you set another) is stock_unknown: none of that van’s parts are reported as on the van, and each of the job’s lines is flagged so a person can ask the tech. Keep the count cheap: a weekly count on Friday afternoon, and each finished job’s parts taken off the van as the job is closed.
 
 The shelf, reserved first. A part the shelf holds is reserved to the job before anything is ordered, the same reserve as Material Order’s check 2, so two jobs cannot both be promised the last tempering valve.
 
 ## 3. The records it keeps, in the shape your developer needs
 
-One run per date, keyed so a second run can see what the first one did. Note what is missing: there is no purchase order here. Orders live in Material Order, and this record holds only the id that came back.
+One run per date, keyed so a second run can see what the first one did. There is no purchase order here. Orders live in Material Order, and this record holds only the id that came back.
 
 ```
 Run                               # one per date; re-runs add to it
@@ -183,7 +183,7 @@ Before handing anything over, the supplier’s lead time is read. If the part ca
 
 Same checks and the same pass test, five ways. Pick one per business: two of them checking the same board at once would order twice.
 
-- **Done for you, on Office Voice.** Not today. Office Voice has no step in this standard yet. Purchase order tools for it are on its backlog and are coming, not available; until they ship, the order write is Material Order’s, built on your own systems. If you want it set up for you, that is a scoped build.
+- **Done for you, by AI Pathway.** Not today. We have no step in this standard yet. Purchase order tools for it are on our backlog and are coming, not available; until they ship, the order write is Material Order’s, built on your own systems. If you want it set up for you, that is a scoped build.
 - **Google Workspace, the default.** A [copyable Google Sheet](https://docs.google.com/spreadsheets/d/1JP3z6kykNhgWhPqSqgr-LSNJzJrQglMLMoK0b-mig6c/copy) with Board, Needs, Templates, Van, Shelf and Suppliers tabs, and a run each afternoon at 2pm. It writes Results, Orders (one draft per supplier for a person to place through Material Order), Messages and Flags, and emails each tech once per job if you turn that on. It calls nothing outside the spreadsheet.
 - **Microsoft 365.** The [Microsoft 365 plan](https://aipathway.com.au/explore-ai/van-stock-on-microsoft-365) lays out the SharePoint lists, a scheduled flow that orders only through the Material Order flow, and one Teams message per tech and job.
 - **Your own bot.** A Grok Bot or Claude task scheduled for 2pm that reads the sheet’s tabs, writes the results and drafts the orders for a person to approve, held to the same checks. It reads its own earlier results before writing, so a second run orders nothing. There is no recipe page for it yet; start from [how to use Grok Bot](https://aipathway.com.au/explore-ai/how-to-use-grok-bot).
@@ -195,7 +195,7 @@ How to run any standard each of these ways is in [run a standard anywhere](https
 
 Checked as at 1 November 2026
 
-Office Voice lists read_purchase_order and draft_purchase_order tools on its backlog. Neither has shipped, so this standard names no Office Voice step, and the provider block below says the order write is the builder’s.
+AI Pathway lists read_purchase_order and draft_purchase_order tools on its backlog. Neither has shipped, so this standard names no AI Pathway step, and the provider block below says the order write is the builder’s.
 
 Tradify has no public or partner API, confirmed in writing by their support on 10 April 2026.
 
@@ -225,7 +225,7 @@ stays local                          # yours, and the standard
 
 the order write
   - Material Order's, through its threshold and approved suppliers.
-    Office Voice's purchase order tools are on its backlog, not
+    AI Pathway's purchase order tools are on its backlog, not
     shipped; until they are, the write is built on your systems
 
 cannot meet the standard

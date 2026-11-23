@@ -129,7 +129,7 @@ Flow 1 never edits a Versions row it did not just create. An edit is a rebuild, 
 
 ## 5. What the flows can reach in your Microsoft 365 and your sales data, and what they never touch
 
-The flows use the Shown library the way a shop uses a drop safe: they can put a page in, and they have no way to take one out. They read Rules and Sales on one SharePoint site, write a new Versions row for each build, start the approval, and file the approved page in Shown. They never send anything to the vendor, never set the price, never change a version once it is approved, and never update or delete a file in Shown. They hold no mailbox connection at all, on purpose: the agent gives the page to the vendor. Your own login stays yours: the flows run under their own account, never your username and password.
+The flows build the page that shows a vendor where the price came from. They read your selection rules and recorded sales on one SharePoint site, build a new version of the page, and file it once it is approved. The agent approves every version, gives the page to the vendor, and owns the price and everything said about it. Your own login stays yours: the flows run under their own account, never your username and password.
 
 What each connection is for.
 

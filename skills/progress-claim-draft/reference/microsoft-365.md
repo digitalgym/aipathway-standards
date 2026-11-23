@@ -150,7 +150,7 @@ Flow 1 has no mail connector at all. Releasing is not serving: after Flow 2, the
 
 ## 5. What the flows can reach in your Microsoft 365, and what they never touch
 
-The flows are a clerk with a calculator and a pencil: they read the lists, write the draft, and leave it on the project manager’s desk. They read Acceptance, Contracts, ScheduleOfValues, SiteAssessment and Variations, write ClaimLines, and post one message to the project manager in Teams. They never send mail to a client, never write to your accounting system and never edit the lists people fill.
+It drafts the month’s progress claim for you to check and send. It reads the contract, the schedule of values, the signed variations and the percent complete your project manager entered after walking the site. Then it writes the claim lines and tells the project manager in Teams that a draft is ready. You review, sign and serve the claim.
 
 What each connection is for.
 

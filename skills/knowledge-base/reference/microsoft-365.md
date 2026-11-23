@@ -102,7 +102,7 @@ The register is a list rather than a database because the people who own the sou
 | Every source has a named owner, and a team is not an owner | Person column | Set the Owner column to People only rather than People and Groups. "Operations" then cannot be saved, which is the standard's line that a team cannot be asked anything, expressed as a column setting. |
 | Duplicates resolve to one canonical copy, and only the canonical is indexed | Status and DuplicateOf | The second copy keeps its row with Indexed set to No. Deleting it would lose the fact that the drive holds two, which is the thing somebody needs to know next time. |
 | Retrieved date, checksum and edition are recorded when the source arrives | Intake flow | RetrievedAt and Checksum are written by the flow on create. Edition stays typed, because only a person reads a cover and decides what the issuer called it. |
-| Customer material is registered as such, restricted, and kept out of the shared index | Permissions + Indexed | A separate library with its own access list, set not to appear in search results, and Indexed left at No. See the first trap: this is a permission boundary, not a column. |
+| Customer material is registered as such, restricted, and kept out of the shared index | Permissions + Indexed | A separate library with its own access list, set not to appear in search results, and Indexed left at No. See the first trap. This is a permission boundary, not a column. |
 | Every indexed passage names its source and a locator that can be opened | Passages list | SourceId and Locator are required columns and OpenAt is a hyperlink somebody clicks. A chunk number has nowhere to be written down. |
 | Search returns passages with their source and locator, and composes nothing | No compose step | The search reads the Passages list and returns rows. The only honest enforcement is that nothing was built which writes a paragraph, and that a general assistant over the same library is a different thing sitting beside this one. |
 | A changed checksum reaches its owner in the same run | Watch flow | The register write and the message to the Owner are steps in one run. A dashboard that shows the change is not the owner having been told. |
@@ -209,7 +209,7 @@ Ownerless Sources is the one to put on the front page, because it is the only nu
 
 ## 6. What the flows can reach in your SharePoint, and what they never touch
 
-The flows keep the card catalogue, not the books. They walk the shelves the register names, update a card when a book changes, and leave a note for the person whose name is on it. They never take a book off the shelf, rewrite a page, or change who holds a library card. In practice they read the libraries the register covers, write only to the register site, and send the owner an email or a task. They never move, rename, edit or delete a file, never change a permission, and never answer a question.
+The flows keep the register of your files up to date. They read the libraries the register covers, update the register when a file changes, and send the file’s owner an email or a task. Each source has a named person who answers for it when it moves, and which copy counts is yours to decide.
 
 What each connection is for.
 
@@ -217,7 +217,7 @@ What each connection is for.
 - **SharePoint and OneDrive, the covered libraries, read.** To read each file’s ETag and compare it with the register. Only the libraries the register names, and never the customer material library unless it is registered.
 - **Outlook, one shared mailbox.** To tell an owner their source moved.
 - **Planner or Teams, and Approvals.** The recheck and gap tasks with a due date, and the owner’s approval in Flow 4.
-- **No ledger and no Office Voice.** Nothing in this build touches money or makes a call.
+- **No ledger and no AI Pathway calls.** Nothing in this build touches money or makes a call.
 
 Keep it to the least it needs.
 
@@ -257,7 +257,7 @@ A scheduled flow reads files the tenant holds. It does not go and look at what a
 
 ### A gap as a filtered view called Missing
 
-The tempting build is a view over rows with a blank Location. The standard says a source that should exist and cannot be found is a task with an owner and a due date, and a view has neither. Nobody is ever late for a view, and nobody opens one twice.
+The tempting build is a view over rows with a blank Location. The standard says a source that should exist and cannot be found is a task with an owner and a due date, and a view has neither.
 
 ## 9. Where the automation stops
 

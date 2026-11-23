@@ -20,7 +20,7 @@ This standard has no hosted provider; do not run conformance connect. For the ch
 
 ---
 
-Warranty and service dates nobody remembers? This standard takes the equipment from every finished job, works out when it is next due and when its warranty ends, and reminds the customer ahead of each date, once, with one follow-up. A yes lands in your job system as one booking request, and a person books the time. Written so you can build it yourself.
+Nobody remembers warranty and service dates. This standard takes the equipment from every finished job, works out when it is next due and when its warranty ends, and reminds the customer ahead of each date, once, with one follow-up. A yes lands in your job system as one booking request, and a person books the time. Written so you can build it yourself.
 
 Used by
 
@@ -45,7 +45,7 @@ It never books the time, never prices the work, and never tells a customer what 
 
 The hard part
 
-Not the reminder. Writing the yes back into ServiceM8, Simpro or whatever you run as exactly one booking request, against the right customer and unit, however many times they say yes.
+Writing the yes back into ServiceM8, Simpro or whatever you run as exactly one booking request, against the right customer and unit, however many times they say yes.
 
 You put in a hot water system last November. It is due for a service this month, and the customer has no idea. Neither do you: the date is somewhere in a finished job nobody will open again. In a few months something goes wrong with it, the customer searches for a plumber, and the one who comes up first is not you. The warranty on the inverter you fitted five years ago ends next week too, and nobody has said a word.
 
@@ -99,7 +99,7 @@ No answer after a written number of days, one follow-up. Then it stops for that 
 
 ## 4. The records it keeps, in the shape your developer needs
 
-Six objects. Note what the Asset does not have: a due date. Dates are worked out from the Schedule every time, so there is nothing stored to go stale.
+Six objects. The Asset has no due date. Dates are worked out from the Schedule every time, so there is nothing stored to go stale.
 
 ```
 Asset                             # one per piece of equipment
@@ -192,10 +192,10 @@ The request carries no time and no price. The build does not know who is free on
 
 The reminders live wherever the business already works. Four ways, all held to the same checks:
 
-- **Google Workspace.** A free [Next Service sheet](https://docs.google.com/spreadsheets/d/1US_h8-dKjRh75BAtSKuL3XLm90IsL-LLSYjtYPUcFBA/copy) to copy: units from your job system’s export, your schedule on its own tab, the dates worked out every morning, reminder emails from your Google account and reminder calls through Office Voice, each yes on one booking request for a person.
+- **Google Workspace.** A free [Next Service sheet](https://docs.google.com/spreadsheets/d/1US_h8-dKjRh75BAtSKuL3XLm90IsL-LLSYjtYPUcFBA/copy) to copy: units from your job system’s export, your schedule on its own tab, the dates worked out every morning, reminder emails from your Google account and reminder calls through AI Pathway, each yes on one booking request for a person.
 - **Microsoft 365.** Lists and flows for the business already paying for it. The [Microsoft 365 plan](https://aipathway.com.au/explore-ai/service-reminders-on-microsoft-365) lays out the lists and flows, with the schedule as its own list so nobody types a date.
 - **A personal dashboard.** Hand this page to a coding agent and it builds a small page of what is due this month, the replies and the booking requests, against the stub until the write into the job system has to be real.
-- **A long-lived bot.** A routine that wakes when a job is marked complete and once a day after that, sends what is due, reads the replies and writes each yes back once. On ServiceM8, the [Grok Bot or Claude recipe](https://aipathway.com.au/explore-ai/equipment-due-servicem8-grok-bot-claude) is one prompt and a morning routine, with the reminder calls handed to Office Voice.
+- **A long-lived bot.** A routine that wakes when a job is marked complete and once a day after that, sends what is due, reads the replies and writes each yes back once. On ServiceM8, the [Grok Bot or Claude recipe](https://aipathway.com.au/explore-ai/equipment-due-servicem8-grok-bot-claude) is one prompt and a morning routine, with the reminder calls handed to AI Pathway.
 
 How to run any standard each of these ways is in [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
 

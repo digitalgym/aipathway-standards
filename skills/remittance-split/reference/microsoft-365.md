@@ -32,7 +32,7 @@ Read [the Remittance Split build standard](https://aipathway.com.au/explore-ai/r
 
 Check that your ledger can apply one payment across many invoices through its API, and decide how Flow 3 reaches it. Xero has batch payments; MYOB and QuickBooks Online can apply one customer payment across several invoices. Power Automate reaches each through a custom connector or the HTTP action (both premium) on a connection the business owns, not the builder’s own login.
 
-Then decide where the deposit comes from: a statement export (CSV or OFX) from your bank dropped in a library, or a person keying in the amount, date and reference from the bank line. Not the ledger’s bank feed: Xero’s API does not give an ordinary app the bank lines waiting to be reconciled. Either way, the amount in the Deposits list comes from the bank, never from the remittance.
+Then decide where the deposit comes from: a statement export (CSV or OFX) from your bank dropped in a library, or a person keying in the amount, date and reference from the bank line. Not the ledger’s bank feed. Xero’s API does not give an ordinary app the bank lines waiting to be reconciled. Either way, the amount in the Deposits list comes from the bank, never from the remittance.
 
 ## 2. The lists, with their columns
 
@@ -149,7 +149,7 @@ No flow writes the Decision column. A person sets it in the Exceptions list, fro
 
 ## 5. What the flows can reach in your Microsoft 365 and your ledger, and what they never touch
 
-The flows get a teller’s window, not the manager’s office. They can bank what came in against the invoices the remittance names, once per deposit, and nothing else. They read the statement export and the remittance, write the five lists, post exceptions to the bookkeeper and apply one batch payment. They never write off a short payment, never raise a credit note, never record an overpayment, never edit an invoice, and never fill in the Decision column.
+The flows bank a customer’s payment against the invoices it pays. They read the bank statement and the remittance, match each line to its invoice, and apply one batch payment per deposit in your ledger. Any line that doesn’t match, like a short payment or an unknown invoice, goes to your bookkeeper to decide, and write-offs and credit notes stay with you.
 
 What each connection is for.
 

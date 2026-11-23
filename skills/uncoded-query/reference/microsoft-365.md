@@ -170,7 +170,7 @@ No flow writes the Approvals list. A person adds the row, from the Teams card or
 
 ## 5. What the flows can reach in your Microsoft 365 and your clients' ledgers, and what they never touch
 
-The flows get a pencil with no rubber. They can read each client’s uncoded lines, chart and history, send one list a month, and write a coding a person approved, once. They never reconcile a bank line, create an account or tax code, tell a client anything about tax, or fill in the Approvals list.
+The flows ask your clients about the bank lines nobody can code, once a month. They read each client’s uncoded lines, chart and history, send one plain question list, and write a coding into the ledger once a person has approved it. You approve every coding, reconcile the bank line, and answer any tax question the replies raise.
 
 What each connection is for.
 

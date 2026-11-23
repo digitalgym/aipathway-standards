@@ -168,7 +168,7 @@ Weight the score however suits the business, but compute it in one model. The mo
 
 ## 6. What the flows can read across your branches, and what they never change
 
-The flows are a dipstick in every branch’s tank: they check the level and write it down, and they never top it up or drain it. They read each segment site’s lists, the key contract and who is in each Entra group, write DriftFindings in the centre’s site, and post the digest to each segment’s channel. They never edit, close or delete a branch’s record, never change the key contract, and never change who is in a group.
+The flows show the centre which branches have drifted, and where. They read each branch’s lists and who is in each group, write what they find in the centre’s site, and post a digest to each branch’s channel. Every conversation with a branch that crosses a threshold is yours, and so is deciding whether a local difference is legitimate or a low score is a real problem.
 
 What each connection is for.
 
@@ -201,7 +201,7 @@ Why not give the centre’s managers edit access to every branch site? It is qui
 6. Build Flow 1 with the schema checks only. Run it, and expect the first result to be worse than anybody predicted.
 7. Add gate bypass, then the two pattern detections.
 8. Build the model, the score and row level security. Verify a segment user sees only their own.
-9. Build Flow 2 and let it post once while the numbers are still bad. That first ugly digest is the whole culture of this standard.
+9. Build Flow 2 and let it post once while the numbers are still bad.
 
 ## 8. Four traps specific to this build
 

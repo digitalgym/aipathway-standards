@@ -16,7 +16,7 @@ carrying each check's id, ports, what to inject and what to assert.
 To print them: npx @aipathway/conformance show client-memory-build-standard
 To scaffold a folder that runs them, every check starting red: npx @aipathway/conformance init client-memory-build-standard
 Do the scaffolding yourself if you can run commands; the person should not have to open a terminal.
-This standard has no hosted provider; do not run conformance connect. For the checks a stub cannot prove: The call is Office Voice's live step: it reads the owner's notes for the caller and records what was said with its source. Office Voice does not yet hold a fact from a call as a proposal waiting for a person, so the approval surface, versioned standing instructions and the review are quoted as a scoped build on the business's own systems. Send the failing check id for a fixed price; do not build the live step yourself.
+This standard has no hosted provider; do not run conformance connect. For the checks a stub cannot prove: The call is AI Pathway's live step: it reads the owner's notes for the caller and records what was said with its source. AI Pathway does not yet hold a fact from a call as a proposal waiting for a person, so the approval surface, versioned standing instructions and the review are quoted as a scoped build on the business's own systems. Send the failing check id for a fixed price; do not build the live step yourself.
 
 ---
 
@@ -51,7 +51,7 @@ In March Priya Shah asked for her invoices to go to her bookkeeper. The owner sa
 
 Memory, as a record
 
-1. **The call and the message**: Office Voice, or any agent. It hears things and proposes them, with where it heard them. proposal source supersedes waits for
+1. **The call and the message**: AI Pathway, or any agent. It hears things and proposes them, with where it heard them. proposal source supersedes waits for
 2. **A person decides**: Someone on your approvers list says yes or no. The record keeps who and when. approved_by approved_at becomes
 3. **The approved slice**: Approved items only, keyed to the client id in your job system. Versioned, never edited. client_id version critical is read by
 4. **Every other standard**: Quote Out, Invoice Out, Debtor Chasing, the desks. Read fresh, every time. quote invoice chase reviewed by
@@ -69,7 +69,7 @@ One item, through the gate
 7. Is it followed on the next interaction? If so, the quote, invoice and chase each read it fresh and follow it.
 8. If not, the review flags it, and any fix is a new proposal that goes back to a person.
 
-The filled diamond is the person: nothing an agent proposes is read until someone on the approvers list says yes. The loop is the review, and a fix goes back through the same diamond.
+The filled diamond is the person. Nothing an agent proposes is read until someone on the approvers list says yes. The loop is the review, and a fix goes back through the same diamond.
 
 ## 1. What this standard covers
 
@@ -154,7 +154,7 @@ None of those standards changes. Each one already reads the job before it acts; 
 Priya already has an approved instruction, version 1: invoices to accounts@shahprops.com.au. On Tuesday morning she rings about a leak, and near the end says to send invoices to Jan, her bookkeeper, from now on.
 
 1. Tuesday, 10:14am. Proposed. The call ends and two proposals arrive. One is a standing instruction, send_to jan@shahprops.com.au, source stated, the call’s id, supersedes version 1. The other comes from the call summary: “happy to pay by card on the day”, source inferred, by the summary model. Neither is approved.
-2. Tuesday, 3pm. The old version holds. The leak job completes and Invoice Out reads Priya’s approved slice. Version 1 is still the approved one, so the invoice goes to accounts@. That is correct: nobody has agreed to the change yet.
+2. Tuesday, 3pm. The old version holds. The leak job completes and Invoice Out reads Priya’s approved slice. Version 1 is still the approved one, so the invoice goes to accounts@. That is correct. Nobody has agreed to the change yet.
 3. Wednesday, 7:30am. A person decides. Dana, the owner, opens the approval list. She approves the change to Jan and rejects the card-on-the-day guess, because Priya never said it. Each decision is recorded with her name and the time.
 4. Wednesday, 7:30am. Versioned. Version 1 is marked superseded and points at the new item, which is approved as version 2. Version 1’s words are unchanged: anyone can still see what was in force on Tuesday, and why.
 5. From then on. The next quote, invoice and chase for Priya each read her slice fresh and go to Jan. The rejected guess is never read by anything.
@@ -178,16 +178,16 @@ The review writes nothing to memory. A fix is a new proposal that names the item
 
 ## 8. Connect a Grok Bot or Claude to the memory, without it approving anything
 
-Think of the new office junior with the client file: they read it before every job and leave a sticky note when they learn something, but only the boss writes in the file. A bot that builds your debtor list or chases your quotes reads the client’s approved memory before each draft and proposes anything new it hears. It never approves its own proposal, never edits an approved item, and never matches a client by name. Your login stays yours: the bot holds a key you can delete.
+It reads what you know about each client before every draft. A bot that builds your debtor list or chases your quotes reads the client’s approved memory before each draft, and proposes anything new it hears. You approve or reject every proposal, and you settle any two instructions that contradict each other. Your login stays yours.
 
 What each piece of access is for.
 
-- **Read the book, on an Office Voice key.** Lets the bot call get_memory for what your calls and your own notes hold about a caller. It comes with Bot Starter at $19 a month per business. Office Voice keys that memory by phone number, not the client id on the job, so the bot checks the number belongs to the job’s client and skips it where two clients share one.
+- **Read the book, on your AI Pathway key.** Lets the bot call get_memory for what your calls and your own notes hold about a caller. It comes with Bot Starter at $19 a month per business. AI Pathway keys that memory by phone number, not the client id on the job, so the bot checks the number belongs to the job’s client and skips it where two clients share one.
 - **Not Write drafts and notes.** That box also allows record_fact, which makes a fact live the moment it is written with no one approving it. A bot that can call it fails check 1. Leave it off on a memory bot’s key.
 - **Your own sheet or SharePoint list, if you host it.** The bot reads approved rows by the job’s client id and adds new rows as proposed. Its connection can add a row but cannot mark one approved: decisions sit in a tab or list only the approvers can write to.
 
-1. Pick where the memory lives. Office Voice’s memory has what was said on the phone; your own list meets every check today. You can use both, with Office Voice proposing into your list.
-2. Under Keys (office-voice.com/app/keys), create a key with **Read the book** only, and add it to the bot as the [Grok Bot and Xero guide](https://aipathway.com.au/explore-ai/grok-bot-xero#key) sets out. The same key works in Claude.
+1. Pick where the memory lives. Our memory has what was said on the phone; your own list meets every check today. You can use both, with AI Pathway proposing into your list.
+2. Under Keys (connect.aipathway.com.au/app/keys), create a key with **Read the book** only, and add it to the bot as the [Grok Bot and Xero guide](https://aipathway.com.au/explore-ai/grok-bot-xero#key) sets out. The same key works in Claude.
 3. Tell the bot, in its standing instructions, to read memory each time it drafts for a client, not once at the start of a run, and to write anything it would remember as a proposed row for you to review.
 4. Fill the approvers: the owner and whoever runs the office. A bot’s account is never one of them.
 5. Run the checklist in section 11 against a real client.
@@ -200,7 +200,7 @@ Where it runs. In SharePoint lists and Power Automate flows (the [Microsoft 365 
 
 Checked as at 29 October 2026
 
-Office Voice reads the owner’s notes for a caller on every call, and records what was said on a call as a fact with its source, which its get_memory, record_fact and list_facts tools expose. It keeps every correction rather than overwriting. It does not yet hold a fact from a call as a proposal that waits for a person, and its review screen is not built, so a call fact is in use as soon as it is recorded. Until that changes, the approval surface, the versions and the review are a scoped build, and the provider block below says so.
+AI Pathway reads the owner’s notes for a caller on every call, and records what was said on a call as a fact with its source, which its get_memory, record_fact and list_facts tools expose. It keeps every correction rather than overwriting. It does not yet hold a fact from a call as a proposal that waits for a person, and its review screen is not built, so a call fact is in use as soon as it is recorded. Until that changes, the approval surface, the versions and the review are a scoped build, and the provider block below says so.
 
 Tradify has no public or partner API, confirmed in writing by their support on 10 April 2026.
 
@@ -208,14 +208,14 @@ Tradify has no public or partner API, confirmed in writing by their support on 1
 
 ## 10. What your developer builds, and the step that needs care
 
-The step not to hand-roll is the call: hearing a preference in the middle of a conversation about something else, and proposing it without acting on it. That is Office Voice's. The approval surface, the versions and the review are yours, and they are small.
+The step not to hand-roll is the call: hearing a preference in the middle of a conversation about something else, and proposing it without acting on it. That is ours. The approval surface, the versions and the review are yours, and they are small.
 
 ```
 provider:
   stub:       local.mock_client_memory
   production: none                       # scoped build, not a product
 
-the live step                        # Office Voice
+the live step                        # AI Pathway
   - the call reads the approved slice for the caller
   - the call proposes what it heard, with the call id
 

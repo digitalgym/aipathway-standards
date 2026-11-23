@@ -16,7 +16,7 @@ carrying each check's id, ports, what to inject and what to assert.
 To print them: npx @aipathway/conformance show just-sold-pack-build-standard
 To scaffold a folder that runs them, every check starting red: npx @aipathway/conformance init just-sold-pack-build-standard
 Do the scaffolding yourself if you can run commands; the person should not have to open a terminal.
-This standard has no hosted provider; do not run conformance connect. For the checks a stub cannot prove: No hosted step. Verified sale facts are the hard step, so the production check runs on the agency's own sale record and a data source it already licenses. The neighbours did not ask to be called, so any call stays with the agent; Office Voice will not place it. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence.
+This standard has no hosted provider; do not run conformance connect. For the checks a stub cannot prove: No hosted step. Verified sale facts are the hard step, so the production check runs on the agency's own sale record and a data source it already licenses. The neighbours did not ask to be called, so any call stays with the agent; AI Pathway will not place it. There is nothing to buy: your build does this step on the business's own systems. No production run is offered yet, because the live port map is not published, so do not run AIPATHWAY_ENV=production. Run the pass test by hand on the real systems and attach the evidence.
 
 ---
 
@@ -44,9 +44,9 @@ It never says what the reader's own home is worth, never states a price that was
 
 The hard part
 
-Not the drafting. Knowing the price, the date and the address are the verified ones on the day the letter goes, and knowing when a sale is not yet public. The calls stay with the agent.
+Knowing the price, the date and the address are the verified ones on the day the letter goes, and knowing when a sale is not yet public. The calls stay with the agent.
 
-A place on the street sells on Saturday. By Tuesday the neighbours have heard the price from somebody else, the agent meant to drop a note in every letterbox and did not, and the one neighbour who asked for an appraisal last spring never got a call. The sale was the best reason to be in touch all year, and it went by. Or worse: the letter went out before the sale was public, or quoted a price the vendor asked to keep quiet.
+A place on the street sells on Saturday. By Tuesday the neighbours have heard the price from somebody else, the agent meant to drop a note in every letterbox and did not, and the one neighbour who asked for an appraisal last spring never got a call. The sale was the best reason to be in touch all year, and it went by. Or the letter went out before the sale was public, or quoted a price the vendor asked to keep quiet.
 
 One sale, to the people near it
 
@@ -179,7 +179,7 @@ The call list is a short list, sized to how many calls the agent can actually ma
 2. **Then the reason.** Same street, then the radius, then a matching owner.
 3. **Then the longest since you last spoke.** Ties only. It never leapfrogs a stronger reason.
 
-The list orders, it never permits. Nobody the gate held is on it, whatever their rank would have been, and the build never rings anyone on it. Calling is off by default, and Office Voice will not place these calls: it rings only people with a lawful basis, such as someone who asked for a call, and a neighbour of a sale has not. So the calls on the list are the agent’s own. If an agency turns calling on in its own build anyway, every call still goes through a gate first: the do-not-call register, calling hours in the contact’s own time, and the AI disclosure at the start.
+The list orders, it never permits. Nobody the gate held is on it, whatever their rank would have been, and the build never rings anyone on it. Calling is off by default, and AI Pathway will not place these calls: it rings only people with a lawful basis, such as someone who asked for a call, and a neighbour of a sale has not. So the calls on the list are the agent’s own. If an agency turns calling on in its own build anyway, every call still goes through a gate first: the do-not-call register, calling hours in the contact’s own time, and the AI disclosure at the start.
 
 ## 7. What stays with a person
 
@@ -222,7 +222,7 @@ the hard step: sale facts
     against them
 
 the calls: the agent's own
-  - off by default. Office Voice will not place them: it needs
+  - off by default. AI Pathway will not place them: it needs
     a lawful basis for a call, and a neighbour who never asked
     to be called has none
   - if an agency turns calling on in its own build: a register

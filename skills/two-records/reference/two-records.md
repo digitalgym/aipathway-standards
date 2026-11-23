@@ -45,7 +45,7 @@ It does not correct a record on its own, does not guess which source is right, a
 
 The hard part
 
-Not the comparison. Writing down, once, which system is the truth for each field, and keeping both original values after a person corrects one.
+Writing down, once, which system is the truth for each field, and keeping both original values after a person corrects one.
 
 The job system says the job was worth one number and the ledger says another. Somebody fixes it on a Friday by typing the ledger figure into the job, and the reason they were different is gone. Three months later the customer asks why, and there is nothing to read. The two numbers were the evidence. The fix destroyed it.
 
@@ -67,7 +67,7 @@ Any pair of systems that each hold part of the truth about the same thing and ar
 
 Matching a supplier invoice to a purchase order before it is paid is the [Invoice Check standard](https://aipathway.com.au/explore-ai/invoice-check-build-standard) and is out of scope here. That one is a gate on money leaving. This one is a report on two records that should already agree. The [accounts admin paper](https://aipathway.com.au/explore-ai/accounts-admin-automation) is the argument beside it, and the rule that a measure has one definition computed once comes from the [Multi-Site Conformance standard](https://aipathway.com.au/explore-ai/multi-site-conformance-build-standard).
 
-The failure this prevents is specific. Not the mismatch; every business has those. The mismatch that was fixed by a machine, or by a person in a hurry, without either value being kept, so that the record now agrees and nobody can say why it ever did not.
+The failure this prevents is specific. Every business has mismatches. This standard is about the one fixed by a machine, or by a person in a hurry, without either value being kept, so that the record now agrees and nobody can say why it ever did not.
 
 ## 2. The pair contract
 
@@ -145,12 +145,12 @@ The all-clear publishes. A run that says nothing when everything matched is indi
 
 ## 7. Connect your job system and your ledger, without it fixing either on its own
 
-Think of the check as a stocktaker: it counts the shelf against the book and lists every gap, and the book only changes when the manager signs the sheet. It reads both sources. Its one write is a correction a named person accepted, into the field the pair contract says that correction may touch. It never edits a record on its own, never deletes one, never merges two customers and never overwrites the value that was there before. Revoke its key or disconnect its app in either system and it is cut off. Your own login stays yours: the check connects with its own key or app connection, never your username and password.
+It finds where your job system and your ledger disagree. It reads both and lists every difference, and when a named person accepts a correction, it writes that one fix into the field you agreed it may change. You accept every correction, and you decide which system is right for each field. Your own login stays yours: the check connects with its own key or app connection, never your username and password.
 
 What each piece of access is for.
 
 - **Source A, read.** The job system, the roster or the register: every record carrying the shared id, and the fields the contract compares.
-- **Source B, read.** The ledger, the timesheets or the drive, the same way. If Office Voice is already connected to your Xero, a key with only “Read the book” ticked gives the check your Xero invoices, up to 120 days back, without a second Xero connection.
+- **Source B, read.** The ledger, the timesheets or the drive, the same way. If AI Pathway is already connected to your Xero, a key with only “Read the book” ticked gives the check your Xero invoices, up to 120 days back, without a second Xero connection.
 - **Bank lines, from an export.** Xero does not give ordinary apps the unreconciled lines on your bank feed; that access is for lenders. When the bank is one of the pair, the check reads a statement export from your bank.
 - **The target, write, accepted corrections only.** One field, one record, keyed so a retry lands once, with the target’s own id read back. Where the target has no way in, the correction is a task with the accepted value, and the person who keys it records the id.
 

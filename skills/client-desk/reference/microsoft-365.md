@@ -24,7 +24,7 @@ The temptation on this stack is to copy each job’s arrival time into a list so
 - **What this is**: A build plan for the client desk standard on Microsoft 365. Four lists, three flows, and the arrival time read from the job system every time it is needed.
 - **The core rule**: A status answer and a running-late message both read the job by its id at the moment they need the time. No list holds one.
 - **What it does not do**: It does not hold a job, an arrival time or a contact, and a second delivery of the same schedule change cannot make a second message.
-- **The hard part**: The phone line itself is not a Power Automate job: it is the step not to hand-roll. On this stack the hard column is Updates.ChangeKey, which makes a repeated change fail at the list.
+- **The hard part**: The phone line itself is the step not to hand-roll, and it is not a Power Automate job. On this stack the hard column is Updates.ChangeKey, which makes a repeated change fail at the list.
 
 ## 1. Before you start
 
@@ -126,7 +126,7 @@ None of the flows holds a time between runs. Each one reads the job when it need
 
 ## 5. What the flows can reach in your Microsoft 365 and your job system, and what they never touch
 
-Think of a receptionist who can read the job board on the wall but has no marker. The flows read a job by its id, write a note on it, keep the four lists in one SharePoint site, and send one message per change from an account the business owns. They never move an arrival time, never edit, close or delete a job, never message a contact who has not agreed to it, and never open another site or inbox. Your own login stays yours: the flows run under an account kept for them, and the job system sees a key made for the build, never your username and password.
+The flows keep each customer told when their job changes. They read the job, write a note on it, and send one message for each change to the customers who have agreed to messages. Your team moves arrival times on the board, makes every callback, and handles anything said to an upset customer. Your own login stays yours: the flows run under an account kept for them, and the job system sees a key made for the build, never your username and password.
 
 What each connection is for.
 
@@ -135,7 +135,7 @@ What each connection is for.
 - **The HTTP trigger on Flows 1 and 2.** So the line can call them while the caller waits. It is premium too, and its address works like a password: keep it with the line and nowhere else.
 - **Outlook or the SMS account the business owns.** For Flow 3’s one message per change, sent from a shared address, not a person’s.
 - **Teams, optional.** To tell the callback’s owner it is theirs and when it is due.
-- **Office Voice Front Desk, if it answers the line.** It answers the business’s number all day, and on a ServiceM8 or Simpro board, switched on under Automations, it rings the customer when a job moves later. It does not send a job-complete message or any update by text, so Flow 3 still covers those.
+- **Front Desk from AI Pathway, if it answers the line.** It answers the business’s number all day, and on a ServiceM8 or Simpro board, switched on under Automations, it rings the customer when a job moves later. It does not send a job-complete message or any update by text, so Flow 3 still covers those.
 
 Keep the marker out of reach.
 

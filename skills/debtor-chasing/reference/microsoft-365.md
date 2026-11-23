@@ -18,7 +18,7 @@ Used by
 - Credit Controller
 - Finance Manager
 
-The debtor chasing standard is unusual among the ones we publish because the record it works from already exists somewhere else. Your accounting system knows who owes you. What it does not do is decide who to ring first, refuse to ring the ones you must not, or remember what the last conversation produced. That is what gets built here.
+The debtor chasing standard is unusual among the ones we publish because the record it works from already exists somewhere else. Your accounting system knows who owes you. It does not decide who to ring first, refuse to ring the ones you must not, or remember what the last conversation produced. That is what gets built here.
 
 ## In short
 
@@ -33,11 +33,11 @@ Read [the debtor chasing build standard](https://aipathway.com.au/explore-ai/deb
 
 **One honest note about this standard in particular.** It specifies behaviour, the buckets, the ranking and the gate, rather than a set of record shapes. The lists below are the minimum that satisfies its conformance checklist, not objects the standard itself names. Shape them to your ledger where that reads better; the checks are what you are being held to.
 
-The standard also marks the compliance gate as the step not to hand-roll, and names a product for it. Everything here assumes the gate is either that product or a deliberate build you own. What this page will not do is show you how to assemble a calling system out of flows and hope the gate holds.
+The standard also marks the compliance gate as the step not to hand-roll, and names a product for it. Everything here assumes the gate is either that product or a deliberate build you own. This page will not show you how to assemble a calling system out of flows and hope the gate holds.
 
 ## 2. The lists, with their columns
 
-Four lists. Note what is absent: there is no invoice table and no balance column, because the ledger has those and a second copy is the failure this build plan is most likely to cause.
+Four lists, with no invoice table and no balance column, because the ledger has those and a second copy is the failure this build plan is most likely to cause.
 
 ```
 Site: Receivables
@@ -183,12 +183,12 @@ Stale Positions is the one to alert on. Everything else on this page is worthles
 
 ## 6. What the flows can reach in your Microsoft 365 and in Xero, and what they never touch
 
-The build gets the office franking machine, not the chequebook. It can stamp and send, and it can write down what happened, but it cannot move a dollar. The flows read what is owed, write the rank, the suppressions and the contact record into one SharePoint site, and send from one shared mailbox. Through Office Voice they can write a promise back to Xero as a note on the invoice and queue a call. Nothing in this build records a payment, changes an amount, or sends, approves or voids an invoice, and no flow opens another site or another inbox. Your own Xero login stays yours: you sign in with Xero once inside Office Voice, and the flows get a key, never your username and password.
+The flows chase what you’re owed, in the order that matters. They read what is owed, rank who to chase, send from one shared mailbox and queue a call, then write any promise to pay back to Xero as a note on the invoice. Disputes, hardship and payment plans come to you, and the credit policy is yours to set. Your own Xero login stays yours: you sign in with Xero once inside AI Pathway, and the flows get a key, never your username and password.
 
 What each connection is for.
 
 - **SharePoint, the one site.** To hold Positions, Promises, Suppressions and Contacts. The ranking, the gate and the record live here; the balances do not.
-- **Office Voice, for Xero.** Flows call it with the HTTP action (premium) and a key from office-voice.com/app/keys. **Read the book** feeds Flow 1 the open debtor book. **Write drafts and notes** lets Flow 4 send a promise back, so the follow-up moves to that date. **Queue calls** lets Flow 3 hand over the ranked names; it is off by default and only the account owner can add it. The calls themselves are in section 11 of the standard.
+- **AI Pathway, for Xero.** Flows call it with the HTTP action (premium) and a key from connect.aipathway.com.au/app/keys. **Read the book** feeds Flow 1 the open debtor book. **Write drafts and notes** lets Flow 4 send a promise back, so the follow-up moves to that date. **Queue calls** lets Flow 3 hand over the ranked names; it is off by default and only the account owner can add it. The calls themselves are in section 11 of the standard.
 - **Another ledger, read.** If you are not on Xero, Flow 1 reads a nightly export into a library, or a custom connector or the HTTP action, both premium. Read only, always.
 - **Outlook, the one shared mailbox.** For the emailed reminders Flow 3 sends, from an address the business owns.
 - **Teams, optional.** To post the ranked list and the Stale Positions alert to the person who works the book.
@@ -199,9 +199,9 @@ Keep the chequebook in the drawer.
 2. Build them inside a solution, so each connection is a connection reference you can see, swap or remove in one place.
 3. Make the service account a member of the one SharePoint site and no other. If an app registration reads the site instead, grant it Sites.Selected and have an admin add only this site.
 4. Give the service account Send As on the one shared mailbox and no other. If an app registration sends instead, limit it to that mailbox with an Exchange application access policy or RBAC for Applications.
-5. Create the Office Voice key with **Read the book** only, check Flow 1 against Xero’s aged receivables report, then add the other two scopes one at a time. A practice can narrow the key to named client organisations.
+5. Create the AI Pathway key with **Read the book** only, check Flow 1 against Xero’s aged receivables report, then add the other two scopes one at a time. A practice can narrow the key to named client organisations.
 
-How to cut it off. Turn the flows off and nothing ranks or sends. Revoke the Office Voice key and the flows can no longer read Xero, write a note or queue a call. Remove Office Voice from Xero’s connected apps and Office Voice loses Xero too.
+How to cut it off. Turn the flows off and nothing ranks or sends. Revoke the AI Pathway key and the flows can no longer read Xero, write a note or queue a call. Remove AI Pathway from Xero’s connected apps and AI Pathway loses Xero too.
 
 Why not connect the flows straight to Xero? You can, with a custom connector or the HTTP action and your own Xero app. Apps created from March 2026 must ask for granular scopes, the flow has to keep its own sign-in alive, and it is one more key into the ledger to scope and watch. For reading the book that is a fair trade. It still rings nobody, and the gate before each call is still yours to build, which this page has already said it will not teach.
 

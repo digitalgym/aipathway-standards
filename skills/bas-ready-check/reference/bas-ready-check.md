@@ -138,7 +138,7 @@ GST ACCOUNT   Moved $3,008.00; GST on sales less purchases is
 NOT CHECKED   none this quarter.
 ```
 
-Some of these will be fine. Reece may really have supplied something GST-free this time; the $500 journal may be a correction the BAS agent asked for. That is the point: the list shows them, with the evidence, and a person decides. A build that wrote “change B4 to GST” fails check 11.
+Some of these will be fine. Reece may really have supplied something GST-free this time; the $500 journal may be a correction the BAS agent asked for. That is why the list shows them, with the evidence, and a person decides. A build that wrote “change B4 to GST” fails check 11.
 
 ## 5. The records it keeps, in the shape your developer needs
 

@@ -45,9 +45,9 @@ It does not file with a regulator and it never says compliant. It says current, 
 
 The hard part
 
-Not the documents. Applicability, which is a rules problem, and the binding layer that keeps a pack current when a rule or a ticket moves.
+Applicability, which is a rules problem, and the binding layer that keeps a pack current when a rule or a ticket moves.
 
-The invoice, timesheet, SWMS, licence copy, insurance certificate or compliance pack fails after the work is done. A rejected pack costs a claim, a licence, a contractor payment, or a week of unpaid admin. The work was fine. The paperwork was not current. This is the parent standard for the three pieces that already cover parts of that problem, because a build that only does one of them will still reject packs. The pack is a set. Treat it as a set.
+The invoice, timesheet, SWMS, licence copy, insurance certificate or compliance pack fails after the work is done. A rejected pack costs a claim, a licence, a contractor payment, or a week of unpaid admin. The work was fine. The paperwork was not current. This is the parent standard for the three pieces that already cover parts of that problem, because a build that only does one of them will still reject packs.
 
 The eight checks, in order
 
@@ -63,7 +63,7 @@ Stop at the first failure: a pack that passes check four and fails check one is 
 
 ## 1. What this standard is
 
-This is the public specification for the fifth job on the homepage: stop rejected paperwork. The other four jobs already have a standard. This one had three pieces and no spine. They stay. This standard is what they hang on.
+This is the public specification for the fifth job on the homepage: stop rejected paperwork. The other four jobs already have a standard. This one had three pieces and nothing joining them. They stay, and this standard joins them.
 
 - [Invoice Check](https://aipathway.com.au/explore-ai/invoice-check-build-standard): the subcontractor invoice is wrong, late, or missing a ticket.
 - [Compliance Calendar](https://aipathway.com.au/explore-ai/compliance-calendar-build-standard): a date lived in the wrong system and the rule moved. Its companion paper on [licence, insurance and tracking](https://aipathway.com.au/explore-ai/compliance-tracking-trades) covers QBCC, public liability, workers comp, vehicle, white card, visa and induction.
@@ -83,7 +83,7 @@ You keep judgement. The machine does the volume.
 
 ## 3. The three objects you are building
 
-You are not building a folder. You are building three objects that stay in sync.
+You are building three objects that stay in sync.
 
 Object 1
 
@@ -238,7 +238,7 @@ The binding layer is the hard step: one graph, official form maps, field reuse a
 
 Highest option, job five
 
-**None as a product yet.** If a product existed for the binding layer, this standard would name it, the way the debtor standard names Office Voice and the reactivation standard names Office Voice’s governed call for callbacks. It does not, and we are not building one for now. This job is yours to build, to this standard.
+**None as a product yet.** If a product existed for the binding layer, this standard would name it, the way the debtor standard names AI Pathway and the reactivation standard names our governed call for callbacks. It does not, and we are not building one for now. This job is yours to build, to this standard.
 
 Use the standard as a checklist if the pack is small and slow-moving. Build the binding layer when the pack is the thing that costs a claim, a licence, or a contractor payment. Call us when the graph spans three systems and a team that will not maintain a Zap.
 
@@ -278,7 +278,7 @@ Do not start at “all paperwork”. Start at the set that already rejects packs
 | QLD and east-coast trades | QBCC, workers comp, public liability, white card, SWMS for the common job types, WHS notices, subcontractor tickets | ServiceM8, Simpro, Tradify (read from its job export: no public API), Xero |
 | Construction and builders | The above, plus a site-specific SWMS pack and subcontractor prequal | The job system, plus Microsoft 365: the SharePoint library is where the certificates already live. Connect it, do not replace it. Graph first. |
 | Property management | The Compliance Calendar standard, already published: smoke alarms, pool barriers, minimum housing standards, entry notices. The pack wraps the calendar. | PropertyMe, Console, PropertyTree |
-| Bookkeeping practice (the channel) | A multi-client workspace running the Yellow and Hold queues for trade and property clients | Xero and MYOB practices. Per-client billing, the same motion as Office Voice. |
+| Bookkeeping practice (the channel) | A multi-client workspace running the Yellow and Hold queues for trade and property clients | Xero and MYOB practices. Per-client billing, the same motion as our Get Paid. |
 
 BAS, IAS and ASIC annual statements stay with the practice and the registered agent. This standard does not pick a fight with the tax agent rail. It writes status back if a partner rail exists.
 
@@ -286,9 +286,9 @@ BAS, IAS and ASIC annual statements stay with the practice and the registered ag
 
 The roadmap already says QA and compliance come after the pipeline is predictable. Keep that. This is not a first project for a shop that still misses the phone.
 
-- If the leak is missed calls: the Booked After Hours standard. Office Voice Front Desk, which answers all day, is the step not to hand-roll. Not this.
-- If the leak is unpaid invoices: the Debtor Chasing standard. Office Voice is the step not to hand-roll.
-- If the leak is a quiet database: the Database Reactivation standard. The calls are yours from a daily list; a callback someone asked for is Office Voice’s governed call, the step not to hand-roll.
+- If the leak is missed calls: the Booked After Hours standard. Front Desk from AI Pathway, which answers all day, is the step not to hand-roll. Not this.
+- If the leak is unpaid invoices: the Debtor Chasing standard. AI Pathway is the step not to hand-roll.
+- If the leak is a quiet database: the Database Reactivation standard. The calls are yours from a daily list; a callback someone asked for is our governed call, the step not to hand-roll.
 - If the leak is packs failing after the work: this standard. A scoped build if the binding layer is the cost.
 
 The diagnosis still names the job. The $500 audit still says product, build, or leave it alone.
@@ -359,7 +359,7 @@ The pack is an object, not a directory. If it cannot be handed to an inspector, 
 
 ## 14. Connect the library where your licences and certificates sit, and your job system, without it changing a document
 
-The build uses your document library the way a library card does: it reads what is on the shelf, and it never writes in the margins or takes a book home. It reads the certificates, licences and policies where they already sit, reads the work type and site from the job system, and writes one thing: the handover pack for each location, as a new version. It never edits, moves or deletes a certificate, never files with a regulator, never sends a pack to a builder or insurer, and never tells anyone they are compliant. Remove its access in Microsoft 365 or Google, or revoke its key in the job system, and it reads nothing more. Your own login stays yours: the build connects with its own app registration or key, never your username and password.
+It builds the handover pack for each location from the documents you already hold. It reads the certificates, licences and policies where they already sit, and the work type and site from your job system, then writes the pack as a new version. You sign off each pack and decide what it claims. Your own login stays yours: the build connects with its own app registration or key, never your username and password.
 
 What each piece of access is for.
 

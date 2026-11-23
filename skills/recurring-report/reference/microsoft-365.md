@@ -24,7 +24,7 @@ Most of this already exists in your tenant, and that is the problem. Power BI wi
 - **What this is**: A build plan for the recurring report standard on Microsoft 365. Six lists, four flows, and one design decision that the rest of the page follows from.
 - **The core rule**: Every figure is stored with its definition, its source and the time that source was read. Power BI reads those rows. It does not produce them, because a failed refresh renders the last good data and says nothing.
 - **What it does not do**: It does not show last period's value when a source cannot be read, and it does not change a published report. A correction is a new version with a name and a reason on it.
-- **The hard part**: Not the query. Making could not be read into something the report is able to say, on a platform whose default behaviour is to keep showing the last number that worked.
+- **The hard part**: Getting the report to say a source could not be read, on a platform whose default behaviour is to keep showing the last number that worked.
 
 ## 1. Before you start
 
@@ -225,14 +225,14 @@ This model reports on the reporting rather than on the business. The figures the
 
 ## 6. What the flows can read in your Microsoft 365, your ledger and your job system, and what they never touch
 
-The flows are a paper round: the same paper, to the same doors, at the same time every week, whatever the news, and nobody on the round rewrites last week’s paper. They read each source the register names, write the figures and the reports into this one SharePoint site, and post each version to its audience. They never edit an invoice, a job or a contact, never post a journal, and never change a published report: a correction is a new version by a named person.
+The flows write your regular report from the figures you already keep. They read your ledger, your job system and the other sources you list, keep the figures and the reports in one SharePoint site, and post each version to its audience. You make any correction, and you decide whether a report goes outside the business.
 
 What each connection is for.
 
 - **SharePoint, this one site.** Read and write on the six lists. Only the flows’ account contributes to Reports and Figures; everybody else reads.
 - **Your ledger, read.** Xero or MYOB, for the money measures the register defines, through a custom connector or the HTTP action, both premium in Power Automate. Xero gives apps created from March 2026 granular scopes, so ask only for the read scopes your definitions name.
 - **Your job system, read.** ServiceM8, Simpro or whatever runs the work, the same way, for measures like jobs completed in the week.
-- **An Office Voice key with “Read the book”, if the report carries debtors.** Called from the flow at `https://office-voice.com/api/mcp` with a bearer key from the Keys page in Office Voice. It lists what is overdue now and the invoices raised since a date, up to 120 days back. A measure that needs a longer history reads the ledger directly. The report needs nothing else from the key, so leave “Write drafts and notes” and “Queue calls” off.
+- **An AI Pathway key with “Read the book”, if the report carries debtors.** Called from the flow at `https://connect.aipathway.com.au/api/mcp` with a bearer key from the Keys page in AI Pathway. It lists what is overdue now and the invoices raised since a date, up to 120 days back. A measure that needs a longer history reads the ledger directly. The report needs nothing else from the key, so leave “Write drafts and notes” and “Queue calls” off.
 - **Teams and one shared reports mailbox.** Teams posts each internal audience’s version and tells a definition’s owner when a source could not be read or a threshold moved. The shared mailbox sends the version to an audience outside the business, such as the lender.
 - **Power BI, read.** It reads the stored figure rows and writes nothing back.
 

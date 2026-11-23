@@ -17,7 +17,7 @@ Used by
 - Operations Manager
 - Scheduler
 
-The interesting part of a dispatch board is not fitting jobs into a day. It is the four things that have to be impossible: a slot on an address nobody resolved, a second slot for one job, a gas job on a lapsed licence, and a customer told twice because a flow was rerun. SharePoint can make two of those unrepresentable with a column setting. The other two are the order the flow does things in, and Power Automate will happily let you get that order wrong.
+The interesting part of a dispatch board is the four things that have to be impossible: a slot on an address nobody resolved, a second slot for one job, a gas job on a lapsed licence, and a customer told twice because a flow was rerun. SharePoint can make two of those unrepresentable with a column setting. The other two are the order the flow does things in, and Power Automate will happily let you get that order wrong.
 
 ## In short
 
@@ -230,7 +230,7 @@ Silent Jobs is the front page. Every other number here describes something visib
 
 ## 6. What the flows can reach in your Microsoft 365 and your job system, and what they never touch
 
-The build gets a pencil for the diary and no key to the till. The flows read jobs, techs and licences, write one booked time per job into the job system with its id back, keep the board’s seven lists in one SharePoint site, and send one message per version. They never create or edit an invoice or a quote, never change a price, never delete a job, never edit a licence row, and never message a customer on a channel they did not agree to. Your own login stays yours: the flows run under an account kept for them, and the job system sees a key made for the build, never your username and password.
+The flows plan the day: who goes where, and when. They read your jobs, techs and licences, book each job a time in your job system, and tell a customer once on the channel they agreed to. Anything unusual, like an emergency bumping a booked job, comes to you to decide, and you keep each tech’s licence record true. Your own login stays yours. The flows run under an account kept for them, and the job system sees a key made for the build, never your username and password.
 
 What each connection is for.
 
@@ -239,7 +239,7 @@ What each connection is for.
 - **Approvals.** So Flow 3 waits for a named dispatcher before an emergency moves anything.
 - **Outlook or the SMS account the business owns.** For Flow 2’s one confirmation to the customer and one message to the tech, sent from a shared address.
 - **Teams, optional.** For escalations and the weekly Silent Jobs post to the dispatcher.
-- **Office Voice, if you run it on ServiceM8 or Simpro.** It needs nothing from these flows. With running-late calls switched on under Automations, it rings the customer when a job moves later on the board, so a slipped day is a call as well as Flow 4’s written message.
+- **AI Pathway, if you run it on ServiceM8 or Simpro.** It needs nothing from these flows. With running-late calls switched on under Automations, it rings the customer when a job moves later on the board, so a slipped day is a call as well as Flow 4’s written message.
 
 Keep the till locked.
 

@@ -45,7 +45,7 @@ It does not answer questions; that is Cited Answer. It does not write the file; 
 
 The hard part
 
-Not getting the facts in. It is the week page 14 of the PDF is replaced, and every fact that came from page 14 has to be updated or removed. Ordinary search cannot tell you which answers used page 14. This can.
+The week page 14 of the PDF is replaced, and every fact that came from page 14 has to be updated or removed. Ordinary search cannot tell you which answers used page 14. This can.
 
 A folder of PDFs is a pile. A vector store is a pile with better search. A graph is a set of typed nodes, typed edges, and a change you can find. Embed the pile if you want. Do not call it the graph until a fact lives once and retiring a source takes its answers with it.
 
@@ -67,7 +67,7 @@ Any body of material a business will later ask an assistant to speak from, where
 
 It does not cover a personal notes database, a marketing content lake, or a chat log treated as training data. Client interviews become an advice file, not nodes in this graph, until a person promotes a claim into the library. “We do not lend on this product in Western Australia” is a policy node. “This client said they are comfortable” is not.
 
-The failure this prevents is specific. It is the answer that cites “the knowledge base” the way a student cites “the internet”. Retrieval appeared to work. Nothing in the system can show which clause, which edition, which date, or which other node will break when that file is replaced.
+The failure this prevents is the answer that cites “the knowledge base” the way a student cites “the internet”. Retrieval appeared to work. Nothing in the system can show which clause, which edition, which date, or which other node will break when that file is replaced.
 
 The phase before this one. Check 2 registers a source as an instrument as if the source were to hand. For most businesses it is in somebody’s email. The [Knowledge Base standard](https://aipathway.com.au/explore-ai/knowledge-base-build-standard) is that phase: one register with an owner per source, on the Microsoft 365 or Workspace tenant the business already runs, and a watch that notices a changed edition. The graph takes its sources from that register, never from a fresh upload. It is the long, foundational part, and it is measured in weeks for a network.
 

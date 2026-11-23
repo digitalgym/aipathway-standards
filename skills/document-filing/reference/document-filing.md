@@ -181,7 +181,7 @@ At the end of each working day the run publishes one short line: how many docume
 
 It publishes on a quiet day too. “Nothing came in, nothing is waiting” is a real answer, and a missing close is a different one: the run did not happen. Silence must never be mistaken for calm, which is the rule this standard borrows from Two Records.
 
-Duplicates are counted, not hidden. The same invoice arriving by email and through the copier is one document, recognised by its kind, its own number and its record. Not by the file: a scan and a PDF of the same page never match byte for byte, so a duplicate rule built on the file alone files every scanned invoice twice.
+Duplicates are counted, not hidden. The same invoice arriving by email and through the copier is one document, recognised by its kind, its own number and its record, never by the file. A scan and a PDF of the same page never match byte for byte, so a duplicate rule built on the file alone files every scanned invoice twice.
 
 ## 7. What stays with a person
 

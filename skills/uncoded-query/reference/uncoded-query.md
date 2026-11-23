@@ -16,11 +16,11 @@ carrying each check's id, ports, what to inject and what to assert.
 To print them: npx @aipathway/conformance show uncoded-query-build-standard
 To scaffold a folder that runs them, every check starting red: npx @aipathway/conformance init uncoded-query-build-standard
 Do the scaffolding yourself if you can run commands; the person should not have to open a terminal.
-This standard has no hosted provider; do not run conformance connect. For the checks a stub cannot prove: No hosted product writes a coding. The approval-gated, keyed write into the client's own ledger is built against that ledger's API, quoted as a scoped build. No follow-up call is offered: Office Voice has no lawful basis for one here, so the call stays with the person. Send the failing check id for a fixed price; do not build the live step yourself.
+This standard has no hosted provider; do not run conformance connect. For the checks a stub cannot prove: No hosted product writes a coding. The approval-gated, keyed write into the client's own ledger is built against that ledger's API, quoted as a scoped build. No follow-up call is offered: AI Pathway has no lawful basis for one here, so the call stays with the person. Send the failing check id for a fixed price; do not build the live step yourself.
 
 ---
 
-Chasing clients every month to explain bank lines? This standard sends each client one plain question list a month, one line at a time with a place to answer, reminds them on your schedule, turns each answer into a suggested coding from their own chart, and writes it to the ledger only after a person approves it, once. It works the same on Xero, MYOB Business and QuickBooks Online. Written so you can build it yourself.
+If you chase clients every month to explain bank lines, this standard sends each client one plain question list a month, one line at a time with a place to answer, reminds them on your schedule, turns each answer into a suggested coding from their own chart, and writes it to the ledger only after a person approves it, once. It works the same on Xero, MYOB Business and QuickBooks Online. Written so you can build it yourself.
 
 Used by
 
@@ -46,7 +46,7 @@ It never tells a client what is deductible, never invents an account, never reco
 
 The hard part
 
-Not sending the email. Writing the approved coding into a ledger you do not own, exactly once even when the connection drops mid-write, and refusing everything nobody approved.
+Writing the approved coding into a ledger you do not own, exactly once even when the connection drops mid-write, and refusing everything nobody approved.
 
 The first week of the month, and forty client files each have a handful of bank lines nobody can code. Someone builds a spreadsheet per client, emails it, and waits. Half come back with one line answered. The rest get a reminder, then another, and next month the same client is asked about a line they answered three weeks ago, because the answer is in an email thread and the line is still sitting in suspense waiting for someone to code it.
 
@@ -85,7 +85,7 @@ Every line is one plain question, built the same way: the amount, who it went to
 
 The list carries a link where the client answers each line on its own, in a few words, on a phone if they like. It goes by email, and by an SMS link to the same page where the client has a mobile on file. What the client never sees: an account code, a tax code, the word suspense, or anything about what is deductible or claimable. The client is asked what happened. What that means for tax is your call, not the message’s.
 
-Reminders follow your schedule: every so many days, up to a number you set, and only for the lines still unanswered. A line the client has answered leaves every reminder, and it stays out of next month’s list too, even while its coding waits for approval and the ledger still shows it as uncoded. After the last reminder, the client’s open lines go to a person on your team. Whether to ring the client is theirs to decide, and the build places no call. Office Voice, which places governed calls for other standards, dials only on a lawful reason such as an invoice the person owes or a callback they asked for, and a question about a bank line is none of them. So the call stays with your team.
+Reminders follow your schedule: every so many days, up to a number you set, and only for the lines still unanswered. A line the client has answered leaves every reminder, and it stays out of next month’s list too, even while its coding waits for approval and the ledger still shows it as uncoded. After the last reminder, the client’s open lines go to a person on your team. Whether to ring the client is theirs to decide, and the build places no call. AI Pathway, which places governed calls for other standards, dials only on a lawful reason such as an invoice the person owes or a callback they asked for, and a question about a bank line is none of them. So the call stays with your team.
 
 ## 3. From “tiles for the Smith St job” to an account and tax code
 

@@ -20,7 +20,7 @@ This standard has no hosted provider; do not run conformance connect. For the ch
 
 ---
 
-One deposit, ten invoices, and Xero can’t tell which? This standard reads the remittance line by line, matches each line to its invoice by number with the amount confirmed, and applies the deposit as one batch payment equal to it, so the bank line reconciles in one click. Anything that does not fit goes to a person, and nothing is written off. Written so you can build it yourself.
+One deposit pays ten invoices, and Xero can’t tell which. This standard reads the remittance line by line, matches each line to its invoice by number with the amount confirmed, and applies the deposit as one batch payment equal to it, so the bank line reconciles in one click. Anything that does not fit goes to a person, and nothing is written off. Written so you can build it yourself.
 
 Used by
 
@@ -60,7 +60,7 @@ One deposit, applied whole or not at all
 6. If every line is explained, build one batch with one payment per line, each for the line's own amount.
 7. Has a batch already been applied for this deposit? If not, apply it once: its total equals the deposit, the bank line reconciles in one click, and the remittance file is kept with it. If so, nothing new is applied, whichever copy of the remittance arrived.
 
-The filled diamond is the hard step: every line explained and the total equal to the deposit, or nothing applied. Everything before it a builder proves on the stub. The second diamond is what keeps a remittance that arrives twice from paying twice.
+The filled diamond is the hard step. Every line is explained and the total equals the deposit, or nothing is applied. Everything before it a builder proves on the stub. The second diamond is what keeps a remittance that arrives twice from paying twice.
 
 ## 1. What this standard covers
 
@@ -80,7 +80,7 @@ What is out of scope. Comparing two systems that both hold the same thing, and p
 
 What cannot meet it, and what can. The build needs a ledger that can apply one payment across many invoices through its API, and the deposit from the bank: a statement export your bank produces (CSV or OFX), or a person keying the amount, date and reference from the bank line. Xero’s API has batch payments, but it does not hand an ordinary app the unreconciled lines from your bank feed, and its bank statement endpoint is a restricted one built for lenders. MYOB and QuickBooks Online can each apply one customer payment across several invoices. Check that your own ledger can do this through its API before you start, because a ledger that only takes one payment per invoice cannot reconcile the bank line in one click, and so cannot pass check 8. A remittance that only ever arrives on paper can still be read, but someone has to scan it first.
 
-Is there a ready-made version? Not yet. No product of ours applies payments to a ledger: the Office Voice Xero connection writes drafts and notes to Xero, never payments. So this standard is a Draft, and the build is yours or a scoped build with us.
+Is there a ready-made version? Not yet. No product of ours applies payments to a ledger. Our Xero connection writes drafts and notes to Xero, never payments. So this standard is a Draft, and the build is yours or a scoped build with us.
 
 ## 2. Which invoices did that deposit pay?
 
@@ -109,7 +109,7 @@ One exception holds the whole deposit. The nine lines that matched cleanly wait 
 | reassign | The person names the invoice the line was really for. The line is matched again against that one, and its amount still has to fit. |
 | take_over | The person handles the whole deposit by hand in the ledger, for example to record an overpayment. The build applies nothing for that deposit, ever. |
 
-Once every exception line has a decision, the batch is applied, and it still equals the deposit. Nothing is corrected by the machine in the meantime. It does not write off the $10 a plan manager short paid, it does not raise a credit note for an overpayment, it does not edit the invoice to match the remittance, and it does not spread a shortfall across the payer’s other invoices. The build has no way to do any of those: the only change it can make to the ledger is the batch.
+Once every exception line has a decision, the batch is applied, and it still equals the deposit. Nothing is corrected by the machine in the meantime. It does not write off the $10 a plan manager short paid, it does not raise a credit note for an overpayment, it does not edit the invoice to match the remittance, and it does not spread a shortfall across the payer’s other invoices. The build has no way to do any of those. The only change it can make to the ledger is the batch.
 
 ## 4. The records it keeps, in the shape your developer needs
 
@@ -211,7 +211,7 @@ The deposit itself does not come through this connection. Xero’s API does not 
 
 Why not Xero’s own Claude connector? It only reads. It can find the invoices a remittance names, but it cannot apply the batch, so someone still keys the payments by hand, which is the job this standard removes.
 
-Why not an Office Voice key? Its write scope, “Write drafts and notes”, writes draft invoices, draft quotes and promise-to-pay notes. It never applies a payment, so it cannot make this job’s one change.
+Why not an AI Pathway key? Its write scope, “Write drafts and notes”, writes draft invoices, draft quotes and promise-to-pay notes. It never applies a payment, so it cannot make this job’s one change.
 
 Why not give a bot your Xero login? A login can do everything you can: write off the $10 short, raise a credit note, edit the invoice to match. Those are the changes this standard keeps with a person.
 
@@ -239,7 +239,7 @@ the stub                             # local.mock_remittances
   - no write-off, no credit note, no overpayment, no invoice edit
 
 the hard step: the batch, in production
-  - no hosted product applies payments. The Office Voice Xero
+  - no hosted product applies payments. The AI Pathway Xero
     connection writes drafts and notes, never payments. Build it against your own ledger
     and bank statements, or as a scoped build with us
   - read the deposit from a bank statement export (CSV or

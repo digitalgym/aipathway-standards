@@ -32,9 +32,9 @@ Read [the two records build standard](https://aipathway.com.au/explore-ai/two-re
 
 Decide the master per field, and write it down. Not which system is better: which one is the truth for the amount, which one for the address, which one for the date it landed. The standard calls this the decision most businesses have never made explicitly, and on this stack it is also the decision that has to exist as rows in a list before a single flow will run, because every comparison below reads it. A run that has to guess will guess differently on Tuesday.
 
-Then answer a second question, because it decides the shape of the third flow. **Can your tenant write into the target source at all?** If there is a supported way to write to the system that is not master for a field, the accepted correction is a write and the target hands back an id. If there is not, the accepted correction is a task for a person carrying the value they are to key, and they record the id the target gave them. Both are the standard. What is not the standard is a flow that writes the correction into a SharePoint copy of the ledger and treats that as the ledger.
+Then answer a second question, because it decides the shape of the third flow. **Can your tenant write into the target source at all?** If there is a supported way to write to the system that is not master for a field, the accepted correction is a write and the target hands back an id. If there is not, the accepted correction is a task for a person carrying the value they are to key, and they record the id the target gave them. Both are the standard. A flow that writes the correction into a SharePoint copy of the ledger and treats that as the ledger is not.
 
-One thing this plan does not do, deliberately: it is a report on two records that should already agree, not a gate on money leaving. Matching a supplier invoice to a purchase order before it is paid is a different standard with a different build.
+This plan is deliberately a report on two records that should already agree, not a gate on money leaving. Matching a supplier invoice to a purchase order before it is paid is a different standard with a different build.
 
 ## 2. The lists, with their columns
 
@@ -239,21 +239,21 @@ Within Tolerance is the one to watch rather than the one to be pleased about. A 
 
 ## 6. What the flows can reach in your Microsoft 365, your job system and your ledger, and what they never touch
 
-The flows hold a red pen and no eraser. Flow 1 reads both sources and marks every difference in the site; it holds no write connection to either source at all. Flow 3 alone can write, one accepted field into the target, once. No flow deletes a record, merges two customers, records a payment, or overwrites the value that was there before without keeping it on the Corrections row.
+The flows find where your job system and your ledger disagree. They read both and mark every difference in the site, and once a person accepts a correction, they write that one field into the other system, once. You accept every correction, and you decide which system is right for each field.
 
 What each connection is for.
 
 - **SharePoint, the one site.** The six lists in section 2. Every flow reads and writes there.
 - **Source A, read only.** Usually the job system. Through a custom connector or the HTTP action (both premium), or a nightly export dropped into a library that Flow 1 reads.
-- **Source B, read only.** Usually the ledger. If Office Voice is already connected to your Xero, Flow 1 can call its MCP endpoint through the HTTP action with a key from /app/keys that has only “Read the book” ticked. That gives your Xero invoices, up to 120 days back, without a second Xero connection. Bank lines come from a statement export, because Xero does not give ordinary apps the unreconciled lines on a bank feed.
+- **Source B, read only.** Usually the ledger. If AI Pathway is already connected to your Xero, Flow 1 can call its MCP endpoint through the HTTP action with a key from connect.aipathway.com.au/app/keys that has only “Read the book” ticked. That gives your Xero invoices, up to 120 days back, without a second Xero connection. Bank lines come from a statement export, because Xero does not give ordinary apps the unreconciled lines on a bank feed.
 - **The target, write, Flow 3 only.** Its own connection, separate from the read connection Flow 1 uses, with the narrowest permission that can change the fields the contract lets a correction touch. Where the target has no way in, there is no write connection at all, and Flow 3 makes a task for a person.
 - **Teams and Approvals.** Flow 2’s card, with both values and the master’s value side by side.
 
 Least privilege, in practice. All four flows belong to the automation service account and sit in one solution, with the read and write connections as separate connection references, so you can remove the write and keep the comparison running. That account is a member of this site only. If an app registration is used, give it Sites.Selected on this one site. The full conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365#access).
 
-How to cut it off. Turn off Flow 3, or remove its write connection, and nothing more is written while the comparison keeps publishing. Delete the Office Voice key at /app/keys, revoke the job system’s key, or disconnect the app in Xero, and nothing more is read. The differences, corrections and both original values stay in the site.
+How to cut it off. Turn off Flow 3, or remove its write connection, and nothing more is written while the comparison keeps publishing. Delete the AI Pathway key at connect.aipathway.com.au/app/keys, revoke the job system’s key, or disconnect the app in Xero, and nothing more is read. The differences, corrections and both original values stay in the site.
 
-Why not merge the two in Power Query or Power BI? It is a good way to see the differences, and it writes nothing, which is half of this standard. What it does not keep is a difference as a row with an owner, who accepted the fix, or a lock that makes the fix land once, and each refresh replaces yesterday’s view. Use it to look; use the flows to keep the record.
+Why not merge the two in Power Query or Power BI? It is a good way to see the differences, and it writes nothing, which is half of this standard. It does not keep a difference as a row with an owner, who accepted the fix, or a lock that makes the fix land once, and each refresh replaces yesterday’s view. Use it to look; use the flows to keep the record.
 
 ## 7. The order to build it in
 

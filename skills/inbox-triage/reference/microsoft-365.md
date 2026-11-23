@@ -17,7 +17,7 @@ Used by
 - Business Systems Analyst
 - Office Administrator
 
-The shared mailbox is the one place in this stack where Microsoft has already done the hard part. Every message arriving in a shared mailbox carries a conversation id, which is exactly the key the standard needs for one thread, one item. What Power Automate will let you do is raise a second item anyway, acknowledge a complaint on the way past, and delete something. None of those three is a capability problem. Each is a branch in the wrong place.
+The shared mailbox is the one place in this stack where Microsoft has already done the hard part. Every message arriving in a shared mailbox carries a conversation id, which is exactly the key the standard needs for one thread, one item. What Power Automate will let you do is raise a second item anyway, acknowledge a complaint on the way past, and delete something. Each of those three is a branch in the wrong place.
 
 ## In short
 
@@ -215,11 +215,11 @@ AVERAGEX (
 )
 ```
 
-Acknowledged Complaints is the canary and it belongs on the front page even though it should read zero forever. A measure that is always zero is worth keeping precisely when the day it is not zero is the day somebody sent a cheerful automatic reply to a customer who was already angry.
+Acknowledged Complaints belongs on the front page even though it should read zero forever. The day it is not zero is the day somebody sent a cheerful automatic reply to a customer who was already angry.
 
 ## 6. What the flows can reach in your mailbox and your job system, and what they never touch
 
-Think of the flows as the mail room. They open every envelope that comes to the one counter, sort it into a pigeonhole with a person’s name on it, and put supplier invoices in the evidence drawer. The mail room has no shredder, and nothing leaves it without a signature. In practice that means they read the one shared mailbox, write the lists and libraries on one SharePoint site, look up a job or supplier id, and send an acknowledgement or a released reply from that mailbox. They never delete a message, never open anyone’s own inbox, and never edit a job, a bill or a payment.
+The flows sort the shared inbox so each email reaches the right person. They read the shared mailbox, match each email to its job or supplier, file supplier invoices as evidence, and send an acknowledgement from that mailbox. You release every reply with a price, a date or a decision in it, and complaints, and whether a supplier invoice is genuine, are yours to decide.
 
 What each connection is for.
 
@@ -227,7 +227,7 @@ What each connection is for.
 - **SharePoint, one site.** The six lists and three libraries: the item, the raw message, the attachment and its index row. Nothing outside that site.
 - **Approvals and Teams.** The release in Flow 2, and the escalation in Flows 1 and 3 to the person on the Queues row.
 - **The job system.** A custom connector or the HTTP action (both premium in Power Automate) against its API, to find the job id and attach the message to it. ServiceM8 and Simpro both have one. Tradify has no public API and no Zapier app, so for a Tradify business this connection does not exist: file against the supplier in Xero and keep the Tradify job number on the item.
-- **Xero, for supplier ids only.** The flow needs the id, not the ledger. A supplier list refreshed into a lookup list on a schedule is enough; a custom connector or the HTTP action against your own Xero app also works, and is premium. Office Voice is not part of this build: the standard names no hosted step for it.
+- **Xero, for supplier ids only.** The flow needs the id, not the ledger. A supplier list refreshed into a lookup list on a schedule is enough; a custom connector or the HTTP action against your own Xero app also works, and is premium. AI Pathway is not part of this build: the standard names no hosted step for it.
 
 Keep it to the least it needs.
 

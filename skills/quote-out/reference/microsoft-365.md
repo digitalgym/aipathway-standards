@@ -228,13 +228,13 @@ Hours To Draft belongs on the front page and nothing else on this list competes 
 
 ## 6. What the flows can reach in your Microsoft 365, your job system and Xero, and what they never touch
 
-The flows work like a typist who prepares the letter and leaves it on your desk to sign. Everything is filled in from your own records, and nothing goes in the post until you put it there. They read the job and your price list, keep the queue, the parked lines and the log in this one SharePoint site, and write one draft quote into the system of record. They never send a quote, never mark one accepted, never change a price in your price list, and never touch an invoice or a payment.
+The flows create a draft quote, ready for you to sign off and send. They read the job, price every line from your own price list, and write one draft quote into your job system. Anything your list doesn’t cover, and any discount, is yours to decide.
 
 What each connection is for.
 
 - **SharePoint, this one site.** Read and write on the seven lists. It is the only place in Microsoft 365 the flows write, and it has no document library.
-- **The job, read.** The only trigger for a quote. From ServiceM8 or Simpro through a custom connector or the HTTP action, both premium in Power Automate, or through Office Voice’s `read_job`. A Tradify job comes from its enquiry email or job export, because Tradify has no public API and no Zapier app.
-- **An Office Voice key, for the draft into Xero.** Called from the flow at `https://office-voice.com/api/mcp` with a bearer key made on the Keys page in Office Voice. “Read the book” covers `read_pricebook`, your Xero Items read fresh at draft time. “Write drafts and notes” covers `draft_quote`, which takes catalogue ids and quantities, never a rate. Leave “Queue calls” off: this build rings nobody. Quote drafting stays off until the owner reconnects Xero with it on.
+- **The job, read.** The only trigger for a quote. From ServiceM8 or Simpro through a custom connector or the HTTP action, both premium in Power Automate, or through AI Pathway’s `read_job`. A Tradify job comes from its enquiry email or job export, because Tradify has no public API and no Zapier app.
+- **An AI Pathway key, for the draft into Xero.** Called from the flow at `https://connect.aipathway.com.au/api/mcp` with a bearer key made at connect.aipathway.com.au/app/keys. “Read the book” covers `read_pricebook`, your Xero Items read fresh at draft time. “Write drafts and notes” covers `draft_quote`, which takes catalogue ids and quantities, never a rate. Leave “Queue calls” off: this build rings nobody. Quote drafting stays off until the owner reconnects Xero with it on.
 - **Teams.** To post the park queue and any write that came back without an id, to the channel the owner watches.
 - **Power BI, read.** It reads the lists to draw the measures and writes nothing back.
 
@@ -244,9 +244,9 @@ Keep each one to the least it needs.
 2. Create every connection as the service account and use it through the solution’s connection references, so nobody’s own login sits inside a flow.
 3. Give the service account access to this one site and no other. If an app registration is used instead, grant it Sites.Selected and give it this site alone.
 4. Give the flows no mailbox. Nothing here sends, so there is no Outlook connection to scope, and leaving it out is part of the fence.
-5. Put the Office Voice key in a custom connector’s connection rather than in an HTTP action’s header, where anyone who can edit the flow can read it. Tick only the two scopes above.
+5. Put the AI Pathway key in a custom connector’s connection rather than in an HTTP action’s header, where anyone who can edit the flow can read it. Tick only the two scopes above.
 
-How to cut it off. Turn the flows off in Power Automate and no more drafts are written. Revoke the key on the Keys page in Office Voice, or disconnect Office Voice under Connected apps in Xero’s settings, and Xero receives nothing more. Block sign-in on the service account and every connection it owns stops working.
+How to cut it off. Turn the flows off in Power Automate and no more drafts are written. Revoke the key at connect.aipathway.com.au/app/keys, or disconnect AI Pathway under Connected apps in Xero’s settings, and Xero receives nothing more. Block sign-in on the service account and every connection it owns stops working.
 
 Why not have Copilot write the quote in Word? It will produce a tidy quote in a minute, from whatever it read, and the result is a document in your tenant: the second place to look that the standard’s first rule forbids, priced from a rate it may have rounded or remembered. `draft_quote` accepts only catalogue ids, so Xero prices every line from your own Items and the draft sits where you already send quotes from.
 
@@ -285,7 +285,7 @@ Power Automate marks the write step green and moves to the next one, so the obvi
 - Pricing a variation to a quote that has already been accepted. It parks as variation and a person prices it, because it changes something already agreed.
 - Any discount. The customer asking for a number off the book is a negotiation, and the standard prices the catalogue rather than the negotiation.
 - Any line the price list does not cover. The whole quote parks with the priced lines attached. A build that estimates its way around a missing catalogue line is not a conforming build, it is a liability with a total on it.
-- The authenticated write into ServiceM8, Simpro or Xero. That call leaves Microsoft 365 entirely, and holding the credential relationship with a vendor tenant is the step the standard tells you not to hand-roll. For Xero, Office Voice's draft_quote is that step.
+- The authenticated write into ServiceM8, Simpro or Xero. That call leaves Microsoft 365 entirely, and holding the credential relationship with a vendor tenant is the step the standard tells you not to hand-roll. For Xero, AI Pathway's draft_quote is that step.
 
 **The pass test.** Stage one job in a test tenant where the work needs three things on your price list and one thing that is not on it. Run Flow 1 through Flow 3. You must get exactly one Quotes row at State parked, with TotalExGst blank, three QuoteLines each carrying a real CatalogueId and a PricebookReadAt stamped after the job arrived, and one Unmatched row reading not_in_pricebook. Nothing may exist in the tenant yet, because a parked quote is not a drafted one. Now add the missing item to the price list, resolve the Unmatched row, and let it run again: one draft in the tenant, one ExternalId, DuplicateOf pointing at the first pass, and still exactly one Quotes row. Twenty minutes on a test tenant. If the second pass created a second row, Flow 1 is writing before it reads. If the first pass produced a total, Flow 2 drafted around the parked line, and that is the one failure on this page that costs real money. If any line carries a UnitRate and no CatalogueId, you cannot tell anybody where that number came from, which was the whole reason for the column.
 

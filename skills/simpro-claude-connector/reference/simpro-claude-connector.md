@@ -59,7 +59,7 @@ One question, answered from your Simpro
 6. If yes, the connector first looks for the record that already exists: by its own reference, and for a caller by phone number reduced to digits.
 7. Is it already in Simpro? If yes, it uses that record, so one request makes one record. If no, it saves the record once, at Simpro's first status, and never moves it to another status. Nothing is sent to a customer.
 
-The key comes first, and it is yours. Every answer is looked up fresh, with every detail asked for. The filled diamond is a save: most questions never reach it, and those that do check for an existing record first. Nothing on this path messages a customer or changes a status.
+The key comes first, and it is yours. Every answer is looked up fresh, with every detail asked for. The filled diamond is a save. Most questions never reach it, and those that do check for an existing record first. Nothing on this path messages a customer or changes a status.
 
 ## 1. Claude answers from your Simpro, and you can check every answer
 
@@ -71,7 +71,7 @@ Simpro lets its customers connect software to their own account, under its API l
 
 ## 2. Connect Simpro to Claude on a key you request, without it messaging a customer or moving a job
 
-Think of the key as the site key you cut for a subcontractor: it opens the whole site, so the rules about what they touch are written down, and you take it back in one step. Treat a Simpro API key the same way, as opening your whole Simpro. The fence is in the build: it reads quotes, jobs, customers and invoices, and at most books one job at Simpro’s first status, and it logs every request where you can read it. It never emails or texts anyone, never moves a job or quote to another status, and never acts on a note inside a record. Remove the application in Simpro and it is cut off. Simpro no longer lets you cut the key yourself: you request it, and Simpro reviews the request. Your own login stays yours: the build connects with its own key, never your username and password.
+It lets Claude answer from your live Simpro. It reads your quotes, jobs, customers and invoices, books one new job at Simpro’s first status if you want bookings, and logs every request where you can read it. You request the key from Simpro, you move every job and quote along, and anything a customer sees is yours. Your own login stays yours: the build connects with its own key, never your username and password.
 
 What each piece of access is for.
 
@@ -89,7 +89,7 @@ What each piece of access is for.
 6. Decide whether Claude may book jobs. If not, tell your developer to leave the write out.
 7. Run the pass test below, removing the application last. Turning it back on afterwards means asking Simpro again, so use a test application if you can.
 
-Rather not build it? Simpro does not offer a Claude connector of its own. AI Pathway runs one: paste its address into Claude, sign in with Simpro and pick your company, and it reads quotes, jobs, customers and overdue invoices live, read-only, in about two minutes (the [step-by-step guide](https://aipathway.com.au/explore-ai/claude-and-simpro#signin) shows it). That runs on a sign-in you approved in Simpro, on our service. This standard is for building your own, where the key, the connector and the log all stay in systems you control. And if what you want is a customer rung when their job slips on the board, that is not this connector, which never contacts anyone: Office Voice makes that running-late call from your Simpro board once you switch it on under Automations.
+Rather not build it? Simpro does not offer a Claude connector of its own. AI Pathway runs one: paste its address into Claude, sign in with Simpro and pick your company, and it reads quotes, jobs, customers and overdue invoices live, read-only, in about two minutes (the [step-by-step guide](https://aipathway.com.au/explore-ai/claude-and-simpro#signin) shows it). That runs on a sign-in you approved in Simpro, on our service. This standard is for building your own, where the key, the connector and the log all stay in systems you control. And if what you want is a customer rung when their job slips on the board, that is not this connector, which never contacts anyone. We make that running-late call from your Simpro board once you switch it on under Automations.
 
 Where it runs. On a computer or account you own, as an MCP server Claude connects to, or in Microsoft 365 with the key held in a custom connector (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/simpro-connector-on-microsoft-365) lays it out). Both are held to the same checks; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
 

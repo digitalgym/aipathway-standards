@@ -45,7 +45,7 @@ It does not spend over the threshold, does not accept a supplier's substitution,
 
 The hard part
 
-Not the picking. The job that was ordered on Monday and again on Wednesday because nobody read back, and the docket that was signed on site and never compared to what was ordered.
+The job that was ordered on Monday and again on Wednesday because nobody read back, and the docket that was signed on site and never compared to what was ordered.
 
 The job needed forty metres of pipe. Thirty were on the shelf, sixty were ordered, twice, at last month’s price, from a supplier who sent a substitute nobody agreed to. The docket was signed on site and filed. The invoice for all of it arrived three weeks later and was paid because it matched the docket. None of that was fraud. It was ordering without a standard.
 
@@ -152,7 +152,7 @@ The matched delivery is the record the supplier’s invoice should be compared a
 
 ## 7. Connect your job system and supplier accounts for orders, without it spending over your limit
 
-The build gets what a fuel card gives a driver: it buys what it is for, from the places you named, up to a limit, and every purchase shows on the statement. It reads the job’s material list, the stock on hand and the supplier’s catalogue, and writes one order per job and supplier. It never releases an order over your threshold, never orders from a supplier you have not approved, never accepts a substitute and never pays the supplier’s invoice. Revoke its key or app connection in the job system and it is cut off. Your own login stays yours: the build connects with its own key or app connection, never your username and password, and it never holds the password to your trade account.
+It orders each job’s materials, once, from your approved suppliers. It reads the job’s material list, the stock on hand and the supplier’s catalogue, and writes one order per job and supplier. Any order over your limit, any new supplier, any substitute and any delivery that doesn’t match comes to you to decide. Your own login stays yours. The build connects with its own key or app connection, never your username and password, and it never holds the password to your trade account.
 
 What each piece of access is for.
 

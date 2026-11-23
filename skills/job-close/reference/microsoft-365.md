@@ -30,7 +30,7 @@ The tech already knows what they did, which parts went in and how long it took. 
 
 Read [the job close build standard](https://aipathway.com.au/explore-ai/job-close-build-standard) first. It defines its objects, and the lists below are those objects with SharePoint types on them. Shared conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-Fill PriceBook first. Export the catalogue from ServiceM8 or Simpro and import it, then spend twenty minutes with a tech adding the words they actually say to Aliases: “15 mil elbow”, “TMV”. That list decides how much gets parked.
+Fill PriceBook first. Export the catalogue from ServiceM8 or Simpro and import it, then spend twenty minutes with a tech adding the words they actually say to Aliases: “15 mil elbow”, “TMV”. The more words on that list, the less gets parked.
 
 Then name the owners: who prices a part the book does not hold (the office manager, usually), who prices a variation, and who supervises each tech. Every exception goes to one of them by name.
 
@@ -158,7 +158,7 @@ Flow 3 is the only flow that touches the job system's writes, and it always star
 
 ## 5. What the flows can reach in your Microsoft 365, and what they never touch
 
-Think of it as the apprentice who fills in the job sheet from what you tell them in the van: they write down what you said, look every part up in the price list, read it back to you, and only file it when you nod. The flows read and write the five lists on one SharePoint site, read and write job cards in your job system through one key, and email from one shared mailbox. None of them creates a job, sends an invoice, edits a Captures row, or opens anyone’s own inbox.
+The flows fill in the job card from what the tech says on site. They write down what the tech said, look every part up in your price list, and read the card back before it goes into your job system. The tech confirms each card from their own phone, and any part not in your price list, and any variation, is yours to price.
 
 What each connection is for.
 

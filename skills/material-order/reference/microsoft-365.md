@@ -259,7 +259,7 @@ Waiting Release Ageing Days is the one that tells you whether the threshold is s
 
 ## 6. What the flows can reach in your Microsoft 365, your job system and your suppliers, and what they never touch
 
-Think of the flows as the storeman behind the trade counter. They can see the shelf, write the order slip and check what came off the truck against it. They do not hold the chequebook, and they cannot open an account with a new supplier. In practice the flows read the job’s material lines, the Stock list and each supplier’s Catalogue list, write reservations, orders, delivery lines and variances into this one SharePoint site, and hand each released order to the job system or the supplier’s orders address. They never pay a supplier, never set Suppliers.Approved, never accept a substitute, and never hold the password to your trade account.
+The flows order each job’s materials and check what arrives. They read the job’s material list, your stock and each supplier’s catalogue, set aside what’s already in stock, and send each released order to your job system or the supplier’s orders address. You release any order over your limit, approve new suppliers and accept any substitute, and anything that doesn’t match on delivery comes to you.
 
 What each connection is for.
 

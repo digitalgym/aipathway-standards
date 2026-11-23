@@ -50,7 +50,7 @@ Why we publish it
 
 A check built to a shared standard can be audited, handed over and trusted. One built ad hoc leaves when its author does.
 
-Most people who need this can build it. A competent bookkeeper with AI tools, or a developer with a week, will get something running. What separates the ones still running in two years from the ones quietly abandoned is not the model or the language. It is the order of the checks, what happens to an exception, and whether anyone can tell that it ran. That is what this specifies.
+Most people who need this can build it. A competent bookkeeper with AI tools, or a developer with a week, will get something running. What separates the ones still running in two years from the ones quietly abandoned is the order of the checks, what happens to an exception, and whether anyone can tell that it ran. The model and the language matter less. That is what this specifies.
 
 The four checks, in order
 
@@ -129,7 +129,7 @@ The third queue is the one people leave out, and it is the one that decides adop
 
 ## 4. The exception record
 
-An exception is not a notification. It is a record, and it needs enough on it that a person can decide without opening anything else:
+An exception is a record rather than a notification, and it needs enough on it that a person can decide without opening anything else:
 
 - **What arrived**: invoice number, supplier, amount, and a link to the source document
 - **What was expected**: the PO or contract reference and its figure
@@ -216,13 +216,13 @@ The most valuable output is often check three: making the absence of a written v
 
 ## 9. Connect your accounts inbox and Xero or MYOB for invoice checks, without it paying anyone
 
-The build gets the access a proofreader gets: it reads every page and marks what does not agree, and it never signs off the print run. It reads the invoices that land in your accounts inbox, the purchase orders, bills and contacts in Xero or MYOB, and the folder where your written variation approvals live. It files each invoice into one of the four queues and, if you allow it, drafts the bill or the query. It never approves or pays a bill, never changes a purchase order, a rate or a contact, never replies to a supplier on its own and never deletes an email. Remove its connection in Xero or MYOB and in your mailbox and it is cut off. Your own login stays yours: the build connects through Xero’s or MYOB’s own sign-in and your mailbox’s own approval screen, never with your username and password.
+It checks each invoice that comes in against what you ordered and approved. It reads the invoices in your accounts inbox, your purchase orders, bills and contacts in Xero or MYOB, and your written variation approvals, then files each invoice into one of four queues and, if you allow it, drafts the bill or the query. Approving the bill stays with you, and so do variations and any dispute with a subcontractor. Your own login stays yours. The build connects through Xero’s or MYOB’s own sign-in and your mailbox’s own approval screen, never with your username and password.
 
 **What each piece of access is for.**
 
 - **The accounts inbox, read.** Invoices arrive as attachments from people outside your systems. The build reads them and labels each one once it is filed, so nobody checks it twice.
 - **Purchase orders and contacts, read.** The other half of checks 1, 2 and 4: the agreed rate, the quantity and the contract sum.
-- **Bills, read.** To see whether this invoice is already in the ledger, so the same claim is never checked or drafted twice. If Xero is already connected to Office Voice, a key with Read the book lists the bills in Xero for this read. Office Voice does not read purchase orders, so those still come through the build’s own connection.
+- **Bills, read.** To see whether this invoice is already in the ledger, so the same claim is never checked or drafted twice. If Xero is already connected to AI Pathway, a key with Read the book lists the bills in Xero for this read. AI Pathway does not read purchase orders, so those still come through the build’s own connection.
 - **The variation approvals, read.** The folder or list where written approvals live, for check 3.
 - **Bills, draft only, if you want it.** To draft a clean match as a bill for a person to approve. The permission that lets an app draft a bill in Xero also lets it approve one, so the stop at draft is in the build, and the pass test checks it.
 
@@ -277,7 +277,7 @@ The exception keeps its date and its evidence after it is closed. In an industry
 
 ## 11. What your developer builds, and the step that needs care
 
-There is nothing to buy here, and the block says so rather than pointing at something adjacent. The reason is section 6: the hard part is the binding between an invoice line and the approval record, and that binding is specific to how a business already works.
+There is nothing to buy here, and the block says so rather than pointing at something adjacent. The reason is in section 6. The hard part is the binding between an invoice line and the approval record, and that binding is specific to how a business already works.
 
 ```
 provider:

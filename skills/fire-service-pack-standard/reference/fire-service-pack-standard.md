@@ -47,7 +47,7 @@ The hard part
 
 Unbound work is invisible unless you build the queue. Nothing surfaces it on its own, and it ages quietly.
 
-In this trade the work and the record of the work are not two things. A test that was performed correctly and recorded against the wrong asset, or with no photograph of the tag, is worth nothing to the person who has to rely on it. The failure is almost never the technician. It is that the system let the job close.
+In this trade the work and the record of the work are not two things. A test that was performed correctly and recorded against the wrong asset, or with no photograph of the tag, is worth nothing to the person who has to rely on it. The failure is almost always the system letting the job close, rarely the technician.
 
 One visit, and whether it counts
 
@@ -117,7 +117,7 @@ A different trade with a different pack. Defect codes that mean something for a 
 
 ## 5. The exception that needs naming
 
-An asset taken out of service temporarily is a legitimate outcome and it is the one exception most systems handle badly, because it looks like a resolution. It is not. An isolation without a retest date is a defect wearing a different label, and it is the state most likely to still be true a year later with nobody accountable.
+An asset taken out of service temporarily is a legitimate outcome and it is the one exception most systems handle badly, because it looks like a resolution. An isolation without a retest date is a defect wearing a different label, and it is the state most likely to still be true a year later with nobody accountable.
 
 Record it as its own result, with who authorised it, why, and the date it must be revisited. If that date passes, it escalates like any other breached obligation and it does not clear itself when the work is eventually done.
 
@@ -194,7 +194,7 @@ The two fields that carry the whole standard are service_record.asset_id and evi
 
 ## 9. Connect your job system and document store to the pack, without it signing anything
 
-The build gets the access a filing clerk gets: it can open the drawer and file the sheet, but it has no pen to sign with. It reads completed visits, their photographs and readings, and the asset register, and it files the bound evidence and a draft pack, marked as a draft, in one folder you choose. The issued copy is saved separately, only once a person has signed it. It never marks a result as a pass, never signs or attests, never deletes evidence, and never touches a file outside that folder. Revoke its key in the job system and remove its access to the folder, and it is cut off. Your own login stays yours: the build connects with its own key or app connection, never your username and password.
+It puts the service pack together, ready for you to sign. It reads completed visits, their photographs and readings, and the asset register, and files the evidence and a draft pack in one folder you choose. You decide who is competent, and you sign and attest; the issued copy is saved only once a person has signed it. Your own login stays yours. The build connects with its own key or app connection, never your username and password.
 
 What each piece of access is for.
 

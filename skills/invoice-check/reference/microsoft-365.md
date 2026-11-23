@@ -17,7 +17,7 @@ Used by
 - Contract Administrator
 - Commercial Manager
 
-The thing that makes this workflow work is not the extraction. It is that the checks run in an order, stop when one fails, and leave a record that outlives the decision somebody made about it. Power Automate makes the first of those slightly awkward and the second entirely up to you, which is why both are called out here.
+What makes this workflow work is that the checks run in an order, stop when one fails, and leave a record that outlives the decision somebody made about it. Power Automate makes the first of those slightly awkward and the second entirely up to you, which is why both are called out here.
 
 ## In short
 
@@ -158,14 +158,14 @@ Cumulative By Order is the measure the standard is really arguing for. Put it on
 
 ## 6. What the flows can reach in your accounts inbox and your ledger, and what they never touch
 
-The flows work like a stocktaker: they count what arrived against the order book and write down every difference, and they never hold the key to the till. They read the invoices that land in your accounts mailbox, the order or schedule each one is checked against, the bills already in the ledger and the folder of written variation approvals. They write to one SharePoint site and nowhere else. They never approve or pay a bill, never change an order, a rate or a contact, never reply to a supplier and never delete an email. Your own login stays yours: the flows run under their own account and their own keys, never your username and password.
+The flows check every subcontractor invoice against what you ordered. They match each invoice that lands in your accounts mailbox against its order or schedule, the bills already in your ledger and your written variation approvals, and write every difference down on one SharePoint site. You approve each bill, and variations and any dispute with a subcontractor are yours to decide. Your own login stays yours. The flows run under their own account and their own keys, never your username and password.
 
 What each connection is for.
 
 - **Outlook, the one shared mailbox, read.** Flow 1 starts when an invoice arrives in accounts@ or whatever your shared accounts mailbox is called. It reads the attachment and marks the email as filed, so nobody checks it twice.
 - **SharePoint, the one site, read and write.** The Originals library, where the invoice is stored unchanged, and the Invoices, CheckResults and Exceptions lists beside it.
 - **The reference, read.** The purchase order, subcontract or schedule of rates each invoice is checked against. If it lives in a list on the same site, nothing more is needed. If it lives in Xero, MYOB or the job system, read it by a custom connector or the HTTP action (both premium), or load a nightly export into a list.
-- **Bills in Xero, read, through Office Voice.** So the same claim is never checked twice. If Xero is already connected to Office Voice, a key with “Read the book” lists the bills, called from the flow over its MCP endpoint with the HTTP action or a custom connector (both premium). Office Voice does not read purchase orders, so those still come through the route above.
+- **Bills in Xero, read, through AI Pathway.** So the same claim is never checked twice. If Xero is already connected to AI Pathway, a key with “Read the book” lists the bills, called from the flow over its MCP endpoint with the HTTP action or a custom connector (both premium). AI Pathway does not read purchase orders, so those still come through the route above.
 - **The variation approvals, read.** The folder or list where written approvals live, for check 3.
 - **Teams, to announce.** A card that tells the queue owner an exception is waiting. The card is a pointer; the Exceptions row is the record.
 
@@ -176,9 +176,9 @@ Give it the least it needs.
 1. Own the flows with a service account, not a person who might leave. A flow owned by someone who leaves stops when their account is switched off.
 2. Build the flows inside a solution and share connections through its connection references, so nobody’s personal mailbox connection ends up inside a flow.
 3. Give the service account access to the one shared mailbox and the one site, and nothing else. If you use an app registration, limit its mail access to that mailbox with an Exchange application access policy or RBAC for Applications, and grant it Sites.Selected with only this site added.
-4. Create the Office Voice key under Keys with “Read the book” ticked and nothing else. Keep it in a custom connector’s connection or a secret environment variable, not typed into an HTTP action where anyone who can edit the flow can read it.
+4. Create the AI Pathway key under Keys with “Read the book” ticked and nothing else. Keep it in a custom connector’s connection or a secret environment variable, not typed into an HTTP action where anyone who can edit the flow can read it.
 
-How to cut it off. Turn off the three flows, or delete their connections in Power Automate. Delete the Office Voice key under Keys, remove the service account from the mailbox and the site, and delete the app registration’s secret if you used one. The originals and the exception history stay on the site.
+How to cut it off. Turn off the three flows, or delete their connections in Power Automate. Delete the AI Pathway key under Keys, remove the service account from the mailbox and the site, and delete the app registration’s secret if you used one. The originals and the exception history stay on the site.
 
 Why not a bill capture add-on for Xero? Bill capture reads an invoice into a bill, and does it well. It does not run the checks in order and stop at the first failure, it does not know whether a variation was ever approved, and it does not keep the cumulative position across an order. Keep it if you have it. This build sits beside it and checks what it captured.
 

@@ -183,27 +183,27 @@ Broken Links, Written Without Id and Sent Without Release are about the build, n
 
 ## 6. What the flows can reach in your job system, Xero and Microsoft 365, and what they never touch
 
-The flows work from a courier’s run sheet: they call at the named stops, collect the id they are handed, drop it at the next stop, and never wander through the building. They read jobs and invoices by id, write one job per enquiry, draft the quote and the invoice, note a promise to pay in Xero, and queue the chase once a release says it may go. They never record a payment, never approve or void an invoice, never change an amount on one already sent, never send anything without a Releases row, and never look a customer up by name. Your own logins stay yours: each system is connected on its own sign-in page or with its own key, never your username and password.
+It does the paperwork for every job, from the first enquiry to the chase. It opens the job, drafts the quote and the invoice, notes when a customer promises to pay, and lines up the chase, so nobody types the same job in twice. You check and send everything a customer sees. Your own logins stay yours: each system is connected on its own sign-in page or with its own key, never your username and password.
 
 What each connection is for.
 
 - **SharePoint, the one site, read and write.** StageOwners, Enquiries, Hops, Exceptions and Releases. Ids and owners only; no job, quote or invoice is copied in.
 - **The job system, read and write.** To find the open job on the caller’s number at intake, write one job per enquiry, and read every record back by its id. ServiceM8 by an API key or an app connection; Simpro through your company’s own API at its simprosuite.com address, approved as a user whose security group covers customers, jobs and quotes. Either one is reached by a custom connector or the HTTP action (both premium). If the job system sends events, they arrive at the When an HTTP request is received trigger, also premium; if not, the flows poll on a schedule with a watermark. Tradify has no public API and no Zapier app, so no flow can write its jobs: the call goes to its enquiries inbox, a person makes the job, and the seam starts at the ledger.
-- **Xero through Office Voice, “Read the book”.** Flows 3 and 4 read the invoice off the live ledger in the same run (list_invoices, filtered to its number), so a paid invoice is never chased.
-- **Xero through Office Voice, “Write drafts and notes”.** The invoice draft from the accepted quote, and a promise to pay noted on the invoice. Drafts and notes only, never a payment.
-- **Office Voice, “Queue calls”.** Flow 4 hands an overdue invoice to the Get Paid call once its Releases row exists.
+- **Xero through AI Pathway, “Read the book”.** Flows 3 and 4 read the invoice off the live ledger in the same run (list_invoices, filtered to its number), so a paid invoice is never chased.
+- **Xero through AI Pathway, “Write drafts and notes”.** The invoice draft from the accepted quote, and a promise to pay noted on the invoice. Drafts and notes only, never a payment.
+- **AI Pathway, “Queue calls”.** Flow 4 hands an overdue invoice to the Get Paid call once its Releases row exists.
 - **Teams, to tell the owner.** Each new Exceptions row is posted to the person StageOwners names for that stage. The post points at the row; the row is the exception.
 
-All three Office Voice boxes sit on one key, created under Keys in Office Voice and called from the flows over its MCP endpoint by the HTTP action or a custom connector. This plan adds no mailbox access: any quote or invoice email goes out from the hop plan’s own send step.
+All three AI Pathway boxes sit on one key, created under Keys at connect.aipathway.com.au/app/keys and called from the flows over its MCP endpoint by the HTTP action or a custom connector. This plan adds no mailbox access: any quote or invoice email goes out from the hop plan’s own send step.
 
 Give it the least it needs.
 
 1. Own the flows with a service account, not a person who might leave. A flow owned by someone who leaves stops when their account is switched off.
 2. Build the four flows inside a solution and share connections through its connection references, so nobody’s personal connection ends up inside a flow.
 3. Make the service account a member of this one site and no other. If you use an app registration instead, grant it Sites.Selected with only this site added, and if it ever needs a mailbox, limit it to one shared mailbox with an Exchange application access policy or RBAC for Applications.
-4. Keep the Office Voice key and the job system key in a custom connector’s connection or a secret environment variable, not typed into an HTTP action where anyone who can edit the flow can read them.
+4. Keep your AI Pathway key and the job system key in a custom connector’s connection or a secret environment variable, not typed into an HTTP action where anyone who can edit the flow can read them.
 
-How to cut it off. Turn off the four flows, or delete their connections in Power Automate. Delete the key under Keys in Office Voice, remove the connection or key in ServiceM8 or Simpro, and remove the service account from the site. The Hops log stays, so you can still see where every id went.
+How to cut it off. Turn off the four flows, or delete their connections in Power Automate. Delete the key under Keys at connect.aipathway.com.au/app/keys, remove the connection or key in ServiceM8 or Simpro, and remove the service account from the site. The Hops log stays, so you can still see where every id went.
 
 Why not a ready-made job-system-to-Xero recipe in an integration platform? Most move one record from one system to another, and do it well. Ask whether it carries the job id through four hops, stops the next step when a write comes back with no id, and puts a named owner on the exception. If not, each hop will look fine and the chain will still break between them, which is what this plan is for.
 

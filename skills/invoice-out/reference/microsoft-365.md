@@ -136,7 +136,7 @@ FLOW 1  Draft on completion
 FLOW 2  Get it into the ledger
   trigger  an Invoices item reaches Status = draft
   logic    hand the row to whatever holds the ledger credentials
-           (Office Voice's draft_invoice, by default), and store the
+           (AI Pathway's draft_invoice, by default), and store the
            id that comes back in ExternalId
            nothing back -> Status = parked, ParkReason = write_failed
   never    treat a successful flow run as a successful write. The run
@@ -155,7 +155,7 @@ FLOW 3  Release
 FLOW 4  Send, and close the record
   trigger  ReleasedBy or ReleasedByRule is written
   logic    the send happens in the ledger, then write SentAt
-           through Office Voice the flow cannot approve or email in
+           through AI Pathway the flow cannot approve or email in
              Xero: the released invoice goes to the person who released
              it, they approve and email it in Xero, and their
              confirmation writes SentAt
@@ -211,12 +211,12 @@ Book Gaps grouped by code is the measure that pays for the build. Every park wit
 
 ## 6. What the flows can reach in your Microsoft 365 and in Xero, and what they never touch
 
-The flows fill in the invoice pad from the job sheet. They are never handed the till. They read the jobs marked complete and the lines on them, read the price book, write the lists on one SharePoint site, and through Office Voice write one draft invoice per job into Xero. They never approve an invoice, never email one to a customer, never record a payment and never change a job. With Office Voice the send stays with a person in Xero, which is why Flow 4 records the send rather than making it. Nobody’s Xero, ServiceM8 or Simpro password goes near a flow: the owner signs in on each one’s own page inside Office Voice, and the build holds one key.
+The flows draft an invoice for every finished job. They read the jobs marked complete and the lines on them, price each line from your price book, and write one draft invoice per job into Xero. You release each invoice, or set the rule that does it under your threshold, and send it from Xero, and any line your price book doesn’t hold comes to you to price. Nobody’s Xero, ServiceM8 or Simpro password goes near a flow: the owner signs in on each one’s own page inside AI Pathway, and the build holds one key.
 
 What each connection is for.
 
 - **SharePoint, one site.** Jobs, JobLines, PriceBook, Invoices, InvoiceLines, ReleaseRules and the SignedAcceptances library. Nothing outside that site.
-- **Office Voice, over its MCP endpoint.** Called at https://office-voice.com/api/mcp with a bearer key from office-voice.com/app/keys, through the HTTP action or a custom connector (both premium in Power Automate). Read the book lists finished jobs from ServiceM8 or Simpro once they are connected in Office Voice, and reads your Xero Items. Write drafts and notes writes the draft invoice, and the id comes back for ExternalId. Leave Queue calls unticked: this job never rings anyone.
+- **AI Pathway, over its MCP endpoint.** Called at https://connect.aipathway.com.au/api/mcp with a bearer key from connect.aipathway.com.au/app/keys, through the HTTP action or a custom connector (both premium in Power Automate). Read the book lists finished jobs from ServiceM8 or Simpro once they are connected in AI Pathway, and reads your Xero Items. Write drafts and notes writes the draft invoice, and the id comes back for ExternalId. Leave Queue calls unticked: this job never rings anyone.
 - **Outlook, one shared mailbox.** Only if completion reaches you as a notification email from the job system. The flows send no invoices from it.
 - **Approvals and Teams.** The release in Flow 3, to the person who set the rule.
 - **Tradify: no connection.** It has no public API and no Zapier app, so a person enters the job lines and everything from the Jobs list onwards still applies.
@@ -224,12 +224,12 @@ What each connection is for.
 Keep it to the least it needs.
 
 1. Make a service account for the build and create the flows as it, not as the bookkeeper. Flows and connections owned by a person go with them when they leave.
-2. Put the four flows in a solution and use connection references, so each connection, and the Office Voice key, is set once and every flow shares it.
+2. Put the four flows in a solution and use connection references, so each connection, and the AI Pathway key, is set once and every flow shares it.
 3. Make the service account a member of the one SharePoint site and no other. An app registration gets Sites.Selected and that site only.
 4. If completion arrives by email, give the service account Full Access to that one shared mailbox. An app registration gets its mail permission scoped to that mailbox with RBAC for Applications in Exchange Online, or an application access policy.
-5. Create the Office Voice key with Read the book and Write drafts and notes only, and keep it like a password.
+5. Create the AI Pathway key with Read the book and Write drafts and notes only, and keep it like a password.
 
-How to cut it off. Turn the flows off and nothing drafts. Delete the Office Voice key at /app/keys and the flows stop reaching Xero and the job system on the next run; removing Office Voice from Xero’s connected apps cuts Xero off for every key at once. Drafts already in Xero stay drafts until a person approves them.
+How to cut it off. Turn the flows off and nothing drafts. Delete the AI Pathway key at connect.aipathway.com.au/app/keys and the flows stop reaching Xero and the job system on the next run; removing AI Pathway from Xero’s connected apps cuts Xero off for every key at once. Drafts already in Xero stay drafts until a person approves them.
 
 Why not your own Xero app behind a custom connector? You can. Then you create the Xero app, ask for granular scopes (required for apps created from March 2026), and own the token refresh, the duplicate guard and the recovery when a write’s response is lost, from then on. That is the one write the standard’s [connect section](https://aipathway.com.au/explore-ai/invoice-out-build-standard#connect) says not to hand-roll unless the owner asks for it.
 

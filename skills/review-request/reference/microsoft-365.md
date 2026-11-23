@@ -17,7 +17,7 @@ Used by
 - Business Systems Analyst
 - Office Manager
 
-The message is the easy part. What takes thought is the same as on any stack: the flow reads the job system at the moment of sending, so a job with an open callback waits; every customer gets the words from one row in Rules, so there is nowhere for a second link to live; and an opt-out is kept against the customer, where no later job can reach it.
+The message is the easy part. The hard part is the same as on any stack: the flow reads the job system at the moment of sending, so a job with an open callback waits; every customer gets the words from one row in Rules, so there is nowhere for a second link to live; and an opt-out is kept against the customer, where no later job can reach it.
 
 ## In short
 
@@ -143,7 +143,7 @@ Flow 2 is the only flow that reads replies, and it has no send action. An owner 
 
 ## 5. What the flows can reach in your Microsoft 365 and your job system, and what they never touch
 
-The flows look through the shop window. They can see every finished job, its callbacks and its invoice state, and they cannot reach in and move one. They send one ask and one reminder from an account the business owns, file every reply as received, and alert the owner on a low score. They never edit or close a job, never change an invoice, never post or answer a review, and never send a customer anything after they reply.
+The flows ask every customer for a review once the job is done. They check each finished job, its callbacks and its invoice, send one ask and one reminder from an account the business owns, and file every reply. A low score comes to you to call the customer, and you answer every Google review and write the message they send.
 
 What each connection is for.
 

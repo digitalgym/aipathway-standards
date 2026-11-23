@@ -45,7 +45,7 @@ It does not answer questions and it does not hold facts. Search returns passages
 
 The hard part
 
-Not the search. Finding every source the business actually relies on, naming a person for each, and then noticing the week the issuer replaces one. That is a foundational project, not an afternoon.
+Finding every source the business actually relies on, naming a person for each, and then noticing the week the issuer replaces one. That is a foundational project, not an afternoon.
 
 The policy is in one person’s email. The price list is a spreadsheet on a laptop. The current edition of the manual is whichever copy was opened last. Every business has this, and every one of them is told the fix is a searchable knowledge base. The search is the easy part. The register with a name against every source is the part that makes the search worth trusting, and it is the part nobody demos.
 
@@ -69,7 +69,7 @@ It covers the phase the [Knowledge Graph standard](https://aipathway.com.au/expl
 
 What it is not. It is not a chat assistant over the drive. It is not a migration to a new document system. The drive stays where it is; the register points at it. And it is not the graph: nothing here holds a fact, only where a fact can be found.
 
-How big it is. Honestly, this is the foundational project, and it is measured in weeks for a network rather than an afternoon. Not because any step is hard, but because finding every source and getting a person to put their name to it is a conversation per source. The checks in section 4 can each be proved in an hour on a stub. The inventory cannot, and the pass test says so.
+How big it is. Honestly, this is the foundational project, and it is measured in weeks for a network rather than an afternoon. No single step is hard. Finding every source and getting a person to put their name to it is a conversation per source. The checks in section 4 can each be proved in an hour on a stub. The inventory cannot, and the pass test says so.
 
 ## 2. The kinds of source
 
@@ -150,13 +150,13 @@ The order is the claim. Chunk the drive first and you have a search nobody owns;
 
 This is the boundary, and it is the one every product will try to talk you across. A search over the knowledge base returns passages with a register id and a locator a person can open. It does not return a paragraph the model wrote from those passages.
 
-The reason is not caution. A composed answer from a pile cannot say which edition it used, cannot be found again when that edition is replaced, and cannot decline. Those three properties are what the [Cited Answer standard](https://aipathway.com.au/explore-ai/cited-answer-build-standard) provides over the graph, and the graph exists so that they can be provided. A knowledge base that answers has skipped both, and the answer it gives will be the one that was right last year.
+A composed answer from a pile cannot say which edition it used, cannot be found again when that edition is replaced, and cannot decline. Those three properties are what the [Cited Answer standard](https://aipathway.com.au/explore-ai/cited-answer-build-standard) provides over the graph, and the graph exists so that they can be provided. A knowledge base that answers has skipped both, and the answer it gives will be the one that was right last year.
 
 What search is for, then: a person finding the passage to read, a person finding the duplicate to resolve, and the graph’s extractor finding candidate passages to propose. All three want a locator. None of them wants a paragraph.
 
 ## 6. Connect SharePoint or Google Drive so the watch can read every source, without moving or changing a file
 
-The build does a stocktake, not a shop fit-out. It walks every shelf the register names, counts what is there and writes it on the sheet, and it moves nothing. It reads the files in the libraries or shared drives the register points at, compares each one’s checksum, and writes only to the register and to the owner’s inbox or task list. It never moves, renames, edits or deletes a file, never changes who can open one, and never answers a question. Turn off the flow or the script, or remove its access in your Microsoft or Google account settings, and it stops. Your own login stays yours: the flow or script asks for access on Microsoft’s or Google’s own approval screen, and nobody types a password into it.
+It keeps one register of everything the business relies on, and spots when a file changes. It reads the files in the libraries or shared drives the register points at, notices when one has changed, updates the register and lets the file’s owner know by email or a task. Each source has a named person who answers for it when it moves, and which copy counts is yours to decide. Your own login stays yours. The flow or script asks for access on Microsoft’s or Google’s own approval screen, and nobody types a password into it.
 
 What each piece of access is for.
 
