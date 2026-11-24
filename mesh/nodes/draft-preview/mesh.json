@@ -1,0 +1,82 @@
+{
+  "slug": "draft-preview",
+  "name": "Draft Preview",
+  "office_task": "When a bot or person hands over a draft invoice, bill or journal, recompute its lines, GST and journal, park anything a cent out, write it to Xero once a named person releases it, then read it back.",
+  "verticals": [
+    "accounting-bookkeeping"
+  ],
+  "standards": [
+    "ledger-write-preview"
+  ],
+  "systems_of_record": [
+    "the client's ledger (Xero), over the Accounting API through the business's own sign-in: its tax rates are read before any preview, and a draft invoice, bill, credit note, spend or receive money or manual journal is written only after a named person releases its preview, carrying the Idempotency-Key preview:<tenant>:<draft>:<preview> in the header and in the reference, then read back by its id and compared to the cent",
+    "the preview book the practice keeps (a sheet, a list or the AI Pathway connector). It holds the drafts handed over by another bot or a person, each preview, and each release with the name of the person who gave it. In production the preview comes from the preview_draft tool on the AI Pathway connector (connect.aipathway.com.au), which reads the connected ledger's own tax rates",
+    "the exception desk the practice runs, which issues the exception_id"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/draft-preview"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "schedule",
+    "webhook"
+  ],
+  "consumes": [
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    },
+    {
+      "event": "exception.closed",
+      "wake": "webhook"
+    }
+  ],
+  "emits": [
+    {
+      "event": "invoice.raised",
+      "write": "an invoice or credit note in the client's Xero file, written once after a named person released its preview: each line, the GST worked out per line from the ledger's own rate, and the key preview:<tenant>:<draft>:<preview> in the reference",
+      "readback": "the ledger returns the document id; reading it back returns the subtotal, total tax and total Xero stored, compared to the cent with the preview and recorded. No id back means it was not written. The draft is parked as write_failed and the ledger is read for the key before any retry"
+    },
+    {
+      "event": "bill.received",
+      "write": "a supplier bill in the client's Xero file, written once after a named person released its preview, with the GST per line from the ledger's own rate and the key preview:<tenant>:<draft>:<preview> in the reference",
+      "readback": "the ledger returns the bill id; reading it back returns the totals Xero stored, compared to the cent with the preview. A bill that reads back different is parked for the person who released it, with both sets of figures, and never edited to match"
+    },
+    {
+      "event": "exception.raised",
+      "write": "a parked draft for a named person, never written to the ledger. It is one of: stated totals a cent or more away from the recomputed ones (both sets of figures), a tax type the ledger does not hold or a rates read that got no answer, a journal whose debits and credits differ, a write that got no answer, or a document whose stored totals differ from the preview",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the draft id, the kind, both sets of figures and the exception_owner"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "preview.totals_differ",
+      "preview.unknown_tax_rate",
+      "preview.unbalanced",
+      "preview.write_failed",
+      "preview.readback_differs"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.draft_id",
+      "seam.preview_id",
+      "seam.rates_read_id",
+      "seam.released_by",
+      "seam.idempotency_key",
+      "seam.document_id",
+      "seam.readback_matches",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
