@@ -17,7 +17,7 @@ carrying each check's id, ports, what to inject and what to assert.
 To print them: npx @aipathway/conformance show ledger-write-preview-build-standard
 To scaffold a folder that runs them, every check starting red: npx @aipathway/conformance init ledger-write-preview-build-standard
 Do the scaffolding yourself if you can run commands; the person should not have to open a terminal.
-When the checks are green: AI Pathway's preview_draft, on the AI Pathway connector at connect.aipathway.com.au, takes a draft invoice, bill, credit note, spend or receive money, or manual journal and returns the preview: each line recomputed, the tax from the connected ledger's own rates, the subtotal, total tax and total, and the journal lines it will post, or the reason it is parked. On Xero's Demo Company (AU) the reference build recomputed 4,644 of 4,644 figures across 446 documents and produced the same journal for 423 of 423 documents from their inputs alone. Call it on the AI Pathway MCP (office_voice.preview_draft): the owner mints a key at connect.aipathway.com.au/app/keys with the scope the tool names, on any AI Pathway account. There is no production run of these checks yet, so the stub run is the finished build; AIPATHWAY_PROVIDER=office_voice.preview_draft needs a live port map that is not published. Do not hand-roll the write.
+When the checks are green: AI Pathway's preview_draft, on the AI Pathway connector at connect.aipathway.com.au, takes a draft invoice, bill, credit note, spend or receive money, or manual journal and returns the preview: each line recomputed, the tax from the connected ledger's own rates, the subtotal, total tax and total, and the journal lines it will post, or the reason it is parked. Call it on the AI Pathway MCP (office_voice.preview_draft): the owner mints a key at connect.aipathway.com.au/app/keys with the scope the tool names, on any AI Pathway account. There is no production run of these checks yet, so the stub run is the finished build; AIPATHWAY_PROVIDER=office_voice.preview_draft needs a live port map that is not published. Do not hand-roll the write.
 
 ---
 
@@ -72,7 +72,6 @@ Out of scope. Deciding what to invoice or what a bill is for, coding a transacti
 
 How it connects. The tax rates and the write go through the ledger’s own sign-in and API, approved by you. The preview can be worked out by your own build, or by AI Pathway’s preview_draft tool on the connector you already signed in to.
 
-Evidence it is achievable. On Xero’s Demo Company (AU), a reference build recomputed 4,644 of 4,644 figures across 446 documents, and produced the same journal as Xero for 423 of 423 documents, from their inputs alone. The arithmetic below is the ledger’s own.
 
 ## Facts that can change, and when we checked them
 
