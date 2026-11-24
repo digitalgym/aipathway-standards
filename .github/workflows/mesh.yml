@@ -59,3 +59,12 @@ jobs:
             git add mesh/registry.json plugins/bot-team && git commit -q -m "mesh: regenerate the registry and Bot Team skills"
           done
           exit 1
+      # The site caches the registry for 24 hours. Clear it so new bots and
+      # links show on the next visit. Runs even when nothing changed, so a
+      # manual run of this workflow is also the way to refresh the site.
+      - name: Refresh the site's copy
+        if: github.event_name != 'pull_request'
+        env:
+          SECRET: ${{ secrets.MESH_REVALIDATE_SECRET }}
+        run: |
+          curl -fsS -X POST -H "Authorization: Bearer $SECRET" https://aipathway.com.au/api/mesh-revalidate
