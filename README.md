@@ -96,6 +96,7 @@ test the directory's Grok Bots by driving the Grok Bot desktop app.
 | `AIP-BS-CUSTOMER-LINK` | [`customer-link`](skills/customer-link/SKILL.md) | Customer Link Build Standard |
 | `AIP-BS-RULES-AND-HOLDS` | [`rules-and-holds`](skills/rules-and-holds/SKILL.md) | Rules And Holds Build Standard |
 | `AIP-BS-HAND-OFF` | [`hand-off`](skills/hand-off/SKILL.md) | Hand Off Build Standard |
+| `AIP-BS-LEDGER-WRITE-PREVIEW` | [`ledger-write-preview`](skills/ledger-write-preview/SKILL.md) | Ledger Write Preview Build Standard |
 | `AIP-BS-MONTH-END-CLOSE` | [`month-end-close`](skills/month-end-close/SKILL.md) | Month End Close Build Standard |
 | `AIP-BS-JUST-SOLD-PACK` | [`just-sold-pack`](skills/just-sold-pack/SKILL.md) | Just Sold Pack Build Standard |
 | `AIP-BS-TWO-RECORDS` | [`two-records`](skills/two-records/SKILL.md) | Two Records Build Standard |
