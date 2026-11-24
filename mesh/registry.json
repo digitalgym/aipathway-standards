@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-24T11:11:43.782Z",
+  "generated_at": "2026-11-24T11:23:14.882Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -9179,7 +9179,7 @@
     {
       "slug": "month-pack",
       "name": "Month Pack",
-      "office_task": "Each month, put every client's management pack (profit and loss, balance sheet, cash, key ratios) in their folder, every figure sourced and as-of, for the partner to send.",
+      "office_task": "Each month, put every client's management pack (profit and loss, balance sheet, cash, key ratios) in their folder, every figure tied to the ledger's own report, for the partner to send.",
       "verticals": [
         "accounting-bookkeeping"
       ],
@@ -9188,6 +9188,7 @@
       ],
       "systems_of_record": [
         "each client's ledger (Xero or MYOB): profit and loss, balance sheet and the executive summary ratios for the month",
+        "the ledger's own single-month reports (Xero), read over the AI Pathway connector (connect.aipathway.com.au) to tie each figure before it is published. The connector's check_books tool rebuilds the books from source documents and compares them with the trial balance. It only reads and writes nothing to the ledger",
         "each client's bank statement: the operating account's closing balance at month end",
         "the practice's client folder the pack is published into (SharePoint or Google Drive), which issues the report_id"
       ],
@@ -9200,18 +9201,19 @@
       "emits": [
         {
           "event": "report.published",
-          "write": "one view of the client's monthly pack per audience (reviewing partner, client's owner, client's lender), written into the practice's folder for that client, each figure carrying its definition id, source and as-of time, or published as unavailable with the reason; a correction is a new version superseding the old, with the named person and the reason. Sending it outside the practice stays with the partner",
+          "write": "one view of the client's monthly pack per audience (reviewing partner, client's owner, client's lender), written into the practice's folder for that client, each figure tied to the ledger's single-month report for the month and carrying its definition id, source and as-of time. A figure that does not tie to the cent (a ratio, to the precision the ledger shows) is published as unavailable with both values, and one that cannot be read is published as unavailable with the reason; a correction is a new version superseding the old, with the named person and the reason. Sending it outside the practice stays with the partner",
           "readback": "reading the client's month back from the folder returns each report_id with its version, published_at and published_by; no id back means it was not published and report.publish_failed is raised"
         },
         {
           "event": "exception.raised",
-          "write": "an exception naming the definition's owner or the threshold's person: a source that could not be read, a measure with no definition or two, a threshold that could not be compared, a correction missing a person or reason, or a pack that did not read back",
+          "write": "an exception naming the definition's owner, the threshold's person or the reviewing partner: a figure that did not tie to the ledger's report, a source that could not be read, a measure with no definition or two, a threshold that could not be compared, a correction missing a person or reason, or a pack that did not read back",
           "readback": "the exception desk returns an exception_id, and reading that id back returns the client, the month, the measure, the reason and the exception_owner"
         }
       ],
       "exceptions": {
         "raises": [
           "report.source_unreadable",
+          "report.figure_did_not_tie",
           "report.no_definition",
           "report.conflicting_definitions",
           "report.threshold_not_comparable",
@@ -9256,8 +9258,8 @@
           "standard": "recurring-report",
           "edition": "2026-10-03",
           "environment": "stub",
-          "ran_at": "2026-11-04T11:50:24.890Z",
-          "run_id": "run-1793793024888",
+          "ran_at": "2026-11-24T11:16:46.374Z",
+          "run_id": "run-1795519006372",
           "green": 9,
           "red": 0,
           "with_us": 1,
