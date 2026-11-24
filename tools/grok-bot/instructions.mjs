@@ -141,10 +141,17 @@ export function botPack({ read, means }, slug, platform = "grok") {
   };
 }
 
-/** The schedule a bot's own job implies: monthly and weekly jobs must not run every weekday. */
+/**
+ * The schedule a bot's own job implies, read from the cadence its job opens
+ * with ("Each month, ...", "Every Monday, ..."). Only the opening counts: a
+ * morning job that mentions monthly services still runs every morning.
+ */
 export function scheduleFor(officeTask = "") {
-  if (/\b(each|every) month\b|\bmonthly\b|\bmonth end\b|\bmonth-end\b/i.test(officeTask)) return "On the first weekday of each month at 7:00 AM";
-  if (/\b(each|every) week\b|\bweekly\b/i.test(officeTask)) return "Every Monday at 7:00 AM";
+  const t = officeTask.trim().toLowerCase();
+  const day = t.match(/^every (monday|tuesday|wednesday|thursday|friday)\b/);
+  if (day) return `Every ${day[1][0].toUpperCase()}${day[1].slice(1)} at 7:00 AM`;
+  if (/^(each|every) week\b(?!day)/.test(t)) return "Every Monday at 7:00 AM";
+  if (/^((each|every) month|at month end)\b/.test(t)) return "On the first weekday of each month at 7:00 AM";
+  if (/^every evening\b/.test(t)) return "Every weekday at 5:00 PM";
   return "Every weekday at 7:00 AM";
 }
-
