@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-24T20:24:07.648Z",
+  "generated_at": "2026-11-24T20:28:26.943Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -4759,6 +4759,104 @@
           "ran_at": "2026-11-03T12:59:55.658Z",
           "run_id": "run-1793710795657",
           "green": 10,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 13
+        }
+      ]
+    },
+    {
+      "slug": "draft-preview",
+      "name": "Draft Preview",
+      "office_task": "When a bot or person hands over a draft invoice, bill or journal, recompute its lines, GST and journal, park anything a cent out, write it to Xero once a named person releases it, then read it back.",
+      "verticals": [
+        "accounting-bookkeeping"
+      ],
+      "standards": [
+        "ledger-write-preview"
+      ],
+      "systems_of_record": [
+        "the client's ledger (Xero), over the Accounting API through the business's own sign-in: its tax rates are read before any preview, and a draft invoice, bill, credit note, spend or receive money or manual journal is written only after a named person releases its preview, carrying the Idempotency-Key preview:<tenant>:<draft>:<preview> in the header and in the reference, then read back by its id and compared to the cent",
+        "the preview book the practice keeps (a sheet, a list or the AI Pathway connector). It holds the drafts handed over by another bot or a person, each preview, and each release with the name of the person who gave it. In production the preview comes from the preview_draft tool on the AI Pathway connector (connect.aipathway.com.au), which reads the connected ledger's own tax rates",
+        "the exception desk the practice runs, which issues the exception_id"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "invoice.raised",
+          "write": "an invoice or credit note in the client's Xero file, written once after a named person released its preview: each line, the GST worked out per line from the ledger's own rate, and the key preview:<tenant>:<draft>:<preview> in the reference",
+          "readback": "the ledger returns the document id; reading it back returns the subtotal, total tax and total Xero stored, compared to the cent with the preview and recorded. No id back means it was not written. The draft is parked as write_failed and the ledger is read for the key before any retry"
+        },
+        {
+          "event": "bill.received",
+          "write": "a supplier bill in the client's Xero file, written once after a named person released its preview, with the GST per line from the ledger's own rate and the key preview:<tenant>:<draft>:<preview> in the reference",
+          "readback": "the ledger returns the bill id; reading it back returns the totals Xero stored, compared to the cent with the preview. A bill that reads back different is parked for the person who released it, with both sets of figures, and never edited to match"
+        },
+        {
+          "event": "exception.raised",
+          "write": "a parked draft for a named person, never written to the ledger. It is one of: stated totals a cent or more away from the recomputed ones (both sets of figures), a tax type the ledger does not hold or a rates read that got no answer, a journal whose debits and credits differ, a write that got no answer, or a document whose stored totals differ from the preview",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the draft id, the kind, both sets of figures and the exception_owner"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "preview.totals_differ",
+          "preview.unknown_tax_rate",
+          "preview.unbalanced",
+          "preview.write_failed",
+          "preview.readback_differs"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.draft_id",
+          "seam.preview_id",
+          "seam.rates_read_id",
+          "seam.released_by",
+          "seam.idempotency_key",
+          "seam.document_id",
+          "seam.readback_matches",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/draft-preview"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-24",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "ledger-write-preview",
+          "edition": "2026-11-24",
+          "environment": "stub",
+          "ran_at": "2026-11-24T20:25:33.785Z",
+          "run_id": "run-1795551933784",
+          "green": 8,
           "red": 0,
           "with_us": 1,
           "evidence_required": 1,
@@ -17048,6 +17146,7 @@
     "design-quote",
     "docket-billing",
     "docs-due",
+    "draft-preview",
     "draw-match",
     "drawing-register",
     "dropped-ball",
@@ -17764,6 +17863,48 @@
       "to": "terms-watch",
       "event": "payment.received",
       "id": "payment_id"
+    },
+    {
+      "from": "draft-preview",
+      "to": "bill-check",
+      "event": "bill.received",
+      "id": "bill_id"
+    },
+    {
+      "from": "draft-preview",
+      "to": "claim-check",
+      "event": "bill.received",
+      "id": "bill_id"
+    },
+    {
+      "from": "draft-preview",
+      "to": "expense-check",
+      "event": "bill.received",
+      "id": "bill_id"
+    },
+    {
+      "from": "draft-preview",
+      "to": "goods-match",
+      "event": "bill.received",
+      "id": "bill_id"
+    },
+    {
+      "from": "draft-preview",
+      "to": "price-creep",
+      "event": "bill.received",
+      "id": "bill_id"
+    },
+    {
+      "from": "draft-preview",
+      "to": "sub-pay-check",
+      "event": "bill.received",
+      "id": "bill_id"
+    },
+    {
+      "from": "draft-preview",
+      "to": "vendor-actuals",
+      "event": "bill.received",
+      "id": "bill_id"
     },
     {
       "from": "fault-desk",
