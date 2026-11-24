@@ -72,7 +72,6 @@ Out of scope. Deciding what to invoice or what a bill is for, coding a transacti
 
 How it connects. The tax rates and the write go through the ledger’s own sign-in and API, approved by you. The preview can be worked out by your own build, or by AI Pathway’s preview_draft tool on the connector you already signed in to.
 
-
 ## Facts that can change, and when we checked them
 
 Checked as at 24 November 2026
