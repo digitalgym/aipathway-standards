@@ -196,6 +196,37 @@ export const ALL_PORTS = [
   "read_signoff",
   "propose_journal",
   "set_lock_date",
+  // Customer Link (2026-11-23). The map of which customer records in which
+  // systems are one customer. `read_link` reads the accepted links for one
+  // ref, and nothing else. `propose_link` is the only write an agent makes: a
+  // pair of refs with the strong keys that matched, waiting for a person.
+  // `write_link` records a person's decision (link, reject, unlink) and
+  // carries who and when. Three ports, because the gap between proposing and
+  // linking is where the person stands.
+  "read_link",
+  "propose_link",
+  "write_link",
+  // Rules and Holds (2026-11-23). A hold is a planned stop for a person, a
+  // record on the business's holds list, never a chat message. `request_hold`
+  // raises hold.requested with the record's ref and the rule that asked for
+  // it. `read_hold` reads whether a person released or refused it, and
+  // whether its one action is spent. Recording a person's release reuses
+  // `gate`, and reading the rules document reuses `read_rule`.
+  "request_hold",
+  "read_hold",
+  // Hand-Off (2026-11-23). How one step gives a job to the next, in the mesh
+  // contract's shape. `emit_handoff` appends one envelope to the hand-off log,
+  // which is also how the next step is woken; it is a write, and the only way
+  // anything enters the log. `read_handoffs` reads the log and the dedupe keys
+  // already handled. `claim_record` writes or clears seam.holder and
+  // seam.holder_until on the record. `mark_processed` records a dedupe key
+  // <ref>|<event id>|<node slug> once a step is done. Four ports, because a
+  // claim, a hand-off and a dedupe key fail in different ways and the trace
+  // has to show which.
+  "emit_handoff",
+  "read_handoffs",
+  "claim_record",
+  "mark_processed",
   // the run itself
   "rank",
   "gate",
@@ -289,6 +320,18 @@ export const PORT_SHAPE: Record<Port, { verb: PortVerb; subject: string }> = {
   read_signoff: { verb: "read", subject: "signoff" },
   propose_journal: { verb: "write", subject: "journal_proposal" },
   set_lock_date: { verb: "write", subject: "lock_date" },
+  // Customer Link (2026-11-23)
+  read_link: { verb: "read", subject: "link" },
+  propose_link: { verb: "write", subject: "link_proposal" },
+  write_link: { verb: "write", subject: "link" },
+  // Rules and Holds (2026-11-23)
+  request_hold: { verb: "write", subject: "hold" },
+  read_hold: { verb: "read", subject: "hold" },
+  // Hand-Off (2026-11-23)
+  emit_handoff: { verb: "write", subject: "handoff" },
+  read_handoffs: { verb: "read", subject: "handoff" },
+  claim_record: { verb: "write", subject: "claim" },
+  mark_processed: { verb: "write", subject: "dedupe_key" },
   // attach
   evidence: { verb: "attach", subject: "evidence" },
   cite: { verb: "attach", subject: "citation" },

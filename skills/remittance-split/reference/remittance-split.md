@@ -298,6 +298,7 @@ Checked as at 24 October 2026
 
 ## Related reading
 
+- Case study: an NDIS provider’s plan-manager remittances, recorded in Xero
 - The Two Records Build Standard: two systems compared, corrections proposed
 - The Debtor Chasing Build Standard: chasing what this leaves unpaid
 - The Invoice Check Build Standard: the payables side
