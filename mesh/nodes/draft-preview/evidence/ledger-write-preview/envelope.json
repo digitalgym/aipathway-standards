@@ -1,0 +1,7139 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1795551933784",
+  "standard": "ledger-write-preview-build-standard",
+  "spec": "AIP-BS-LEDGER-WRITE-PREVIEW",
+  "specVersion": "2026-11-24",
+  "environment": "stub",
+  "startedAt": "2026-11-24T20:25:33.768Z",
+  "finishedAt": "2026-11-24T20:25:33.784Z",
+  "results": [
+    {
+      "checkId": "every-draft-previewed-or-parked",
+      "n": 1,
+      "title": "Every draft gets a preview or is parked",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every draft has a preview or a parked item after the first run, and every write names a preview of its own draft.",
+      "actual": "6 preview(s), 3 parked, 6 write(s)",
+      "stimulus": {
+        "description": "Nine drafts across six document types, run on an ordinary day.",
+        "now": "2026-11-23T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "every-draft-previewed-or-parked"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "ledger": "xero",
+            "dryRun": false
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_handoffs",
+          "verb": "read",
+          "subject": "handoff",
+          "request": {
+            "drafts": true
+          },
+          "response": {
+            "count": 9
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_signoff",
+          "verb": "read",
+          "subject": "signoff",
+          "request": {
+            "book": true
+          },
+          "response": {
+            "previews": 0,
+            "releases": 0
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxRates": true
+          },
+          "response": {
+            "readId": "RT-1",
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "INV-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "INV-1-1",
+                "amount": 5097,
+                "tax": 510
+              },
+              {
+                "lineId": "INV-1-2",
+                "amount": 4998,
+                "tax": 500
+              },
+              {
+                "lineId": "INV-1-3",
+                "amount": 4500,
+                "tax": 0
+              }
+            ],
+            "subtotal": 14595,
+            "totalTax": 1010,
+            "total": 15605,
+            "journal": [
+              {
+                "accountCode": "610",
+                "debit": 15605,
+                "credit": 0
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 5097
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 4998
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 4500
+              },
+              {
+                "accountCode": "820",
+                "debit": 0,
+                "credit": 1010
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-1"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "INV-2",
+            "kind": "totals_differ",
+            "detail": "the draft's stated totals differ from the totals worked out from its lines",
+            "stated": {
+              "subtotal": 12345,
+              "totalTax": 1236,
+              "total": 13581
+            },
+            "recomputed": {
+              "subtotal": 12345,
+              "totalTax": 1235,
+              "total": 13580
+            },
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "BILL-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "BILL-1-1",
+                "amount": 9100,
+                "tax": 910
+              }
+            ],
+            "subtotal": 9100,
+            "totalTax": 910,
+            "total": 10010,
+            "journal": [
+              {
+                "accountCode": "800",
+                "debit": 0,
+                "credit": 10010
+              },
+              {
+                "accountCode": "310",
+                "debit": 9100,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 910,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-2"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "BILL-2",
+            "kind": "unknown_tax_rate",
+            "detail": "line BILL-2-1: the ledger holds no tax rate named GSTONIMPORTS",
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "CN-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "CN-1-1",
+                "amount": 5000,
+                "tax": 500
+              }
+            ],
+            "subtotal": 5000,
+            "totalTax": 500,
+            "total": 5500,
+            "journal": [
+              {
+                "accountCode": "610",
+                "debit": 0,
+                "credit": 5500
+              },
+              {
+                "accountCode": "200",
+                "debit": 5000,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 500,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-3"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "SPEND-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "SPEND-1-1",
+                "amount": 3300,
+                "tax": 300
+              }
+            ],
+            "subtotal": 3000,
+            "totalTax": 300,
+            "total": 3300,
+            "journal": [
+              {
+                "accountCode": "090",
+                "debit": 0,
+                "credit": 3300
+              },
+              {
+                "accountCode": "449",
+                "debit": 3000,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 300,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-4"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "RECV-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "RECV-1-1",
+                "amount": 25000,
+                "tax": 0
+              }
+            ],
+            "subtotal": 25000,
+            "totalTax": 0,
+            "total": 25000,
+            "journal": [
+              {
+                "accountCode": "090",
+                "debit": 25000,
+                "credit": 0
+              },
+              {
+                "accountCode": "260",
+                "debit": 0,
+                "credit": 25000
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-5"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "MJ-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "MJ-1-1",
+                "amount": 12000,
+                "tax": 0
+              },
+              {
+                "lineId": "MJ-1-2",
+                "amount": 12000,
+                "tax": 0
+              }
+            ],
+            "subtotal": 12000,
+            "totalTax": 0,
+            "total": 12000,
+            "journal": [
+              {
+                "accountCode": "477",
+                "debit": 12000,
+                "credit": 0
+              },
+              {
+                "accountCode": "804",
+                "debit": 0,
+                "credit": 12000
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-6"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "MJ-2",
+            "kind": "unbalanced",
+            "detail": "debits 10000 cents and credits 9000 cents",
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "ledger": "xero",
+            "dryRun": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_handoffs",
+          "verb": "read",
+          "subject": "handoff",
+          "request": {
+            "drafts": true
+          },
+          "response": {
+            "count": 9
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_signoff",
+          "verb": "read",
+          "subject": "signoff",
+          "request": {
+            "book": true
+          },
+          "response": {
+            "previews": 6,
+            "releases": 6
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxRates": true
+          },
+          "response": {
+            "readId": "RT-2",
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:INV-1:PV-1"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "INV-1",
+            "previewId": "PV-1",
+            "idempotencyKey": "preview:harbour:INV-1:PV-1",
+            "total": 15605
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-1"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:INV-1:PV-1"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "INV-1",
+            "documentId": "DOC-1",
+            "previewId": "PV-1",
+            "matches": true,
+            "ledger": {
+              "subtotal": 14595,
+              "totalTax": 1010,
+              "total": 15605
+            },
+            "preview": {
+              "subtotal": 14595,
+              "totalTax": 1010,
+              "total": 15605
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:BILL-1:PV-2"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "BILL-1",
+            "previewId": "PV-2",
+            "idempotencyKey": "preview:harbour:BILL-1:PV-2",
+            "total": 10010
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-2"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:BILL-1:PV-2"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "BILL-1",
+            "documentId": "DOC-2",
+            "previewId": "PV-2",
+            "matches": true,
+            "ledger": {
+              "subtotal": 9100,
+              "totalTax": 910,
+              "total": 10010
+            },
+            "preview": {
+              "subtotal": 9100,
+              "totalTax": 910,
+              "total": 10010
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:CN-1:PV-3"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "CN-1",
+            "previewId": "PV-3",
+            "idempotencyKey": "preview:harbour:CN-1:PV-3",
+            "total": 5500
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-3"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:CN-1:PV-3"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "CN-1",
+            "documentId": "DOC-3",
+            "previewId": "PV-3",
+            "matches": true,
+            "ledger": {
+              "subtotal": 5000,
+              "totalTax": 500,
+              "total": 5500
+            },
+            "preview": {
+              "subtotal": 5000,
+              "totalTax": 500,
+              "total": 5500
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:SPEND-1:PV-4"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "SPEND-1",
+            "previewId": "PV-4",
+            "idempotencyKey": "preview:harbour:SPEND-1:PV-4",
+            "total": 3300
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-4"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:SPEND-1:PV-4"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "SPEND-1",
+            "documentId": "DOC-4",
+            "previewId": "PV-4",
+            "matches": true,
+            "ledger": {
+              "subtotal": 3000,
+              "totalTax": 300,
+              "total": 3300
+            },
+            "preview": {
+              "subtotal": 3000,
+              "totalTax": 300,
+              "total": 3300
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:RECV-1:PV-5"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "RECV-1",
+            "previewId": "PV-5",
+            "idempotencyKey": "preview:harbour:RECV-1:PV-5",
+            "total": 25000
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-5"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:RECV-1:PV-5"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "RECV-1",
+            "documentId": "DOC-5",
+            "previewId": "PV-5",
+            "matches": true,
+            "ledger": {
+              "subtotal": 25000,
+              "totalTax": 0,
+              "total": 25000
+            },
+            "preview": {
+              "subtotal": 25000,
+              "totalTax": 0,
+              "total": 25000
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:MJ-1:PV-6"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "MJ-1",
+            "previewId": "PV-6",
+            "idempotencyKey": "preview:harbour:MJ-1:PV-6",
+            "total": 12000
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-6"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:MJ-1:PV-6"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "MJ-1",
+            "documentId": "DOC-6",
+            "previewId": "PV-6",
+            "matches": true,
+            "ledger": {
+              "subtotal": 12000,
+              "totalTax": 0,
+              "total": 12000
+            },
+            "preview": {
+              "subtotal": 12000,
+              "totalTax": 0,
+              "total": 12000
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "lines-recomputed",
+      "n": 2,
+      "title": "Every line amount is recomputed from its inputs",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every draft whose stated totals agree has a preview, and every preview line amount equals quantity x unit price x (1 - discount), rounded to the cent.",
+      "actual": "INV-1 lines: [{\"lineId\":\"INV-1-1\",\"amount\":5097,\"tax\":510},{\"lineId\":\"INV-1-2\",\"amount\":4998,\"tax\":500},{\"lineId\":\"INV-1-3\",\"amount\":4500,\"tax\":0}]",
+      "stimulus": {
+        "description": "An invoice with a 15% discount on a line of three at $19.99, and a line of 2.5 hours at $19.99.",
+        "now": "2026-11-23T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "lines-recomputed"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "ledger": "xero",
+            "dryRun": false
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_handoffs",
+          "verb": "read",
+          "subject": "handoff",
+          "request": {
+            "drafts": true
+          },
+          "response": {
+            "count": 9
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_signoff",
+          "verb": "read",
+          "subject": "signoff",
+          "request": {
+            "book": true
+          },
+          "response": {
+            "previews": 0,
+            "releases": 0
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxRates": true
+          },
+          "response": {
+            "readId": "RT-1",
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "INV-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "INV-1-1",
+                "amount": 5097,
+                "tax": 510
+              },
+              {
+                "lineId": "INV-1-2",
+                "amount": 4998,
+                "tax": 500
+              },
+              {
+                "lineId": "INV-1-3",
+                "amount": 4500,
+                "tax": 0
+              }
+            ],
+            "subtotal": 14595,
+            "totalTax": 1010,
+            "total": 15605,
+            "journal": [
+              {
+                "accountCode": "610",
+                "debit": 15605,
+                "credit": 0
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 5097
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 4998
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 4500
+              },
+              {
+                "accountCode": "820",
+                "debit": 0,
+                "credit": 1010
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-1"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "INV-2",
+            "kind": "totals_differ",
+            "detail": "the draft's stated totals differ from the totals worked out from its lines",
+            "stated": {
+              "subtotal": 12345,
+              "totalTax": 1236,
+              "total": 13581
+            },
+            "recomputed": {
+              "subtotal": 12345,
+              "totalTax": 1235,
+              "total": 13580
+            },
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "BILL-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "BILL-1-1",
+                "amount": 9100,
+                "tax": 910
+              }
+            ],
+            "subtotal": 9100,
+            "totalTax": 910,
+            "total": 10010,
+            "journal": [
+              {
+                "accountCode": "800",
+                "debit": 0,
+                "credit": 10010
+              },
+              {
+                "accountCode": "310",
+                "debit": 9100,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 910,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-2"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "BILL-2",
+            "kind": "unknown_tax_rate",
+            "detail": "line BILL-2-1: the ledger holds no tax rate named GSTONIMPORTS",
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "CN-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "CN-1-1",
+                "amount": 5000,
+                "tax": 500
+              }
+            ],
+            "subtotal": 5000,
+            "totalTax": 500,
+            "total": 5500,
+            "journal": [
+              {
+                "accountCode": "610",
+                "debit": 0,
+                "credit": 5500
+              },
+              {
+                "accountCode": "200",
+                "debit": 5000,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 500,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-3"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "SPEND-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "SPEND-1-1",
+                "amount": 3300,
+                "tax": 300
+              }
+            ],
+            "subtotal": 3000,
+            "totalTax": 300,
+            "total": 3300,
+            "journal": [
+              {
+                "accountCode": "090",
+                "debit": 0,
+                "credit": 3300
+              },
+              {
+                "accountCode": "449",
+                "debit": 3000,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 300,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-4"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "RECV-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "RECV-1-1",
+                "amount": 25000,
+                "tax": 0
+              }
+            ],
+            "subtotal": 25000,
+            "totalTax": 0,
+            "total": 25000,
+            "journal": [
+              {
+                "accountCode": "090",
+                "debit": 25000,
+                "credit": 0
+              },
+              {
+                "accountCode": "260",
+                "debit": 0,
+                "credit": 25000
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-5"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "MJ-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "MJ-1-1",
+                "amount": 12000,
+                "tax": 0
+              },
+              {
+                "lineId": "MJ-1-2",
+                "amount": 12000,
+                "tax": 0
+              }
+            ],
+            "subtotal": 12000,
+            "totalTax": 0,
+            "total": 12000,
+            "journal": [
+              {
+                "accountCode": "477",
+                "debit": 12000,
+                "credit": 0
+              },
+              {
+                "accountCode": "804",
+                "debit": 0,
+                "credit": 12000
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-6"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "MJ-2",
+            "kind": "unbalanced",
+            "detail": "debits 10000 cents and credits 9000 cents",
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "tax-from-the-ledger-rate",
+      "n": 3,
+      "title": "Tax is recomputed per line from the ledger's own rate",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every draft whose stated totals agree has a preview, every preview line's tax equals the per-line figure from the ledger's rate, and every preview cites a rates read served before it was written.",
+      "actual": "previews cite RT-1",
+      "stimulus": {
+        "description": "An invoice stated before tax, a spend money stated including tax, and a line on a GST free rate.",
+        "now": "2026-11-23T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "tax-from-the-ledger-rate"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "ledger": "xero",
+            "dryRun": false
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_handoffs",
+          "verb": "read",
+          "subject": "handoff",
+          "request": {
+            "drafts": true
+          },
+          "response": {
+            "count": 9
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_signoff",
+          "verb": "read",
+          "subject": "signoff",
+          "request": {
+            "book": true
+          },
+          "response": {
+            "previews": 0,
+            "releases": 0
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxRates": true
+          },
+          "response": {
+            "readId": "RT-1",
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "INV-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "INV-1-1",
+                "amount": 5097,
+                "tax": 510
+              },
+              {
+                "lineId": "INV-1-2",
+                "amount": 4998,
+                "tax": 500
+              },
+              {
+                "lineId": "INV-1-3",
+                "amount": 4500,
+                "tax": 0
+              }
+            ],
+            "subtotal": 14595,
+            "totalTax": 1010,
+            "total": 15605,
+            "journal": [
+              {
+                "accountCode": "610",
+                "debit": 15605,
+                "credit": 0
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 5097
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 4998
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 4500
+              },
+              {
+                "accountCode": "820",
+                "debit": 0,
+                "credit": 1010
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-1"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "INV-2",
+            "kind": "totals_differ",
+            "detail": "the draft's stated totals differ from the totals worked out from its lines",
+            "stated": {
+              "subtotal": 12345,
+              "totalTax": 1236,
+              "total": 13581
+            },
+            "recomputed": {
+              "subtotal": 12345,
+              "totalTax": 1235,
+              "total": 13580
+            },
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "BILL-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "BILL-1-1",
+                "amount": 9100,
+                "tax": 910
+              }
+            ],
+            "subtotal": 9100,
+            "totalTax": 910,
+            "total": 10010,
+            "journal": [
+              {
+                "accountCode": "800",
+                "debit": 0,
+                "credit": 10010
+              },
+              {
+                "accountCode": "310",
+                "debit": 9100,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 910,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-2"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "BILL-2",
+            "kind": "unknown_tax_rate",
+            "detail": "line BILL-2-1: the ledger holds no tax rate named GSTONIMPORTS",
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "CN-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "CN-1-1",
+                "amount": 5000,
+                "tax": 500
+              }
+            ],
+            "subtotal": 5000,
+            "totalTax": 500,
+            "total": 5500,
+            "journal": [
+              {
+                "accountCode": "610",
+                "debit": 0,
+                "credit": 5500
+              },
+              {
+                "accountCode": "200",
+                "debit": 5000,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 500,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-3"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "SPEND-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "SPEND-1-1",
+                "amount": 3300,
+                "tax": 300
+              }
+            ],
+            "subtotal": 3000,
+            "totalTax": 300,
+            "total": 3300,
+            "journal": [
+              {
+                "accountCode": "090",
+                "debit": 0,
+                "credit": 3300
+              },
+              {
+                "accountCode": "449",
+                "debit": 3000,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 300,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-4"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "RECV-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "RECV-1-1",
+                "amount": 25000,
+                "tax": 0
+              }
+            ],
+            "subtotal": 25000,
+            "totalTax": 0,
+            "total": 25000,
+            "journal": [
+              {
+                "accountCode": "090",
+                "debit": 25000,
+                "credit": 0
+              },
+              {
+                "accountCode": "260",
+                "debit": 0,
+                "credit": 25000
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-5"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "MJ-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "MJ-1-1",
+                "amount": 12000,
+                "tax": 0
+              },
+              {
+                "lineId": "MJ-1-2",
+                "amount": 12000,
+                "tax": 0
+              }
+            ],
+            "subtotal": 12000,
+            "totalTax": 0,
+            "total": 12000,
+            "journal": [
+              {
+                "accountCode": "477",
+                "debit": 12000,
+                "credit": 0
+              },
+              {
+                "accountCode": "804",
+                "debit": 0,
+                "credit": 12000
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-6"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "MJ-2",
+            "kind": "unbalanced",
+            "detail": "debits 10000 cents and credits 9000 cents",
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "totals-recomputed",
+      "n": 4,
+      "title": "The subtotal, total tax and total are recomputed",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every draft whose stated totals agree has a preview, and every preview's subtotal, total tax and total equal the figures recomputed from its inputs.",
+      "actual": "INV-1 14595/1010/15605; BILL-1 9100/910/10010; CN-1 5000/500/5500; SPEND-1 3000/300/3300; RECV-1 25000/0/25000; MJ-1 12000/0/12000",
+      "stimulus": {
+        "description": "The same drafts, some stated before tax and some including it.",
+        "now": "2026-11-23T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "totals-recomputed"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "ledger": "xero",
+            "dryRun": false
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_handoffs",
+          "verb": "read",
+          "subject": "handoff",
+          "request": {
+            "drafts": true
+          },
+          "response": {
+            "count": 9
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_signoff",
+          "verb": "read",
+          "subject": "signoff",
+          "request": {
+            "book": true
+          },
+          "response": {
+            "previews": 0,
+            "releases": 0
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxRates": true
+          },
+          "response": {
+            "readId": "RT-1",
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "INV-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "INV-1-1",
+                "amount": 5097,
+                "tax": 510
+              },
+              {
+                "lineId": "INV-1-2",
+                "amount": 4998,
+                "tax": 500
+              },
+              {
+                "lineId": "INV-1-3",
+                "amount": 4500,
+                "tax": 0
+              }
+            ],
+            "subtotal": 14595,
+            "totalTax": 1010,
+            "total": 15605,
+            "journal": [
+              {
+                "accountCode": "610",
+                "debit": 15605,
+                "credit": 0
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 5097
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 4998
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 4500
+              },
+              {
+                "accountCode": "820",
+                "debit": 0,
+                "credit": 1010
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-1"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "INV-2",
+            "kind": "totals_differ",
+            "detail": "the draft's stated totals differ from the totals worked out from its lines",
+            "stated": {
+              "subtotal": 12345,
+              "totalTax": 1236,
+              "total": 13581
+            },
+            "recomputed": {
+              "subtotal": 12345,
+              "totalTax": 1235,
+              "total": 13580
+            },
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "BILL-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "BILL-1-1",
+                "amount": 9100,
+                "tax": 910
+              }
+            ],
+            "subtotal": 9100,
+            "totalTax": 910,
+            "total": 10010,
+            "journal": [
+              {
+                "accountCode": "800",
+                "debit": 0,
+                "credit": 10010
+              },
+              {
+                "accountCode": "310",
+                "debit": 9100,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 910,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-2"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "BILL-2",
+            "kind": "unknown_tax_rate",
+            "detail": "line BILL-2-1: the ledger holds no tax rate named GSTONIMPORTS",
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "CN-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "CN-1-1",
+                "amount": 5000,
+                "tax": 500
+              }
+            ],
+            "subtotal": 5000,
+            "totalTax": 500,
+            "total": 5500,
+            "journal": [
+              {
+                "accountCode": "610",
+                "debit": 0,
+                "credit": 5500
+              },
+              {
+                "accountCode": "200",
+                "debit": 5000,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 500,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-3"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "SPEND-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "SPEND-1-1",
+                "amount": 3300,
+                "tax": 300
+              }
+            ],
+            "subtotal": 3000,
+            "totalTax": 300,
+            "total": 3300,
+            "journal": [
+              {
+                "accountCode": "090",
+                "debit": 0,
+                "credit": 3300
+              },
+              {
+                "accountCode": "449",
+                "debit": 3000,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 300,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-4"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "RECV-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "RECV-1-1",
+                "amount": 25000,
+                "tax": 0
+              }
+            ],
+            "subtotal": 25000,
+            "totalTax": 0,
+            "total": 25000,
+            "journal": [
+              {
+                "accountCode": "090",
+                "debit": 25000,
+                "credit": 0
+              },
+              {
+                "accountCode": "260",
+                "debit": 0,
+                "credit": 25000
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-5"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "MJ-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "MJ-1-1",
+                "amount": 12000,
+                "tax": 0
+              },
+              {
+                "lineId": "MJ-1-2",
+                "amount": 12000,
+                "tax": 0
+              }
+            ],
+            "subtotal": 12000,
+            "totalTax": 0,
+            "total": 12000,
+            "journal": [
+              {
+                "accountCode": "477",
+                "debit": 12000,
+                "credit": 0
+              },
+              {
+                "accountCode": "804",
+                "debit": 0,
+                "credit": 12000
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-6"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "MJ-2",
+            "kind": "unbalanced",
+            "detail": "debits 10000 cents and credits 9000 cents",
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "journal-balances",
+      "n": 5,
+      "title": "The preview shows the exact journal, and it balances",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Every preview's journal balances and holds the lines the document posts; the unbalanced journal has one unbalanced item parked and no preview.",
+      "actual": "MJ-2: unbalanced, 0 preview(s)",
+      "stimulus": {
+        "description": "An invoice, a bill, a credit note, spend and receive money, and a manual journal whose debits are $10.00 more than its credits.",
+        "now": "2026-11-23T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "journal-balances"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "ledger": "xero",
+            "dryRun": false
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_handoffs",
+          "verb": "read",
+          "subject": "handoff",
+          "request": {
+            "drafts": true
+          },
+          "response": {
+            "count": 9
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_signoff",
+          "verb": "read",
+          "subject": "signoff",
+          "request": {
+            "book": true
+          },
+          "response": {
+            "previews": 0,
+            "releases": 0
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxRates": true
+          },
+          "response": {
+            "readId": "RT-1",
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "INV-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "INV-1-1",
+                "amount": 5097,
+                "tax": 510
+              },
+              {
+                "lineId": "INV-1-2",
+                "amount": 4998,
+                "tax": 500
+              },
+              {
+                "lineId": "INV-1-3",
+                "amount": 4500,
+                "tax": 0
+              }
+            ],
+            "subtotal": 14595,
+            "totalTax": 1010,
+            "total": 15605,
+            "journal": [
+              {
+                "accountCode": "610",
+                "debit": 15605,
+                "credit": 0
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 5097
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 4998
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 4500
+              },
+              {
+                "accountCode": "820",
+                "debit": 0,
+                "credit": 1010
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-1"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "INV-2",
+            "kind": "totals_differ",
+            "detail": "the draft's stated totals differ from the totals worked out from its lines",
+            "stated": {
+              "subtotal": 12345,
+              "totalTax": 1236,
+              "total": 13581
+            },
+            "recomputed": {
+              "subtotal": 12345,
+              "totalTax": 1235,
+              "total": 13580
+            },
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "BILL-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "BILL-1-1",
+                "amount": 9100,
+                "tax": 910
+              }
+            ],
+            "subtotal": 9100,
+            "totalTax": 910,
+            "total": 10010,
+            "journal": [
+              {
+                "accountCode": "800",
+                "debit": 0,
+                "credit": 10010
+              },
+              {
+                "accountCode": "310",
+                "debit": 9100,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 910,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-2"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "BILL-2",
+            "kind": "unknown_tax_rate",
+            "detail": "line BILL-2-1: the ledger holds no tax rate named GSTONIMPORTS",
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "CN-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "CN-1-1",
+                "amount": 5000,
+                "tax": 500
+              }
+            ],
+            "subtotal": 5000,
+            "totalTax": 500,
+            "total": 5500,
+            "journal": [
+              {
+                "accountCode": "610",
+                "debit": 0,
+                "credit": 5500
+              },
+              {
+                "accountCode": "200",
+                "debit": 5000,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 500,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-3"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "SPEND-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "SPEND-1-1",
+                "amount": 3300,
+                "tax": 300
+              }
+            ],
+            "subtotal": 3000,
+            "totalTax": 300,
+            "total": 3300,
+            "journal": [
+              {
+                "accountCode": "090",
+                "debit": 0,
+                "credit": 3300
+              },
+              {
+                "accountCode": "449",
+                "debit": 3000,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 300,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-4"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "RECV-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "RECV-1-1",
+                "amount": 25000,
+                "tax": 0
+              }
+            ],
+            "subtotal": 25000,
+            "totalTax": 0,
+            "total": 25000,
+            "journal": [
+              {
+                "accountCode": "090",
+                "debit": 25000,
+                "credit": 0
+              },
+              {
+                "accountCode": "260",
+                "debit": 0,
+                "credit": 25000
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-5"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "MJ-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "MJ-1-1",
+                "amount": 12000,
+                "tax": 0
+              },
+              {
+                "lineId": "MJ-1-2",
+                "amount": 12000,
+                "tax": 0
+              }
+            ],
+            "subtotal": 12000,
+            "totalTax": 0,
+            "total": 12000,
+            "journal": [
+              {
+                "accountCode": "477",
+                "debit": 12000,
+                "credit": 0
+              },
+              {
+                "accountCode": "804",
+                "debit": 0,
+                "credit": 12000
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-6"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "MJ-2",
+            "kind": "unbalanced",
+            "detail": "debits 10000 cents and credits 9000 cents",
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "a-cent-is-a-difference",
+      "n": 6,
+      "title": "A draft whose totals differ by a cent is parked, never adjusted",
+      "verdict": "pass",
+      "held": true,
+      "expected": "That draft has one totals_differ item carrying the stated and the recomputed totals, no preview and no write; no draft whose totals agree is parked as differing.",
+      "actual": "INV-2: [{\"draftId\":\"INV-2\",\"kind\":\"totals_differ\",\"detail\":\"the draft's stated totals differ from the totals worked out from its lines\",\"stated\":{\"subtotal\":12345,\"totalTax\":1236,\"total\":13581},\"recomputed\":{\"subtotal\":12345,\"totalTax\":1235,\"total\":13580},\"owner\":\"Kim\",\"seq\":6}]",
+      "stimulus": {
+        "description": "An invoice whose stated tax is one cent more than the per-line tax, released along with everything else in the book.",
+        "now": "2026-11-23T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "a-cent-is-a-difference"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "ledger": "xero",
+            "dryRun": false
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_handoffs",
+          "verb": "read",
+          "subject": "handoff",
+          "request": {
+            "drafts": true
+          },
+          "response": {
+            "count": 9
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_signoff",
+          "verb": "read",
+          "subject": "signoff",
+          "request": {
+            "book": true
+          },
+          "response": {
+            "previews": 0,
+            "releases": 0
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxRates": true
+          },
+          "response": {
+            "readId": "RT-1",
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "INV-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "INV-1-1",
+                "amount": 5097,
+                "tax": 510
+              },
+              {
+                "lineId": "INV-1-2",
+                "amount": 4998,
+                "tax": 500
+              },
+              {
+                "lineId": "INV-1-3",
+                "amount": 4500,
+                "tax": 0
+              }
+            ],
+            "subtotal": 14595,
+            "totalTax": 1010,
+            "total": 15605,
+            "journal": [
+              {
+                "accountCode": "610",
+                "debit": 15605,
+                "credit": 0
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 5097
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 4998
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 4500
+              },
+              {
+                "accountCode": "820",
+                "debit": 0,
+                "credit": 1010
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-1"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "INV-2",
+            "kind": "totals_differ",
+            "detail": "the draft's stated totals differ from the totals worked out from its lines",
+            "stated": {
+              "subtotal": 12345,
+              "totalTax": 1236,
+              "total": 13581
+            },
+            "recomputed": {
+              "subtotal": 12345,
+              "totalTax": 1235,
+              "total": 13580
+            },
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "BILL-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "BILL-1-1",
+                "amount": 9100,
+                "tax": 910
+              }
+            ],
+            "subtotal": 9100,
+            "totalTax": 910,
+            "total": 10010,
+            "journal": [
+              {
+                "accountCode": "800",
+                "debit": 0,
+                "credit": 10010
+              },
+              {
+                "accountCode": "310",
+                "debit": 9100,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 910,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-2"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "BILL-2",
+            "kind": "unknown_tax_rate",
+            "detail": "line BILL-2-1: the ledger holds no tax rate named GSTONIMPORTS",
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "CN-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "CN-1-1",
+                "amount": 5000,
+                "tax": 500
+              }
+            ],
+            "subtotal": 5000,
+            "totalTax": 500,
+            "total": 5500,
+            "journal": [
+              {
+                "accountCode": "610",
+                "debit": 0,
+                "credit": 5500
+              },
+              {
+                "accountCode": "200",
+                "debit": 5000,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 500,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-3"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "SPEND-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "SPEND-1-1",
+                "amount": 3300,
+                "tax": 300
+              }
+            ],
+            "subtotal": 3000,
+            "totalTax": 300,
+            "total": 3300,
+            "journal": [
+              {
+                "accountCode": "090",
+                "debit": 0,
+                "credit": 3300
+              },
+              {
+                "accountCode": "449",
+                "debit": 3000,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 300,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-4"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "RECV-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "RECV-1-1",
+                "amount": 25000,
+                "tax": 0
+              }
+            ],
+            "subtotal": 25000,
+            "totalTax": 0,
+            "total": 25000,
+            "journal": [
+              {
+                "accountCode": "090",
+                "debit": 25000,
+                "credit": 0
+              },
+              {
+                "accountCode": "260",
+                "debit": 0,
+                "credit": 25000
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-5"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "MJ-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "MJ-1-1",
+                "amount": 12000,
+                "tax": 0
+              },
+              {
+                "lineId": "MJ-1-2",
+                "amount": 12000,
+                "tax": 0
+              }
+            ],
+            "subtotal": 12000,
+            "totalTax": 0,
+            "total": 12000,
+            "journal": [
+              {
+                "accountCode": "477",
+                "debit": 12000,
+                "credit": 0
+              },
+              {
+                "accountCode": "804",
+                "debit": 0,
+                "credit": 12000
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-6"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "MJ-2",
+            "kind": "unbalanced",
+            "detail": "debits 10000 cents and credits 9000 cents",
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "ledger": "xero",
+            "dryRun": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_handoffs",
+          "verb": "read",
+          "subject": "handoff",
+          "request": {
+            "drafts": true
+          },
+          "response": {
+            "count": 9
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_signoff",
+          "verb": "read",
+          "subject": "signoff",
+          "request": {
+            "book": true
+          },
+          "response": {
+            "previews": 6,
+            "releases": 6
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxRates": true
+          },
+          "response": {
+            "readId": "RT-2",
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:INV-1:PV-1"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "INV-1",
+            "previewId": "PV-1",
+            "idempotencyKey": "preview:harbour:INV-1:PV-1",
+            "total": 15605
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-1"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:INV-1:PV-1"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "INV-1",
+            "documentId": "DOC-1",
+            "previewId": "PV-1",
+            "matches": true,
+            "ledger": {
+              "subtotal": 14595,
+              "totalTax": 1010,
+              "total": 15605
+            },
+            "preview": {
+              "subtotal": 14595,
+              "totalTax": 1010,
+              "total": 15605
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:BILL-1:PV-2"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "BILL-1",
+            "previewId": "PV-2",
+            "idempotencyKey": "preview:harbour:BILL-1:PV-2",
+            "total": 10010
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-2"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:BILL-1:PV-2"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "BILL-1",
+            "documentId": "DOC-2",
+            "previewId": "PV-2",
+            "matches": true,
+            "ledger": {
+              "subtotal": 9100,
+              "totalTax": 910,
+              "total": 10010
+            },
+            "preview": {
+              "subtotal": 9100,
+              "totalTax": 910,
+              "total": 10010
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:CN-1:PV-3"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "CN-1",
+            "previewId": "PV-3",
+            "idempotencyKey": "preview:harbour:CN-1:PV-3",
+            "total": 5500
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-3"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:CN-1:PV-3"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "CN-1",
+            "documentId": "DOC-3",
+            "previewId": "PV-3",
+            "matches": true,
+            "ledger": {
+              "subtotal": 5000,
+              "totalTax": 500,
+              "total": 5500
+            },
+            "preview": {
+              "subtotal": 5000,
+              "totalTax": 500,
+              "total": 5500
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:SPEND-1:PV-4"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "SPEND-1",
+            "previewId": "PV-4",
+            "idempotencyKey": "preview:harbour:SPEND-1:PV-4",
+            "total": 3300
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-4"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:SPEND-1:PV-4"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "SPEND-1",
+            "documentId": "DOC-4",
+            "previewId": "PV-4",
+            "matches": true,
+            "ledger": {
+              "subtotal": 3000,
+              "totalTax": 300,
+              "total": 3300
+            },
+            "preview": {
+              "subtotal": 3000,
+              "totalTax": 300,
+              "total": 3300
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:RECV-1:PV-5"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "RECV-1",
+            "previewId": "PV-5",
+            "idempotencyKey": "preview:harbour:RECV-1:PV-5",
+            "total": 25000
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-5"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:RECV-1:PV-5"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "RECV-1",
+            "documentId": "DOC-5",
+            "previewId": "PV-5",
+            "matches": true,
+            "ledger": {
+              "subtotal": 25000,
+              "totalTax": 0,
+              "total": 25000
+            },
+            "preview": {
+              "subtotal": 25000,
+              "totalTax": 0,
+              "total": 25000
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:MJ-1:PV-6"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "MJ-1",
+            "previewId": "PV-6",
+            "idempotencyKey": "preview:harbour:MJ-1:PV-6",
+            "total": 12000
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-6"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:MJ-1:PV-6"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "MJ-1",
+            "documentId": "DOC-6",
+            "previewId": "PV-6",
+            "matches": true,
+            "ledger": {
+              "subtotal": 12000,
+              "totalTax": 0,
+              "total": 12000
+            },
+            "preview": {
+              "subtotal": 12000,
+              "totalTax": 0,
+              "total": 12000
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "no-guessed-tax-rate",
+      "n": 7,
+      "title": "A tax rate the ledger does not hold is never guessed",
+      "verdict": "pass",
+      "held": true,
+      "expected": "That draft has an unknown_tax_rate item parked, no preview and no write.",
+      "actual": "BILL-2: unknown_tax_rate; rates down: 7 parked",
+      "stimulus": {
+        "description": "A bill with a line coded to a tax type the ledger does not hold.",
+        "now": "2026-11-23T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "no-guessed-tax-rate"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "ledger": "xero",
+            "dryRun": false
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_handoffs",
+          "verb": "read",
+          "subject": "handoff",
+          "request": {
+            "drafts": true
+          },
+          "response": {
+            "count": 9
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_signoff",
+          "verb": "read",
+          "subject": "signoff",
+          "request": {
+            "book": true
+          },
+          "response": {
+            "previews": 0,
+            "releases": 0
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxRates": true
+          },
+          "response": {
+            "readId": "RT-1",
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "INV-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "INV-1-1",
+                "amount": 5097,
+                "tax": 510
+              },
+              {
+                "lineId": "INV-1-2",
+                "amount": 4998,
+                "tax": 500
+              },
+              {
+                "lineId": "INV-1-3",
+                "amount": 4500,
+                "tax": 0
+              }
+            ],
+            "subtotal": 14595,
+            "totalTax": 1010,
+            "total": 15605,
+            "journal": [
+              {
+                "accountCode": "610",
+                "debit": 15605,
+                "credit": 0
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 5097
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 4998
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 4500
+              },
+              {
+                "accountCode": "820",
+                "debit": 0,
+                "credit": 1010
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-1"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "INV-2",
+            "kind": "totals_differ",
+            "detail": "the draft's stated totals differ from the totals worked out from its lines",
+            "stated": {
+              "subtotal": 12345,
+              "totalTax": 1236,
+              "total": 13581
+            },
+            "recomputed": {
+              "subtotal": 12345,
+              "totalTax": 1235,
+              "total": 13580
+            },
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "BILL-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "BILL-1-1",
+                "amount": 9100,
+                "tax": 910
+              }
+            ],
+            "subtotal": 9100,
+            "totalTax": 910,
+            "total": 10010,
+            "journal": [
+              {
+                "accountCode": "800",
+                "debit": 0,
+                "credit": 10010
+              },
+              {
+                "accountCode": "310",
+                "debit": 9100,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 910,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-2"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "BILL-2",
+            "kind": "unknown_tax_rate",
+            "detail": "line BILL-2-1: the ledger holds no tax rate named GSTONIMPORTS",
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "CN-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "CN-1-1",
+                "amount": 5000,
+                "tax": 500
+              }
+            ],
+            "subtotal": 5000,
+            "totalTax": 500,
+            "total": 5500,
+            "journal": [
+              {
+                "accountCode": "610",
+                "debit": 0,
+                "credit": 5500
+              },
+              {
+                "accountCode": "200",
+                "debit": 5000,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 500,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-3"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "SPEND-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "SPEND-1-1",
+                "amount": 3300,
+                "tax": 300
+              }
+            ],
+            "subtotal": 3000,
+            "totalTax": 300,
+            "total": 3300,
+            "journal": [
+              {
+                "accountCode": "090",
+                "debit": 0,
+                "credit": 3300
+              },
+              {
+                "accountCode": "449",
+                "debit": 3000,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 300,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-4"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "RECV-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "RECV-1-1",
+                "amount": 25000,
+                "tax": 0
+              }
+            ],
+            "subtotal": 25000,
+            "totalTax": 0,
+            "total": 25000,
+            "journal": [
+              {
+                "accountCode": "090",
+                "debit": 25000,
+                "credit": 0
+              },
+              {
+                "accountCode": "260",
+                "debit": 0,
+                "credit": 25000
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-5"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "MJ-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "MJ-1-1",
+                "amount": 12000,
+                "tax": 0
+              },
+              {
+                "lineId": "MJ-1-2",
+                "amount": 12000,
+                "tax": 0
+              }
+            ],
+            "subtotal": 12000,
+            "totalTax": 0,
+            "total": 12000,
+            "journal": [
+              {
+                "accountCode": "477",
+                "debit": 12000,
+                "credit": 0
+              },
+              {
+                "accountCode": "804",
+                "debit": 0,
+                "credit": 12000
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-6"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "MJ-2",
+            "kind": "unbalanced",
+            "detail": "debits 10000 cents and credits 9000 cents",
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "ledger": "xero",
+            "dryRun": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_handoffs",
+          "verb": "read",
+          "subject": "handoff",
+          "request": {
+            "drafts": true
+          },
+          "response": {
+            "count": 9
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_signoff",
+          "verb": "read",
+          "subject": "signoff",
+          "request": {
+            "book": true
+          },
+          "response": {
+            "previews": 6,
+            "releases": 6
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxRates": true
+          },
+          "response": {
+            "readId": "RT-2",
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:INV-1:PV-1"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "INV-1",
+            "previewId": "PV-1",
+            "idempotencyKey": "preview:harbour:INV-1:PV-1",
+            "total": 15605
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-1"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:INV-1:PV-1"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "INV-1",
+            "documentId": "DOC-1",
+            "previewId": "PV-1",
+            "matches": true,
+            "ledger": {
+              "subtotal": 14595,
+              "totalTax": 1010,
+              "total": 15605
+            },
+            "preview": {
+              "subtotal": 14595,
+              "totalTax": 1010,
+              "total": 15605
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:BILL-1:PV-2"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "BILL-1",
+            "previewId": "PV-2",
+            "idempotencyKey": "preview:harbour:BILL-1:PV-2",
+            "total": 10010
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-2"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:BILL-1:PV-2"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "BILL-1",
+            "documentId": "DOC-2",
+            "previewId": "PV-2",
+            "matches": true,
+            "ledger": {
+              "subtotal": 9100,
+              "totalTax": 910,
+              "total": 10010
+            },
+            "preview": {
+              "subtotal": 9100,
+              "totalTax": 910,
+              "total": 10010
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:CN-1:PV-3"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "CN-1",
+            "previewId": "PV-3",
+            "idempotencyKey": "preview:harbour:CN-1:PV-3",
+            "total": 5500
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-3"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:CN-1:PV-3"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "CN-1",
+            "documentId": "DOC-3",
+            "previewId": "PV-3",
+            "matches": true,
+            "ledger": {
+              "subtotal": 5000,
+              "totalTax": 500,
+              "total": 5500
+            },
+            "preview": {
+              "subtotal": 5000,
+              "totalTax": 500,
+              "total": 5500
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:SPEND-1:PV-4"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "SPEND-1",
+            "previewId": "PV-4",
+            "idempotencyKey": "preview:harbour:SPEND-1:PV-4",
+            "total": 3300
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-4"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:SPEND-1:PV-4"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "SPEND-1",
+            "documentId": "DOC-4",
+            "previewId": "PV-4",
+            "matches": true,
+            "ledger": {
+              "subtotal": 3000,
+              "totalTax": 300,
+              "total": 3300
+            },
+            "preview": {
+              "subtotal": 3000,
+              "totalTax": 300,
+              "total": 3300
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:RECV-1:PV-5"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "RECV-1",
+            "previewId": "PV-5",
+            "idempotencyKey": "preview:harbour:RECV-1:PV-5",
+            "total": 25000
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-5"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:RECV-1:PV-5"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "RECV-1",
+            "documentId": "DOC-5",
+            "previewId": "PV-5",
+            "matches": true,
+            "ledger": {
+              "subtotal": 25000,
+              "totalTax": 0,
+              "total": 25000
+            },
+            "preview": {
+              "subtotal": 25000,
+              "totalTax": 0,
+              "total": 25000
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:MJ-1:PV-6"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "MJ-1",
+            "previewId": "PV-6",
+            "idempotencyKey": "preview:harbour:MJ-1:PV-6",
+            "total": 12000
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-6"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:MJ-1:PV-6"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "MJ-1",
+            "documentId": "DOC-6",
+            "previewId": "PV-6",
+            "matches": true,
+            "ledger": {
+              "subtotal": 12000,
+              "totalTax": 0,
+              "total": 12000
+            },
+            "preview": {
+              "subtotal": 12000,
+              "totalTax": 0,
+              "total": 12000
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "released-by-a-named-person",
+      "n": 8,
+      "title": "Nothing is written until a named person releases the preview",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "Every write follows a release by a named person of the preview it carries, for the same draft; the draft left unreleased has no write.",
+      "actual": "writes before release: 0; written: INV-1, BILL-1, CN-1, RECV-1, MJ-1",
+      "stimulus": {
+        "description": "The build runs before any release; then a person releases every preview but one, and the build runs again.",
+        "now": "2026-11-23T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "released-by-a-named-person"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "ledger": "xero",
+            "dryRun": false
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_handoffs",
+          "verb": "read",
+          "subject": "handoff",
+          "request": {
+            "drafts": true
+          },
+          "response": {
+            "count": 9
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_signoff",
+          "verb": "read",
+          "subject": "signoff",
+          "request": {
+            "book": true
+          },
+          "response": {
+            "previews": 0,
+            "releases": 0
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxRates": true
+          },
+          "response": {
+            "readId": "RT-1",
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "INV-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "INV-1-1",
+                "amount": 5097,
+                "tax": 510
+              },
+              {
+                "lineId": "INV-1-2",
+                "amount": 4998,
+                "tax": 500
+              },
+              {
+                "lineId": "INV-1-3",
+                "amount": 4500,
+                "tax": 0
+              }
+            ],
+            "subtotal": 14595,
+            "totalTax": 1010,
+            "total": 15605,
+            "journal": [
+              {
+                "accountCode": "610",
+                "debit": 15605,
+                "credit": 0
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 5097
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 4998
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 4500
+              },
+              {
+                "accountCode": "820",
+                "debit": 0,
+                "credit": 1010
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-1"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "INV-2",
+            "kind": "totals_differ",
+            "detail": "the draft's stated totals differ from the totals worked out from its lines",
+            "stated": {
+              "subtotal": 12345,
+              "totalTax": 1236,
+              "total": 13581
+            },
+            "recomputed": {
+              "subtotal": 12345,
+              "totalTax": 1235,
+              "total": 13580
+            },
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "BILL-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "BILL-1-1",
+                "amount": 9100,
+                "tax": 910
+              }
+            ],
+            "subtotal": 9100,
+            "totalTax": 910,
+            "total": 10010,
+            "journal": [
+              {
+                "accountCode": "800",
+                "debit": 0,
+                "credit": 10010
+              },
+              {
+                "accountCode": "310",
+                "debit": 9100,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 910,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-2"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "BILL-2",
+            "kind": "unknown_tax_rate",
+            "detail": "line BILL-2-1: the ledger holds no tax rate named GSTONIMPORTS",
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "CN-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "CN-1-1",
+                "amount": 5000,
+                "tax": 500
+              }
+            ],
+            "subtotal": 5000,
+            "totalTax": 500,
+            "total": 5500,
+            "journal": [
+              {
+                "accountCode": "610",
+                "debit": 0,
+                "credit": 5500
+              },
+              {
+                "accountCode": "200",
+                "debit": 5000,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 500,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-3"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "SPEND-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "SPEND-1-1",
+                "amount": 3300,
+                "tax": 300
+              }
+            ],
+            "subtotal": 3000,
+            "totalTax": 300,
+            "total": 3300,
+            "journal": [
+              {
+                "accountCode": "090",
+                "debit": 0,
+                "credit": 3300
+              },
+              {
+                "accountCode": "449",
+                "debit": 3000,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 300,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-4"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "RECV-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "RECV-1-1",
+                "amount": 25000,
+                "tax": 0
+              }
+            ],
+            "subtotal": 25000,
+            "totalTax": 0,
+            "total": 25000,
+            "journal": [
+              {
+                "accountCode": "090",
+                "debit": 25000,
+                "credit": 0
+              },
+              {
+                "accountCode": "260",
+                "debit": 0,
+                "credit": 25000
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-5"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "MJ-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "MJ-1-1",
+                "amount": 12000,
+                "tax": 0
+              },
+              {
+                "lineId": "MJ-1-2",
+                "amount": 12000,
+                "tax": 0
+              }
+            ],
+            "subtotal": 12000,
+            "totalTax": 0,
+            "total": 12000,
+            "journal": [
+              {
+                "accountCode": "477",
+                "debit": 12000,
+                "credit": 0
+              },
+              {
+                "accountCode": "804",
+                "debit": 0,
+                "credit": 12000
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-6"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "MJ-2",
+            "kind": "unbalanced",
+            "detail": "debits 10000 cents and credits 9000 cents",
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "ledger": "xero",
+            "dryRun": false
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_handoffs",
+          "verb": "read",
+          "subject": "handoff",
+          "request": {
+            "drafts": true
+          },
+          "response": {
+            "count": 9
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_signoff",
+          "verb": "read",
+          "subject": "signoff",
+          "request": {
+            "book": true
+          },
+          "response": {
+            "previews": 6,
+            "releases": 0
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxRates": true
+          },
+          "response": {
+            "readId": "RT-2",
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "ledger": "xero",
+            "dryRun": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_handoffs",
+          "verb": "read",
+          "subject": "handoff",
+          "request": {
+            "drafts": true
+          },
+          "response": {
+            "count": 9
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_signoff",
+          "verb": "read",
+          "subject": "signoff",
+          "request": {
+            "book": true
+          },
+          "response": {
+            "previews": 6,
+            "releases": 5
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxRates": true
+          },
+          "response": {
+            "readId": "RT-3",
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:INV-1:PV-1"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "INV-1",
+            "previewId": "PV-1",
+            "idempotencyKey": "preview:harbour:INV-1:PV-1",
+            "total": 15605
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-1"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:INV-1:PV-1"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "INV-1",
+            "documentId": "DOC-1",
+            "previewId": "PV-1",
+            "matches": true,
+            "ledger": {
+              "subtotal": 14595,
+              "totalTax": 1010,
+              "total": 15605
+            },
+            "preview": {
+              "subtotal": 14595,
+              "totalTax": 1010,
+              "total": 15605
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:BILL-1:PV-2"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "BILL-1",
+            "previewId": "PV-2",
+            "idempotencyKey": "preview:harbour:BILL-1:PV-2",
+            "total": 10010
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-2"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:BILL-1:PV-2"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "BILL-1",
+            "documentId": "DOC-2",
+            "previewId": "PV-2",
+            "matches": true,
+            "ledger": {
+              "subtotal": 9100,
+              "totalTax": 910,
+              "total": 10010
+            },
+            "preview": {
+              "subtotal": 9100,
+              "totalTax": 910,
+              "total": 10010
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:CN-1:PV-3"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "CN-1",
+            "previewId": "PV-3",
+            "idempotencyKey": "preview:harbour:CN-1:PV-3",
+            "total": 5500
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-3"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:CN-1:PV-3"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "CN-1",
+            "documentId": "DOC-3",
+            "previewId": "PV-3",
+            "matches": true,
+            "ledger": {
+              "subtotal": 5000,
+              "totalTax": 500,
+              "total": 5500
+            },
+            "preview": {
+              "subtotal": 5000,
+              "totalTax": 500,
+              "total": 5500
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:RECV-1:PV-5"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "RECV-1",
+            "previewId": "PV-5",
+            "idempotencyKey": "preview:harbour:RECV-1:PV-5",
+            "total": 25000
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-4"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:RECV-1:PV-5"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "RECV-1",
+            "documentId": "DOC-4",
+            "previewId": "PV-5",
+            "matches": true,
+            "ledger": {
+              "subtotal": 25000,
+              "totalTax": 0,
+              "total": 25000
+            },
+            "preview": {
+              "subtotal": 25000,
+              "totalTax": 0,
+              "total": 25000
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:MJ-1:PV-6"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "MJ-1",
+            "previewId": "PV-6",
+            "idempotencyKey": "preview:harbour:MJ-1:PV-6",
+            "total": 12000
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-5"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:MJ-1:PV-6"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "MJ-1",
+            "documentId": "DOC-5",
+            "previewId": "PV-6",
+            "matches": true,
+            "ledger": {
+              "subtotal": 12000,
+              "totalTax": 0,
+              "total": 12000
+            },
+            "preview": {
+              "subtotal": 12000,
+              "totalTax": 0,
+              "total": 12000
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "writes-once",
+      "n": 9,
+      "title": "Each released document is written exactly once",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "The ledger holds exactly one document per released draft, every attempt for a draft carried the same key, and the lost answer was parked as write_failed.",
+      "actual": "6 document(s) for 6 drafts; lost answer on INV-1; 1 write_failed",
+      "stimulus": {
+        "description": "Five released previews; the first write lands but its answer is lost, and the build runs again.",
+        "now": "2026-11-23T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "writes-once"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "ledger": "xero",
+            "dryRun": false
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_handoffs",
+          "verb": "read",
+          "subject": "handoff",
+          "request": {
+            "drafts": true
+          },
+          "response": {
+            "count": 9
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_signoff",
+          "verb": "read",
+          "subject": "signoff",
+          "request": {
+            "book": true
+          },
+          "response": {
+            "previews": 0,
+            "releases": 0
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxRates": true
+          },
+          "response": {
+            "readId": "RT-1",
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "INV-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "INV-1-1",
+                "amount": 5097,
+                "tax": 510
+              },
+              {
+                "lineId": "INV-1-2",
+                "amount": 4998,
+                "tax": 500
+              },
+              {
+                "lineId": "INV-1-3",
+                "amount": 4500,
+                "tax": 0
+              }
+            ],
+            "subtotal": 14595,
+            "totalTax": 1010,
+            "total": 15605,
+            "journal": [
+              {
+                "accountCode": "610",
+                "debit": 15605,
+                "credit": 0
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 5097
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 4998
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 4500
+              },
+              {
+                "accountCode": "820",
+                "debit": 0,
+                "credit": 1010
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-1"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "INV-2",
+            "kind": "totals_differ",
+            "detail": "the draft's stated totals differ from the totals worked out from its lines",
+            "stated": {
+              "subtotal": 12345,
+              "totalTax": 1236,
+              "total": 13581
+            },
+            "recomputed": {
+              "subtotal": 12345,
+              "totalTax": 1235,
+              "total": 13580
+            },
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "BILL-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "BILL-1-1",
+                "amount": 9100,
+                "tax": 910
+              }
+            ],
+            "subtotal": 9100,
+            "totalTax": 910,
+            "total": 10010,
+            "journal": [
+              {
+                "accountCode": "800",
+                "debit": 0,
+                "credit": 10010
+              },
+              {
+                "accountCode": "310",
+                "debit": 9100,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 910,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-2"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "BILL-2",
+            "kind": "unknown_tax_rate",
+            "detail": "line BILL-2-1: the ledger holds no tax rate named GSTONIMPORTS",
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "CN-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "CN-1-1",
+                "amount": 5000,
+                "tax": 500
+              }
+            ],
+            "subtotal": 5000,
+            "totalTax": 500,
+            "total": 5500,
+            "journal": [
+              {
+                "accountCode": "610",
+                "debit": 0,
+                "credit": 5500
+              },
+              {
+                "accountCode": "200",
+                "debit": 5000,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 500,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-3"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "SPEND-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "SPEND-1-1",
+                "amount": 3300,
+                "tax": 300
+              }
+            ],
+            "subtotal": 3000,
+            "totalTax": 300,
+            "total": 3300,
+            "journal": [
+              {
+                "accountCode": "090",
+                "debit": 0,
+                "credit": 3300
+              },
+              {
+                "accountCode": "449",
+                "debit": 3000,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 300,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-4"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "RECV-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "RECV-1-1",
+                "amount": 25000,
+                "tax": 0
+              }
+            ],
+            "subtotal": 25000,
+            "totalTax": 0,
+            "total": 25000,
+            "journal": [
+              {
+                "accountCode": "090",
+                "debit": 25000,
+                "credit": 0
+              },
+              {
+                "accountCode": "260",
+                "debit": 0,
+                "credit": 25000
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-5"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "MJ-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "MJ-1-1",
+                "amount": 12000,
+                "tax": 0
+              },
+              {
+                "lineId": "MJ-1-2",
+                "amount": 12000,
+                "tax": 0
+              }
+            ],
+            "subtotal": 12000,
+            "totalTax": 0,
+            "total": 12000,
+            "journal": [
+              {
+                "accountCode": "477",
+                "debit": 12000,
+                "credit": 0
+              },
+              {
+                "accountCode": "804",
+                "debit": 0,
+                "credit": 12000
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-6"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "MJ-2",
+            "kind": "unbalanced",
+            "detail": "debits 10000 cents and credits 9000 cents",
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "ledger": "xero",
+            "dryRun": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_handoffs",
+          "verb": "read",
+          "subject": "handoff",
+          "request": {
+            "drafts": true
+          },
+          "response": {
+            "count": 9
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_signoff",
+          "verb": "read",
+          "subject": "signoff",
+          "request": {
+            "book": true
+          },
+          "response": {
+            "previews": 6,
+            "releases": 6
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxRates": true
+          },
+          "response": {
+            "readId": "RT-2",
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:INV-1:PV-1"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "INV-1",
+            "previewId": "PV-1",
+            "idempotencyKey": "preview:harbour:INV-1:PV-1",
+            "total": 15605
+          },
+          "response": {
+            "ok": false,
+            "error": "timeout"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "INV-1",
+            "kind": "write_failed",
+            "detail": "no answer from the ledger (timeout); it is read for preview:harbour:INV-1:PV-1 before any retry",
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:BILL-1:PV-2"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "BILL-1",
+            "previewId": "PV-2",
+            "idempotencyKey": "preview:harbour:BILL-1:PV-2",
+            "total": 10010
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-2"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:BILL-1:PV-2"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "BILL-1",
+            "documentId": "DOC-2",
+            "previewId": "PV-2",
+            "matches": true,
+            "ledger": {
+              "subtotal": 9100,
+              "totalTax": 910,
+              "total": 10010
+            },
+            "preview": {
+              "subtotal": 9100,
+              "totalTax": 910,
+              "total": 10010
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:CN-1:PV-3"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "CN-1",
+            "previewId": "PV-3",
+            "idempotencyKey": "preview:harbour:CN-1:PV-3",
+            "total": 5500
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-3"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:CN-1:PV-3"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "CN-1",
+            "documentId": "DOC-3",
+            "previewId": "PV-3",
+            "matches": true,
+            "ledger": {
+              "subtotal": 5000,
+              "totalTax": 500,
+              "total": 5500
+            },
+            "preview": {
+              "subtotal": 5000,
+              "totalTax": 500,
+              "total": 5500
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:SPEND-1:PV-4"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "SPEND-1",
+            "previewId": "PV-4",
+            "idempotencyKey": "preview:harbour:SPEND-1:PV-4",
+            "total": 3300
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-4"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:SPEND-1:PV-4"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "SPEND-1",
+            "documentId": "DOC-4",
+            "previewId": "PV-4",
+            "matches": true,
+            "ledger": {
+              "subtotal": 3000,
+              "totalTax": 300,
+              "total": 3300
+            },
+            "preview": {
+              "subtotal": 3000,
+              "totalTax": 300,
+              "total": 3300
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:RECV-1:PV-5"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "RECV-1",
+            "previewId": "PV-5",
+            "idempotencyKey": "preview:harbour:RECV-1:PV-5",
+            "total": 25000
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-5"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:RECV-1:PV-5"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "RECV-1",
+            "documentId": "DOC-5",
+            "previewId": "PV-5",
+            "matches": true,
+            "ledger": {
+              "subtotal": 25000,
+              "totalTax": 0,
+              "total": 25000
+            },
+            "preview": {
+              "subtotal": 25000,
+              "totalTax": 0,
+              "total": 25000
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:MJ-1:PV-6"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "MJ-1",
+            "previewId": "PV-6",
+            "idempotencyKey": "preview:harbour:MJ-1:PV-6",
+            "total": 12000
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-6"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:MJ-1:PV-6"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "MJ-1",
+            "documentId": "DOC-6",
+            "previewId": "PV-6",
+            "matches": true,
+            "ledger": {
+              "subtotal": 12000,
+              "totalTax": 0,
+              "total": 12000
+            },
+            "preview": {
+              "subtotal": 12000,
+              "totalTax": 0,
+              "total": 12000
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-11-24T01:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "ledger": "xero",
+            "dryRun": false
+          }
+        },
+        {
+          "at": "2026-11-24T01:00:00.000Z",
+          "port": "read_handoffs",
+          "verb": "read",
+          "subject": "handoff",
+          "request": {
+            "drafts": true
+          },
+          "response": {
+            "count": 9
+          }
+        },
+        {
+          "at": "2026-11-24T01:00:00.000Z",
+          "port": "read_signoff",
+          "verb": "read",
+          "subject": "signoff",
+          "request": {
+            "book": true
+          },
+          "response": {
+            "previews": 6,
+            "releases": 6
+          }
+        },
+        {
+          "at": "2026-11-24T01:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxRates": true
+          },
+          "response": {
+            "readId": "RT-3",
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-24T01:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:INV-1:PV-1"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T01:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "INV-1",
+            "documentId": "DOC-1",
+            "previewId": "PV-1",
+            "matches": true,
+            "ledger": {
+              "subtotal": 14595,
+              "totalTax": 1010,
+              "total": 15605
+            },
+            "preview": {
+              "subtotal": 14595,
+              "totalTax": 1010,
+              "total": 15605
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-11-24T01:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "ledger": "xero",
+            "dryRun": false
+          }
+        },
+        {
+          "at": "2026-11-24T01:00:00.000Z",
+          "port": "read_handoffs",
+          "verb": "read",
+          "subject": "handoff",
+          "request": {
+            "drafts": true
+          },
+          "response": {
+            "count": 9
+          }
+        },
+        {
+          "at": "2026-11-24T01:00:00.000Z",
+          "port": "read_signoff",
+          "verb": "read",
+          "subject": "signoff",
+          "request": {
+            "book": true
+          },
+          "response": {
+            "previews": 6,
+            "releases": 6
+          }
+        },
+        {
+          "at": "2026-11-24T01:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxRates": true
+          },
+          "response": {
+            "readId": "RT-4",
+            "count": 4
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "read-back-compared",
+      "n": 10,
+      "title": "The document is read back and its totals compared with the preview",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "Every written document has a recorded read-back made after a read of it; the one that differs has one readback_differs item with both totals, and no other draft has one.",
+      "actual": "6 read-back(s); readback_differs: BILL-1",
+      "stimulus": {
+        "description": "Five released previews, one of which the ledger stores with total tax one cent lower than the preview.",
+        "now": "2026-11-23T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "read-back-compared"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "ledger": "xero",
+            "dryRun": false
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_handoffs",
+          "verb": "read",
+          "subject": "handoff",
+          "request": {
+            "drafts": true
+          },
+          "response": {
+            "count": 9
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_signoff",
+          "verb": "read",
+          "subject": "signoff",
+          "request": {
+            "book": true
+          },
+          "response": {
+            "previews": 0,
+            "releases": 0
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxRates": true
+          },
+          "response": {
+            "readId": "RT-1",
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "INV-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "INV-1-1",
+                "amount": 5097,
+                "tax": 510
+              },
+              {
+                "lineId": "INV-1-2",
+                "amount": 4998,
+                "tax": 500
+              },
+              {
+                "lineId": "INV-1-3",
+                "amount": 4500,
+                "tax": 0
+              }
+            ],
+            "subtotal": 14595,
+            "totalTax": 1010,
+            "total": 15605,
+            "journal": [
+              {
+                "accountCode": "610",
+                "debit": 15605,
+                "credit": 0
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 5097
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 4998
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 4500
+              },
+              {
+                "accountCode": "820",
+                "debit": 0,
+                "credit": 1010
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-1"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "INV-2",
+            "kind": "totals_differ",
+            "detail": "the draft's stated totals differ from the totals worked out from its lines",
+            "stated": {
+              "subtotal": 12345,
+              "totalTax": 1236,
+              "total": 13581
+            },
+            "recomputed": {
+              "subtotal": 12345,
+              "totalTax": 1235,
+              "total": 13580
+            },
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "BILL-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "BILL-1-1",
+                "amount": 9100,
+                "tax": 910
+              }
+            ],
+            "subtotal": 9100,
+            "totalTax": 910,
+            "total": 10010,
+            "journal": [
+              {
+                "accountCode": "800",
+                "debit": 0,
+                "credit": 10010
+              },
+              {
+                "accountCode": "310",
+                "debit": 9100,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 910,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-2"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "BILL-2",
+            "kind": "unknown_tax_rate",
+            "detail": "line BILL-2-1: the ledger holds no tax rate named GSTONIMPORTS",
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "CN-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "CN-1-1",
+                "amount": 5000,
+                "tax": 500
+              }
+            ],
+            "subtotal": 5000,
+            "totalTax": 500,
+            "total": 5500,
+            "journal": [
+              {
+                "accountCode": "610",
+                "debit": 0,
+                "credit": 5500
+              },
+              {
+                "accountCode": "200",
+                "debit": 5000,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 500,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-3"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "SPEND-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "SPEND-1-1",
+                "amount": 3300,
+                "tax": 300
+              }
+            ],
+            "subtotal": 3000,
+            "totalTax": 300,
+            "total": 3300,
+            "journal": [
+              {
+                "accountCode": "090",
+                "debit": 0,
+                "credit": 3300
+              },
+              {
+                "accountCode": "449",
+                "debit": 3000,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 300,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-4"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "RECV-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "RECV-1-1",
+                "amount": 25000,
+                "tax": 0
+              }
+            ],
+            "subtotal": 25000,
+            "totalTax": 0,
+            "total": 25000,
+            "journal": [
+              {
+                "accountCode": "090",
+                "debit": 25000,
+                "credit": 0
+              },
+              {
+                "accountCode": "260",
+                "debit": 0,
+                "credit": 25000
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-5"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "MJ-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "MJ-1-1",
+                "amount": 12000,
+                "tax": 0
+              },
+              {
+                "lineId": "MJ-1-2",
+                "amount": 12000,
+                "tax": 0
+              }
+            ],
+            "subtotal": 12000,
+            "totalTax": 0,
+            "total": 12000,
+            "journal": [
+              {
+                "accountCode": "477",
+                "debit": 12000,
+                "credit": 0
+              },
+              {
+                "accountCode": "804",
+                "debit": 0,
+                "credit": 12000
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-6"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "MJ-2",
+            "kind": "unbalanced",
+            "detail": "debits 10000 cents and credits 9000 cents",
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "ledger": "xero",
+            "dryRun": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_handoffs",
+          "verb": "read",
+          "subject": "handoff",
+          "request": {
+            "drafts": true
+          },
+          "response": {
+            "count": 9
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_signoff",
+          "verb": "read",
+          "subject": "signoff",
+          "request": {
+            "book": true
+          },
+          "response": {
+            "previews": 6,
+            "releases": 6
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxRates": true
+          },
+          "response": {
+            "readId": "RT-2",
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:INV-1:PV-1"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "INV-1",
+            "previewId": "PV-1",
+            "idempotencyKey": "preview:harbour:INV-1:PV-1",
+            "total": 15605
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-1"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:INV-1:PV-1"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "INV-1",
+            "documentId": "DOC-1",
+            "previewId": "PV-1",
+            "matches": true,
+            "ledger": {
+              "subtotal": 14595,
+              "totalTax": 1010,
+              "total": 15605
+            },
+            "preview": {
+              "subtotal": 14595,
+              "totalTax": 1010,
+              "total": 15605
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:BILL-1:PV-2"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "BILL-1",
+            "previewId": "PV-2",
+            "idempotencyKey": "preview:harbour:BILL-1:PV-2",
+            "total": 10010
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-2"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:BILL-1:PV-2"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "BILL-1",
+            "documentId": "DOC-2",
+            "previewId": "PV-2",
+            "matches": false,
+            "ledger": {
+              "subtotal": 9100,
+              "totalTax": 909,
+              "total": 10009
+            },
+            "preview": {
+              "subtotal": 9100,
+              "totalTax": 910,
+              "total": 10010
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "BILL-1",
+            "kind": "readback_differs",
+            "detail": "document DOC-2 stored totals that differ from the released preview",
+            "recomputed": {
+              "subtotal": 9100,
+              "totalTax": 910,
+              "total": 10010
+            },
+            "ledger": {
+              "subtotal": 9100,
+              "totalTax": 909,
+              "total": 10009
+            },
+            "owner": "Priya"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:CN-1:PV-3"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "CN-1",
+            "previewId": "PV-3",
+            "idempotencyKey": "preview:harbour:CN-1:PV-3",
+            "total": 5500
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-3"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:CN-1:PV-3"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "CN-1",
+            "documentId": "DOC-3",
+            "previewId": "PV-3",
+            "matches": true,
+            "ledger": {
+              "subtotal": 5000,
+              "totalTax": 500,
+              "total": 5500
+            },
+            "preview": {
+              "subtotal": 5000,
+              "totalTax": 500,
+              "total": 5500
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:SPEND-1:PV-4"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "SPEND-1",
+            "previewId": "PV-4",
+            "idempotencyKey": "preview:harbour:SPEND-1:PV-4",
+            "total": 3300
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-4"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:SPEND-1:PV-4"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "SPEND-1",
+            "documentId": "DOC-4",
+            "previewId": "PV-4",
+            "matches": true,
+            "ledger": {
+              "subtotal": 3000,
+              "totalTax": 300,
+              "total": 3300
+            },
+            "preview": {
+              "subtotal": 3000,
+              "totalTax": 300,
+              "total": 3300
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:RECV-1:PV-5"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "RECV-1",
+            "previewId": "PV-5",
+            "idempotencyKey": "preview:harbour:RECV-1:PV-5",
+            "total": 25000
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-5"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:RECV-1:PV-5"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "RECV-1",
+            "documentId": "DOC-5",
+            "previewId": "PV-5",
+            "matches": true,
+            "ledger": {
+              "subtotal": 25000,
+              "totalTax": 0,
+              "total": 25000
+            },
+            "preview": {
+              "subtotal": 25000,
+              "totalTax": 0,
+              "total": 25000
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:MJ-1:PV-6"
+          },
+          "response": {
+            "found": false
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "draftId": "MJ-1",
+            "previewId": "PV-6",
+            "idempotencyKey": "preview:harbour:MJ-1:PV-6",
+            "total": 12000
+          },
+          "response": {
+            "ok": true,
+            "documentId": "DOC-6"
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "idempotencyKey": "preview:harbour:MJ-1:PV-6"
+          },
+          "response": {
+            "found": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "draftId": "MJ-1",
+            "documentId": "DOC-6",
+            "previewId": "PV-6",
+            "matches": true,
+            "ledger": {
+              "subtotal": 12000,
+              "totalTax": 0,
+              "total": 12000
+            },
+            "preview": {
+              "subtotal": 12000,
+              "totalTax": 0,
+              "total": 12000
+            }
+          },
+          "response": {
+            "recorded": true
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "dry-run-writes-nothing",
+      "n": 11,
+      "title": "A dry run writes nothing",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Previews are written as on an ordinary day, and there is no write to the ledger at all.",
+      "actual": "6 preview(s), 6 release(s), 0 write(s)",
+      "stimulus": {
+        "description": "The same drafts with dry run on; a person releases every preview and the build runs again.",
+        "now": "2026-11-23T23:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "dry-run-writes-nothing"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "ledger": "xero",
+            "dryRun": true
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_handoffs",
+          "verb": "read",
+          "subject": "handoff",
+          "request": {
+            "drafts": true
+          },
+          "response": {
+            "count": 9
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_signoff",
+          "verb": "read",
+          "subject": "signoff",
+          "request": {
+            "book": true
+          },
+          "response": {
+            "previews": 0,
+            "releases": 0
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxRates": true
+          },
+          "response": {
+            "readId": "RT-1",
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "INV-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "INV-1-1",
+                "amount": 5097,
+                "tax": 510
+              },
+              {
+                "lineId": "INV-1-2",
+                "amount": 4998,
+                "tax": 500
+              },
+              {
+                "lineId": "INV-1-3",
+                "amount": 4500,
+                "tax": 0
+              }
+            ],
+            "subtotal": 14595,
+            "totalTax": 1010,
+            "total": 15605,
+            "journal": [
+              {
+                "accountCode": "610",
+                "debit": 15605,
+                "credit": 0
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 5097
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 4998
+              },
+              {
+                "accountCode": "200",
+                "debit": 0,
+                "credit": 4500
+              },
+              {
+                "accountCode": "820",
+                "debit": 0,
+                "credit": 1010
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-1"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "INV-2",
+            "kind": "totals_differ",
+            "detail": "the draft's stated totals differ from the totals worked out from its lines",
+            "stated": {
+              "subtotal": 12345,
+              "totalTax": 1236,
+              "total": 13581
+            },
+            "recomputed": {
+              "subtotal": 12345,
+              "totalTax": 1235,
+              "total": 13580
+            },
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "BILL-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "BILL-1-1",
+                "amount": 9100,
+                "tax": 910
+              }
+            ],
+            "subtotal": 9100,
+            "totalTax": 910,
+            "total": 10010,
+            "journal": [
+              {
+                "accountCode": "800",
+                "debit": 0,
+                "credit": 10010
+              },
+              {
+                "accountCode": "310",
+                "debit": 9100,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 910,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-2"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "BILL-2",
+            "kind": "unknown_tax_rate",
+            "detail": "line BILL-2-1: the ledger holds no tax rate named GSTONIMPORTS",
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "CN-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "CN-1-1",
+                "amount": 5000,
+                "tax": 500
+              }
+            ],
+            "subtotal": 5000,
+            "totalTax": 500,
+            "total": 5500,
+            "journal": [
+              {
+                "accountCode": "610",
+                "debit": 0,
+                "credit": 5500
+              },
+              {
+                "accountCode": "200",
+                "debit": 5000,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 500,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-3"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "SPEND-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "SPEND-1-1",
+                "amount": 3300,
+                "tax": 300
+              }
+            ],
+            "subtotal": 3000,
+            "totalTax": 300,
+            "total": 3300,
+            "journal": [
+              {
+                "accountCode": "090",
+                "debit": 0,
+                "credit": 3300
+              },
+              {
+                "accountCode": "449",
+                "debit": 3000,
+                "credit": 0
+              },
+              {
+                "accountCode": "820",
+                "debit": 300,
+                "credit": 0
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-4"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "RECV-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "RECV-1-1",
+                "amount": 25000,
+                "tax": 0
+              }
+            ],
+            "subtotal": 25000,
+            "totalTax": 0,
+            "total": 25000,
+            "journal": [
+              {
+                "accountCode": "090",
+                "debit": 25000,
+                "credit": 0
+              },
+              {
+                "accountCode": "260",
+                "debit": 0,
+                "credit": 25000
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-5"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "propose_journal",
+          "verb": "write",
+          "subject": "journal_proposal",
+          "request": {
+            "draftId": "MJ-1",
+            "ratesReadId": "RT-1",
+            "lines": [
+              {
+                "lineId": "MJ-1-1",
+                "amount": 12000,
+                "tax": 0
+              },
+              {
+                "lineId": "MJ-1-2",
+                "amount": 12000,
+                "tax": 0
+              }
+            ],
+            "subtotal": 12000,
+            "totalTax": 0,
+            "total": 12000,
+            "journal": [
+              {
+                "accountCode": "477",
+                "debit": 12000,
+                "credit": 0
+              },
+              {
+                "accountCode": "804",
+                "debit": 0,
+                "credit": 12000
+              }
+            ]
+          },
+          "response": {
+            "previewId": "PV-6"
+          }
+        },
+        {
+          "at": "2026-11-23T23:00:00.000Z",
+          "port": "raise_exception",
+          "verb": "write",
+          "subject": "exception",
+          "request": {
+            "draftId": "MJ-2",
+            "kind": "unbalanced",
+            "detail": "debits 10000 cents and credits 9000 cents",
+            "owner": "Kim"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "ledger": "xero",
+            "dryRun": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_handoffs",
+          "verb": "read",
+          "subject": "handoff",
+          "request": {
+            "drafts": true
+          },
+          "response": {
+            "count": 9
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_signoff",
+          "verb": "read",
+          "subject": "signoff",
+          "request": {
+            "book": true
+          },
+          "response": {
+            "previews": 6,
+            "releases": 6
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxRates": true
+          },
+          "response": {
+            "readId": "RT-2",
+            "count": 4
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_rule",
+          "verb": "read",
+          "subject": "rule",
+          "request": {
+            "settings": true
+          },
+          "response": {
+            "ledger": "xero",
+            "dryRun": true
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_handoffs",
+          "verb": "read",
+          "subject": "handoff",
+          "request": {
+            "drafts": true
+          },
+          "response": {
+            "count": 9
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_signoff",
+          "verb": "read",
+          "subject": "signoff",
+          "request": {
+            "book": true
+          },
+          "response": {
+            "previews": 6,
+            "releases": 6
+          }
+        },
+        {
+          "at": "2026-11-24T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "taxRates": true
+          },
+          "response": {
+            "readId": "RT-3",
+            "count": 4
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 12,
+      "title": "It survives the builder",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the preview and the write runs on.",
+        "now": "2026-11-24T20:25:33.784Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 13,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "Before release the ledger shows nothing new; after it, one document per released draft with the key in its reference, stored totals equal to the preview, and nothing for the parked draft; the second run adds nothing.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "Three real drafts, the build run before and after a person's release, then run again.",
+        "now": "2026-11-24T20:25:33.784Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 13,
+    "pass": 8,
+    "fail": 0,
+    "shapeOnly": 3,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
