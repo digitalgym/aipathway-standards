@@ -25,42 +25,64 @@ const OCT = { period: "2026-10", scheduledAt: "2026-11-07T21:00:00.000Z" };
 const BOOKKEEPER = "Mei Tan (bookkeeper)";
 const PARTNER = "Rob Hardy (reviewing partner)";
 
-const def = (id, measure, source, queryRef, filters, owner = BOOKKEEPER) => ({ id, measure, source, queryRef, period: "month", filters, owner });
+// Each measure is computed once from its definition (the books, rebuilt from
+// the source documents) and then tied to the ledger's own report for the same
+// month before it is published. The tie is always a single-month report:
+// Xero's multi-period P&L anchored on the 30th leaves out anything dated the
+// 31st. Money ties to the cent; a ratio ties at the precision Xero shows it.
+const tie = (queryRef, decimals = 2) => ({ source: "xero", queryRef, decimals, notify: PARTNER });
+const def = (id, measure, source, queryRef, filters, tieTo, owner = BOOKKEEPER) => ({ id, measure, source, queryRef, period: "month", filters, owner, tie: tieTo });
 const ACCRUAL = ["accrual basis", "calendar month", "AUD ex GST"];
 const ASAT = ["as at the last day of the month", "AUD"];
 
 const DEFS = {
-  revenue: def("DEF-revenue", "pl_revenue", "xero", "profit_and_loss.total_income", ACCRUAL),
-  cos: def("DEF-cos", "pl_cost_of_sales", "xero", "profit_and_loss.total_cost_of_sales", ACCRUAL),
-  gp: def("DEF-gp", "pl_gross_profit", "xero", "profit_and_loss.gross_profit", ACCRUAL),
-  opex: def("DEF-opex", "pl_operating_expenses", "xero", "profit_and_loss.total_operating_expenses", ACCRUAL),
-  np: def("DEF-np", "pl_net_profit", "xero", "profit_and_loss.net_profit", ACCRUAL),
-  assets: def("DEF-assets", "bs_total_assets", "xero", "balance_sheet.total_assets", ASAT),
-  liab: def("DEF-liab", "bs_total_liabilities", "xero", "balance_sheet.total_liabilities", ASAT),
-  net: def("DEF-net", "bs_net_assets", "xero", "balance_sheet.net_assets", ASAT),
-  cash: def("DEF-cash", "cash_at_bank", "bank", "statement.closing_balance", ["operating account closing balance", "as on the bank statement for the last day of the month"]),
-  gm: def("DEF-gm", "ratio_gross_margin_pct", "xero", "executive_summary.gross_margin_pct", ["gross profit over total income", "calendar month"]),
-  cr: def("DEF-cr", "ratio_current", "xero", "executive_summary.current_ratio", ["current assets over current liabilities", "as at month end"]),
-  dd: def("DEF-dd", "ratio_debtor_days", "xero", "executive_summary.debtor_days", ["average days to be paid", "as at month end"]),
+  revenue: def("DEF-revenue", "pl_revenue", "xero", "books.profit_and_loss.total_income", ACCRUAL, tie("report.profit_and_loss.single_month.total_income")),
+  cos: def("DEF-cos", "pl_cost_of_sales", "xero", "books.profit_and_loss.total_cost_of_sales", ACCRUAL, tie("report.profit_and_loss.single_month.total_cost_of_sales")),
+  gp: def("DEF-gp", "pl_gross_profit", "xero", "books.profit_and_loss.gross_profit", ACCRUAL, tie("report.profit_and_loss.single_month.gross_profit")),
+  opex: def("DEF-opex", "pl_operating_expenses", "xero", "books.profit_and_loss.total_operating_expenses", ACCRUAL, tie("report.profit_and_loss.single_month.total_operating_expenses")),
+  np: def("DEF-np", "pl_net_profit", "xero", "books.profit_and_loss.net_profit", ACCRUAL, tie("report.profit_and_loss.single_month.net_profit")),
+  assets: def("DEF-assets", "bs_total_assets", "xero", "books.balance_sheet.total_assets", ASAT, tie("report.balance_sheet.single_month.total_assets")),
+  liab: def("DEF-liab", "bs_total_liabilities", "xero", "books.balance_sheet.total_liabilities", ASAT, tie("report.balance_sheet.single_month.total_liabilities")),
+  net: def("DEF-net", "bs_net_assets", "xero", "books.balance_sheet.net_assets", ASAT, tie("report.balance_sheet.single_month.net_assets")),
+  cash: def("DEF-cash", "cash_at_bank", "bank", "statement.closing_balance", ["operating account closing balance", "as on the bank statement for the last day of the month"], tie("report.bank_summary.single_month.operating_account_closing")),
+  gm: def("DEF-gm", "ratio_gross_margin_pct", "xero", "books.executive_summary.gross_margin_pct", ["gross profit over income, as a percentage", "calendar month"], tie("report.executive_summary.single_month.gross_margin_pct", 1)),
+  cr: def("DEF-cr", "ratio_current", "xero", "books.executive_summary.current_ratio", ["current assets over current liabilities", "as at month end"], tie("report.executive_summary.single_month.current_ratio", 2)),
+  dd: def("DEF-dd", "ratio_debtor_days", "xero", "books.executive_summary.debtor_days", ["debtors over income plus other income, times days in the month", "as at month end"], tie("report.executive_summary.single_month.debtor_days", 0)),
 };
 const ALL = Object.values(DEFS);
 const EVERY = ALL.map((d) => d.measure);
 const LENDER_SET = ["pl_revenue", "pl_net_profit", "cash_at_bank", "ratio_current", "ratio_debtor_days"];
 
+// What Xero's own reports show for each month (ratios at Xero's precision).
 const MONTH_A = { revenue: 184500, cos: 102300, gp: 82200, opex: 61450, np: 20750, assets: 412800, liab: 236400, net: 176400, cash: 38900, gm: 44.6, cr: 1.42, dd: 38 };
 const MONTH_B = { revenue: 171200, cos: 98900, gp: 72300, opex: 76600, np: -4300, assets: 405100, liab: 241900, net: 163200, cash: 26300, gm: 42.2, cr: 1.31, dd: 47 };
+// What the books compute: the same money, the ratios at full precision.
+const BOOKS = new Map([
+  [MONTH_A, { ...MONTH_A, gm: (82200 / 184500) * 100, cr: 1.4237, dd: 37.8 }],
+  [MONTH_B, { ...MONTH_B, gm: (72300 / 171200) * 100, cr: 1.3104, dd: 46.9 }],
+]);
+const books = (m) => BOOKS.get(m) ?? m;
+// Sales dated the 31st, which Xero's multi-period P&L anchored on the 30th leaves out.
+const DATED_31ST = 14317.4;
+const MULTI_SHORT = new Set(["revenue", "gp", "np"]);
 
-const XERO = (a, b) => ({
-  id: "xero",
-  kind: "ledger",
-  values: Object.fromEntries(
-    Object.entries(DEFS)
-      .filter(([, d]) => d.source === "xero")
-      .map(([k, d]) => [d.queryRef, { [SEP.period]: a[k], [OCT.period]: b[k] }]),
-  ),
-});
+/**
+ * The Xero file: the books computed from the source documents, the ledger's
+ * single-month reports, and the multi-period columns that must never be used.
+ * `reportA` / `reportB` let a scenario make one report line disagree.
+ */
+const XERO = (a, b, { reportA = a, reportB = b } = {}) => {
+  const values = {};
+  for (const [k, d] of Object.entries(DEFS)) {
+    if (d.source === "xero") values[d.queryRef] = { [SEP.period]: books(a)[k], [OCT.period]: books(b)[k] };
+    values[d.tie.queryRef] = { [SEP.period]: reportA[k], [OCT.period]: reportB[k] };
+    const short = MULTI_SHORT.has(k) ? DATED_31ST : 0;
+    values[d.tie.queryRef.replace("single_month", "multi_period")] = { [SEP.period]: reportA[k] - short, [OCT.period]: reportB[k] - short };
+  }
+  return { id: "xero", kind: "ledger", values };
+};
 const BANK = (a, b) => ({ id: "bank", kind: "bank", values: { "statement.closing_balance": { [SEP.period]: a, [OCT.period]: b } } });
-const SOURCES = () => [XERO(MONTH_A, MONTH_B), BANK(MONTH_A.cash, MONTH_B.cash)];
+const SOURCES = (opts) => [XERO(MONTH_A, MONTH_B, opts), BANK(MONTH_A.cash, MONTH_B.cash)];
 
 const PARTNER_VIEW = (measures) => ({ id: "partner", name: "Reviewing partner", measures });
 const OWNER_VIEW = (measures) => ({ id: "owner", name: "Client's owner", measures });
@@ -147,13 +169,19 @@ export const scenarios = [
   },
   {
     checkId: "source-and-as-of-on-every-figure",
-    // The full pack over Xero and the bank statement. The run wakes eleven
-    // minutes late, so an as-of time typed from the due time does not match.
+    // Every figure ties. The full pack over Xero and the bank statement: each
+    // figure computed from its definition agrees with Xero's own single-month
+    // report, so all twelve publish with their source and as-of time. The run
+    // wakes eleven minutes late, so an as-of time typed from the due time does
+    // not match. Xero's multi-period columns are there too and are short by
+    // the sales dated the 31st, so a build that ties to them cannot pass.
     world: () => world({ definitions: ALL, sources: SOURCES(), schedule: [SEP], audiences: [OWNER_VIEW(EVERY)] }),
     drive: async (build, w) => tick(build, w, SEP),
     holds: (w) => {
       const r = w.current(SEP.period, "owner");
       if (!r) return false;
+      const published = w.firstCall("publish_report");
+      if (published < 0) return false;
       const seen = new Set();
       for (const f of valued(r)) {
         if (!f.source || !f.asOf || !f.definitionId) return false;
@@ -161,13 +189,19 @@ export const scenarios = [
         if (!d || d.source !== f.source) return false;
         const reads = w.sourceReads(d.source, d.queryRef, SEP.period).filter((c) => c.response?.ok === true);
         if (!reads.some((c) => c.response.asOf === f.asOf)) return false;
+        // Tied to the ledger's own single-month report before the pack was written.
+        if (!d.tie || !d.tie.queryRef.includes("single_month")) return false;
+        const tieAt = w.firstCall("read_ledger", (c) => c.request?.source === d.tie.source && c.request?.queryRef === d.tie.queryRef && c.request?.period === SEP.period && c.response?.ok === true);
+        if (tieAt < 0 || tieAt > published) return false;
+        if (f.value !== w.calls[tieAt].response.value) return false;
         seen.add(f.source);
       }
+      if (w.escalations.some((e) => e.reason === "report.figure_did_not_tie")) return false;
       return seen.has("xero") && seen.has("bank") && valued(r).length === ALL.length;
     },
     describe: (w) => {
       const r = w.current(SEP.period, "owner");
-      return r ? valued(r).map((f) => `${f.measure}@${f.source}/${f.asOf}`).join("; ") : "no pack published";
+      return r ? r.figures.map((f) => (f.value === null ? `${f.measure} unavailable (${f.unavailableReason})` : `${f.measure}=${f.value}@${f.source}/${f.asOf}`)).join("; ") : "no pack published";
     },
   },
   {
@@ -201,28 +235,52 @@ export const scenarios = [
   },
   {
     checkId: "cannot-compute-says-so",
-    // The bank statement feed stops answering before October's pack.
-    world: () => world({ definitions: ALL, sources: SOURCES(), schedule: [SEP, OCT], audiences: [OWNER_VIEW(EVERY)] }),
+    // One figure off by one cent. In September the books compute net profit
+    // of 20750.00 and Xero's single-month P&L shows 20750.01: net profit must
+    // publish as unavailable with both values, the reviewing partner gets the
+    // exception, and the other eleven figures publish. Then the bank
+    // statement feed stops answering before October's pack.
+    world: () =>
+      world({
+        definitions: ALL,
+        sources: SOURCES({ reportA: { ...MONTH_A, np: 20750.01 } }),
+        schedule: [SEP, OCT],
+        audiences: [OWNER_VIEW(EVERY)],
+      }),
     drive: async (build, w) => {
       await tick(build, w, SEP);
       w.breakSource("bank");
       await tick(build, w, OCT);
     },
     holds: (w) => {
-      const first = w.current(SEP.period, "owner")?.figures.find((f) => f.measure === "cash_at_bank");
+      // September: the figure that did not tie.
+      const sep = w.current(SEP.period, "owner");
+      if (!sep) return false;
+      const np = sep.figures.find((f) => f.measure === "pl_net_profit");
+      if (!np || np.value !== null || typeof np.unavailableReason !== "string") return false;
+      if (!np.unavailableReason.includes("20750.00") || !np.unavailableReason.includes("20750.01")) return false;
+      const s = Date.parse(SEP.scheduledAt);
+      const o = Date.parse(OCT.scheduledAt);
+      const tieEx = w.escalations.filter((e) => e.reason === "report.figure_did_not_tie" && Date.parse(e.at) >= s && Date.parse(e.at) < o);
+      if (tieEx.length !== 1 || !`${tieEx[0].detail}`.includes("pl_net_profit") || !`${tieEx[0].detail}`.includes(PARTNER)) return false;
+      if (!w.notifications.some((n) => n.person === PARTNER && n.measure === "pl_net_profit" && n.period === SEP.period)) return false;
+      const sepRest = sep.figures.filter((f) => f.measure !== "pl_net_profit");
+      if (sepRest.length !== ALL.length - 1 || !sepRest.every((f) => f.value !== null && f.asOf !== null)) return false;
+      const sepCash = sep.figures.find((f) => f.measure === "cash_at_bank");
+      if (sepCash.value !== MONTH_A.cash) return false;
+      // October: the source that could not be read.
       const second = w.current(OCT.period, "owner")?.figures.find((f) => f.measure === "cash_at_bank");
-      if (!first || first.value !== MONTH_A.cash || !second) return false;
-      if (second.value !== null) return false;
+      if (!second || second.value !== null) return false;
       if (typeof second.unavailableReason !== "string" || !second.unavailableReason.includes("source_unreachable")) return false;
-      const t = Date.parse(OCT.scheduledAt);
-      const escalated = w.escalations.some((e) => Date.parse(e.at) >= t && `${e.reason} ${e.detail ?? ""}`.includes("cash_at_bank"));
-      const ownerTold = w.notifications.some((n) => Date.parse(n.at) >= t && n.person === BOOKKEEPER && n.measure === "cash_at_bank" && n.period === OCT.period);
+      const escalated = w.escalations.some((e) => Date.parse(e.at) >= o && `${e.reason} ${e.detail ?? ""}`.includes("cash_at_bank"));
+      const ownerTold = w.notifications.some((n) => Date.parse(n.at) >= o && n.person === BOOKKEEPER && n.measure === "cash_at_bank" && n.period === OCT.period);
       const rest = w.current(OCT.period, "owner").figures.filter((f) => f.measure !== "cash_at_bank");
       return escalated && ownerTold && rest.length === ALL.length - 1 && rest.every((f) => f.value !== null && f.asOf !== null);
     },
     describe: (w) => {
+      const np = w.current(SEP.period, "owner")?.figures.find((x) => x.measure === "pl_net_profit");
       const f = w.current(OCT.period, "owner")?.figures.find((x) => x.measure === "cash_at_bank");
-      return `October cash: ${f ? `${f.value} (${f.unavailableReason})` : "none"}; ${w.escalations.length} escalation(s); ${w.notifications.length} notification(s)`;
+      return `September net profit: ${np ? `${np.value} (${np.unavailableReason})` : "none"}; October cash: ${f ? `${f.value} (${f.unavailableReason})` : "none"}; ${w.escalations.length} escalation(s); ${w.notifications.length} notification(s)`;
     },
   },
   {

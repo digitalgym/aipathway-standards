@@ -120,6 +120,33 @@ const mutants = {
   "ignores corrections": mutate(() => ({
     readCorrections: () => [],
   })),
+  "publishes the untied figure": (ports) => {
+    // Reads the ledger's report, then treats the computed value as if it tied.
+    const defs = ports.readDefinitions();
+    const computed = new Map();
+    return build({
+      ...ports,
+      readSource: (s, q, period) => {
+        const r = ports.readSource(s, q, period);
+        const own = defs.find((d) => d.source === s && d.queryRef === q);
+        if (own && r.ok) computed.set(`${own.measure}/${period}`, r.value);
+        const tied = defs.find((d) => d.tie?.source === s && d.tie?.queryRef === q);
+        if (tied && r.ok && computed.has(`${tied.measure}/${period}`)) return { ...r, value: computed.get(`${tied.measure}/${period}`) };
+        return r;
+      },
+    });
+  },
+  "ties to the multi-period column": mutate((p) => ({
+    // Asks for the single-month line but is handed the multi-period column,
+    // which leaves out anything dated the 31st.
+    readSource: (s, q, period) => p.readSource(s, q.replace("single_month", "multi_period"), period),
+  })),
+  "ties money to the dollar": mutate((p) => ({
+    readDefinitions: () => p.readDefinitions().map((d) => (d.tie ? { ...d, tie: { ...d.tie, decimals: 0 } } : d)),
+  })),
+  "skips the tie": mutate((p) => ({
+    readDefinitions: () => p.readDefinitions().map(({ tie, ...d }) => d),
+  })),
 };
 
 const results = {};

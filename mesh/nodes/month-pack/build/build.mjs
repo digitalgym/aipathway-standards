@@ -23,7 +23,11 @@
  *   4. publishes a figure it could not read as unavailable with the reason,
  *      tells the definition's owner and raises an exception, never last
  *      month's value;
- *   5. compares each thresholded measure with last month's published figure
+ *   5. ties each computed figure to the ledger's own single-month report
+ *      before it is published (see tie below): to the cent for money, to the
+ *      ledger's displayed precision for a ratio. One that does not tie is
+ *      published as unavailable with both values and the partner told;
+ *   6. compares each thresholded measure with last month's published figure
  *      and tells the named person in the same run, escalating instead when
  *      either side is unavailable.
  *
@@ -31,7 +35,8 @@
  * it goes to the client or the lender is the partner's call, made by a
  * person. Corrections are never edits: a named person asks, the gate records
  * their name and reason, and a new version supersedes the old in every view
- * carrying that measure. Nothing here writes to the ledger.
+ * carrying that measure. Nothing here writes to the ledger: the computed
+ * figures and the ledger's reports are both reads.
  */
 
 /** Plain labels for the commentary. No digits: a digit in prose must be a figure value. */
@@ -102,8 +107,13 @@ async function publishMonth(ports, { period, priorMonth, definitions, thresholds
       await ports.escalate("report.source_unreadable", `${measure} for ${period}: ${def.source} ${read.reason}; owner ${def.owner}`);
       continue;
     }
+    const tied = await tie(ports, def, period, read.value);
+    if (!tied.ok) {
+      pack.set(measure, { measure, value: null, unavailableReason: tied.reason });
+      continue;
+    }
     const cited = await ports.cite({ measure, definitionId: def.id, source: def.source, asOf: read.asOf });
-    pack.set(measure, { measure, value: read.value, unavailableReason: null, cited });
+    pack.set(measure, { measure, value: tied.value, unavailableReason: null, cited });
   }
 
   const written = [];
@@ -120,6 +130,45 @@ async function publishMonth(ports, { period, priorMonth, definitions, thresholds
   await confirm(ports, period, written);
 
   await thresholdsFor(ports, { period, priorMonth, thresholds, pack });
+}
+
+/**
+ * Tie a computed figure to the ledger's own report for the same month before
+ * it is published. The register names, per measure, the line of the ledger's
+ * report it must agree with (`def.tie`): always a single-month report, because
+ * Xero's multi-period P&L anchored on the 30th leaves out anything dated the
+ * 31st. Money ties to the cent; a ratio ties at the precision the ledger shows
+ * it (`tie.decimals`). A figure that does not tie, or whose report cannot be
+ * read, is unavailable with the reason and both values, never the computed
+ * value or last month's, and the named partner gets the exception.
+ */
+async function tie(ports, def, period, computed) {
+  const t = def.tie;
+  const owner = t?.notify ?? def.owner;
+  const fail = async (reason, detail) => {
+    await ports.notify(owner, { measure: def.measure, period, detail });
+    await ports.escalate("report.figure_did_not_tie", `${def.measure} for ${period}: ${detail}; exception_owner ${owner}`);
+    return { ok: false, reason };
+  };
+  if (!t?.queryRef || !t?.source) {
+    return fail("not_tied: the register names no ledger report line for this measure", "the register names no ledger report line to tie this figure to");
+  }
+  if (!/single_month/.test(t.queryRef)) {
+    return fail(`not_tied: ${t.queryRef} is not a single-month report`, `${t.queryRef} is not a single-month report; monthly figures tie only to single-month reports`);
+  }
+  const report = await ports.readSource(t.source, t.queryRef, period);
+  if (!report.ok) {
+    return fail(`tie_unreadable: ${report.reason}`, `the ledger's report ${t.queryRef} could not be read: ${report.reason}`);
+  }
+  const places = Number.isInteger(t.decimals) ? t.decimals : 2;
+  const unit = 10 ** places;
+  const mine = Math.round(computed * unit);
+  const theirs = Math.round(report.value * unit);
+  if (mine !== theirs || !Number.isFinite(mine)) {
+    const both = `computed ${(mine / unit).toFixed(places)}, ledger report ${(theirs / unit).toFixed(places)}`;
+    return fail(`did_not_tie: ${both}`, `did not tie to ${t.queryRef}: ${both}`);
+  }
+  return { ok: true, value: theirs / unit };
 }
 
 /** A pack counts as written only when its report_id reads back for the month. */
@@ -214,7 +263,9 @@ function commentary(period, figures) {
     if (f.value === null) continue;
     lines.push(f.value < 0 ? `${label(f.measure)}: below zero this month, as shown in the figures.` : `${label(f.measure)}: ${f.value}.`);
   }
-  const missing = figures.filter((f) => f.value === null).map((f) => `${label(f.measure)} (${f.unavailableReason})`);
+  // The reason's code only: the detail after the colon can carry both values
+  // of a figure that did not tie, and those numbers are not on the figure list.
+  const missing = figures.filter((f) => f.value === null).map((f) => `${label(f.measure)} (${String(f.unavailableReason).split(":")[0]})`);
   if (missing.length) lines.push(`Not available this month: ${missing.join("; ")}.`);
   return lines.join(" ");
 }
