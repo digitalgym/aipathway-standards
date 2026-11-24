@@ -5,8 +5,11 @@ loss, balance sheet, cash at bank and key ratios) into the practice's folder
 for that client at 7:00 am AEST on the 8th, built to AIP-BS-RECURRING-REPORT
 2026-10-03. The schedule lists the clients due and runs the build once per
 client against that client's Xero file, bank statement and register. Every
-figure cites its definition, source and as-of time; a figure that cannot be
-read is published as unavailable and its owner told; threshold crossings go to
+figure cites its definition, source and as-of time, and is tied to Xero's own
+single-month report before it is published (to the cent, or a ratio to the
+precision Xero shows); a figure that does not tie is published as unavailable
+with both values and the partner told; a figure that cannot be read is
+published as unavailable and its owner told; threshold crossings go to
 the named partner; corrections are a new version by a named person. Whether a
 pack goes to the client or the lender is the partner's call, made by a person.
 
