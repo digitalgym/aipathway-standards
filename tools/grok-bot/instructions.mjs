@@ -133,10 +133,18 @@ export function botPack({ read, means }, slug, platform = "grok") {
       name: m.name,
       description,
       instructions,
-      routine: [schedule && "Every weekday at 7:00 AM", email && "whenever an email arrives at this Bot's address"].filter(Boolean).join(", and ") || "When its webhook is called by the job system",
+      routine: [schedule && scheduleFor(m.office_task), email && "whenever an email arrives at this Bot's address"].filter(Boolean).join(", and ") || "When its webhook is called by the job system",
       connect: m.systems_of_record,
       credit: m.port_of?.credited ? `Port of ${m.port_of.original_name} by ${m.port_of.original_author} (${m.port_of.share_link})` : "Original AI Pathway build",
       standard: c.canon,
     },
   };
 }
+
+/** The schedule a bot's own job implies: monthly and weekly jobs must not run every weekday. */
+export function scheduleFor(officeTask = "") {
+  if (/\b(each|every) month\b|\bmonthly\b|\bmonth end\b|\bmonth-end\b/i.test(officeTask)) return "On the first weekday of each month at 7:00 AM";
+  if (/\b(each|every) week\b|\bweekly\b/i.test(officeTask)) return "Every Monday at 7:00 AM";
+  return "Every weekday at 7:00 AM";
+}
+

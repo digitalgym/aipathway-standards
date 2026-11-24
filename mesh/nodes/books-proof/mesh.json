@@ -10,11 +10,11 @@
   ],
   "systems_of_record": [
     "the client's ledger (Xero), read only over the Accounting API. Its trial balance at the as-of date is the master for every account balance, matched on the Xero account id. The bot rebuilds a shadow ledger from the source documents: invoices, bills, credit notes, payments, bank transactions, transfers and manual journals. Nothing is ever written to the client's ledger. Expense claims and opening (conversion) balances are not exposed over the API, so each accepted difference records its cause",
-    "the bot's own store: the shadow ledger, opened from the trial balance at a cutover date the person sets, and the history of every accepted adjustment. In production it runs on the AI Pathway connector's check_books tool (connect.aipathway.com.au) once that ships; until then the hosted step runs with us",
+    "the bot's own store: the shadow ledger, opened from the trial balance at a cutover date the person sets, and the history of every accepted adjustment. Each run calls the AI Pathway connector's check_books tool (connect.aipathway.com.au), which rebuilds the books from the source documents and compares every account with the trial balance",
     "the system the result is published into (it issues the report_id the practice opens)"
   ],
   "links": {
-    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/books-proof"
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/books-proof", "bot": "https://x.ai/bot/uqj8s5HXKVp-dhkuaDANt"
   },
   "maintainer": {
     "name": "AI Pathway",
@@ -23,7 +23,7 @@
   "runtime": [
     "node",
     "schedule",
-    "webhook"
+    "webhook", "grok-bot-template"
   ],
   "consumes": [
     {
