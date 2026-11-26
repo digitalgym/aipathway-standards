@@ -43,6 +43,7 @@ export { JobCloseWorld } from "./job-close.world.js";
 export { JustSoldWorld } from "./just-sold-pack.world.js";
 export { KnowledgeBaseWorld } from "./knowledge-base.world.js";
 export { KnowledgeGraphWorld } from "./knowledge-graph.world.js";
+export { LedgerCoreWorld, LedgerCoreGolden } from "./ledger-core.world.js";
 export { LedgerWritePreviewWorld } from "./ledger-write-preview.world.js";
 export { MaterialOrderWorld } from "./material-order.world.js";
 export { MonthEndCloseWorld } from "./month-end-close.world.js";

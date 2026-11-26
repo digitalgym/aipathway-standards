@@ -62,7 +62,7 @@ One draft, from the hand-over to the read-back
 7. Do the totals the ledger stored equal the preview? If yes, the read-back is recorded and the document is done.
 8. If no, it is parked for a person with both sets of figures. The build does not edit the document to match.
 
-The filled diamond is the release: before it, the build only reads your ledger’s tax rates and fills the preview. Everything written into your accounts comes after it, and the document is done only when it reads back equal to the preview.
+The filled diamond is the release. Before it, the build only reads your ledger’s tax rates and fills the preview. Everything written into your accounts comes after it, and the document is done only when it reads back equal to the preview.
 
 ## 1. What this standard covers
 
@@ -165,7 +165,7 @@ The bookkeeper releases every preview but one. The first write times out after i
 
 ## 6. Writing into your accounts, once
 
-Each released preview carries the key `preview:<tenant>:<draft>:<preview>` in the document’s reference or memo, and in the ledger’s idempotency key or request id where it has one. Before any write the build reads the ledger for that key. A write with no answer does not count as written: it is parked and tried again only after the read.
+Each released preview carries the key `preview:<tenant>:<draft>:<preview>` in the document’s reference or memo, and in the ledger’s idempotency key or request id where it has one. Before any write the build reads the ledger for that key. A write with no answer does not count as written. It is parked and tried again only after the read.
 
 The document is done only when it reads back. The build compares the subtotal, total tax and total the ledger stored with the preview, to the cent, and records the result. A difference goes to a person with both sets of figures; the build never edits the document to match. With dry run on, everything up to the release happens as usual and nothing is written.
 
