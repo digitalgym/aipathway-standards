@@ -430,6 +430,8 @@ export function checklistFrom(
 const WORDS = [
   "zero", "one", "two", "three", "four", "five", "six", "seven", "eight",
   "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen",
+  // Extended 2026-11-27: Ledger Core has 18 checks on the stub and 20 in all.
+  "sixteen", "seventeen", "eighteen", "nineteen", "twenty",
 ];
 const word = (n: number) => WORDS[n] ?? String(n);
 const cap = (w: string) => w.charAt(0).toUpperCase() + w.slice(1);

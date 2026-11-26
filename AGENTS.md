@@ -63,6 +63,7 @@ Standards in this repo:
 - AIP-BS-CUSTOMER-LINK: skills/customer-link/ (Customer Link Build Standard)
 - AIP-BS-RULES-AND-HOLDS: skills/rules-and-holds/ (Rules And Holds Build Standard)
 - AIP-BS-HAND-OFF: skills/hand-off/ (Hand Off Build Standard)
+- AIP-BS-LEDGER-CORE: skills/ledger-core/ (Ledger Core Build Standard)
 - AIP-BS-LEDGER-WRITE-PREVIEW: skills/ledger-write-preview/ (Ledger Write Preview Build Standard)
 - AIP-BS-MONTH-END-CLOSE: skills/month-end-close/ (Month End Close Build Standard)
 - AIP-BS-JUST-SOLD-PACK: skills/just-sold-pack/ (Just Sold Pack Build Standard)

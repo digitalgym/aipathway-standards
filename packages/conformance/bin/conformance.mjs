@@ -32,7 +32,7 @@ import { readFile } from "node:fs/promises";
 import { hostname } from "node:os";
 import { basename, resolve } from "node:path";
 import { fetchChecks } from "../dist/fetch-checks.js";
-import { scaffold } from "../dist/init-templates.js";
+import { goldenFor, scaffold } from "../dist/init-templates.js";
 import {
   CONNECT_SCOPES,
   DEFAULT_ORIGIN,
@@ -93,7 +93,8 @@ const KNOWN = [
   "customer-link-build-standard",
   "rules-and-holds-build-standard",
   "hand-off-build-standard",
-  "ledger-write-preview-build-standard"
+  "ledger-write-preview-build-standard",
+  "ledger-core-build-standard"
 ];
 
 const [cmd, slug] = process.argv.slice(2);
@@ -226,8 +227,12 @@ if (cmd === "init") {
   console.log("  npm install");
   console.log("  node run.mjs\n");
   console.log(
-    "Then implement build.mjs and the `holds` in scenarios.mjs. AGENTS.md in\n" +
-      "that folder is written for a coding agent if you would rather hand it over.\n",
+    goldenFor(slug)
+      ? "Then implement build.mjs. scenarios.mjs runs the standard's published golden\n" +
+          "suite as it is: do not edit it. AGENTS.md in that folder is written for a\n" +
+          "coding agent if you would rather hand it over.\n"
+      : "Then implement build.mjs and the `holds` in scenarios.mjs. AGENTS.md in\n" +
+          "that folder is written for a coding agent if you would rather hand it over.\n",
   );
   process.exit(0);
 }

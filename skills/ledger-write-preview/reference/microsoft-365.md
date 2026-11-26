@@ -32,7 +32,7 @@ Read [the ledger write preview build standard](https://aipathway.com.au/explore-
 
 Fill Settings with your ledger, its receivable, payable and GST accounts, and the people who may release. Leave DryRun on for the first week and compare the previews with what you would have entered by hand.
 
-One thing to check before you build Flow 2: **where does your ledger keep a key for a retry?** Xero takes an Idempotency-Key header and QuickBooks Online a request id; on MYOB Business the key goes in the memo and Flow 2 reads before every retry.
+Before you build Flow 2, check where your ledger keeps a key for a retry. Xero takes an Idempotency-Key header and QuickBooks Online a request id. On MYOB Business the key goes in the memo, and Flow 2 reads for it before every retry.
 
 ## 2. The lists, with their columns
 
