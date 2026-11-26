@@ -48,7 +48,7 @@ The hard part
 
 Getting every cent the same way every time, and knowing for sure that nobody has changed an old entry. The golden tests check both.
 
-Your job system shows $48,210.55 owing from customers. Your accountant’s figure for the same day is $48,210.54. Somebody spends an afternoon finding the cent: GST worked out once on an invoice total instead of line by line. Next month it is a payment that was edited after the month was closed, and nobody can say who changed it. Books kept by software should never need that afternoon.
+Your job system shows $48,210.55 owing from customers. Your accountant’s figure for the same day is $48,210.54. Somebody spends an afternoon finding the cent. It was GST worked out once on an invoice total instead of line by line. Next month it is a payment that was edited after the month was closed, and nobody can say who changed it. Books kept by software should never need that afternoon.
 
 One entry, from arriving to the reports
 
@@ -197,7 +197,7 @@ node run.mjs
 
 Pick a month end as the cutover date. Your accountant checks the old system’s trial balance for that day and signs it off by name. That trial balance goes in as one opening entry, and the books are locked up to that day. Everything before belongs to the old system; everything after belongs to the new one.
 
-If an error from before the cutover turns up later, it is fixed with an entry dated in the current month, never by changing the old figures. Before signing, it is worth checking that the bank balances match the statements and that the unpaid invoices and bills add up to what the trial balance says is owed.
+If an error from before the cutover turns up later, it is fixed with an entry dated in the current month, never by changing the old figures. Before signing, check that the bank balances match the statements and that the unpaid invoices and bills add up to what the trial balance says is owed.
 
 ## 7. What stays with a person
 
