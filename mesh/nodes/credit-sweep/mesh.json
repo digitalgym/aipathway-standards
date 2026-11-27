@@ -1,0 +1,89 @@
+{
+  "slug": "credit-sweep",
+  "name": "Credit Sweep",
+  "office_task": "Every Monday, find customer money sitting unapplied (credit notes, overpayments, prepayments, stray receipts), show the open invoice each most likely belongs to, and draft the allocation for a person.",
+  "verticals": [
+    "b2b-office"
+  ],
+  "standards": [
+    "two-records"
+  ],
+  "systems_of_record": [
+    "the customer's own ledger (Xero, MYOB Business or QuickBooks Online), read through the AI Pathway hosted MCP. Source a is the chase list: per customer contact id, the amount due on open sales invoices and those invoices. Source b is the same customer's account once money already held is counted: open invoices less unapplied credit notes, overpayments, prepayments and receipts against no invoice, each with its amount and date. The account is master for amount_due. The only write is an allocation a named person released; refunds, payments and anything touching GST or BAS stay with a person or the accountant",
+    "the bot's own store: the pair contract (with the date it was written), every run, each difference with both values, and each released allocation with the person who released it",
+    "the system the result is published into (it issues the report_id the person opens)"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/credit-sweep"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "schedule",
+    "webhook",
+    "grok-bot-template"
+  ],
+  "consumes": [
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    },
+    {
+      "event": "exception.closed",
+      "wake": "webhook"
+    }
+  ],
+  "emits": [
+    {
+      "event": "payment.received",
+      "write": "a customer's unapplied credit note, overpayment, prepayment or receipt allocated to the open sales invoice a named person released it against, written once in the ledger with the chase-list value, the account value before the allocation and the person who released it kept in history",
+      "readback": "the ledger returns the allocation id, and reading the credit back (in Xero GET /api.xro/2.0/CreditNotes/{id}, /Overpayments/{id} or /Prepayments/{id}) shows the allocation on the Invoice.InvoiceID with RemainingCredit lower by the amount, and the invoice's AmountDue lower by the same; no id back means it was not written and the owner is told"
+    },
+    {
+      "event": "report.published",
+      "write": "the Monday credit sweep where the person opens it: the pair contract it ran under, the join key (the customer contact id), the master per field, and the counts matched, within tolerance, mismatched, orphaned and allocated, published every run including the all-clear",
+      "readback": "the report store returns a report_id, and reading that id back returns the contract id, the five counts and the published time; no id back means the run did not publish and the owner is told"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception naming the person who owns receivables: a customer whose chase list shows more due than their account once money held is counted, with both values, the master's value, each credit with its age and the open invoice it most likely belongs to, and the drafted allocation waiting for release; a customer holding money with no open invoice, with a refund note for a person to decide; a customer on the chase list with no account position; a difference over the threshold amount; too many customers holding money; or a released allocation whose write returned no id",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the contact id, the reason, both values and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "two-records.contract_missing",
+      "two-records.difference_open",
+      "two-records.orphan_credit_no_open_invoice",
+      "two-records.orphan_no_account_position",
+      "two-records.over_threshold_amount",
+      "two-records.mismatch_rate_exceeded",
+      "two-records.write_not_read_back"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "seam-mirror",
+    "fields": [
+      "seam.contact_id",
+      "seam.contract_id",
+      "seam.run_id",
+      "seam.difference_status",
+      "seam.value_chase_list",
+      "seam.value_account",
+      "seam.master_value",
+      "seam.credit_id",
+      "seam.likely_invoice_id",
+      "seam.accepted_by",
+      "seam.allocation_id",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
