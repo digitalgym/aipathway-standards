@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-27T11:59:14.339Z",
+  "generated_at": "2026-11-27T11:59:53.060Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -3494,6 +3494,111 @@
           "with_us": 1,
           "evidence_required": 0,
           "total": 13
+        }
+      ]
+    },
+    {
+      "slug": "credit-sweep",
+      "name": "Credit Sweep",
+      "office_task": "Every Monday, find customer money sitting unapplied (credit notes, overpayments, prepayments, stray receipts), show the open invoice each most likely belongs to, and draft the allocation for a person.",
+      "verticals": [
+        "b2b-office"
+      ],
+      "standards": [
+        "two-records"
+      ],
+      "systems_of_record": [
+        "the customer's own ledger (Xero, MYOB Business or QuickBooks Online), read through the AI Pathway hosted MCP. Source a is the chase list: per customer contact id, the amount due on open sales invoices and those invoices. Source b is the same customer's account once money already held is counted: open invoices less unapplied credit notes, overpayments, prepayments and receipts against no invoice, each with its amount and date. The account is master for amount_due. The only write is an allocation a named person released; refunds, payments and anything touching GST or BAS stay with a person or the accountant",
+        "the bot's own store: the pair contract (with the date it was written), every run, each difference with both values, and each released allocation with the person who released it",
+        "the system the result is published into (it issues the report_id the person opens)"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "payment.received",
+          "write": "a customer's unapplied credit note, overpayment, prepayment or receipt allocated to the open sales invoice a named person released it against, written once in the ledger with the chase-list value, the account value before the allocation and the person who released it kept in history",
+          "readback": "the ledger returns the allocation id, and reading the credit back (in Xero GET /api.xro/2.0/CreditNotes/{id}, /Overpayments/{id} or /Prepayments/{id}) shows the allocation on the Invoice.InvoiceID with RemainingCredit lower by the amount, and the invoice's AmountDue lower by the same; no id back means it was not written and the owner is told"
+        },
+        {
+          "event": "report.published",
+          "write": "the Monday credit sweep where the person opens it: the pair contract it ran under, the join key (the customer contact id), the master per field, and the counts matched, within tolerance, mismatched, orphaned and allocated, published every run including the all-clear",
+          "readback": "the report store returns a report_id, and reading that id back returns the contract id, the five counts and the published time; no id back means the run did not publish and the owner is told"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception naming the person who owns receivables: a customer whose chase list shows more due than their account once money held is counted, with both values, the master's value, each credit with its age and the open invoice it most likely belongs to, and the drafted allocation waiting for release; a customer holding money with no open invoice, with a refund note for a person to decide; a customer on the chase list with no account position; a difference over the threshold amount; too many customers holding money; or a released allocation whose write returned no id",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the contact id, the reason, both values and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "two-records.contract_missing",
+          "two-records.difference_open",
+          "two-records.orphan_credit_no_open_invoice",
+          "two-records.orphan_no_account_position",
+          "two-records.over_threshold_amount",
+          "two-records.mismatch_rate_exceeded",
+          "two-records.write_not_read_back"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "seam-mirror",
+        "fields": [
+          "seam.contact_id",
+          "seam.contract_id",
+          "seam.run_id",
+          "seam.difference_status",
+          "seam.value_chase_list",
+          "seam.value_account",
+          "seam.master_value",
+          "seam.credit_id",
+          "seam.likely_invoice_id",
+          "seam.accepted_by",
+          "seam.allocation_id",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook",
+        "grok-bot-template"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/credit-sweep"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-27",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "two-records",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-27T11:57:02.336Z",
+          "run_id": "run-1795780622335",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
         }
       ]
     },
@@ -7892,6 +7997,94 @@
           "environment": "stub",
           "ran_at": "2026-11-04T12:24:09.561Z",
           "run_id": "run-1793795049559",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        }
+      ]
+    },
+    {
+      "slug": "journal-watch",
+      "name": "Journal Watch",
+      "office_task": "Every Monday, list last week's manual journals in a client's ledger and flag any touching a bank or GST account, a locked or signed-off period, or with no narration, for the client's reviewer.",
+      "verticals": [
+        "accounting-bookkeeping"
+      ],
+      "standards": [
+        "recurring-report"
+      ],
+      "systems_of_record": [
+        "the client's ledger (Xero, MYOB or QuickBooks Online), read only over the AI Pathway hosted MCP: manual journals posted in the week with their date, the user who posted them where the ledger records one, narration, lines, amounts and accounts, the chart of accounts for bank and GST accounts, and the lock date. Nothing is written to the ledger",
+        "the practice management system (such as Xero Practice Manager or Karbon): the months the practice has signed off for the client",
+        "the practice's client folder the weekly list is published into (SharePoint or Google Drive), which issues the report_id"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "one view of the week's manual journals per audience (the practice, the client's reviewer), written into the practice's folder for that client: the count, the total debits and the four flags (a line on a bank account, a line on a GST account, a date in a signed-off or locked period, no narration), each figure carrying its definition id, source and as-of time, with each journal listed by date, who posted it where the ledger records it, narration, amount and accounts. A measure that cannot be read is published as unavailable with the reason and the week is never called clear; a correction is a new version superseding the old, with the named person and the reason. Sending it to the client's reviewer, and any reversal or edit of a journal, stays with a person",
+          "readback": "reading the client's week back from the folder returns each report_id with its version, published_at and published_by; no id back means it was not published and report.publish_failed is raised"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception naming the definition's owner, the threshold's person or the reviewing partner: a ledger or sign-off record that could not be read, a measure with no definition or two, a threshold that could not be compared, a correction missing a person or reason, or a view that did not read back",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the client, the week, the measure, the reason and the exception_owner"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "report.source_unreadable",
+          "report.no_definition",
+          "report.conflicting_definitions",
+          "report.threshold_not_comparable",
+          "report.correction_incomplete",
+          "report.correction_unknown_measure",
+          "report.publish_failed"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.report_id",
+          "seam.period",
+          "seam.version",
+          "seam.supersedes",
+          "seam.published_by",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/journal-watch"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-27",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "recurring-report",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-27T11:57:29.522Z",
+          "run_id": "run-1795780649520",
           "green": 9,
           "red": 0,
           "with_us": 1,
@@ -17224,6 +17417,7 @@
     "contract-billing",
     "cost-desk",
     "cover-check",
+    "credit-sweep",
     "crew-board",
     "danger-tag-desk",
     "day-desk",
@@ -17266,6 +17460,7 @@
     "job-sheet",
     "job-wip",
     "jobs-weekly",
+    "journal-watch",
     "late-rent-desk",
     "lead-payback",
     "lead-sort",
@@ -17462,6 +17657,42 @@
       "to": "visit-round",
       "event": "job.created",
       "id": "job_id"
+    },
+    {
+      "from": "credit-sweep",
+      "to": "chase-book",
+      "event": "payment.received",
+      "id": "payment_id"
+    },
+    {
+      "from": "credit-sweep",
+      "to": "chase-desk",
+      "event": "payment.received",
+      "id": "payment_id"
+    },
+    {
+      "from": "credit-sweep",
+      "to": "invoice-pair",
+      "event": "payment.received",
+      "id": "payment_id"
+    },
+    {
+      "from": "credit-sweep",
+      "to": "owing-today",
+      "event": "payment.received",
+      "id": "payment_id"
+    },
+    {
+      "from": "credit-sweep",
+      "to": "payment-watch",
+      "event": "payment.received",
+      "id": "payment_id"
+    },
+    {
+      "from": "credit-sweep",
+      "to": "terms-watch",
+      "event": "payment.received",
+      "id": "payment_id"
     },
     {
       "from": "crew-board",
