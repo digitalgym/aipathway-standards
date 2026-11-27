@@ -1,0 +1,75 @@
+{
+  "slug": "set-aside",
+  "name": "Set Aside",
+  "office_task": "Every Monday, publish how much of the bank balance is already owed in GST, PAYG, super and other tax, each tied to the ledger's balance sheet, and what is really free to spend.",
+  "verticals": [
+    "accounting-bookkeeping"
+  ],
+  "standards": [
+    "recurring-report"
+  ],
+  "systems_of_record": [
+    "the business's own ledger (Xero, MYOB or QuickBooks), read only over the AI Pathway hosted connector (connect.aipathway.com.au): the trial balance as at the run date for the bank accounts and each tax liability account the register names (GST, PAYG Withholdings Payable, Superannuation Payable, and any other such as payroll tax), and the ledger's own balance sheet as at the run date that each figure is tied to, to the cent. Nothing is written to the ledger. Any later change to the books is a separate job that goes through the Ledger Write Preview standard",
+    "the definitions register the bookkeeper keeps: one definition per measure, the ledger account it reads, the balance sheet line it ties to, and its owner; the thresholds and who is told; the audiences and the measures each one sees",
+    "the folder, channel or mailbox the report is published into (one per audience), which issues the report_id"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/set-aside"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "schedule"
+  ],
+  "consumes": [
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    }
+  ],
+  "emits": [
+    {
+      "event": "report.published",
+      "write": "one view of the week's Set Aside report per audience (owner, bookkeeper, and a manager who sees only the bank total and what is free to spend): the bank total, GST owed (collected less paid), PAYG withheld, super payable and other tax owed, each with its ledger account, definition id, source and as-of time and tied to the balance sheet as at the run date; then the total owed, what is free to spend and the share of the bank balance already owed, worked out only from tied figures. A figure that does not tie is published as unavailable with both values, and anything worked out from it is held, naming the figure it waits on, never a guess. It flags what the ledger shows as owed and gives no tax advice; what to set aside or pay stays with the owner and their accountant. A correction is a new version superseding the old, with the named person and the reason",
+      "readback": "reading the week back from the publish location returns each report_id with its version, published_at and published_by; no id back means it was not published and report.publish_failed is raised"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception naming the definition's owner, the threshold's person or the bookkeeper: a figure that did not tie to the balance sheet, a ledger that could not be read, a figure held because an input was unavailable, a measure with no definition or two, a threshold that could not be compared, a correction missing a person or reason or aimed at a worked-out figure, or a report that did not read back",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the week, the measure, the reason and the exception_owner"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "report.source_unreadable",
+      "report.figure_did_not_tie",
+      "report.derived_figure_held",
+      "report.no_definition",
+      "report.conflicting_definitions",
+      "report.threshold_not_comparable",
+      "report.correction_incomplete",
+      "report.correction_unknown_measure",
+      "report.correction_to_derived_figure",
+      "report.publish_failed"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.report_id",
+      "seam.period",
+      "seam.version",
+      "seam.supersedes",
+      "seam.published_by",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
