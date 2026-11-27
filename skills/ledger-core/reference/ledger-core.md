@@ -34,7 +34,7 @@ Used by
 
 What this is
 
-An open build standard for any software that keeps its own set of books: a job system that posts its own journals, a bot that keeps a copy of your accounts to answer questions, a tool your bookkeeper uses to rebuild reports. It says what those books must do for the figures to be trusted.
+An open build standard for any software that keeps its own set of books: a job system that keeps its own entries, a bot that keeps a copy of your accounts to answer questions, a tool your bookkeeper uses to rebuild reports. It says what those books must do for the figures to be trusted.
 
 The core rule
 
@@ -65,25 +65,25 @@ The filled diamond is where an entry is refused if any rule fails, and nothing o
 
 ## 1. Any software that keeps its own books follows these rules
 
-This covers any build that keeps double-entry books of its own: a job system posting its own journals, a bot keeping a copy of your accounts so it can answer quickly, a practice tool rebuilding a client’s reports from their documents. It covers how money is stored, what may go in, how mistakes are fixed, how closed months stay closed, how tampering is found, how the reports are worked out, how invoices, bills, payments and transfers turn into entries, and how the books start when you move across.
+This covers any software that keeps double-entry books of its own: a job system keeping its own entries, a bot keeping a copy of your accounts so it can answer quickly, a practice tool rebuilding a client’s reports from their documents. It covers how money is stored, what may go in, how mistakes are fixed, how closed months stay closed, how tampering is found, how the reports are worked out, how invoices, bills, payments and transfers turn into entries, and how the books start when you move across.
 
-Out of scope. What to charge or how to code a transaction, lodging the BAS, foreign currency, payroll and inventory valuation. If the books your software keeps sit beside Xero, MYOB or QuickBooks, anything it writes into those follows the [Ledger Write Preview](https://aipathway.com.au/explore-ai/ledger-write-preview-build-standard) standard, and the month end follows the [Month-End Close](https://aipathway.com.au/explore-ai/month-end-close-build-standard).
+Out of scope. What to charge or how to code a transaction, lodging the BAS, foreign currency, payroll and inventory valuation. If the books your software keeps sit beside Xero, MYOB or QuickBooks, anything it puts into those follows the [Ledger Write Preview](https://aipathway.com.au/explore-ai/ledger-write-preview-build-standard) standard, and the month end follows the [Month-End Close](https://aipathway.com.au/explore-ai/month-end-close-build-standard).
 
-What cannot meet it. A spreadsheet where anyone can type over last month’s rows, or a store that keeps one running balance per account and no entries behind it. Neither can prove what changed or rebuild a report from scratch.
+What cannot meet it. A spreadsheet where anyone can type over last month’s rows, or a system that keeps only a running balance for each account, with no entries behind it. Neither can prove what changed or rebuild a report from scratch.
 
 ## 2. The rules on one page
 
-These are ordinary accounting rules, written down precisely enough that two builds give the same figure to the cent. The financial year is the Australian one, 1 July to 30 June.
+These are ordinary accounting rules, written down precisely enough that two pieces of software give the same figure to the cent. The financial year is the Australian one, 1 July to 30 June.
 
 | Rule | What it says |
 | --- | --- |
-| Money | Whole cents. Read from text digit by digit, never through a floating point number. Past the cent, round half away from zero. |
+| Money | Whole cents, read exactly as written, never as a rounded computer number. Past the cent, round half away from zero. |
 | A journal | Posts only if debits equal credits to the cent, on accounts and tax codes the business holds. |
 | History | A posted journal is never changed or deleted. The only correction is a reversal that negates every line, then the right entry. |
 | The lock date | Nothing dated on or before it posts. It only moves forward. |
-| The hash chain | Each journal carries the sha256 of its own canonical text and the hash of the one before. A check recomputes it from what is stored now. |
+| The hash chain | Each journal carries a fingerprint of itself and of the one before it, so changing any old entry breaks the chain. A check works the fingerprints out again from what is stored now. |
 | Reports | Rebuilt from the journals every time. Year 1 July to 30 June; last year's profit rolls into retained earnings on 1 July. |
-| Documents | Only authorised or paid post. Draft, submitted, voided and deleted post nothing. The same document never posts twice. |
+| Documents | Only approved or paid invoices and bills go in. Drafts, ones waiting for approval, voided and deleted ones put nothing in. The same document never goes in twice. |
 | Transfers | Between your own accounts: posted once, from the transfer. Not cash in or out. |
 | Line maths | Quantity x price x (1 - discount), rounded per line. GST per line: amount x rate before tax, amount x rate / (1 + rate) including it. |
 | Credit notes | Applied to an invoice or bill from the later of the date applied and the credit note's own date. |
@@ -128,7 +128,7 @@ There is no field for an edit and no status that removes a journal. The only way
 
 ## 4. The checks, in order
 
-The first seven keep the books honest whatever goes in. The next ten are the accounting itself, each with books and figures to match. The last ones are about the people and your real month.
+The first seven keep the books honest whatever goes in. The next ten are the accounting itself, each with a set of books and the figures it must produce. Then comes a run of 300 random entries. The last two need people and a real month of your own.
 
 1. Money is whole cents, parsed without floats. Every amount is stored as a whole number of cents. Money arrives as decimal text and is parsed digit by digit, never through a floating point number: thousands separators are allowed, anything past the cent rounds half away from zero, and text that is not a number is refused as NOT_MONEY.
 2. A journal posts only if debits equal credits. A journal is stored only when its lines sum to zero to the cent. A journal out by any amount is refused as UNBALANCED; one naming an account the chart does not hold as UNKNOWN_ACCOUNT; one with no lines as NO_LINES; one reusing an id as DUPLICATE_JOURNAL. A refused journal leaves nothing in the store.
@@ -209,7 +209,7 @@ If an error from before the cutover turns up later, it is fixed with an entry da
 
 ## 8. Run it your way
 
-The same checks, golden tests and pass test on each. Two rules hold whichever you pick: nothing already in the books is changed, and a cent is a difference.
+Each way uses the same checks, golden tests and pass test. Whichever you pick, nothing already in the books is ever changed, and a cent out counts as a difference.
 
 - **Google Workspace.** A protected sheet of entries that a script adds to and nobody edits, with the reports worked out from it. See [building on Google Workspace](https://aipathway.com.au/explore-ai/building-on-google-workspace).
 - **Microsoft 365.** A SharePoint list of entries that only the posting flow can add to, a lock date, and reports worked out from the list. The [Books That Balance build plan](https://aipathway.com.au/explore-ai/books-that-balance-on-microsoft-365) lays out the lists and flows.
@@ -243,7 +243,7 @@ the golden suite
 
 Anyone selling software that keeps your books should be able to run these golden tests in front of you, and show you the chain check passing on your own books.
 
-**The pass test.** On your own books, not the golden ones. Cut over at a month end from your old system’s trial balance, signed off by your accountant. Put one real month of invoices, bills, payments and bank lines through the software. At the next month end, its trial balance, worked out from its entries, agrees to the cent with an independent figure for the same documents, or your bookkeeper can name every difference. 1A less 1B equals the GST account’s movement. The chain check passes. Reverse one real entry: it nets to zero. A stub cannot pass this. The golden books are invented; only your own month, your accountant’s sign-off and an independent figure prove the software keeps real books right.
+**The pass test.** On your own books, not the golden ones. Cut over at a month end from your old system’s trial balance, signed off by your accountant. Put one real month of invoices, bills, payments and bank lines through the software. At the next month end, its trial balance, worked out from its entries, agrees to the cent with an independent figure for the same documents, or your bookkeeper can name every difference. 1A less 1B equals the GST account’s movement. The chain check passes. Reverse one real entry: it nets to zero. A test setup cannot pass this. The golden books are invented; only your own month, your accountant’s sign-off and an independent figure prove the software keeps real books right.
 
 ## 10. A checklist to hold any build or supplier to
 
