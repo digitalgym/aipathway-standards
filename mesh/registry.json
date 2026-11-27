@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0",
   "vocabulary_version": "1.1",
-  "generated_at": "2026-11-27T12:00:12.999Z",
+  "generated_at": "2026-11-27T12:00:37.135Z",
   "contract": "One id from the system of record on every hop. Each hop woken by a named event. Read by id, never by name or phone after intake. An open exception with a named owner stops the chain. A write counts only when the system of record returns an id that reads back. Durable state lives on the shared record.",
   "nodes": [
     {
@@ -14411,6 +14411,97 @@
       ]
     },
     {
+      "slug": "set-aside",
+      "name": "Set Aside",
+      "office_task": "Every Monday, publish how much of the bank balance is already owed in GST, PAYG, super and other tax, each tied to the ledger's balance sheet, and what is really free to spend.",
+      "verticals": [
+        "accounting-bookkeeping"
+      ],
+      "standards": [
+        "recurring-report"
+      ],
+      "systems_of_record": [
+        "the business's own ledger (Xero, MYOB or QuickBooks), read only over the AI Pathway hosted connector (connect.aipathway.com.au): the trial balance as at the run date for the bank accounts and each tax liability account the register names (GST, PAYG Withholdings Payable, Superannuation Payable, and any other such as payroll tax), and the ledger's own balance sheet as at the run date that each figure is tied to, to the cent. Nothing is written to the ledger. Any later change to the books is a separate job that goes through the Ledger Write Preview standard",
+        "the definitions register the bookkeeper keeps: one definition per measure, the ledger account it reads, the balance sheet line it ties to, and its owner; the thresholds and who is told; the audiences and the measures each one sees",
+        "the folder, channel or mailbox the report is published into (one per audience), which issues the report_id"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "one view of the week's Set Aside report per audience (owner, bookkeeper, and a manager who sees only the bank total and what is free to spend): the bank total, GST owed (collected less paid), PAYG withheld, super payable and other tax owed, each with its ledger account, definition id, source and as-of time and tied to the balance sheet as at the run date; then the total owed, what is free to spend and the share of the bank balance already owed, worked out only from tied figures. A figure that does not tie is published as unavailable with both values, and anything worked out from it is held, naming the figure it waits on, never a guess. It flags what the ledger shows as owed and gives no tax advice; what to set aside or pay stays with the owner and their accountant. A correction is a new version superseding the old, with the named person and the reason",
+          "readback": "reading the week back from the publish location returns each report_id with its version, published_at and published_by; no id back means it was not published and report.publish_failed is raised"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception naming the definition's owner, the threshold's person or the bookkeeper: a figure that did not tie to the balance sheet, a ledger that could not be read, a figure held because an input was unavailable, a measure with no definition or two, a threshold that could not be compared, a correction missing a person or reason or aimed at a worked-out figure, or a report that did not read back",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the week, the measure, the reason and the exception_owner"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "report.source_unreadable",
+          "report.figure_did_not_tie",
+          "report.derived_figure_held",
+          "report.no_definition",
+          "report.conflicting_definitions",
+          "report.threshold_not_comparable",
+          "report.correction_incomplete",
+          "report.correction_unknown_measure",
+          "report.correction_to_derived_figure",
+          "report.publish_failed"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "system-of-record",
+        "fields": [
+          "seam.report_id",
+          "seam.period",
+          "seam.version",
+          "seam.supersedes",
+          "seam.published_by",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/set-aside"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-27",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "recurring-report",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-27T11:58:29.433Z",
+          "run_id": "run-1795780709431",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
+        }
+      ]
+    },
+    {
       "slug": "sign-in-follow-up",
       "name": "Sign-In Follow-Up",
       "office_task": "Take the open-home sign-in sheet, follow up only the people who said yes with a message I approved, sort their replies, and draft the vendor's report from them.",
@@ -15362,6 +15453,108 @@
           "with_us": 1,
           "evidence_required": 0,
           "total": 13
+        }
+      ]
+    },
+    {
+      "slug": "super-match",
+      "name": "Super Match",
+      "office_task": "Each weekday, match every pay run's super to the payment that paid it, by pay run id, and flag any pay run with no matching payment inside the due window you set, with both figures.",
+      "verticals": [
+        "b2b-office"
+      ],
+      "standards": [
+        "two-records"
+      ],
+      "systems_of_record": [
+        "the payroll in the customer's own ledger (Xero, MYOB or QuickBooks), read only through the AI Pathway hosted MCP, or a payroll export where the connection does not reach payroll: each pay run's id, payday and super guarantee owed. The pay run is the master for the amount owed and for the payday. Only pay runs whose due date (payday plus the due window) has passed are read, so an on-time payment is never raised early. The payroll is never written",
+        "the super payments that left the bank, as the same ledger records them (the clearing house payment, each carrying the pay run id in its reference), read through the AI Pathway hosted MCP, or a bank statement export where the feed line is needed: the amount paid and the days after payday the money left. The only write is an accepted correction (a top-up the person says they already paid themselves), recorded through the Ledger Write Preview standard: the journal and recomputed totals are shown, the person releases it, it is written once and read back. The bot never pays, approves, posts or lodges anything itself",
+        "the bot's own store: the pair contract (with the due window in days, a setting the person confirms against current ATO guidance, never a figure the bot decides), every difference with both values, and every accepted correction with who accepted it",
+        "the system the result is published into (it issues the report_id the person opens)"
+      ],
+      "consumes": [
+        {
+          "event": "schedule.tick",
+          "wake": "schedule"
+        },
+        {
+          "event": "exception.closed",
+          "wake": "webhook"
+        }
+      ],
+      "emits": [
+        {
+          "event": "report.published",
+          "write": "the weekday super match where the payroll officer opens it: the pair contract it ran under, the join key (the pay run id), the master per field, the due window in force, and the counts matched, within the window, mismatched, orphaned and corrected; published every weekday, including the all-clear",
+          "readback": "the report store returns a report_id, and reading that id back returns the contract id, the five counts and the published time; no id back means the run did not publish and the owner is told"
+        },
+        {
+          "event": "exception.raised",
+          "write": "an exception naming the person who owns payroll: a pay run past its due date with no payment under its id (super owed and $0.00 paid); a payment short of or over the super owed, with both figures and the pay run's figure as master; a payment that left after the due window, with both figures and the days; a payment naming a pay run id the payroll does not have; a shortfall over the threshold amount; too many pay runs differing; or an accepted correction whose write returned no id. The bot never pays the shortfall; a person does, outside the bot",
+          "readback": "the exception desk returns an exception_id, and reading that id back returns the pay run id, the reason, both figures and the exception_owner; no id back means nothing was raised and the run stops"
+        }
+      ],
+      "exceptions": {
+        "raises": [
+          "two-records.contract_missing",
+          "two-records.difference_open",
+          "two-records.super_paid_late",
+          "two-records.orphan_pay_run_unpaid",
+          "two-records.orphan_payment_no_pay_run",
+          "two-records.over_threshold_amount",
+          "two-records.mismatch_rate_exceeded",
+          "two-records.write_refused",
+          "two-records.write_not_read_back"
+        ],
+        "owner_field": "exception_owner",
+        "halts_on_open": true
+      },
+      "durable_state": {
+        "writes_to": "seam-mirror",
+        "fields": [
+          "seam.pay_run_id",
+          "seam.payday",
+          "seam.due_window_days",
+          "seam.contract_id",
+          "seam.run_id",
+          "seam.difference_status",
+          "seam.super_owed",
+          "seam.super_paid",
+          "seam.days_after_payday",
+          "seam.accepted_by",
+          "seam.written_id",
+          "seam.exception_owner"
+        ]
+      },
+      "runtime": [
+        "node",
+        "schedule",
+        "webhook"
+      ],
+      "links": {
+        "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/super-match"
+      },
+      "maintainer": {
+        "name": "AI Pathway",
+        "github": "digitalgym"
+      },
+      "port_of": null,
+      "status": "listed",
+      "listed_at": "2026-11-27",
+      "routable": true,
+      "evidence_kind": "self-run",
+      "evidence": [
+        {
+          "standard": "two-records",
+          "edition": "2026-10-03",
+          "environment": "stub",
+          "ran_at": "2026-11-27T11:57:58.554Z",
+          "run_id": "run-1795780678553",
+          "green": 9,
+          "red": 0,
+          "with_us": 1,
+          "evidence_required": 1,
+          "total": 12
         }
       ]
     },
@@ -17520,6 +17713,7 @@
     "seller-book",
     "seller-weekly",
     "service-due",
+    "set-aside",
     "sign-in-follow-up",
     "site-drop",
     "site-orders",
@@ -17529,6 +17723,7 @@
     "stage-billing",
     "starter-pack",
     "sub-pay-check",
+    "super-match",
     "supplier-statement-check",
     "swms-desk",
     "takeoff-quote",
