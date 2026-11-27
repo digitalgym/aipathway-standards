@@ -102,7 +102,7 @@ skill asserts.
 - 5. Three calls on a winter evening
 - 6. What stays with a person
 - 7. Run it your way
-- 8. Join It to Your Own System: What to Stub, and What Not to Hand-Roll
+- 8. Join It to Your Own System: What to Build Yourself, and What Not To
 - 9. A checklist to hold any build or supplier to
 
 ## Attribution

@@ -9,7 +9,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/arrears-on-mic
 
 ---
 
-The escalation clock here is written in legislation, which makes the derive step and the stop check carry weight the other build plans do not have to.
+The deadlines for chasing rent are set by state law, so working out each date, and checking for a reason to stop, matter more here than in any other build plan.
 
 Used by
 
@@ -17,24 +17,24 @@ Used by
 - Property Manager
 - Operations Manager
 
-Arrears is the one workflow in this library where getting the date arithmetic wrong is not merely embarrassing. The periods are set by state legislation, the notices have legal effect, and a message sent to somebody who has already paid is a complaint with your name on it. The build is not hard. It is just unforgiving about two specific steps.
+Arrears is the one job in this library where getting the dates wrong is more than embarrassing. The periods are set by state legislation, the notices have legal effect, and a message sent to somebody who has already paid is a complaint with your name on it. The build is not hard. It is unforgiving about two steps.
 
 ## In short
 
 - **What this is**: A build plan for the rent arrears standard on Microsoft 365. Four lists, four flows, six measures.
-- **The core rule**: Not in arrears is the first branch of the triage, every time. Everything else in this plan exists downstream of that check.
-- **What it does not do**: No notice with legal effect leaves without a named person releasing it. The timer drafts; the person sends.
+- **The core rule**: The first thing the triage checks, every time, is whether the tenant is in arrears at all. Everything else in this plan comes after that check.
+- **What it does not do**: No notice with legal effect leaves without a named person releasing it. The flows draft it, and the person sends it.
 - **The hard part**: The stop check, which has to run before every message rather than once when the sequence started.
 
 ## 1. Before you start
 
-Read [the rent arrears build standard](https://aipathway.com.au/explore-ai/rent-arrears-build-standard) first, and note that it already defines its objects. The lists below are those objects with SharePoint types on them, not a new model. The shared conventions for this stack are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
+Read [the rent arrears build standard](https://aipathway.com.au/explore-ai/rent-arrears-build-standard) first. It already defines the records, and the lists below are those same records set up in SharePoint. The shared conventions for this stack are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-Two decisions to make before building. Which jurisdictions you operate in, because the Rules list is per state and an implementation that assumes one is wrong the first time you manage a property across a border. And who is permitted to release a notice, because that group is the gate and it should exist before the flow that calls it.
+Two decisions to make before building. Which jurisdictions you operate in, because the Rules list is per state and an implementation that assumes one is wrong the first time you manage a property across a border. And who may release a notice, because that group is what stops a notice going out on its own, and it should exist before the flow that asks it.
 
 ## 2. The lists, with their columns
 
-Four lists, following the standard's own objects. The one thing to notice is the order of columns on Positions: PaidTo comes first because the clock runs on it and Balance is the least useful of the three on its own.
+Four lists, following the standard's own records. Note the column order on Positions. PaidTo comes first because every deadline counts from it, and Balance is the least useful of the three on its own.
 
 ```
 Site: Arrears
@@ -89,11 +89,11 @@ Messages records drafts that were never sent, with the stop condition that stopp
 
 | The check | Enforced by | How |
 | --- | --- | --- |
-| Report paid-to first, because the statutory clock runs on it | List design | PaidTo is the required field and DaysInArrears is derived from it on refresh. Balance is present and deliberately secondary on every view. |
-| Not in arrears is checked before anything else | Triage flow | The first branch, always. Chasing someone who has paid is the most damaging thing this process can do and it is what a stale position causes. |
+| Report paid-to first, because the statutory clock runs on it | List design | PaidTo is the required field and DaysInArrears is worked out from it on each refresh. Balance is there, and deliberately second, on every view. |
+| Not in arrears is checked before anything else | Triage flow | The first branch, always. Chasing someone who has paid is the most damaging thing this process can do, and an out-of-date figure is what causes it. |
 | The position is as at a time, and that time is shown | Sync flow | AsOf stamps every row. Any view or message that can show a figure without its stamp will eventually show a wrong one. |
 | The stop check runs before every message, not once per run | Message flow | Circumstances change mid-sequence. The check is inside the send step and it re-reads, so a hardship application lodged this morning stops this afternoon's message. |
-| Statutory dates are derived from a dated, jurisdictional rule | Clock flow | NextLawfulDate is computed from the rule live for that state on that date, with the rule version stamped. Never typed, and never hardcoded to one state. |
+| Legal deadlines are worked out from the rule for that state on that date | Clock flow | NextLawfulDate is worked out from the rule in force for that state on that date, with the rule version recorded. It is never typed in, and never fixed to one state. |
 | Nothing legal leaves without a person releasing it | Approval | The notice is drafted and an approval is requested. The send action sits after the approval response, never on the timer. |
 
 ## 4. The four flows
@@ -188,9 +188,9 @@ What each connection is for.
 - **Tenancy notes and flags, read.** For the stop conditions Flow 4 re-reads before every message: an arrangement, hardship, a dispute, a notice already issued.
 - **One shared mailbox, send.** Flow 4’s ordinary messages, from an address the agency owns, so what went out is in one place.
 - **Approvals.** The notice, released only by a response from the approver group you decided on in section 1.
-- **An AI Pathway key with “Queue calls”, if you hand the short list over for calls.** Made at connect.aipathway.com.au/app/keys and called from a flow over its MCP endpoint with the HTTP action. One governed call per tenant; we check the Do Not Call Register and calling hours before it dials. Leave the key out and the build stops at the list.
+- **An AI Pathway key with “Queue calls”, if you hand the short list over for calls.** Made at connect.aipathway.com.au/app/keys and called from a flow over its MCP endpoint with the HTTP action. One call per tenant, and we check the Do Not Call Register and calling hours before it dials. Leave the key out and the build stops at the list.
 
-Least privilege, as steps.
+Give it the least access it needs, step by step.
 
 1. Own the four flows with a service account, not a property manager who might leave, with a named co-owner.
 2. Build them in one solution on connection references, so the rent roll, SharePoint, mailbox and Approvals connections are each one place to change.
@@ -215,21 +215,21 @@ Why not run the flows on a property manager’s own platform login? It is quicke
 
 ## 8. Four traps specific to this build
 
-### Hardcoding one state's periods
+### Fixing one state's periods into the flow
 
 The periods differ by jurisdiction and they change. A flow with a literal number of days in it is correct in one state until the day it is not, and nothing about it will announce that. Put the periods in a Rules list with EffectiveFrom, exactly as the compliance calendar does.
 
-### A cached arrears figure
+### An arrears figure saved and reused
 
-The standard says the position is derived on read and never cached. SharePoint stores, so the honest compromise is a stamped refresh with the stamp visible everywhere. What you must not do is let a figure from Monday reach a message on Thursday.
+The standard says the arrears figure is worked out fresh each time and never stored. SharePoint stores everything, so the workable compromise is a refresh with its time stamped, and the stamp visible everywhere. What you must not do is let a figure from Monday reach a message on Thursday.
 
-### The stop check evaluated once at the start of a run
+### The stop check run once at the start
 
 A sequence that checks stop conditions when it begins and then sends four messages over ten days is not implementing this standard. The person's circumstances are exactly what changes in those ten days.
 
 ### Approval as a notification
 
-An adaptive card that says a notice is about to go, with a cancel button, is not an approval. The send must not happen unless somebody actively approved, which means the send action is downstream of the approval outcome, not racing it.
+A message card that says a notice is about to go, with a cancel button, is not an approval. The send must not happen unless somebody actively approved, which means the send step comes after the approval, and only on a yes.
 
 ## 9. Where the automation stops
 
@@ -239,7 +239,7 @@ An adaptive card that says a notice is about to go, with a cancel button, is not
 - Anything at a tribunal. The system supplies the record and stops there.
 - Interpreting the legislation for your state. The Rules list is loaded by somebody who knows, and a wrong load looks exactly like a right one.
 
-**The pass test.** Two staged checks on test data. First, take a tenancy in the statutory path and add a live StopConditions row with reason hardship, then let the message flow run. No message may be sent, and a Messages row must appear with SentAt blank and Blocked naming the condition. Second, change a rule’s DaysAfter and give the change an effective date: every NextLawfulDate derived from it must move, and each row must still carry the RuleVersion that produced the old one. If the first sends, the stop check is running once per run rather than per message. If the second needs anyone to retype a date, the clock is stored rather than derived, and it will be wrong the first time the legislation moves.
+**The pass test.** Two staged checks on test data. First, take a tenancy in the statutory path and add a live StopConditions row with reason hardship, then let the message flow run. No message may be sent, and a Messages row must appear with SentAt blank and Blocked naming the condition. Second, change a rule’s DaysAfter and give the change an effective date: every NextLawfulDate derived from it must move, and each row must still carry the RuleVersion that produced the old one. If the first sends, the stop check is running once per run rather than per message. If the second needs anyone to retype a date, the dates are stored rather than worked out, and they will be wrong the first time the legislation moves.
 
 ## Related reading
 

@@ -46,7 +46,7 @@ It never answers anyone, never pays or approves, never guesses a value it cannot
 
 The hard part
 
-Not the reading. Landing each document on the one record it belongs to inside the job system the office actually uses, entering details there without overwriting anything, and closing the day so a missed run shows.
+Reading the document is the easy part. The hard part is landing each one on the one record it belongs to inside the job system the office uses, typing details in without overwriting anything, and closing the day so a missed run shows.
 
 Monday, 8am. The office administrator opens the inbox to forty attachments over the weekend, a stack of dockets someone left on the desk from the ute, and three web forms. There is a photo of a delivery docket from site with no job number on it, and nobody is sure which job it belongs to. The same supplier invoice came in by email and again through the copier. By Friday half of it is filed, some of it twice, and the rest is in a pile that nobody can say the size of.
 
@@ -60,23 +60,23 @@ Every door, one run, one list
 6. If so, its details are entered into the record and the original is filed once against it. A second copy of the same document is noted as a duplicate.
 7. At the close of the day: is everything accounted for, arrived equals filed plus on the list plus duplicates? The close is published either way, a quiet day included, and any gap is named on it for the next run.
 
-The filled diamond is the hard step: the document fits exactly one record and every detail reads clearly, inside the job system the office really uses. A no is not an error, it is the exceptions list. The second diamond is the close, published every working day either way.
+The filled diamond is the hard step. The document must fit exactly one record, and every detail must read clearly, inside the job system the office uses. If not, it goes to the exceptions list. The second diamond is the daily count, published every working day either way.
 
 ## 1. What this standard covers, and what it leaves to others
 
-Documents, from every door, and the data entry that goes with them. Each one is counted as it arrives, given one kind, matched to its job, purchase order, customer or supplier by a number printed on it, has the details the business chose typed into that record, and is filed there once. Anything the run cannot do cleanly goes to one exceptions list with a reason and an owner. At the end of the day the run publishes a close: documents in equals filed plus on the list plus duplicates.
+Documents, from every door, and the data entry that goes with them. Each one is counted as it arrives, given one kind, matched to its job, purchase order, customer or supplier by a number printed on it, has the details the business chose typed into that record, and is filed there once. Anything the run cannot do cleanly goes to one exceptions list with a reason and an owner. At the end of the day the run publishes a daily count, where documents in equals filed, plus on the list, plus duplicates.
 
-What is out of scope, and where it lives instead. Messages, as opposed to documents, belong to the [Inbox Triage standard](https://aipathway.com.au/explore-ai/inbox-triage-build-standard): one shared inbox, who answers each message, response clocks, complaints and acknowledgements. This standard takes documents from every door, not only the inbox, does the data entry into the record, and never answers anything. It reuses two of Inbox Triage’s rules on purpose, and says so: “Every message gets exactly one kind from a closed list” and “A message about a job or a supplier is filed against that record by id”. Here they apply to documents rather than messages, so an office running both keeps one discipline: a closed list and a record id, never a folder.
+What is out of scope, and where it lives instead. Messages, as opposed to documents, belong to the [Inbox Triage standard](https://aipathway.com.au/explore-ai/inbox-triage-build-standard): one shared inbox, who answers each message, response clocks, complaints and acknowledgements. This standard takes documents from every door, not only the inbox, does the data entry into the record, and never answers anything. It reuses two of Inbox Triage’s rules on purpose, and says so: “Every email is sorted into exactly one type from a set list” and “An email about a job or a supplier is filed on that job or supplier's own record”. Here they apply to documents rather than messages, so an office running both works one way: a fixed list of kinds, and filing against the record’s own number, never into a folder.
 
-A supplier invoice this run files is handed on, not paid. It sits on its purchase order or supplier record, where the [Invoice Check standard](https://aipathway.com.au/explore-ai/invoice-check-build-standard) reads it and decides whether it is right to pay. And making two systems agree, the job system and the ledger say, is the [Two Records standard](https://aipathway.com.au/explore-ai/two-records-build-standard). This standard never reconciles two systems. It borrows one rule from Two Records: “The run publishes on schedule with its counts, including the all-clear”, so a day the run did not happen is visible.
+A supplier invoice this run files is handed on, not paid. It sits on its purchase order or supplier record, where the [Invoice Check standard](https://aipathway.com.au/explore-ai/invoice-check-build-standard) reads it and decides whether it is right to pay. And making two systems agree (the job system and the accounts, say) is the [Two Records standard](https://aipathway.com.au/explore-ai/two-records-build-standard). This standard never makes two systems agree. It borrows one rule from Two Records: “Every scheduled run reports its counts, including the all-clear”, so a day the run did not happen is visible.
 
-What cannot meet it, and what can. Any job system or CRM that can look a record up by its id and accept an attachment against it: ServiceM8, Simpro, Fergus, AroFlo and Jobber for jobs, and Xero contacts for customers and suppliers. Tradify has no public API and no Zapier app, so a build cannot attach a document to a Tradify job directly. We connect it another way: the document is filed against the customer or supplier in Xero with the Tradify job number kept on it, or a browser step a person approves attaches it to the job in Tradify. And an office that runs on paper with no record numbers cannot meet check 3 until it starts writing a job number on its paperwork. That one change, a job number on every docket and order, is usually the cheapest win in the whole standard.
+What cannot meet it, and what can. Any job system or CRM that can look a record up by its number and accept an attachment against it: ServiceM8, Simpro, Fergus, AroFlo and Jobber for jobs, and Xero contacts for customers and suppliers. Tradify has no public API, the connection other software uses, and no Zapier app, so a build cannot attach a document to a Tradify job directly. We connect it another way. The document is filed against the customer or supplier in Xero with the Tradify job number kept on it, or a browser step a person approves attaches it to the job in Tradify. And an office that runs on paper with no record numbers cannot meet check 3 until it starts writing a job number on its paperwork. That one change, a job number on every docket and order, is usually the cheapest win in the whole standard.
 
-Is there a ready-made version? Not yet. No product runs this filing run across every door with the exceptions list and the close. So this standard is a Draft, and the build is yours.
+Is there a ready-made version? Not yet. No product runs this filing run across every door with the exceptions list and the daily count, so you build it from this standard, or we set it up for you as a separate build.
 
 ## 2. Every document is counted the moment it arrives
 
-Five doors, and the first thing that happens at each is a count: which door, what time, and a fingerprint of the file. Nothing is filed, set aside or raised that was not counted first, because the close at the end of the day is only as honest as this count.
+There are five doors, and the first thing that happens at each is a count: which door, what time, and a fingerprint of the file (a code unique to that exact file). Nothing is filed, set aside or put on the list unless it was counted first, because the count at the end of the day is only as honest as this one.
 
 | Door | What comes through it |
 | --- | --- |
@@ -86,7 +86,7 @@ Five doors, and the first thing that happens at each is a count: which door, wha
 | web_form | A form a customer filled in on the website |
 | supplier_portal | A statement or invoice downloaded from a supplier's portal |
 
-Then each document gets exactly one kind, from a list the business writes. The list below is a starting point; the business may change it, but it stays closed. A document that is none of them goes on the exceptions list as unknown_kind. It never starts a new folder, because a folder called “Misc” is where documents go to be lost.
+Then each document gets exactly one kind, from a list the business writes. The list below is a starting point. The business can change it, but the run never adds to it on its own. A document that fits none of them goes on the exceptions list as an unknown kind. It never starts a new folder, because a folder called “Misc” is where documents go to be lost.
 
 ## 3. Each one goes on its record by the number printed on it
 
@@ -103,13 +103,13 @@ Each kind says which printed number finds its record and which details are typed
 | statement | The supplier account number | Nothing: filed for the supplier |
 | customer_form | The customer account number | A new email or phone, into a blank field only |
 
-Never by a name, an address or an amount. The photo of the docket with no job number names the supplier and the site, and the job system’s search box would happily offer a job at that address. It might even be the right one. But “might” is how a delivery ends up on the wrong job and gets invoiced to the wrong customer, so the docket goes on the list as no_id and a person who knows says which job. A bare “1055” that fits both job 1055 and order 1055 goes on the list too.
+Never by a name, an address or an amount. The photo of the docket with no job number names the supplier and the site, and the job system’s search box would happily offer a job at that address. It might even be the right one. But “might” is how a delivery ends up on the wrong job and gets invoiced to the wrong customer, so the docket goes on the list marked “no number” and a person who knows says which job. A bare “1055” that fits both job 1055 and order 1055 goes on the list too.
 
-Typing in follows the same caution. Every detail for that kind must read clearly, and a total must equal its lines. If one does not, nothing from that document is typed in: the field is named on the list and left blank, never guessed. And if the record already holds a different value (the job says the quote was $4,800, the signed quote says $4,850), the record keeps its value and both go on the list side by side. A document is never allowed to quietly change what the business already wrote down.
+Typing in follows the same caution. Every detail for that kind must read clearly, and a total must equal its lines. If one does not, nothing from that document is typed in. The field is named on the list and left blank, never guessed. And if the record already holds a different value (the job says the quote was $4,800, the signed quote says $4,850), the record keeps its value and both go on the list side by side. A document is never allowed to quietly change what the business already wrote down.
 
 ## 4. The records it keeps, in the shape your developer needs
 
-Five objects. The Arrival is the one most builds leave out, and without it the close cannot add up, because nobody counted what came in.
+Five records. The Arrival record is the one most builds leave out, and without it the daily count cannot add up, because nobody counted what came in.
 
 ```
 Arrival                           # written first, append only
@@ -147,24 +147,24 @@ A Filing with no Arrival behind it, or an Arrival that is none of filed, duplica
 
 ## 5. The checks, in order
 
-The order is the claim. Counting comes before reading, because the close depends on it. The kind comes before the match, because the kind says which number to look for. The match comes before any typing, and the typing stops at the first doubt.
+Each check has to pass before the next one runs. Counting comes before reading, because the daily count depends on it. The kind comes before the match, because the kind says which number to look for. The match comes before any typing, and the typing stops at the first doubt.
 
-1. Every document is counted the moment it arrives. Before anything else, each arrival is written down with the door it came through, the time, and a fingerprint of the file. Nothing is filed, set aside or raised that was not counted first.
-2. Each document gets exactly one kind from a list the business writes. Supplier invoice, delivery docket, purchase order, signed quote, job sheet or photo, certificate, statement, customer form. A document that is none of these goes on the exceptions list as unknown_kind. It never starts a new folder.
-3. It is matched to its record by a number printed on it, never by a name or a guess. The job number, the purchase order number, or the customer or supplier account number printed on the document. No number on it, a number that fits two records, or a number that fits none goes on the exceptions list as no_id, two_matches or no_match.
-4. Details are entered into the record only when they read clearly and add up. The details the business chose for each kind (an invoice number and total, a docket's delivery date, a signed quote's amount) are entered only if every one reads clearly and the lines add up to the total. Otherwise nothing from that document is entered, the field is named, and it goes on the list.
-5. A value already in the record is never overwritten by a document that disagrees. If the record already holds a different value, both go on the exceptions list side by side as conflicts_with_record, and the record keeps its value until a person decides.
-6. The same document arriving twice is filed once. An invoice emailed and also scanned is one document. It is recognised by its kind, its own number and its record, not by the file, because a scan and a PDF of the same page never match byte for byte. The second arrival is noted as a duplicate of the first.
-7. The original is kept exactly as it arrived, and linked from the record. The build never edits, renames over or deletes an original. What the record links to is the file that came in, with the same fingerprint it was counted under.
-8. Anything that needs a person waits on one list, with a reason and an owner, oldest first. The reasons are a closed list: no_id, two_matches, no_match, unreadable_field, does_not_add_up, conflicts_with_record, unknown_kind. Each exception has an owner. Nothing that needs a person waits anywhere else.
-9. The run files and enters details, and never replies, pays, approves or sends. Nothing goes to a customer or a supplier. A filed supplier invoice is left on its record for the Invoice Check standard, which decides on paying. Replies and response clocks belong to Inbox Triage. The only message the run sends is to the owner of an exception, inside the business.
-10. The day closes with every document accounted for, published even when it is all clear. At the close, documents in equals filed plus on the list plus duplicates, and the count is published every working day, a quiet day included, so a run that did not happen shows as missing rather than as calm.
-11. A person clearing an exception is recorded, and the document then files as normal. Who cleared it, which record they chose and when. The document is then filed to that record and its details entered from what the person decided, with their name against it.
-12. For any document, where it came from and what happened to it can be looked up. The door and the time, its kind, the record it was filed to, what was entered from it, whether it was a duplicate, and who cleared it if a person had to.
-13. It survives the builder. Someone other than the builder can explain what it does, and it runs on an account the business owns.
-14. The pass test passes. On the business's own job system and inbox: a supplier invoice emailed and also scanned is filed once with one duplicate, a docket photo with no job number and a document changed to disagree with the record each wait on the list with their reason, and the day's close adds up.
+1. Every document is counted the moment it arrives. Before anything else, each arrival is logged with the way it came in, the time, and a fingerprint of the file. Nothing is filed, set aside or put on the exceptions list unless it was counted first.
+2. Each document gets exactly one kind from a list the business writes. The kinds are supplier invoice, delivery docket, purchase order, signed quote, job sheet or photo, certificate, statement and customer form. A document that is none of these goes on the exceptions list (reason: unknown_kind). It never starts a new folder.
+3. It is matched to its record by a number printed on it, never by a name or a guess. It uses the job number, the purchase order number, or the customer or supplier account number printed on the document. If there is no number, a number that fits two records, or one that fits none, the document goes on the exceptions list (reason: no_id, two_matches or no_match).
+4. Details are entered into the record only when they read clearly and add up. The details the business chose for each kind (an invoice number and total, a docket's delivery date, a signed quote's amount) are entered only if every one reads clearly and the lines add up to the total. If not, nothing from that document is entered, and it goes on the list with the problem detail named.
+5. A value already in the record is never overwritten by a document that disagrees. If the record already holds a different value, both go on the exceptions list side by side (reason: conflicts_with_record), and the record keeps its value until a person decides.
+6. The same document arriving twice is filed once. An invoice emailed and also scanned is one document. It is recognised by its kind, its own number and its record rather than by the file, because a scan and a PDF of the same page never match exactly. The second arrival is noted as a duplicate of the first.
+7. The original is kept exactly as it arrived, and linked from the record. It never edits, renames over or deletes an original. The record links to the file that came in, with the same fingerprint it was counted under.
+8. Anything that needs a person waits on one list, with a reason and an owner, oldest first. The reasons come from a set list (no_id, two_matches, no_match, unreadable_field, does_not_add_up, conflicts_with_record, unknown_kind). Each exception has an owner, and nothing that needs a person waits anywhere else.
+9. It files and enters details, and never replies, pays, approves or sends. Nothing goes to a customer or a supplier. A filed supplier invoice is left on its record for the Invoice Check standard, which decides on paying, and replies and response times belong to Inbox Triage. The only message it sends is to the person who owns an exception, inside the business.
+10. The day closes with every document accounted for, published even when it is all clear. At the close, the documents that came in equal those filed, plus those on the list, plus duplicates. The count is published every working day, quiet days included, so a missed run shows as missing rather than as a calm day.
+11. A person clearing an exception is recorded, and the document then files as normal. It records who cleared it, which record they chose and when. The document is then filed to that record, with its details entered from what the person decided and their name against it.
+12. For any document, where it came from and what happened to it can be looked up. You can see how and when it came in, its kind, the record it was filed to, what was entered from it, whether it was a duplicate, and who cleared it if a person had to.
+13. It keeps working if the person who built it leaves. Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+14. The pass test passes. On your own job system and inbox, a supplier invoice that is emailed and also scanned is filed once, with one duplicate noted. A docket photo with no job number, and a document changed to disagree with the record, each wait on the list with their reason. The day's close adds up.
 
-The exception reasons, a closed list:
+The exception reasons, a fixed list:
 
 | no_id | No job, order or account number printed on it |
 | --- | --- |
@@ -179,32 +179,32 @@ The exception reasons, a closed list:
 
 At the end of each working day the run publishes one short line: how many documents came in, how many were filed, how many are on the list, and how many were duplicates. The first number always equals the other three added together. Under it, the open exceptions, oldest first, each with its reason and its owner.
 
-It publishes on a quiet day too. “Nothing came in, nothing is waiting” is a real answer, and a missing close is a different one: the run did not happen. Silence must never be mistaken for calm, which is the rule this standard borrows from Two Records.
+It publishes on a quiet day too. “Nothing came in, nothing is waiting” is a real answer. A missing count means the run did not happen. A quiet day must never look the same as a missed run, which is the rule this standard borrows from Two Records.
 
-Duplicates are counted, not hidden. The same invoice arriving by email and through the copier is one document, recognised by its kind, its own number and its record, never by the file. A scan and a PDF of the same page never match byte for byte, so a duplicate rule built on the file alone files every scanned invoice twice.
+Duplicates are counted, not hidden. The same invoice arriving by email and through the copier is one document, recognised by its kind, its own number and its record, never by the file. A scan and a PDF of the same page are never the same file, so a duplicate rule built on the file alone files every scanned invoice twice.
 
 ## 7. What stays with a person
 
 - Clearing every exception: which job a docket with no number belongs to, which of two values is right, what an unreadable figure says. The run records who cleared it, and then files it.
-- Writing the list of kinds and what is typed in for each. The build follows the table; it does not grow it.
-- Every reply to a customer or a supplier. That is Inbox Triage's ground, with its own release step.
+- Writing the list of kinds and what is typed in for each. The build follows the table and never adds to it.
+- Every reply to a customer or a supplier. That belongs to Inbox Triage, which has its own sign-off before anything is sent.
 - Deciding a supplier invoice is right to pay. The run files it where Invoice Check reads it.
 - Deleting anything. The run never deletes an original, and neither does any flow it starts.
-- How long documents are kept. The run keeps everything; the business sets its own retention.
+- How long documents are kept. The run keeps everything, and the business decides how long to keep it.
 
 ## 8. Run it on what you already use
 
 The run lives beside the job system the office already works in. Three ways, all held to the same checks:
 
 - **Existing tools only.** A shared mailbox, the copier’s scan-to-email, and SharePoint lists for the count, the exceptions and the close. The [Microsoft 365 plan](https://aipathway.com.au/explore-ai/filing-run-on-microsoft-365) lays out the lists and flows.
-- **A personal dashboard.** Hand this page to a coding agent and it builds a small page with today’s count, the exceptions list and a clear button, against the stub until it has to write into the real job system.
-- **A long-lived bot.** A routine that runs through the day as documents arrive, posts each new exception to its owner, and publishes the close at 5pm.
+- **A personal dashboard.** Hand this page to a coding agent and it builds a small page with today’s count, the exceptions list and a clear button, working against a test version until it is connected to the real job system.
+- **A bot that runs all day.** A routine that runs through the day as documents arrive, posts each new exception to its owner, and publishes the close at 5pm.
 
 How to run any standard each of these ways is in [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
 
 ## 9. What your developer builds, and the step that needs care
 
-One step not to hand-roll: landing each document on the one record it belongs to inside the job system the office really uses, entering details there without overwriting anything, and keeping the original exactly as it arrived. Everything else a coding agent builds against the stub in an afternoon.
+One step is not worth building yourself: landing each document on the one record it belongs to inside the job system the office uses, typing details in without overwriting anything, and keeping the original exactly as it arrived. A coding agent can build everything else against a test version in an afternoon.
 
 ```
 provider:
@@ -233,26 +233,26 @@ cannot meet the standard
 
 A vendor selling document capture is usually selling the reading. Ask them three things: what happens to a docket with no job number, what happens when the document disagrees with what the job already says, and where the count of what arrived today is published.
 
-**The pass test.** On your own job system and inbox. Forward one real supplier invoice to the inbox and scan the same invoice on the copier. Photograph a delivery docket with no job number on it. Take a copy of a signed quote or invoice, change one amount so it disagrees with what the record says, and send it in. Then let the day close. Expect one filing of the invoice with its details entered once, one duplicate noted, two exceptions on the list (no_id and conflicts_with_record), the record still holding its own amount, and a close where arrived equals filed plus on the list plus duplicates. If the docket was filed to a job, or the record now shows the changed amount, the build guessed, which is the failure this standard exists to prevent.
+**The pass test.** On your own job system and inbox. Forward one real supplier invoice to the inbox and scan the same invoice on the copier. Photograph a delivery docket with no job number on it. Take a copy of a signed quote or invoice, change one amount so it disagrees with what the record says, and send it in. Then let the day close. Expect one filing of the invoice with its details entered once, one duplicate noted, two exceptions on the list (no number, and a clash with the record), the record still holding its own amount, and a daily count where arrived equals filed, plus on the list, plus duplicates. If the docket was filed to a job, or the record now shows the changed amount, the build guessed, which is the failure this standard exists to prevent.
 
 ## 10. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 
-- **1. Every document is counted the moment it arrives.** Before anything else, each arrival is written down with the door it came through, the time, and a fingerprint of the file. Nothing is filed, set aside or raised that was not counted first.
-- **2. Each document gets exactly one kind from a list the business writes.** Supplier invoice, delivery docket, purchase order, signed quote, job sheet or photo, certificate, statement, customer form. A document that is none of these goes on the exceptions list as unknown_kind. It never starts a new folder.
-- **3. It is matched to its record by a number printed on it, never by a name or a guess.** The job number, the purchase order number, or the customer or supplier account number printed on the document. No number on it, a number that fits two records, or a number that fits none goes on the exceptions list as no_id, two_matches or no_match.
-- **4. Details are entered into the record only when they read clearly and add up.** The details the business chose for each kind (an invoice number and total, a docket's delivery date, a signed quote's amount) are entered only if every one reads clearly and the lines add up to the total. Otherwise nothing from that document is entered, the field is named, and it goes on the list.
-- **5. A value already in the record is never overwritten by a document that disagrees.** If the record already holds a different value, both go on the exceptions list side by side as conflicts_with_record, and the record keeps its value until a person decides.
-- **6. The same document arriving twice is filed once.** An invoice emailed and also scanned is one document. It is recognised by its kind, its own number and its record, not by the file, because a scan and a PDF of the same page never match byte for byte. The second arrival is noted as a duplicate of the first.
-- **7. The original is kept exactly as it arrived, and linked from the record.** The build never edits, renames over or deletes an original. What the record links to is the file that came in, with the same fingerprint it was counted under.
-- **8. Anything that needs a person waits on one list, with a reason and an owner, oldest first.** The reasons are a closed list: no_id, two_matches, no_match, unreadable_field, does_not_add_up, conflicts_with_record, unknown_kind. Each exception has an owner. Nothing that needs a person waits anywhere else.
-- **9. The run files and enters details, and never replies, pays, approves or sends.** Nothing goes to a customer or a supplier. A filed supplier invoice is left on its record for the Invoice Check standard, which decides on paying. Replies and response clocks belong to Inbox Triage. The only message the run sends is to the owner of an exception, inside the business.
-- **10. The day closes with every document accounted for, published even when it is all clear.** At the close, documents in equals filed plus on the list plus duplicates, and the count is published every working day, a quiet day included, so a run that did not happen shows as missing rather than as calm.
-- **11. A person clearing an exception is recorded, and the document then files as normal.** Who cleared it, which record they chose and when. The document is then filed to that record and its details entered from what the person decided, with their name against it.
-- **12. For any document, where it came from and what happened to it can be looked up.** The door and the time, its kind, the record it was filed to, what was entered from it, whether it was a duplicate, and who cleared it if a person had to.
-- **13. It survives the builder.** Someone other than the builder can explain what it does, and it runs on an account the business owns.
-- **14. The pass test passes.** On the business's own job system and inbox: a supplier invoice emailed and also scanned is filed once with one duplicate, a docket photo with no job number and a document changed to disagree with the record each wait on the list with their reason, and the day's close adds up.
+- **1. Every document is counted the moment it arrives.** Before anything else, each arrival is logged with the way it came in, the time, and a fingerprint of the file. Nothing is filed, set aside or put on the exceptions list unless it was counted first.
+- **2. Each document gets exactly one kind from a list the business writes.** The kinds are supplier invoice, delivery docket, purchase order, signed quote, job sheet or photo, certificate, statement and customer form. A document that is none of these goes on the exceptions list (reason: unknown_kind). It never starts a new folder.
+- **3. It is matched to its record by a number printed on it, never by a name or a guess.** It uses the job number, the purchase order number, or the customer or supplier account number printed on the document. If there is no number, a number that fits two records, or one that fits none, the document goes on the exceptions list (reason: no_id, two_matches or no_match).
+- **4. Details are entered into the record only when they read clearly and add up.** The details the business chose for each kind (an invoice number and total, a docket's delivery date, a signed quote's amount) are entered only if every one reads clearly and the lines add up to the total. If not, nothing from that document is entered, and it goes on the list with the problem detail named.
+- **5. A value already in the record is never overwritten by a document that disagrees.** If the record already holds a different value, both go on the exceptions list side by side (reason: conflicts_with_record), and the record keeps its value until a person decides.
+- **6. The same document arriving twice is filed once.** An invoice emailed and also scanned is one document. It is recognised by its kind, its own number and its record rather than by the file, because a scan and a PDF of the same page never match exactly. The second arrival is noted as a duplicate of the first.
+- **7. The original is kept exactly as it arrived, and linked from the record.** It never edits, renames over or deletes an original. The record links to the file that came in, with the same fingerprint it was counted under.
+- **8. Anything that needs a person waits on one list, with a reason and an owner, oldest first.** The reasons come from a set list (no_id, two_matches, no_match, unreadable_field, does_not_add_up, conflicts_with_record, unknown_kind). Each exception has an owner, and nothing that needs a person waits anywhere else.
+- **9. It files and enters details, and never replies, pays, approves or sends.** Nothing goes to a customer or a supplier. A filed supplier invoice is left on its record for the Invoice Check standard, which decides on paying, and replies and response times belong to Inbox Triage. The only message it sends is to the person who owns an exception, inside the business.
+- **10. The day closes with every document accounted for, published even when it is all clear.** At the close, the documents that came in equal those filed, plus those on the list, plus duplicates. The count is published every working day, quiet days included, so a missed run shows as missing rather than as a calm day.
+- **11. A person clearing an exception is recorded, and the document then files as normal.** It records who cleared it, which record they chose and when. The document is then filed to that record, with its details entered from what the person decided and their name against it.
+- **12. For any document, where it came from and what happened to it can be looked up.** You can see how and when it came in, its kind, the record it was filed to, what was entered from it, whether it was a duplicate, and who cleared it if a person had to.
+- **13. It keeps working if the person who built it leaves.** Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+- **14. The pass test passes.** On your own job system and inbox, a supplier invoice that is emailed and also scanned is filed once, with one duplicate noted. A docket photo with no job number, and a document changed to disagree with the record, each wait on the list with their reason. The day's close adds up.
 
 Building this on Microsoft 365: [the lists, the flows and the daily close](https://aipathway.com.au/explore-ai/filing-run-on-microsoft-365).
 

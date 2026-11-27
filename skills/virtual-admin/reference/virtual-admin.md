@@ -41,22 +41,22 @@ Everything the admin does for a customer hangs off one job record. So when a cus
 
 What it does not do
 
-It never hard-codes business hours, never sends an invoice or a chase past a complaint the desk took, never finds a job by the customer's name, and never gives the owner one list from the phone and another from the ledger.
+It never hard-codes business hours, never sends an invoice or a chase past a complaint the desk took, never finds a job by the customer's name, and never gives the owner one list from the phone and another from the accounts.
 
 The hard part
 
-Not any one task. The after-hours desk and the daytime desk finding the same job, and a complaint said out loud on a call becoming something the invoice step can read. Those are the seams.
+Two moments go wrong: the after-hours desk and the daytime desk finding the same job, and a complaint said out loud on a call reaching the invoice step.
 
 Mr Ayres rang on Tuesday morning to say the gutter was still leaking after the repair. The person on the phone wrote it down, kindly, in a note. At three o’clock the job was marked complete, the invoice went out, and he got a text saying the job was done. A month later the chase rang him about the invoice. Every piece of that worked. He is not a customer any more.
 
 The role, as standards
 
-1. **The two desks**: Client Desk by day, Booked After Hours outside your hours. Your hours decide. call hours duplicate_of both write to
+1. **The two desks**: Client Desk by day, Booked After Hours outside your hours. Your hours decide. call hours duplicate_of both record on
 2. **The job record**: One job per customer, with its timeline and any open exception. job_id timeline exception is read by
-3. **The money path**: Quote Out, Invoice Out, Debtor Chasing, bound by Cash Seam. quote_id invoice_id chase ends the day on
+3. **The money path**: Quote Out, Invoice Out, Debtor Chasing, joined by Cash Seam. quote_id invoice_id chase ends the day on
 4. **The owner's list**: One list at the close, every open item with a name on it. line owner for a person
 
-Read it downward. The two desks write to one job. Everything the money path does reads that job first. The arrows are what this standard checks; each box is its own standard.
+Read it from the top. The two desks record everything on one job. Every step on the money side reads that job first. The arrows are what this standard checks, and each box has its own standard.
 
 Where the desk meets the money
 
@@ -69,7 +69,7 @@ Where the desk meets the money
 7. Is an exception open on the job? If not, the invoice goes and, when overdue, the chase, each logged on the timeline.
 8. If one is open, the invoice and the chase are held, and the hold is a line on the owner's one end-of-day list with its owner's name.
 
-The filled diamond is the complaint: what the customer says on the phone becomes an exception on the job, owned by a person. The last branch is the hold, which ends the day on the owner’s one list.
+The filled diamond is the complaint. What the customer says on the phone becomes an exception on the job, owned by a person. The last branch is the hold, which ends the day on the owner’s one list.
 
 ## 1. What this standard covers
 
@@ -78,9 +78,9 @@ A builder or a trade that wants the office admin role done, not five tools that 
 - Client Desk
 - Cash Seam
 
-Both pass on their own, and neither fails when the customer tells the desk something the money path needed to know. That is the gap. Every check below is about what crosses between the two halves: which desk answers, which job both desks use, the complaint that has to reach the invoice, the event both halves wake on, and the one list the owner reads at the end of the day.
+Both pass their own checks, and neither fails when the customer tells the desk something the money side needed to know. This standard covers that gap. Every check below is about what passes between the two halves: which desk answers, which job both desks use, the complaint that has to reach the invoice, the event that starts both halves when the job is done, and the one list the owner reads at the end of the day.
 
-What cannot meet it. Anything that cannot meet both halves. A job system with no API cannot be read by the desk or hand its job id to the money path, so the record that joins them does not exist. A business on Tradify can run the money path from the ledger and the transfer half of the desk, and a person joins them.
+What cannot meet it. Anything that cannot meet both halves. A job system that no other software can connect to cannot be read by the desk or pass its job id to the money side, so there is no record to join them. A business on Tradify can run the money side from its accounts and the call-transfer part of the desk, and a person joins the two.
 
 ## 2. The records it keeps, in the shape your developer needs
 
@@ -107,16 +107,16 @@ A desk chosen with no read of the hours, a complaint that exists only in a call 
 
 ## 3. The checks, in order
 
-The order follows a customer through the day. The hours decide who answers, both desks find the same job, what the customer says reaches the money before it moves, one event wakes both halves at completion, and everything ends on one timeline and one list.
+Each check has to pass before the next one runs, and they follow a customer through the day. The hours decide who answers, both desks find the same job, what the customer says reaches the money side before it moves, one event starts both halves when the job is done, and everything ends on one timeline and one list.
 
-1. The business's own hours decide which desk answers, read at the time of the call. Whether a call is handled by the daytime desk (Client Desk) or the after-hours desk (Booked After Hours) is decided by the hours and holidays the business set, read when the call arrives. Nothing hard-codes nine to five, and a public holiday the business closes on is after hours.
-2. A customer who rings both desks has one job. A call at night and a call the next morning from the same number about the same thing make one job. Whichever desk answers second attaches to the open job with duplicate_of set, rather than writing its own.
-3. A complaint or dispute taken on a call stops the invoice and the chase. When a caller complains about the work or disputes what they owe, the desk writes it onto the job as an exception, owned by the person the business named for complaints. The invoice step and the chase step read the job first and hold while that exception is open.
-4. The job-done message and the invoice come from the same event and name the same job. Job completed is one event. The completion message to the customer and the invoice are both woken by it and both carry the job id it named, read by that id. Neither finds its job by the customer's name.
-5. Every call, message, invoice and chase is on the job's timeline. The job is the one record of the customer. Every call either desk takes, every status message, the invoice and every chase are written to that job's timeline, so whoever picks up the phone next, person or agent, sees all of it in one place.
-6. One list at the end of the day, across both halves, with an owner on every line. At the close of business the build publishes one list: every open exception, callback and held invoice from both the desk and the money path, each with the person who owns it as the business named them. Nothing open is missing and nothing is unowned.
-7. It survives the builder. Someone other than the builder can explain what it does, and it runs on an account the business owns.
-8. The pass test passes. On the business's own number, job system and ledger: ring after hours, ring again the next morning and complain about the work, then mark the job complete. One job exists, the morning call is attached to it, the complaint is an exception with an owner, no invoice or chase goes out on it, and the owner's end-of-day list shows it.
+1. Your own hours decide which desk answers, checked when the call comes in. Whether a call is handled by the daytime desk (Client Desk) or the after-hours desk (Booked After Hours) is decided by the hours and holidays the business set, checked when the call arrives. Nothing assumes nine to five, and a public holiday the business closes on is after hours.
+2. A customer who rings both desks has one job. A call at night and a call the next morning from the same number about the same thing make one job. Whichever desk answers second adds the call to the open job, marked as a repeat, instead of starting a new one.
+3. A complaint or dispute taken on a call stops the invoice and the chase. When a caller complains about the work or disputes what they owe, the desk records it on the job as an open issue for the person you named to handle complaints. Before invoicing or chasing, it checks the job, and nothing goes out while that issue is open.
+4. The job-done message and the invoice both start from the job being marked complete, and name the same job. Marking a job complete sets off both the completion message to the customer and the invoice, and both look up the job by its number. Neither finds its job by the customer's name.
+5. Every call, message, invoice and chase is on the job's timeline. The job is the one record of the customer. Every call either desk takes, every status message, the invoice and every chase are saved to that job's timeline, so whoever picks up the phone next, a person or a bot, sees all of it in one place.
+6. One list at the end of the day, across both halves, with an owner on every line. At the close of business it sends one list of every open issue, callback and held invoice, from both the phone desks and the invoicing and chasing, each with the person you named to own it. Nothing open is missing, and nothing is left without an owner.
+7. It keeps working if the person who built it leaves. Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+8. The pass test passes. On your own number, job system and accounts, ring after hours, ring again the next morning and complain about the work, then mark the job complete. There is one job with the morning call on it, the complaint is an open issue with an owner, no invoice or chase goes out on it, and the owner's end-of-day list shows it.
 
 ## 4. The role, task by task
 
@@ -136,7 +136,7 @@ What a good office admin does for a builder or a trade, and where each piece is 
 | The desk and the money on one record | Virtual Admin (this standard) |
 | Being the person the customer knows | A person. Not a standard, and not something to automate. |
 
-The last row matters. A good admin is worth having because customers deal with one person who knows their job. Software can make sure that person, or anyone covering for them, sees the whole job in one place. It cannot be that person.
+A good admin is worth having because customers deal with one person who knows their job. Software can make sure that person, or anyone covering for them, sees the whole job in one place. It cannot be that person.
 
 ## 5. The order to build it in
 
@@ -147,7 +147,7 @@ The last row matters. A good admin is worth having because customers deal with o
 
 ## 6. What stays with a person
 
-- Every complaint and dispute, by the person the business named for complaints. The build stops the money; the person talks to the customer.
+- Every complaint and dispute, by the person the business named for complaints. The build holds the invoice and the chase, and the person talks to the customer.
 - Every line on the end-of-day list, by its owner.
 - Setting the hours, the holidays and who owns what.
 - Being the person the customer knows.
@@ -157,7 +157,7 @@ The last row matters. A good admin is worth having because customers deal with o
 
 Checked as at 26 October 2026
 
-Both desks run on Front Desk, which answers by day and after hours, and the money path on Recover, sold as Get Paid. No product of ours joins them on one record yet, so no end-to-end run of the whole role on a real tenant has been published, and the provider block below says scoped build.
+Both desks run on Front Desk, which answers by day and after hours, and the money path on Recover, sold as Get Paid. No product of ours joins them on one record yet, so no end-to-end run of the whole role on a real business’s own systems has been published, and the provider block below says we quote it as a scoped build.
 
 Tradify has no public or partner API, confirmed in writing by their support on 10 April 2026.
 
@@ -165,7 +165,7 @@ Tradify has no public or partner API, confirmed in writing by their support on 1
 
 ## 8. What your developer builds, and the step that needs care
 
-No step of its own not to hand-roll. The live steps belong to the halves: the phone line on each desk, and the authenticated write into the job system and the ledger on the money path. What this standard adds is wiring: the hours rule, the complaint hold, the timeline and the list.
+This standard has no step of its own that you must not build yourself. The live steps belong to the two halves: the phone line on each desk, and, on the money side, saving each record into the job system and your accounts through a proper sign-in. What this standard adds is wiring: the hours rule, the complaint hold, the timeline and the list.
 
 ```
 provider:
@@ -186,20 +186,20 @@ stays local                          # yours, and the standard
 
 A vendor selling a virtual admin is usually selling a person, or a voice, or a dashboard. Ask them one thing: when a customer complains on the phone in the morning, what stops the invoice that afternoon?
 
-**The pass test.** On the business’s own number, job system and ledger, not a sample. Ring after hours about a new problem. Ring again from the same phone the next morning, in business hours, and complain about the work. Then mark the job complete and let the end of the day run. Both recordings must open with the disclosure. The job system must hold one job, with both calls on its timeline and the complaint as an exception naming the complaints owner. The ledger must hold no invoice for it, and nothing may have been chased. The list the owner receives must name the complaint and its owner. A stub cannot pass this: its clock says whatever the runner sets and its two desks share memory by construction, so only the real line, the real job system and the real ledger prove the halves found each other.
+**The pass test.** On the business’s own number, job system and ledger, not a sample. Ring after hours about a new problem. Ring again from the same phone the next morning, in business hours, and complain about the work. Then mark the job complete and let the end of the day run. Both recordings must open by saying it is an AI and the call is recorded. The job system must hold one job, with both calls on its timeline and the complaint as an exception naming the complaints owner. Your accounts must hold no invoice for it, and nothing may have been chased. The list the owner receives must name the complaint and its owner. Test data cannot pass this. Its clock says whatever the tester sets, and its two desks share one memory from the start, so only the real line, the real job system and your real accounts prove the halves found each other.
 
 ## 9. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 
-- **1. The business's own hours decide which desk answers, read at the time of the call.** Whether a call is handled by the daytime desk (Client Desk) or the after-hours desk (Booked After Hours) is decided by the hours and holidays the business set, read when the call arrives. Nothing hard-codes nine to five, and a public holiday the business closes on is after hours.
-- **2. A customer who rings both desks has one job.** A call at night and a call the next morning from the same number about the same thing make one job. Whichever desk answers second attaches to the open job with duplicate_of set, rather than writing its own.
-- **3. A complaint or dispute taken on a call stops the invoice and the chase.** When a caller complains about the work or disputes what they owe, the desk writes it onto the job as an exception, owned by the person the business named for complaints. The invoice step and the chase step read the job first and hold while that exception is open.
-- **4. The job-done message and the invoice come from the same event and name the same job.** Job completed is one event. The completion message to the customer and the invoice are both woken by it and both carry the job id it named, read by that id. Neither finds its job by the customer's name.
-- **5. Every call, message, invoice and chase is on the job's timeline.** The job is the one record of the customer. Every call either desk takes, every status message, the invoice and every chase are written to that job's timeline, so whoever picks up the phone next, person or agent, sees all of it in one place.
-- **6. One list at the end of the day, across both halves, with an owner on every line.** At the close of business the build publishes one list: every open exception, callback and held invoice from both the desk and the money path, each with the person who owns it as the business named them. Nothing open is missing and nothing is unowned.
-- **7. It survives the builder.** Someone other than the builder can explain what it does, and it runs on an account the business owns.
-- **8. The pass test passes.** On the business's own number, job system and ledger: ring after hours, ring again the next morning and complain about the work, then mark the job complete. One job exists, the morning call is attached to it, the complaint is an exception with an owner, no invoice or chase goes out on it, and the owner's end-of-day list shows it.
+- **1. Your own hours decide which desk answers, checked when the call comes in.** Whether a call is handled by the daytime desk (Client Desk) or the after-hours desk (Booked After Hours) is decided by the hours and holidays the business set, checked when the call arrives. Nothing assumes nine to five, and a public holiday the business closes on is after hours.
+- **2. A customer who rings both desks has one job.** A call at night and a call the next morning from the same number about the same thing make one job. Whichever desk answers second adds the call to the open job, marked as a repeat, instead of starting a new one.
+- **3. A complaint or dispute taken on a call stops the invoice and the chase.** When a caller complains about the work or disputes what they owe, the desk records it on the job as an open issue for the person you named to handle complaints. Before invoicing or chasing, it checks the job, and nothing goes out while that issue is open.
+- **4. The job-done message and the invoice both start from the job being marked complete, and name the same job.** Marking a job complete sets off both the completion message to the customer and the invoice, and both look up the job by its number. Neither finds its job by the customer's name.
+- **5. Every call, message, invoice and chase is on the job's timeline.** The job is the one record of the customer. Every call either desk takes, every status message, the invoice and every chase are saved to that job's timeline, so whoever picks up the phone next, a person or a bot, sees all of it in one place.
+- **6. One list at the end of the day, across both halves, with an owner on every line.** At the close of business it sends one list of every open issue, callback and held invoice, from both the phone desks and the invoicing and chasing, each with the person you named to own it. Nothing open is missing, and nothing is left without an owner.
+- **7. It keeps working if the person who built it leaves.** Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+- **8. The pass test passes.** On your own number, job system and accounts, ring after hours, ring again the next morning and complain about the work, then mark the job complete. There is one job with the morning call on it, the complaint is an open issue with an owner, no invoice or chase goes out on it, and the owner's end-of-day list shows it.
 
 ## Related reading
 

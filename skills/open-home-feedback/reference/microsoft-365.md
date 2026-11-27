@@ -17,14 +17,14 @@ Used by
 - Business Systems Analyst
 - Sales Administrator
 
-Power Automate already has the one thing this standard leans on hardest: an approval that waits for a person. So the build is mostly lists and three flows. What takes thought is the same as on any stack: consent is read from the register and never assumed, an opt-out is kept somewhere no new register can reach, and the vendor report holds counts and buyers’ words and nothing else.
+Power Automate already has the one thing this standard leans on hardest: an approval that waits for a person. So the build is mostly lists and three flows. What takes thought is the same as on any setup: consent is read from the register and never assumed, an opt-out is kept somewhere no new register can reach, and the vendor report holds counts and buyers’ words and nothing else.
 
 ## In short
 
 - **What this is**: A build plan for the Open-Home Feedback standard on Microsoft 365. Five lists, three flows, and two approvals that a person gives in Teams.
-- **The core rule**: Flow 1 drafts and starts an approval. Outlook sends only when the approval comes back approved, and the approver is written onto the row.
-- **What it does not do**: No flow replies to an offer or a complaint, and no list has a sentiment column. The report is counts, verbatim price comments and themes a person tagged.
-- **The hard part**: Keeping OptOuts keyed on the person rather than the row, so next Saturday's register cannot undo it, and keeping Replies append only, so the record still answers a vendor in two months.
+- **The core rule**: Flow 1 drafts each follow-up and asks the agent to approve it in Teams. Outlook sends it only once it is approved, and the approver's name is recorded with it.
+- **What it does not do**: No flow replies to an offer or a complaint, and no list has a sentiment column. The report is counts, price comments word for word, and themes a person tagged.
+- **The hard part**: Tying each opt-out to the person rather than one register row, so next Saturday's register cannot undo it, and never editing or deleting a past reply, so the record still answers a vendor in two months.
 
 ## 1. Before you start
 
@@ -151,7 +151,7 @@ What each connection is for.
 - **Outlook, one mailbox.** Flow 1 and Flow 3 send from it once approved; Flow 2 reads the replies that land there. Use the shared-mailbox send action if it is a shared mailbox the agent reads.
 - **Approvals and Teams.** The approval on every follow-up and every vendor report, and the posts to the agent about offers, complaints and rows with no consent.
 - **The CRM: no connection.** The register comes in as an export or a typed sheet, imported into the Register list. No flow can read or change a contact in Rex, Agentbox or VaultRE, because none is given a way in.
-- **AI Pathway: not in this plan.** If you add the standard’s optional call, the key only holds an attendee who asked for a call. It cannot dial; AI Pathway decides at dial time on the AI disclosure, the Do Not Call Register and calling hours.
+- **AI Pathway: not in this plan.** If you add the standard’s optional call, the key only holds an attendee who asked for a call. It cannot dial. AI Pathway decides just before each call, checking the AI disclosure, the Do Not Call Register and calling hours.
 
 Keep it to the least it needs.
 

@@ -32,7 +32,7 @@ Used by
 
 What this is
 
-An open build standard for an automated invoice-versus-purchase-order check. Implement it in whatever you like.
+An open build standard for checking each invoice against its purchase order automatically. Build it in whatever tool you like.
 
 Who it is for
 
@@ -40,17 +40,17 @@ Anyone building this themselves, and any AI agent asked to build it. It is writt
 
 The core rule
 
-The check proposes, a person disposes. Nothing in this specification pays an invoice.
+The check suggests and a person decides. Nothing in this standard pays an invoice.
 
 The hard parts
 
-Matching to the right PO, progressive claims, finding the variation approval, and deciding what close enough means. Section 6 names them so you can scope them in.
+Matching to the right PO, progressive claims, finding the variation approval, and deciding what close enough means. Section 6 names them so you can plan for them.
 
 Why we publish it
 
-A check built to a shared standard can be audited, handed over and trusted. One built ad hoc leaves when its author does.
+A check built to a shared standard can be audited, handed over and trusted. One built on the fly leaves when the person who built it does.
 
-Most people who need this can build it. A competent bookkeeper with AI tools, or a developer with a week, will get something running. What separates the ones still running in two years from the ones quietly abandoned is the order of the checks, what happens to an exception, and whether anyone can tell that it ran. The model and the language matter less. That is what this specifies.
+Most people who need this can build it. A competent bookkeeper with AI tools, or a developer with a week, will get something running. What separates the ones still running in two years from the ones quietly abandoned is the order of the checks, what happens to an exception, and whether anyone can tell that it ran. The AI model and the software matter less. Those three things are what this standard sets out.
 
 The four checks, in order
 
@@ -62,42 +62,42 @@ The four checks, in order
 6. Inside the adjusted sum? If yes, it lands in queue 3, done and reversible, which is the queue that earns trust.
 7. If no, the overrun is flagged before payment and it lands in queue 1, needs a decision, sorted by dollars at risk.
 
-Cheapest and most objective first, stopping at the first failure, so the exception a person reads is the earliest thing that went wrong. Check 3 is filled because it is the one section 2 says most builds skip.
+The quickest, clearest check runs first, and the run stops at the first failure, so the problem a person reads is the earliest thing that went wrong. Check 3 is shaded because section 2 says most builds skip it.
 
 ## 1. What this standard covers
 
-One workflow: a supplier or subcontractor invoice arrives, and something decides whether it agrees with what was agreed. It covers the comparison and the exception. It does not cover paying anyone, and it deliberately stops short of that.
+One job: a supplier or subcontractor invoice arrives, and it is checked against what was agreed. The standard covers the check and what happens to an invoice that fails it. Paying anyone stays with a person, on purpose.
 
 The standard assumes two connections and nothing else. An **inbox**, because invoices arrive as email attachments from people outside your systems, and that is the whole reason this work is manual. And an **accounting package** holding the other half of the comparison: the purchase orders, the bills, the contacts, the job codes. In Australian construction that is usually Xero or MYOB.
 
 Why the work sits here
 
-Everything an accounting package automates is inside one company’s boundary: its ledger, its bank feed, its payroll. Everything still done by hand crosses a boundary. The supplier is a separate company, using different software, under no obligation to match your format. That is why this work is stable rather than a gap waiting for the next release, and why the fix is to check across the seam rather than to try to close it.
+Everything an accounting package automates happens inside one company: its accounts, its bank feed, its payroll. Everything still done by hand involves someone outside it. The supplier is a separate company, using different software, under no obligation to match your format. That is why this work will not disappear in the next software update, and why the fix is to check each invoice against your own records instead of trying to make suppliers fit your system.
 
 ## 2. The four checks, in order
 
-Run them in this order and stop at the first failure. The order is part of the specification: it moves from the cheapest and most objective comparison to the most contested, so the exception a person reads is the earliest thing that went wrong rather than the last one detected.
+Each check has to pass before the next one runs, and the run stops at the first failure. The order goes from the quickest, clearest comparison to the one most likely to be argued over, so the problem a person reads is the earliest thing that went wrong.
 
 | # | Check | Against | Passes when | On failure |
 | --- | --- | --- | --- | --- |
 | 1 | Rate | The purchase order, subcontract or schedule of rates | Unit rate on the invoice equals the agreed rate | Flag with both rates and the difference in dollars |
-| 2 | Quantity or progress | What has been marked complete, and what was claimed previously | Claimed quantity is available and not already claimed | Flag with the cumulative position, not just this claim |
-| 3 | Variation | The written approval record | Every line outside the original scope has an approval reference | Flag as unapproved scope. Never infer approval from an email tone |
-| 4 | Contract sum | The contract total plus approved variations | Cumulative claimed stays inside the adjusted sum | Flag as overrun before payment, not at practical completion |
+| 2 | Quantity or progress | What has been marked complete, and what was claimed previously | Claimed quantity is available and not already claimed | Flag with the total claimed to date, as well as this claim |
+| 3 | Variation | The written approval record | Every line outside the original scope has an approval reference | Flag as unapproved scope. Never treat a confident email as an approval |
+| 4 | Contract sum | The contract total plus approved variations | Total claimed to date stays inside the contract total plus approved variations | Flag the overrun before payment, long before practical completion |
 
-**Check 3 is the one that matters and the one most builds skip.** Rate and quantity are arithmetic. Whether a variation was ever approved is a question about a document that may not exist, and it is where the money actually goes. A check that validates rates and totals but accepts any line item presented to it is checking the easy half.
+**Check 3 is the one that matters and the one most builds skip.** Rate and quantity are simple sums. Whether a variation was ever approved depends on a document that may not exist, and it is where the money goes. A check that tests rates and totals but accepts any line on the invoice is checking the easy half.
 
-If there is no purchase order to compare against, do not guess. That invoice belongs in the fourth queue with the question “which job is this?” attached, not in the first with an inferred match.
+If there is no purchase order to compare against, do not guess. That invoice goes in the fourth queue with the question “which job is this?” attached. It never goes in the first with a guessed match.
 
 ## 3. The four queues
 
-Every invoice ends in exactly one of four states. Build these as four lists a person can open, not as a status column nobody reads.
+Every invoice ends up in exactly one of four queues. Build them as four lists a person can open, never as a status column nobody reads.
 
 Queue 1
 
 Needs a decision
 
-Mismatches the machine found and cannot resolve
+Mismatches the check found and cannot settle
 
 Sorted by dollars at risk. If this is long, the build has failed
 
@@ -123,43 +123,43 @@ Blocked by nature
 
 New subcontractor setup, variation with no written approval, payment authorisation
 
-Work the machine should not attempt, kept apart from work it failed
+Work the check should never try, kept apart from work it got wrong
 
-The third queue is the one people leave out, and it is the one that decides adoption. If the clean matches are invisible, nobody can tell the difference between a system that checked forty invoices and found three problems, and a system that silently did nothing. For the first month the operator will read that list line by line. By the second they will check the count. That progression only happens if you build the list.
+The third queue is the one people leave out, and it decides whether your team keeps using the check. If the clean matches are hidden, nobody can tell a system that checked forty invoices and found three problems from one that silently did nothing. For the first month the person checking invoices will read that list line by line. By the second they will check the count. That only happens if you build the list.
 
 ## 4. The exception record
 
-An exception is a record rather than a notification, and it needs enough on it that a person can decide without opening anything else:
+Each exception is saved as a record you can come back to, with enough on it that a person can decide without opening anything else:
 
 - **What arrived**: invoice number, supplier, amount, and a link to the source document
 - **What was expected**: the PO or contract reference and its figure
-- **The difference**: stated in dollars, not as a percentage or a similarity score
+- **The difference**: in dollars, never a percentage or a match score
 - **Which check failed**, and therefore which checks were never run
-- **Confidence**, and what it is based on, so a person can discount it
-- **The date, kept**: the record survives the decision
+- **How sure the check is**, and why, so a person can weigh it
+- **The date, kept**, so the record stays after the decision is made
 
 Keep the source document attached to the record. In an industry that gets audited, a decision without the evidence that informed it is worth very little eighteen months later.
 
 ## 5. Six rules that keep it trustworthy
 
-1. **Propose, never commit.** Draft the bill, draft the query, propose the payment batch. A person clicks. Nothing in this standard moves money, and that is not a limitation to relax in version two.
-2. **Never auto-approve, only ever flag.** A check that is confidently wrong is worse than no check, because the operator stops looking. “Nothing to flag” has to be honest, not a guess.
-3. **Silence is a finding.** The hardest thing a person does here is notice what did not arrive: the invoice never sent, the certificate quietly expired, the PO with no claim against it. Drive the second queue from expected-versus-actual, not from what turned up.
+1. **Suggest, never act.** Draft the bill, draft the query, suggest the payment batch. A person clicks. Nothing in this standard moves money, and a later version should not change that.
+2. **Never auto-approve, only ever flag.** A check that is confidently wrong is worse than no check, because people stop looking. “Nothing to flag” has to mean the checks ran and found nothing.
+3. **Notice what did not arrive.** The hardest thing a person does here is notice what is missing: the invoice never sent, the certificate quietly expired, the PO with no claim against it. Fill the second queue by comparing what you expected with what arrived, not only from what turned up.
 4. **Every automatic action is visible and reversible.** If you cannot show what it did and undo it, you cannot ask anyone to rely on it.
-5. **Fixed checks, no free-text prompt.** If an operator has to phrase the question, two runs will not agree and neither will be reproducible. The value is that it happens identically every time.
-6. **Escalate ambiguity, never resolve it.** A partial match, an unreadable scan, a supplier you have never seen. These belong to a person. Guessing here is how the whole thing loses credibility in one bad month.
+5. **Fixed checks, no typed questions.** If someone has to type the question each time, two runs will not agree. The value is that it runs the same way every time.
+6. **Pass anything unclear to a person, never guess.** A partial match, an unreadable scan, a supplier you have never seen. These belong to a person. Guessing here is how the whole thing loses people's trust in one bad month.
 
 ## 6. The parts that are harder than they look
 
-A first version comes together quickly. These are the things that take the rest of the time, listed so you can scope them in rather than discover them one at a time. If you are stuck on one of these, you have not done anything wrong. This is where the work actually is.
+A first version comes together quickly. These are the things that take the rest of the time, listed so you can plan for them instead of finding them one at a time. If you are stuck on one of these, you have not done anything wrong. This is where the work is.
 
 Matching the invoice to the right purchase order
 
 Suppliers do not quote your PO number, or they quote it wrong, or one invoice spans three POs, or the PO was raised after the work. Matching on supplier plus amount plus date gets you most of the way and then produces a confident wrong answer. Decide early what you will do with a partial match, because it is the most common case and it is not a match.
 
-Reading a line item that was never structured
+Reading an invoice line written any old way
 
-“Variation 3: additional works as discussed” against a PO line reading “Supply and install, stage 2”. Totals compare cleanly; descriptions do not. This is where extraction stops helping and judgement starts, and it is the reason the check escalates instead of guessing.
+“Variation 3: additional works as discussed” against a PO line reading “Supply and install, stage 2”. Totals compare cleanly; descriptions do not. This is where reading the invoice stops helping and judgement starts, and it is why the check passes the line to a person instead of guessing.
 
 Finding the variation approval
 
@@ -167,44 +167,44 @@ Check 3 assumes there is a written record. Often the approval is in a text messa
 
 Progressive claims and retention
 
-A claim is usually cumulative, so the check is not invoice-versus-PO but this-claim-plus-everything-previously-claimed versus the adjusted contract sum, less retention. Get this wrong and every claim after the first looks like an overcharge.
+A claim is usually a running total, so the check compares this claim plus everything claimed before it with the contract sum plus approved variations, less retention. Comparing one invoice with the PO is not enough. Get this wrong and every claim after the first looks like an overcharge.
 
 Credit notes and part-payments
 
-They break the assumption that one invoice equals one decision, and they are usually the first thing that makes a working check start producing noise.
+They break the assumption that one invoice equals one decision, and they are usually the first thing that makes a working check start raising false alarms.
 
 Deciding what “close enough” means
 
-Rounding, GST treatment, a $2 freight difference. Too tight and the exception queue fills with nothing; too loose and it misses the thing you built it for. This threshold is a business decision, not a technical one, and it should be written down where the operator can see it.
+Rounding, GST treatment, a $2 freight difference. Too tight and the exception queue fills with nothing; too loose and it misses the thing you built it for. Where you set it is a business decision. Write it down where the person checking invoices can see it.
 
-None of these is a reason to stop. They are the reason a build takes longer than the first demo suggests, and knowing them in advance is most of the difference between a check that survives contact with a real month and one that gets switched off.
+None of these is a reason to stop. They are the reason a build takes longer than the first demo suggests, and knowing them in advance is most of the difference between a check that copes with a real month and one that gets switched off.
 
 ## 7. What breaks after it works
 
-A self-built check usually works when it is built, because the person who built it is also the person running it and they carry what it does not cover in their head. The failures come later, and they are consistent enough to design against:
+A self-built check usually works when it is built, because the person who built it is also the person running it and they carry what it does not cover in their head. The failures come later, and they are predictable enough to plan for:
 
 - **It leaves when they do.** A prompt library in someone’s chat history, a spreadsheet of their formulas, an inbox rule under their login. None of that gets handed over.
 - **Nobody knows whether it ran.** A check performed when someone remembers, phrased how they phrased it that day, with no record that two runs agreed.
-- **It degrades quietly.** Rates change, a supplier changes their invoice layout, a new PO format appears. It keeps returning “nothing to flag” and everyone believes it.
+- **It drifts and nobody notices.** Rates change, a supplier changes their invoice layout, a new PO format appears. It keeps returning “nothing to flag” and everyone believes it.
 - **It cannot be audited.** No dated record of what was compared against what.
 
-None of these is a reason not to build it yourself. They are the things to design against if you do. Rules 3, 4 and 6 above exist specifically because of them, and following this standard is what makes a self-built check survivable by the next person in the seat.
+These are the things to plan for if you build it yourself. Rules 3, 4 and 6 above exist because of them, and following this standard is what lets the next person in the job keep a self-built check running.
 
 ## 8. What It Is Worth
 
-No figures here: the standard derives none, and what a check is worth will differ on your own invoice mix. These name the levers, assuming an inbox and an accounting package holding the purchase orders.
+There are no figures here. The standard works none out, and what a check is worth depends on your own invoices. These are what drive its value, assuming an inbox and an accounting package holding the purchase orders.
 
 Four checks
 
 Stopping at the first failure
 
-Rate, quantity, variation, contract sum. Cheapest and most objective first, most contested last.
+Rate, quantity, variation, contract sum. Quickest and clearest first, the one most likely to be argued over last.
 
 In dollars
 
 Every difference on an exception
 
-Not a percentage or a similarity score, and the source document stays attached to the record.
+Never a percentage or a match score, and the source document stays attached to the record.
 
 Every one
 
@@ -212,33 +212,33 @@ Clean match visible in a list
 
 Otherwise nobody can tell a check that found three problems from one that silently did nothing.
 
-The most valuable output is often check three: making the absence of a written variation approval visible, because that is where the money actually goes.
+The most valuable output is often check three: making the absence of a written variation approval visible, because that is where the money goes.
 
 ## 9. Connect your accounts inbox and Xero or MYOB for invoice checks, without it paying anyone
 
-It checks each invoice that comes in against what you ordered and approved. It reads the invoices in your accounts inbox, your purchase orders, bills and contacts in Xero or MYOB, and your written variation approvals, then files each invoice into one of four queues and, if you allow it, drafts the bill or the query. Approving the bill stays with you, and so do variations and any dispute with a subcontractor. Your own login stays yours. The build connects through Xero’s or MYOB’s own sign-in and your mailbox’s own approval screen, never with your username and password.
+It checks each invoice that comes in against what you ordered and approved. It reads the invoices in your accounts inbox, your purchase orders, bills and contacts in Xero or MYOB, and your written variation approvals, then files each invoice into one of four queues and, if you allow it, drafts the bill or the query. You approve every bill, and you decide variations and any dispute with a subcontractor. Your own login stays yours: the build connects through Xero’s or MYOB’s own sign-in and your mailbox’s own approval screen, never with your username and password.
 
 **What each piece of access is for.**
 
 - **The accounts inbox, read.** Invoices arrive as attachments from people outside your systems. The build reads them and labels each one once it is filed, so nobody checks it twice.
 - **Purchase orders and contacts, read.** The other half of checks 1, 2 and 4: the agreed rate, the quantity and the contract sum.
-- **Bills, read.** To see whether this invoice is already in the ledger, so the same claim is never checked or drafted twice. If Xero is already connected to AI Pathway, a key with Read the book lists the bills in Xero for this read. AI Pathway does not read purchase orders, so those still come through the build’s own connection.
+- **Bills, read.** To see whether this invoice is already in your accounts, so the same claim is never checked or drafted twice. If Xero is already connected to AI Pathway, a key with Read the book lists the bills in Xero for this read. AI Pathway does not read purchase orders, so those still come through the build’s own connection.
 - **The variation approvals, read.** The folder or list where written approvals live, for check 3.
-- **Bills, draft only, if you want it.** To draft a clean match as a bill for a person to approve. The permission that lets an app draft a bill in Xero also lets it approve one, so the stop at draft is in the build, and the pass test checks it.
+- **Bills, draft only, if you want it.** To draft a clean match as a bill for a person to approve. The permission that lets an app draft a bill in Xero also lets it approve one, so the build itself has to stop at draft, and the pass test checks that it does.
 
 1. Give the build read access to the accounts inbox, ideally a shared mailbox such as accounts@, through Microsoft’s or Google’s own approval screen.
 2. Connect Xero or MYOB through its own sign-in and ask only for reading purchase orders, bills and contacts, plus drafting bills if you want that. A Xero app created now has to choose Xero’s granular permissions, which makes asking for less straightforward.
-3. Point it at the folder or list where written variation approvals live. If they live in text messages, start the folder now; until then every variation will flag, which is the point.
+3. Point it at the folder or list where written variation approvals live. If they live in text messages, start the folder now. Until then every variation will be flagged, and that is intended.
 4. Write down what close enough means (section 6) and who works each queue.
 5. Run the pass test below on two invoices, then check that no bill the build touched is anything but a draft.
 
-**Why not Xero’s bill capture, Hubdoc or Dext?** They read an invoice into a bill, and they do that well. That is the easy half. They do not know whether a variation line was ever approved, because the approval sits in your site instructions and your texts, not in the ledger, and check 3 is where the money goes. If an app you already pay for matches bills to purchase orders, keep it for checks 1 and 4 and build check 3 beside it.
+**Why not Xero’s bill capture, Hubdoc or Dext?** They read an invoice into a bill, and they do that well. That is the easy half. They do not know whether a variation line was ever approved, because the approval sits in your site instructions and your texts, not in Xero or MYOB, and check 3 is where the money goes. If an app you already pay for matches bills to purchase orders, keep it for checks 1 and 4 and build check 3 beside it.
 
 **Where it runs.** A scheduled flow with the queues as lists (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/checking-invoices-on-microsoft-365) lays these out), a Google Sheet with a timer, or a small dashboard a coding agent builds from this page. All are held to the same checks; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
 
 ## 10. The records it keeps, in the shape your developer needs
 
-Sections 2 to 4 in the shape a build needs them. The check result carries which check failed AND which checks never ran, because the order is part of the specification and an exception that does not say where it stopped cannot be acted on.
+Sections 2 to 4 in the shape a build needs them. The check result records which check failed AND which checks never ran, because each check must pass before the next one runs, and an exception that does not say where it stopped cannot be acted on.
 
 ```
 invoice_under_check:
@@ -277,7 +277,7 @@ The exception keeps its date and its evidence after it is closed. In an industry
 
 ## 11. What your developer builds, and the step that needs care
 
-There is nothing to buy here, and the block says so rather than pointing at something adjacent. The reason is in section 6. The hard part is the binding between an invoice line and the approval record, and that binding is specific to how a business already works.
+There is no product to buy for this, and the block says so instead of pointing at something close. Section 6 explains why. The hard part is linking an invoice line to its written approval, and that depends on how each business already works.
 
 ```
 provider:
@@ -298,34 +298,34 @@ stays_local:
   - the exception record and its evidence
 ```
 
-Connect the document store the business already runs rather than moving the documents somewhere new. The approval record is only trustworthy where people already put it.
+Connect the document store the business already runs rather than moving the documents somewhere new. Approvals can only be trusted where people already keep them.
 
-**The pass test.** Take an invoice that matches its order exactly and change one unit rate. It must land in the decision queue naming check 1, the difference in dollars, and the three checks that never ran. Then take an invoice with a line outside the original scope and no written approval: it must flag as unapproved scope and must not pass because the supplier’s covering email sounds confident. Both take a minute to stage. If the second one passes, your variation check is reading tone rather than an approval record, which is section 2 in one sentence.
+**The pass test.** Take an invoice that matches its order exactly and change one unit rate. It must land in the decision queue naming check 1, the difference in dollars, and the three checks that never ran. Then take an invoice with a line outside the original scope and no written approval: it must flag as unapproved scope and must not pass because the supplier’s covering email sounds confident. Both take a minute to set up. If the second one passes, your variation check is reading the tone of the email instead of an approval record.
 
 ## 12. What stays with a person
 
-This standard finds and files. It does not decide, and the difference is the whole reason anyone trusts the queues six months later.
+This standard finds and files. A person decides, and that is why people still trust the queues six months later.
 
-- **Approving anything.** An exception is a record put in front of a named person. The machine does not release a payment, and it never approves a variation.
-- **Whether a difference is worth pursuing.** A small overcharge from a subcontractor you need next month is a commercial decision, not an arithmetic one.
+- **Approving anything.** An exception is a record put in front of a named person. The check never releases a payment, and it never approves a variation.
+- **Whether a difference is worth pursuing.** A small overcharge from a subcontractor you need next month is a business call, not a sum.
 - **Anything under Security of Payment.** Statutory timeframes with the builder’s name on them. They stay with the builder and their advisor, and nothing in this standard touches them.
 - **Telling a supplier they are wrong.** The build produces the comparison. A person has the conversation.
-- **Accepting a low-confidence extraction.** A marked field is a prompt for a human, never something that promotes itself once nobody looks.
+- **Accepting a figure the check could not read clearly.** A marked figure waits for a person to confirm it. It is never accepted just because nobody looked.
 
 ## 13. A checklist to hold any build or supplier to
 
-A build conforms to this standard if all of the following are true. Use it on your own implementation, or on one an AI built for you.
+A build conforms to this standard if all of the following are true. Use it on your own build, or on one an AI built for you.
 
 - The four checks run in order and stop at the first failure.
-- No matching purchase order escalates.
-- Variation approval is checked against a written record.
-- Every invoice lands in exactly one of the four queues.
-- Clean matches are visible in a list.
-- Every exception carries the difference and the source.
+- An invoice with no matching purchase order goes to a person.
+- A variation only counts as approved if the approval is in writing.
+- Every invoice lands on exactly one of the four lists.
+- Invoices that match cleanly are shown in a list.
+- Every invoice that does not match shows the difference and where it came from.
 - Nothing pays or releases without a person.
-- The record of a check survives the decision.
-- Tolerance thresholds are written down where the operator can read them.
-- It survives the builder.
+- The record of each check is kept after the decision.
+- The allowed tolerances are written down where the person running it can read them.
+- It keeps working if the person who built it leaves.
 - The pass test passes.
 
 ## Facts that can change, and when we checked them
@@ -336,7 +336,7 @@ Checked as at 18 September 2026
 
 **Victoria changed on 15 April 2026** under the Building Legislation Amendment (Fairer Payments on Jobsites and Other Matters) Act 2025: excluded amounts gone, a monthly claim right, and payment capped at 20 business days, for claims served on or after that date. Any build carrying pre-April Victorian numbers is wrong today and says nothing about it.
 
-**“Business day” is itself jurisdictional.** Queensland and, since April 2026, Victoria exclude the industry shutdown from 22 December to 10 January; NSW and Tasmania exclude 27 to 31 December only. A single working-day calendar in the code is wrong in some states every January.
+**“Business day” is itself jurisdictional.** Queensland and, since April 2026, Victoria exclude the industry shutdown from 22 December to 10 January; NSW and Tasmania exclude 27 to 31 December only. A build with one business-day calendar for every state is wrong in some states every January.
 
 **Check these against the primary instrument before you rely on them**, and store the date you checked beside the value rather than hard-coding it. This standard tells you the shape and where to look. It is not legal advice and it does not tell you that anything complies.
 

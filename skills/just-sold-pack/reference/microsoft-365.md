@@ -17,7 +17,7 @@ Used by
 - Business Systems Analyst
 - Marketing Manager
 
-A property sells and the agency wants the neighbours to hear it from them. In a Microsoft 365 office that usually means a mail merge from a spreadsheet somebody exported, sent the same afternoon. This plan keeps the spreadsheet’s speed and adds the three things it lacks: a sale that can say no, one message per neighbour, and a person’s yes on each.
+A property sells and the agency wants the neighbours to hear it from them. In a Microsoft 365 office that usually means a mail merge from a spreadsheet somebody exported, sent the same afternoon. This plan keeps the spreadsheet’s speed and adds the three things it lacks: a sale that stops when its figures do not match, one message per neighbour, and a person’s yes on each.
 
 ## In short
 
@@ -28,7 +28,7 @@ A property sells and the agency wants the neighbours to hear it from them. In a 
 
 ## 1. Before you start
 
-Read [the Just-Sold Pack build standard](https://aipathway.com.au/explore-ai/just-sold-pack-build-standard) first. It owns the holds, the three reasons, the ranking and the exceptions. Where it and this page disagree, it wins. The shared conventions for this stack are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
+Read [the Just-Sold Pack build standard](https://aipathway.com.au/explore-ai/just-sold-pack-build-standard) first. It sets the holds, the three reasons, the ranking and the exceptions. Where it and this page disagree, it wins. The shared conventions for this stack are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
 Contacts stay in the CRM. The flows read them when the pack runs, so a do-not-contact flag set this morning holds this afternoon.
 
@@ -148,7 +148,7 @@ What each connection is for.
 - **The sale source, read only.** The data source the agency already licenses, read beside the agency’s own record so Flow 1 can compare them.
 - **Outlook, one shared mailbox, send only, Flow 2 only.** Flow 1 holds no mail connection at all, so it cannot send even by mistake.
 
-Least privilege, in practice. Both flows are owned by the automation service account, not by an agent, and sit in one solution with connection references. That account is a member of this one site only and has Send As on the one shared mailbox. If anything uses an app registration instead, give it Sites.Selected on this site and scope its mail permission to that mailbox. The details are in [the shared conventions](https://aipathway.com.au/explore-ai/standards-on-microsoft-365#access).
+Keep access to the minimum. Both flows are owned by the automation service account, not by an agent, and sit in one solution with connection references. That account is a member of this one site only and has Send As on the one shared mailbox. If anything uses an app registration instead, give it Sites.Selected on this site and scope its mail permission to that mailbox. The details are in [the shared conventions](https://aipathway.com.au/explore-ai/standards-on-microsoft-365#access).
 
 How to cut it off. Turn off Flow 2 and nothing more can be sent. Remove the CRM connection, or revoke its key in the CRM, and nothing more is read. The Pack rows and the Log stay, so you can still see what went and who approved it.
 

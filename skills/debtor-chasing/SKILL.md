@@ -90,11 +90,11 @@ skill asserts.
 
 ## The work, in order
 
-- 1. What You Actually Need Off the Ledger
+- 1. What You Need From Your Accounts
 - 2. Four Buckets, Not One Reminder Run
 - 3. Which Invoice Gets Chased First
 - 4. The Opener Decides Whether You Get a Date
-- 5. A Promise Is an Object, Not a Feeling
+- 5. A Promise Is a Record With a Date
 - 6. What It Is Worth
 - 7. Parts That Are Harder Than They Look
 - 8. What Breaks After It Works

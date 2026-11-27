@@ -94,7 +94,8 @@ const KNOWN = [
   "rules-and-holds-build-standard",
   "hand-off-build-standard",
   "ledger-write-preview-build-standard",
-  "ledger-core-build-standard"
+  "ledger-core-build-standard",
+  "duplicate-bill-hold-build-standard"
 ];
 
 const [cmd, slug] = process.argv.slice(2);

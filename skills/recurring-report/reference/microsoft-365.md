@@ -9,7 +9,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/recurring-repo
 
 ---
 
-A figure is a stored row with its source and the time that source was read, not a tile that refreshed. The difference only shows up on the morning the feed is down, which is the morning it matters.
+Each figure is saved with its source and the time that source was read, so it cannot quietly change. A dashboard that only refreshes looks the same until the morning a source is down, and that is the morning it matters.
 
 Used by
 
@@ -17,12 +17,12 @@ Used by
 - Finance Manager
 - Operations Manager
 
-Most of this already exists in your tenant, and that is the problem. Power BI will refresh every morning and put a number on the wall, and on the morning the source cannot be read it will show yesterday’s number with exactly the same confidence and no mark on the tile. The hardest requirement in this standard is the one the stack does not do by default: publish a figure that says it could not be computed, on time, and leave last period’s figure exactly where it was.
+Most of this already exists in your Microsoft 365, and that is the problem. Power BI will refresh every morning and put a number on the wall, and on the morning the source cannot be read it will show yesterday’s number with exactly the same confidence and no mark on the tile. The hardest requirement in this standard is the one Microsoft 365 does not do by default: publish, on time, a figure that says it could not be worked out, and leave last period’s figure exactly where it was.
 
 ## In short
 
 - **What this is**: A build plan for the recurring report standard on Microsoft 365. Six lists, four flows, and one design decision that the rest of the page follows from.
-- **The core rule**: Every figure is stored with its definition, its source and the time that source was read. Power BI reads those rows. It does not produce them, because a failed refresh renders the last good data and says nothing.
+- **The core rule**: Every figure is saved with its definition, its source and the time that source was read. Power BI only shows those saved figures. It never produces them, because when a refresh fails it quietly shows the last good data.
 - **What it does not do**: It does not show last period's value when a source cannot be read, and it does not change a published report. A correction is a new version with a name and a reason on it.
 - **The hard part**: Getting the report to say a source could not be read, on a platform whose default behaviour is to keep showing the last number that worked.
 
@@ -30,11 +30,11 @@ Most of this already exists in your tenant, and that is the problem. Power BI wi
 
 Read [the recurring report build standard](https://aipathway.com.au/explore-ai/recurring-report-build-standard) first. It defines its objects, and the lists below are those objects with SharePoint types on them. Shared conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-Write the definitions register before you create a single list. One sentence per measure: which source, which query, which period, which filters, and who owns it. Revenue is invoiced revenue from the ledger for the calendar month, excluding credit notes, owned by the bookkeeper. The standard puts it plainly: the register is the product and the report is what it produces. Building the flows first gets you a working schedule that publishes numbers two people define differently, which is the thing you already have.
+Write the definitions register before you create a single list. One sentence per measure: which source, which query, which period, which filters, and who owns it. Revenue is invoiced revenue from the ledger for the calendar month, excluding credit notes, owned by the bookkeeper. The standard is plain about it: the register of definitions matters most, and the report is what it produces. Building the flows first gets you a working schedule that publishes numbers two people define differently, which is the thing you already have.
 
-Then make the decision this whole page turns on. **A figure is a row, not a tile.** The obvious build here is a Power BI report over the lists on a scheduled refresh, and it fails two of the standard’s checks in ways nobody notices. When a refresh fails, the model keeps the last successful data and every visual renders it, which is last period’s value shown as current. And a visual over live lists recomputes history, so the report the lender read in August quietly becomes a different report once August’s data is tidied up. Compute each figure in a flow, store it with its source and its as-of time, and point Power BI at the stored rows.
+Then make the decision this whole page turns on. **Save each figure as a row in a list, and never rely on a dashboard tile.** The obvious build here is a Power BI report over the lists on a scheduled refresh, and it fails two of the standard’s checks in ways nobody notices. When a refresh fails, Power BI keeps the last data that loaded and every chart shows it, which is last period’s value shown as current. And a chart over live lists recalculates the past, so the report the lender read in August quietly becomes a different report once August’s data is tidied up. Work out each figure in a flow, save it with its source and the time that source was read, and point Power BI at the saved rows.
 
-Last, list the audiences. Not the recipients: the audiences, each with the measures it carries. A lender, a franchisor and the owner are three lists of measures, and the difference between them is a declaration somebody made rather than a filter somebody applied.
+Last, list the audiences: the groups who each get their own version of the report, with the figures each one carries. A lender, a franchisor and the owner are three lists of figures, and what separates them is a decision somebody wrote down rather than a filter somebody applied.
 
 ## 2. The lists, with their columns
 
@@ -109,7 +109,7 @@ The standard's Version object is a row in Reports rather than a list of its own,
 | The report publishes at the scheduled time whether or not anything changed | Recurrence trigger | The publish step sits outside every condition, and the period's Reports rows are created before the run with ScheduledAt on them. A period that never published is a row with a blank PublishedAt, which can be queried. An absence cannot. |
 | A figure whose source could not be read publishes as unavailable, with the reason | Run after failure | The read action's failure path writes the row with Unavailable yes, the reason, and a message to that definition's owner. There is no branch anywhere in the flow that copies a value from a previous period. |
 | Prose describes figures that exist and never states a number they do not carry | Narrative step | The sentence is assembled by the flow from that report's figure rows, so a number that is not a figure has no way in. Where a model writes it instead, it is given the figure list and the flow refuses to publish a narrative carrying a numeral that is not on it. |
-| Each audience sees the figures declared for it and nothing else | AudienceMeasures | Each audience gets its own report and its own figure rows, written from the declared list. Row level security is the wrong tool here, because the lender has no account in your tenant to be filtered by one. |
+| Each audience sees the figures declared for it and nothing else | AudienceMeasures | Each audience gets its own report and its own figure rows, written from the declared list. Row level security is the wrong tool here, because the lender has no account in your Microsoft 365 to be filtered by one. |
 | A published figure changes only by a named person publishing a new version | Reports.Version + permissions | Correcting writes a fresh report row with the version raised, the person and the reason, and marks the old one superseded. Contribute on both lists belongs to the flow's account, so editing in place is not on the menu. |
 
 ## 4. The four flows
@@ -230,7 +230,7 @@ The flows write your regular report from the figures you already keep. They read
 What each connection is for.
 
 - **SharePoint, this one site.** Read and write on the six lists. Only the flows’ account contributes to Reports and Figures; everybody else reads.
-- **Your ledger, read.** Xero or MYOB, for the money measures the register defines, through a custom connector or the HTTP action, both premium in Power Automate. Xero gives apps created from March 2026 granular scopes, so ask only for the read scopes your definitions name.
+- **Your ledger, read.** Xero or MYOB, for the money measures the register defines, through a custom connector or the HTTP action, both premium in Power Automate. Xero gives apps created from March 2026 narrower, granular permissions, so ask only for the read permissions your definitions need.
 - **Your job system, read.** ServiceM8, Simpro or whatever runs the work, the same way, for measures like jobs completed in the week.
 - **An AI Pathway key with “Read the book”, if the report carries debtors.** Called from the flow at `https://connect.aipathway.com.au/api/mcp` with a bearer key from the Keys page in AI Pathway. It lists what is overdue now and the invoices raised since a date, up to 120 days back. A measure that needs a longer history reads the ledger directly. The report needs nothing else from the key, so leave “Write drafts and notes” and “Queue calls” off.
 - **Teams and one shared reports mailbox.** Teams posts each internal audience’s version and tells a definition’s owner when a source could not be read or a threshold moved. The shared mailbox sends the version to an audience outside the business, such as the lender.
@@ -238,7 +238,7 @@ What each connection is for.
 
 Keep each one to the least it needs.
 
-1. Create a service account for the flows and build them in a solution that account owns, with a named person as co-owner. A flow owned by a person stops working the day that person leaves, and so does the report. If the flows use a premium connector, the account needs a Power Automate licence that covers premium connectors; check what your tenant already has.
+1. Create a service account for the flows and build them in a solution that account owns, with a named person as co-owner. A flow owned by a person stops working the day that person leaves, and so does the report. If the flows use a premium connector, the account needs a Power Automate licence that covers premium connectors; check what your Microsoft 365 already has.
 2. Create every connection as the service account and use it through the solution’s connection references, so nobody’s own login sits inside a flow.
 3. Give the service account access to this one site and no other. If an app registration is used instead, grant it Sites.Selected and give it this site alone.
 4. Give the service account Send As on the shared reports mailbox and nothing else. If an app registration sends the mail, limit it to that mailbox with RBAC for Applications in Exchange Online, or the older application access policy.
@@ -246,7 +246,7 @@ Keep each one to the least it needs.
 
 How to cut it off. Revoke a source’s key, or disconnect it under Connected apps in Xero’s settings, and the next run publishes those figures as unavailable rather than guessing. Turn the flows off in Power Automate and nothing publishes at all, and any period already opened shows in Periods Missed. Block sign-in on the service account and every connection it owns stops working.
 
-Why not a Power BI subscription that emails the report every Monday? It is already in your tenant and it is on time. It sends a snapshot of whatever the model holds, so after a failed refresh it emails last period’s numbers as this period’s, with nothing on the page to say so. It keeps no versions, and it has no way to say unavailable. Keep subscriptions for the owner’s own look at the numbers, and publish the report from the stored rows.
+Why not a Power BI subscription that emails the report every Monday? It is already in your Microsoft 365 and it is on time. It sends a snapshot of whatever the model holds, so after a failed refresh it emails last period’s numbers as this period’s, with nothing on the page to say so. It keeps no versions, and it has no way to say unavailable. Keep subscriptions for the owner’s own look at the numbers, and publish the report from the stored rows.
 
 ## 7. The order to build it in
 
@@ -255,7 +255,7 @@ Why not a Power BI subscription that emails the report every Monday? It is alrea
 3. Declare the audiences and their measures, starting with the internal one. The lender's view is the same machinery with a shorter list, so there is nothing to learn from building it first.
 4. Build Flow 1 and let one period open with nothing behind it. A Reports row with a blank PublishedAt is the thing you will use to prove everything after this works.
 5. Build Flow 2 with one measure. Check the as-of on the figure row is the time the source was read and not the time the run finished, because those are the same number on the day you build it and never again.
-6. Break that source on purpose and run again. The figure must publish as unavailable with the reason, the owner must be told, and the report must still go out. This is the check most builds never test and the first one to fail in production.
+6. Break that source on purpose and run again. The figure must publish as unavailable with the reason, the owner must be told, and the report must still go out. This is the check most builds never test, and the first one to fail once the report is live.
 7. Add the remaining measures, the threshold comparison against the prior published figure, and the narrative assembled from the figure rows.
 8. Build Flow 3, correct a figure, and confirm version one is still readable with its original value. Then connect Power BI over Reports and Figures, with Periods Missed on the front page.
 
@@ -263,7 +263,7 @@ Why not a Power BI subscription that emails the report every Monday? It is alrea
 
 ### A refreshing dashboard instead of a published report
 
-When a scheduled refresh fails, the model keeps the last data that loaded and every visual renders it, confidently, with nothing on the tile to say so. That is precisely the figure this standard forbids: last period's value shown as current. The same shape breaks the correction rule too, because a visual over live lists recomputes August whenever August's data is touched, so the report somebody relied on is not the report that is there now. Power BI is where the numbers get looked at. The published figure is a row with an as-of time on it.
+When a scheduled refresh fails, Power BI keeps the last data that loaded and every chart shows it, confidently, with nothing on the tile to say so. That is precisely the figure this standard forbids: last period's value shown as current. The same shape breaks the correction rule too, because a chart over live lists recalculates August whenever August's data is touched, so the report somebody relied on is not the report that is there now. Power BI is where the numbers get looked at. The published figure is a row with an as-of time on it.
 
 ### One timestamp at the end of the run
 
@@ -271,11 +271,11 @@ Assembling every figure and stamping them all with the time the report was built
 
 ### The audience as a filter
 
-Filtering one report per recipient is a view, and a view is per person and per session. It also does not work at all for the audience that matters most: a lender does not have an account in your tenant to be filtered by. Write each audience its own figure rows from its declared measures. Row level security is the right tool inside the business and the wrong tool for anything that leaves it.
+Filtering one report per recipient is a view, and a view is per person and per session. It also does not work at all for the audience that matters most: a lender does not have an account in your Microsoft 365 to be filtered by. Write each audience its own figure rows from its declared measures. Row level security is the right tool inside the business and the wrong tool for anything that leaves it.
 
 ### A model writing the commentary from the sources
 
-If the sentence comes from the same prompt that summarised the data, it will state a percentage nobody computed, printed directly under numbers that were, and the reader has no way to tell them apart. Build the sentence from the figure rows. If a model writes it, give it the figure list and nothing else, and have the flow refuse to publish a narrative carrying a numeral that is not on that list. Checking numerals in a flow expression is fiddly, which is the honest argument for the template.
+If the sentence comes from the same prompt that summarised the data, it will state a percentage nobody computed, printed directly under numbers that were, and the reader has no way to tell them apart. Build the sentence from the figure rows. If a model writes it, give it the figure list and nothing else, and have the flow refuse to publish a narrative carrying a numeral that is not on that list. Checking numbers in a flow is fiddly, which is a good reason to build the sentence from the template.
 
 ## 9. Where the automation stops
 
@@ -283,7 +283,7 @@ If the sentence comes from the same prompt that summarised the data, it will sta
 - Setting a threshold, and who is told when it is crossed. A threshold with nobody named on it is a column, and it will be read as a control for about a year.
 - What a figure means to a lender, a franchisor or a board. The sentence in the register is a person's, and it is the part no flow can check.
 - Whether a report goes outside the business at all. Adding an audience is a decision about disclosure, not a row somebody adds because the data was already there.
-- Reading a source your tenant has no supported way to read. The standard requires the as-of time to come from the read itself, so a number a person keys in cannot honestly carry one. Either the connection gets built or that measure stays off the report as unavailable. A typed timestamp dressed as a read is the exact failure this check exists to catch.
+- Reading a source your Microsoft 365 has no supported way to read. The standard requires the as-of time to come from the read itself, so a number a person keys in cannot honestly carry one. Either the connection gets built or that measure stays off the report as unavailable. A typed timestamp dressed as a read is the exact failure this check exists to catch.
 
 **The pass test.** Two consecutive periods, on the real sources, for one audience. Before the second period’s publish time, break one source on purpose: revoke the connection, or point its query at something that is not there. Then do nothing and let the schedule run.
 

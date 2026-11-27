@@ -22,9 +22,9 @@ Your flows already do one job each: one raises the invoice, one chases it, one f
 ## In short
 
 - **What this is**: A build plan for the hand-off standard on Microsoft 365. Four lists, the steps every stage flow starts and ends with, a flow that logs your job system's own webhooks, and a button that shows where a job is.
-- **The core rule**: A flow hands over by adding one Handoffs row with the job's and the invoice's refs and the EventId that woke it. The next flow reads the job from the job system by that ref.
-- **What it does not do**: No Handoffs row carries a customer's name, address or an amount. No flow can edit or delete a Handoffs row: the service account's permission level has Add Items and nothing else.
-- **The hard part**: A job system that retries its webhook, and two flows that claim the same job in the same second. The unique Key on Processed and the read-back on Claims are what stop both.
+- **The core rule**: Each flow passes the job on by adding one row that names the job, the invoice, and what set the flow off. The next flow looks the job up in your job system from that row.
+- **What it does not do**: No row carries a customer's name, address or an amount. No flow can change or delete a row, because the account the flows run under can only add rows.
+- **The hard part**: Your job system sending the same update twice, and two flows grabbing the same job in the same second. Two lists stop both: one remembers every update already handled, and the other lets only one flow hold a job at a time.
 
 ## 1. Before you start
 
@@ -163,9 +163,9 @@ A flow that fails halfway leaves the job held for good. HolderUntil is never mor
 
 ## 8. Where the automation stops
 
-- Who is named in StageHolders for each stage.
+- Choosing which flow does each stage.
 - Reading the trail when a job stalls, and deciding what happens next.
-- Anything an exception or a hold stops, until a person closes or releases it.
+- Anything stopped by a problem or put on hold, until a person sorts it out or releases it.
 
 **The pass test.** On your own job system, ledger and two of your own stage flows. Complete a real job: one Handoffs row from the webhook, then one from each flow, each with CausedBy filled and no name or amount. Replay the webhook by hand: no second invoice and no second row. Copy the first stage flow under another node name that StageHolders does not name, and run it: it must stop at its first step. Press Flow 2 for the job: it must name the job system, both flows and where the job is now. Try to edit a Handoffs row as the service account: it must be refused.
 
@@ -173,6 +173,6 @@ A flow that fails halfway leaves the job held for good. HolderUntil is never mor
 
 - the hand-off build standard
 - The cash path on Microsoft 365: the flows this plan connects
-- One Customer on Microsoft 365: the refs every row names
+- One Customer on Microsoft 365: the record numbers every row names
 - Parked items on Microsoft 365: where a stopped job goes
 - Building the standards on Microsoft 365

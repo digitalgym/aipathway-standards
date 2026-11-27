@@ -22,17 +22,17 @@ The tech already knows what they did, which parts went in and how long it took. 
 ## In short
 
 - **What this is**: A build plan for the job close standard on Microsoft 365. A Power Apps form, five SharePoint lists, four Power Automate flows, and one HTTP connection to ServiceM8 or Simpro.
-- **The core rule**: Every part is a PriceBook row or it goes to Exceptions. The card is written only after the assigned tech presses Confirm, and the job is marked complete only after the job system sends its ids back.
+- **The core rule**: Every part must be in your price book, or it goes to the person you named to price it. Nothing goes on the job card until the tech on the job presses Confirm, and the job is marked complete only after your job system confirms the card went in.
 - **What it does not do**: No flow creates a job, prices a part the book does not hold, prices work the quote did not cover, or sends an invoice. Invoice Out does the invoice, from the completed job.
-- **The hard part**: A write from a phone in a roof space that times out and is tried again must land once, and the Confirm must come from the tech on the job, not from whoever can see the list.
+- **The hard part**: When a phone in a roof space loses signal and tries again, the card must still go in only once. And the Confirm must come from the tech on the job, not from anyone who can see the list.
 
 ## 1. Before you start
 
 Read [the job close build standard](https://aipathway.com.au/explore-ai/job-close-build-standard) first. It defines its objects, and the lists below are those objects with SharePoint types on them. Shared conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-Fill PriceBook first. Export the catalogue from ServiceM8 or Simpro and import it, then spend twenty minutes with a tech adding the words they actually say to Aliases: “15 mil elbow”, “TMV”. The more words on that list, the less gets parked.
+Fill PriceBook first. Export the catalogue from ServiceM8 or Simpro and import it, then spend twenty minutes with a tech adding the words they actually say to Aliases: “15 mil elbow”, “TMV”. The more words on that list, the fewer parts get sent back to be priced by hand.
 
-Then name the owners: who prices a part the book does not hold (the office manager, usually), who prices a variation, and who supervises each tech. Every exception goes to one of them by name.
+Then name the owners: who prices a part the book does not hold (the office manager, usually), who prices a variation, and who supervises each tech. Every problem goes to one of them by name.
 
 One thing to check before you build: **can the job system tell you who is assigned to a job?** ServiceM8 holds it on the job’s activities and Simpro on the schedule. If yours cannot, Flow 1 cannot check the tech, and check 1 fails.
 
@@ -104,7 +104,7 @@ Closes.IntentId is unique, so one capture can only ever have one close row, and 
 | --- | --- | --- |
 | The job exists and this tech is on it | Flow 1 and the job system read | Flow 1 reads the job by JobId from the job system and compares its assigned tech with SubmittedBy. No job, or the wrong tech, writes an Exceptions row and stops. There is no step anywhere that creates a job. |
 | What the tech said is stored first | Captures permissions and CloseLog | The form writes the Captures row; Flow 1 logs it as stored and then reads only that row. Nobody can edit it, so what was said can always be set beside what was written. |
-| Every part is a price book line or it is parked | PriceBook and Flow 1 | Each spoken part is looked up against Code, ItemName and Aliases. One match is a line; none is not_in_book and more than one is ambiguous, each an Exceptions row. There is no price field on the form. |
+| Every part is a price book line or it is held back for pricing | PriceBook and Flow 1 | Each spoken part is looked up against Code, ItemName and Aliases. One match is a line; none is not_in_book and more than one is ambiguous, each an Exceptions row. There is no price field on the form. |
 | A variation is never priced at close | Flow 1 and the job's quote | On a quoted job Flow 1 reads the quote's lines from the job system. A part whose code is not on the quote is parked as variation to the variation pricer, even when PriceBook holds it. |
 | The tech confirms the draft | Closes.ConfirmedBy and Flow 2 | The draft goes to the tech's phone. Confirm sets ConfirmedBy to whoever pressed it, and Flow 2 moves the row to confirmed only if that is the job's assigned tech. Anyone else's press is refused. |
 | One write, with ids back | Closes.IntentId and Flow 3 | Flow 3 writes from the Closes row, re-reads PriceBook for the prices, sends the intent id with the write, and stores the ids the job system sends back. No ids means write_failed, an Exceptions row and a retry from the same row. |
@@ -204,10 +204,10 @@ A write that timed out may have landed. Flow 3 retries from the same Closes row 
 ## 8. Where the automation stops
 
 - Confirming the draft: the assigned tech, from their own sign-in.
-- Pricing every part parked as not in the book or ambiguous.
-- Pricing every variation, and the customer's signature for it.
-- Chasing a tech who has not confirmed.
-- Fixing a write that failed.
+- Pricing every part held back as not in the book or unclear.
+- Pricing every variation, and getting the customer's signature for it.
+- Chasing a tech who has not confirmed, as their supervisor.
+- Fixing a card that did not go into the job system.
 
 **The pass test.** On a real job in your own ServiceM8 or Simpro: the tech sends a thirty-second note naming one part in the price book and one that is not, with two photos, and confirms the draft. Within five minutes the job card shows the work done, the known part at the book price, both photos and the job complete; the unknown part is one Exceptions row and on no card. Send the same capture again: nothing duplicates.
 
@@ -216,5 +216,5 @@ A write that timed out may have landed. Flow 3 retries from the same Closes row 
 - the job close build standard
 - Invoicing out on Microsoft 365: the invoice from the completed job
 - The dispatch board on Microsoft 365: the right tech at the right job
-- The cash path on Microsoft 365: one job id from the call to the chase
+- The cash path on Microsoft 365: one job number from the first call to the last reminder
 - Building the standards on Microsoft 365

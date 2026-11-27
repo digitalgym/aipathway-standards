@@ -21,7 +21,7 @@ When the checks are green: The call to a contact who asked to be rung back is AI
 
 ---
 
-The method, not the pitch. Everything below is what we would build, written so you can build it instead.
+Everything below is what we would build, written so you can build it yourself.
 
 Used by
 
@@ -37,11 +37,11 @@ Export five fields, split into four plays, rank inside each one, and write an op
 
 The hard part
 
-Not the automation. It is the ranking, because the list is always longer than your capacity to call it.
+The ranking, because the list is always longer than the number of calls you can make.
 
 Where to stop
 
-The compliance gate and the record. Everything above it is a weekend. That step is a liability with a phone number attached.
+Stop at the compliance checks and the call record. Everything before them is a weekend's work. The checks are where the legal risk sits, on every call.
 
 Honest caveat
 
@@ -59,17 +59,17 @@ The method, end to end
 6. If yes, make the call. The opener is the whole call.
 7. Appointment agreed? If yes, the appraisal is booked with a date on it. If no, that no buys months rather than a removal, the outcome is written back, and the next touch comes back through the gate.
 
-Everything across the top is a weekend of work and stays yours. The ranking orders, it never permits: the gate sits underneath it, and every later touch comes back through the same diamond.
+Everything across the top is a weekend of work and stays yours. The ranking decides who is called first, never whether they may be called. The compliance checks sit underneath it, and every later call or message goes back through the same diamond.
 
 ## 1. The Five Fields That Matter
 
 Export the whole database, then ignore most of it. Five fields carry the method:
 
-1. **Name and mobile.** A landline is not a warm contact, it is a switchboard.
+1. **Name and mobile.** A landline gets you a switchboard.
 2. **Address.** Everything in section 3 hangs off resolving this to a property.
 3. **Purchase or settlement date.** The single highest-value field and the one most likely to be missing.
 4. **Last contact outcome.** Not the date, the outcome. “Asked me to call back in spring” is worth more than every other field combined.
-5. **Investor or owner-occupier.** Only if you actually know. Guessing produces the worst call in section 2.
+5. **Investor or owner-occupier.** Only if you know. Guessing produces the worst call in section 2.
 
 If purchase date is sparse, do not stop and do not estimate it. Flag the gap, run the other plays, and capture the date in conversation when you do get someone on the phone. A database fills itself in if the calls write back to it.
 
@@ -96,7 +96,7 @@ Investor re-activation
 - **Trigger::** A yield shift, or a sweep of contacts you already know are investors.
 - **Who::** Flagged investors only. Do not guess who is one.
 - **Angle::** Gross yields are the strongest in years. Want first look at the right stock before it hits the portals?
-- **Why it earns its place::** Buyer-forward. The win is a buying brief, not a listing, which is a different and easier yes.
+- **Why it earns its place::** It leads with buying. The win is a buying brief rather than a listing, and that is an easier yes.
 
 Lapsed appraisals and past clients
 
@@ -111,9 +111,9 @@ Build the tenure play first even though lapsed appraisals convert better. Apprai
 
 This part decides whether any of it works. You cannot call fifty thousand people. You can call some number per day, so the only question that matters is which ones. Six rules, in order of weight:
 
-Engagement state dominates everything
+Where things stand with them outranks everything
 
-Someone who asked for a callback outranks a cold contact, always, whatever the other signals say. State is the strongest predictor you have and it came from a human, not a model.
+Someone who asked for a callback outranks a cold contact, always, whatever the other signals say. Where things stand is the strongest signal you have, and a person recorded it.
 
 Boost: a fresh sale nearby
 
@@ -125,15 +125,15 @@ Long enough that the house no longer fits, recent enough that they remember buyi
 
 Demote: a recent no
 
-Someone who pushed back last month goes to the bottom, not out. Churning them is how a warm database becomes a cold one.
+Someone who pushed back last month goes to the bottom, not out. Ringing them again too soon is how a warm database becomes a cold one.
 
 Recency breaks ties only
 
-It can never leapfrog a warmer contact. If recency is doing real work in your ranking, you have built a most-recently-imported list, not a priority list.
+It can never leapfrog a warmer contact. If how recently a contact was added does most of the ranking, you have built a list of whoever was imported last, not a priority list.
 
-Ranking orders, it never permits
+The ranking sets the order, never the permission
 
-This is the one that matters. A score decides who is called first. It must never decide whether someone may be called at all. Keep the gate in section 6 underneath the ranking, where no score can reach past it.
+A score decides who is called first. It must never decide whether someone may be called at all. Keep the compliance checks in section 6 underneath the ranking, where no score can get past them.
 
 Keep the weights in one place, as plain numbers you can read. The score has to be explainable because in six months you will want to know why a particular person was called on a particular Tuesday, and a model that cannot answer that is a model you will stop trusting.
 
@@ -159,17 +159,17 @@ Write two openers per play, not one, and alternate them by contact so the split 
 
 ## 5. Cadence, and When to Stop
 
-A warm database is an asset that a bad cadence converts into a cold one. Five rules hold it together:
+Calling too often turns a warm database cold. Five rules keep it warm:
 
 - **One play at a time.** A contact who qualifies for two plays sits in one of them, and gets at most one opener a week. Two plays ringing the same person in the same week is how a warm contact learns you are running a list.
 - **Every sequence has a defined end, and a reply ends it.** The calls and openers in a play stop at a set step whether or not anyone answered. A reply stops them at once, and nothing further goes out from that sequence.
-- **One slow value touch a month** for contacts who are mid-journey and quiet. Something worth reading, not a check-in. This is a separate, low-frequency track, not the tail of a sequence, and a reply or an opt-out ends it too.
-- **A no buys months, not a removal.** Demote, wait, come back with a different play. The tenure call and the equity call are different conversations, and a no to one is not a no to the other.
-- **Write every outcome back.** A call that does not update the record is a call you will make again, and the second time it is not warm, it is annoying.
+- **One slow value touch a month** for contacts who are mid-journey and quiet. Something worth reading, not a check-in. It runs on its own, once a month, separate from any sequence, and a reply or an opt-out ends it too.
+- **A no means wait a few months, not remove them.** Demote, wait, come back with a different play. The tenure call and the equity call are different conversations, and a no to one is not a no to the other.
+- **Write every outcome back.** A call that does not update the record is a call you will make again, and the second time it is annoying.
 
 ## 6. The Gate, Which Is the Step to Not Hand-Roll
 
-Everything above is a weekend’s work and you should do it. This part is not, and the reason is not difficulty. Each of these is a rule that has to hold on every single call, including the one made at 8:04pm by a script nobody has looked at since March.
+Everything above is a weekend’s work and you should do it. The checks below, which this page calls the gate, are different. They are not hard, but each one has to hold on every single call, including the one made at 8:04pm by a script nobody has looked at since March.
 
 - **Warm only.** A contact with no prior relationship is a cold call wearing a warm list’s clothes.
 - **Do not contact, honoured across every play.** An opt-out is a decision about you, not about one campaign.
@@ -184,7 +184,7 @@ You can build this. What you cannot easily build is the part where it is still t
 
 ## 7. The Daily Call List: Who Do I Ring Today?
 
-Every morning the ranked run becomes a short list for you, not a campaign. It holds no more people than the number you set, because the number you will actually ring is the only honest cap. Each row says who, which play, why today, a drafted opener for you to say or send, and what happened last time.
+Every morning the ranking becomes a short list for you, not a campaign. It holds no more people than the number you set, because the number you will really ring is the only limit that counts. Each row says who, which play, why today, a drafted opener for you to say or send, and what happened last time.
 
 One row of the list
 
@@ -197,8 +197,8 @@ One row of the list
 
 - **Things to sort out sit on top.** A reply waiting comes first, because someone who answered you outranks anyone you might ring. Then a do-not-contact conflict, such as an opt-out that a fresh export has quietly cleared. Then a contact missing a name, mobile or address. None of these is ever on the list itself.
 - **Three buttons a row: accept, skip, done.** Accept means you are on it today. Skip keeps them off for a few days. Done asks what happened: spoke, no answer, left a message, call me back, not interested, appraisal booked, do not contact, wrong number.
-- **Outcomes go back the same day.** Whatever you mark is written to the CRM or the sheet that evening, and tomorrow’s list is made from it. The person you spoke to today is not on tomorrow’s list; the person who asked for a call back is at the top of it; an opt-out never comes back. A list that looks the same every morning is a list nobody is writing back to.
-- **You make every call and every send.** The list drafts, it does not dial. The optional call in section 8 only ever rings a contact who asked to be rung back, and only if you turn it on. It is off unless you do.
+- **Outcomes go back the same day.** Whatever you mark is saved to the CRM or the sheet that evening, and tomorrow’s list is made from it. The person you spoke to today is not on tomorrow’s list; the person who asked for a call back is at the top of it; an opt-out never comes back. A list that looks the same every morning is a list nobody is updating.
+- **You make every call and every send.** The list drafts openers. It never dials. The optional call in section 8 only ever rings a contact who asked to be rung back, and only if you turn it on. It is off unless you do.
 
 The list is checks 11 and 12 below: the day’s list respects the cap and carries a reason on every row, and yesterday’s outcomes change today’s list. The gate in section 6 sits under the list exactly as it sits under the ranking: a do-not-contact flag keeps someone off it whatever their score.
 
@@ -210,11 +210,11 @@ The list lands as tasks in your CRM if it takes tasks, as a morning email to you
 
 A personal dashboard
 
-Ask your coding agent to build a one-page dashboard against this standard: the list on top, exceptions above it, three buttons a row. It reads your CRM export or the sheet, and it writes the outcome back before you close it.
+Ask your coding agent to build a one-page dashboard against this standard: the list on top, exceptions above it, three buttons a row. It reads your CRM export or the sheet, and it saves each outcome back before you close it.
 
 A bot that runs every morning
 
-A long-lived routine (a scheduled agent, a Slack or WhatsApp bot) makes the list at 7am, sends it to you, and records what you reply. It is the same rules on a timer, so the conformance checks below apply to it unchanged.
+A long-lived routine (a scheduled agent, a Slack or WhatsApp bot) makes the list at 7am, sends it to you, and records what you reply. It is the same rules on a timer, so the checklist below applies to it unchanged.
 
 The rules are the same in all three; only where the list lives changes. [Running a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere) walks through each one.
 
@@ -222,21 +222,21 @@ The rules are the same in all three; only where the list lives changes. [Running
 
 The ready-made version of the daily list is a Google Sheet you copy: a Contacts tab you paste your export into, a Today tab with the list and the three buttons, a Log that keeps the do-not-contact register where a re-import cannot reach it, and Settings for your cap. It never dials. [Make your own copy](https://docs.google.com/spreadsheets/d/1fH7IdrRDjzIQuis3gl09Shnt4ZRSEGG1-zA_LUNL9Uw/copy).
 
-A sale nearby is the strongest reason on the list, and in the sheet it is a column you fill from what you know or from a data source your agency already licenses. No hosted property-data service is offered to other builds, so build against a stub feed.
+A sale nearby is the strongest reason on the list, and in the sheet it is a column you fill from what you know or from a data source your agency already licenses. No hosted property-data service is offered to other builds, so build against test data.
 
 ## 8. Connect AI Pathway to ring back the people who asked, and nobody else
 
-It rings back the people who asked you to. It calls only the contacts who asked for a callback. Everyone else on the list is yours to call, from the daily list in section 7. It’s optional and off by default.
+It rings back the people who asked you to. It takes the contacts you hand it who asked for a callback and queues one call to each. You make every other call yourself, from the daily list in section 7, and you decide what may be promised on a call. It’s optional and off by default.
 
-With its key, AI Pathway can hold the contacts you send it and queue one call to each, on a stated basis. For this standard the basis is`callback`or`they_asked`: the contact asked you to ring. It never reads your CRM, never rings a contact you did not hand it, and never makes a prospecting or cold call: there is no basis for one, so it refuses them however high the contact scores. Revoke the key and it is cut off. Your CRM login stays yours: you send contacts with a key, and AI Pathway never gets your username and password.
+Every call it queues needs a stated reason, which the setup calls a basis. For this standard the basis is`callback`or`they_asked`: the contact asked you to ring. A contact without one is refused, however high it scores. Your CRM login stays yours: you send contacts with a key, and AI Pathway never gets your username and password.
 
 What each piece of access is for.
 
-- **Write contacts** (`contacts:write`). To hold the contact who asked as a record AI Pathway keeps, so a call has a real person and number behind it.
-- **Queue calls** (`campaigns:initiate`). To queue one governed call: who it is, one plain sentence the agent will say, and the basis. It is the only piece that makes a phone ring, and only the account owner can grant it.
+- **Write contacts** (`contacts:write`). To hold the contact who asked as a record AI Pathway keeps, so a call has a real person and number behind it. It holds only the contacts you send it and never reads your CRM.
+- **Queue calls** (`campaigns:initiate`). To queue one call with every check applied: who it is, one plain sentence the agent will say, and the basis. It is the only piece that makes a phone ring, and only the account owner can grant it. There is no basis for a prospecting or cold call, so it never makes one. Revoke the key and it is cut off.
 - **Read the record** (`audit:read`). To read back each call, placed or held, and why.
 
-At dial time it checks the Do Not Call Register and your do-not-contact flags, calling hours in the person’s own state, one attempt per person per day, and about ten single calls a day per workspace.
+Just before each call it checks the Do Not Call Register and your do-not-contact flags, calling hours in the person’s own state, one attempt per person per day, and about ten single calls a day per workspace.
 
 1. In AI Pathway, under API keys (connect.aipathway.com.au/app/keys), create a key with`contacts:write`and`audit:read`only.
 2. Send one contact who asked for a callback, and check it lands with the right name, mobile and state.
@@ -244,7 +244,7 @@ At dial time it checks the Do Not Call Register and your do-not-contact flags, c
 4. Hand over only the rows marked “call me back” on the daily list, each with the basis`callback`.
 5. Run the pass test at the end of this section.
 
-Build against a stub until a callback has to actually ring, then change one line:
+Build against test data until a callback has to ring, then change one line:
 
 ```
 provider:
@@ -278,9 +278,9 @@ basis:                  # create_call refuses a call without one
 
 Two details worth knowing before you write the script.`external_ref`on the contact and`item_ref`with`touch_number`on the call make a retry safe: the same callback is never queued twice. And create_call queues the call rather than dialling it, so a request made at 9pm is placed at the next lawful time, not now.
 
-**What you cannot stub is section 6, and that is the point.** A queued call is permission to consider a call, not permission to ring. AI Pathway checks the do-not-contact flags, the register and the calling hours in the person’s own state at dial time, and a high score cannot promote a contact past any of it.
+**Test data cannot stand in for section 6.** A queued call is a request to ring, and the checks still decide whether it rings. Just before each call, AI Pathway checks the do-not-contact flags, the register and the calling hours in the person’s own state, and a high score cannot move a contact past any of them.
 
-**The pass test.** Take the highest-scoring contact who asked for a callback, flag it do not contact, and queue the call. It must not be rung, and the record must say why it was not. Run it again with the flag off and the clock at 8:30pm, and it must hold until morning. Both take a minute to stage. Run the same two against your own build. If yours rings, the gate is advice rather than a rule, which is section 6 in one sentence.
+**The pass test.** Take the highest-scoring contact who asked for a callback, flag it do not contact, and queue the call. It must not be rung, and the record must say why it was not. Run it again with the flag off and the clock at 8:30pm, and it must hold until morning. Both take a minute to stage. Run the same two against your own build. If yours rings, the gate is advice rather than a rule.
 
 Why not an auto-dialler, or your CRM’s own calling add-on? A dialler rings the list it is given, so whoever builds the list decides who gets called, and section 6 becomes a setting someone can switch off. Before you connect one, ask it three things: does it refuse a call with no reason on record, does a do-not-contact flag set in your CRM reach it before the next dial, and does it hold calling hours in the contact’s state rather than yours.
 
@@ -291,13 +291,13 @@ Where it runs. The list itself lives wherever section 7 puts it: your existing t
 These are the four places a working build usually stalls, so you can recognise them as normal rather than as a sign you got it wrong.
 
 - **Purchase dates are missing.** Most CRMs have them for a third of contacts. The tenure play is the best one and it depends on the sparsest field, which is why section 1 says capture it in conversation instead of waiting.
-- **Address to property is not a lookup.** Unit numbers, renamed streets and duplicate records mean a meaningful slice will not resolve. Decide up front what a call with no property data says, because you will make a lot of them.
+- **Matching an address to a property takes more than a lookup.** Unit numbers, renamed streets and duplicate records mean a fair share will not match. Decide up front what a call with no property data says, because you will make a lot of them.
 - **“Warm” is a judgement, not a column.** Someone who enquired once in 2019 and never replied is in the database and is not warm. You will have to define this and you will get it wrong twice.
-- **Capacity is the binding constraint, not the list.** This is why section 3 exists. Every hour spent on the automation before the ranking is an hour spent making it easier to call the wrong people faster.
+- **The limit is how many calls you can make, not the size of the list.** This is why section 3 exists. Every hour spent on the automation before the ranking is an hour spent making it easier to call the wrong people faster.
 
 ## 10. What It Is Worth
 
-Directions, not figures: the standard derives none and your list will differ. What these levers are worth depends on your data, starting with purchase date, which most CRMs hold for about a third of contacts.
+These are directions, not figures. The standard works out no numbers, and your list will differ. What these levers are worth depends on your data, starting with purchase date, which most CRMs hold for about a third of contacts.
 
 Four plays
 
@@ -317,37 +317,37 @@ Written against every ranked row
 
 Plain words, not a score, so in six months you can say why that person was called on that Tuesday.
 
-Capacity is the binding constraint, not the list, which is why the ranking is the part that pays. Automation built before it only calls the wrong people faster.
+The limit is how many calls you can make, not the size of the list, which is why the ranking is the part that pays. Automation built before it only calls the wrong people faster.
 
 ## 11. What Breaks After It Works
 
-A self-built version of everything above genuinely works. Here is what happens to it over time.
+A self-built version of everything above works. Here is what happens to it over time.
 
 - **It leaves with whoever built it.** The rules live in one person’s head and one spreadsheet under their login. The replacement starts from nothing, and this is a role that turns over.
 - **Nobody knows whether it ran.** A silent week looks identical to a working week. There is no alarm for a queue that quietly stopped refilling.
-- **It degrades without failing.** A CRM export changes a column name, the tenure play matches nothing, and the system keeps reporting zero opportunities. A false negative is worse than an error, because an error gets looked at.
-- **Attribution arrives too late to steer by.** The listing comes eight months after the call. By the time you can prove it worked you have already decided whether to keep doing it.
+- **It gets worse without ever failing.** A CRM export changes a column name, the tenure play matches nothing, and the system keeps reporting zero opportunities. A wrong “nothing to do” is worse than an error, because an error gets looked at.
+- **You learn what worked too late to steer by.** The listing comes eight months after the call. By the time you can prove it worked you have already decided whether to keep doing it.
 
-None of that is an argument against building it. It is an argument for knowing which parts you want to still be true after you stop paying attention to them.
+Build it anyway, and know which parts you want to still be true after you stop paying attention to them.
 
 ## 12. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 
-- **1. The fields each play needs are present.** Name, mobile and address are needed to work a contact at all. Every other gap is reported and limits only the play that needs it.
-- **2. Four plays, each with a real trigger.** Not one campaign against the whole list. A contact qualifies for a play because of something true about them.
-- **3. Ranking is by the six rules, in order.** The order is the claim; a build that scores the same inputs differently is a different standard.
-- **4. A contact belongs to one play at a time.** No contact is in two runs at once, and nobody receives two openers in a week from two plays.
-- **5. The opener names why you are calling.** A call that cannot say what prompted it reads as a cold call, because it is one.
-- **6. Cadence has a stop, and the stop is honoured.** The sequence ends whether or not the contact replied, and a reply ends it.
-- **7. The gate sits underneath the ranking.** Warm only, consent, do not contact, the contact's own timezone, and calling hours. No score promotes a contact past any of it.
-- **8. Do-not-contact is permanent and global.** It survives a re-import, applies across every play, and is never cleared by a new list.
-- **9. Every skip is explained.** The audit says why a contact was not called, not merely that it was not. A silent skip is indistinguishable from a bug.
-- **10. A human decides anything that is a relationship.** An offer, a price, a complaint, or a contact who asks a question the play was not built for.
-- **11. The day's list respects the cap and carries a reason per row.** Each morning the ranked run becomes a short list for a person: no more rows than the cap the agent set, each with its play, the reason, a drafted opener and the last outcome.
-- **12. Yesterday's outcomes change today's list.** What the agent records against a row is written back to the CRM or sheet the same day, and the next morning's list is made from what was written.
-- **13. It survives the builder.** Someone other than the builder can explain what it does, and it runs on an account the business owns.
-- **14. The pass test passes.** A do-not-contact flag on the top-scoring contact stops the call, and the audit says which gate stopped it.
+- **1. The details each play needs are on the list.** Name, mobile and address are needed before a contact can be worked at all. Any other missing detail is reported, and only keeps the contact out of the play that needs it.
+- **2. Four plays, each started by something real.** Each play has its own reason to call, with no single campaign to the whole list. A contact is in a play because of something true about them.
+- **3. Contacts are ranked by the six rules, in their set order.** The six rules always apply in the same order. A bot that ranks the same contacts differently is following a different standard.
+- **4. A contact belongs to one play at a time.** No contact is in two runs at once, and nobody gets two opening approaches in a week from two plays.
+- **5. The call opens with why you are calling.** A call that can't say what prompted it is a cold call.
+- **6. Every follow-up sequence has an end, and the end is kept.** The sequence ends at its set point whether or not the contact replied, and a reply ends it.
+- **7. The calling rules come before the ranking.** A contact is called only if they are warm, have consented, are not flagged do-not-contact, and it is inside calling hours in their own timezone. No score moves a contact past any of these.
+- **8. Do-not-contact is permanent and global.** It survives a re-import, applies to every play, and a new list never clears it.
+- **9. Every skipped contact has a reason.** The record says why a contact was not called, as well as that they weren't. A skip with no reason looks exactly like a fault.
+- **10. A person decides anything that touches the relationship.** An offer, a price, a complaint, or a question the play wasn't built for all go to a person to decide.
+- **11. The day's list stays within the limit and gives a reason for every contact.** Each morning the ranked contacts become a short list for a person, no longer than the limit the agent set. Each contact on it shows its play, the reason, a drafted opener and how the last contact went.
+- **12. Yesterday's outcomes change today's list.** What the agent records against each contact is saved back to the CRM or sheet the same day, and the next morning's list is made from what was saved.
+- **13. It keeps working if the person who built it leaves.** Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+- **14. The pass test passes.** A do-not-contact flag on the top-ranked contact stops the call, and the record says which calling rule stopped it.
 
 Building this on Microsoft 365: [the lists, the flows and the measures](https://aipathway.com.au/explore-ai/database-reactivation-on-microsoft-365).
 

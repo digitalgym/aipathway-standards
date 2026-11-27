@@ -9,7 +9,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/quotes-out-on-
 
 ---
 
-The quote is created in the job system, not here. That one sentence decides every list on this page, and it is the reason this plan is shaped differently from the others.
+The quote is drafted in your job system or Xero, where you already send quotes from. Microsoft 365 only keeps the jobs waiting for a quote, the quotes on hold and the record of where each price came from.
 
 Used by
 
@@ -18,22 +18,22 @@ Used by
 - Estimator
 - Office Administrator
 
-Every other plan in this set makes a SharePoint list the book. This one does not. The standard says the quote is drafted into ServiceM8, Simpro or Xero against the price list already in there, because a document we generated and held would make us a second place the office has to look. So what Microsoft 365 holds is the queue, the park and the log, and the one step it does not hold is the authenticated write into somebody else’s ledger.
+On the other plans in this set, a SharePoint list holds the record. On this one it doesn’t. The quote is drafted in ServiceM8, Simpro or Xero, priced from the price list already in there, so the office has one place to look for it. Microsoft 365 keeps the jobs waiting for a quote, the quotes on hold and a record of where every price came from. Putting the draft into your job system is the one step that happens outside Microsoft 365.
 
 ## In short
 
-- **What this is**: A build plan for the quote out standard on Microsoft 365. Seven lists, four flows, seven measures, and deliberately no quote document anywhere in the tenant.
-- **The core rule**: The quote is created in the job system against the price list already in it. These lists hold the queue and the log, never the copy that counts.
-- **What it does not do**: There is no send step, because the standard has no send port. A person releases the draft in the system they already open every morning.
-- **The hard part**: The read at draft time. A catalogue synced into a list is fast, tidy, and silently wrong the week after the office puts an increase through.
+- **What this is**: A build plan for the quote out standard on Microsoft 365. Seven lists, four flows, seven measures, and no quote document stored anywhere in your Microsoft 365.
+- **The core rule**: The quote is created in the job system, priced from the price list already in it. These lists hold the jobs waiting and the record of each price. The quote itself lives only in your job system.
+- **What it does not do**: Nothing here sends a quote. You check the draft and send it from the system you already open every morning.
+- **The hard part**: Prices have to be read fresh for every draft. A copy of the price list kept in SharePoint is quick and tidy, and it is quietly wrong the week after the office puts a price rise through.
 
 ## 1. Before you start
 
 Read [the quote out build standard](https://aipathway.com.au/explore-ai/quote-out-build-standard) first. It defines its objects, and the lists below are those objects with SharePoint types on them. Shared conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-Decide which system of record the quote is created in, before you create a single list. The standard names three that expose a write for a quote record: ServiceM8, Simpro and Xero. Tradify has no public API and no Zapier app, so nothing can create a quote inside Tradify or read its price list. A Tradify business still fits: the job comes in from Tradify’s enquiry email or job export, and the draft is written into Xero, where Tradify already sends its invoices, priced from your Xero Items. What you must not do is hold the quote in a SharePoint list because there seemed nowhere else to write it. That is the second system of record the standard exists to prevent.
+Decide which system the quote is created in, before you create a single list. The standard names three that let another program create a quote: ServiceM8, Simpro and Xero. Tradify has no public API and no Zapier app, so nothing can create a quote inside Tradify or read its price list. A Tradify business still fits: the job comes in from Tradify’s enquiry email or job export, and the draft is written into Xero, where Tradify already sends its invoices, priced from your Xero Items. Don’t keep the quote in a SharePoint list because there seemed nowhere else to put it. That gives the office a second place to look, which is what the standard exists to prevent.
 
-Then accept the thing that makes this plan odd. Microsoft 365 is not the source of truth here and must not become it. There is no quote document library below, no generated PDF and no approval on one. The lists carry the work queue, the parked lines, and the log that answers where a number came from six months later.
+On this plan, Microsoft 365 never becomes the main record of the quote. There is no quote document library below, no generated PDF and no approval on one. The lists hold the jobs waiting, the lines on hold, and the record that answers where a number came from six months later.
 
 ## 2. The lists, with their columns
 
@@ -106,7 +106,7 @@ LIST  RunLog                (so one QuoteId answers everything)
 Nothing here renders a quote. There is no document library on this site.
 ```
 
-Unmatched has no rate column and that absence is the enforcement, exactly as the standard enforces sending by having no send port. A person who wants to price a parked line has to do it in the job system against the book, which is where it belongs and where the next person will find it.
+The Unmatched list has no column for a price, so nobody can price a held line here, in the same way the build has no way to send. You price a held line in the job system against your price list, where the next person will find it.
 
 ## 3. Every rule, and what enforces it
 
@@ -173,7 +173,7 @@ FLOW 4  The park queue
            whole point of section 3 is gone.
 ```
 
-Flow 2 stops rather than drafting around the parked line, which is the standard's own sentence: sending three quarters of a quote is how a business ends up doing the fourth quarter for free. In Power Automate that means a terminate inside the loop, not a filter that quietly drops the unmatched item and carries on with a total.
+Flow 2 stops instead of drafting around the held line. The standard says why. Send three quarters of a quote and the business ends up doing the fourth quarter for free. In Power Automate that means a terminate inside the loop, not a filter that quietly drops the unmatched item and carries on with a total.
 
 ## 5. The Power BI model and its measures
 
@@ -224,7 +224,7 @@ CALCULATE (
 )
 ```
 
-Hours To Draft belongs on the front page and nothing else on this list competes with it. The standard is explicit that the expensive part of a late quote is the hours between the job existing and somebody starting the draft, so that gap is the claim the build is making and this is where it is true or visibly not.
+Hours To Draft belongs on the front page and nothing else on this list competes with it. The standard is explicit that the expensive part of a late quote is the hours between the job existing and somebody starting the draft, so that gap is what the build sets out to shrink, and this measure shows whether it has.
 
 ## 6. What the flows can reach in your Microsoft 365, your job system and Xero, and what they never touch
 
@@ -234,7 +234,7 @@ What each connection is for.
 
 - **SharePoint, this one site.** Read and write on the seven lists. It is the only place in Microsoft 365 the flows write, and it has no document library.
 - **The job, read.** The only trigger for a quote. From ServiceM8 or Simpro through a custom connector or the HTTP action, both premium in Power Automate, or through AI Pathway’s `read_job`. A Tradify job comes from its enquiry email or job export, because Tradify has no public API and no Zapier app.
-- **An AI Pathway key, for the draft into Xero.** Called from the flow at `https://connect.aipathway.com.au/api/mcp` with a bearer key made at connect.aipathway.com.au/app/keys. “Read the book” covers `read_pricebook`, your Xero Items read fresh at draft time. “Write drafts and notes” covers `draft_quote`, which takes catalogue ids and quantities, never a rate. Leave “Queue calls” off: this build rings nobody. Quote drafting stays off until the owner reconnects Xero with it on.
+- **An AI Pathway key, for the draft into Xero.** Called from the flow at `https://connect.aipathway.com.au/api/mcp` with a bearer key made at connect.aipathway.com.au/app/keys. “Read the book” covers `read_pricebook`, your Xero Items read fresh at draft time. “Write drafts and notes” covers `draft_quote`, which takes catalogue ids and quantities, never a rate. Leave “Queue calls” off, because this build rings nobody. Quote drafting stays off until the owner reconnects Xero with it on.
 - **Teams.** To post the park queue and any write that came back without an id, to the channel the owner watches.
 - **Power BI, read.** It reads the lists to draw the measures and writes nothing back.
 
@@ -243,21 +243,21 @@ Keep each one to the least it needs.
 1. Create a service account for the flows and build them in a solution that account owns, with a named person as co-owner. A flow owned by a person stops working the day that person leaves. The HTTP action and custom connectors are premium, so the account needs a Power Automate licence that covers them; check what your tenant already has.
 2. Create every connection as the service account and use it through the solution’s connection references, so nobody’s own login sits inside a flow.
 3. Give the service account access to this one site and no other. If an app registration is used instead, grant it Sites.Selected and give it this site alone.
-4. Give the flows no mailbox. Nothing here sends, so there is no Outlook connection to scope, and leaving it out is part of the fence.
+4. Give the flows no mailbox. Nothing here sends, so there is no Outlook connection to scope, and leaving it out keeps the build from sending anything.
 5. Put the AI Pathway key in a custom connector’s connection rather than in an HTTP action’s header, where anyone who can edit the flow can read it. Tick only the two scopes above.
 
 How to cut it off. Turn the flows off in Power Automate and no more drafts are written. Revoke the key at connect.aipathway.com.au/app/keys, or disconnect AI Pathway under Connected apps in Xero’s settings, and Xero receives nothing more. Block sign-in on the service account and every connection it owns stops working.
 
-Why not have Copilot write the quote in Word? It will produce a tidy quote in a minute, from whatever it read, and the result is a document in your tenant: the second place to look that the standard’s first rule forbids, priced from a rate it may have rounded or remembered. `draft_quote` accepts only catalogue ids, so Xero prices every line from your own Items and the draft sits where you already send quotes from.
+Why not have Copilot write the quote in Word? It will produce a tidy quote in a minute, from whatever it read, and the result is a document in your Microsoft 365. That is a second place to look, which the standard’s first rule forbids, priced from a rate Copilot may have rounded or remembered. `draft_quote` accepts only catalogue ids, so Xero prices every line from your own Items and the draft sits where you already send quotes from.
 
 ## 7. The order to build it in
 
 1. Create the seven lists. Index JobRef and QuoteId wherever they appear, and Work on TierMap. TierMap and QuoteOptions are only for sending good, better and best options on one quote: the business fills TierMap, the flow only reads it, and a person marks the chosen option and closes the others.
-2. Build Flow 1 and let it run for a week doing nothing else. What you get on day one is a countable list of jobs with no quote against them and how long they have been that way, which is the argument the rest of the build is worth making.
+2. Build Flow 1 and let it run for a week doing nothing else. What you get on day one is a countable list of jobs with no quote against them and how long they have been that way, which shows whether the rest of the build is worth making.
 3. Build Flow 2 with only the parking half. Every job parks with not_in_pricebook. It is useless as a quoting engine and immediately useful as a work queue, and it cannot invent a rate because it cannot price at all.
 4. Build Flow 4 so the park queue has a named owner before anything can reach it. A queue nobody owns produces the same outcome as no queue.
 5. Add catalogue matching to Flow 2. Watch CatalogueId and PricebookReadAt fill in, and check the stamps against the draft times before you trust a single rate.
-6. Build Flow 3 against a test tenant. This is the step the standard says not to hand-roll, and it is the first thing here that needs anything from anybody else.
+6. Build Flow 3 against a test tenant. This is the step the standard says not to build yourself, and it is the first thing here that needs anything from anybody else.
 7. Connect Power BI. Hours To Draft on the front page, Write Failures and Parked With A Total alerted.
 8. Run the pass test on a real job in a real tenant.
 
@@ -273,7 +273,7 @@ Somebody will suggest generating a PDF and storing it, because that is what Shar
 
 ### A sent value on State
 
-The list looks unfinished without it and it will be added within a month, probably by someone tidying the Choice column. The absence of the value is the enforcement. The day it exists, a flow will be written that sets it, and the day after that something will be sending.
+The list looks unfinished without it and it will be added within a month, probably by someone tidying the Choice column. Leaving that value out is what stops sending. The day it exists, a flow will be written that sets it, and the day after that something will be sending.
 
 ### Treating a successful action as a drafted quote
 
@@ -284,8 +284,8 @@ Power Automate marks the write step green and moves to the next one, so the obvi
 - Sending. The standard has no send port and these flows have no send action, so the last thirty seconds stay with a person who reads the draft in the job system and releases it.
 - Pricing a variation to a quote that has already been accepted. It parks as variation and a person prices it, because it changes something already agreed.
 - Any discount. The customer asking for a number off the book is a negotiation, and the standard prices the catalogue rather than the negotiation.
-- Any line the price list does not cover. The whole quote parks with the priced lines attached. A build that estimates its way around a missing catalogue line is not a conforming build, it is a liability with a total on it.
-- The authenticated write into ServiceM8, Simpro or Xero. That call leaves Microsoft 365 entirely, and holding the credential relationship with a vendor tenant is the step the standard tells you not to hand-roll. For Xero, AI Pathway's draft_quote is that step.
+- Any line the price list does not cover. The whole quote parks with the priced lines attached. A build that estimates its way around a missing price-list line no longer meets the standard, and its total is a liability.
+- The authenticated write into ServiceM8, Simpro or Xero. That call leaves Microsoft 365 entirely, and signing in to another company's system on your behalf is the step the standard tells you not to build yourself. For Xero, AI Pathway's draft_quote is that step.
 
 **The pass test.** Stage one job in a test tenant where the work needs three things on your price list and one thing that is not on it. Run Flow 1 through Flow 3. You must get exactly one Quotes row at State parked, with TotalExGst blank, three QuoteLines each carrying a real CatalogueId and a PricebookReadAt stamped after the job arrived, and one Unmatched row reading not_in_pricebook. Nothing may exist in the tenant yet, because a parked quote is not a drafted one. Now add the missing item to the price list, resolve the Unmatched row, and let it run again: one draft in the tenant, one ExternalId, DuplicateOf pointing at the first pass, and still exactly one Quotes row. Twenty minutes on a test tenant. If the second pass created a second row, Flow 1 is writing before it reads. If the first pass produced a total, Flow 2 drafted around the parked line, and that is the one failure on this page that costs real money. If any line carries a UnitRate and no CatalogueId, you cannot tell anybody where that number came from, which was the whole reason for the column.
 

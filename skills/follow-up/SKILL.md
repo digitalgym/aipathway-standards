@@ -95,11 +95,11 @@ skill asserts.
 - 3. The records it keeps, in the shape your developer needs
 - 4. The checks, in order
 - 5. The four queues
-- 6. The cadence and the cap
+- 6. How often to chase, and when to stop
 - 7. The call
 - 8. What stays with a person
 - 9. Connect Xero for quote calls, without it touching the price
-- 10. Join It to Your Own System: What to Stub, and What Not to Hand-Roll
+- 10. Join It to Your Own System: What to Build on Test Data, and What Not to Hand-Roll
 - 11. A checklist to hold any build or supplier to
 
 ## Attribution

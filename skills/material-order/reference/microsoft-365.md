@@ -9,7 +9,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/material-order
 
 ---
 
-Stock is read before anything is bought, the price comes from the supplier's own catalogue, and the docket is matched back rather than signed and filed. Six queues, and the list itself refuses the second order.
+Stock is checked before anything is bought, the price comes from the supplier's own catalogue, and each delivery docket is checked line by line against the order instead of being signed and filed. Six queues, and the list itself refuses a second order for the same job and supplier.
 
 Used by
 
@@ -17,22 +17,22 @@ Used by
 - Operations Manager
 - Project Manager
 
-Ordering looks like the easiest of these to automate, which is why the picking list is the half every tool ships. The half that costs money is the other one: the shelf nobody checked, the second order on Wednesday, the substitute nobody agreed to, and the docket that was signed on site and never compared to anything. All four are shapes in a list before they are flows, and the order the flows run in is the whole standard.
+Ordering looks like the easiest of these to automate, which is why every tool ships the picking list. The money is lost in the other half: the shelf nobody checked, the second order on Wednesday, the substitute nobody agreed to, and the docket that was signed on site and never compared to anything. Each of the four is stopped by how a list is set up, before any flow runs, and each step has to finish before the next one starts.
 
 ## In short
 
 - **What this is**: A build plan for the material order standard on Microsoft 365. Twelve lists, a library, four flows, eight measures.
-- **The core rule**: The stock read comes before the draft and the catalogue read before the write. A build that orders first and checks afterwards has already spent the money.
+- **The core rule**: Stock is checked before an order is drafted, and the supplier's catalogue before the order is placed. A build that orders first and checks afterwards has already spent the money.
 - **What it does not do**: It never accepts a supplier's substitution, never releases over the threshold, and never adds a supplier to the approved list. A named person does each of those three.
-- **The hard part**: Not the picking. The job ordered on Monday and again on Wednesday, and the delivery that was received as a photo instead of as lines.
+- **The hard part**: The picking is easy. The hard part is the job ordered on Monday and again on Wednesday, and the delivery that was saved as a photo instead of checked line by line.
 
 ## 1. Before you start
 
 Read [the material order build standard](https://aipathway.com.au/explore-ai/material-order-build-standard) first. It defines its objects, and the lists below are those objects with SharePoint types on them. Shared conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-Decide one thing first: which of your suppliers has a catalogue this tenant can actually read. A wholesaler who will send a price file you can land in a list is one kind of supplier. A bloke with a phone number is another, and the standard is blunt about him: orders to that supplier park on every line until a person prices them. Sort your suppliers into those two piles before you build anything, because the second pile decides how much of this is a queue rather than a flow.
+Decide one thing first: which of your suppliers has a price list your Microsoft 365 can read. A wholesaler who will send a price file you can load into a list is one kind of supplier. A bloke with a phone number is another, and the standard is blunt about him. Every line ordered from him stops until a person prices it. Sort your suppliers into those two piles before you build anything, because the second pile decides how much of this a person handles by hand.
 
-Then be honest about stock. The whole standard turns on reading what is already on the shelf or in the van, and a Stock list nobody maintains will quietly reserve things that are not there. If stock is not real, say so and start with on-hand at zero for everything: the build still works, it just never saves you the line it should have.
+Then be honest about stock. The whole standard turns on reading what is already on the shelf or in the van, and a Stock list nobody keeps up will set aside things that are not there. If your stock count isn’t kept up, start with zero on hand for everything. The build still works, but it never saves you ordering something you already had.
 
 ## 2. The lists, with their columns
 
@@ -255,7 +255,7 @@ CALCULATE (
 )
 ```
 
-Waiting Release Ageing Days is the one that tells you whether the threshold is set anywhere near right. A queue that sits for four days is not a control, it is a job that started without its materials, and the answer is usually to move the number rather than to remove the gate.
+Waiting Release Ageing Days is the one that tells you whether the threshold is set anywhere near right. An order that waits four days for release means a job started without its materials, and the answer is usually to move the number rather than to remove the approval step.
 
 ## 6. What the flows can reach in your Microsoft 365, your job system and your suppliers, and what they never touch
 
@@ -317,8 +317,8 @@ A Yes/No column records that somebody ticked something. The standard asks for a 
 - The release of any order over the threshold, or to a supplier not on the approved list. The rule covers the small and the familiar; everything else is somebody's decision with their name on it.
 - Approving a supplier in the first place. Approved is a Yes/No a person sets, and no flow should ever write to it.
 - Accepting a substitution, on site, with their name on the line. The build can hold the line as a variance forever; it cannot look at the fitting and say whether it will do.
-- Every variance: short, over, wrong item, damaged, or a price that moved between the catalogue and the docket. The queue is the ask, and closing one is a person deciding what happens to the money.
-- Matching and paying the supplier's invoice. This build produces the order and the matched docket; the third record and the decision belong to the invoice check standard, not here.
+- Every variance: short, over, wrong item, damaged, or a price that moved between the catalogue and the docket. Each one waits in the list until a person decides what happens to the money.
+- Matching and paying the supplier's invoice. This build produces the order and the checked docket. Checking the invoice against both, and deciding to pay it, belongs to the invoice check standard.
 
 **The pass test.** Stage one job with four material lines: one the store covers in full, one code no catalogue holds, and two from an approved supplier that together sit over the threshold. Run the draft flow twice, an hour apart. You must get a Reservations row for the covered line and that line on no order at all, a parked order with reason not_in_catalogue and no price on it, exactly one order per supplier, and the over-threshold order at waiting_release with nobody having released it. Then record a docket one line short against a sent order, and a second docket against an order number that does not exist: the first gives you delivery lines with both quantities and a variance of kind short, the second gives you no delivery at all. Twenty minutes on test data. If the covered line was ordered, the stock read is running after the draft and you are buying what is already on the shelf. If a second order appeared for the same pair, OrderKey is not unique and the supplier is sending two of everything.
 

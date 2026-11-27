@@ -45,7 +45,7 @@ It never sums up what a customer is like, never puts a price on a quote line, an
 
 The hard part
 
-Not the writing. Keeping a fluent AI from filling gaps with history that never happened, and keeping the last owner's invoice dispute off the new owner's brief when a house changes hands.
+The writing is easy. The hard part is stopping a fluent AI from filling gaps with history that never happened, and keeping the last owner's invoice dispute off the new owner's brief when a house changes hands.
 
 The tech knocks on a door they last visited eight months ago and remembers nothing: the dog, the gate code, the hot water unit that was nearly gone, the quote the customer never answered. The office knew. The job system knew. Nobody told the tech, so the customer explains it all again, and the replacement they were half ready to say yes to walks away.
 
@@ -67,13 +67,13 @@ The few minutes before the van leaves. For each tech, for each job on their slot
 
 What is out of scope. Deciding who goes where is the [Dispatch Board standard](https://aipathway.com.au/explore-ai/dispatch-board-build-standard); this one only reads the slots it wrote. Ordering the parts is [Material Order](https://aipathway.com.au/explore-ai/material-order-build-standard); this one lists what was set aside. What the business has agreed it knows about a customer, approved by a person, is [Client Memory](https://aipathway.com.au/explore-ai/client-memory-build-standard), and an approved memory item is a record a brief may quote like any other. Chasing the open quote is [Follow-Up](https://aipathway.com.au/explore-ai/follow-up-build-standard); the brief only tells the tech it exists.
 
-What cannot meet it, and what can. The brief has to be built from the job system’s own records, with their ids and dates. ServiceM8, Simpro, AroFlo and Fergus each have an API a build can read jobs, notes and quotes through, so each can meet it; check your plan includes API access. ServiceM8 also has an official connector an AI assistant can read through. Tradify has no public API, so a build cannot read it directly: the sheet below works from what the office copies out of it by hand, and the record ids and dates have to come with it. A job system that holds notes with no date cannot meet check 2 for those notes: they never reach the brief.
+Which job systems it works with. The brief has to be built from the job system’s own records, with their ids and dates. ServiceM8, Simpro, AroFlo and Fergus each have an API a build can read jobs, notes and quotes through, so each can meet it; check your plan includes API access. ServiceM8 also has an official connector an AI assistant can read through. Tradify has no public API, so a build cannot read it directly: the sheet below works from what the office copies out of it by hand, and the record ids and dates have to come with it. A job system that holds notes with no date cannot meet check 2 for those notes: they never reach the brief.
 
-Is there a ready-made version? Not yet. No product builds and sends this brief today. A free Google Sheet version is built and coming to this page; the build is otherwise yours, or ours as a scoped build. Where it sits in the job’s day is on [the field service roadmap](https://aipathway.com.au/explore-ai/field-service-automation-roadmap).
+Is there a ready-made version? Yes, a free Google Sheet. Copy it from the Google Workspace link at the top of this page, paste the day’s slots and site records from your job system’s export, and it emails each tech their brief. No hosted product builds and sends this brief yet, so any other build is yours, or ours as a scoped build. Where it sits in the job’s day is on [the field service roadmap](https://aipathway.com.au/explore-ai/field-service-automation-roadmap).
 
 ## 2. What goes on a brief, and where each line comes from
 
-Seven kinds of line, a closed list. Each one is a record the job system already holds, read for the job’s own customer at that site.
+Seven kinds of line, and no others. Each one is a record the job system already holds, read for the job’s own customer at that site.
 
 | Line | Where it comes from |
 | --- | --- |
@@ -89,21 +89,21 @@ Three things are never on a brief, however helpful they would look. A summary of
 
 ## 3. The checks, in order
 
-The order is the claim. The slots come first, because a brief for the wrong job is worse than none. The source rule sits in front of every line, before the wording, because a line that cannot be traced has nothing to word. Hazards lead each job because they are the line a tech must not miss. Delivery comes last, and only once.
+Each check has to pass before the next one runs. The slots come first, because a brief for the wrong job is worse than none. Every line must point to its record before it is worded, because a line that cannot be traced has nothing to say. Hazards lead each job because they are the line a tech must not miss. Delivery comes last, and only once.
 
-1. The jobs come from the tech's slots for the day, by job id. Each tech's brief lists exactly the jobs slotted to that tech for the day, by the job system's own job id, with the window copied from the slot. A job slotted to somebody else, an unslotted job at the same street, or a window restated from memory is a failure.
-2. Every line carries the record it came from and that record's date. Every line in the brief names the system, the record id and the record's date, and that record exists and belongs to the job's customer. A line with no record or no date is dropped, not shown. This is the rule that stops a fluent brief inventing history: Cited Answer's "every claim carries its source", applied to a site visit.
-3. Notes are quoted or shortened, never reinterpreted, and no sentiment is generated. A note in the brief is the note's own words, or the first part of them cut with an ellipsis, with its author and date. Nothing is summarised into a claim the note does not make, and no word about the customer's mood or character is added. Where the business has set customer notes to be left out, they are left out.
-4. Hazard and access lines lead each job, and a missing one is shown as missing. For each job, hazard and access lines come before every other line. A site with no hazard record or no access record shows that gap under missing, so the tech knows to ask. Nothing is filled in.
-5. Open quotes on the site are listed with their age, and never priced. Each quote still open for the job's customer at that site is one line, with its quote id and its age in days from the quote's own date. Accepted, declined and expired quotes are not listed. The line carries no price, no discount and no promise: the tech may mention the quote, and the brief never sells it.
-6. A brief for one customer never draws on another customer's records. Every record a brief cites belongs to the job's own customer, even at the same address. A house that changed hands keeps the old owner's visits, notes and quotes with the old owner. Reads are made by the job's customer id, never by the address alone.
-7. Delivered once, on a channel the tech agreed to, by the set time, and again only when a slot changes. Each tech gets one brief for the day, on a channel they agreed to, no later than the business's set time. Running again with nothing changed sends nothing. When a slot changes, that tech gets exactly one fresh brief. A tech with no agreed channel gets nothing sent and is parked for a person, never sent on a channel somebody guessed.
-8. It survives the builder. Someone other than the builder can explain what it does, and it runs on an account the business owns.
-9. The pass test passes. On the real job system: tomorrow's job at a site visited before, with one open quote and no access note. The brief lists the last visit with its date and record, the open quote with its age, and no access note under missing. Delete the last visit's note and rebuild: that line disappears.
+1. The brief lists the tech's booked jobs for the day, by job number. Each tech's brief lists exactly the jobs booked to that tech for the day, by the job system's own job number, with the time window copied from the booking. A job booked to somebody else, an unbooked job in the same street, or a window written from memory fails.
+2. Every line shows the record it came from and that record's date. Every line in the brief names the system, the record number and the record's date, and that record exists and belongs to the job's customer. A line with no record or no date is left out. This stops a smooth-sounding brief inventing history, the same as Cited Answer's rule that "every claim carries its source", applied to a site visit.
+3. Notes are quoted or cut short, never reworded, and nothing is added about the customer's mood. A note in the brief is in its own words, or the first part of them cut with an ellipsis, with who wrote it and when. Nothing is summarised into a claim the note does not make, and no word about the customer's mood or character is added. If the business has chosen to leave customer notes out, they are left out.
+4. Hazard and access notes come first on each job, and a missing one is shown as missing. For each job, hazard and access lines come before everything else. A site with no hazard record or no access record shows that gap under missing, so the tech knows to ask. Nothing is filled in.
+5. Open quotes on the site are listed with their age, and never priced. Each quote still open for the job's customer at that site gets one line, with its quote number and its age in days from the quote's own date. Accepted, declined and expired quotes are left off. The line has no price, no discount and no promise, so the tech may mention the quote but the brief never sells it.
+6. A brief for one customer never draws on another customer's records. Every record a brief uses belongs to the job's own customer, even at the same address. When a house changes hands, the old owner's visits, notes and quotes stay with the old owner. Records are looked up by the job's customer, never by the address alone.
+7. Sent once, the way the tech agreed, by the set time, and again only when a booking changes. Each tech gets one brief for the day, by the channel they agreed to, no later than the business's set time. Running again with nothing changed sends nothing, and when a booking changes that tech gets exactly one fresh brief. A tech with no agreed channel gets nothing and goes to a person to sort out, never sent by a channel somebody guessed.
+8. It keeps working if the person who built it leaves. Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+9. The pass test passes. On the real job system, take tomorrow's job at a site visited before, with one open quote and no access note. The brief lists the last visit with its date and record, the open quote with its age, and the access note under missing. Delete the last visit's note and rebuild the brief, and that line disappears.
 
 ## 4. What the tech reads at 6am
 
-Two jobs, one site visited before and one barely known. The first brief is long because the job system knows a lot. The second is short and says what is missing, which is the useful thing: the tech knows to ask about access and hazards at the door.
+Two jobs, one site visited before and one barely known. The first brief is long because the job system knows a lot. The second is short and says what is missing, so the tech knows to ask about access and hazards at the door.
 
 ```
 Brief for Sam, Monday 2 November
@@ -169,9 +169,9 @@ A line without a source is the defect this standard exists to make impossible. A
 
 ## 6. Delivered once, and nothing written back
 
-The brief goes to each tech once, before the time you set, on the channel they agreed to: email, SMS, Teams or Google Chat. Run it again with nothing changed and nothing is sent. Move one of their slots and that tech gets one fresh brief, marked as updated. A tech who has not agreed a channel gets nothing, and the build parks them for a person on the [one exception queue](https://aipathway.com.au/explore-ai/field-service-automation-roadmap) rather than guessing a mobile number from the staff list.
+The brief goes to each tech once, before the time you set, on the channel they agreed to: email, SMS, Teams or Google Chat. Run it again with nothing changed and nothing is sent. Move one of their slots and that tech gets one fresh brief, marked as updated. A tech who has not agreed a channel gets nothing, and the build puts them on the [one exceptions list](https://aipathway.com.au/explore-ai/field-service-automation-roadmap) for a person, rather than guessing a mobile number from the staff list.
 
-Nothing is written back. The build has no port that changes a job, a slot, a quote or a note, so a conforming build cannot do it by accident. If the brief is wrong, the record is wrong, and the fix is in the job system, where the next brief reads it.
+Nothing is written back. The build has no way to change a job, a slot, a quote or a note, so a build that meets the standard cannot do it by accident. If the brief is wrong, the record is wrong, and the fix is in the job system, where the next brief reads it.
 
 ## 7. What stays with a person
 
@@ -185,17 +185,17 @@ Nothing is written back. The build has no port that changes a job, a slot, a quo
 
 The same checks and the same pass test hold whichever way you run it. Five ways, and what is ready today in each:
 
-- **Done for you, from AI Pathway.** Not today. AI Pathway can read one job by its id with read_job, but it does not list a day’s slots, read a site’s history or quotes, or send the brief. So nothing here is sold as an AI Pathway step, and no call is involved: a brief is a message to your own staff.
+- **Done for you, from AI Pathway.** Not today. AI Pathway can look up one job by its number (read_job), but it does not list a day’s slots, read a site’s history or quotes, or send the brief. So nothing here is sold as an AI Pathway step, and no call is involved: a brief is a message to your own staff.
 - **Your own bot: Grok Bot or Claude.** The natural fit. A scheduled prompt at 5:30 each morning, reading ServiceM8 through its official connector, with check 2 pasted in as the rule: “Every line names the record it came from and that record’s date. A line you cannot point to a record for is left out. Quote notes; never sum up a customer.” The ServiceM8 connector is set up the same way as in [chasing ServiceM8 quotes with a Grok Bot or Claude](https://aipathway.com.au/explore-ai/chase-servicem8-quotes-grok-bot-claude). On Simpro, the bot reads through a connector built to the [Simpro Claude Connector standard](https://aipathway.com.au/explore-ai/simpro-claude-connector-build-standard). One limit to know: a bot’s own memory is not a record, so it must read fresh each morning and never carry yesterday’s brief forward.
-- **Google Workspace, the default.** A copyable Google Sheet is built: paste the day’s slots and the site records from your job system’s export, and it emails each tech their brief from 5am, again only when a slot moves, with every line ending in its record and date. It is coming to this page; it calls nothing outside the spreadsheet and writes nothing back.
+- **Google Workspace, the default.** A copyable Google Sheet is built: paste the day’s slots and the site records from your job system’s export, and it emails each tech their brief from 5am, again only when a slot moves, with every line ending in its record and date. Copy it from the Google Workspace link at the top of this page. It calls nothing outside the spreadsheet and writes nothing back.
 - **Microsoft 365.** The [Microsoft 365 plan](https://aipathway.com.au/explore-ai/morning-brief-on-microsoft-365) lays out six SharePoint lists, a flow that copies from the job system each morning and a flow that posts each tech their brief in Teams.
-- **Your own code.** This page: the checks, the data model, a runnable stub and the pass test. Hand it to a coding agent with the button at the top.
+- **Your own code.** This page: the checks, the data model, a practice setup with sample data, and the pass test. Hand it to a coding agent with the button at the top.
 
-Mixing is fine, with one rule: one way owns the brief for a given tech. Two surfaces sending the same tech a brief each morning is check 7 failed twice. How to run any standard each of these ways is in [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
+Mixing is fine, with one rule: only one way sends each tech their brief. If two ways each send the same tech a brief every morning, check 7 fails twice. How to run any standard each of these ways is in [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
 
 ## 9. What your developer builds, and the step that needs care
 
-No hosted step, and nothing written anywhere. Retrieval and drafting are the free part, and a coding agent builds them against the stub in an afternoon. What needs care is checks 2 and 6, and the pass test is run on your own job system.
+There is nothing hosted to buy, and nothing is written anywhere. Reading the records and drafting the brief are the free part, and a coding agent builds them against sample data in an afternoon. Checks 2 and 6 need care, and the pass test runs on your own job system.
 
 ```
 provider:
@@ -230,21 +230,21 @@ cannot meet the standard
 
 A vendor selling an AI job summary is usually selling the writing. Ask them three things: where each line came from, what happens when a note is deleted, and whose history appears when a house changes hands.
 
-**The pass test.** In your own job system. Pick tomorrow’s job at a site you have visited before, with one open quote and no access note. Tomorrow’s brief for that tech must list the last visit with its date and its record, the open quote with its age, and no access note under missing. Now delete the last visit’s note in your job system and rebuild the brief: that line must disappear, not be remembered or rephrased. A stub cannot fake this, because a stub forgets what you tell it to. Each step takes a minute to stage.
+**The pass test.** In your own job system. Pick tomorrow’s job at a site you have visited before, with one open quote and no access note. Tomorrow’s brief for that tech must list the last visit with its date and its record, the open quote with its age, and no access note under missing. Now delete the last visit’s note in your job system and rebuild the brief: that line must disappear, with nothing remembered or reworded. Sample data cannot fake this, because sample data forgets whatever you tell it to. Each step takes a minute to set up.
 
 ## 10. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 
-- **1. The jobs come from the tech's slots for the day, by job id.** Each tech's brief lists exactly the jobs slotted to that tech for the day, by the job system's own job id, with the window copied from the slot. A job slotted to somebody else, an unslotted job at the same street, or a window restated from memory is a failure.
-- **2. Every line carries the record it came from and that record's date.** Every line in the brief names the system, the record id and the record's date, and that record exists and belongs to the job's customer. A line with no record or no date is dropped, not shown. This is the rule that stops a fluent brief inventing history: Cited Answer's "every claim carries its source", applied to a site visit.
-- **3. Notes are quoted or shortened, never reinterpreted, and no sentiment is generated.** A note in the brief is the note's own words, or the first part of them cut with an ellipsis, with its author and date. Nothing is summarised into a claim the note does not make, and no word about the customer's mood or character is added. Where the business has set customer notes to be left out, they are left out.
-- **4. Hazard and access lines lead each job, and a missing one is shown as missing.** For each job, hazard and access lines come before every other line. A site with no hazard record or no access record shows that gap under missing, so the tech knows to ask. Nothing is filled in.
-- **5. Open quotes on the site are listed with their age, and never priced.** Each quote still open for the job's customer at that site is one line, with its quote id and its age in days from the quote's own date. Accepted, declined and expired quotes are not listed. The line carries no price, no discount and no promise: the tech may mention the quote, and the brief never sells it.
-- **6. A brief for one customer never draws on another customer's records.** Every record a brief cites belongs to the job's own customer, even at the same address. A house that changed hands keeps the old owner's visits, notes and quotes with the old owner. Reads are made by the job's customer id, never by the address alone.
-- **7. Delivered once, on a channel the tech agreed to, by the set time, and again only when a slot changes.** Each tech gets one brief for the day, on a channel they agreed to, no later than the business's set time. Running again with nothing changed sends nothing. When a slot changes, that tech gets exactly one fresh brief. A tech with no agreed channel gets nothing sent and is parked for a person, never sent on a channel somebody guessed.
-- **8. It survives the builder.** Someone other than the builder can explain what it does, and it runs on an account the business owns.
-- **9. The pass test passes.** On the real job system: tomorrow's job at a site visited before, with one open quote and no access note. The brief lists the last visit with its date and record, the open quote with its age, and no access note under missing. Delete the last visit's note and rebuild: that line disappears.
+- **1. The brief lists the tech's booked jobs for the day, by job number.** Each tech's brief lists exactly the jobs booked to that tech for the day, by the job system's own job number, with the time window copied from the booking. A job booked to somebody else, an unbooked job in the same street, or a window written from memory fails.
+- **2. Every line shows the record it came from and that record's date.** Every line in the brief names the system, the record number and the record's date, and that record exists and belongs to the job's customer. A line with no record or no date is left out. This stops a smooth-sounding brief inventing history, the same as Cited Answer's rule that "every claim carries its source", applied to a site visit.
+- **3. Notes are quoted or cut short, never reworded, and nothing is added about the customer's mood.** A note in the brief is in its own words, or the first part of them cut with an ellipsis, with who wrote it and when. Nothing is summarised into a claim the note does not make, and no word about the customer's mood or character is added. If the business has chosen to leave customer notes out, they are left out.
+- **4. Hazard and access notes come first on each job, and a missing one is shown as missing.** For each job, hazard and access lines come before everything else. A site with no hazard record or no access record shows that gap under missing, so the tech knows to ask. Nothing is filled in.
+- **5. Open quotes on the site are listed with their age, and never priced.** Each quote still open for the job's customer at that site gets one line, with its quote number and its age in days from the quote's own date. Accepted, declined and expired quotes are left off. The line has no price, no discount and no promise, so the tech may mention the quote but the brief never sells it.
+- **6. A brief for one customer never draws on another customer's records.** Every record a brief uses belongs to the job's own customer, even at the same address. When a house changes hands, the old owner's visits, notes and quotes stay with the old owner. Records are looked up by the job's customer, never by the address alone.
+- **7. Sent once, the way the tech agreed, by the set time, and again only when a booking changes.** Each tech gets one brief for the day, by the channel they agreed to, no later than the business's set time. Running again with nothing changed sends nothing, and when a booking changes that tech gets exactly one fresh brief. A tech with no agreed channel gets nothing and goes to a person to sort out, never sent by a channel somebody guessed.
+- **8. It keeps working if the person who built it leaves.** Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+- **9. The pass test passes.** On the real job system, take tomorrow's job at a site visited before, with one open quote and no access note. The brief lists the last visit with its date and record, the open quote with its age, and the access note under missing. Delete the last visit's note and rebuild the brief, and that line disappears.
 
 Building this on Microsoft 365: [the lists, the copy flow and the brief flow](https://aipathway.com.au/explore-ai/morning-brief-on-microsoft-365).
 
@@ -252,7 +252,7 @@ Building this on Microsoft 365: [the lists, the copy flow and the brief flow](ht
 
 Checked as at 1 November 2026
 
-**AI Pathway.** Its MCP endpoint offers read_job, which reads one job by its id from the connected job system. It has no tool that lists a day’s slots by tech, reads a site’s history or open quotes, or sends a brief to a tech.
+**AI Pathway.** Its connection for AI assistants offers read_job, which looks up one job by its number in the connected job system. It has no tool that lists a day’s slots by tech, reads a site’s history or open quotes, or sends a brief to a tech.
 
 **ServiceM8.** Hosts an official connector at api.servicem8.com/mcp that an AI assistant signs in to. Simpro, AroFlo and Fergus have APIs a build can read through; Tradify has no public API.
 

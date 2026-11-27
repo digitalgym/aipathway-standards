@@ -17,7 +17,7 @@ Used by
 - Project Manager
 - Business Systems Analyst
 
-The month’s claim is the same job every time: open the schedule, ask the project manager where each line is up to, work out the value to date, take off what you claimed last month, add the signed variations, and check the sums twice. This plan puts each of those in a SharePoint list and lets a flow do the arithmetic and hold the draft. You still check it, sign it and serve it. The plan follows a standard that is in Draft until its waiver wording has had a legal review.
+The month’s claim is the same job every time: open the schedule, ask the project manager where each line is up to, work out the value to date, take off what you claimed last month, add the signed variations, and check the sums twice. This plan puts each of those in a SharePoint list and lets a flow do the sums and hold the draft. You still check it, sign it and serve it. The plan follows a standard that is in Draft until its waiver wording has had a legal review.
 
 ## In short
 
@@ -106,9 +106,9 @@ ClaimLines.ClaimKey is ContractId/Period, so one month's draft is found and upda
 | --- | --- | --- |
 | Nothing is drafted until the waiver is accepted at the current version | Acceptance.Version, and Flow 1's first step | Flow 1 reads the latest Acceptance row before anything else. No row, or one for an older version, ends the run with a message to the account owner, before any contract is read. |
 | Figures come only from the contract record | Contracts.ContractSum and ScheduleOfValues | The schedule's lines must add up to ContractSum, or the draft is parked as schedule_mismatch. Claimed before is the value to date on last month's released ClaimLines, or ClaimedBeforeSite. |
-| Percent complete is a person's | SiteAssessment, this Period only | A line with no row for this month, with AssessedBy and AssessedOn, parks the draft as no_assessment. The flow never copies last month's row or works a percent out. |
+| Percent complete comes from your project manager's site walk | SiteAssessment, this Period only | A line with no row for this month, with AssessedBy and AssessedOn, parks the draft as no_assessment. The flow never copies last month's row or works a percent out. |
 | A variation only with a signature | Variations.SignedAcceptance | A variation with no link parks the draft as unsigned_variation. A signed one is a line, its link carried onto ClaimLines. |
-| The arithmetic is shown | ClaimLines columns and the TOTAL row | Value to date is ScheduledValue times PercentComplete; this claim is value to date less ClaimedBefore. A line below what was claimed before parks the draft as below_previous. |
+| The sums are shown | ClaimLines columns and the TOTAL row | Value to date is ScheduledValue times PercentComplete; this claim is value to date less ClaimedBefore. A line below what was claimed before parks the draft as below_previous. |
 | The marker stays until a person releases | ClaimLines.Marker and Flow 2 | Every row Flow 1 writes carries the marker. Flow 2 clears it only when a person runs it on a held claim, and writes their name to ReleasedBy. |
 
 ## 4. The flows
@@ -146,7 +146,7 @@ FLOW 2  Release                         (a person runs it on a claim)
   never    sends or serves the claim. The builder does that.
 ```
 
-Flow 1 has no mail connector at all. Releasing is not serving: after Flow 2, the builder signs the claim and serves it on their own timing under the contract.
+Flow 1 has no mail connector at all. Releasing a draft does not serve it. After Flow 2, the builder signs the claim and serves it on their own timing under the contract.
 
 ## 5. What the flows can reach in your Microsoft 365, and what they never touch
 
@@ -155,7 +155,7 @@ It drafts the month’s progress claim for you to check and send. It reads the c
 What each connection is for.
 
 - **SharePoint, the ClaimDrafts site.** Read on five lists, contribute on ClaimLines. Nothing outside the site.
-- **Teams, a chat with the project manager.** One message per draft saying it is held, or parked and why.
+- **Teams, a chat with the project manager.** One message per draft saying it is ready to check, or that it stopped and why.
 
 Keep it to the least it needs.
 
@@ -178,15 +178,15 @@ How to cut it off. Turn the flows off and nothing drafts. Take the service accou
 
 ### Defaulting a missing percent
 
-A Power Automate expression that falls back to the last value, or to zero, quietly invents a percent. A missing row parks the draft; it never becomes a number.
+A Power Automate expression that falls back to the last value, or to zero, quietly invents a percent. If a percent is missing, the draft stops and goes to the project manager with the gap named. It never becomes a number.
 
-### Floating point on money
+### Rounding errors on money
 
 Multiply in cents and round once per line, then add the rounded lines for the totals. Rounding the total separately makes it disagree with the lines by a cent.
 
 ### A mail action added later
 
-Someone will want the flow to email the client. That is serving, and it is the builder's. Keep the flow without a mail connector and the claim cannot leave by accident.
+Someone will want the flow to email the client. That would serve the claim, and serving is the builder's job. Keep the flow without a mail connector and the claim cannot leave by accident.
 
 ## 8. Where the automation stops
 
@@ -194,9 +194,9 @@ Someone will want the flow to email the client. That is serving, and it is the b
 - Walking the site and entering each percent complete.
 - Checking, signing and serving the claim, and its timing under the contract and the state's Act.
 - Every payment schedule, reply, retention question and adjudication.
-- Every parked draft.
+- Every draft that stops on a missing or wrong figure.
 
-**The pass test.** On your own tenant. With no Acceptance row, run Flow 1: nothing is drafted. Add the row at the current version. Load one contract with a line nobody assessed this month and one unsigned variation, and another contract fully assessed. Run Flow 1: the first is parked with both reasons, the second held with the marker and sums that match yours by hand. Run it again: still one draft each. Release the second with Flow 2: the marker is off and your name is on it, and nothing was sent to anyone.
+**The pass test.** Use your own Microsoft 365. With no Acceptance row, run Flow 1: nothing is drafted. Add the row at the current version. Load one contract with a line nobody assessed this month and one unsigned variation, and another contract fully assessed. Run Flow 1: the first stops with both reasons named, the second is held with the marker and sums that match yours by hand. Run it again: still one draft each. Release the second with Flow 2: the marker is off and your name is on it, and nothing was sent to anyone.
 
 ## Related reading
 

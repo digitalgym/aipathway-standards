@@ -92,9 +92,9 @@ skill asserts.
 - 1. Scope, and what is out of it
 - 2. The checks, in order
 - 3. The price list is the only source of a rate
-- 4. What gets parked
+- 4. What waits for you
 - 5. The quote object
-- 6. Write-back, and writing once
+- 6. The quote goes into your system, once
 - 7. Sending stays with a person
 - 8. Connect Xero so every job gets a draft quote from your own price list, and nothing goes to the customer until you send it
 - 9. Provider and hosting

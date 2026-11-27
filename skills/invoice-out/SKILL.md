@@ -100,7 +100,7 @@ skill asserts.
 - 6. The release gate
 - 7. What stays with a person
 - 9. Connect Xero and ServiceM8 or Simpro for draft invoices, without anything being sent
-- 10. What your developer builds: the one write not to hand-roll
+- 10. What your developer builds, and the one step not to build yourself
 - 11. A checklist to hold any build or supplier to
 
 ## Attribution

@@ -37,15 +37,15 @@ An open build standard for the phase before a knowledge graph: bringing everythi
 
 The core rule
 
-Nothing is chunked or embedded until it is on the register with an owner, a checksum and one canonical copy. The register is the product. The search is a convenience on top of it.
+Nothing is made searchable until it is on the register with an owner, a checksum (a fingerprint that changes when the file does) and one copy that counts. The register is what you are building. Search sits on top of it.
 
 What it does not do
 
-It does not answer questions and it does not hold facts. Search returns passages with a locator. Answering is Cited Answer, over the graph this feeds.
+It does not answer questions and it does not hold facts. Search returns passages, each with where to find it. Answering questions is the Cited Answer standard's job, over the graph this feeds.
 
 The hard part
 
-Finding every source the business actually relies on, naming a person for each, and then noticing the week the issuer replaces one. That is a foundational project, not an afternoon.
+Finding every source the business relies on, naming a person for each, and then noticing the week the issuer replaces one. That takes weeks, not an afternoon.
 
 The policy is in one person’s email. The price list is a spreadsheet on a laptop. The current edition of the manual is whichever copy was opened last. Every business has this, and every one of them is told the fix is a searchable knowledge base. The search is the easy part. The register with a name against every source is the part that makes the search worth trusting, and it is the part nobody demos.
 
@@ -59,21 +59,21 @@ One file, from the drive to the graph
 6. If yes, index its passages with locators a person can open: page and section, offsets, or seconds on a recording.
 7. On every scheduled run, is the checksum still the same? If yes, the entry is ready for the graph with its register id attached. If no, the old copy is marked superseded, the owner is told in the same run, and it goes back through the gate.
 
-The register comes before the index, on purpose. The filled diamond is the owner, the checksum and the single canonical copy, which is what the scheduled watch needs to work. The loop is the watch catching a changed edition and telling the owner.
+Files go on the register before they are made searchable. The filled diamond is the owner, the checksum and the one copy that counts, which the watch (the scheduled check of every source) needs to work. The loop is the watch catching a new edition and telling the owner.
 
 ## 1. What this standard covers
 
 Any business that will later ask an assistant to speak from its own material, and whose material is currently in more than one place with nobody named against it. A trades business with a price list, a set of codes and a folder of supplier terms. A practice with legislation, its own procedures and client files. A broker network with a lender panel, a credit policy and an operations manual across many offices.
 
-It covers the phase the [Knowledge Graph standard](https://aipathway.com.au/explore-ai/knowledge-graph-build-standard) opens with in one line, “register the source”, and that for most businesses is the longest phase by far. It ends where that standard begins: a register entry with an id, an edition, a checksum and a locator scheme, which the graph takes as an instrument.
+It covers the phase the [Knowledge Graph standard](https://aipathway.com.au/explore-ai/knowledge-graph-build-standard) opens with in one line, “register the source”, and that for most businesses is the longest phase by far. It ends where that standard begins: a register entry with an id, an edition, a checksum and a way to point to the exact page or section, which the graph takes on as an instrument.
 
-What it is not. It is not a chat assistant over the drive. It is not a migration to a new document system. The drive stays where it is; the register points at it. And it is not the graph: nothing here holds a fact, only where a fact can be found.
+What it leaves out. It adds no chat assistant over the drive and moves nothing to a new document system. The drive stays where it is, and the register points at it. It is also not the graph. It holds no facts, only where a fact can be found.
 
-How big it is. Honestly, this is the foundational project, and it is measured in weeks for a network rather than an afternoon. No single step is hard. Finding every source and getting a person to put their name to it is a conversation per source. The checks in section 4 can each be proved in an hour on a stub. The inventory cannot, and the pass test says so.
+How big it is. This is the groundwork for everything after it, and for a network it takes weeks, not an afternoon. No single step is hard. Finding every source and getting a person to put their name to it is a conversation per source. The checks in section 4 can each be proved in an hour on test data. The inventory cannot, and the pass test says so.
 
 ## 2. The kinds of source
 
-Six kinds, a closed list. The kind decides who may read it and how long it is kept. The folder it was found in decides nothing.
+There are six kinds, and only six. The kind decides who may read it and how long it is kept. The folder it was found in decides nothing.
 
 | Kind | What it is | Kept, and who reads it |
 | --- | --- | --- |
@@ -84,11 +84,11 @@ Six kinds, a closed list. The kind decides who may read it and how long it is ke
 | contract | Agreements the business is party to | Full term plus the statutory period. Restricted access |
 | customer_material | Client files, interviews, emails, anything about a person | Expiry set on arrival. Access list. Never in the shared index |
 
-The last row is the one that goes wrong. A client interview saved in the policy folder gets embedded with the policy, and the shared search then returns a client’s circumstances to whoever asks a policy question. Kind is set on arrival and the index is scoped by it.
+The last row is the one that goes wrong. A client interview saved in the policy folder gets made searchable with the policy, and the shared search then shows a client’s circumstances to whoever asks a policy question. The kind is set when a file arrives, and it decides what the shared search can show.
 
 ## 3. The records it keeps, in the shape your developer needs
 
-Six objects. The register entry does the work. The watch run and the gap are the two most builds leave out, because a search over a drive appears to function without either.
+Six kinds of record. The register entry does the work. The watch run and the gap are the two most builds leave out, because a search over a drive seems to work without either.
 
 ```
 RegisterEntry                     # one per source, the product
@@ -130,38 +130,38 @@ A Passage with a null register_id is the defect this standard exists to make unr
 
 ## 4. The checks, in order
 
-The order is the claim. Chunk the drive first and you have a search nobody owns; register first and the search inherits an owner, a checksum and a scope from every entry it is built on.
+Each check has to pass before the next one runs. Make the drive searchable first and you have a search nobody owns. Register first, and every search result carries the owner, the checksum and the access rules of the entry it came from.
 
-1. Every source is on the register before anything is indexed. A file is registered with a title, a location and an owner before a passage from it is chunked or embedded. Indexing an unregistered file fails.
-2. Duplicates resolve to one canonical copy, and only the canonical is indexed. Two copies of the same source are one register entry with the others marked duplicate_of. The index holds the canonical copy once.
-3. Every source has a named owner, and a team is not an owner. The owner is the person who is asked when the source moves or goes missing. "Operations" cannot be asked anything.
-4. Retrieved date, checksum and edition are recorded when the source arrives. A source without a checksum cannot be watched. One without an edition, where the issuer publishes one, cannot be handed to the graph.
-5. Customer material is registered as such, restricted, and kept out of the shared index. Client files, interviews and emails are inventoried with kind customer_material and an access list. They are never chunked into the search everyone uses.
-6. Every indexed passage names its source and a locator that can be opened. Page and section, offsets in a stable file version, or seconds on a recording. "Chunk 47" is not a locator.
-7. Search returns passages with their source and locator, and composes nothing. A query returns what was found and where. It does not return a paragraph the model wrote. Answering is the Cited Answer standard, over the graph.
-8. A source that should exist and cannot be found is a gap with an owner and a date. The current edition of an instrument the business relies on, not on the drive, is not a blank row. It is a task for a person.
-9. Every source on the drive is re-fetched on a schedule, and a changed checksum reaches its owner. The watch runs whether or not anything changed. When a checksum moves, the register records the new one, marks the old copy superseded, and the owner is told the same run. A source held only by the issuer gets a recheck task to its owner on the same schedule, and the confirmation is recorded.
-10. Retention and access follow the kind of source. An issued instrument is kept with every edition. Customer material carries an expiry and an access list. The kind decides, not the folder it was found in.
-11. A source reaches the graph only from the register, carrying its id, edition, checksum and locator scheme. The Knowledge Graph standard registers a source as an instrument. That instrument is this register entry, not a fresh upload. A graph source with no register id has skipped this standard.
-12. It survives the builder. Someone other than the builder can explain what it does, and it runs on an account the business owns.
-13. The pass test passes. On the business's real drive: every source registered with a person, one duplicate found and resolved, one client file quarantined, a real edition change caught by the watch within a cycle, and a search that returns locators the owner can open.
+1. Every file is on the register before any of it goes into the search. Each file goes on the register with a title, where it lives and an owner before any passage from it is added to the search. Adding a file that is not on the register fails.
+2. Duplicates come down to one master copy, and only the master goes into the search. Two copies of the same file are one entry on the register, with the others marked as duplicates of it (duplicate_of). The search holds the master copy once.
+3. Every source has a named owner, and a team is not an owner. The owner is the person who gets asked when the file changes or goes missing. "Operations" cannot be asked anything.
+4. The date it was fetched, its fingerprint and its edition are recorded when a file arrives. A file without a fingerprint (checksum) cannot be watched for changes. One without an edition, where the issuer publishes one, cannot be passed on to the Knowledge Graph.
+5. Customer material is registered as customer material, locked down, and kept out of the shared search. Client files, interviews and emails go on the register as customer material (customer_material) with a list of who may open them. They never go into the search everyone uses.
+6. Every passage in the search names its file and a spot in it you can open. That spot is a page and section, a position in a fixed version of the file, or a time on a recording. "Chunk 47" does not tell anyone where to look.
+7. Search returns passages with their file and where to find them, and writes nothing of its own. A search returns what was found and where. It never returns a paragraph the AI wrote. Answering questions is the job of the Cited Answer standard, working from the Knowledge Graph.
+8. A file that should exist and cannot be found becomes a gap with an owner and a due date. If the current edition of a document the business relies on is missing from the drive, it is listed as a job for a named person to find it, with a due date. It is never left as a blank line.
+9. Every file on the drive is rechecked on a schedule, and its owner hears when it changes. The check runs whether or not anything changed. When a file changes, the register records the new fingerprint, marks the old copy replaced, and the owner is told on the same run. A document held only by its issuer becomes a recheck job for its owner on the same schedule, and their confirmation is recorded.
+10. How long a file is kept, and who may open it, depends on what kind of file it is. An issued document is kept with every edition. Customer material has an expiry date and a list of who may open it. The kind of file decides this, whatever folder it was found in.
+11. A file reaches the Knowledge Graph only from the register, with its register number, edition, fingerprint and how to find spots in it. The Knowledge Graph standard takes each source from this register entry, never from a fresh upload. A source in the Knowledge Graph with no register number has skipped this standard.
+12. It keeps working if the person who built it leaves. Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+13. The pass test passes. On the business's real drive, every file is on the register with a named person, one duplicate is found and sorted, one client file is locked away, a real new edition is caught by the next scheduled check, and a search returns spots the owner can open.
 
 ## 5. Search finds, and never answers
 
-This is the boundary, and it is the one every product will try to talk you across. A search over the knowledge base returns passages with a register id and a locator a person can open. It does not return a paragraph the model wrote from those passages.
+Search shows you the passage, and that is where it stops. Every product will try to talk you past this line. A search over the knowledge base returns passages, each with its register entry and a link a person can open to the exact spot. It does not return a paragraph the AI wrote from those passages.
 
-A composed answer from a pile cannot say which edition it used, cannot be found again when that edition is replaced, and cannot decline. Those three properties are what the [Cited Answer standard](https://aipathway.com.au/explore-ai/cited-answer-build-standard) provides over the graph, and the graph exists so that they can be provided. A knowledge base that answers has skipped both, and the answer it gives will be the one that was right last year.
+An answer written from a pile of files cannot say which edition it used, cannot be traced when that edition is replaced, and cannot say it does not know. The [Cited Answer standard](https://aipathway.com.au/explore-ai/cited-answer-build-standard) gives you all three, working from the graph, and the graph exists so that it can. A knowledge base that answers has skipped both, and the answer it gives will be the one that was right last year.
 
-What search is for, then: a person finding the passage to read, a person finding the duplicate to resolve, and the graph’s extractor finding candidate passages to propose. All three want a locator. None of them wants a paragraph.
+Search is for three things: a person finding the passage to read, a person finding a duplicate to sort out, and the graph’s builder finding passages to propose. All three need to know where the passage is. None of them needs a paragraph.
 
 ## 6. Connect SharePoint or Google Drive so the watch can read every source, without moving or changing a file
 
-It keeps one register of everything the business relies on, and spots when a file changes. It reads the files in the libraries or shared drives the register points at, notices when one has changed, updates the register and lets the file’s owner know by email or a task. Each source has a named person who answers for it when it moves, and which copy counts is yours to decide. Your own login stays yours. The flow or script asks for access on Microsoft’s or Google’s own approval screen, and nobody types a password into it.
+It keeps one register of everything the business relies on, and spots when a file changes. It reads the files in the libraries or shared drives the register points at, notices when one has changed, updates the register and lets the file’s owner know by email or a task. A named person answers for each source when it moves, and you decide which copy counts, who may read customer material, and what goes on to the graph. Your own login stays yours. The flow or script asks for access on Microsoft’s or Google’s own approval screen, and nobody types a password into it.
 
 What each piece of access is for.
 
 - **The named libraries or shared drives, read.** To fetch each source and compare its checksum with the one on the register.
-- **The register, read and write.** The only thing the build edits: the new checksum, the date it looked, and the status.
+- **The register, read and write.** The only thing the build changes: the new checksum, the date it looked, and the status.
 - **Mail and tasks, send.** To tell the owner a source moved, and to raise the recheck task for a source the issuer holds.
 - **Search, as it already is.** Microsoft Search and Drive search only show a person what that person can already open, which is why customer material sits in a library only its access list can open.
 
@@ -173,7 +173,7 @@ What each piece of access is for.
 
 Why not switch on Copilot or Gemini over the drive? They search the drive and write an answer from what the person asking can already open, and for finding a passage they are useful. They keep no register: nobody is named against a source, nothing notices the week an issuer replaces one, and the answer does not say which edition it used. Section 5 is the reason this standard stops at finding. Put the register under them first and they get better too.
 
-Both tenants answer every role below, and the drive does not move. One limit applies to both: the scheduled watch can only compare what sits on the drive. A source the issuer publishes only on its own site is watched by a recheck task to the owner, so for that source the catch is a person, not software.
+Microsoft 365 and Google Workspace both cover every role below, and the drive does not move. One limit applies to both: the watch can only compare what sits on the drive. A source the issuer publishes only on its own site gets a recheck task to the owner instead, so for that source a person does the catching.
 
 | Role | Microsoft 365 | Google Workspace |
 | --- | --- | --- |
@@ -184,15 +184,15 @@ Both tenants answer every role below, and the drive does not move. One limit app
 | Gaps | Planner or a task list, one task per missing source | Tasks, or a row on a second sheet with a due date |
 | Retention | Retention labels by kind, applied from the register | Vault retention rules by shared drive, shared drives assigned by kind. Vault comes with Business Plus and above |
 
-The register is a list, not a database, on purpose. A list is what the people who own the sources already open, and an owner who has to log into something new to answer for a source will not. The checks do not care which of the two you are on, because they are asserted through ports rather than against a vendor.
+The register is a list, not a database, on purpose. A list is what the people who own the sources already open, and an owner who has to log into something new to answer for a source will not. The checks work the same on either, because they test what the build does, not which vendor it runs on.
 
 Where it runs. The [Microsoft 365 plan](https://aipathway.com.au/explore-ai/knowledge-base-on-microsoft-365) lays out the list, the flow and the labels; [the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365) gives the general shape, and [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere) covers the other ways to run it.
 
 ## 7. The handover to the graph
 
-The Knowledge Graph standard’s second check registers a source as an instrument with a title, an issuer, an edition, a jurisdiction, effective dates and a checksum. The title, edition, checksum and retrieved date are on the register entry already. The person promoting it adds the issuer, the jurisdiction and the effective dates, and the graph refuses the promotion without them. The handover is a promotion of the entry, by a person, carrying its id. The graph never takes a fresh upload, because a fresh upload has no owner and no history, and the first replaced edition would have nowhere to go.
+The Knowledge Graph standard’s second check registers a source as an instrument with a title, an issuer, an edition, a jurisdiction, effective dates and a checksum. The title, edition, checksum and retrieved date are on the register entry already. The person promoting it adds the issuer, the jurisdiction and the effective dates, and the graph refuses the promotion without them. The handover is a person promoting the register entry, with its id. The graph never takes a fresh upload, because a fresh upload has no owner and no history, and the first replaced edition would have nowhere to go.
 
-Read upward, the stack is this standard, then the graph, then Cited Answer, then the Advice File. The order and the reasons are in [combining the build standards](https://aipathway.com.au/explore-ai/combining-the-standards).
+From the bottom up, the stack is this standard, then the graph, then Cited Answer, then the Advice File. The order and the reasons are in [combining the build standards](https://aipathway.com.au/explore-ai/combining-the-standards).
 
 ## 8. What stays with a person
 
@@ -202,11 +202,11 @@ Read upward, the stack is this standard, then the graph, then Cited Answer, then
 - Who may read customer material, and for how long it is kept.
 - Promoting a register entry to the graph.
 
-The build may propose all five. It may not occupy owner or promoted_by, and it may not set duplicate_of without a person.
+The build may suggest all five. It can never be named as a source’s owner or as the one who promoted it, and it cannot mark a file as a duplicate without a person.
 
 ## 9. What your developer builds, and the step that needs care
 
-One step not to hand-roll, and it is a schedule and a table rather than software. The rest an agent builds on the tenant in an afternoon once the sources are found.
+One step is not to build yourself, and it is a schedule and a table rather than software. A coding agent builds the rest on your Microsoft 365 or Google Workspace in an afternoon, once the sources are found.
 
 ```
 provider:
@@ -231,25 +231,25 @@ the long part
 
 There is no hosted product for this standard. The production check runs over the business's real drive and mailbox with its real owners. A vendor selling a searchable knowledge base is selling the index, and is usually silent about who owns each source and what happens when one is replaced. Ask them that first.
 
-**The pass test.** On the business’s real drive, not a sample. Register every source with a person against it, and compare the register to the drive: anything on the drive and not on the register, or the other way round, is the finding. Find the two copies of the same manual the drive is holding, because it is, and resolve them to one entry. Find the client file in the wrong folder, register it as customer material with an access list, and confirm it does not appear in the shared search for someone outside that list. Pick one instrument the issuer will actually replace during the trial and let the watch run: once the new edition lands on the drive, the new checksum must be on the register and the owner must have been told within one cycle, without anybody noticing the change by hand first. For a source only the issuer holds, the recheck task must fire on schedule and the owner’s confirmation must be recorded. Then run a search for something the material covers and hand the result to the owner: every locator must open to the passage it names, and the result must contain no paragraph the tool wrote.
+**The pass test.** On the business’s real drive, not a sample. Register every source with a person against it, and compare the register to the drive: anything on the drive and not on the register, or the other way round, is the finding. Find the two copies of the same manual the drive is holding, because it is, and resolve them to one entry. Find the client file in the wrong folder, register it as customer material with an access list, and confirm it does not appear in the shared search for someone outside that list. Pick one instrument the issuer will replace during the trial and let the watch run: once the new edition lands on the drive, the new checksum must be on the register and the owner must have been told within one scheduled run, without anybody noticing the change by hand first. For a source only the issuer holds, the recheck task must fire on schedule and the owner’s confirmation must be recorded. Then run a search for something the material covers and hand the result to the owner: every locator must open to the passage it names, and the result must contain no paragraph the tool wrote.
 
 ## 10. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 
-- **1. Every source is on the register before anything is indexed.** A file is registered with a title, a location and an owner before a passage from it is chunked or embedded. Indexing an unregistered file fails.
-- **2. Duplicates resolve to one canonical copy, and only the canonical is indexed.** Two copies of the same source are one register entry with the others marked duplicate_of. The index holds the canonical copy once.
-- **3. Every source has a named owner, and a team is not an owner.** The owner is the person who is asked when the source moves or goes missing. "Operations" cannot be asked anything.
-- **4. Retrieved date, checksum and edition are recorded when the source arrives.** A source without a checksum cannot be watched. One without an edition, where the issuer publishes one, cannot be handed to the graph.
-- **5. Customer material is registered as such, restricted, and kept out of the shared index.** Client files, interviews and emails are inventoried with kind customer_material and an access list. They are never chunked into the search everyone uses.
-- **6. Every indexed passage names its source and a locator that can be opened.** Page and section, offsets in a stable file version, or seconds on a recording. "Chunk 47" is not a locator.
-- **7. Search returns passages with their source and locator, and composes nothing.** A query returns what was found and where. It does not return a paragraph the model wrote. Answering is the Cited Answer standard, over the graph.
-- **8. A source that should exist and cannot be found is a gap with an owner and a date.** The current edition of an instrument the business relies on, not on the drive, is not a blank row. It is a task for a person.
-- **9. Every source on the drive is re-fetched on a schedule, and a changed checksum reaches its owner.** The watch runs whether or not anything changed. When a checksum moves, the register records the new one, marks the old copy superseded, and the owner is told the same run. A source held only by the issuer gets a recheck task to its owner on the same schedule, and the confirmation is recorded.
-- **10. Retention and access follow the kind of source.** An issued instrument is kept with every edition. Customer material carries an expiry and an access list. The kind decides, not the folder it was found in.
-- **11. A source reaches the graph only from the register, carrying its id, edition, checksum and locator scheme.** The Knowledge Graph standard registers a source as an instrument. That instrument is this register entry, not a fresh upload. A graph source with no register id has skipped this standard.
-- **12. It survives the builder.** Someone other than the builder can explain what it does, and it runs on an account the business owns.
-- **13. The pass test passes.** On the business's real drive: every source registered with a person, one duplicate found and resolved, one client file quarantined, a real edition change caught by the watch within a cycle, and a search that returns locators the owner can open.
+- **1. Every file is on the register before any of it goes into the search.** Each file goes on the register with a title, where it lives and an owner before any passage from it is added to the search. Adding a file that is not on the register fails.
+- **2. Duplicates come down to one master copy, and only the master goes into the search.** Two copies of the same file are one entry on the register, with the others marked as duplicates of it (duplicate_of). The search holds the master copy once.
+- **3. Every source has a named owner, and a team is not an owner.** The owner is the person who gets asked when the file changes or goes missing. "Operations" cannot be asked anything.
+- **4. The date it was fetched, its fingerprint and its edition are recorded when a file arrives.** A file without a fingerprint (checksum) cannot be watched for changes. One without an edition, where the issuer publishes one, cannot be passed on to the Knowledge Graph.
+- **5. Customer material is registered as customer material, locked down, and kept out of the shared search.** Client files, interviews and emails go on the register as customer material (customer_material) with a list of who may open them. They never go into the search everyone uses.
+- **6. Every passage in the search names its file and a spot in it you can open.** That spot is a page and section, a position in a fixed version of the file, or a time on a recording. "Chunk 47" does not tell anyone where to look.
+- **7. Search returns passages with their file and where to find them, and writes nothing of its own.** A search returns what was found and where. It never returns a paragraph the AI wrote. Answering questions is the job of the Cited Answer standard, working from the Knowledge Graph.
+- **8. A file that should exist and cannot be found becomes a gap with an owner and a due date.** If the current edition of a document the business relies on is missing from the drive, it is listed as a job for a named person to find it, with a due date. It is never left as a blank line.
+- **9. Every file on the drive is rechecked on a schedule, and its owner hears when it changes.** The check runs whether or not anything changed. When a file changes, the register records the new fingerprint, marks the old copy replaced, and the owner is told on the same run. A document held only by its issuer becomes a recheck job for its owner on the same schedule, and their confirmation is recorded.
+- **10. How long a file is kept, and who may open it, depends on what kind of file it is.** An issued document is kept with every edition. Customer material has an expiry date and a list of who may open it. The kind of file decides this, whatever folder it was found in.
+- **11. A file reaches the Knowledge Graph only from the register, with its register number, edition, fingerprint and how to find spots in it.** The Knowledge Graph standard takes each source from this register entry, never from a fresh upload. A source in the Knowledge Graph with no register number has skipped this standard.
+- **12. It keeps working if the person who built it leaves.** Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+- **13. The pass test passes.** On the business's real drive, every file is on the register with a named person, one duplicate is found and sorted, one client file is locked away, a real new edition is caught by the next scheduled check, and a search returns spots the owner can open.
 
 ## Related reading
 

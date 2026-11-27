@@ -37,15 +37,15 @@ An open build standard for the afternoon before. Each of tomorrow's jobs is chec
 
 The core rule
 
-What a job needs comes from the record: the accepted quote, the job's materials, or a written list per job type (a template, like "a hot water swap needs the unit, two flexis and a tempering valve"). No list on the record, no guess: a person is asked.
+What a job needs comes from the record: the accepted quote, the job's materials, or a written list per job type (a template, like "a hot water swap needs the unit, two flexis and a tempering valve"). If the record has no list, nothing is guessed and a person is asked.
 
 What it does not do
 
-It never swaps a part for one it thinks will do, never trusts a van count from last week, and never writes a purchase order itself. Ordering goes through the Material Order standard, with its limits.
+It reserves shelf stock, sends orders through the Material Order standard with its limits, and flags problems in time. Swapping a part stays with a person, and a van count from last week is never trusted.
 
 The hard part
 
-Not the comparison. Keeping the van count honest, and making sure a second run at 2.30pm does not order the valve twice or text the tech again.
+Comparing the lists is easy. The hard part is keeping the van count right, and making sure a second run at 2.30pm does not order the valve twice or text the tech again.
 
 The tech gets to the job, opens the van, and the valve is not there. The customer gets a second visit, and you pay for two trips and bill one. The valve was on the quote the whole time. Nobody checked the quote against the van before the tech left, because at 3pm everybody is busy with today.
 
@@ -60,7 +60,7 @@ Tomorrow's board, checked the afternoon before
 7. Will it arrive before the slot? If yes, it is ordered through Material Order, one request per supplier per run, and a re-run orders nothing again. If no, it is flagged with the reason and a person moves the job or sources the part. An equivalent part is only ever a suggestion on the flag.
 8. The run publishes its result by the cut-off, whether or not it found anything.
 
-Across the top: read the board, take each job’s needs from the record, read the van with when it was counted. The filled diamond is the van and the shelf: covered, and the tech is told; not covered, and the supplier’s lead time decides whether it is ordered through Material Order or flagged for a person.
+Across the top: read the board, take each job’s needs from the record, and read the van with when it was counted. The filled diamond is the van and the shelf. If they cover the part, the tech is told. If not, the supplier’s lead time decides whether it is ordered through Material Order or flagged for a person.
 
 ## 1. What this standard covers
 
@@ -68,9 +68,9 @@ Any trade business that sends techs out with stock on the van: plumbers, electri
 
 It sits beside two standards that exist. The [Dispatch Board standard](https://aipathway.com.au/explore-ai/dispatch-board-build-standard) puts the job on tomorrow’s board with a tech and a slot; that board is where this one starts. The [Material Order standard](https://aipathway.com.au/explore-ai/material-order-build-standard) turns a job’s list into purchase orders, priced from the supplier’s catalogue, with a threshold a person releases. Parts Ready decides which lines need an order at all, and hands those to it. It is one step on the [field service automation roadmap](https://aipathway.com.au/explore-ai/field-service-automation-roadmap).
 
-What is out of scope. Pricing and sending the purchase order, which is Material Order. Matching the delivery docket, also Material Order. Moving a job to another day when the part cannot arrive: this standard flags it, and a person moves it on the board.
+What is out of scope. Pricing and sending the purchase order, which is Material Order. Matching the delivery docket, also Material Order. Moving a job to another day when the part cannot arrive. This standard flags it, and a person moves it on the board.
 
-What can meet it, and what cannot. The board and the needs have to be readable by job id. ServiceM8, Simpro, AroFlo and Fergus each have an API a build can read jobs and their materials through; check your plan includes API access. Tradify has no public API, so the board and each job’s parts come in by export into the sheet or the lists, and the build’s own record is what stops a second order. Van stock is the weak input: most small trades do not keep it in the job system at all. Simpro and AroFlo can hold stock by location, and a van can be a location if you set it up that way; elsewhere the van count lives in the sheet. A van nobody counts cannot meet check 3, and the standard says so rather than pretending.
+What can meet it, and what cannot. The board and each job’s parts list have to be readable by job number. ServiceM8, Simpro, AroFlo and Fergus each have an API a build can read jobs and their materials through; check your plan includes API access. Tradify has no public API, so the board and each job’s parts come in by export into the sheet or the lists, and the build’s own record is what stops a second order. Van stock is the weak input: most small trades do not keep it in the job system at all. Simpro and AroFlo can hold stock by location, and a van can be a location if you set it up that way; elsewhere the van count lives in the sheet. A van nobody counts cannot meet check 3, and the standard says so rather than pretending.
 
 ## 2. Where the needs and the stock come from, and why nobody guesses
 
@@ -127,22 +127,22 @@ A second Result or a second TechMessage for the same date, job and part is the d
 
 ## 4. The checks, in order
 
-The order is the claim. The board and the record come before any stock is read, because a part list nobody wrote is not worth checking. The shelf comes before any order, because the cheapest part is the one you already own. The lead time comes before the order, because an order that arrives after the job is a second visit with extra steps.
+Each check has to pass before the next one runs. The board and the job’s parts list come before any stock is read, because a part list nobody wrote is not worth checking. The shelf comes before any order, because the cheapest part is the one you already own. The lead time comes before the order, because an order that arrives after the job is a second visit with extra steps.
 
-1. Tomorrow's jobs come from the dispatched board, by job id, and a job added later re-runs for that job only. The run reads tomorrow's board and works from each slot's job id and assigned tech, never from an address or a customer name. A job added to the board after the first run is checked on the next run on its own: the jobs already checked are not re-ordered, re-reserved or re-sent.
-2. What a job needs comes from the record, and a job with no needs list is flagged, never guessed. A job's needs are the accepted quote's lines, the job's own materials, or a written template for its job type, in that order. A job with none of these is flagged needs_list_unknown to a person with an owner. The build never works out from the job's description, or from what is usual, what a job needs.
-3. Van stock is read with the time it was counted, and a count older than the limit is flagged, not trusted. Van and shelf stock are read on every run, each with an as-of time. Van stock counted longer ago than the business's limit (24 hours unless it sets another) is stock_unknown: no line is reported as on the van from it, and each of that job's lines is flagged to a person.
-4. Shelf stock is reserved to the job before anything is ordered. Before any order is requested, the shelf is read. A line the shelf covers is reserved against that job, the same reserve as Material Order's check 2, and is not ordered. The tech is told where to pick it up.
-5. A shortfall is ordered only through Material Order, one request per supplier per run, and a second run orders nothing again. Parts Ready never writes a purchase order. A part held nowhere is handed to Material Order's path, grouped into one request per supplier per run, so that standard's threshold and approved-supplier rules decide the release. A second run on the same board with nothing changed requests nothing.
-6. A part that cannot arrive before the job is flagged with the reason, not ordered and hoped for. Each supplier's lead time is read as data. A part whose arrival would land after the job's slot is flagged lead_time_after_job, naming the job, so a person can move the job or source the part. It is not ordered.
-7. An equivalent part is a suggestion on the flag, never a change to the order, the reservation or the tech's list. When a part cannot be supplied in time and another part in stock would do the same job, the build may say so on the flag. It never reserves, orders or lists the other part for the tech, and never changes the job's parts list. A person decides.
-8. Each tech is told once per job, with the job id: what is on the van, what to pick up and where. Each tech with a job tomorrow gets one message for that job, carrying the job id: the parts on the van, the parts to pick up and the shelf location, and anything flagged. A second run with nothing changed sends nothing.
-9. The run publishes by the cut-off whether or not it found anything, and every flag goes to the exceptions queue with an owner. Every run publishes a result for tomorrow's date by the business's cut-off (15:00 unless it sets another), including when every part is already on a van. A quiet afternoon is a result, not silence. Every flag is written to the business's one exceptions queue with an owner.
-10. The pass test passes. On tomorrow's real board: one job whose part is on the van, one whose part is only on the shelf, and one whose part is held nowhere. By the cut-off each tech is told correctly, the shelf shows the reservation, and the third job has a purchase order through Material Order or a flag naming it. A re-run orders nothing again.
+1. Tomorrow's jobs come from the job board by job number, and a job added later is checked on its own. It reads tomorrow's job board and works from each job's number and assigned tech, never from an address or a customer name. A job added after the first run is checked on the next run on its own. The jobs already checked are not ordered, reserved or messaged again.
+2. What a job needs comes from the job's own records, and a job with no parts list is flagged, never guessed. A job's parts come from the accepted quote's lines, the job's own materials, or a written template for its job type, in that order. A job with none of these is flagged to a named person (reason: needs_list_unknown). It never guesses what a job needs from the job's description or from what is usual.
+3. Van stock is read with the time it was counted, and a count older than the limit is flagged, not trusted. Van and shelf stock are read on every run, each with the time it was counted. If a van was counted longer ago than the business's limit (24 hours unless it sets another), its stock counts as unknown (reason: stock_unknown). No part is reported as on the van from that count, and each part for that job is flagged to a person.
+4. Shelf stock is reserved to the job before anything is ordered. Before anything is ordered, it checks the shelf. A part the shelf covers is reserved for that job, the same way as Material Order's check 2, and is not ordered. The tech is told where to pick it up.
+5. A missing part is ordered only through Material Order, one request per supplier per run, and running it again orders nothing. Parts Ready never raises a purchase order itself. A part held nowhere is handed to Material Order, grouped into one request per supplier per run, so that standard's spending threshold and approved-supplier rules decide whether the order goes out. A second run on the same board with nothing changed asks for nothing.
+6. A part that cannot arrive before the job is flagged with the reason, not ordered and hoped for. It reads each supplier's delivery time from their record. If a part would arrive after the job's booked time, it is not ordered. It is flagged to a person, naming the job, so they can move the job or find the part elsewhere (reason: lead_time_after_job).
+7. An equivalent part is only a suggestion on the flag, never a change to the order, the reserved stock or the tech's list. When a part cannot be supplied in time and another part in stock would do the same job, it may say so on the flag. It never reserves, orders or lists the other part for the tech, and never changes the job's parts list. A person decides.
+8. Each tech is told once per job, with the job number, what is on the van, what to pick up and where. Each tech with a job tomorrow gets one message for that job. It gives the job number, the parts on the van, the parts to pick up and where they sit on the shelf, and anything flagged. A second run with nothing changed sends nothing.
+9. The results go out by the cut-off even when nothing is missing, and every flag goes on the exceptions list with an owner. Every run puts out a result for tomorrow by the business's cut-off (15:00 unless it sets another), even when every part is already on a van. A quiet afternoon still gets a result. Every flag goes on the business's one exceptions list with a named owner.
+10. The pass test passes. Take tomorrow's real job board with one job whose part is on the van, one whose part is only on the shelf, and one whose part is held nowhere. By the cut-off each tech is told correctly, the shelf shows the part reserved, and the third job has a purchase order through Material Order or a flag naming it. Run it again and nothing is ordered twice.
 
 ## 5. What each job gets, and what the tech is told
 
-Every part on every job ends in one of four states:
+Every part on every job ends up with one of four results:
 
 | Status | What it means |
 | --- | --- |
@@ -162,13 +162,13 @@ A flag carries one reason, from a closed list:
 
 Each tech gets one message per job, with the job number on it: “Tomorrow, job 4471 at 8am: tempering valve is on your van. Job 4473 at 11am: pick up the 315L unit from Bay 3, it is reserved for you.” A flagged part says so, and says a person is on it. A second run that finds nothing new sends nothing. A job added to the board at 4pm gets its own message on the next run, and nobody else hears again.
 
-The run publishes its result for the date by the cut-off, every time, including the afternoons when every part is already on a van. Silence and “all clear” look the same to the office unless the run says which. Every flag goes onto the business’s one exceptions queue with an owner, the same queue every other standard on the roadmap writes to.
+The run publishes its result for the date by the cut-off, every time, including the afternoons when every part is already on a van. Silence and “all clear” look the same to the office unless the run says which. Every flag goes onto the business’s one exceptions list with an owner, the same list every other standard on the roadmap adds to.
 
 ## 6. Ordering through Material Order, once
 
-A part held nowhere is not ordered by this standard. It is handed to [Material Order](https://aipathway.com.au/explore-ai/material-order-build-standard), grouped into one request per supplier per run, each line naming its job. Material Order prices it from the supplier’s catalogue, holds anything over your threshold or to a supplier you have not approved for a named person, and gives back a purchase order id. Parts Ready records that id against the job and part. A second run reads its own record first, finds the id, and orders nothing.
+This standard does not order a part held nowhere. It hands it to [Material Order](https://aipathway.com.au/explore-ai/material-order-build-standard), grouped into one request per supplier per run, each line naming its job. Material Order prices it from the supplier’s catalogue, holds anything over your threshold or to a supplier you have not approved for a named person, and gives back a purchase order id. Parts Ready records that id against the job and part. A second run reads its own record first, finds the id, and orders nothing.
 
-Before handing anything over, the supplier’s lead time is read. If the part cannot arrive before the job’s slot, it is not ordered and hoped for. It is flagged lead_time_after_job, naming the job, so a person can move the job, send a different tech, or ring the wholesaler. If another part in stock would do the same job, the flag can say so. It is a suggestion for a person, never a change to the order, the reservation or the tech’s list: the part on the quote is the one the customer agreed to.
+Before handing anything over, the supplier’s lead time is read. If the part cannot arrive before the job’s slot, it is flagged lead_time_after_job, naming the job, so a person can move the job, send a different tech, or ring the wholesaler. If another part in stock would do the same job, the flag can say so. It is a suggestion for a person, never a change to the order, the reservation or the tech’s list. The part on the quote is the one the customer agreed to.
 
 ## 7. What stays with a person
 
@@ -177,17 +177,17 @@ Before handing anything over, the supplier’s lead time is read. If the part ca
 - Writing the template for each job type. The build reads it and never invents one.
 - Counting the van. The build reads the count and its time; it cannot count for you.
 - Releasing any order over the threshold, which Material Order holds for a named person.
-- Every flag on the exceptions queue.
+- Every flag on the exceptions list.
 
 ## 8. Run it your way
 
-Same checks and the same pass test, five ways. Pick one per business: two of them checking the same board at once would order twice.
+The same checks and the same pass test apply all five ways. Pick one per business, because two of them checking the same board at once would order twice.
 
-- **Done for you, by AI Pathway.** Not today. We have no step in this standard yet. Purchase order tools for it are on our backlog and are coming, not available; until they ship, the order write is Material Order’s, built on your own systems. If you want it set up for you, that is a scoped build.
+- **Done for you, by AI Pathway.** Not as a product yet. AI Pathway has no step in this standard today. Our purchase order tools are on the backlog and have not shipped, so for now orders go through Material Order, built on your own systems. If you want it set up for you, we do it as a scoped build.
 - **Google Workspace, the default.** A [copyable Google Sheet](https://docs.google.com/spreadsheets/d/1JP3z6kykNhgWhPqSqgr-LSNJzJrQglMLMoK0b-mig6c/copy) with Board, Needs, Templates, Van, Shelf and Suppliers tabs, and a run each afternoon at 2pm. It writes Results, Orders (one draft per supplier for a person to place through Material Order), Messages and Flags, and emails each tech once per job if you turn that on. It calls nothing outside the spreadsheet.
 - **Microsoft 365.** The [Microsoft 365 plan](https://aipathway.com.au/explore-ai/van-stock-on-microsoft-365) lays out the SharePoint lists, a scheduled flow that orders only through the Material Order flow, and one Teams message per tech and job.
-- **Your own bot.** A Grok Bot or Claude task scheduled for 2pm that reads the sheet’s tabs, writes the results and drafts the orders for a person to approve, held to the same checks. It reads its own earlier results before writing, so a second run orders nothing. There is no recipe page for it yet; start from [how to use Grok Bot](https://aipathway.com.au/explore-ai/how-to-use-grok-bot).
-- **Your own code.** This page: the records, the checks in order, the stub and the pass test. Hand it to a coding agent and run the conformance kit until the stub checks pass.
+- **Your own bot.** A Grok Bot or Claude job scheduled for 2pm that reads the sheet’s tabs, writes the results and drafts the orders for a person to approve, held to the same checks. It reads its own earlier results before writing, so a second run orders nothing. There is no recipe page for it yet; start from [how to use Grok Bot](https://aipathway.com.au/explore-ai/how-to-use-grok-bot).
+- **Your own code.** This page: the records, the checks in order, a test version and the pass test. Hand it to a coding agent and run the conformance kit until the checks pass on the test version.
 
 How to run any standard each of these ways is in [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
 
@@ -195,7 +195,7 @@ How to run any standard each of these ways is in [run a standard anywhere](https
 
 Checked as at 1 November 2026
 
-AI Pathway lists read_purchase_order and draft_purchase_order tools on its backlog. Neither has shipped, so this standard names no AI Pathway step, and the provider block below says the order write is the builder’s.
+AI Pathway lists read_purchase_order and draft_purchase_order tools on its backlog. Neither has shipped, so this standard names no AI Pathway step, and the provider block below says placing the order is the builder’s job.
 
 Tradify has no public or partner API, confirmed in writing by their support on 10 April 2026.
 
@@ -203,7 +203,7 @@ Tradify has no public or partner API, confirmed in writing by their support on 1
 
 ## 9. What your developer builds, and the step that needs care
 
-No step here passes the twelve-month test on its own: the purchase order write belongs to Material Order. What a coding agent builds against the stub is the board read, the as-of rule, the reservation, the lead-time decision, one message per tech and job, and a run that publishes by the cut-off.
+No step here passes the twelve-month test on its own: the purchase order write belongs to Material Order. A coding agent builds the rest against a test version: reading the board, the rule on how old a van count can be, the reservation, the lead-time decision, one message per tech and job, and a run that publishes by the cut-off.
 
 ```
 provider:
@@ -235,22 +235,22 @@ cannot meet the standard
 
 Anyone selling van stock automation should be able to answer two questions: what does it do with a van count from last week, and what happens to the order when it runs twice.
 
-**The pass test.** On tomorrow’s real board. Set one job whose quote needs a part you hold on the van, one whose part is only on the shelf, and one whose part you hold nowhere. By the cut-off: the first tech’s message lists the part as on the van; the second says pick it up from the shelf, and the shelf shows it reserved to that job; the third has a purchase order drafted through Material Order or, if the lead time misses the slot, a flag naming the job. Change nothing and run it again: no second order and no second message. Each of these takes a minute to stage. A stub cannot pass this, because a stub van holds whatever was seeded into it; only a van somebody counted proves the tech will find the part.
+**The pass test.** Do this on tomorrow’s real board. Set one job whose quote needs a part you hold on the van, one whose part is only on the shelf, and one whose part you hold nowhere. By the cut-off: the first tech’s message lists the part as on the van; the second says pick it up from the shelf, and the shelf shows it reserved to that job; the third has a purchase order drafted through Material Order or, if the lead time misses the slot, a flag naming the job. Change nothing and run it again: no second order and no second message. Each of these takes a minute to stage. A test version cannot pass this, because its van holds whatever was put into it. Only a van somebody counted proves the tech will find the part.
 
 ## 10. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 
-- **1. Tomorrow's jobs come from the dispatched board, by job id, and a job added later re-runs for that job only.** The run reads tomorrow's board and works from each slot's job id and assigned tech, never from an address or a customer name. A job added to the board after the first run is checked on the next run on its own: the jobs already checked are not re-ordered, re-reserved or re-sent.
-- **2. What a job needs comes from the record, and a job with no needs list is flagged, never guessed.** A job's needs are the accepted quote's lines, the job's own materials, or a written template for its job type, in that order. A job with none of these is flagged needs_list_unknown to a person with an owner. The build never works out from the job's description, or from what is usual, what a job needs.
-- **3. Van stock is read with the time it was counted, and a count older than the limit is flagged, not trusted.** Van and shelf stock are read on every run, each with an as-of time. Van stock counted longer ago than the business's limit (24 hours unless it sets another) is stock_unknown: no line is reported as on the van from it, and each of that job's lines is flagged to a person.
-- **4. Shelf stock is reserved to the job before anything is ordered.** Before any order is requested, the shelf is read. A line the shelf covers is reserved against that job, the same reserve as Material Order's check 2, and is not ordered. The tech is told where to pick it up.
-- **5. A shortfall is ordered only through Material Order, one request per supplier per run, and a second run orders nothing again.** Parts Ready never writes a purchase order. A part held nowhere is handed to Material Order's path, grouped into one request per supplier per run, so that standard's threshold and approved-supplier rules decide the release. A second run on the same board with nothing changed requests nothing.
-- **6. A part that cannot arrive before the job is flagged with the reason, not ordered and hoped for.** Each supplier's lead time is read as data. A part whose arrival would land after the job's slot is flagged lead_time_after_job, naming the job, so a person can move the job or source the part. It is not ordered.
-- **7. An equivalent part is a suggestion on the flag, never a change to the order, the reservation or the tech's list.** When a part cannot be supplied in time and another part in stock would do the same job, the build may say so on the flag. It never reserves, orders or lists the other part for the tech, and never changes the job's parts list. A person decides.
-- **8. Each tech is told once per job, with the job id: what is on the van, what to pick up and where.** Each tech with a job tomorrow gets one message for that job, carrying the job id: the parts on the van, the parts to pick up and the shelf location, and anything flagged. A second run with nothing changed sends nothing.
-- **9. The run publishes by the cut-off whether or not it found anything, and every flag goes to the exceptions queue with an owner.** Every run publishes a result for tomorrow's date by the business's cut-off (15:00 unless it sets another), including when every part is already on a van. A quiet afternoon is a result, not silence. Every flag is written to the business's one exceptions queue with an owner.
-- **10. The pass test passes.** On tomorrow's real board: one job whose part is on the van, one whose part is only on the shelf, and one whose part is held nowhere. By the cut-off each tech is told correctly, the shelf shows the reservation, and the third job has a purchase order through Material Order or a flag naming it. A re-run orders nothing again.
+- **1. Tomorrow's jobs come from the job board by job number, and a job added later is checked on its own.** It reads tomorrow's job board and works from each job's number and assigned tech, never from an address or a customer name. A job added after the first run is checked on the next run on its own. The jobs already checked are not ordered, reserved or messaged again.
+- **2. What a job needs comes from the job's own records, and a job with no parts list is flagged, never guessed.** A job's parts come from the accepted quote's lines, the job's own materials, or a written template for its job type, in that order. A job with none of these is flagged to a named person (reason: needs_list_unknown). It never guesses what a job needs from the job's description or from what is usual.
+- **3. Van stock is read with the time it was counted, and a count older than the limit is flagged, not trusted.** Van and shelf stock are read on every run, each with the time it was counted. If a van was counted longer ago than the business's limit (24 hours unless it sets another), its stock counts as unknown (reason: stock_unknown). No part is reported as on the van from that count, and each part for that job is flagged to a person.
+- **4. Shelf stock is reserved to the job before anything is ordered.** Before anything is ordered, it checks the shelf. A part the shelf covers is reserved for that job, the same way as Material Order's check 2, and is not ordered. The tech is told where to pick it up.
+- **5. A missing part is ordered only through Material Order, one request per supplier per run, and running it again orders nothing.** Parts Ready never raises a purchase order itself. A part held nowhere is handed to Material Order, grouped into one request per supplier per run, so that standard's spending threshold and approved-supplier rules decide whether the order goes out. A second run on the same board with nothing changed asks for nothing.
+- **6. A part that cannot arrive before the job is flagged with the reason, not ordered and hoped for.** It reads each supplier's delivery time from their record. If a part would arrive after the job's booked time, it is not ordered. It is flagged to a person, naming the job, so they can move the job or find the part elsewhere (reason: lead_time_after_job).
+- **7. An equivalent part is only a suggestion on the flag, never a change to the order, the reserved stock or the tech's list.** When a part cannot be supplied in time and another part in stock would do the same job, it may say so on the flag. It never reserves, orders or lists the other part for the tech, and never changes the job's parts list. A person decides.
+- **8. Each tech is told once per job, with the job number, what is on the van, what to pick up and where.** Each tech with a job tomorrow gets one message for that job. It gives the job number, the parts on the van, the parts to pick up and where they sit on the shelf, and anything flagged. A second run with nothing changed sends nothing.
+- **9. The results go out by the cut-off even when nothing is missing, and every flag goes on the exceptions list with an owner.** Every run puts out a result for tomorrow by the business's cut-off (15:00 unless it sets another), even when every part is already on a van. A quiet afternoon still gets a result. Every flag goes on the business's one exceptions list with a named owner.
+- **10. The pass test passes.** Take tomorrow's real job board with one job whose part is on the van, one whose part is only on the shelf, and one whose part is held nowhere. By the cut-off each tech is told correctly, the shelf shows the part reserved, and the third job has a purchase order through Material Order or a flag naming it. Run it again and nothing is ordered twice.
 
 ## Related reading
 

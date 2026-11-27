@@ -31,6 +31,7 @@ export { ReactivationWorld } from "./database-reactivation.world.js";
 export { DebtorWorld } from "./debtor-chasing.world.js";
 export { DispatchWorld } from "./dispatch-board.world.js";
 export { DocumentFilingWorld } from "./document-filing.world.js";
+export { DuplicateBillHoldWorld } from "./duplicate-bill-hold.world.js";
 export { ExceptionDeskWorld } from "./exception-desk.world.js";
 export { FaultTriageWorld } from "./fault-triage.world.js";
 export { FollowUpWorld } from "./follow-up.world.js";

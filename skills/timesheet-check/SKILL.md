@@ -92,10 +92,10 @@ skill asserts.
 ## The work, in order
 
 - 1. What this standard covers
-- 2. The closed list of anomalies
+- 2. The six kinds of odd entry
 - 3. The records it keeps, in the shape your developer needs
 - 4. The checks, in order
-- 5. The award is a rule you read, not one you interpret
+- 5. The check reads the award as written, and a person interprets it
 - 6. What stays with a person
 - 7. Connect your timesheets, roster and payroll, without it paying anyone
 - 9. What your developer builds, and the step that needs care

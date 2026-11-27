@@ -9,7 +9,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/service-remind
 
 ---
 
-The same standard, for a trade business that lives in Microsoft 365: installed equipment as a list, dates worked out from a schedule list, reminders from Outlook, and each yes written back to the job system once.
+The same standard, for a trade business that runs on Microsoft 365: installed equipment as a list, dates worked out from a schedule list, reminders from Outlook, and each yes written back to the job system once.
 
 Used by
 
@@ -24,7 +24,7 @@ The temptation in SharePoint is a NextDue column, filled in once and sorted by. 
 - **What this is**: A build plan for the Next Service standard on Microsoft 365. Six lists, four flows, and a booking request written into the job system you already run.
 - **The core rule**: Flow 2 reads Assets and Schedule every morning and works each date out. There is no due-date column to go stale when the schedule changes.
 - **What it does not do**: No flow picks a time slot or a price, and no message says what a warranty covers. A person books every request in the job system.
-- **The hard part**: Claiming the BookingRequests row before calling the job system, so a second yes or a retried flow finds it and writes nothing.
+- **The hard part**: Logging the booking request in SharePoint before the job is created in your job system, so a second yes, or a flow that retries, finds it there and creates nothing.
 
 ## 1. Before you start
 
@@ -32,7 +32,7 @@ Read [the Next Service build standard](https://aipathway.com.au/explore-ai/next-
 
 Decide how finished jobs get in. If your job system (ServiceM8, Simpro, Fergus, Jobber or AroFlo) has a connector or a webhook, Flow 1 triggers on a job marked complete. If not, a daily export into a list works. Tradify has no public API and no Zapier app, so a Tradify business brings finished jobs in from Tradify’s job export, and each yes goes to its enquiry inbox as one email, checked against BookingRequests first.
 
-Then write the Schedule list before anything else: one row per equipment type you install or service, with the months between services. Base it on the manufacturer’s instructions or your own advice. An asset whose type has no row is an exception, not a guess.
+Then write the Schedule list before anything else: one row per equipment type you install or service, with the months between services. Base it on the manufacturer’s instructions or your own advice. An asset whose type has no row goes to a person, and the flow never guesses a date for it.
 
 ## 2. The lists, with their columns
 
@@ -171,7 +171,7 @@ A customer who rings instead of replying reaches whoever answers your phone. If 
 
 Keep each one to the least it needs.
 
-1. Create a service account for the flows and build them in a solution that account owns, with a named person as co-owner. A flow owned by a person stops working the day that person leaves. If the flows use a premium connector, the account needs a Power Automate licence that covers premium connectors; check what your tenant already has.
+1. Create a service account for the flows and build them in a solution that account owns, with a named person as co-owner. A flow owned by a person stops working the day that person leaves. If the flows use a premium connector, the account needs a Power Automate licence that covers premium connectors; check what your Microsoft 365 already has.
 2. Create every connection as the service account and use it through the solution’s connection references, so nobody’s own login sits inside a flow.
 3. Give the service account access to this one site and no other. If an app registration is used instead, grant it Sites.Selected and give it this site alone.
 4. Give the service account access and Send As on the shared reminders mailbox and nothing else. If an app registration reads or sends the mail, limit it to that mailbox with RBAC for Applications in Exchange Online, or the older application access policy.
@@ -214,7 +214,7 @@ Power Automate retries a step that times out. If the job is created first, the r
 - Fixing any asset with a missing install date, model or type.
 - Answering any reply Flow 3 marks unclear, and taking anyone off OptOuts, which happens only if they ask.
 
-**The pass test.** Change the hot water row in Schedule from twelve months to six and run Flow 2: every hot water date moves, and nobody edited one. Add a test customer to OptOuts: they get nothing. Put your own mobile on a test customer with a unit inside the lead time, reply YES to the reminder, then YES again: one BookingRequests row and one job in your job system. A few minutes on your own tenant.
+**The pass test.** Change the hot water row in Schedule from twelve months to six and run Flow 2: every hot water date moves, and nobody edited one. Add a test customer to OptOuts: they get nothing. Put your own mobile on a test customer with a unit inside the lead time, reply YES to the reminder, then YES again: one BookingRequests row and one job in your job system. A few minutes on your own Microsoft 365.
 
 ## Related reading
 

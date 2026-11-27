@@ -9,7 +9,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/one-customer-o
 
 ---
 
-Five lists and two flows that record which records in your job system, ledger and inbox are one customer, decided by a person, and read by every flow that chases or files.
+Five lists and two flows that keep track of which entries in your job system, ledger and inbox are one customer, decided by a person, and read by every flow that chases or files.
 
 Used by
 
@@ -17,22 +17,22 @@ Used by
 - Office Manager
 - Bookkeeper
 
-Your customers already live in three places: a client in the job system, a contact in the ledger, an address in the inbox. This plan does not move them. It adds one list that says which of those records are the same customer, with the key that matched and the person who agreed.
+Your customers already live in three places: a client in the job system, a contact in the ledger, an address in the inbox. This plan leaves them where they are and adds one list that says which of those records are the same customer, with the detail that matched (ABN, email or phone) and the person who agreed.
 
 ## In short
 
 - **What this is**: A build plan for the customer link standard on Microsoft 365. Five lists, a scan flow, a commit flow, and one lookup added to each flow that applies a rule about a customer.
-- **The core rule**: The scan writes rows as proposed. A person adds a Decisions row. The commit flow applies it only if that person is on Approvers, and every other flow reads Status = linked.
+- **The core rule**: The scan only ever suggests a link. A person decides by adding a row to Decisions, the commit flow applies it only if that person is on Approvers, and every other flow uses confirmed links only.
 - **What it does not do**: No flow writes to the job system, the ledger or the mailbox contacts. An unlink changes a row's status, so every row stays on record.
-- **The hard part**: Reading the ABN, email and phone out of real records, where the ABN sits in a notes field, and permissions on Decisions so the flow's own account cannot add a row.
+- **The hard part**: Real records can hide the ABN in a notes field, so reading the ABN, email and phone out of them takes care. Decisions also needs its permissions set so the flow's own account cannot add a row.
 
 ## 1. Before you start
 
 Read [the customer link build standard](https://aipathway.com.au/explore-ai/customer-link-build-standard) first. It defines its objects, and the lists below are those objects with SharePoint types on them. Shared conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-Write every id as a ref, the system and its id: `servicem8:4471`, `xero:C-ACME`, `outlook:ops@acme.com.au`. Every flow that reads Links builds its own ref the same way, or it finds nothing.
+Write every record’s number as a ref, which is the system plus its id: `servicem8:4471`, `xero:C-ACME`, `outlook:ops@acme.com.au`. Every flow that reads Links builds its own ref the same way, or it finds nothing.
 
-Fill Approvers: the owner and whoever keeps the books is usual. Then check **who can add a row to Decisions**: only the people on Approvers. That one setting is what makes a link something the AI cannot give itself.
+Fill Approvers. Usually that is the owner and whoever keeps the books. Then check **who can add a row to Decisions**: only the people on Approvers. That one setting stops the AI from linking customers by itself.
 
 ## 2. The lists, with their columns
 
@@ -133,7 +133,7 @@ Flow 2 is the only flow that writes a status other than proposed, and it only ev
 
 ## 5. What the flows can reach in your Microsoft 365, and what they never touch
 
-The flows find where one customer appears in your job system, ledger and inbox. They compare the records on ABN, email and phone, and suggest a link wherever they match. Your approvers link, reject or unlink each one, and any pair with two different ABNs comes to you.
+The flows find where the same customer appears in your job system, ledger and inbox, so every chase and filing flow treats them as one. They compare the records on ABN, email and phone, and suggest a link wherever they match. Your approvers link, reject or unlink each one, and any pair with two different ABNs comes to you.
 
 What each connection is for.
 
@@ -179,7 +179,7 @@ A merge in the ledger takes an accountant to undo, and other software reads thos
 - Every row in AbnConflicts.
 - Tidying duplicates inside the job system or the ledger, in that system.
 
-**The pass test.** On your own job system, ledger and mailbox. Run Flow 1 on the button and pick a real customer held in all three: each proposed row must name a key that matches on both records. Add a Decisions row as someone not on Approvers: it must be refused. Link it as the owner, put the ledger contact on the do-not-contact list, and raise an overdue invoice from the customer’s job: the chase must hold. Unlink it: the next chase must go, and the Links row must still be there, marked unlinked. Neither system’s audit history may show a write by any flow.
+**The pass test.** On your own job system, ledger and mailbox. Run Flow 1 on the button and pick a real customer held in all three: each proposed row must name a key that matches on both records. Add a Decisions row as someone not on Approvers: it must be refused. Link it as the owner, put the ledger contact on the do-not-contact list, and raise an overdue invoice from the customer’s job: the chase must hold off. Unlink it: the next chase must go out, and the Links row must still be there, marked unlinked. Neither system’s audit history may show a write by any flow.
 
 ## Related reading
 

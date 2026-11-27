@@ -90,14 +90,14 @@ skill asserts.
 
 ## The work, in order
 
-- 1. Read the parent standard first
+- 1. Start with the rejected pack standard
 - 2. The twelve checks, in order
-- 3. Four queues, and unbound is not pass
+- 3. Every visit lands in one of four lists, and missing evidence is never a pass
 - 4. Different asset classes need different evidence
-- 5. The exception that needs naming
+- 5. An asset taken out of service needs a date to come back
 - 6. Who is waiting at the end
-- 7. Jurisdiction is data, not a constant
-- 8. The objects, and the fields that make them bindable
+- 7. The rules differ by state, so store them per state
+- 8. The records it needs, so evidence can be tied to an asset
 - 9. Connect your job system and document store to the pack, without it signing anything
 - 10. What your developer builds, and the step that needs care
 - 11. A checklist to hold any build or supplier to

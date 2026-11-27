@@ -41,13 +41,13 @@ Every message gets exactly one kind from a closed list, and a message about a jo
 
 What it does not do
 
-It does not reply with a price, a date or a decision unless a named person released those words. It does not answer a complaint at all. It does not delete spam; it quarantines it.
+It does not reply with a price, a date or a decision unless a named person signed off those words. It does not answer a complaint at all. It does not delete spam; it quarantines it.
 
 The hard part
 
-The write that attaches a message to the right job or supplier by id, in a system that is not yours, and the gate that stops a fluent reply going out because it looked fine. Those two are the step not to hand-roll.
+Attaching each message to the right job or supplier by its id, in a system that is not yours, and the check that stops a smooth-sounding reply going out because it looked fine. Those two are the steps not to build yourself.
 
-The supplier invoice was in the inbox on Monday. So was the quote request, the customer saying the gate code had changed, the statement, and the one from the customer who was not happy with the finish. By Friday the invoice had been paid twice from two copies in two folders, the quote request had an automatic reply promising a date nobody had checked, and the complaint had a cheerful acknowledgement on it. None of that is a volume problem. It is the inbox being read by a thing that files by copying and answers by guessing.
+The supplier invoice was in the inbox on Monday. So was the quote request, the customer saying the gate code had changed, the statement, and the one from the customer who was not happy with the finish. By Friday the invoice had been paid twice from two copies in two folders, the quote request had an automatic reply promising a date nobody had checked, and the complaint had a cheerful acknowledgement on it. Each of those came from an inbox read by a thing that files by copying and answers by guessing.
 
 One message, landing to answered
 
@@ -59,7 +59,7 @@ One message, landing to answered
 6. Has a named person released a reply? If yes, it is sent, and the message, the kind, the record, the owner and the release are on the record.
 7. If no, the customer gets an acknowledgement saying a person will reply and by when, and the item waits. Past its clock it escalates to the owner's manager. It never re-enters the filing on its own.
 
-The message is the trigger and the kind comes off a closed list. The filled diamond is the filing: against the job or supplier record by id, one item per thread, which is the step not to hand-roll. The second diamond is the release, and an item with no release gets an acknowledgement and waits for a person.
+The message is the trigger and the kind comes off a closed list. The filled diamond is the filing: against the job or supplier record by id, one item per thread, which is the step not to build yourself. The second diamond is the release, a named person signing off the reply, and an item nobody has signed off gets an acknowledgement and waits for a person.
 
 ## 1. What this standard covers
 
@@ -67,9 +67,9 @@ The shared accounts or admin inbox of a small business: the address on the invoi
 
 It sits under [the paper](https://aipathway.com.au/explore-ai/accounts-inbox-automation), which argues the inbox is the job rather than an interruption to it. Two standards continue from here. A supplier invoice this standard files as evidence is what the [Invoice Check standard](https://aipathway.com.au/explore-ai/invoice-check-build-standard) reads next, matched against the order. The phone equivalent is the [Booked After Hours standard](https://aipathway.com.au/explore-ai/booked-after-hours-build-standard), which holds the same line: take the message, write it once, never decide for a person.
 
-What it does not cover. It does not classify well. Whether a build tells a statement from an invoice is the builder’s problem and the stub cannot prove it. What the stub proves is the shape: one kind, off the list, filed to a record, queued with an owner, and nothing sent without a release. A build that classifies badly but conforms still loses nothing, because the wrong kind lands in a queue a person reads. A build that classifies well and files into folders loses things every week.
+What it does not cover. How well a build sorts messages. Whether it tells a statement from an invoice is the builder’s problem, and the practice version cannot prove it. What the practice version proves is the shape: one kind, off the list, filed to a record, queued with an owner, and nothing sent without a release. A build that sorts badly but follows the standard still loses nothing, because the wrong kind lands in a queue a person reads. A build that sorts well and files into folders loses things every week.
 
-What cannot meet it. A job system with no API cannot take the filing write directly. Tradify has no public API and no Zapier app, so on Tradify the message is filed against the supplier in Xero with the Tradify job number kept on the item, or a browser step a person approves attaches it to the job. The standard says which route a build took rather than claiming a write that does not exist.
+What cannot meet it. A job system with no API cannot have messages filed into it directly. Tradify has no public API and no Zapier app, so on Tradify the message is filed against the supplier in Xero with the Tradify job number kept on the item, or a browser step a person approves attaches it to the job. The standard says which route a build took rather than claiming a filing that cannot happen.
 
 ## 2. The records it keeps, in the shape your developer needs
 
@@ -108,20 +108,20 @@ An Item whose thread already has one is the defect this standard exists to make 
 
 ## 3. The checks, in order
 
-The order is the claim. The kind comes before the filing, the filing before the queue, and the queue before anything is sent, because a build that acknowledges first and files later produces a customer who was promised a reply on an item nobody owns.
+Each check has to pass before the next one runs. The kind comes before the filing, the filing before the queue, and the queue before anything is sent, because a build that acknowledges first and files later produces a customer who was promised a reply on an item nobody owns.
 
-1. Every message gets exactly one kind from a closed list. The kinds are supplier_invoice, quote_request, job_update, statement, complaint, remittance, spam and other. Every message gets one of those and only one. A free-text kind, or a message with two kinds or none, fails.
-2. A message about a job or a supplier is filed against that record by id. The message is attached to the job or the supplier it belongs to, by the record's own id, never as a copy in a folder. A filed message with no record id fails. A message classified other may stay unfiled, but it must become a task for a person.
-3. A supplier invoice attachment is filed as evidence with its hash and the message id. The attachment is the artefact, filed as evidence carrying its hash, the message id and the supplier record, so the Invoice Check standard can read it where it was filed. The body text alone is not the artefact.
-4. Every classified message lands in the queue for its kind, with a named owner and a due date. Each kind has a queue, and the queue has a named owner and a response clock. The item takes the owner's name and a due date from that clock. A message with no queue, no owner or no due date fails.
-5. A complaint is escalated to a named person with the full message, and nothing is sent to the customer. A complaint is never acknowledged, answered or summarised by the machine. It is handed whole to a named person, and the item is marked escalated. Any outbound on a complaint fails.
-6. The only automatic outbound is an acknowledgement, and any substantive reply carries a named person's release. The machine may send one thing on its own: an acknowledgement saying a person will reply and by when. Anything that quotes a price, a date or a decision leaves only after a release event naming a person. A reply with no release fails.
-7. Each kind carries a response clock, and an item past its clock escalates to the owner's manager. The clock belongs to the kind, not to whoever happens to be looking. An open item still unanswered when its clock runs out is escalated to the owner's manager, named. It never just gets older.
-8. A follow-up in the same thread updates the existing item. One thread is one item. A second message in a thread the build has already raised an item for is filed to that item, and the item now carries both message ids. A second item for one thread fails.
-9. Spam is filed to quarantine with its hash, retrievable, and never deleted by the machine. A message classified spam is moved to quarantine with its hash, where a person can find it. The machine never deletes a message. A message the machine trashed fails.
-10. Message id, kind, record, owner, clock, what was sent and by whom are retrievable by message. When the customer says nobody answered, the record shows the message, its kind, the record it was filed to, the owner, the due date, every outbound and the person who released it.
-11. It survives the builder. Someone other than the builder can explain what it does, and it runs on an account the business owns.
-12. The pass test passes. On the real mailbox for a week: a real supplier invoice filed as evidence against its supplier, a real complaint reaching a person untouched, a real thread of three messages held as one item, and nothing substantive sent without a release.
+1. Every email is sorted into exactly one type from a set list. The types are supplier invoice, quote request, job update, statement, complaint, remittance, spam and other. Every email gets one of those and only one. A made-up type, or an email with two types or none, fails.
+2. An email about a job or a supplier is filed on that job or supplier's own record. The email is attached to the job or supplier it belongs to, using that record's own number, never as a copy in a folder. Filing without the record's number fails. An email sorted as other can stay unfiled, but it must go on a person's list to deal with.
+3. A supplier invoice attachment is filed as proof, with its fingerprint and the email it came in. The attached invoice itself is what gets filed as proof, with its fingerprint (hash), the email it came in and the supplier's record, so the Invoice Check standard can read it where it was filed. The email text on its own does not count.
+4. Every sorted email goes on the list for its type, with a named owner and a due date. Each type has its own list, and each list has a named owner and a time to reply. The item takes the owner's name, and its due date comes from that time to reply. An email with no list, no owner or no due date fails.
+5. A complaint goes to a named person with the full email, and nothing is sent to the customer. It never acknowledges, answers or summarises a complaint. The whole complaint goes to a named person, and the item is marked as handed on. Anything sent out on a complaint fails.
+6. The only thing it sends on its own is a we-got-it note, and every real answer needs a named person's go-ahead. The one thing it may send on its own is a note saying a person will reply, and by when. Anything that gives a price, a date or a decision goes out only after a named person releases it. A reply with no release fails.
+7. Each type has a time to reply, and an item past it goes to the owner's manager. The time to reply belongs to the type, not to whoever happens to be looking. An item still unanswered when its time runs out goes to the owner's manager, by name. It never just sits there getting older.
+8. A reply in the same email thread updates the existing item. One thread is one item. A second email in a thread that already has an item is filed to that item, which then holds both emails. A second item for one thread fails.
+9. Spam is set aside where a person can find it, and never deleted. An email sorted as spam is moved to a quarantine folder with its fingerprint (hash), where a person can find it. It never deletes an email, and any email it bins fails.
+10. For each email you can look up its type, where it was filed, its owner, its due time, what was sent and who approved it. When the customer says nobody answered, the record shows the email, its type, the record it was filed to, the owner, the due date, everything sent out and the person who released it.
+11. It keeps working if the person who built it leaves. Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+12. The pass test passes. On the real mailbox for a week, a real supplier invoice is filed as proof against its supplier and a real complaint reaches a person untouched. A real thread of three emails is held as one item, and no real answer goes out without a person's release.
 
 ## 4. The four queues
 
@@ -132,13 +132,13 @@ The order is the claim. The kind comes before the filing, the filing before the 
 | Escalated | Every complaint, and any item that ran past its clock | Handed to a named person. A complaint arrives whole, with nothing sent to the customer |
 | Quarantined | Spam, filed with its hash | Retrievable by a person. The machine never deletes a message |
 
-A queue is a table with an owner’s name and a clock on every row. It is not a folder. A folder holds copies and nobody owns it; a queue holds items and somebody does. The kind “other” has a queue too, and it is the one the business should read most carefully, because it is where the classifier gave up.
+A queue is a table with an owner’s name and a clock on every row. A folder holds copies and nobody owns it; a queue holds items and somebody does. The kind “other” has a queue too, and it is the one the business should read most carefully, because it is where the sorting gave up.
 
 ## 5. The acknowledgement and the release
 
 The machine may send one thing on its own: an acknowledgement that says a person will reply, and by when. The “by when” is the item’s due date, which came from the kind’s clock, so the promise is one the queue can keep. The acknowledgement has no free text in it. It cannot quote a price or a date because there is nowhere to put one.
 
-Everything else is a substantive reply, and a substantive reply leaves only after a release event that names a person. The person writes or approves the words; the build records the release, then sends exactly those words. There is no rule with a threshold here, unlike the invoice standard, because there is no number to put a threshold on. A reply is a decision, and a decision is a person’s.
+Everything else is a substantive reply, and a substantive reply leaves only after a named person signs it off, which the standard calls the release. The person writes or approves the words; the build records the release, then sends exactly those words. There is no rule with a threshold here, unlike the invoice standard, because there is no number to put a threshold on. A reply is a decision, and a decision is a person’s.
 
 The complaint is the case that proves the gate. It gets no acknowledgement, not even the harmless one, because a cheerful automatic reply on a complaint is worse than silence. It is handed whole to a named person and the item is marked escalated. What that person says is theirs.
 
@@ -146,7 +146,7 @@ The complaint is the case that proves the gate. It gets no acknowledgement, not 
 
 One thread is one item. Before a build raises an item it reads whether the thread already has one, and a follow-up is added to that item rather than raised beside it. The pass test asks for a real thread of three messages held as one, because two items for one conversation is how a customer gets answered twice with different answers, or not at all because each item looked like somebody else’s.
 
-Spam is filed to quarantine with its hash, where a person can find it. The machine never deletes a message, spam included, because the day the classifier calls a real remittance spam is the day the business needs to get it back. Quarantine is a queue with an owner like any other, read monthly rather than daily.
+Spam is filed to quarantine with its hash, where a person can find it. The machine never deletes a message, spam included, because the day the sorting calls a real remittance spam is the day the business needs to get it back. Quarantine is a queue with an owner like any other, read monthly rather than daily.
 
 The clock belongs to the kind. A complaint has hours, a quote request has a day, a statement has a week, and the business sets those once. An item still open when its clock runs out is escalated to the owner’s manager by name. It does not turn red in a dashboard nobody opens; it turns up in front of a second person.
 
@@ -155,12 +155,12 @@ The clock belongs to the kind. A complaint has hours, a quote request has a day,
 - Every substantive reply: anything with a price, a date or a decision in it. A person writes or approves the words and the release carries their name.
 - The complaint, whole. What is said to that customer and when.
 - Deciding a supplier invoice is genuine. This standard files the attachment as evidence; the Invoice Check standard matches it and a person approves it.
-- Reading everything the machine called other. That queue is the classifier admitting it does not know.
+- Reading everything the machine called other. That queue is where the sorting admits it does not know.
 - The queue table itself: who owns each kind and how long it may wait.
 
 ## 8. What your developer builds, and the step that needs care
 
-Two steps not to hand-roll: the filing write that attaches a message to the right job or supplier by id in a system you do not own, and the release gate on every reply. There is no hosted product for either. Everything else a coding agent builds against the stub in an afternoon.
+Two steps not to build yourself: filing a message against the right job or supplier by id in a system you do not own, and a person's release on every reply. There is no hosted product for either. A coding agent builds everything else against the practice version in an afternoon.
 
 ```
 provider:
@@ -196,18 +196,18 @@ A vendor selling inbox automation is usually selling the classifier and an auto-
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 
-- **1. Every message gets exactly one kind from a closed list.** The kinds are supplier_invoice, quote_request, job_update, statement, complaint, remittance, spam and other. Every message gets one of those and only one. A free-text kind, or a message with two kinds or none, fails.
-- **2. A message about a job or a supplier is filed against that record by id.** The message is attached to the job or the supplier it belongs to, by the record's own id, never as a copy in a folder. A filed message with no record id fails. A message classified other may stay unfiled, but it must become a task for a person.
-- **3. A supplier invoice attachment is filed as evidence with its hash and the message id.** The attachment is the artefact, filed as evidence carrying its hash, the message id and the supplier record, so the Invoice Check standard can read it where it was filed. The body text alone is not the artefact.
-- **4. Every classified message lands in the queue for its kind, with a named owner and a due date.** Each kind has a queue, and the queue has a named owner and a response clock. The item takes the owner's name and a due date from that clock. A message with no queue, no owner or no due date fails.
-- **5. A complaint is escalated to a named person with the full message, and nothing is sent to the customer.** A complaint is never acknowledged, answered or summarised by the machine. It is handed whole to a named person, and the item is marked escalated. Any outbound on a complaint fails.
-- **6. The only automatic outbound is an acknowledgement, and any substantive reply carries a named person's release.** The machine may send one thing on its own: an acknowledgement saying a person will reply and by when. Anything that quotes a price, a date or a decision leaves only after a release event naming a person. A reply with no release fails.
-- **7. Each kind carries a response clock, and an item past its clock escalates to the owner's manager.** The clock belongs to the kind, not to whoever happens to be looking. An open item still unanswered when its clock runs out is escalated to the owner's manager, named. It never just gets older.
-- **8. A follow-up in the same thread updates the existing item.** One thread is one item. A second message in a thread the build has already raised an item for is filed to that item, and the item now carries both message ids. A second item for one thread fails.
-- **9. Spam is filed to quarantine with its hash, retrievable, and never deleted by the machine.** A message classified spam is moved to quarantine with its hash, where a person can find it. The machine never deletes a message. A message the machine trashed fails.
-- **10. Message id, kind, record, owner, clock, what was sent and by whom are retrievable by message.** When the customer says nobody answered, the record shows the message, its kind, the record it was filed to, the owner, the due date, every outbound and the person who released it.
-- **11. It survives the builder.** Someone other than the builder can explain what it does, and it runs on an account the business owns.
-- **12. The pass test passes.** On the real mailbox for a week: a real supplier invoice filed as evidence against its supplier, a real complaint reaching a person untouched, a real thread of three messages held as one item, and nothing substantive sent without a release.
+- **1. Every email is sorted into exactly one type from a set list.** The types are supplier invoice, quote request, job update, statement, complaint, remittance, spam and other. Every email gets one of those and only one. A made-up type, or an email with two types or none, fails.
+- **2. An email about a job or a supplier is filed on that job or supplier's own record.** The email is attached to the job or supplier it belongs to, using that record's own number, never as a copy in a folder. Filing without the record's number fails. An email sorted as other can stay unfiled, but it must go on a person's list to deal with.
+- **3. A supplier invoice attachment is filed as proof, with its fingerprint and the email it came in.** The attached invoice itself is what gets filed as proof, with its fingerprint (hash), the email it came in and the supplier's record, so the Invoice Check standard can read it where it was filed. The email text on its own does not count.
+- **4. Every sorted email goes on the list for its type, with a named owner and a due date.** Each type has its own list, and each list has a named owner and a time to reply. The item takes the owner's name, and its due date comes from that time to reply. An email with no list, no owner or no due date fails.
+- **5. A complaint goes to a named person with the full email, and nothing is sent to the customer.** It never acknowledges, answers or summarises a complaint. The whole complaint goes to a named person, and the item is marked as handed on. Anything sent out on a complaint fails.
+- **6. The only thing it sends on its own is a we-got-it note, and every real answer needs a named person's go-ahead.** The one thing it may send on its own is a note saying a person will reply, and by when. Anything that gives a price, a date or a decision goes out only after a named person releases it. A reply with no release fails.
+- **7. Each type has a time to reply, and an item past it goes to the owner's manager.** The time to reply belongs to the type, not to whoever happens to be looking. An item still unanswered when its time runs out goes to the owner's manager, by name. It never just sits there getting older.
+- **8. A reply in the same email thread updates the existing item.** One thread is one item. A second email in a thread that already has an item is filed to that item, which then holds both emails. A second item for one thread fails.
+- **9. Spam is set aside where a person can find it, and never deleted.** An email sorted as spam is moved to a quarantine folder with its fingerprint (hash), where a person can find it. It never deletes an email, and any email it bins fails.
+- **10. For each email you can look up its type, where it was filed, its owner, its due time, what was sent and who approved it.** When the customer says nobody answered, the record shows the email, its type, the record it was filed to, the owner, the due date, everything sent out and the person who released it.
+- **11. It keeps working if the person who built it leaves.** Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+- **12. The pass test passes.** On the real mailbox for a week, a real supplier invoice is filed as proof against its supplier and a real complaint reaches a person untouched. A real thread of three emails is held as one item, and no real answer goes out without a person's release.
 
 ## Related reading
 

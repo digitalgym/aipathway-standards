@@ -36,17 +36,17 @@ An open build standard for a compliance calendar across a rent roll or an asset 
 
 The core rule
 
-Store the rule with an effective date. Derive the due date. Never store a due date as a fact.
+Keep the rule and the date it took effect, and work the due date out from it. Never type a due date in as a fact.
 
 What it does not do
 
-It does not decide. It surfaces what is due, drafts the action, and escalates what is at risk. A person still says yes.
+It shows what is due, drafts the action, and raises anything at risk with a person. A person still says yes.
 
 The hard part
 
 The owner who declines the work, and the obligation that stays live anyway.
 
-Most compliance calendars are a spreadsheet of due dates. They work until a rule changes, and then every date in the column is wrong and nobody can tell which ones. The difference between a calendar and a list of dates is that a calendar stores the rule and derives the date. That single decision is most of this specification.
+Most compliance calendars are a spreadsheet of due dates. They work until a rule changes, and then every date in the column is wrong and nobody can tell which ones. The difference between a calendar and a list of dates is that a calendar keeps the rule and works the date out from it. Most of this standard follows from that one choice.
 
 One obligation, end to end
 
@@ -58,7 +58,7 @@ One obligation, end to end
 6. If yes, the notice goes out and the work is booked.
 7. Evidence on file? If yes, the obligation closes and stays provable later. If no, it sits in state 3, waiting on someone, carrying who, since when, and the next chase date, which is drafted and released the same way.
 
-A due date is a rule applied to an anchor, and both sides move. The filled diamond is the release: drafted, never sent, and a person lets it go.
+A due date comes from a rule and a starting date, and either can change. The filled diamond is a person checking the drafted notice and sending it. Nothing goes out on its own.
 
 ## 1. What this standard covers
 
@@ -68,24 +68,24 @@ It does not cover doing the work. It covers knowing the work is due, proving it 
 
 ## 2. Dated rules, derived dates
 
-This is the whole standard in one section. A due date is not a fact about a property. It is the output of a rule applied to an anchor date, and both sides move.
+A due date comes from a rule applied to a starting date, such as the day the alarm was last checked, and either one can change. This section is the whole standard in short.
 
-**Rules carry an effective date, and old rules are kept.** When a jurisdiction changes an interval, you do not edit the rule. You add a new version with a new effective date. Everything recomputes, and an audit two years later can still show which rule governed a date that has already passed. A calendar that edits its rules in place cannot answer the only question an audit asks.
+**Rules carry an effective date, and old rules are kept.** When a jurisdiction changes an interval, you do not edit the rule. You add a new version with the date it takes effect. Every due date is worked out again, and two years later you can still show which rule set a date that has already passed. A calendar that edits its rules in place cannot show an auditor that.
 
-Rules are also per jurisdiction. Intervals, notice periods and entry rules differ by state and territory, and a rent roll that crosses a border needs the rule to know which side it is on.
+Rules are also per jurisdiction. Intervals, notice periods and entry rules differ by state and territory, and a rent roll with properties in more than one state needs each rule to know which state it applies to.
 
 ## 3. The obligation record
 
 One row per obligation per property. It needs enough on it that somebody who has never seen the property can act:
 
 - **What is required**: with the rule version that says so
-- **The anchor**: the date the interval counts from, and where that date came from
-- **The derived due date**: computed, shown, never typed in
+- **The starting date**: the date the interval counts from, and where that date came from
+- **The due date**: worked out from the rule, shown, never typed in
 - **Evidence of last completion**: the certificate or report, attached, not just a tick
 - **Who is responsible**: the agency, the owner, or the tenant, because it is not always you
 - **State**: one of the four below
 
-The evidence field is the one people leave out and the one a tribunal asks for. A tick confirming an alarm was tested is worth very little without the report that proves it.
+The evidence is the part people leave out and the part a tribunal asks for. A tick confirming an alarm was tested is worth very little without the report that proves it.
 
 ## 4. The four states
 
@@ -93,9 +93,9 @@ State 1
 
 Scheduled
 
-The obligation has a derived due date and nothing is required yet
+The due date is worked out and nothing is needed yet
 
-Recomputed whenever the rule or the anchor date changes
+Worked out again whenever the rule or the starting date changes
 
 State 2
 
@@ -103,7 +103,7 @@ Due, action drafted
 
 Inside the lead time. The notice, booking or request is written
 
-Drafted, never sent. A person releases it
+Drafted only. A person checks it and sends it
 
 State 3
 
@@ -119,18 +119,18 @@ Breached or at risk
 
 The date passed, or it cannot now be met within the lead time
 
-Escalates to a named person. Never clears itself
+Goes to a named person. Never clears itself
 
 **The fourth state must never clear itself.** A breached obligation that quietly disappears when the work is eventually done destroys the only record that it was ever breached, which is exactly what you need when someone asks why.
 
 ## 5. Six rules that keep it trustworthy
 
-1. **Derive, never store.** A due date is computed from a dated rule and an anchor. If it is stored as a value, a rule change silently leaves every row wrong and nothing tells you.
-2. **Keep superseded rules.** Add a version with an effective date rather than editing in place, so a date that has already passed can still be explained.
-3. **Propose, never commit.** Draft the entry notice, the contractor booking, the owner request. A person sends it. Notices in particular are legal instruments and their timing is not something to automate away.
-4. **Silence is a finding.** Nothing arriving is the signal. A booking never confirmed and a certificate never returned both look identical to an empty inbox, and both need to surface.
-5. **Escalate, never resolve, an at-risk item.** The system's job is to make sure a person knows in time. It is not to decide the obligation was not that important.
-6. **Record refusal as a state, not an absence.** When an owner declines the work, that is an outcome to store with its date and its author. The obligation stays live and the refusal is the evidence.
+1. **Work the date out; never type it in.** A due date is worked out from a dated rule and a starting date. If it is typed in, a rule change leaves every row wrong and nothing tells you.
+2. **Keep old rules.** Add a new version with the date it takes effect rather than editing the old one, so a date that has already passed can still be explained.
+3. **Draft, never send.** Draft the entry notice, the contractor booking, the owner request. A person sends it. Notices in particular are legal documents, and a person decides when they go.
+4. **Treat silence as a warning.** Nothing arriving is the warning. A booking never confirmed and a certificate never returned both look like an empty inbox, and both need to go to a person.
+5. **Raise an at-risk item with a person; never close it.** The calendar's job is to make sure a person knows in time, and never to decide the obligation did not matter.
+6. **Record a refusal, with its date.** When an owner declines the work, record who declined and when. The obligation stays live and the refusal is the evidence.
 
 ## 6. The parts that are harder than they look
 
@@ -138,27 +138,27 @@ The dates are the easy half. These are what the rest of the time goes on:
 
 The anchor date is often unknown
 
-You inherit a rent roll and nobody knows when the alarm was last checked. A calendar that requires a real anchor cannot start; one that assumes today is safe is quietly wrong for a year. Model an explicit unknown state that surfaces for verification rather than defaulting.
+You inherit a rent roll and nobody knows when the alarm was last checked. A calendar that needs a real starting date cannot start, and one that assumes today is wrong for a year without anyone noticing. Mark the date as unknown and send it to a person to confirm, rather than filling in a guess.
 
 The rule differs by jurisdiction and changes
 
-Intervals, notice periods and who may enter are set per state and territory, and they move. This is why rules are dated and versioned, and it is ongoing work rather than a one-off configuration.
+Intervals, notice periods and who may enter are set per state and territory, and they change. This is why rules are dated and versioned, and keeping them current is ongoing work, not a one-off setup.
 
 The obligation is not always yours
 
-Some duties sit with the owner and some with the tenant. A calendar that treats every row as the agency's job produces a queue nobody can action, and one that ignores the others misses the ones you are still liable to chase.
+Some duties sit with the owner and some with the tenant. A calendar that treats every row as the agency's job fills a list with work nobody in the agency can do, and one that ignores the others misses the ones you are still liable to chase.
 
 The owner says no
 
-This is the genuinely hard one. The work is due, the owner declines to pay, and the obligation does not go away. The system has to hold a live obligation, a recorded refusal and the evidence of having asked, all at once, without pretending the matter is closed.
+The work is due, the owner declines to pay, and the obligation does not go away. The calendar has to hold a live obligation, a recorded refusal and the evidence of having asked, all at once, without pretending the matter is closed.
 
 Access, and the reschedule that undoes the plan
 
-Entry requires notice, notice requires a date, and a tenant who is not home resets it. The second attempt is the normal case, not the exception, so build for it rather than treating it as an error.
+Entry needs notice, notice needs a date, and a tenant who is not home starts it all again. Expect a second attempt as normal and build for it.
 
 Evidence arrives as an attachment from someone else
 
-A contractor emails a PDF certificate. Matching it to the right property and obligation is the same cross-boundary problem as invoice matching, and it fails the same ways.
+A contractor emails a PDF certificate. Matching it to the right property and obligation is the same problem as matching a supplier invoice to the right job, and it goes wrong the same ways.
 
 ## 7. What breaks after it works
 
@@ -171,19 +171,19 @@ A spreadsheet calendar works while the person who built it is reading it every w
 
 ## 8. What It Is Worth
 
-No client averages here. These are levers, not measured results, for a rent roll running the paper’s example rule: a 12 month interval with 45 days of lead time. Your jurisdictions and dates will differ.
+No client averages here, and these are not measured results. They assume a rent roll running the paper’s example rule, a 12 month interval with 45 days of lead time. Your jurisdictions and dates will differ.
 
 Every one
 
 Date recomputed on a rule change
 
-Due dates are derived from a dated rule and an anchor, so a new rule version moves every row at once
+Due dates are worked out from a dated rule and a starting date, so a new rule version moves every row at once
 
 Zero
 
 Breaches that clear themselves
 
-The fourth state escalates to a named person and never clears itself when the work is finally done
+The fourth state goes to a named person and never clears itself when the work is finally done
 
 Countable
 
@@ -191,7 +191,7 @@ Obligations with evidence attached
 
 Every row carries the certificate or report, not just a tick, which is what a tribunal asks for
 
-The largest gain is the rule change that recomputes every date instead of leaving a column quietly wrong with no way to tell which rows moved.
+The largest gain is that a rule change moves every date at once, instead of leaving a column wrong with no way to tell which rows moved.
 
 ## 9. The records it keeps, in the shape your developer needs
 
@@ -240,7 +240,7 @@ The breached state must never clear itself. A breached obligation that quietly d
 
 ## 10. What your developer builds, and the step that needs care
 
-Unusually for these standards, there is nothing here to buy. This one is a build, and the honest version of a provider block says so rather than inventing a product to point at.
+Unlike most of these standards, there is nothing here to buy. You build this one.
 
 ```
 provider:
@@ -258,24 +258,24 @@ stays_local:                     # all of it, in this case
   - the four states, and the append-only history
 ```
 
-What makes this a build rather than a purchase is that the rule set is jurisdictional and yours. A vendor selling a national compliance calendar is selling the part that is easy and skipping the part that is hard.
+You build it because the rules change from state to state and the rule set is yours. A vendor selling one national compliance calendar sells the easy part and skips the hard part.
 
-**The pass test.** Change one rule’s interval and give the change an effective date. Every obligation derived from that rule must show a new due date, and each one must still be able to tell you which rule version produced it. Then take an obligation in the breached state, complete it, and confirm the record still says it was breached. Both take a minute against your own data. If the first needs anyone to retype a date, the due dates are stored rather than derived; if the second quietly reads as done, you have lost the only evidence that matters.
+**The pass test.** Change one rule’s interval and give the change an effective date. Every obligation derived from that rule must show a new due date, and each one must still be able to tell you which rule version produced it. Then take an obligation in the breached state, complete it, and confirm the record still says it was breached. Both take a minute against your own data. If the first needs anyone to retype a date, the due dates are typed in instead of worked out from the rule. If the second quietly reads as done, you have lost the only evidence that matters.
 
 ## 11. A checklist to hold any build or supplier to
 
-A build conforms if all of the following are true. Use it on your own implementation, or on one an AI built for you.
+A build meets the standard if all of the following are true. Use it on your own implementation, or on one an AI built for you.
 
-- Due dates are derived from a dated rule and an anchor, never stored as values.
-- Superseded rule versions are retained with their effective dates.
-- Rules are held per jurisdiction where the obligation differs by one.
-- An unknown anchor date is an explicit state that surfaces, not a default.
-- Every obligation carries evidence of last completion, not just a completion flag.
-- An owner or tenant refusal is stored as a dated outcome, and the obligation stays live.
-- Nothing sends a legal notice without a person releasing it.
+- Each due date is worked out from a dated rule and a starting date (the anchor), never saved as a fixed date.
+- When a rule is replaced, its old versions are kept, each with the date it took effect.
+- Where an obligation differs from one jurisdiction to another, each jurisdiction has its own rule.
+- When the starting date (the anchor) is not known, it is marked unknown and flagged where it can be seen, never filled in with a default.
+- Every obligation holds the evidence of when it was last completed, never just a tick saying it is done.
+- When an owner or tenant refuses, that is saved as an outcome with its date, and the obligation stays open.
+- Nothing sends a legal notice until a person has released it.
 - A breached obligation never clears itself when the work is finally done.
-- Someone other than the builder can explain what it does, and it runs on an account the business owns.
-- A rule change moves every open due date derived from it, and a breach that is completed late still reads as breached.
+- Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+- A rule change moves every open due date worked out from it, and a breach that is completed late still shows as breached.
 
 ## Related reading
 

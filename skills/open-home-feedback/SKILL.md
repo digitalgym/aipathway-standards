@@ -104,7 +104,7 @@ skill asserts.
 - 6. The vendor report
 - 7. What stays with a person
 - 8. Run it in what you already use
-- 9. Join It to Your Own System: What to Stub, and What Not to Hand-Roll
+- 9. Join It to Your Own System: What to Build, and What Not to Build From Scratch
 - 10. A checklist to hold any build or supplier to
 
 ## Attribution

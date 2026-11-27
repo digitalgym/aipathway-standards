@@ -9,7 +9,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/debtor-chasing
 
 ---
 
-The ledger keeps the money. The tenant keeps the ranking, the gate and the record of who was contacted and what they said.
+Your accounts keep what is owed. Microsoft 365 keeps who to chase first, who must not be chased, and the record of who was contacted and what they said.
 
 Used by
 
@@ -23,21 +23,21 @@ The debtor chasing standard is unusual among the ones we publish because the rec
 ## In short
 
 - **What this is**: A build plan for the debtor chasing standard on Microsoft 365. Four lists, four flows, six measures, and the ledger left exactly where it is.
-- **The core rule**: Balances are read, stamped and shown with their as-at time. A balance stored in SharePoint is a second ledger and it is the wrong one by tomorrow.
+- **The core rule**: Balances are read from your accounts and always shown with the time they were read. A balance stored in SharePoint is a second set of books, and it is wrong by tomorrow.
 - **What it does not do**: It does not decide to send a debtor to collections, apply a credit hold, or write off a debt. Those are decisions with consequences and they stay with a person.
-- **The hard part**: Not the ranking. The check that runs immediately before every contact, which is the one thing a filtered view cannot be.
+- **The hard part**: The ranking is the easy part. The hard part is the check that runs just before every contact, which hiding names from a list view cannot do.
 
 ## 1. Before you start
 
-Read [the debtor chasing build standard](https://aipathway.com.au/explore-ai/debtor-chasing-build-standard) first. It is the specification and this is one way to satisfy it. Where the two disagree, the standard wins and this page has a bug. The shared conventions for this stack are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
+Read [the debtor chasing build standard](https://aipathway.com.au/explore-ai/debtor-chasing-build-standard) first. It sets the rules, and this page is one way to meet them. Where the two disagree, the standard wins and this page is wrong. The setup shared by every Microsoft 365 plan is in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-**One honest note about this standard in particular.** It specifies behaviour, the buckets, the ranking and the gate, rather than a set of record shapes. The lists below are the minimum that satisfies its conformance checklist, not objects the standard itself names. Shape them to your ledger where that reads better; the checks are what you are being held to.
+**This standard sets rules for what happens, not for how records look.** It covers the age buckets, the ranking and the check before contact. The lists below are the least you need to pass its checklist, and the standard does not name them. Shape them to your accounts where that reads better. The checks are what you are held to.
 
-The standard also marks the compliance gate as the step not to hand-roll, and names a product for it. Everything here assumes the gate is either that product or a deliberate build you own. This page will not show you how to assemble a calling system out of flows and hope the gate holds.
+The standard also says not to build the compliance check before each call yourself, and names a product for it. Everything here assumes that check is either that product or a build you own on purpose. This page does not show how to put a calling system together out of flows and hope the check holds.
 
 ## 2. The lists, with their columns
 
-Four lists, with no invoice table and no balance column, because the ledger has those and a second copy is the failure this build plan is most likely to cause.
+Four lists, with no invoice table and no balance column, because your accounts already hold those, and a second copy is the mistake this plan is most likely to cause.
 
 ```
 Site: Receivables
@@ -89,12 +89,12 @@ Suppressions is a list rather than a flag on Positions on purpose: a debtor can 
 
 | The check | Enforced by | How |
 | --- | --- | --- |
-| The ledger stays the source of truth for what is owed | Sync flow | Positions are refreshed from the accounting system and never edited in the tenant. A balance typed into SharePoint is a second ledger, and the wrong one within a day. |
+| The ledger stays the source of truth for what is owed | Sync flow | Balances are refreshed from your accounts and never edited in Microsoft 365. A balance typed into SharePoint is a second set of books, and it is wrong within a day. |
 | Ranking is not by age | Rank flow | A scheduled flow scores and writes Rank. Age is one input among several, not the sort. Nobody sorts a view. |
-| Nothing is contacted without the gate passing first | Contact flow | The suppression check runs inside the contact step, immediately before the send, not as a filter on the list the operator is reading. |
-| A promise to pay moves the follow-up | Promise flow | Recording a promise sets the next action date from the promised date and stops the sequence until it passes. A broken promise is its own state, not a return to the top of the list. |
-| Every contact is recorded whether or not anyone answered | Contact flow | The Contacts list is append-only. No answer is an outcome and it is the one people skip recording, which is how the same debtor gets rung three times on Friday. |
-| A dispute stops the chase and does not restart it | Suppression list | Dispute is a suppression reason with an owner and a review date. Clearing it is a person's decision and it is dated. |
+| Nobody is contacted until the do-not-contact check passes | Contact flow | The do-not-contact check runs inside the contact step, just before each send, so it applies however the send was started. Hiding names from the list a person is reading does not count. |
+| A promise to pay moves the follow-up | Promise flow | Recording a promise sets the next action date from the promised date and stops the sequence until it passes. A broken promise is marked broken and ranked again, rather than going back to the top of the list. |
+| Every contact is recorded whether or not anyone answered | Contact flow | Rows are only ever added to the Contacts list, never changed. No answer is an outcome and it is the one people skip recording, which is how the same debtor gets rung three times on Friday. |
+| A dispute stops the chase and does not restart it | Suppression list | A dispute puts the debtor on the do-not-contact list with an owner and a review date. Taking them off is a person's decision, and it is dated. |
 
 ## 4. The four flows
 
@@ -132,7 +132,7 @@ FLOW 4  Promise, and the follow-up that moves with it
            Status = broken, and re-rank. Broken is its own state.
 ```
 
-Flow 3 is the whole standard. If a person can send from a view without passing through it, this build does not conform however good the ranking is.
+Flow 3 matters most. If a person can send from a list view without going through it, this build does not meet the standard, however good the ranking is.
 
 ## 5. The Power BI model and its measures
 
@@ -193,7 +193,7 @@ What each connection is for.
 - **Outlook, the one shared mailbox.** For the emailed reminders Flow 3 sends, from an address the business owns.
 - **Teams, optional.** To post the ranked list and the Stale Positions alert to the person who works the book.
 
-Keep the chequebook in the drawer.
+Keep it to the least it needs.
 
 1. Build the flows under a service account, an ordinary licensed account kept for them, not a person who might leave or change their password.
 2. Build them inside a solution, so each connection is a connection reference you can see, swap or remove in one place.
@@ -203,15 +203,15 @@ Keep the chequebook in the drawer.
 
 How to cut it off. Turn the flows off and nothing ranks or sends. Revoke the AI Pathway key and the flows can no longer read Xero, write a note or queue a call. Remove AI Pathway from Xero’s connected apps and AI Pathway loses Xero too.
 
-Why not connect the flows straight to Xero? You can, with a custom connector or the HTTP action and your own Xero app. Apps created from March 2026 must ask for granular scopes, the flow has to keep its own sign-in alive, and it is one more key into the ledger to scope and watch. For reading the book that is a fair trade. It still rings nobody, and the gate before each call is still yours to build, which this page has already said it will not teach.
+Why not connect the flows straight to Xero? You can, with a custom connector or the HTTP action and your own Xero app. Apps created from March 2026 must ask for narrower, granular permissions, the flow has to keep its own sign-in alive, and it is one more key into your accounts to limit and watch. For reading the debtor book that is a fair trade. It still rings nobody, and the check before each call is still yours to build, which this page does not cover.
 
 ## 7. The order to build it in
 
 1. Create the four lists. Index DebtorRef on all of them.
-2. Build Flow 1 against a file export before you buy a connector licence. A nightly CSV is a legitimate first version and it proves the shape.
-3. Put AsOf on every view you build. If a number can be read without its stamp, somebody will read it without its stamp.
-4. Build Flow 3 with the gate, before Flow 2. Ranking a list you cannot safely contact is the wrong order to discover a problem in.
-5. Stage a suppression and confirm the send refuses. This is the pass test and it should be run before the first real contact.
+2. Build Flow 1 against a file export before you buy a connector licence. A nightly CSV is a sound first version, and it proves the lists work.
+3. Show the AsOf time on every view you build. If a balance can be read without the time it was read, somebody will read it that way.
+4. Build Flow 3 with the do-not-contact check, before Flow 2. Make sure nobody can be contacted wrongly before you rank anyone.
+5. Put a test debtor on the do-not-contact list and confirm the send refuses. This is the pass test, and it runs before the first real contact.
 6. Build Flow 2, then Flow 4.
 7. Connect Power BI, add the measures, alert on Stale Positions.
 
@@ -219,28 +219,28 @@ Why not connect the flows straight to Xero? You can, with a custom connector or 
 
 ### Copying balances into SharePoint
 
-The temptation is to import the aged list once and work from it. Within a day somebody has paid and the tenant is chasing money it already has, which is the most damaging thing this process can do. Store the reference and the position as at a stamped time, show that time on every view, and refresh on a schedule.
+The temptation is to import the aged list once and work from it. Within a day somebody has paid and you are chasing money you already have, which is the most damaging thing this process can do. Store the invoice reference and the balance with the time it was read, show that time on every view, and refresh on a schedule.
 
 ### The accounting connector is premium
 
-Unlike the rest of these build plans, this one usually needs a premium connector or a custom connector to reach the ledger, and that is a per-user or per-flow licence. Price it before you design around it. A nightly export to a file the tenant reads is a legitimate and much cheaper first version.
+Unlike the rest of these build plans, this one usually needs a premium connector or a custom connector to reach the ledger, and that is a per-user or per-flow licence. Price it before you design around it. A nightly export to a file the flows read is a sound and much cheaper first version.
 
-### Suppression as a view filter
+### Do-not-contact as a list filter
 
-A filtered view is per person and per session. The moment somebody opens the unfiltered list, or a flow queries without the filter, the gate is gone. The check belongs in the step that sends, where it cannot be worked around.
+A filtered view is per person and per session. The moment somebody opens the unfiltered list, or a flow reads it without the filter, the check is gone. The check belongs in the step that sends, where it cannot be worked around.
 
 ### Treating no answer as no contact
 
-If only successful conversations are written back, the contact history understates itself and the ranking keeps promoting the same names. Write the attempt, then the outcome.
+If only successful conversations are written back, the contact history shows less than really happened and the ranking keeps putting the same names at the top. Write the attempt, then the outcome.
 
 ## 9. Where the automation stops
 
 - Escalating to collections, applying a credit hold, or writing off a debt. Consequential decisions, and they stay with a person.
-- Clearing a suppression. Adding one can be automatic; removing one is a decision with a name and a date on it.
+- Taking a debtor off the do-not-contact list. Adding them can be automatic; removing them is a decision with a name and a date on it.
 - Anything said on a call that commits the business to a settlement or a payment arrangement.
-- The compliance gate itself, which the standard names as the step not to hand-roll and which this plan assumes you have not.
+- The compliance check before each call. The standard says not to build it yourself, and this plan assumes you have not.
 
-**The pass test.** Stage a suppression you control. Add a Suppressions row for a test debtor with reason dispute and no ClearedAt, then try to contact that debtor through the normal path. The send must refuse, and a Contacts row must appear with outcome refused naming the suppression. Then clear the suppression and confirm the same debtor becomes contactable and that the clearing carries a person and a timestamp. Both take two minutes on your own data and neither needs a real debtor. If the send goes out, your gate is a view filter; if the refusal leaves no record, you cannot later show what the system did or did not do.
+**The pass test.** Set up a do-not-contact entry you control. Add a Suppressions row for a test debtor with reason dispute and no ClearedAt, then try to contact that debtor through the normal path. The send must refuse, and a Contacts row must appear with outcome refused naming the suppression. Then clear the suppression and confirm the same debtor becomes contactable and that the clearing carries a person and a timestamp. Both take two minutes on your own data and neither needs a real debtor. If the send goes out, your check is only a list filter. If the refusal leaves no record, you cannot later show what the system did or did not do.
 
 ## Related reading
 

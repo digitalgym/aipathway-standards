@@ -21,10 +21,10 @@ Your flows already send quotes, invoices and chases. This plan gives them one se
 
 ## In short
 
-- **What this is**: A build plan for the rules and holds standard on Microsoft 365. Five lists you fill, a Holds list, a Releases list only people write to, a hold flow, a release flow, and one lookup added to the start of each flow that acts.
-- **The core rule**: A flow reads the rules each run. Anything over a limit, or with no rule, goes on Holds as requested. A person adds a Releases row, and the release flow applies it only if that person is on ReleaseBy for that action.
-- **What it does not do**: No flow has a payment action. No flow writes to Rules, ReleaseBy, DoNotContact, ContactHours, StageHolders or Releases. A Holds row is never deleted.
-- **The hard part**: Finding every limit already typed into a flow's conditions and replacing it with the lookup, and permissions on Releases so the flows' own account cannot add a row.
+- **What this is**: A build plan for the rules and holds standard on Microsoft 365: five lists you fill, a Holds list, a Releases list only people add to, a flow that raises a hold, a flow that applies a release, and one check of the rules added to the start of each flow that sends or orders.
+- **The core rule**: A flow reads the rules each run. Anything over a limit, or with no rule, goes on the Holds list to wait for a person. A person adds a release, and the release flow applies it only if that person is on the release list (ReleaseBy) for that action.
+- **What it does not do**: People write Rules, ReleaseBy, DoNotContact, ContactHours, StageHolders and Releases, and the flows only read them. Payments stay with people too, because no flow can make one. A Holds row is never deleted.
+- **The hard part**: Finding every limit already typed into your existing flows and replacing it with a check of the rules list, and setting permissions on Releases so the flows' own account cannot add a release.
 
 ## 1. Before you start
 
@@ -150,12 +150,12 @@ Flow 2 is the only flow that sets a hold to released or refused, and it only doe
 
 ## 5. What the flows can reach in your Microsoft 365, and what they never touch
 
-The flows make every bot follow the rules you write once. They read your limits, release lists, do-not-contact list and contact hours at the start of every run, and put anything over a limit on the Holds list. You write and change the rules, decide who releases what, and release or refuse every hold.
+The flows make every bot follow the rules you write once. They read your limits, release lists, do-not-contact list and contact hours at the start of every run, and put anything over a limit on the Holds list. You write and change the rules, decide who releases what, release or refuse every hold, and keep the do-not-contact list.
 
 What each connection is for.
 
 - **SharePoint, the SignOffs site.** Read on Rules, ReleaseBy, DoNotContact, ContactHours, StageHolders and Releases. Add and update on Holds and ReleaseOutcomes. Your quote, invoice, chase and order flows read the rules here.
-- **Your existing flows.** Each one that sends or orders calls the hold flow when the rules say to wait, and reads Holds before it takes a held action. Their own connections to your job system and ledger stay as they are.
+- **Your existing flows.** Each one that sends or orders calls the hold flow when the rules say to wait, and reads Holds before it takes a held action. Their own connections to your job system and accounting software stay as they are.
 - **Outlook or Teams.** A message to the people on ReleaseBy when a hold is raised, and to the owner when a release is refused.
 
 Keep it to the least it needs.
@@ -170,14 +170,14 @@ Keep it to the least it needs.
 1. Agree the ref format and the action names with whoever built your other flows, and list every limit already typed into them.
 2. Create the lists, fill Rules, ReleaseBy, DoNotContact, ContactHours and StageHolders, and lock Releases to the people on ReleaseBy.
 3. Build Flow 2 and test it with a Releases row from someone not on ReleaseBy: it must be refused.
-4. Build Flow 1, then add the lookup to the invoice flow and take its own limit out. Raise an invoice over the limit and release it.
-5. Add the lookup to the quote, chase and order flows the same way, one at a time.
+4. Build Flow 1, then add the rules check to the invoice flow and take its own limit out. Raise an invoice over the limit and release it.
+5. Add the rules check to the quote, chase and order flows the same way, one at a time.
 
 ## 7. Three traps specific to this build
 
 ### Reading the rules once when the flow is built
 
-A flow that copies the limit into a variable at design time never sees the owner change it. The lookup runs every time the flow does.
+A flow that copies the limit into a variable when it is built never sees the owner change it. The rules check runs every time the flow does.
 
 ### Letting a release cover the next invoice too
 
@@ -194,7 +194,7 @@ Power Automate's utcNow() is UTC. At 8:30pm in Brisbane it is 10:30am UTC, insid
 - Who is on ReleaseBy.
 - Every row in DoNotContact.
 
-**The pass test.** On your own systems, with your own flows. Raise a real invoice over the limit: a Holds row must appear naming the rule, and nothing may go. Add a Releases row as someone not on ReleaseBy: it must be refused. Release it as the owner: the invoice must go once, and UsedAt must be set. Put a real customer in DoNotContact: nothing may go to them. Let a send come due after hours: it must wait for the morning. Then lower the limit in Rules and raise an invoice between the old and the new: every flow that sends invoices must hold it.
+**The pass test.** Do this on your own systems, with your own flows. Raise a real invoice over the limit: a Holds row must appear naming the rule, and nothing may go. Add a Releases row as someone not on ReleaseBy: it must be refused. Release it as the owner: the invoice must go once, and UsedAt must be set. Put a real customer in DoNotContact: nothing may go to them. Let a send come due after hours: it must wait for the morning. Then lower the limit in Rules and raise an invoice between the old and the new: every flow that sends invoices must hold it.
 
 ## Related reading
 

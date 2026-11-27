@@ -9,7 +9,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/inbox-triage-o
 
 ---
 
-One thread is one item, and Outlook already gives you the key that makes that true. The rest is a Choice column with fill-in switched off and a flow that has no delete action in it.
+Each email thread becomes one item, and Outlook already gives every thread the number that makes that work. The rest is a fixed list of kinds nobody can add to, and a flow that can never delete an email.
 
 Used by
 
@@ -17,22 +17,22 @@ Used by
 - Business Systems Analyst
 - Office Administrator
 
-The shared mailbox is the one place in this stack where Microsoft has already done the hard part. Every message arriving in a shared mailbox carries a conversation id, which is exactly the key the standard needs for one thread, one item. What Power Automate will let you do is raise a second item anyway, acknowledge a complaint on the way past, and delete something. Each of those three is a branch in the wrong place.
+The shared mailbox is the one place in this stack where Microsoft has already done the hard part. Every message arriving in a shared mailbox carries a conversation id, the thread number the standard needs to keep one thread as one item. Power Automate will still let you raise a second item, send an automatic reply to a complaint, or delete something. Each of those comes from a step in the wrong place.
 
 ## In short
 
 - **What this is**: A build plan for the inbox triage standard on Microsoft 365. A shared mailbox, six lists, three libraries, four flows and seven measures.
-- **The core rule**: The conversation id off the mail trigger is the key, held by an enforced unique value. A follow-up appends to the item it finds. It never raises a second one.
+- **The core rule**: The conversation id on each email is the key, and SharePoint refuses a second item with the same one. A follow-up is added to the item it finds. It never raises a second one.
 - **What it does not do**: No flow in this build has a delete action, for any kind, including spam. Nothing with a price, a date or a decision in it leaves without an approval that names the person who released it.
-- **The hard part**: Two things the standard asks for that this stack does not hand you: a content hash on the filed attachment, and sight of the mail Exchange already moved to Junk. Both are called out below rather than papered over.
+- **The hard part**: Two things the standard asks for that Microsoft 365 does not hand you: a content hash (a fingerprint of the file) on the filed attachment, and sight of the mail Exchange already moved to Junk. Both are covered in the traps below.
 
 ## 1. Before you start
 
 Read [the inbox triage build standard](https://aipathway.com.au/explore-ai/inbox-triage-build-standard) first. It defines its objects, and the lists below are those objects with SharePoint types on them. Shared conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-Decide one thing first: what a message gets filed against. The standard is unambiguous that filing means a record id, never a copy in a folder, so you need to know what ids exist before you design anything. A job system with an API gives you job ids. Xero gives you supplier ids. Tradify has no public API and no Zapier app, so a build cannot file against a Tradify job directly. The route there is filing against the supplier in Xero with the Tradify job number kept on the item, or a browser step a person approves that attaches it to the job. Pick your id space now, because RecordRef below is the column the whole standard turns on and it is the one that cannot be retrofitted.
+Decide one thing first: what a message gets filed against. The standard is clear that filing means attaching the email to a record by its id, never saving a copy in a folder, so you need to know which ids you have before you design anything. A job system other software can connect to gives you job ids. Xero gives you supplier ids. Tradify has no public API and no Zapier app, so a build cannot file against a Tradify job directly. The route there is filing against the supplier in Xero with the Tradify job number kept on the item, or a browser step a person approves that attaches it to the job. Choose where your ids come from now, because RecordRef below is the column the whole standard turns on, and it is the one you cannot add later.
 
-Two things this stack does not give you, both named in the traps. There is no action in Power Automate that returns a content hash of a file, so the standard’s hash on the filed attachment and on the quarantined message has no source in the box. And the mail trigger sees the folder you point it at, which means anything Exchange has already filed to Junk is invisible to a build that claims it never deletes a message. Read both before you start, not after the bookkeeper asks where last month’s remittance went.
+Two things this stack does not give you, both named in the traps. There is no action in Power Automate that returns a content hash of a file, so the standard’s hash on the filed attachment and on the quarantined message has nothing built in to produce it. And the mail trigger sees the folder you point it at, which means anything Exchange has already filed to Junk is invisible to a build that claims it never deletes a message. Read both before you start, not after the bookkeeper asks where last month’s remittance went.
 
 ## 2. The lists, with their columns
 
@@ -91,20 +91,20 @@ LIBRARY  Bodies                   the raw message, kept
 LIBRARY  Quarantine               spam. Retrievable. Nothing is deleted.
 ```
 
-EvidenceIndex is a list pointing at a library rather than an attachment column on Items, for the reason the Invoice Check build needs: an attachment cannot be queried and cannot be counted, and the whole downstream job is finding the supplier invoice where it was filed. Acknowledgements has no body column, which is the cheapest possible way to guarantee the automatic outbound cannot quote a price.
+EvidenceIndex is a list pointing at a library rather than an attachment column on Items, for the reason the Invoice Check build needs: a list attachment cannot be searched or counted, and everything after this build depends on finding the supplier invoice where it was filed. Acknowledgements has no column for the message text, which is the simplest way to make sure the automatic reply can never quote a price.
 
 ## 3. Every rule, and what enforces it
 
 | The rule | Enforced by | How |
 | --- | --- | --- |
-| Every message gets exactly one kind from a closed list | Kind, a Choice column | Eight values, single select, allow fill-in choices turned off. Whatever classifies the mail sits outside this plan; what SharePoint enforces is that it cannot invent a ninth kind, and a kind it cannot decide lands in other. |
+| Every message gets exactly one kind from a closed list | Kind, a Choice column | Eight values, one per email, with fill-in choices turned off. Whatever sorts the mail sits outside this plan. SharePoint makes sure it cannot invent a ninth kind, and a kind it cannot decide lands in other. |
 | A message about a job or a supplier is filed against that record by id | Mail.FiledTo | The value is the record's own id from the job system or Xero. The flow has no move-to-folder step for a filed message, because a folder holds copies and a copy is what gets paid twice. |
-| A supplier invoice attachment is filed as evidence with the message id and the supplier record | Attachments + EvidenceIndex | The file and the index row are written in the same run, so the Invoice Check build reads it where it was filed. The hash the standard also asks for has no source in this stack, which is a trap below rather than a column that lies. |
-| Every classified message lands in the queue for its kind, with a named owner and a due date | Queues list | Owner and Due are copied onto the item from the Queues row for its kind. A missing Queues row stops the raise rather than producing an item nobody owns, which is the whole reason the clock is a list and not an expression. |
-| A complaint is escalated to a named person with the full message, and nothing is sent to the customer | Flow order | The complaint branch terminates the flow before the acknowledgement step exists in the run. It is not a condition sitting beside the send, because a condition beside a send is one edit away from being bypassed. |
+| A supplier invoice attachment is filed as evidence with the message id and the supplier record | Attachments + EvidenceIndex | The file and the index row are saved in the same run, so the Invoice Check build reads it where it was filed. Nothing built into Microsoft 365 produces the hash the standard also asks for, which is covered in the traps below rather than faked in a column. |
+| Every classified message lands in the queue for its kind, with a named owner and a due date | Queues list | Owner and Due are copied onto the item from the Queues row for its kind. If the Queues row is missing, no item is raised, rather than one nobody owns. That is why the time limits live in a list and not in a formula. |
+| A complaint is escalated to a named person with the full message, and nothing is sent to the customer | Flow order | The complaint branch ends the flow before it reaches the acknowledgement step. It is not a condition sitting next to the send, because a condition next to a send is one edit away from being skipped. |
 | Any substantive reply carries a named person's release | Approval + Releases | The reply is sent inside the same flow as the approval, from the words stored on the Releases row, not from the words in the request. One flow in the site has a send action against the mailbox, and it is this one. |
-| A follow-up in the same thread updates the existing item | Items.ThreadKey, unique | The conversation id off the trigger is the key. A create that loses a race fails on the unique value, and the failure branch is the one that appends the message id to the item that already exists. |
-| Spam is quarantined, never deleted | Quarantine library | The message is copied to the library and moved to a folder. No flow in this build contains a delete action, which is a thing you can verify by reading them rather than by trusting them. |
+| A follow-up in the same thread updates the existing item | Items.ThreadKey, unique | The conversation id off the trigger is the key. If two runs try to create the item at once, the second fails on the unique value, and its failure branch adds the message id to the item that already exists. |
+| Spam is quarantined, never deleted | Quarantine library | The message is copied to the library and moved to a folder. No flow in this build contains a delete action, which you can check by reading them rather than trusting them. |
 
 ## 4. The four flows
 
@@ -155,7 +155,7 @@ FLOW 4  Quarantine review
            remittance spam is the day this matters.
 ```
 
-The order inside Flow 1 is the design. Spam and complaint terminate before the acknowledgement step is ever reached, so a cheerful automatic reply on a complaint is not something a misconfigured condition can produce. Everything else in that flow is recoverable; that one is not.
+The order of steps inside Flow 1 matters most. Spam and complaints stop the flow before it reaches the acknowledgement, so a wrongly set condition cannot send a cheerful automatic reply to a complaint. Every other mistake in that flow can be fixed afterwards. That one cannot.
 
 ## 5. The Power BI model and its measures
 
@@ -219,7 +219,7 @@ Acknowledged Complaints belongs on the front page even though it should read zer
 
 ## 6. What the flows can reach in your mailbox and your job system, and what they never touch
 
-The flows sort the shared inbox so each email reaches the right person. They read the shared mailbox, match each email to its job or supplier, file supplier invoices as evidence, and send an acknowledgement from that mailbox. You release every reply with a price, a date or a decision in it, and complaints, and whether a supplier invoice is genuine, are yours to decide.
+The flows sort the shared inbox so each email reaches the right person. They read the shared mailbox, match each email to its job or supplier, file supplier invoices as evidence, and send an acknowledgement from that mailbox. You approve every reply with a price, a date or a decision in it, and you decide every complaint and whether a supplier invoice is genuine.
 
 What each connection is for.
 
@@ -227,7 +227,7 @@ What each connection is for.
 - **SharePoint, one site.** The six lists and three libraries: the item, the raw message, the attachment and its index row. Nothing outside that site.
 - **Approvals and Teams.** The release in Flow 2, and the escalation in Flows 1 and 3 to the person on the Queues row.
 - **The job system.** A custom connector or the HTTP action (both premium in Power Automate) against its API, to find the job id and attach the message to it. ServiceM8 and Simpro both have one. Tradify has no public API and no Zapier app, so for a Tradify business this connection does not exist: file against the supplier in Xero and keep the Tradify job number on the item.
-- **Xero, for supplier ids only.** The flow needs the id, not the ledger. A supplier list refreshed into a lookup list on a schedule is enough; a custom connector or the HTTP action against your own Xero app also works, and is premium. AI Pathway is not part of this build: the standard names no hosted step for it.
+- **Xero, for supplier ids only.** The flow needs the supplier id, not your accounts. A supplier list refreshed into a lookup list on a schedule is enough; a custom connector or the HTTP action against your own Xero app also works, and is premium. AI Pathway is not part of this build, because the standard names no hosted step for it.
 
 Keep it to the least it needs.
 
@@ -239,16 +239,16 @@ Keep it to the least it needs.
 
 How to cut it off. Turn the flows off and the mailbox goes back to being a mailbox, with every message still in it. Remove the service account’s access to the mailbox in Exchange, or delete the job system key, and the build loses that one piece.
 
-Why not Outlook rules, or Copilot over the whole mailbox? Rules are fine for sorting one person’s inbox, and a rule can move, forward, auto-reply and delete. That is the trouble: a rule acts on one message at a time, so a thread of three is three, there is no owner and no clock, and the delete is one tick away. Copilot can summarise the mailbox and suggest a reply for whoever opens it; it files nothing against a record and keeps no release.
+Why not Outlook rules, or Copilot over the whole mailbox? Rules are fine for sorting one person’s inbox, and a rule can move, forward, auto-reply and delete. That is the trouble: a rule acts on one message at a time, so a thread of three is three, there is no owner and no clock, and the delete is one tick away. Copilot can summarise the mailbox and suggest a reply for whoever opens it. It files nothing against a record and keeps no release.
 
 ## 7. The order to build it in
 
-1. Settle the id space: which system gives you job ids, which gives you supplier ids, and what happens to a message that matches neither.
+1. Settle where your ids come from: which system gives you job ids, which gives you supplier ids, and what happens to a message that matches neither.
 2. Create the six lists and three libraries. Turn on enforce unique values for Items.ThreadKey, Mail.MessageId and Acknowledgements.ThreadKey before any rows exist.
 3. Fill the Queues list by hand, one row per kind, with a real person in Owner and Manager and a real number in ClockHours. Nothing below works until this table is somebody's.
-4. Build Flow 1 with classification hard-coded to other. Confirm that a thread of three emails produces one item with three message ids, and that attachments reach the library. Everything after this is refinement.
+4. Build Flow 1 with every email sorted as other for now. Confirm that a thread of three emails produces one item with three message ids, and that attachments reach the library. Everything after this is refinement.
 5. Add the spam and complaint branches, in that order, before the acknowledgement step. Verify by reading the flow top to bottom that no path from complaint reaches a send.
-6. Add the acknowledgement, then attach your classifier so Kind stops being other.
+6. Add the acknowledgement, then connect whatever sorts your mail, so Kind stops being other.
 7. Build Flow 2. The approval precedes the Releases row and the Releases row precedes the send, with nothing between them.
 8. Build Flows 3 and 4, then connect Power BI. Acknowledged Complaints and Unowned Items go on the front page.
 
@@ -256,11 +256,11 @@ Why not Outlook rules, or Copilot over the whole mailbox? Rules are fine for sor
 
 ### The hash the standard asks for has nowhere to come from
 
-Checks three and nine both want a content hash: on the filed attachment, and on the quarantined message. Microsoft 365 has no action in the box that returns one. You have two honest options. Add a step you own that computes the hash and store it, and the standard is met. Or store what you do have, the message id plus the library item, call the column Fingerprint rather than Hash, and tell the Invoice Check build that the artefact is identified by file and message rather than by content. What you must not do is write a file size or an ETag into a column called Hash, because everything downstream will treat it as one.
+Checks three and nine both want a content hash: on the filed attachment, and on the quarantined message. Microsoft 365 has no built-in action that returns one. You have two honest options. Add a step you own that computes the hash and store it, and the standard is met. Or store what you do have, the message id plus the library item, call the column Fingerprint rather than Hash, and tell the Invoice Check build that the attachment is identified by file and message rather than by content. What you must not do is write a file size or an ETag into a column called Hash, because everything downstream will treat it as one.
 
 ### Junk gets there before the flow does
 
-The mail trigger watches the folder you point it at. Exchange files a great deal of the mail this standard calls spam into Junk before any flow sees it, and Junk clears itself out. The build can then truthfully say it never deleted a message while the mailbox quietly did. Decide deliberately: either trigger on the folder that actually receives everything, or accept that quarantine covers only what reaches the inbox and say so on the page where people go looking for a lost remittance.
+The mail trigger watches the folder you point it at. Exchange files a great deal of the mail this standard calls spam into Junk before any flow sees it, and Junk clears itself out. The build can then truthfully say it never deleted a message while the mailbox quietly did. Decide deliberately: either trigger on the folder that receives everything, or accept that quarantine covers only what reaches the inbox and say so on the page where people go looking for a lost remittance.
 
 ### Allow fill-in choices left switched on
 
@@ -268,17 +268,17 @@ A Choice column with fill-in enabled is a text column that looks closed. The fir
 
 ### Replies that leave without passing through the flow
 
-The release gate is only worth what the send-as permissions are worth. Anyone who can open the shared mailbox in Outlook can reply from it, and the Releases list will never know. That is a permissions decision, not a flow: decide who holds send-as, and accept that the people who keep it are the people whose replies the record cannot vouch for. Reconciling the sent folder against Releases once a week is the cheap version of finding out.
+The approval step only protects you as far as the Send As permissions do. Anyone who can open the shared mailbox in Outlook can reply from it, and the Releases list will never know. Permissions decide this, not a flow. Decide who holds Send As, and accept that the people who keep it are the people whose replies the record cannot vouch for. Reconciling the sent folder against Releases once a week is the cheap version of finding out.
 
 ## 9. Where the automation stops
 
 - Every substantive reply: anything with a price, a date or a decision in it. A person writes or approves the words, and the release carries their name.
 - The complaint, whole. What is said to that customer and when is theirs, and the build's only job is to get it in front of them untouched.
-- Deciding a supplier invoice is genuine. This build files the attachment as evidence; the invoice check standard matches it and a person approves the payment.
-- Reading everything the machine called other. That queue is the classifier admitting it does not know, and Other Share is the measure that says how often.
-- The Queues table itself: who owns each kind, who it escalates to, and how long it may wait. A flow reads that table; it never writes to it.
+- Deciding a supplier invoice is genuine. This build files the attachment as evidence. The invoice check standard matches it, and a person approves the payment.
+- Reading everything the build sorted as other. That queue is where it admits it does not know, and Other Share is the measure that says how often.
+- The Queues table itself: who owns each kind, who it escalates to, and how long it may wait. A flow reads that table and never changes it.
 
-**The pass test.** Stage one conversation in the real shared mailbox. Send a message to it from an address you control with a PDF attached, then reply to your own message twice in the same thread, then run the flow across all three. You must end with exactly one Items row carrying three message ids, one EvidenceIndex row pointing at the PDF sitting in the Attachments library, and an Owner and a Due that came off the Queues row rather than from anywhere in the flow. Then set Kind to complaint on a staged item and run Flow 1 against it: there must be no Acknowledgements row for that thread at all, and an EscalatedTo with a name in it. Fifteen minutes. If a second Items row appeared, the conversation id is not the key or the unique value is off, and one customer will get two answers to one question. If the PDF is an attachment on the list item rather than a file in the library, nothing downstream can query for it and the invoice check build starts from nothing. If the complaint got an acknowledgement, the complaint branch is sitting beside the send instead of before it.
+**The pass test.** Stage one conversation in the real shared mailbox. Send a message to it from an address you control with a PDF attached, then reply to your own message twice in the same thread, then run the flow across all three. You must end with exactly one Items row carrying three message ids, one EvidenceIndex row pointing at the PDF sitting in the Attachments library, and an Owner and a Due that came off the Queues row rather than from anywhere in the flow. Then set Kind to complaint on a staged item and run Flow 1 against it: there must be no Acknowledgements row for that thread at all, and an EscalatedTo with a name in it. Fifteen minutes. If a second Items row appeared, the conversation id is not the key or the unique value is off, and one customer will get two answers to one question. If the PDF is an attachment on the list item rather than a file in the library, nothing after it can find it and the invoice check build starts from nothing. If the complaint got an acknowledgement, the complaint branch is sitting beside the send instead of before it.
 
 ## Related reading
 

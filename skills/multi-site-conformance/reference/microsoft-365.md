@@ -9,7 +9,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/multi-site-con
 
 ---
 
-Shared keys, drift detection on a clock, one score computed once, and one question about tenancy that decides whether any of it is possible.
+The same required fields at every branch, a daily check for branches drifting from the standard, one score worked out once for all of them, and one question about your Microsoft setup that decides whether any of it works.
 
 Used by
 
@@ -17,26 +17,26 @@ Used by
 - Operations Manager
 - Business Systems Analyst
 
-This build plan has an unusual first step, and it is not technical. Before any list is created somebody has to answer whether the branches live in one Microsoft tenant or several, because the answer changes everything that follows and it is the one thing that cannot be fixed later with a flow.
+This build plan has an unusual first step, and it is not technical. Before any list is created somebody has to answer whether the branches share one Microsoft 365 tenant (your organisation’s Microsoft account) or each have their own. The answer changes everything that follows, and it is the one thing a flow cannot fix later.
 
 ## In short
 
 - **What this is**: A build plan for the multi-site conformance standard on Microsoft 365. Three lists on top of whatever the underlying standard already built, two flows, one score.
-- **The core rule**: Segment resolves through an Entra group. A typed label looks identical on day one and is wrong by the first time somebody changes branch.
-- **What it does not do**: It surfaces drift and scores it the same way everywhere. What to do about a branch that keeps drifting is a conversation between two named people.
-- **The hard part**: The tenancy question. Everything here assumes one directory, and separate franchisee tenants need a different shape entirely.
+- **The core rule**: Which branch a person belongs to comes from their Microsoft group membership. A typed label looks the same on day one and is wrong the first time somebody changes branch.
+- **What it does not do**: It finds where branches have drifted from the standard and scores every branch the same way. What to do about a branch that keeps drifting is a conversation between two named people.
+- **The hard part**: Whether the branches share one Microsoft 365 tenant. Everything here assumes they do, and franchisees with their own tenants need a different shape entirely.
 
 ## 1. The question to settle first
 
-Read [the multi-site conformance build standard](https://aipathway.com.au/explore-ai/multi-site-conformance-build-standard) first, and note that it sits above the others: you implement a calendar or a pack, and this is how that survives being deployed to fourteen places. Shared conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
+Read [the multi-site conformance build standard](https://aipathway.com.au/explore-ai/multi-site-conformance-build-standard) first, and note that it sits above the other standards. You build a calendar or a pack once, and this standard keeps it working the same way in fourteen places. Shared conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-Then answer this. **One tenant, or several?** Branches of one company are usually one tenant and everything below applies directly. Franchise networks frequently are not: each franchisee owns their own directory, and then shared lists, cross-segment queries and a single semantic model are all unavailable.
+Then answer one question. **One tenant, or several?** Branches of one company usually share one tenant, and everything below applies as written. Franchise networks often do not. Each franchisee owns their own, and then shared lists, reports across branches and a single Power BI model are all off the table.
 
-If it is several, you have two workable shapes. Guest access to one shared site owned by the centre, which keeps this plan intact and costs you an onboarding conversation per segment. Or each segment publishes an agreed extract on a schedule and the centre holds only that, which keeps everyone independent and means drift detection sees what the extract carries and nothing else. Pick deliberately. Both are defensible; drifting into the second by accident is not.
+If it is several, you have two shapes that work. The first is guest access to one shared site owned by the centre, which keeps this plan intact and costs you a setup conversation with each branch. The second is each branch sending the centre an agreed export on a schedule, and the centre holding only that. It keeps everyone independent, but the drift checks only see what the export carries. Choose one on purpose. Both work; ending up with the second by accident does not.
 
 ## 2. The lists, with their columns
 
-Three lists on top of whatever the underlying standard already built. They are deliberately thin: this standard governs other lists rather than holding work of its own.
+Three lists on top of whatever the underlying standard already built. They are deliberately small, because this standard checks other lists and holds no work of its own.
 
 ```
 Site: Conformance
@@ -85,10 +85,10 @@ Segments carries the Entra group id rather than a name, because names get change
 | --- | --- | --- |
 | The key contract is written down and versioned | KeyContract list | A list with EffectiveFrom, not a diagram in an onboarding deck. Changing it is a version, which means the old one is still readable. |
 | Segments add, never rename or fork | Column validation | Required keys are enforced at the list, so a row missing one cannot be saved. Extra columns are permitted and ignored by everything shared. |
-| Segment comes from group membership | Segments list | The Segment column resolves through an Entra group, never a label somebody types. Ownership cannot then drift away from access. |
+| Segment comes from group membership | Segments list | The Segment column resolves through an Entra group, never a label somebody types. So who owns a record always matches who can see it. |
 | Drift is detected on a schedule, all four kinds | Drift flow | One scheduled flow writing DriftFindings. Schema and gate-bypass are queries; shadow register and silence are patterns over time. |
 | One definition of every measure | One model | A single semantic model. No segment can publish its own version of the same number, which is the argument that otherwise consumes every review. |
-| The digest posts on a fixed schedule regardless | Digest flow | Unconditional. A report that appears when the numbers are good teaches everybody to read its absence. |
+| The digest posts on a fixed schedule regardless | Digest flow | Every week, whatever the numbers. If the report only appears when the numbers are good, everyone learns that no report means bad news. |
 | Each segment sees its own findings, not only the centre | RLS + digest | Same findings, same detail, posted to the segment's own channel. A centre-only report is surveillance and is resented accordingly. |
 
 ## 4. The two flows
@@ -168,14 +168,14 @@ Weight the score however suits the business, but compute it in one model. The mo
 
 ## 6. What the flows can read across your branches, and what they never change
 
-The flows show the centre which branches have drifted, and where. They read each branch’s lists and who is in each group, write what they find in the centre’s site, and post a digest to each branch’s channel. Every conversation with a branch that crosses a threshold is yours, and so is deciding whether a local difference is legitimate or a low score is a real problem.
+The flows show the centre which branches have drifted from the standard, and where. They read each branch’s lists and who is in each group, write what they find in the centre’s site, and post a digest to each branch’s channel. You have every conversation with a branch that crosses a threshold, and you decide whether a local difference is fair and whether a low score is a real problem.
 
 What each connection is for.
 
-- **Each segment site, read.** Every site associated to the hub, for the four drift checks. Nothing on a segment site is written.
+- **Each branch site, read.** Every site linked to the hub, for the four drift checks. Nothing on a branch site is written.
 - **The centre’s site.** Read on KeyContract and Segments, write on DriftFindings. That list is the only thing the flows write.
-- **Group membership, read.** To give every record its segment from the Entra group it sits in, never from a typed label.
-- **Teams.** To post each segment’s findings to its own channel, the roll-up to the centre’s, and a message to a coach by name when a segment passes its thresholds.
+- **Group membership, read.** To give every record its branch from the Microsoft group it sits in, never from a typed label.
+- **Teams.** To post each branch’s findings to its own channel, the roll-up to the centre’s, and a message to a coach by name when a branch passes its thresholds.
 - **Power BI, read.** The model, the score and row level security read the lists and write nothing back.
 
 Keep each one to the least it needs.
@@ -195,8 +195,8 @@ Why not give the centre’s managers edit access to every branch site? It is qui
 
 1. Answer the tenancy question. Write the answer down.
 2. Create the hub site and associate the segment sites to it.
-3. Create Segments with real Entra group ids, a real owner and a real coach for each. A segment with no named coach cannot be routed to and the threshold is decoration.
-4. Write KeyContract version 1. This is a conversation, not a data entry task, and it is the deliverable people will argue about.
+3. Create Segments with real Entra group ids, a real owner and a real coach for each. A branch with no named coach has nobody to send findings to, and its threshold means nothing.
+4. Write KeyContract version 1. It takes a conversation more than data entry, and it is the part people will argue about.
 5. Apply the required-key validation to the underlying lists and confirm a row missing one cannot be saved.
 6. Build Flow 1 with the schema checks only. Run it, and expect the first result to be worse than anybody predicted.
 7. Add gate bypass, then the two pattern detections.
@@ -207,29 +207,29 @@ Why not give the centre’s managers edit access to every branch site? It is qui
 
 ### Franchisees on their own tenants
 
-Settle this before anything else. If each franchisee owns a separate Microsoft tenant, none of this works as written: cross-tenant querying, shared lists and one semantic model all assume one directory. The realistic options are a shared site the segments are guests in, or each segment publishing an agreed extract to the centre. Both are workable. Discovering the question three weeks into a build is not.
+Settle this before anything else. If each franchisee owns a separate Microsoft tenant, none of this works as written, because reports across branches, shared lists and one Power BI model all assume one tenant. The realistic options are a shared site the branches join as guests, or each branch sending an agreed export to the centre. Both work. Finding out three weeks into a build does not.
 
 ### A site per branch with no hub
 
-Separate sites inside one tenant are fine, but the drift flow then has to enumerate them rather than query one list. Associate them to a hub site from day one, or accept that adding a branch means editing a flow, which is exactly the maintenance nobody does.
+Separate sites inside one tenant are fine, but the drift flow then has to go through them one by one instead of reading one list. Associate them to a hub site from day one, or accept that adding a branch means editing a flow, which is exactly the maintenance nobody does.
 
 ### Segment as a typed choice column
 
-It looks identical and it decays immediately. Somebody is moved between branches, the group membership changes and the column does not, and every number about that person is now filed under the wrong segment with nothing to detect it.
+It looks the same and goes wrong almost at once. Somebody is moved between branches, the group membership changes and the column does not, and every number about that person is now filed under the wrong segment with nothing to detect it.
 
-### Scoring honesty out of the system
+### Punishing the honest branches
 
-A branch that records its problems scores worse than one that hides them. If the score is used punitively you will have clean numbers within two months and no instrument. Read a low score as a question, and watch for a segment whose numbers improve without anything changing.
+A branch that records its problems scores worse than one that hides them. If the score is used to punish branches, you will have clean numbers within two months and nothing they can tell you. Read a low score as a question, and watch for a segment whose numbers improve without anything changing.
 
 ## 9. Where the automation stops
 
 - Accepting a local variation as legitimate, and recording why.
-- Changing the key contract, which is a version and a conversation, not an edit.
-- Every conversation with a segment that has crossed a threshold.
+- Changing the key contract, which means a new version and a conversation first, never a quick edit.
+- Every conversation with a branch that has crossed a threshold.
 - Judging whether a low score is a compliance problem or an honest branch recording what a quieter one is hiding.
-- Deciding a new segment is ready to take real records.
+- Deciding a new branch is ready to take real records.
 
-**The pass test.** In a non-production copy, break the contract two ways in one segment. Put a value in a closed-list field that is not on the list, and do something a gate should prevent, such as typing a date the system derives. Then wait for the next scheduled run without touching anything. Both must appear as DriftFindings against that segment, with enough detail to find the record, and both must appear in the copy that segment receives rather than only in the centre’s. If either is missing you have a report rather than a control. If they reach only the centre, you have built surveillance, and it will be treated as such.
+**The pass test.** In a test copy, break the contract two ways in one branch. Put a value in a closed-list field that is not on the list, and do something a check should prevent, such as typing in a date the system is meant to work out. Then wait for the next scheduled run without touching anything. Both must appear as DriftFindings against that branch, with enough detail to find the record, and both must appear in the copy that branch receives as well as the centre’s. If either is missing, the build is only a report and catches nothing. If they reach only the centre, you have built surveillance, and it will be treated as such.
 
 ## Related reading
 

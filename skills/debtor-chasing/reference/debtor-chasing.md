@@ -21,7 +21,7 @@ When the checks are green: Enable Get Paid on AI Pathway / Recover; npx @aipathw
 
 ---
 
-Pull five fields, sort into four buckets, rank by amount at risk, and leave every call with a date. Free to implement, with everything you need below. Or skip the build: every business with a debtor book does this, so we built the standard into a product, Get Paid.
+Pull five fields, sort into four buckets, rank by amount at risk, and leave every call with a date. Free to implement, with everything you need below. Or skip the build. Every business with a debtor book does this, so we built the standard into a product, Get Paid.
 
 Used by
 
@@ -34,19 +34,19 @@ Written by Andrew, AI Pathway · CC BY 4.0 · Not legal advice
 
 The build
 
-Pull, sort, rank, open. Five fields, four buckets, amount at risk, and one question that takes a date.
+Pull five fields from your accounts, sort into four buckets, rank by amount at risk, and open every call with one question that gets a date.
 
 The hard part
 
-A promise to pay has to become an object with a date on it, or the follow-up is guesswork.
+A promise to pay has to be recorded with a date, or the follow-up is guesswork.
 
 Where to stop
 
-The moment it rings somebody. Calling hours, the register, disclosure and a record that survives.
+Stop building at the point a phone rings. From there it needs calling hours, the Do Not Call Register, saying it is an AI, and a record that lasts.
 
-Honest caveat
+The catch
 
-A self-built version works and is worth building. It stops working the week the person who built it takes leave, which is section 8.
+A self-built version works and is worth building. It stops working the week the person who built it takes leave (section 8).
 
 Nobody has a receivables problem because they forgot to send a reminder. They have one because the reminders went out, were ignored, and nothing happened next. The gap is the follow-up after the email, which needs a person, and the person has a day job.
 
@@ -60,36 +60,36 @@ The method, end to end
 6. Call: disclose, then one question.
 7. Date agreed? If yes, the promise is recorded with a date on it and the run ends. If no, schedule the next touch with a date, which goes back through the gate before it rings.
 
-The top row is a weekend of work and stays yours. The gate is the step between ranking a debtor and ringing one, and every later touch comes back through it. That is the part we sell, and section 10 says why.
+The top row is a weekend of work and stays yours. The gate is the set of checks between ranking a debtor and ringing them, and every later call goes back through it. That is the part we sell, and section 10 says why.
 
 ## Done for you: Get Paid
 
-Every business with a debtor book does this job, so we built this standard into a standalone product: Get Paid. It reads your Xero debtor book, rings each customer on a real line inside the gate in section 10, and records what was agreed as a date. It is held to the pass test in section 12 like any other build.
+Every business with a debtor book does this job, so we built this standard into a standalone product: Get Paid. It reads your Xero debtor book, rings each customer on a real line only after the checks in section 10 pass, and records what was agreed as a date. It is held to the pass test in section 12 like any other build.
 
 What it does today
 
 - Rings customers with invoices 30 or more days overdue, one call per customer covering every invoice they owe, on a real Australian line, and says it is an AI at the start of every call.
 - Holds calling hours (9am to 8pm weekdays, 9am to 5pm Saturdays, no Sundays) in the debtor’s own state, and that state’s public holidays.
-- Re-reads every invoice from Xero just before the dial. A paid, voided or deleted invoice is not rung, and the audit row names the read.
-- Checks promises, disputes and opt-outs again just before every dial, and records a promise to pay as a date, with the follow-up moved to it.
-- Reads the balance out, can text a payment link mid-call, and captures a dispute for a person.
-- Places your list in your order when you send one, and keeps a recording and a record of every call.
+- Checks every invoice in Xero again just before dialling. A paid, voided or deleted invoice is not rung, and the call log records that check.
+- Checks promises, disputes and opt-outs again just before every call, and records a promise to pay as a date, with the follow-up moved to it.
+- Reads the balance out, can text a payment link during the call, and writes down a dispute for a person to handle.
+- Calls your list in your order when you send one, and keeps a recording and a record of every call.
 
 Start a 30-day free trial, connect Xero and switch Get Paid on; prices are on the [pricing page](https://aipathway.com.au/pricing). If you would rather we set it up for you, that is a fixed-price set-up: [pick a time](https://aipathway.com.au/ai-audit#book).
 
 Rather build it yourself? Everything you need is below, free. Joining it to your own inbox, ledger or a bigger workflow? See joining it to your own system. [Get Paid](https://aipathway.com.au/calls) is held to the pass tests on this page like anything else.
 
-## 1. What You Actually Need Off the Ledger
+## 1. What You Need From Your Accounts
 
-Export the aged receivables report and ignore most of it. Five fields carry the method:
+Export the aged receivables report and ignore most of it. The method needs five fields:
 
-- **Customer.** The unit of the conversation. Not the invoice, which is the mistake in section 3.
-- **Amount outstanding, per invoice.** You need them separately to talk about them, and summed to rank.
-- **Days past due.** Off the due date, not the issue date. A 30-day account issued four weeks ago is not late.
+- **Customer.** You chase the customer, not each invoice. Section 3 explains why.
+- **Amount outstanding, per invoice.** You need them separately to talk about them, and added up to rank the customer.
+- **Days past due.** Counted from the due date, not the issue date. A 30-day account issued four weeks ago is not late.
 - **A mobile number.** The field that decides whether any of this is workable. Most ledgers hold a billing email and an office landline, which is the wrong end of the building.
-- **Last contact, and what was said.** Almost never in the ledger. Section 5 is about making this exist.
+- **Last contact, and what was said.** Almost never in your accounts. Section 5 is about recording it.
 
-Run the coverage check before anything else. If two thirds of your overdue rows have no mobile, you do not have a chasing problem yet, you have a data problem, and the fix is a field on the account-setup form rather than anything on this page.
+Before anything else, check how many overdue rows have a mobile number. If two thirds of your overdue rows have no mobile, you have a data problem to fix before any chasing, and the fix is a field on the account-setup form rather than anything on this page.
 
 ## 2. Four Buckets, Not One Reminder Run
 
@@ -102,44 +102,44 @@ A single overdue list treats a customer who is four days late the same as one wh
 
 ## 3. Which Invoice Gets Chased First
 
-This is the section that matters, and the one most builds get wrong twice.
+This section matters most, and most builds get it wrong in two ways.
 
-**The first mistake is ranking by age.** Age tells you how bad a row is. It does not tell you what fixing it is worth. A three-month-old $400 invoice will always sort above a three-week-old $40,000 one, and you will spend your week on the wrong end of the book. Rank by amount at risk, and let age break ties.
+**The first mistake is ranking by age.** Age tells you how bad a row is. It does not tell you what fixing it is worth. A three-month-old $400 invoice will always sort above a three-week-old $40,000 one, and you will spend your week on the wrong end of the list. Rank by amount at risk, and let age break ties.
 
 **The second mistake is ranking invoices instead of customers.** One customer with six overdue invoices is one conversation, not six. Ringing them six times is how a collections process turns into a complaint, and it also loses you the only leverage you have, which is the total.
 
-One more rule, and it is a judgement rather than a formula: flag any customer whose balance is a large enough share of the book that chasing them is a relationship decision. Those are not collections calls and should not be automated. Someone who knows the account rings them.
+One more rule needs judgement, not a formula. Flag any customer whose balance is a large enough share of what you are owed that chasing them is a relationship decision. Those are not collections calls and should not be automated. Someone who knows the account rings them.
 
 ## 4. The Opener Decides Whether You Get a Date
 
-The purpose of the call is not to be paid on the call. It is to leave with a date. Everything in the opener should serve that.
+The purpose of the call is to leave with a date, and everything in the opener should serve that.
 
 - **Name the invoice and the number.** Vagueness reads as a mass mailout and gets treated like one.
-- **Say how far past due, without editorialising.** “Thirty-eight days” is a fact. “Significantly overdue” is an opinion they can argue with.
+- **Say how far past due, as a plain fact.** “Thirty-eight days” is a fact. “Significantly overdue” is an opinion they can argue with.
 - **Ask one question that takes a date as an answer.** “When can we expect it?” beats “Can you pay this?”, which takes yes or no and gets you neither.
 - **Do not apologise for calling.** You are asking for money you are owed.
 - **Do not mention interest, fees or consequences** unless they are real, written into your terms, and you intend to apply them. An empty threat is worse than no threat and it is the fastest way to a dispute.
 
-The most useful thing an opener can do is make it easy to say the real reason. A large share of “we will get to it” is actually a dispute, a missing purchase order, or an invoice that went to the wrong person, and none of those get solved by another reminder.
+The most useful thing an opener can do is make it easy to say the real reason. A large share of “we will get to it” is a dispute, a missing purchase order, or an invoice that went to the wrong person, and none of those get solved by another reminder.
 
 **Builders: the same call, on a stage invoice.** Name the stage and the invoice number, say how many days past the date on it, and ask for a payment date. The call does not price anything, does not approve a variation, and does not go near anything under Security of Payment, which stays with you and your advisor. An unsigned variation is chased for the signature before the work starts, on its own call.
 
-## 5. A Promise Is an Object, Not a Feeling
+## 5. A Promise Is a Record With a Date
 
-This is the part that separates a build that works from one that feels busy. When somebody says they will pay, that has to become a record with fields, not a sentence in a note:
+This is what separates a build that works from one that only looks busy. When somebody says they will pay, record it in set fields, not as a sentence in a note:
 
-- **An amount**, which may legitimately be empty. “I will sort it this week” is a real outcome with no number in it, and forcing a number invents one.
-- **A date.** The whole point. No date means you did not get a promise, you got a deflection, and the follow-up should be scheduled accordingly.
+- **An amount**, which may be empty. “I will sort it this week” is a real answer with no number in it, and forcing a number invents one.
+- **A date.** The whole point. With no date you got a brush-off, not a promise, so book the follow-up as if nothing was promised.
 - **A method**, if offered. Bank transfer, card link, cheque in the post. It tells you when to stop expecting it.
-- **When it was captured**, so a promise made in March is not still driving behaviour in June.
+- **When it was recorded**, so a promise made in March is not still deciding what happens in June.
 
 Then the promised date becomes the follow-up date. This sounds obvious and it is the single most common gap: a system records the promise, leaves the chase schedule where it was, and rings the customer the next morning anyway. Nothing destroys the credibility of an automated chase faster.
 
-And a promise has to survive the next conversation. If a dispute was logged in April, a promise recorded in May must not overwrite it.
+And each record has to survive the next conversation. If a dispute was logged in April, a promise recorded in May must not overwrite it.
 
 ## 6. What It Is Worth
 
-Directions, not figures. The standard derives no numbers, so these name which levers move. How far they move will differ on your own ledger, starting with how many overdue rows carry a mobile number.
+These show the direction, not figures. The standard works out no numbers of its own. How far each one moves will differ on your own ledger, starting with how many overdue rows carry a mobile number.
 
 Every one
 
@@ -165,21 +165,21 @@ The largest gain is the drifting bucket, the 15 to 44 day rows where nothing is 
 
 These are the four places a working build usually stalls, so you can recognise them as normal rather than as a sign you got it wrong.
 
-- **Mobile coverage is the binding constraint.** Ledgers hold billing emails and office landlines. The fix is upstream, on the account-setup form and in conversation, and it takes months to pay off, which is why section 1 says check it first.
+- **Missing mobile numbers hold everything back.** Accounting systems hold billing emails and office landlines. The fix starts earlier, on the account-setup form and in conversation, and it takes months to pay off, which is why section 1 says check it first.
 - **Part payments break your buckets.** A customer pays half. Is that invoice still overdue, still the same age, still the same bucket? Decide before it happens, because it will happen in the first week.
-- **Disputes hide inside “we will get to it”.** Until you capture the reason, your aged report says the problem is time when it is actually a missing purchase order or a job somebody is unhappy with.
-- **Stop-on-payment is harder than it sounds.** Off a nightly export you will ring somebody the morning after they paid, and that single call costs more goodwill than the other forty earned.
+- **Disputes hide inside “we will get to it”.** Until you capture the reason, your aged report says the problem is time when it is a missing purchase order or a job somebody is unhappy with.
+- **Stopping once they pay is harder than it sounds.** Working from a nightly export you will ring somebody the morning after they paid, and that single call costs more goodwill than the other forty earned.
 
 ## 8. What Breaks After It Works
 
-This section is the honest one, and it is the reason a build standard is worth publishing at all. A self-built version of everything above genuinely works. Here is what happens to it over time.
+A self-built version of everything above works. Here is what happens to it over time.
 
 - **It leaves with whoever built it.** The rules live in one person’s head and one spreadsheet under their login, and this is a role that turns over.
 - **Nobody knows whether it ran.** A quiet week and a broken week look identical from the outside. Receivables is the worst place for that, because the number moves slowly enough that you will not notice for a month.
-- **It degrades without failing.** An export changes a column name, the broken-promise bucket matches nothing, and the system cheerfully reports zero broken promises. A false negative is worse than an error, because an error gets looked at.
-- **The gate is the first thing to rot.** Not because anyone removes it, but because a holiday table goes stale, or a new workflow is added beside it rather than under it, and nobody re-runs the pass test in section 10.
+- **It goes wrong without anything failing.** An export changes a column name, the broken-promise bucket matches nothing, and the system cheerfully reports zero broken promises. A wrong zero is worse than an error message, because somebody looks into an error.
+- **The gate is the first thing to go wrong.** Nobody removes it. A holiday list goes out of date, or a new process is added that runs around it, and nobody re-runs the pass test in section 10.
 
-None of that is an argument against building it. It is an argument for knowing which parts you want to still be true after you stop paying attention to them.
+Build it anyway, and know which parts you want to still be true after you stop paying attention to them.
 
 ## 9. What Stays With a Person
 
@@ -190,13 +190,13 @@ Each of these is a decision where being wrong costs more than the call was ever 
 - **Interest, fees, stop-credit and anything resembling a consequence.** Only if it is real, written into your terms, and you intend to apply it. That is a judgement about the customer, not a field.
 - **Write-offs, payment plans and hardship.** A plan is a new agreement. Recording one somebody else made is fine; making one is not.
 - **Every exception to the gate in section 10**, named, with whose authority, in the record.
-- **Anything a lawyer would call a demand.** Collections escalation is a regulated conversation and it is not this.
+- **Anything a lawyer would call a demand.** Formal debt collection is regulated, and this is not it.
 
-The machine does not decide any of the above. It finds them, stops, and hands over with what it already knows.
+The automated call decides none of the above. It finds them, stops, and hands them to a person with what it already knows.
 
 10 · The gate as a service · This is the part we sell
 
-## Everything above is a weekend of work. This part is not, and the reason is not difficulty.
+## Everything above is a weekend of work. This part has to stay right on every call, months later.
 
 You should build it. Each of these, though, is a rule that has to hold on every single contact, including the one made at 8:04pm by a script nobody has looked at since March.
 
@@ -204,16 +204,16 @@ You should build it. Each of these, though, is a rule that has to hold on every 
 - **The Do Not Call Register**, and knowing which of your debtors are exempt and why. An existing-business-relationship exemption is real and it has to be recorded as claimed, not assumed.
 - **Public holidays**, which are per state and are not a lookup you want to maintain by hand.
 - **Disclosure** when the caller is an AI, every time, at the start.
-- **A stop on payment.** The invoice clears at 9am and nothing should ring at 10. This needs to be driven off the ledger, not off a nightly export.
+- **A stop on payment.** The invoice clears at 9am and nothing should ring at 10. This has to work from your live accounts, not a nightly export.
 - **A record that survives**: what was said, when, on whose authority, and which human approved any exception.
 
-The gate has to sit underneath the ranking, not beside it. If a high score can promote a debtor past a check, the check is advice rather than a rule, and the first time that matters will be the time somebody is looking.
+The checks have to run on every debtor, however high they rank. If a high score can push a debtor past a check, the check is only advice, and the first time that matters will be the time somebody is looking.
 
-You can build this. What you cannot easily build is the part where it is still true in eight months, after the model changed, the script was edited by someone else, and the person who wrote the gate moved on.
+You can build this. What you cannot easily build is the part where it is still true in eight months, after the AI model changed, the script was edited by someone else, and the person who wrote the gate moved on.
 
-**Where our gate stands today.** AI disclosure at the start of every call, the Do Not Call Register, and calling hours of 9am to 8pm on weekdays and 9am to 5pm on Saturdays, nothing on Sundays, judged in the debtor’s own state (from the Xero contact’s region or postcode; where neither is known, your business’s timezone, with an audit row saying so). Every invoice is re-read from the ledger at dial time: one paid, voided or deleted since it was queued is not rung, and the audit row names the read. Public holidays are blocked for the debtor’s state, national and state.
+**Where our gate stands today.** AI disclosure at the start of every call, the Do Not Call Register, and calling hours of 9am to 8pm on weekdays and 9am to 5pm on Saturdays, nothing on Sundays, judged in the debtor’s own state (from the Xero contact’s region or postcode; where neither is known, your business’s timezone, with the call log saying so). Every invoice is checked in Xero again just before dialling. One paid, voided or deleted since it was queued is not rung, and the call log records that check. Public holidays are blocked for the debtor’s state, national and state.
 
-**The pass test.** Take your top-ranked debtor, mark the invoice paid in the ledger, and let the chase run anyway. They must not be rung, and the audit trail must tell you why not. Run it again with the invoice still open and the clock at 8:30pm, and it must hold until morning. Both take a minute to stage from your own data. Run the same two against whatever you built yourself, and against any provider, us included. If it rings, the gate is advice rather than a rule, which is this section in one sentence. Get Paid today holds both: it re-reads the invoice from Xero at dial time, and holds the 8:30pm run until morning.
+**The pass test.** Take your top-ranked debtor, mark the invoice paid in your accounts, and let the chase run anyway. They must not be rung, and the audit trail must tell you why not. Run it again with the invoice still open and the clock at 8:30pm, and it must hold until morning. Both take a minute to stage from your own data. Run the same two against whatever you built yourself, and against any provider, us included. If it rings, the gate is only advice, not a rule. Get Paid passes both today. It checks the invoice in Xero again just before dialling, and holds the 8:30pm run until morning.
 
 11 to 13 · Build it
 
@@ -227,7 +227,7 @@ It rings the customers who owe you, in the order you rank them. It reads your Xe
 
 What each piece of access is for.
 
-- **Read the book.** What is outstanding and still needs a decision, so your run ranks the real book rather than last night’s export.
+- **Read the book.** What is outstanding and still needs a decision, so your run ranks what is owed today, not last night’s export.
 - **Write drafts and notes.** To send back a promise a debtor gave your office, so the follow-up moves to that date and no call rings before it.
 - **Queue calls.** To hand us your ranked names. Off by default on a new key, and the only piece that makes a phone ring.
 - **Read chases and the compliance trail.** To see each run, how many were skipped, and why each call was or was not lawful.
@@ -238,9 +238,9 @@ What each piece of access is for.
 4. As the account owner, add **Queue calls** and send your ranked names.
 5. Run the pass test in section 10.
 
-Build against a stub first. The conformance kit has no live mapping for this standard yet, so the provider line below does not switch your run to a live line.
+Build against a test setup first. The conformance kit cannot yet connect this standard to a live line, so the provider setting below will not switch your run to real calls.
 
-Calls are placed in the order you send them, so your ranking stands. A promise, a dispute or an opt-out is checked again just before every dial, including a call already queued when the promise arrives. The queue matches invoices 30 or more days overdue; a name you send with nothing that old comes back as unmatched and is not called.
+Calls are placed in the order you send them, so your ranking stands. A promise, a dispute or an opt-out is checked again just before every dial, including a call already queued when the promise arrives. The queue matches invoices 30 or more days overdue. A name you send with nothing that old comes back as unmatched and is not called.
 
 ```
 provider:
@@ -257,7 +257,7 @@ scopes:
   audit:read           read back why each contact was or was not lawful
 ```
 
-Keys are minted in the product, by an account owner. If you are a bookkeeping or accounting practice, **one key reads your whole client book**, and you can narrow a key to named client orgs when you create it. That narrowing only ever subtracts: an org that later leaves the account stops being reachable by an old key. Connecting an account does not grant `campaigns:initiate`. To queue calls, mint the key at connect.aipathway.com.au/app/keys with that scope switched on.
+Keys are created in the product by an account owner. If you are a bookkeeping or accounting practice, **one key reads your whole client book**, and you can narrow a key to named client orgs when you create it. Narrowing only ever removes access. An org that later leaves the account can no longer be reached by an old key. Connecting an account does not grant `campaigns:initiate`. To queue calls, create the key at connect.aipathway.com.au/app/keys with that scope switched on.
 
 ```
 # What is still open, across every client org the key reaches.
@@ -283,45 +283,45 @@ curl -X POST https://connect.aipathway.com.au/api/v1/campaigns \
         "customer_external_ids":["...","..."]}'
 ```
 
-Dialling stays in the product, and every queued call goes through the gate at dial time: AI disclosure, DNCR, calling hours in the debtor’s own state, and a fresh read of the ledger and of any promise. A single named customer also needs a `basis` (callback, existing_job, existing_invoice or they_asked). Everything else is in [the API reference](https://office-voice.com/help/api).
+Dialling stays in the product, and every queued call goes through the gate just before it dials: AI disclosure, the Do Not Call Register, calling hours in the debtor’s own state, and a fresh check of Xero and of any promise. A single named customer also needs a `basis` (callback, existing_job, existing_invoice or they_asked). Everything else is in [the API reference](https://office-voice.com/help/api).
 
-Why not Xero’s own reminders, or its free connector for Claude? Xero’s invoice reminders send an email on a schedule. That clears the just-late bucket and nothing else: it rings nobody and comes back with no date. Xero’s free connector for Claude only reads, so it can build the ranked list in section 3 but cannot record a promise or queue a single call.
+Why not Xero’s own reminders, or its free connector for Claude? Xero’s invoice reminders send an email on a schedule. That clears the just-late bucket and nothing else. It rings nobody and comes back with no date. Xero’s free connector for Claude only reads, so it can build the ranked list in section 3 but cannot record a promise or queue a single call.
 
 Where it runs. The ranking and the record can live in a sheet or Microsoft 365 lists (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/debtor-chasing-on-microsoft-365) lays these out), a small dashboard, or a scheduled bot. All three are held to the same gate; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
 
 ## 12. The Run, Step by Step
 
-Everything above, in the order a build actually does it. Steps 1 to 7 are yours whatever you decide about section 11. Step 8 is the one that decides whether any of it may happen.
+Everything above, in the order a build does it. Steps 1 to 7 are yours whatever you decide about section 11. Step 8 is the one that decides whether any of it may happen.
 
-1. Pull the five fields in section 1. Run the mobile coverage check before anything else, and stop here if it fails.
+1. Pull the five fields in section 1. Check how many rows have a mobile number before anything else, and stop here if too few do.
 2. Drop every row that is not past its due date. A 30-day account issued four weeks ago is not late.
 3. Sort each invoice into one of the four buckets in section 2.
-4. Collapse invoices to one row per customer, summing what they owe. One customer is one conversation.
+4. Combine invoices into one row per customer, adding up what they owe. One customer is one conversation.
 5. Rank by amount at risk, with age breaking ties. Never by age alone.
 6. Lift any customer whose balance is a relationship-sized share of the book out of the automated run entirely.
 7. Draft the opener for each row: the invoice number, the days past due as a fact, and one question that takes a date as an answer.
-8. Run the gate in section 10 on every row at dial time, underneath the ranking and never beside it.
+8. Run the gate in section 10 on every row just before dialling, whatever its rank.
 9. Make the call, or write the ranked list out and make them yourself.
-10. Record the outcome as the promise object in section 5, with a date, or as the reason there is no date.
-11. Move the next follow-up to the promised date. Not to tomorrow.
-12. Stop on payment, driven off the ledger rather than a nightly export.
+10. Record the outcome as the promise record in section 5, with a date, or as the reason there is no date.
+11. Move the next follow-up to the promised date, not to tomorrow.
+12. Stop as soon as they pay, working from your live accounts, not a nightly export.
 
 ## 13. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 
-- **1. Mobile coverage was checked first.** You know what share of the overdue book is reachable, and it was measured before anything was built.
-- **2. Overdue is measured off the due date.** Not the issue date. Terms are respected before a single row is called late.
-- **3. Four buckets, not one list.** Just late, drifting, hard, and broken promise. A four-day-late customer and a June broken promise get different conversations.
-- **4. Broken promise outranks everything.** It is the only bucket where a prior commitment exists to refer back to.
-- **5. Ranking is by amount at risk.** Age breaks ties and nothing else. A build that sorts by age is chasing the wrong end of the book by design.
-- **6. One customer is one conversation.** Invoices are summed per customer before ranking. Nobody is rung six times for six invoices.
-- **7. Relationship-sized balances are out of the run.** Flagged, excluded, and routed to a named person rather than scored.
-- **8. A promise is an object with a date.** Amount may be empty, date may not. Captured with a timestamp, and it does not overwrite a logged dispute.
-- **9. The promised date is the follow-up date.** The schedule moves with the promise. Nothing rings the next morning anyway.
-- **10. The gate sits underneath the ranking.** Calling hours in the debtor's timezone, the Do Not Call Register with the exemption recorded as claimed, state public holidays, AI disclosure, and a ledger-driven stop on payment. No score promotes a row past any of it.
-- **11. Exceptions are named and attributable.** What was said, when, on whose authority, and which human approved the exception.
-- **12. The pass test passes.** Section 10. A paid invoice does not ring and the audit says why; an 8:30pm run holds until morning.
+- **1. Mobile coverage was checked first.** You know what share of your overdue customers can be reached on a mobile, and it was measured before anything was built.
+- **2. Overdue counts from the due date.** It never counts from the issue date. Your payment terms are respected before any invoice is called late.
+- **3. Late payers are sorted into four groups.** Just late, drifting, hard, and broken promise. A customer four days late and one who broke a promise in June get different conversations.
+- **4. A broken promise comes before everything else.** It is the only group where the customer has already made a commitment you can refer back to.
+- **5. Customers are ranked by how much money is at risk.** Age only breaks a tie. A bot that sorts by age is built to chase the wrong end of your overdue list.
+- **6. One customer is one conversation.** Each customer's invoices are added up before ranking. Nobody is rung six times for six invoices.
+- **7. Balances big enough to put the relationship at stake are left out of the chase.** They are flagged, left out, and sent to the person named in your credit policy instead of being scored.
+- **8. A promise to pay is recorded with a date.** The amount can be left blank, but the date can't. It is saved with the time it was taken, and never overwrites a dispute already on file.
+- **9. The promised date is the follow-up date.** The next call moves with the promise. No call goes out the next morning regardless.
+- **10. The calling rules come before the ranking.** The rules are calling hours in the customer's timezone, the Do Not Call Register with the exemption recorded as claimed, state public holidays, saying the caller is an AI, and a stop as soon as your accounts show the payment. No score moves a customer past any of them.
+- **11. Every exception is named and traced to a person.** It records what was said, when, on whose authority, and which person approved the exception.
+- **12. The pass test passes.** Section 10. A paid invoice gets no call, and the record says why. A run at 8:30pm waits until morning.
 
 Building this on Microsoft 365: [the lists, the flows and the measures](https://aipathway.com.au/explore-ai/debtor-chasing-on-microsoft-365).
 
@@ -329,13 +329,13 @@ Building this on Microsoft 365: [the lists, the flows and the measures](https://
 
 Checked as at 18 September 2026
 
-**Do Not Call Register Act 2006 (Cth), administered by ACMA.** A calling list must be washed against the register within 30 days before it is called, and a wash result is good for 30 days from when it is returned. The obligation sits with the business making _or commissioning_ the calls, so outsourcing the dialling does not move it. Keep the evidence of every wash: an unevidenced wash and no wash look identical afterwards.
+**Do Not Call Register Act 2006 (Cth), administered by ACMA.** A calling list must be checked (washed) against the register within 30 days before it is called, and a wash result is good for 30 days from when it is returned. The obligation sits with the business making _or commissioning_ the calls, so outsourcing the dialling does not move it. Keep the evidence of every wash, because a wash with no evidence and no wash at all look the same afterwards.
 
 **Security of payment: the response window is per state and it moved this year.** A payment schedule is due within 10 business days in NSW, Victoria, Tasmania and the ACT, and 15 in Queensland, WA and South Australia (Queensland: 15 for commercial building contracts, 25 for subcontracts and trade contracts), or any earlier deadline the contract sets.
 
 **Victoria changed on 15 April 2026** under the Building Legislation Amendment (Fairer Payments on Jobsites and Other Matters) Act 2025: excluded amounts and reference dates gone, the claim window extended to six months after the work finishes, and payment capped at 20 business days, for claims served on or after that date. Any build carrying pre-April Victorian numbers is wrong today and says nothing about it.
 
-**“Business day” is itself jurisdictional.** Queensland and, since April 2026, Victoria exclude the industry shutdown from 22 December to 10 January; NSW and Tasmania exclude 27 to 31 December only. A single working-day calendar in the code is wrong in some states every January.
+**“Business day” is itself jurisdictional.** Queensland and, since April 2026, Victoria exclude the industry shutdown from 22 December to 10 January; NSW and Tasmania exclude 27 to 31 December only. A build with one business-day calendar for every state is wrong in some states every January.
 
 **Check these against the primary instrument before you rely on them**, and store the date you checked beside the value rather than hard-coding it. This standard tells you the shape and where to look. It is not legal advice and it does not tell you that anything complies.
 

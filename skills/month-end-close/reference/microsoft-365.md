@@ -22,9 +22,9 @@ The close is the same list every month: bank reconciled, nothing in suspense, de
 ## In short
 
 - **What this is**: A build plan for the Month-End Close standard on Microsoft 365. Six lists and two flows beside the ledger you already run: Xero, MYOB Business or QuickBooks Online, reached through the ledger's own sign-in.
-- **The core rule**: Flow 1 only reads the ledger and fills the close pack. Flow 2 writes into the ledger, and it does nothing until a person's row is on the SignOff list.
+- **The core rule**: Flow 1 only reads your accounts and fills in the close pack. Flow 2 is the only one that changes your accounts, and it does nothing until you have signed off on the SignOff list.
 - **What it does not do**: It never makes up an accrual amount, never decides a difference is too small to matter, never recodes a transaction and never sets a lock date earlier than the one the ledger holds.
-- **The hard part**: A post that times out after it landed: Flow 2 reads the journals back and looks for the intent id before it ever tries again.
+- **The hard part**: Sometimes a journal goes into the ledger but the reply times out, so it looks as if it failed. Before it ever tries again, Flow 2 reads the journals back and looks for the reference it wrote on that journal.
 
 ## 1. Before you start
 
@@ -32,7 +32,7 @@ Read [the month-end close build standard](https://aipathway.com.au/explore-ai/mo
 
 Fill Entities with each company you close, its ledger and who signs it off. Put your accruals and prepayments on Schedule, with the amount where it is the same each month and blank where a person enters it.
 
-One thing to test before you build Flow 2: **can your ledger’s API write the lock date?** Leave LockWritable off until a test on your own company shows a write reads back. Off means Flow 2 asks the reviewer to set it.
+Test one thing before you build Flow 2: **can your ledger’s API set the lock date?** Leave LockWritable off until a test on your own company shows the flow can set it and the new date sticks. While it is off, Flow 2 asks the reviewer to set it.
 
 ## 2. The lists, with their columns
 
@@ -154,13 +154,13 @@ Flow 1 has no write action on the ledger connection at all. Flow 2 is the only o
 
 ## 5. What the flows can reach in your Microsoft 365 and your ledger
 
-Flow 1 is an auditor with read access and a clipboard: it reads the ledger’s reports and writes what it found to the close pack. Flow 2 is the only one that writes into the ledger, and only journals a person ticked on Proposals after a SignOff row exists.
+The flows check your month-end list against your accounts, then post the journals you approved and lock the month. Flow 1 reads your ledger’s reports and records each result, with its evidence, in the close pack. Flow 2 posts only the journals ticked on Proposals, and only after the month is signed off. You review the pack and sign off, keep the accruals schedule, and decide whether any difference matters.
 
-- **Your ledger, through its own connector.** Read reports and transactions for Flow 1; create journals for Flow 2. The settings that hold the lock date are read only on the ledgers checked on 12 November 2026, so the lock step is a task for the reviewer there.
-- **SharePoint, the MonthEndClose site.** Contribute on CloseItems and Proposals; read on the rest.
+- **Your ledger, through its own connector.** Flow 1 reads reports and transactions. Flow 2 creates journals. On the ledgers checked on 12 November 2026, the lock date cannot be changed through the connection, so the reviewer sets it by hand there.
+- **SharePoint, the MonthEndClose site.** The flows can add and edit items on CloseItems and Proposals, and only read the other lists.
 - **Teams, a chat with the reviewer.** One message when a pack is ready, and one when the lock date needs setting by hand.
 
-How to cut it off. Turn Flow 2 off and nothing is written into the ledger. Revoke the ledger connection in the ledger’s own connected apps page and both flows stop.
+How to cut it off. Turn Flow 2 off and nothing goes into your ledger. Revoke the ledger connection in the ledger’s own connected apps page and both flows stop.
 
 ## 6. The order to build it in
 
@@ -168,7 +168,7 @@ How to cut it off. Turn Flow 2 off and nothing is written into the ledger. Revok
 2. Build Flow 1 for one entity and compare its results with last month's close done by hand.
 3. Add the schedule and check a line with no amount is not proposed.
 4. Build Flow 2's first step and run it with no SignOff row: it must stop before reading anything else.
-5. Post one test accrual, kill the run after the post, and run it again: still one journal.
+5. Post one test accrual, stop the run straight after the post, and run it again: still one journal.
 6. Test the lock date write on your own company, and only then turn LockWritable on.
 
 ## 7. Three traps specific to this build
@@ -179,7 +179,7 @@ A Power Automate expression that falls back to last month's figure, or to zero, 
 
 ### A tolerance in the condition
 
-Comparing with less than five dollars instead of equal makes the flow decide materiality. Compare to the cent and let the reviewer decide.
+Comparing with less than five dollars instead of equal lets the flow decide which differences matter. Compare to the cent and let the reviewer decide.
 
 ### Retry policy on the post
 
@@ -193,7 +193,7 @@ Power Automate retries a failed action by default. A post that landed and timed 
 - Setting the lock date by hand where the ledger's API cannot.
 - What each uncoded line was.
 
-**The pass test.** On your own ledger. Run Flow 1 for one entity with one accrual on the schedule: every item has a result, and nothing is written into the ledger. Add the SignOff row and tick the accrual. Flow 2 posts it once and it reads back; run Flow 2 again and nothing new is posted. The lock date reads back at the period end, written by the flow or by the reviewer on the message it sent.
+**The pass test.** On your own ledger. Run Flow 1 for one entity with one accrual on the schedule: every item has a result, and nothing changes in your accounts. Add the SignOff row and tick the accrual. Flow 2 posts it once and finds it when it reads the ledger back. Run Flow 2 again and nothing new is posted. The lock date now shows the period end, set by the flow or by the reviewer after the message it sent.
 
 ## Related reading
 

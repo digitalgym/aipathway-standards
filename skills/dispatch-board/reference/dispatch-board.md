@@ -33,19 +33,19 @@ Used by
 
 What this is
 
-An open build standard for deciding who goes where and when, for a trades or field-service business with a job system and a handful of techs. The board writes the slot; a person owns the exceptions.
+An open build standard for deciding who goes where and when, for a trades or field-service business with a job system and a handful of techs. The board books the slot, and a person decides anything unusual.
 
 The core rule
 
-A slot exists only for a resolved address and a tech whose licence record covers the job. The model can talk about the job; it does not get to decide the address or the licence.
+A job gets a slot only once its address is confirmed and the tech's licence record covers the work. The AI can talk about the job, but it never decides the address or the licence.
 
 What it does not do
 
-It does not override a licence rule, drop a displaced job, or message anyone without consent. An emergency moves a slot only when a named dispatcher says so.
+It does not override a licence rule, drop a job an emergency bumped, or message anyone without consent. An emergency moves a slot only when a named dispatcher says so.
 
 The hard part
 
-Not the puzzle of fitting jobs into a day. The job whose time or address changes after the customer was told, and the slot written on an address nobody verified.
+Fitting jobs into a day is the easy part. The hard part is the job whose time or address changes after the customer was told, and the slot booked on an address nobody checked.
 
 The van turned up at the right street in the wrong suburb. The gas job went to the tech whose licence lapsed in March. The customer was texted twice and the tech not at all. None of those is a scheduling problem in the sense of fitting jobs into a day. Each is a check that was skipped because the board looked full and full looked done.
 
@@ -59,19 +59,19 @@ One job, new to slotted
 6. If yes, the customer is told once on a channel they consented to, and the tech is told with the job, the address, the window and what the customer said.
 7. Has the job stayed unchanged since the slot? If yes, it is slotted with who, when and by whom on the record. If no, the slot moves and each affected party is told exactly once, back through the same gate.
 
-The address resolves before anything else, because a slot on the wrong house is the one failure nobody can fix at nine in the morning. The filled diamond is the write into the job system’s schedule, one per job with an id back. The loop is the change: back through the same gate, each party told once.
+The address is confirmed before anything else, because a slot at the wrong house is the one failure nobody can fix at nine in the morning. The filled diamond is the slot going into the job system’s schedule, one per job, with the job system’s own number back. The loop is a change. It goes back through the same checks, and each person is told once.
 
 ## 1. What this standard covers
 
 Any business that sends people to places: plumbers, electricians, air conditioning, fire services, cleaning, pest, anything with a job system and more than one van. If a job has an address, a time window and a person who has to be licensed to do it, this applies.
 
-It covers the slot, not the call. The [Booked After Hours standard](https://aipathway.com.au/explore-ai/booked-after-hours-build-standard) gets the job into the system with a verified address and a job type. This standard starts from that job and ends with a tech in the right place, told properly. The [scheduling paper](https://aipathway.com.au/explore-ai/scheduling-dispatch-trades) is the argument beside it.
+It covers the slot. Taking the call is the [Booked After Hours standard](https://aipathway.com.au/explore-ai/booked-after-hours-build-standard), which gets the job into the system with a checked address and a job type. This standard starts from that job and ends with a tech in the right place, told properly. The [scheduling paper](https://aipathway.com.au/explore-ai/scheduling-dispatch-trades) explains the thinking behind it.
 
-What cannot meet it. Tradify has no public API and no Zapier app, so a board cannot write a slot into it or read one back live. We connect it another way: Tradify’s job export, loaded each morning, gives the board the day’s jobs, and a browser step a person approves copies each slot across. The checks still hold; the id check is the person’s. ServiceM8, Simpro and Jobber can all take a booked time against a job. On a spreadsheet board the standard still holds, but the write and the id are yours to keep honest.
+What cannot meet it. Tradify has no public API, the connection other software uses, and no Zapier app, so a board cannot put a slot into it or read one back live. We connect it another way. Each morning Tradify’s job export gives the board the day’s jobs, and a browser step a person approves copies each slot across. The checks still hold, and that person confirms each slot landed. ServiceM8, Simpro and Jobber can all take a booked time against a job. On a spreadsheet board the standard still holds, but keeping each slot and its number accurate is up to you.
 
 ## 2. The records it keeps, in the shape your developer needs
 
-Six objects. The consent and the escalation are the two most boards leave out, because the board looks fine without them right up until a customer is texted twice and a job is dropped.
+Six records. Consent and escalation are the two most boards leave out, because the board looks fine without them right up until a customer is texted twice and a job is dropped.
 
 ```
 Job                               # theirs, read through the job system
@@ -107,41 +107,41 @@ A Slot with a null resolved address is the defect this standard exists to make u
 
 ## 3. The checks, in order
 
-The order is the claim. The address resolves before the licence is read, and the licence is read before the slot is placed, because a build that fits the day first and checks afterwards produces a full board with the wrong people on it.
+Each check has to pass before the next one runs. The address is confirmed before the licence is read, and the licence is read before the slot is placed, because a build that fills the day first and checks afterwards produces a full board with the wrong people on it.
 
-1. No slot until the address resolves. A job is given a slot only after its address resolves to a real place. An address that will not resolve leaves the job unslotted and named to a person, never slotted to where somebody hopes it is.
-2. A licence requirement is a rule read from the record, never assumed. A job carrying a licence requirement (gas, electrical, height) is assigned only to a tech whose licence record covers that code and is current on the day. The rule is read before the assignment. No person overrides it, and no build infers it from a name or a job history.
-3. The slot sits inside the customer's window and after the previous job plus travel. A slot starts no earlier than the customer's window opens and ends no later than it closes. Where the tech has a previous job, the slot starts after that job's end plus the travel from its resolved address. Travel is read, never guessed.
-4. One slot per job, written once, updated on a second event. The write is keyed to the job. A second scheduling event for the same job updates the existing slot or does nothing. A null external id is a failed write, not a slot.
-5. An emergency takes a slot only when a named dispatcher accepts the displacement. An emergency may displace a slotted job only after a named person accepts that displacement. The displaced job is re-slotted or escalated with a reason and an owner. It is never silently dropped from the board.
-6. The customer is told once per slot, on a channel they consented to. One confirmation goes to the customer for each slot, on a channel with consent recorded, after the consent is checked. A second identical message, or a message to a customer with no consent on that channel, is a failure. A customer without consent is named to a person to phone.
-7. The tech's notification carries the job, the address, the window and what the customer said. The tech is told with the record: the job id, the resolved address, the customer's window, and the customer's own words about the fault. A bare notification saying there is a new job is not a notification.
-8. A change to the job moves the slot and tells each affected party exactly once. When the job's time, address or tech changes after the slot is written, the slot is updated in place and one fresh message goes to each party the change touches. A change that leaves the old slot in place, or that messages anybody twice, is a failure.
-9. A job that cannot be slotted is escalated with a reason and an owner. No licensed tech, an address that will not resolve, a window no tech can meet: each leaves the job in a queue with a reason and a named owner. Nothing is left off the board in silence.
-10. Who was assigned, when, by whom or by which rule, and what the customer was told are retrievable by job. When the customer says nobody told them, the record shows the slot, the tech, the person or rule that set it, and the message the customer was sent with its time.
-11. It survives the builder. Someone other than the builder can explain what it does, and it runs on an account the business owns.
-12. The pass test passes. On the real job system: one job scheduled twice, one licence-gated job, one emergency displacing a slot with a dispatcher's acceptance, one change to a slotted job.
+1. No time slot until the address is confirmed. A job gets a time slot only once its address is confirmed as a real place. If the address can't be confirmed, the job stays unbooked and goes to a person by name. It is never booked to where somebody hopes it is.
+2. A licence requirement is checked against the tech's licence record, never assumed. A job that needs a licence (gas, electrical, height) goes only to a tech whose licence record covers that licence and is current on the day. The rule is checked before the job is assigned. No person overrides it, and the bot never guesses it from a name or from past jobs.
+3. The slot sits inside the customer's window and after the tech's previous job plus travel. A slot starts no earlier than the customer's window opens and ends no later than it closes. If the tech has a job before it, the slot starts after that job ends plus the travel time from its confirmed address. Travel time is looked up, never guessed.
+4. Each job gets one slot, saved once, and a repeat update changes that slot. Each slot is tied to its job, so a second scheduling update for the same job changes the existing slot or does nothing. If the job system gives back no record number, the slot was not saved and does not count as booked.
+5. An emergency takes a slot only when a named dispatcher accepts bumping the job in it. An emergency can bump a booked job only after a named person accepts it. The bumped job gets a new slot, or goes to a named owner with the reason. It never quietly drops off the board.
+6. The customer is told once per slot, on a channel they agreed to. One confirmation goes to the customer for each slot, only on a channel they have agreed to, and only after that is checked. A second identical message, or a message on a channel they haven't agreed to, is a failure. A customer who hasn't agreed goes to a person to phone.
+7. The tech's message carries the job, the address, the window and what the customer said. The tech gets the job number, the confirmed address, the customer's window and the customer's own words about the fault. A message that only says there is a new job doesn't count.
+8. A change to the job moves its slot and tells each person affected exactly once. When the job's time, address or tech changes after it is booked, the same slot is updated and one fresh message goes to each person the change affects. Leaving the old slot in place, or messaging anyone twice, is a failure.
+9. A job that can't be booked goes to a named owner with the reason. No licensed tech, an address that can't be confirmed, or a window no tech can meet each put the job on a list with the reason and a named owner. No job drops off the board without anyone knowing.
+10. For any job you can see who was assigned, when, by whom or by which rule, and what the customer was told. When the customer says nobody told them, the job's record shows the slot, the tech, the person or rule that set it, and the message the customer was sent with its time.
+11. It keeps working if the person who built it leaves. Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+12. The pass test passes. On your real job system: one job scheduled twice, one job that needs a licence, one emergency bumping a booked job with a dispatcher's acceptance, and one change to a booked job.
 
 ## 4. The four queues
 
 | Queue | What it holds | The rule |
 | --- | --- | --- |
-| Slotted | A job with a tech, a start and an end inside the window, and an id from the job system | The customer and the tech have each been told once. The slot is on the record with who set it |
-| Waiting | A job whose window has not opened, or whose licensed tech is not free yet | Visible on the board with the reason. Not silently absent |
-| Unassignable | No licensed tech, outside the area, a window that cannot be met, an address that will not resolve | Escalated with a reason and an owner. A person decides, never the board |
-| Displaced | A slot an emergency took, with the dispatcher's acceptance on it | Re-slotted this run, or escalated. Never dropped |
+| Slotted | A job with a tech, a start and an end inside the window, and the job system's own number for the slot | The customer and the tech have each been told once. The slot shows who set it |
+| Waiting | A job whose window has not opened, or whose licensed tech is not free yet | Shown on the board with the reason, never quietly missing |
+| Unassignable | No licensed tech, outside the area, a window that cannot be met, an address that cannot be confirmed | Passed to a named person with the reason. A person decides, never the board |
+| Displaced | A slot an emergency took, with the dispatcher's OK on it | Given a new slot in the same run, or passed to a person. Never dropped |
 
-Unassignable is a success. A job the board cannot place, shown to a person with the reason, is worth more than a job placed on a tech who cannot legally do it.
+A job on the Unassignable list means the board is working. A job the board cannot place, shown to a person with the reason, is worth more than a job placed on a tech who cannot legally do it.
 
 ## 5. When the job changes
 
-A job changes after it is slotted more often than it does not. The customer moves the window, the address was wrong, the tech is off sick. The slot carries the version of the job it was made for, and a change to time, address or tech moves the slot and tells each affected party exactly once. Not zero times, which is the old slot sitting there while the customer waits. Not twice, which is how people stop reading messages from you.
+A job changes after it is slotted more often than it does not. The customer moves the window, the address was wrong, the tech is off sick. Each slot remembers which version of the job it was made for. A change to time, address or tech moves the slot and tells each person affected exactly once. Never zero times, which leaves the old slot sitting there while the customer waits, and never twice, which is how people stop reading your messages.
 
-The longer argument is the [change-propagation paper](https://aipathway.com.au/explore-ai/change-propagation-trades). Check 8 is that paper as a test.
+The [change-propagation paper](https://aipathway.com.au/explore-ai/change-propagation-trades) explains this at length, and check 8 turns it into a test.
 
 ## 6. Emergencies, and who says so
 
-A burst pipe at eleven takes a slot from a routine job at two. That is right, and it is a person’s decision. The board may propose the displacement with the job it would move and why. A named dispatcher accepts it, and the acceptance is on the slot. The displaced job is re-slotted in the same run or escalated with the dispatcher as owner. It is never quietly dropped, which is the failure every board makes on the busiest day of the year.
+A burst pipe at eleven takes a slot from a routine job at two. That is right, and it is a person’s decision. The board can suggest the swap, showing the job it would move and why. A named dispatcher accepts it, and their OK is recorded on the slot. The bumped job gets a new slot in the same run, or goes to the dispatcher to sort out. It is never quietly dropped, which is the failure every board makes on the busiest day of the year.
 
 The licence rule has no such override. A gas job goes to a gas-licensed tech or it does not go, and no person on the board can change that, because it is not theirs to change either.
 
@@ -158,7 +158,7 @@ It plans the day: who goes where, and when. It reads your jobs, addresses and te
 
 What each piece of access is for.
 
-- **Jobs, read.** The address, the window, the job type, the licence it needs, and the job’s current version, read again before every write so a change is never missed.
+- **Jobs, read.** The address, the window, the job type, the licence it needs, and the job’s current version, read again before every slot is booked so a change is never missed.
 - **Staff, read.** Who is working, from where, and the licence record the rule reads, if your job system keeps it.
 - **Schedule, write.** The one slot per job: a scheduled activity in ServiceM8, a schedule in Simpro. Updated, never duplicated.
 - **Your SMS or email account, send.** One confirmation per slot to the customer, on a channel they agreed to, and one message to the tech.
@@ -169,15 +169,15 @@ What each piece of access is for.
 4. Connect the SMS or email account the business owns, with each customer’s consented channel on their record.
 5. Run the pass test below on the real job system.
 
-Why not the job system’s own dispatch board? ServiceM8, Simpro and Jobber each ship a board, and for fitting jobs into a day they are fine. Before you rely on one alone, stage the four things the pass test checks: does it refuse a slot on an address nobody verified, does a lapsed licence stop the assignment, does an emergency wait for a named person, and does a changed window send exactly one fresh message.
+Why not the job system’s own dispatch board? ServiceM8, Simpro and Jobber each ship a board, and for fitting jobs into a day they are fine. Before you rely on one alone, try the four things the pass test checks: does it refuse a slot on an address nobody verified, does a lapsed licence stop the assignment, does an emergency wait for a named person, and does a changed window send exactly one fresh message.
 
-When the day slips. On ServiceM8 or Simpro with AI Pathway, the customer hears about a late arrival without the board sending anything: when a job moves later on the board, AI Pathway rings the customer with the new time. The owner switches it on under Automations, and can also ask for a running-late call by voice on their own line.
+When the day slips. On ServiceM8 or Simpro with AI Pathway, the customer hears about a late arrival without the board sending anything. When a job moves later on the board, AI Pathway rings the customer with the new time. The owner switches it on under Automations, and can also ask for a running-late call by voice on their own line.
 
-Where it runs. A scheduled flow with the board and the record in Microsoft 365 lists (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/dispatch-board-on-microsoft-365) lays these out), a small dashboard a coding agent builds from this page, or a routine woken by the job system’s own job events. All three are held to the same checks; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
+Where it runs. A scheduled flow with the board and the record in Microsoft 365 lists (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/dispatch-board-on-microsoft-365) lays these out), a small dashboard a coding agent builds from this page, or a routine that runs whenever the job system reports a change to a job. All three are held to the same checks; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
 
 ## 9. What your developer builds, and the step that needs care
 
-Two steps not to hand-roll: the write into the job system's schedule with an id back, and the customer message with consent. Everything else a coding agent builds against the stub in an afternoon.
+Two steps are not worth building yourself: putting the slot into the job system's schedule and getting its number back, and messaging the customer with their consent. A coding agent can build everything else against a test version of your job system in an afternoon.
 
 ```
 provider:
@@ -211,24 +211,24 @@ another route in
 
 There is no hosted dispatch product. A vendor selling a smart board is usually selling the puzzle, which is the easy half, and is silent about what happens when the job changes after the customer was told. Ask them that first.
 
-**The pass test.** On the real job system, not a sample. Mark one job for scheduling twice, an hour apart: one slot must exist with the system’s own id, updated not duplicated. Put a gas requirement on a job and make the only free tech the one whose licence expired: the job must be unassignable with that reason and an owner, never slotted. Raise an emergency at a time a routine job holds: the board must propose the displacement, wait for a named dispatcher, and re-slot or escalate the displaced job in the same run. Then change the window on a slotted job: the slot must move, and the customer and the tech must each receive exactly one fresh message. If any of those four is not what happened, the standard is not implemented, however full the board looks.
+**The pass test.** On the real job system, not a sample. Mark one job for scheduling twice, an hour apart: one slot must exist with the system’s own number, updated and never duplicated. Put a gas requirement on a job and make the only free tech the one whose licence expired: the job must land on the Unassignable list with that reason and an owner, never slotted. Raise an emergency at a time a routine job holds: the board must suggest the swap, wait for a named dispatcher, and give the bumped job a new slot or pass it to a person in the same run. Then change the window on a slotted job: the slot must move, and the customer and the tech must each receive exactly one fresh message. If any of those four is not what happened, the build does not meet the standard, however full the board looks.
 
 ## 10. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 
-- **1. No slot until the address resolves.** A job is given a slot only after its address resolves to a real place. An address that will not resolve leaves the job unslotted and named to a person, never slotted to where somebody hopes it is.
-- **2. A licence requirement is a rule read from the record, never assumed.** A job carrying a licence requirement (gas, electrical, height) is assigned only to a tech whose licence record covers that code and is current on the day. The rule is read before the assignment. No person overrides it, and no build infers it from a name or a job history.
-- **3. The slot sits inside the customer's window and after the previous job plus travel.** A slot starts no earlier than the customer's window opens and ends no later than it closes. Where the tech has a previous job, the slot starts after that job's end plus the travel from its resolved address. Travel is read, never guessed.
-- **4. One slot per job, written once, updated on a second event.** The write is keyed to the job. A second scheduling event for the same job updates the existing slot or does nothing. A null external id is a failed write, not a slot.
-- **5. An emergency takes a slot only when a named dispatcher accepts the displacement.** An emergency may displace a slotted job only after a named person accepts that displacement. The displaced job is re-slotted or escalated with a reason and an owner. It is never silently dropped from the board.
-- **6. The customer is told once per slot, on a channel they consented to.** One confirmation goes to the customer for each slot, on a channel with consent recorded, after the consent is checked. A second identical message, or a message to a customer with no consent on that channel, is a failure. A customer without consent is named to a person to phone.
-- **7. The tech's notification carries the job, the address, the window and what the customer said.** The tech is told with the record: the job id, the resolved address, the customer's window, and the customer's own words about the fault. A bare notification saying there is a new job is not a notification.
-- **8. A change to the job moves the slot and tells each affected party exactly once.** When the job's time, address or tech changes after the slot is written, the slot is updated in place and one fresh message goes to each party the change touches. A change that leaves the old slot in place, or that messages anybody twice, is a failure.
-- **9. A job that cannot be slotted is escalated with a reason and an owner.** No licensed tech, an address that will not resolve, a window no tech can meet: each leaves the job in a queue with a reason and a named owner. Nothing is left off the board in silence.
-- **10. Who was assigned, when, by whom or by which rule, and what the customer was told are retrievable by job.** When the customer says nobody told them, the record shows the slot, the tech, the person or rule that set it, and the message the customer was sent with its time.
-- **11. It survives the builder.** Someone other than the builder can explain what it does, and it runs on an account the business owns.
-- **12. The pass test passes.** On the real job system: one job scheduled twice, one licence-gated job, one emergency displacing a slot with a dispatcher's acceptance, one change to a slotted job.
+- **1. No time slot until the address is confirmed.** A job gets a time slot only once its address is confirmed as a real place. If the address can't be confirmed, the job stays unbooked and goes to a person by name. It is never booked to where somebody hopes it is.
+- **2. A licence requirement is checked against the tech's licence record, never assumed.** A job that needs a licence (gas, electrical, height) goes only to a tech whose licence record covers that licence and is current on the day. The rule is checked before the job is assigned. No person overrides it, and the bot never guesses it from a name or from past jobs.
+- **3. The slot sits inside the customer's window and after the tech's previous job plus travel.** A slot starts no earlier than the customer's window opens and ends no later than it closes. If the tech has a job before it, the slot starts after that job ends plus the travel time from its confirmed address. Travel time is looked up, never guessed.
+- **4. Each job gets one slot, saved once, and a repeat update changes that slot.** Each slot is tied to its job, so a second scheduling update for the same job changes the existing slot or does nothing. If the job system gives back no record number, the slot was not saved and does not count as booked.
+- **5. An emergency takes a slot only when a named dispatcher accepts bumping the job in it.** An emergency can bump a booked job only after a named person accepts it. The bumped job gets a new slot, or goes to a named owner with the reason. It never quietly drops off the board.
+- **6. The customer is told once per slot, on a channel they agreed to.** One confirmation goes to the customer for each slot, only on a channel they have agreed to, and only after that is checked. A second identical message, or a message on a channel they haven't agreed to, is a failure. A customer who hasn't agreed goes to a person to phone.
+- **7. The tech's message carries the job, the address, the window and what the customer said.** The tech gets the job number, the confirmed address, the customer's window and the customer's own words about the fault. A message that only says there is a new job doesn't count.
+- **8. A change to the job moves its slot and tells each person affected exactly once.** When the job's time, address or tech changes after it is booked, the same slot is updated and one fresh message goes to each person the change affects. Leaving the old slot in place, or messaging anyone twice, is a failure.
+- **9. A job that can't be booked goes to a named owner with the reason.** No licensed tech, an address that can't be confirmed, or a window no tech can meet each put the job on a list with the reason and a named owner. No job drops off the board without anyone knowing.
+- **10. For any job you can see who was assigned, when, by whom or by which rule, and what the customer was told.** When the customer says nobody told them, the job's record shows the slot, the tech, the person or rule that set it, and the message the customer was sent with its time.
+- **11. It keeps working if the person who built it leaves.** Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+- **12. The pass test passes.** On your real job system: one job scheduled twice, one job that needs a licence, one emergency bumping a booked job with a dispatcher's acceptance, and one change to a booked job.
 
 ## Related reading
 

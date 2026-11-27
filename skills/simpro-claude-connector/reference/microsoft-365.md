@@ -17,14 +17,14 @@ Used by
 - Business Systems Analyst
 - Operations Manager
 
-A Copilot Studio agent can call any API a custom connector describes, and Simpro has an API. So the connection itself is an afternoon. What takes thought is the same as on any stack: the key is yours, the answers are live, the lists are asked for the fields that matter, and nothing the agent does reaches a customer.
+A Copilot Studio agent can call any API a custom connector describes, and Simpro has an API. So the connection itself is an afternoon’s work. What takes thought is the same as anywhere else: the key is yours, every answer is read live, each request asks Simpro for the details that matter, and nothing the agent does reaches a customer.
 
 ## In short
 
-- **What this is**: A build plan for the Simpro Claude connector standard on Microsoft 365. One custom connector, one agent, three flows, two lists.
-- **The core rule**: The agent's actions are reads, each through a flow that writes a ConnectorLog row. The one write, a booking, checks a unique reference first and never sets a stage.
-- **What it does not do**: No action emails, texts or changes a stage, and no list holds a copy of Simpro's records, which would be the cache the standard forbids.
-- **The hard part**: Keeping the key inside the connector's connection where only an owner sees it, and making a retried booking hit SharePoint's unique index before it reaches Simpro.
+- **What this is**: A build plan for the Simpro Claude connector standard on Microsoft 365: one custom connector, one agent, three flows and two lists.
+- **The core rule**: The agent only reads, and every read goes through a flow that logs it. The one thing it can create, a booking, checks its reference has not been used before and never sets a stage.
+- **What it does not do**: Emails, texts and stage changes stay with your team. No list holds a copy of Simpro's records, because the standard rules out answering from a stored copy.
+- **The hard part**: Keeping the key inside the connector's connection where only its owner sees it, and making sure a booking sent twice is stopped by SharePoint before it reaches Simpro.
 
 ## 1. Before you start
 
@@ -32,7 +32,7 @@ Read [the Simpro Claude connector build standard](https://aipathway.com.au/explo
 
 Decide who owns the connection. A Power Platform custom connector stores the API key in a connection, and the person who creates that connection is the one who can see it, share it and delete it. Make it someone in the business, on a business account, not whoever happens to build the agent.
 
-Then check the licences. Custom connectors are a premium Power Platform feature and Copilot Studio is licensed separately, so confirm what your tenant already has before you build anything. The key itself comes the same way as on any stack: in Simpro under System, Setup, API, Applications, click Request API access and choose Build something myself. Simpro reviews the request; a business can no longer create the application itself. Start this first, since Simpro does not publish how long it takes.
+Then check the licences. Custom connectors are a premium Power Platform feature and Copilot Studio is licensed separately, so confirm what your Microsoft 365 already has before you build anything. The key itself comes the same way as anywhere else: in Simpro under System, Setup, API, Applications, click Request API access and choose Build something myself. Simpro reviews the request; a business can no longer create the application itself. Start this first, since Simpro does not publish how long it takes.
 
 ## 2. The lists, with their columns
 
@@ -106,7 +106,7 @@ Flow 1 is the only door to Simpro. An agent action wired straight to the connect
 
 ## 5. What the agent can reach in your Microsoft 365 and your Simpro, and what it never touches
 
-The agent answers from your live Simpro. It reads quotes, jobs, customers and invoices from Simpro, logs every request in this one SharePoint site, and, if you allow it, creates one new job at Simpro’s first status. You move every job and quote along, and anything a customer sees is yours.
+The agent answers from your live Simpro. It reads quotes, jobs, customers and invoices from Simpro, logs every request in this one SharePoint site, and, if you allow it, creates one new job at Simpro’s first status. You move every job and quote along, decide anything a customer sees, decide whether two customers are the same person, and control the key.
 
 What each connection is for.
 
@@ -122,11 +122,11 @@ Keep each one to the least it needs.
 1. Create a service account the business controls, and build the flows in a solution it owns, with the key’s owner as co-owner. A flow owned by whoever built the agent stops working the day they leave. The account needs a Power Automate licence that covers premium connectors; check what your tenant already has.
 2. Create the Simpro connection as that account and use it through the solution’s connection reference. Do not share the connection itself with the agent’s makers. Once shared, it can be used in any flow they build.
 3. Give the service account access to this one site and no other. If an app registration is used instead, grant it Sites.Selected and give it this site alone.
-4. Request one Simpro API application for this build alone. A Simpro key opens the whole of your Simpro, so the fence is the connector’s definition: no operation that sends, and no Stage in the booking body.
+4. Request one Simpro API application for this build alone. A Simpro key opens the whole of your Simpro, so the limits come from how the connector is defined: no operation that sends, and no Stage in the booking.
 
 How to cut it off. Remove the application in Simpro and every action is refused at once, which Flow 3 logs. Turn the flows off, or remove the connection, and the agent can reach nothing. Unpublish the agent and nobody can ask it.
 
-Why not a Simpro connector someone else hosts? You can: AI Pathway’s [Simpro sign-in for Claude](https://aipathway.com.au/explore-ai/claude-and-simpro#signin) takes about two minutes. But it runs on our service, between your staff and your customer records. This build is a little more work, and the key, the operations and the log are all in your own tenant. If what you want is a customer rung when their job slips on the board, that is not this connector, which never contacts anyone. AI Pathway makes that running-late call from your Simpro board once you switch it on under Automations.
+Why not a Simpro connector someone else hosts? You can: AI Pathway’s [Simpro sign-in for Claude](https://aipathway.com.au/explore-ai/claude-and-simpro#signin) takes about two minutes. But it runs on our service, between your staff and your customer records. This build is a little more work, and the key, the operations and the log all stay in your own Microsoft 365. If what you want is a customer rung when their job slips on the board, this connector will not do it, because it never contacts anyone. AI Pathway makes that running-late call from your Simpro board once you switch it on under Automations.
 
 ## 6. The order to build it in
 
@@ -162,7 +162,7 @@ Job notes are written by staff and customers and come back as text the agent rea
 - Anything a customer will see. The agent drafts nothing that sends itself.
 - Deciding two customers are the same person when the phone digits do not say so.
 
-**The pass test.** Ask the agent for the three oldest quotes still waiting on the customer and check them by number against Simpro, including one the office has approved but the customer has not answered. Book the same caller twice with one reference, their number written differently from how Simpro holds it: one ConnectorWrites row, one job, on the existing customer. Then delete the application in Simpro and ask again: the agent must say Simpro refused the connection, give no figures, and ConnectorLog must show a refused row. Fifteen minutes on your own build. If a figure comes back after the key is gone, something is answering from a copy.
+**The pass test.** Ask the agent for the three oldest quotes still waiting on the customer and check them by number against Simpro, including one the office has approved but the customer has not answered. Book the same caller twice with one reference, their number written differently from how Simpro holds it: one ConnectorWrites row, one job, on the existing customer. Then delete the application in Simpro and ask again: the agent must say Simpro refused the connection, give no figures, and ConnectorLog must show a refused row. It takes fifteen minutes on your own build. If a figure comes back after the key is gone, something is answering from a copy.
 
 ## Related reading
 

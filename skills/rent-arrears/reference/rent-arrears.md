@@ -21,7 +21,7 @@ When the checks are green: Enable Get Paid on AI Pathway / Recover; npx @aipathw
 
 ---
 
-Rent accrues, and the escalation clock is written in legislation rather than in your credit policy. How to build arrears handling that respects both, and that knows when to stop.
+Rent keeps adding up every day, and your state’s tenancy law, not your own policy, sets when each step can happen. How to build arrears handling that follows both, and knows when to stop.
 
 Used by
 
@@ -37,17 +37,17 @@ An open build standard for arrears triage and escalation across a rent roll. Imp
 
 The core rule
 
-Arrears is a derived position, not a stored number, and the escalation clock belongs to legislation rather than to you.
+Arrears is worked out fresh from the ledger every day, never saved once as a number. And your state's tenancy law, not your own policy, sets when each step can happen.
 
 What it never does
 
-Serve a notice, apply a fee, or message a tenant whose ledger has not been verified. Drafting is the boundary.
+It never serves a notice, applies a fee, or messages a tenant whose ledger has not been checked. It drafts, and a person does the rest.
 
 The hard part
 
 Knowing when to stop. A chase sent to someone who already paid, or who is in hardship, costs more than the arrears.
 
-Your platform already sends the automatic reminders, and it should keep sending them. Those collect the tenancies that were going to pay anyway. What is left is a short list where something is genuinely wrong, and each one needs a conversation on a particular day. Automating arrears means producing that short list correctly, and never messaging anyone who should not have been on it.
+Your platform already sends the automatic reminders, and it should keep sending them. Those collect the tenancies that were going to pay anyway. What is left is a short list where something is wrong, and each one needs a conversation on a particular day. Automating arrears means producing that short list correctly, and never messaging anyone who should not have been on it.
 
 The daily run, end to end
 
@@ -59,39 +59,39 @@ The daily run, end to end
 6. If none is true, the chase is released, one channel at a time.
 7. Past the statutory threshold? If yes, the notice is drafted and never served, because dates and service method are legal facts. If no, the next touch is dated, and the stop conditions are evaluated again before that message goes.
 
-The position is derived every day rather than stored. The stop conditions are the filled diamond because section 4 puts them before every message, not once when the sequence starts, which is why the loop returns through them.
+The arrears are worked out fresh every day. The filled diamond is the stop conditions. Section 4 checks them before every message, not just once at the start, so the loop goes back through them each time.
 
 ## 1. What this standard covers
 
-Deciding, every day, which tenancies in a rent roll need a human to do something, and preparing that something. It covers triage, escalation timing, and the record. It does not cover serving notices or representing anyone at a tribunal.
+Deciding, every day, which tenancies in a rent roll need a person to do something, and preparing that something. It covers triage, escalation timing, and the record. It does not cover serving notices or representing anyone at a tribunal.
 
 Why arrears is not accounts receivable
 
-An overdue invoice sits still: the amount is fixed and the counterparty is a business. Rent accrues. A tenant four days behind is five days behind tomorrow whether or not anyone opened the file, the counterparty lives inside the asset, and the escalation path is set by state legislation rather than by your credit policy. Anything built on receivables assumptions will get the timing wrong in both directions.
+An overdue invoice sits still: the amount is fixed and the other party is a business. Rent keeps adding up. A tenant four days behind is five days behind tomorrow whether or not anyone opened the file, the tenant lives in the property, and the steps you may take are set by state law rather than by your own policy. Anything built the way you chase unpaid invoices will get the timing wrong in both directions.
 
-## 2. Derive the position, never store it
+## 2. Work the arrears out fresh, never save the number
 
-An arrears position is the output of a calculation over the ledger, not a number to be cached. It changes every day without anyone touching it, which is the property that breaks most implementations.
+How far behind a tenant is gets worked out from the ledger each time it is needed. It is never a number saved once. It changes every day without anyone touching it, and that is what trips up most builds.
 
-Three things have to be derived together, and reported together:
+Three things have to be worked out together, and reported together:
 
 - **Paid-to date**: the date rent is paid up to, which is the figure legislation and tribunals reason about
-- **Days in arrears**: derived from paid-to and today, not from when someone last looked
+- **Days in arrears**: worked out from the paid-to date and today, not from when someone last looked
 - **Balance**: the dollar figure, which is the least useful of the three on its own
 
 **Report the paid-to date first.** A balance of $1,840 means nothing without knowing whether that is a fortnightly rent eight days late or a weekly rent a month behind, and the statutory clock runs on days, not dollars.
 
 ## 3. The four triage outcomes
 
-Every tenancy showing arrears resolves to exactly one of these, and the ordering matters: check for the first before assuming any of the others.
+Every tenancy showing arrears falls into exactly one of these, and the order matters: check for the first before assuming any of the others.
 
 Outcome 1
 
 Not actually in arrears
 
-Payment in transit, a part-payment misapplied, rent paid to the wrong reference, a ledger timing artefact
+Payment in transit, a part-payment applied wrongly, rent paid to the wrong reference, a ledger timing quirk
 
-Suppress the chase and flag the ledger, never message the tenant
+Hold the chase and flag the ledger. Never message the tenant
 
 Outcome 2
 
@@ -99,7 +99,7 @@ Will self-resolve
 
 A day or two behind, consistent payer, no history
 
-The platform reminder is enough. Do not escalate a pay cycle
+The platform reminder is enough. Do not escalate over one pay cycle
 
 Outcome 3
 
@@ -107,7 +107,7 @@ Needs a conversation
 
 Something has changed: a pattern break, a part-payment, a first-time miss on a long tenancy
 
-Surface to a person with the history attached. This is the list that matters
+Bring it to a person with the history attached. This is the list that matters
 
 Outcome 4
 
@@ -117,26 +117,26 @@ The arrears period is at or past the threshold for formal action
 
 Draft the notice, never serve it. Dates and service method are legal facts
 
-**Outcome 1 is checked first and is the reason to build this at all.** Chasing someone who already paid is the single most damaging thing an arrears process does. It is also common, because payments arrive with the wrong reference, land on a weekend, or get applied to the wrong tenancy. A system that assumes the ledger is right will generate exactly this error at scale and much faster than a person would.
+**Outcome 1 is checked first and is the reason to build this at all.** Chasing someone who already paid is the single most damaging thing an arrears process does. It is also common, because payments arrive with the wrong reference, land on a weekend, or get applied to the wrong tenancy. A system that assumes the ledger is right will make exactly this mistake across the whole rent roll, and much faster than a person would.
 
 ## 4. The stop conditions
 
-A chase must not be sent when any of these is true. Evaluate them before every message, not once when the sequence starts. Circumstances change mid-sequence and that is precisely when an automated chase does its damage.
+A chase must not be sent when any of these is true. Check them before every message, not just once at the start. Circumstances change mid-sequence and that is precisely when an automated chase does its damage.
 
 - **Payment received or in transit**: Including a part-payment that changes the position, and anything received since the list was built.
 - **A payment arrangement is in place**: If the tenant is meeting an agreed plan, they are not in arrears for chasing purposes even though the balance says otherwise.
 - **Hardship, dispute or advocacy is on file**: Once someone is engaged with a support service or has raised a dispute, the matter belongs to a person.
 - **The tenancy is already on the formal path**: Once a notice exists, messaging outside it can undermine it. One channel at a time.
 - **A person has paused it**: Explicitly, with a reason and a review date. The pause must survive the next run.
-- **The ledger is unverified or the data is stale**: If the feed has not updated, the correct action is to send nothing and raise it.
+- **The ledger is unchecked or the data is out of date**: If the data has not updated, the right thing is to send nothing and raise it with a person.
 
 ## 5. Six rules that keep it trustworthy
 
-1. **The clock belongs to legislation.** Thresholds for formal action are set per state and territory and they move. Hold them as dated, versioned rules the way a compliance calendar does, not as constants in the code.
-2. **Draft the notice, never serve it.** A breach or termination notice is a legal instrument whose date and service method are facts a tribunal will examine. Prepare it, present it, let a person serve it.
+1. **The law sets the timing.** Thresholds for formal action are set per state and territory and they change. Keep them as dated rules with a version number, the way a compliance calendar does, never fixed into the build.
+2. **Draft the notice, never serve it.** A breach or termination notice is a legal document whose date and service method are facts a tribunal will examine. Prepare it, present it, let a person serve it.
 3. **Verify the ledger before every message.** Not when the run starts. Between building a list and sending from it, someone will have paid.
 4. **Escalate the exception, not the balance.** The useful output is the short list where something has changed: a pattern break, a first miss on a long tenancy, a part-payment. A ranked list of everyone who owes money is what the platform already gives you.
-5. **Silence is a finding.** A tenant who has never missed and now has, and does not reply, is the highest-value row on the list. Non-response is a signal, not an absence of one.
+5. **Silence is a finding.** A tenant who has never missed and now has, and does not reply, is the highest-value row on the list.
 6. **Never apply a fee or a charge automatically.** Whether a fee is even lawful depends on the tenancy and the jurisdiction. This is not a decision to make at machine speed.
 
 ## 6. The parts that are harder than they look
@@ -147,7 +147,7 @@ Rent arrives by bank transfer with whatever reference the tenant typed, from an 
 
 Part-payments and irregular cycles
 
-A tenant paying $300 a week against a $420 rent is in arrears and paying. Fortnightly and monthly cycles, mid-cycle rent increases and pro-rata first periods all break naive day counts.
+A tenant paying $300 a week against a $420 rent is in arrears and paying. Fortnightly and monthly cycles, mid-cycle rent increases and pro-rata first periods all break a simple count of days.
 
 The paid-to date is not always what the platform says
 
@@ -157,7 +157,7 @@ Jurisdiction, and rent rolls that cross a border
 
 Thresholds, notice periods and permitted contact all differ by state and territory. An agency with properties either side of a border needs the rule to know which applies.
 
-Hardship is not a field
+Hardship is not a box on a form
 
 It arrives in a phone call, a text, or a support worker's email. If it lives only in someone's memory, the automation will keep chasing straight through it, which is the worst failure this system can have.
 
@@ -167,11 +167,11 @@ The landlord has views about how hard to push, and they are not always consisten
 
 ## 7. When the chase becomes a conversation
 
-Everything above produces a short list of tenancies where somebody needs to talk to somebody. That is the point at which this standard stops being a data problem, and it is worth being honest about what changes.
+Everything above produces a short list of tenancies where somebody needs to talk to somebody. That is the point at which this standard stops being a data problem.
 
 Text and email are one-way. They deliver a message and wait. A conversation is different in kind: it has to hear an answer it did not expect, decide whether that answer is a stop condition, and get the next sentence right in front of a person who may be embarrassed, angry or in genuine hardship. A prototype that handles the expected reply is only the beginning of the work.
 
-What hardening a conversation actually means
+What makes a conversation safe
 
 - **Every branch a real tenant takes.** “I paid yesterday.” “I lost my job.” “Talk to my advocate.” “That’s not my rent, I split it with my partner.” Each is a different outcome and one of them ends the call immediately.
 - **Recognising a stop condition mid-sentence.** Hardship does not arrive as a form field. It arrives halfway through an explanation, and the conversation has to stop pressing the moment it does.
@@ -180,24 +180,24 @@ What hardening a conversation actually means
 - **Reading the live ledger during the call.** If a payment landed this morning, the conversation needs to know before its second sentence, not after.
 - **Writing back what was actually said,** in a form the next person and a tribunal can both read.
 
-This is the part of the standard we would not expect anyone to build from scratch, because a conversation fails in public, with a tenant, on a topic with legal consequences. The iteration required to make one safe is not a weekend, and the failure mode is not a wrong number in a queue.
+This is the part of the standard we would not expect anyone to build from scratch, because a conversation fails in public, with a tenant, on a topic with legal consequences. Making one safe takes far more than a weekend, and when it fails, a tenant hears it.
 
 Where this leads
 
-The call is the hosted step: your system triages, and hands the short list to [AI Pathway](https://aipathway.com.au/calls) to ring. Today that hand-over is one governed call per tenant (create_call: disclosed, recorded, a lawful basis, calling hours, about ten a day), speaking the one-line purpose your system gives it. The arrears conversation itself, with the hardship branch that ends the call and the rules for each state, is Not yet: AI Pathway chases overdue invoices that way on Xero, and is being built to do the same from a rent roll. Until then, keep hardship and anything past a reminder with a person.
+The call is the hosted step: your system triages, and hands the short list to [AI Pathway](https://aipathway.com.au/calls) to ring. Today that hand-over is one call per tenant under AI Pathway’s call rules (create_call): it says it is an AI, the call is recorded, it needs a lawful reason to ring, it keeps to calling hours, and it makes about ten a day, saying the one-line purpose your system gives it. The arrears conversation itself, with the hardship branch that ends the call and the rules for each state, is Not yet available. AI Pathway chases overdue invoices that way on Xero, and is being built to do the same from a rent roll. Until then, keep hardship and anything past a reminder with a person.
 
 The rest of this standard stands on its own. A build that stops at the short list and hands it to a person is a good build, and most of the value is already in it.
 
 ## 8. What breaks after it works
 
 - **A threshold changes and nobody notices.** The escalation dates are now wrong across the whole rent roll, in the direction of acting too late or too early.
-- **The suppression list decays.** Hardship flags and payment arrangements are set once and never reviewed, so either they expire and the chasing resumes wrongly, or they never expire and real arrears goes unworked.
-- **It leaves when they do.** Which tenants are genuinely struggling, which owners want a hard line, which references are habitually wrong: none of it is in the system.
+- **The do-not-chase list goes stale.** Hardship flags and payment arrangements are set once and never reviewed, so either they expire and the chasing resumes wrongly, or they never expire and real arrears goes unworked.
+- **It leaves when they do.** Which tenants are genuinely struggling, which owners want a hard line, which references are habitually wrong. None of it is in the system.
 - **Nobody can show what was sent.** At a tribunal the question is what was communicated and when. A sequence that fired without keeping the sent copy cannot answer it.
 
 ## 9. What It Is Worth
 
-No figures here: the standard derives none, and your results will differ. These name the levers, and what each is worth depends on your payment matching, which is where wrongly chased tenants come from.
+No figures here. The standard works none out, and your results will differ. These name what changes, and what each is worth depends on your payment matching, which is where wrongly chased tenants come from.
 
 Paid-to date
 
@@ -221,7 +221,7 @@ The hard part is knowing when to stop. A chase sent to someone who already paid,
 
 ## 10. The records it keeps, in the shape your developer needs
 
-Sections 2 to 4 in the shape a build needs them. The arrears position is derived on every read and never stored, which is the property most implementations get wrong: a cached number is right on the day it was written and wrong every day after.
+Sections 2 to 4 in the shape a build needs them. The arrears position is derived on every read and never stored, which is the property most implementations get wrong. A cached number is right on the day it was written and wrong every day after.
 
 ```
 arrears_position:              # derived on read. Never cached, never stored.
@@ -264,9 +264,9 @@ What each piece of access is for.
 - **The tenant ledger, read.** For the paid-to date, receipts, part-payments and the rent period, from PropertyMe, Console Cloud or PropertyTree through its own integration route. Where your platform offers none to you, the daily arrears report export does the same job, read once a day.
 - **Tenancy notes and flags, read.** For the stop conditions: an arrangement, hardship, a dispute, a notice already issued, a pause with its review date.
 - **A drafts folder, write.** For the notice, which waits there until a named person serves it, and for the record. Nothing is written to the ledger.
-- **An AI Pathway key with “Queue calls”, if you hand the short list over for calls.** One governed call per tenant, on the basis that you are ringing your own tenant about the tenancy. AI Pathway checks the Do Not Call Register and calling hours before it dials. Leave the key out and the build stops at the list, which is still most of the value.
+- **An AI Pathway key with “Queue calls”, if you hand the short list over for calls.** One call per tenant under AI Pathway’s call rules, on the basis that you are ringing your own tenant about the tenancy. AI Pathway checks the Do Not Call Register and calling hours before it dials. Leave the key out and the build stops at the list, which is still most of the value.
 
-1. Build against the stub until all six stop conditions in section 4 hold.
+1. Build against sample data until all six stop conditions in section 4 hold.
 2. Connect the rent roll read only, or set up the daily arrears export.
 3. Decide where hardship, arrangements and pauses are recorded, so the build reads them rather than someone’s memory.
 4. Load the thresholds for each state you manage in, as dated rules.
@@ -304,22 +304,22 @@ stays_local:                     # do not hand these over. They are the standard
   - the statutory clock and its jurisdiction
 ```
 
-Build against the stub until the message stops being enough. A build that stops at the stub is still a working arrears process and it is most of the value on this page.
+Build against sample data until messages alone are not enough. A build that stops before the calls is still a working arrears process, and it is most of the value on this page.
 
-**The pass test.** Start a chase on a tenancy that is showing arrears. After the first message and before the next, apply a payment in the ledger that clears it. Nothing more may be sent, and the record must say which stop condition caught it. Then push one tenancy past the threshold: the notice is drafted and sits unserved until a named person releases it. As an extra step, re-run the first with the payment reversed and a hardship flag set: again nothing, again with a reason. Each takes a minute to stage from your own data. If a message sends after the payment, your stop conditions are being evaluated once at the start of the sequence rather than before every message, which is section 4 in one sentence. If the notice goes out on its own, section 5 is not built.
+**The pass test.** Start a chase on a tenancy that is showing arrears. After the first message and before the next, apply a payment in the ledger that clears it. Nothing more may be sent, and the record must say which stop condition caught it. Then push one tenancy past the threshold: the notice is drafted and sits unserved until a named person releases it. As an extra step, re-run the first with the payment reversed and a hardship flag set: again nothing, again with a reason. Each takes a minute to set up from your own data. If a message sends after the payment, your stop conditions are being checked once at the start rather than before every message, and section 4 is not built. If the notice goes out on its own, section 5 is not built.
 
 ## 13. A checklist to hold any build or supplier to
 
-- The arrears position is derived every run.
-- Paid-to date drives escalation timing.
-- Statutory thresholds are dated rules.
-- Stop conditions are checked per message.
-- An unmatched or stale ledger escalates.
+- The arrears are worked out fresh on every run.
+- The paid-to date decides when each next step happens.
+- Legal thresholds are kept as dated rules for each state.
+- The stop rules are checked before every message.
+- A ledger that does not match or is out of date goes to a person.
 - Notices are never served without a person.
 - No fee is applied automatically.
-- Every message is retained.
-- Automation discloses itself and stops on hardship.
-- It survives the builder.
+- Every message is kept.
+- An automated conversation says it is automated and stops on hardship.
+- It keeps working if the person who built it leaves.
 - The pass test passes.
 
 ## Facts that can change, and when we checked them

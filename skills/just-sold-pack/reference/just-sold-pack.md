@@ -36,7 +36,7 @@ An open build standard for the just-sold pack. When a property sells, your own s
 
 The core rule
 
-The build drafts a letter, SMS or email for each person and stops. A person approves each one. Nothing leaves because a script decided it should.
+It drafts a letter, SMS or email for each person and stops there. You approve each one before it goes.
 
 What it does not do
 
@@ -44,7 +44,7 @@ It never says what the reader's own home is worth, never states a price that was
 
 The hard part
 
-Knowing the price, the date and the address are the verified ones on the day the letter goes, and knowing when a sale is not yet public. The calls stay with the agent.
+Being sure the price, the date and the address are the verified ones on the day the letter goes, and knowing when a sale is not yet public. The calls stay with the agent.
 
 A place on the street sells on Saturday. By Tuesday the neighbours have heard the price from somebody else, the agent meant to drop a note in every letterbox and did not, and the one neighbour who asked for an appraisal last spring never got a call. The sale was the best reason to be in touch all year, and it went by. Or the letter went out before the sale was public, or quoted a price the vendor asked to keep quiet.
 
@@ -57,30 +57,30 @@ One sale, to the people near it
 5. If it is clear, work out who to tell (same street, inside the radius, or owners of a matching home), draft one letter, SMS or email each, and rank a short list of neighbours worth a personal call.
 6. A person approves each one. If yes, it is sent once and logged. If no, it stays a draft and nothing goes.
 
-The filled diamond is the sale itself: clear to tell, or held with a reason. Its facts are the hard step, because only a live source can say they are true today. Everything after it a builder proves on the stub, and the second diamond is a person’s yes on each draft.
+The filled diamond is the sale itself. Either it is clear to tell, or it is held with a reason. Getting its facts right is the hard step, because only a live source can say they are true today. A builder can test everything after it with practice data, and the second diamond is where you approve each draft.
 
 ## 1. What this standard covers
 
-One sale, and the people near it. The sale is the trigger: the agency’s own sale or one nearby that it wants its contacts to know about. The output is a pack. Each contact who should hear about it gets one draft, on a channel they agreed to, saying what sold, where and when, and the price if it may be stated. A ranked short list says which neighbours are worth a personal call. Anyone who cannot be contacted is listed as an exception, with the reason.
+One sale, and the people near it. It starts with a sale: the agency’s own, or one nearby that it wants its contacts to know about. What comes out is a pack. Each contact who should hear about it gets one draft, on a channel they agreed to, saying what sold, where and when, and the price if it may be stated. A ranked short list says which neighbours are worth a personal call. Anyone who cannot be contacted is listed as an exception, with the reason.
 
-What is out of scope. Working the whole database. Ranking every contact into plays, on a schedule, with no particular event behind it, is the [Database Reactivation standard](https://aipathway.com.au/explore-ai/database-reactivation-build-standard). A just-sold pack can be one reason somebody in that database hears from the agency this week, and the two meet at one rule: a contact already in another sequence is held here, not sent a second message. Appraisals, price guides and anything that says what a particular home is worth are out of scope too. This standard reports a sale that happened. It never prices the reader’s own home.
+What is out of scope. Working the whole database. Ranking every contact into plays, on a schedule, with no particular event behind it, is the [Database Reactivation standard](https://aipathway.com.au/explore-ai/database-reactivation-build-standard). A just-sold pack can be one reason somebody in that database hears from the agency this week, and the two share one rule. A contact already getting another run of messages is held here, so they never get two at once. Appraisals, price guides and anything that says what a particular home is worth are out of scope too. This standard reports a sale that happened. It never prices the reader’s own home.
 
-What cannot meet it, and what can. The pack sits beside the CRM, it does not replace it. Any CRM that can export or read out contacts with an address can feed it. What a build cannot do is invent the sale facts or the consent: a contact list with no record of who agreed to email or SMS sends letters only, and a build with no source for the sale beyond what somebody typed cannot pass check 1 live.
+What cannot meet it, and what can. The pack sits beside your CRM, and you keep the CRM. Any CRM that can export or read out contacts with an address can feed it. A build cannot make up the sale facts or the consent. A contact list with no record of who agreed to email or SMS sends letters only, and a build whose only record of the sale is what somebody typed in cannot pass check 1 on a real sale.
 
-Is there a ready-made version? Not yet. No product takes one sale and builds this pack: a draft per neighbour, the approval step and the exception list. So this standard is a Draft, and the build is yours.
+Is there a ready-made version? Yes, a free Google Sheet. Copy it, enter the sale and your contacts, and approve each draft. No hosted product builds this pack yet, so the sheet is the quickest way to run it today.
 
 ## 2. The sale, and what holds it
 
-Everything a draft says about the sale comes from one read of it, with the time the facts were verified. Not from the agent’s memory, not from a note typed into the CRM on the day of the auction. Four things about the sale itself come before anybody is matched, and three of them stop the whole pack:
+Everything a draft says about the sale comes from one read of its source, with the time the facts were verified, never from the agent’s memory or a note typed into the CRM on auction day. Four things about the sale are checked before anybody is matched, and three of them stop the whole pack:
 
 | The sale is | What happens |
 | --- | --- |
 | Not public yet | Exchange is not public. Nothing is drafted and nobody is short-listed until it is. |
 | Asked to be kept quiet | The vendor or the buyer asked for confidentiality. Nothing is drafted, whatever the sale is worth to the agency. |
-| Figures that disagree | The source and the agency's own record differ on the price, the date or the address. Nothing is drafted, the field is named, and a person fixes one. Neither figure is used in the meantime. |
+| Figures that disagree | The source and the agency's own record differ on the price, the date or the address. Nothing is drafted. The figure that differs is named, and a person fixes one of the two records. Neither figure is used in the meantime. |
 | Price withheld | The pack still goes, about the sale, with no price, no range and no rounded figure. A person is told, so nobody fills it in by hand later. |
 
-Figures that disagree are the one most builds get wrong, because the easy fix is to pick one. The agency’s record says $1,250,000 and the source says $1,205,000: one of them is a typo, and a letter to forty neighbours is the worst place to find out which. So the build holds the sale, names the field, and waits for a person.
+Figures that disagree are the one most builds get wrong, because the easy fix is to pick one. The agency’s record says $1,250,000 and the source says $1,205,000. One of them is a typo, and a letter to forty neighbours is the worst place to find out which. So it stops, names the figure that differs, and waits for a person to fix it.
 
 ## 3. Who to tell
 
@@ -89,14 +89,14 @@ Three reasons, strongest first. A contact who matches none of them is left out, 
 | Reason | Who | Why it earns a message |
 | --- | --- | --- |
 | same_street | Contacts on the same street as the sale | The strongest reason there is. They walk past it every day. |
-| radius | Contacts within the radius the agency sets, in metres | Close enough that the sale is local news. The number is the agency's, not the standard's. |
-| owner_match | Owners of a similar home in the same suburb, further out | Same type of home, same suburb: the sale is the nearest thing they have to a reference point. |
+| radius | Contacts within the radius the agency sets, in metres | Close enough that the sale is local news. The agency sets the distance. |
+| owner_match | Owners of a similar home in the same suburb, further out | Same type of home, same suburb, so the sale is the nearest thing they have to a reference point. |
 
-One entry per contact per sale. Someone on the same street who also owns a similar home gets one message, under the strongest reason, and running the pack a second time for the same sale makes nothing new. Then the gate, before any draft: do not contact means absent from every list; a contact already in another sequence is held; and the channel follows consent. Email only to someone who agreed to email, SMS only to someone who agreed to SMS, a letter to anyone with a postal address and neither, and an exception for anyone with no way to reach them lawfully.
+One entry per contact per sale. Someone on the same street who also owns a similar home gets one message, under the strongest reason, and running the pack a second time for the same sale makes nothing new. Then three checks, before any draft. A contact marked do not contact is left off every list. A contact already getting another run of messages is held. And the channel follows consent. Email only to someone who agreed to email, SMS only to someone who agreed to SMS, a letter to anyone with a postal address and neither, and an exception for anyone with no way to reach them lawfully.
 
 ## 4. The records it keeps, in the shape your developer needs
 
-Five objects. The Exception is the one most builds leave out, because a neighbour who silently did not get a letter looks the same as a bug.
+Five records. The exception is the one most builds leave out, because a neighbour who quietly got no letter looks the same as a fault.
 
 ```
 Sale                              # one per sale event
@@ -139,26 +139,26 @@ A PackEntry with status sent and no approved_by is the defect this standard exis
 
 ## 5. The checks, in order
 
-The order is the claim. The sale is read and judged before anybody is matched, because a sale that should not be told holds every draft at once. The gate sits under the matching, the drafts sit under the gate, and the send sits behind a person.
+Each check has to pass before the next one runs. The sale is checked before anybody is matched, because a sale that should not be told holds every draft at once. The contact checks come after the matching, the drafts come after those checks, and nothing is sent until a person approves it.
 
-1. The sale is read from its source before anyone is matched. One sale, read with the time it was verified, is the trigger. Every fact a draft states comes from that read, never from memory or a typed note.
-2. A sale that is not public, or asked to be kept quiet, holds the whole pack. Before exchange is public, or when the vendor or the buyer asked for confidentiality, nothing is drafted and nobody is short-listed. One exception says which.
-3. Figures that disagree hold the sale. When the source and the agency's own record disagree on the price, the date or the address, the sale is held with the field named. Neither figure is used.
-4. A withheld price is never stated, estimated or hinted. The pack still goes, about the sale, with no price, no range and no rounded figure. A person is told the price was withheld.
-5. Who to tell: same street, within the radius, or an owner who matches. A contact is in the pack for a reason that is true about where they live or what they own. Everybody else is left out, without a message.
-6. One entry per contact per sale. A contact who matches two reasons gets one message, under the strongest reason. Running the pack twice does not make a second.
-7. Do not contact means absent from every list. Not drafted, not short-listed for a call, and recorded as an exception so a person can see why a neighbour is missing.
-8. Email or SMS only with consent for that channel. A contact with no consent for electronic messages gets a letter if there is a postal address, and is held as an exception if there is not.
-9. A contact already in another sequence is held. Someone mid-way through another run of messages is not sent a second one about a sale. They are held, and a person decides.
-10. A draft states the sale and nothing about the neighbour's own home. The street, the date and, if disclosed, the price, as recorded. Never a value, a range or a guess for the reader's own property.
-11. The call short list orders, it never permits. Ranked by the stated rules, in order: prior engagement, then reason, then longest since last spoken to. Anyone held is not on it, whatever their rank would have been.
+1. The sale is read from its source before anyone is matched. One sale, read from its source with the time it was checked, starts the pack. Every fact in a draft comes from that read, never from memory or a typed note.
+2. A sale that is not public, or asked to be kept quiet, holds the whole pack. Until exchange is public, or if the vendor or the buyer asked for it to be kept confidential, nothing is drafted and nobody goes on the call short list. One exception says which of the two it is.
+3. Figures that disagree hold the sale. When the source and the agency's own record disagree on the price, the date or the address, the sale is held and the figure that differs is named. Neither figure is used.
+4. A withheld price is never stated, estimated or hinted. The pack still goes out about the sale, with no price, no range and no rounded figure. A person is told the price was withheld.
+5. People are told if they are on the same street, within the radius, or own a matching home. A contact is in the pack only for a reason that is true about where they live or what they own. Everybody else is left out and gets no message.
+6. One entry per contact per sale. A contact who matches two reasons gets one message, under the strongest reason. Running the pack twice does not make a second message.
+7. Do not contact means left off every list. A do-not-contact neighbour gets no draft and no place on the call short list. They are recorded as an exception so a person can see why a neighbour is missing.
+8. Email or text only with consent for that channel. A contact with no consent for email or text messages gets a letter if there is a postal address, and is held as an exception if there is not.
+9. A contact already getting another series of messages is held. Someone part-way through another run of messages is not sent a second one about a sale. They are held, and a person decides.
+10. A draft states the sale and nothing about the neighbour's own home. It gives the street, the date and, if disclosed, the price, as recorded. It never gives a value, a range or a guess for the reader's own property.
+11. The call short list sets the order and never gives permission to call. It is ranked by the written rules, in this order: past engagement, then the reason they are in the pack, then longest since last spoken to. Anyone held is left off, whatever their rank would have been.
 12. A person approves every send. Nothing leaves on its own. A draft is sent only after a named person approved that entry, and an unapproved draft stays a draft.
-13. Calling is off until the agency turns it on, and then goes through a gate. The short list is for the agent to ring personally. No call is opened by the build unless calling was turned on, and then every call asks the gate first.
-14. Every exception has a kind and a reason. Each one names its kind from the closed list, the sale, the contact where there is one, and why. A count without reasons is not a log.
-15. It survives the builder. Someone other than the builder can explain what it does, and it runs on an account the business owns.
+13. Calling is off until the agency turns it on, and then every call is cleared first. The short list is for the agent to ring personally. It makes no call unless calling was turned on, and then every call has to be cleared by the checks first.
+14. Every exception has a type and a reason. Each one names its type from the set list, the sale, the contact where there is one, and why. A count with no reasons is no use as a record.
+15. It keeps working if the person who built it leaves. Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
 16. The pass test passes. On a real sale from a live source, a figure that disagrees with the agency's record holds the sale, and a do-not-contact neighbour is absent from every list.
 
-The exceptions, a closed list:
+These are the only exceptions it raises:
 
 | sale_not_public | The sale is not public yet |
 | --- | --- |
@@ -173,36 +173,36 @@ The exceptions, a closed list:
 
 A draft says what sold, where, when, and the price if it may be stated, exactly as the sale record holds them. “A 4-bedroom house on Banksia Street sold on 17 October for $1,250,000. If you would like the details of the sale, reply and I will send them.” It identifies who it is from, and an email or SMS carries a way to opt out. It never says what the reader’s own home is worth, what it could sell for, or that now is the time. That is a conversation, and section 7 keeps it with the agent.
 
-The call list is a short list, sized to how many calls the agent can actually make this week. Three rules, in order:
+The call list is a short list, sized to how many calls the agent can make this week. Three rules, in order:
 
 1. **Prior engagement first.** Someone who asked for an appraisal or a callback outranks everyone who did not.
 2. **Then the reason.** Same street, then the radius, then a matching owner.
 3. **Then the longest since you last spoke.** Ties only. It never leapfrogs a stronger reason.
 
-The list orders, it never permits. Nobody the gate held is on it, whatever their rank would have been, and the build never rings anyone on it. Calling is off by default, and AI Pathway will not place these calls: it rings only people with a lawful basis, such as someone who asked for a call, and a neighbour of a sale has not. So the calls on the list are the agent’s own. If an agency turns calling on in its own build anyway, every call still goes through a gate first: the do-not-call register, calling hours in the contact’s own time, and the AI disclosure at the start.
+The list sets the order of the calls. It never gives permission to call anyone. Nobody held at the contact checks is on it, whatever their rank would have been, and the build never rings anyone on it. Calling is off by default, and AI Pathway will not place these calls: it rings only people with a lawful basis, such as someone who asked for a call, and a neighbour of a sale has not. So the calls on the list are the agent’s own. If an agency turns calling on in its own build anyway, every call still has three checks first: the do-not-call register, calling hours in the contact’s own time, and the AI disclosure at the start.
 
 ## 7. What stays with a person
 
-- The yes on every message. A name on the draft, before it goes. The machine has no port that approves.
+- Approving every message. A person's name goes on each draft before it is sent, and the build has no way to approve one itself.
 - The calls on the short list. The build ranks them; the agent rings them.
 - Anything about the reader's own home: its value, a range, a price guide, whether to sell.
 - Clearing an exception, including a figure that does not match. The build names it; a person fixes the record.
 - Whether a sale the vendor wanted kept quiet can be told later, and when.
-- Turning calling on. Off is the default, and the switch belongs to the agency, not the build.
+- Turning calling on. Off is the default, and only the agency can turn it on.
 
 ## 8. Run it on what you already use
 
 The workflow lives wherever the agency already works. Three ways, all held to the same checks:
 
 - **Existing tools only.** The CRM export and a shared Google Sheet, or Microsoft 365 lists. Drafts sit in the sheet or in the email drafts folder, and a person approves each one there. The [Microsoft 365 plan](https://aipathway.com.au/explore-ai/sold-nearby-on-microsoft-365) lays out the lists and flows.
-- **A personal dashboard.** Hand this page to a coding agent and it builds a small page with the sale, the pack, the approve buttons and the call list, against the stub until the sale facts have to be real.
+- **A personal dashboard.** Hand this page to a coding agent and it builds a small page with the sale, the pack, the approve buttons and the call list, using practice data until the sale facts have to be real.
 - **A long-lived bot.** A routine that wakes when a sale is entered, builds the pack and posts it to the agent for approval, in Slack or by email, and sends only what comes back approved.
 
 How to run any standard each of these ways is in [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
 
 ## 9. What your developer builds, and the step that needs care
 
-One step not to hand-roll: sale facts that are verified and current on the day the pack goes, from a source that can say a sale is not public or a price is withheld. The calls stay with the agent. Everything else a coding agent builds against the stub in an afternoon.
+One step not to build yourself: sale facts that are verified and current on the day the pack goes, from a source that can say a sale is not public or a price is withheld. The calls stay with the agent. A coding agent builds everything else against practice data in an afternoon.
 
 ```
 provider:
@@ -241,27 +241,27 @@ cannot meet the standard
 
 A vendor selling just-sold automation is usually selling the letterbox drop. Ask them three things: what happens when the vendor asks to keep the sale quiet after the letters are printed, what the letter says when the price is withheld, and who approved each message that went.
 
-**The pass test.** On a real recent sale, read from a live source, against the agency’s real contact list. First change one figure in the agency’s own record of the sale, the price or the date, and run it: nothing may be drafted, and the exception must name the field. Correct the record and run it again: every draft must state the street, the date and the price exactly as the live source verified them that day, and a neighbour flagged do not contact must be absent from the pack and the call list. Approve one message and run the send: exactly that one goes, once, and nothing else. Both runs take a few minutes to stage. If anything was drafted on the first run, the build picks a figure, which is the failure this standard exists to prevent.
+**The pass test.** On a real recent sale, read from a live source, against the agency’s real contact list. First change one figure in the agency’s own record of the sale, the price or the date, and run it: nothing may be drafted, and the exception must name the field. Correct the record and run it again: every draft must state the street, the date and the price exactly as the live source verified them that day, and a neighbour flagged do not contact must be absent from the pack and the call list. Approve one message and run the send: exactly that one goes, once, and nothing else. Both runs take a few minutes to stage. If anything was drafted on the first run, the build picked one of the two figures, and that is the failure this standard exists to prevent.
 
 ## 10. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 
-- **1. The sale is read from its source before anyone is matched.** One sale, read with the time it was verified, is the trigger. Every fact a draft states comes from that read, never from memory or a typed note.
-- **2. A sale that is not public, or asked to be kept quiet, holds the whole pack.** Before exchange is public, or when the vendor or the buyer asked for confidentiality, nothing is drafted and nobody is short-listed. One exception says which.
-- **3. Figures that disagree hold the sale.** When the source and the agency's own record disagree on the price, the date or the address, the sale is held with the field named. Neither figure is used.
-- **4. A withheld price is never stated, estimated or hinted.** The pack still goes, about the sale, with no price, no range and no rounded figure. A person is told the price was withheld.
-- **5. Who to tell: same street, within the radius, or an owner who matches.** A contact is in the pack for a reason that is true about where they live or what they own. Everybody else is left out, without a message.
-- **6. One entry per contact per sale.** A contact who matches two reasons gets one message, under the strongest reason. Running the pack twice does not make a second.
-- **7. Do not contact means absent from every list.** Not drafted, not short-listed for a call, and recorded as an exception so a person can see why a neighbour is missing.
-- **8. Email or SMS only with consent for that channel.** A contact with no consent for electronic messages gets a letter if there is a postal address, and is held as an exception if there is not.
-- **9. A contact already in another sequence is held.** Someone mid-way through another run of messages is not sent a second one about a sale. They are held, and a person decides.
-- **10. A draft states the sale and nothing about the neighbour's own home.** The street, the date and, if disclosed, the price, as recorded. Never a value, a range or a guess for the reader's own property.
-- **11. The call short list orders, it never permits.** Ranked by the stated rules, in order: prior engagement, then reason, then longest since last spoken to. Anyone held is not on it, whatever their rank would have been.
+- **1. The sale is read from its source before anyone is matched.** One sale, read from its source with the time it was checked, starts the pack. Every fact in a draft comes from that read, never from memory or a typed note.
+- **2. A sale that is not public, or asked to be kept quiet, holds the whole pack.** Until exchange is public, or if the vendor or the buyer asked for it to be kept confidential, nothing is drafted and nobody goes on the call short list. One exception says which of the two it is.
+- **3. Figures that disagree hold the sale.** When the source and the agency's own record disagree on the price, the date or the address, the sale is held and the figure that differs is named. Neither figure is used.
+- **4. A withheld price is never stated, estimated or hinted.** The pack still goes out about the sale, with no price, no range and no rounded figure. A person is told the price was withheld.
+- **5. People are told if they are on the same street, within the radius, or own a matching home.** A contact is in the pack only for a reason that is true about where they live or what they own. Everybody else is left out and gets no message.
+- **6. One entry per contact per sale.** A contact who matches two reasons gets one message, under the strongest reason. Running the pack twice does not make a second message.
+- **7. Do not contact means left off every list.** A do-not-contact neighbour gets no draft and no place on the call short list. They are recorded as an exception so a person can see why a neighbour is missing.
+- **8. Email or text only with consent for that channel.** A contact with no consent for email or text messages gets a letter if there is a postal address, and is held as an exception if there is not.
+- **9. A contact already getting another series of messages is held.** Someone part-way through another run of messages is not sent a second one about a sale. They are held, and a person decides.
+- **10. A draft states the sale and nothing about the neighbour's own home.** It gives the street, the date and, if disclosed, the price, as recorded. It never gives a value, a range or a guess for the reader's own property.
+- **11. The call short list sets the order and never gives permission to call.** It is ranked by the written rules, in this order: past engagement, then the reason they are in the pack, then longest since last spoken to. Anyone held is left off, whatever their rank would have been.
 - **12. A person approves every send.** Nothing leaves on its own. A draft is sent only after a named person approved that entry, and an unapproved draft stays a draft.
-- **13. Calling is off until the agency turns it on, and then goes through a gate.** The short list is for the agent to ring personally. No call is opened by the build unless calling was turned on, and then every call asks the gate first.
-- **14. Every exception has a kind and a reason.** Each one names its kind from the closed list, the sale, the contact where there is one, and why. A count without reasons is not a log.
-- **15. It survives the builder.** Someone other than the builder can explain what it does, and it runs on an account the business owns.
+- **13. Calling is off until the agency turns it on, and then every call is cleared first.** The short list is for the agent to ring personally. It makes no call unless calling was turned on, and then every call has to be cleared by the checks first.
+- **14. Every exception has a type and a reason.** Each one names its type from the set list, the sale, the contact where there is one, and why. A count with no reasons is no use as a record.
+- **15. It keeps working if the person who built it leaves.** Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
 - **16. The pass test passes.** On a real sale from a live source, a figure that disagrees with the agency's record holds the sale, and a do-not-contact neighbour is absent from every list.
 
 Building this on Microsoft 365: [the lists, the flows and the approval column](https://aipathway.com.au/explore-ai/sold-nearby-on-microsoft-365).

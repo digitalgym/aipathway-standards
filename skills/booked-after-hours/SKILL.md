@@ -92,11 +92,11 @@ skill asserts.
 
 - 1. Scope, and what is out of it
 - 2. The checks, in order
-- 3. The job taxonomy is fixed
-- 4. The address is verified, never transcribed
-- 5. The outcome object
-- 6. Write-back, and writing once
-- 7. Escalation and the on-call rule
+- 3. Every call goes into one of three job types
+- 4. The address is looked up and confirmed, never written down as heard
+- 5. Every call leaves the same record
+- 6. One call makes one job in your system
+- 7. Handing to a person, and when to wake the on-call
 - 8. Provider and hosting
 - 9. Connect ServiceM8 or Simpro so calls become jobs, without it touching your quotes or invoices
 - 10. The pass test

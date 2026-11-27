@@ -37,7 +37,7 @@ An open build standard for making two systems that each hold part of the truth a
 
 The core rule
 
-A mismatch is an object with both values and the declared master's value. A machine may propose the fix. Only a named person accepts it, and the acceptance is what writes.
+A mismatch is recorded with both values, and the value from the system you named as right for that field. A machine may suggest the fix. Only a named person accepts it, and nothing changes until they do.
 
 What it does not do
 
@@ -59,25 +59,25 @@ One run, two sources
 6. If yes, the correction is written once into the target source with both original values and the person kept in history.
 7. Are the differences under the declared threshold? If yes, the run publishes its counts, including an all-clear. If no, a named person is told this run, and the run still publishes.
 
-The contract is read first, because a run that has to guess which source is master will guess differently on Tuesday. The filled diamond is acceptance: nothing is written into either source unless a named person accepted the correction. The loop is the schedule, publishing regardless.
+The pair contract is read first, because a run that has to guess which system is right will guess differently on Tuesday. The filled diamond is acceptance. Nothing changes in either system unless a named person accepted the correction. The loop is the schedule, which reports every time, even when all is clear.
 
 ## 1. What this standard covers
 
 Any pair of systems that each hold part of the truth about the same thing and are kept by different people. The job system and the ledger about a job. The bank feed and the invoices about a payment. The roster and the timesheets about a day. The register and the drive about a document. If two records share a key and can disagree, this applies.
 
-Matching a supplier invoice to a purchase order before it is paid is the [Invoice Check standard](https://aipathway.com.au/explore-ai/invoice-check-build-standard) and is out of scope here. That one is a gate on money leaving. This one is a report on two records that should already agree. The [accounts admin paper](https://aipathway.com.au/explore-ai/accounts-admin-automation) is the argument beside it, and the rule that a measure has one definition computed once comes from the [Multi-Site Conformance standard](https://aipathway.com.au/explore-ai/multi-site-conformance-build-standard).
+Matching a supplier invoice to a purchase order before it is paid is the [Invoice Check standard](https://aipathway.com.au/explore-ai/invoice-check-build-standard) and is out of scope here. That one is a gate on money leaving. This one is a report on two records that should already agree. The [accounts admin paper](https://aipathway.com.au/explore-ai/accounts-admin-automation) explains the thinking behind it, and the rule that each measure has one definition, worked out once, comes from the [Multi-Site Conformance standard](https://aipathway.com.au/explore-ai/multi-site-conformance-build-standard).
 
-The failure this prevents is specific. Every business has mismatches. This standard is about the one fixed by a machine, or by a person in a hurry, without either value being kept, so that the record now agrees and nobody can say why it ever did not.
+Every business has mismatches. This standard is about the one fixed by a machine, or by a person in a hurry, without either value being kept, so that the record now agrees and nobody can say why it ever did not.
 
 ## 2. The pair contract
 
-Before a run reads a record, a person writes down four things. Which two sources. Which field is the shared key, and it is an id, never a name. Which source is master for each field that can differ. What tolerance each field carries, in a value, for rounding and timing. A run with no contract has to guess all four, and the guess is the part that changes between runs.
+Before a run reads a record, a person writes down four things. Which two sources. Which field both sources share to match records, and it is an id, never a name. Which source is master (the one that is right) for each field that can differ. How far apart each field may be, as an amount, for rounding and timing. A run with no contract has to guess all four, and the guess is the part that changes between runs.
 
-The master per field is the decision most businesses have never made explicitly. The ledger is master for the amount; the job system is master for the address; the bank feed is master for the date it landed. Write it once. Most of the standard is that sentence.
+Which system is master for each field is the decision most businesses have never written down. The ledger is master for the amount; the job system is master for the address; the bank feed is master for the date it landed. Write it once. Most of the standard is that sentence.
 
 ## 3. The records it keeps, in the shape your developer needs
 
-Five objects. The contract and the correction are the two most reconciliations leave out, because a spreadsheet with two columns and a highlighter appears to work without either.
+Five records. The contract and the correction are the two most reconciliations leave out, because a spreadsheet with two columns and a highlighter appears to work without either.
 
 ```
 PairContract
@@ -110,31 +110,31 @@ A Correction with a written_id and no accepted_by is the defect this standard ex
 
 ## 4. The checks, in order
 
-The order is the claim. The contract is read before a record, the join is on the id before any field is compared, and the difference exists as an object before anyone thinks about a fix.
+Each check has to pass before the next one runs. The pair contract is read before any record, records are matched on their id before any field is compared, and each difference is recorded before anyone thinks about a fix.
 
-1. A pair is declared in a written contract, never guessed. Every reconciliation names its two sources, the shared key that joins them, and which source is master for each field, in a contract a person wrote. A run with no declared master fails.
-2. Records are joined on the shared id, never on a name or an amount. The join key is the id the contract names. Two records with the same customer name, or the same amount, are not a pair unless they share that id.
-3. A matched pair produces nothing; a mismatch produces a Difference, never a corrected record. Agreement is counted and not shown. A disagreement becomes a Difference carrying the field, both values and the master's value. No record in either source is changed by the comparison.
-4. A correction is proposed with both values and written only after a named person accepts it. The run proposes the master's value for the other source. The write happens once, after a named person accepts the proposal, and never before. A write with no acceptance fails.
-5. A record with no partner is an orphan with a reason and an owner, not a silent gap. A record in one source with no record under the same id in the other is raised as an orphan naming the source, a reason and the person who owns it. It is counted on the run and never dropped.
-6. Rounding and timing tolerances are declared per field with a value, and never assumed. A tolerance is a number a person wrote against a field in the contract. A difference inside it is recorded as within_tolerance, still an object. A field with no declared tolerance has none, so any difference on it is open.
-7. The run publishes on schedule with its counts, including the all-clear. Every scheduled run publishes a count of matched, within tolerance, mismatched, orphaned and corrected, even when every number but matched is zero. Its absence is never the signal.
-8. A difference over the declared threshold, or too many mismatches, reaches a named person that run. The contract declares an amount and a rate. A single difference over the amount, or a run whose open mismatches exceed the rate, goes to the named person in the same run, not the next one.
-9. Every accepted correction keeps both original values and the person who accepted. The Difference keeps both values as they were. The Correction records the proposed value, who accepted, when, and the id the write returned. A fix that overwrites the history fails.
-10. For any shared id, the runs, differences and corrections are retrievable. When somebody asks why the ledger says what it says about a job, the record by that id shows every run that raised a difference on it, each difference with both values, and each correction with who accepted it.
-11. It survives the builder. Someone other than the builder can explain what it does, and it runs on an account the business owns.
-12. The pass test passes. On the business's real sources: one seeded mismatch found and shown side by side, one orphan raised, one correction accepted by a person and written once, and an all-clear published the following run.
+1. A person writes down which two records are compared, never a guess. Every comparison names its two systems, the shared reference that links them, and which system is right for each detail, all written down by a person. A run that does not say which system is right fails.
+2. Records are matched on the shared reference, never on a name or an amount. The match uses the reference the person wrote down. Two records with the same customer name, or the same amount, are not a pair unless they share that reference.
+3. Records that agree stay quiet, and a mismatch is shown side by side, never corrected. Agreement is counted but not shown. A disagreement is recorded as a difference showing the detail, both values and the value from the system that is right. Comparing never changes a record in either system.
+4. A fix is proposed with both values, and saved only after a named person accepts it. It proposes the right system's value for the other system. The change is saved once, after a named person accepts it, and never before. A change saved with no acceptance fails.
+5. A record missing from the other system is flagged with a reason and an owner. A record in one system with nothing under the same reference in the other is flagged as unmatched, naming the system, a reason and the person who owns it. It is counted in the run and never dropped.
+6. Any allowance for rounding or timing is a number a person set for each detail, never assumed. A tolerance is a number a person wrote down against one detail. A difference inside it is still recorded (status: within_tolerance). A detail with no tolerance written down has none, so any difference on it stays open.
+7. Every scheduled run reports its counts, including the all-clear. Every scheduled run reports how many records matched, were within tolerance, mismatched, had no match and were corrected, even when every number but matched is zero. A missing report is never taken to mean all is well.
+8. A difference over the set limit, or too many mismatches, reaches a named person in the same run. A person sets an amount and a rate. A single difference over the amount, or a run whose open mismatches go over the rate, goes to the named person in the same run, not the next one.
+9. Every accepted fix keeps both original values and who accepted it. The difference keeps both values as they were. The fix records the proposed value, who accepted it, when, and the reference the other system gave back when it saved. A fix that overwrites the history fails.
+10. For any shared reference, every run, difference and fix can be looked up. When somebody asks why your accounts say what they say about a job, the record for that reference shows every run that found a difference on it, each difference with both values, and each fix with who accepted it.
+11. It keeps working if the person who built it leaves. Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+12. The pass test passes. On your real systems, one planted mismatch is found and shown side by side, and one unmatched record is flagged. One fix is accepted by a person and saved once, and the next run reports an all-clear.
 
 ## 5. The four queues
 
 | Queue | What it holds | The rule |
 | --- | --- | --- |
-| Matched | A pair whose fields agree, or differ inside the declared tolerance | Silent. Counted, never listed. Within-tolerance is recorded as such, not as a match |
+| Matched | A pair whose fields agree, or differ inside the declared tolerance | Counted, never listed. A pair inside the tolerance is recorded as that, not as a match |
 | Open difference | A field where the two sources disagree beyond tolerance | Both values and the master's value in front of a person. Nothing changes until they accept |
 | Orphan | A record in one source with no partner in the other | A reason and an owner. A person decides whether it is real |
-| Corrected | A difference a named person accepted, written once into the target | Both original values and the person kept in history. Never overwritten |
+| Corrected | A difference a named person accepted, changed once in the target system | Both original values and the person kept in history. Never overwritten |
 
-The all-clear publishes. A run that says nothing when everything matched is indistinguishable from a run that did not happen, and the week the schedule silently stops is the week it mattered.
+Every run reports, including the all-clear. A run that says nothing when everything matched looks the same as a run that did not happen, and the week the schedule quietly stops is the week it mattered.
 
 ## 6. What stays with a person
 
@@ -145,28 +145,28 @@ The all-clear publishes. A run that says nothing when everything matched is indi
 
 ## 7. Connect your job system and your ledger, without it fixing either on its own
 
-It finds where your job system and your ledger disagree. It reads both and lists every difference, and when a named person accepts a correction, it writes that one fix into the field you agreed it may change. You accept every correction, and you decide which system is right for each field. Your own login stays yours: the check connects with its own key or app connection, never your username and password.
+It finds where your job system and your ledger disagree. It reads both and lists every difference, and when a named person accepts a correction, it writes that one fix into the field you agreed it may change. You accept every correction, decide which system is right for each field and how far apart they may be, and decide whether a record with no partner is real. Your own login stays yours: the check connects with its own key or app connection, never your username and password.
 
 What each piece of access is for.
 
 - **Source A, read.** The job system, the roster or the register: every record carrying the shared id, and the fields the contract compares.
 - **Source B, read.** The ledger, the timesheets or the drive, the same way. If AI Pathway is already connected to your Xero, a key with only “Read the book” ticked gives the check your Xero invoices, up to 120 days back, without a second Xero connection.
-- **Bank lines, from an export.** Xero does not give ordinary apps the unreconciled lines on your bank feed; that access is for lenders. When the bank is one of the pair, the check reads a statement export from your bank.
-- **The target, write, accepted corrections only.** One field, one record, keyed so a retry lands once, with the target’s own id read back. Where the target has no way in, the correction is a task with the accepted value, and the person who keys it records the id.
+- **Bank lines, from an export.** Xero does not give ordinary apps the unreconciled lines on your bank feed. That access is for lenders. When the bank is one of the pair, the check reads a statement export from your bank.
+- **The target, write, accepted corrections only.** One field on one record, set up so a second try never writes twice, with the target system’s own id read back. Where the target cannot be written to, the correction goes to a person with the accepted value, and the person who types it in records the id.
 
 1. Write the pair contract: the two sources, the shared id, the master per field, the tolerance per field.
 2. Give the check read access to both sources: a key, an app connection or a scheduled export.
 3. Give write access to the target only, and only for the fields the contract lets a correction touch. Leave it off entirely if a person will key every fix.
-4. Your developer builds against the stub until the checks in section 4 pass.
+4. Your developer builds against a test version until the checks in section 4 pass.
 5. Run the pass test below on the real pair.
 
-Why not a sync app that keeps the two in step? A sync app makes the two agree by copying one over the other, field by field, as soon as they differ. That is the Friday fix in the opening paragraph, done every few minutes: the records agree and the value that showed something was wrong is gone. Keep a sync for fields that should simply be copied, and run this check on the fields where a difference means something.
+Why not a sync app that keeps the two in step? A sync app makes the two agree by copying one over the other, field by field, as soon as they differ. That is the Friday fix in the opening paragraph, done every few minutes. The records agree, and the value that showed something was wrong is gone. Keep a sync for fields that should simply be copied, and run this check on the fields where a difference means something.
 
-Where it runs. A scheduled flow with the contract, differences and corrections in Microsoft 365 lists (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/two-records-on-microsoft-365) lays these out), a small page a coding agent builds from this standard, or a routine woken on the schedule in the contract. All are held to the same checks; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
+Where it runs. A scheduled flow with the contract, differences and corrections in Microsoft 365 lists (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/two-records-on-microsoft-365) lays these out), a small page a coding agent builds from this standard, or a routine that runs on the schedule in the contract. All are held to the same checks; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
 
 ## 8. What your developer builds, and the step that needs care
 
-One step not to hand-roll: the accepted correction's write into the target source, with both original values kept. Everything else a coding agent builds against the stub in an afternoon.
+One step is not worth building yourself: writing an accepted correction into the target system, with both original values kept. A coding agent can build everything else against a test version in an afternoon.
 
 ```
 provider:
@@ -186,24 +186,24 @@ the live step
 
 A vendor selling reconciliation is usually selling the comparison, which is the easy half, and is silent about who accepted the last fix and where the old value went. Ask them that first.
 
-**The pass test.** On the real pair, not a sample. Seed one mismatch you know about: the run must show both values side by side with the master’s value and change nothing. Delete one record from one side: the run must raise an orphan with a reason and an owner. Accept the seeded correction as a named person: it must be written once into the target with its own id, and both original values must still be readable afterwards. Then run again with nothing changed: the run must publish an all-clear with its counts. If the correction was written before anyone accepted it, or the old value is gone, the standard is not implemented, however tidy the two records look.
+**The pass test.** On the real pair, not a sample. Seed one mismatch you know about: the run must show both values side by side with the master’s value and change nothing. Delete one record from one side: the run must raise an orphan with a reason and an owner. Accept the seeded correction as a named person: it must be written once into the target system with that system’s own id, and both original values must still be readable afterwards. Then run again with nothing changed: the run must report an all-clear with its counts. If the correction was written before anyone accepted it, or the old value is gone, the build does not meet the standard, however tidy the two records look.
 
 ## 9. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 
-- **1. A pair is declared in a written contract, never guessed.** Every reconciliation names its two sources, the shared key that joins them, and which source is master for each field, in a contract a person wrote. A run with no declared master fails.
-- **2. Records are joined on the shared id, never on a name or an amount.** The join key is the id the contract names. Two records with the same customer name, or the same amount, are not a pair unless they share that id.
-- **3. A matched pair produces nothing; a mismatch produces a Difference, never a corrected record.** Agreement is counted and not shown. A disagreement becomes a Difference carrying the field, both values and the master's value. No record in either source is changed by the comparison.
-- **4. A correction is proposed with both values and written only after a named person accepts it.** The run proposes the master's value for the other source. The write happens once, after a named person accepts the proposal, and never before. A write with no acceptance fails.
-- **5. A record with no partner is an orphan with a reason and an owner, not a silent gap.** A record in one source with no record under the same id in the other is raised as an orphan naming the source, a reason and the person who owns it. It is counted on the run and never dropped.
-- **6. Rounding and timing tolerances are declared per field with a value, and never assumed.** A tolerance is a number a person wrote against a field in the contract. A difference inside it is recorded as within_tolerance, still an object. A field with no declared tolerance has none, so any difference on it is open.
-- **7. The run publishes on schedule with its counts, including the all-clear.** Every scheduled run publishes a count of matched, within tolerance, mismatched, orphaned and corrected, even when every number but matched is zero. Its absence is never the signal.
-- **8. A difference over the declared threshold, or too many mismatches, reaches a named person that run.** The contract declares an amount and a rate. A single difference over the amount, or a run whose open mismatches exceed the rate, goes to the named person in the same run, not the next one.
-- **9. Every accepted correction keeps both original values and the person who accepted.** The Difference keeps both values as they were. The Correction records the proposed value, who accepted, when, and the id the write returned. A fix that overwrites the history fails.
-- **10. For any shared id, the runs, differences and corrections are retrievable.** When somebody asks why the ledger says what it says about a job, the record by that id shows every run that raised a difference on it, each difference with both values, and each correction with who accepted it.
-- **11. It survives the builder.** Someone other than the builder can explain what it does, and it runs on an account the business owns.
-- **12. The pass test passes.** On the business's real sources: one seeded mismatch found and shown side by side, one orphan raised, one correction accepted by a person and written once, and an all-clear published the following run.
+- **1. A person writes down which two records are compared, never a guess.** Every comparison names its two systems, the shared reference that links them, and which system is right for each detail, all written down by a person. A run that does not say which system is right fails.
+- **2. Records are matched on the shared reference, never on a name or an amount.** The match uses the reference the person wrote down. Two records with the same customer name, or the same amount, are not a pair unless they share that reference.
+- **3. Records that agree stay quiet, and a mismatch is shown side by side, never corrected.** Agreement is counted but not shown. A disagreement is recorded as a difference showing the detail, both values and the value from the system that is right. Comparing never changes a record in either system.
+- **4. A fix is proposed with both values, and saved only after a named person accepts it.** It proposes the right system's value for the other system. The change is saved once, after a named person accepts it, and never before. A change saved with no acceptance fails.
+- **5. A record missing from the other system is flagged with a reason and an owner.** A record in one system with nothing under the same reference in the other is flagged as unmatched, naming the system, a reason and the person who owns it. It is counted in the run and never dropped.
+- **6. Any allowance for rounding or timing is a number a person set for each detail, never assumed.** A tolerance is a number a person wrote down against one detail. A difference inside it is still recorded (status: within_tolerance). A detail with no tolerance written down has none, so any difference on it stays open.
+- **7. Every scheduled run reports its counts, including the all-clear.** Every scheduled run reports how many records matched, were within tolerance, mismatched, had no match and were corrected, even when every number but matched is zero. A missing report is never taken to mean all is well.
+- **8. A difference over the set limit, or too many mismatches, reaches a named person in the same run.** A person sets an amount and a rate. A single difference over the amount, or a run whose open mismatches go over the rate, goes to the named person in the same run, not the next one.
+- **9. Every accepted fix keeps both original values and who accepted it.** The difference keeps both values as they were. The fix records the proposed value, who accepted it, when, and the reference the other system gave back when it saved. A fix that overwrites the history fails.
+- **10. For any shared reference, every run, difference and fix can be looked up.** When somebody asks why your accounts say what they say about a job, the record for that reference shows every run that found a difference on it, each difference with both values, and each fix with who accepted it.
+- **11. It keeps working if the person who built it leaves.** Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+- **12. The pass test passes.** On your real systems, one planted mismatch is found and shown side by side, and one unmatched record is flagged. One fix is accepted by a person and saved once, and the next run reports an all-clear.
 
 ## Related reading
 

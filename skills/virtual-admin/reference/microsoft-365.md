@@ -9,7 +9,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/admin-role-on-
 
 ---
 
-The daytime desk and the cash path each have their own plan. This one is the five small lists that let them hear each other: your hours, your owners, and the complaint that has to reach the invoice.
+The daytime desk and the cash path each have their own plan. This one adds five small lists so the two work together. They hold your hours, who owns what, and any complaint that has to stop the invoice.
 
 Used by
 
@@ -17,24 +17,24 @@ Used by
 - Business Systems Analyst
 - Operations Manager
 
-Build the daytime desk and the cash path from their own plans first. Then the gaps show up in a week: a customer who rang the after-hours line and the day line has two jobs, and a complaint taken at ten is a note nobody reads before the invoice flow runs at three. This plan adds three reads and one list a day, and nothing else.
+Build the daytime desk and the cash path from their own plans first. Within a week the gaps show. A customer who rang the after-hours line and then the day line has two jobs, and a complaint taken at ten is a note nobody reads before the invoice goes out at three. This plan adds three checks to flows you already have, and one list a day.
 
 ## In short
 
 - **What this is**: A build plan for the virtual admin standard on Microsoft 365. Five lists and three small changes to flows that already exist in the desk and cash path plans.
-- **The core rule**: A complaint taken on a call becomes a Holds row on the job id. The invoice and chase flows filter Holds on that job id first and stop on an open row.
-- **What it does not do**: It does not hard-code business hours in a flow condition, and it does not hold a job, a call log or an invoice. Each half keeps its own.
-- **The hard part**: Getting the after-hours line and the day line to run the same open-job read, and getting a spoken complaint into a row the invoice flow filters on.
+- **The core rule**: A complaint taken on a call goes on the Holds list against that job. Before an invoice or a chase goes out, the flows check Holds for the job and stop while the complaint is open.
+- **What it does not do**: Your hours live in a list you can change, never typed into a flow. Jobs, call logs and invoices stay where each half already keeps them.
+- **The hard part**: Getting the after-hours line and the day line to look up open jobs the same way, and getting a complaint made on the phone onto the list the invoice flow checks.
 
 ## 1. Before you start
 
 Read [the virtual admin build standard](https://aipathway.com.au/explore-ai/virtual-admin-build-standard) first. It defines its objects, and the lists below are those objects with SharePoint types on them. Shared conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-Get both halves running from their own plans: the daytime desk and the cash path. This plan does not replace either. It adds a read of Hours to the call flow, a read of Holds to the invoice and chase flows, and one flow at the close.
+Get both halves running from their own plans first, the daytime desk and the cash path. This plan adds to them. The call flow checks Hours, the invoice and chase flows check Holds, and one new flow runs at the close of day.
 
-Then fill Hours, Holidays and Owners. Holidays is the one people forget: a public holiday you close on is after hours, and a flow that only knows weekdays will answer it as the day desk.
+Then fill Hours, Holidays and Owners. Holidays is the one people forget. A public holiday you close on counts as after hours, and a flow that only knows weekdays will answer it as the day desk.
 
-One thing to check before you build: **do both of your lines call the same caller lookup?** If the after-hours line writes jobs through one flow and the day line through another, the first fix is to point both at the daytime desk plan’s Flow 1.
+Check one thing before you build. **Do both of your lines look up the caller the same way?** If the after-hours line creates jobs through one flow and the day line through another, first point both at the daytime desk plan’s Flow 1.
 
 ## 2. The lists, with their columns
 
@@ -110,7 +110,7 @@ FLOW 4    End of day                   (schedule, at Closes)
   never    a second list, or a line with no owner
 ```
 
-Three reads added to flows that already exist, and one new flow. If the change to your build is bigger than that, one of the halves is not running to its own plan yet.
+Three checks added to flows you already have, and one new flow. If your change is bigger than that, one of the halves is not yet running to its own plan.
 
 ## 5. What the flows can reach in your Microsoft 365 and your job system, and what they never touch
 
@@ -120,10 +120,10 @@ What each connection is for.
 
 - **SharePoint, the one site.** Hours, Holidays, Owners, Holds and DailyLists. The call flow reads the first three, writes Holds, and the end-of-day flow writes DailyLists.
 - **The job system, through the desk plan’s connection.** The open-job lookup and the note on the job by its id. No second connection is made for this plan.
-- **The call flow’s HTTP trigger.** What the phone line calls. Anyone holding that URL can start the flow, so keep it where you keep keys, not in an email.
+- **The call flow’s HTTP trigger.** The web address the phone line uses to start the call flow. Anyone holding that address can start the flow, so keep it where you keep your passwords and keys, not in an email.
 - **Teams or one shared mailbox.** To send the end-of-day list to the owner. Nothing in this plan writes to a customer.
 
-Least privilege, as steps.
+Give it only the access it needs, step by step.
 
 1. Own Flow 4 and the three changed flows with the service account the two halves already use, not a person who might leave.
 2. Put them in the same solution, on connection references, so the SharePoint, job system and Teams connections are each one place to change.
@@ -132,7 +132,7 @@ Least privilege, as steps.
 
 How to cut it off. Turn off Flow 4 and remove the Holds read from the two money flows, and you are back to the two halves on their own plans. Remove a connection behind a connection reference and every flow using it stops at its next run. The full list of switches is in [the shared conventions](https://aipathway.com.au/explore-ai/standards-on-microsoft-365#access).
 
-Why not let Copilot find the complaint? It will find it, when somebody asks. The invoice flow at three o’clock does not ask. A complaint has to be a row the money flows filter on before they move, and a note that a chat can summarise is still a note nothing reads in time.
+Why not let Copilot find the complaint? Copilot finds it when somebody asks, and the invoice flow at three o’clock does not ask. The complaint has to sit on the Holds list, which the invoice and chase flows check before anything goes out. A note Copilot can summarise is still a note nothing reads in time.
 
 ## 6. The order to build it in
 
@@ -150,11 +150,11 @@ It works until the first public holiday or the first late night. Hours and Holid
 
 ### A complaint written as a note on the job
 
-The note is on the right record and nothing reads it. The invoice flow filters Holds, so the complaint has to be a Holds row.
+The note is on the right job, but nothing reads it. The invoice flow checks Holds, so the complaint has to go on the Holds list.
 
 ### A list from each half
 
-The desk sends its callbacks and the ledger sends its holds, and the owner reads one of them. Flow 4 reads both and writes one row.
+The desk sends its callbacks and the ledger sends its holds, and the owner reads only one of them. Flow 4 reads both and puts them on one list.
 
 ## 8. Where the automation stops
 
@@ -163,7 +163,7 @@ The desk sends its callbacks and the ledger sends its holds, and the owner reads
 - Setting Hours, Holidays and Owners.
 - Being the person the customer knows.
 
-**The pass test.** On your own number, job system and ledger. Ring after hours about a new problem, then ring from the same phone in business hours and complain about the work. Mark the job complete and let the close run. The job system must hold one job with both calls noted on it. A Holds row must name the complaints owner. The ledger must hold no invoice for the job and nothing may have been chased. DailyLists must hold one row for the day, with the complaint and its owner on it.
+**The pass test.** On your own number, job system and ledger. Ring after hours about a new problem, then ring from the same phone in business hours and complain about the work. Mark the job complete and let the end-of-day flow run. The job system must hold one job with both calls noted on it. The Holds list must show the complaint, with the complaints owner named. The ledger must hold no invoice for the job and nothing may have been chased. DailyLists must hold one row for the day, with the complaint and its owner on it.
 
 ## Related reading
 

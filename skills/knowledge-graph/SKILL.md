@@ -98,8 +98,8 @@ skill asserts.
 - 3. The key contract
 - 4. The records it keeps, in the shape your developer needs
 - 5. The checks, in order
-- 6. The four queues for a node
-- 7. What the index is allowed to do
+- 6. The four stages a fact can be in
+- 7. What the search index is allowed to do
 - 8. What stays with a person
 - 9. What your developer builds, and the step that needs care
 - 10. A checklist to hold any build or supplier to

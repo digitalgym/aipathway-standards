@@ -9,7 +9,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/knowledge-grap
 
 ---
 
-Nodes and edges are two lists. The thing that makes it a graph rather than a pile is a third list nobody thinks to build, and a gate this platform can only half hold.
+Facts and the links between them are two SharePoint lists. A third list, recording where each fact came from, is the one most builds leave out, and the approval step is one SharePoint can only partly enforce.
 
 Used by
 
@@ -17,22 +17,22 @@ Used by
 - Business Systems Analyst
 - Operations Manager
 
-You do not need a graph database for this, and on a tenant you already pay for you are not getting one. What you are getting is a set of lists whose shape makes two questions answerable: which nodes came from this source, and who said this one could go live. Those are the two the standard is built around, and both are lost the moment provenance becomes a comma-separated column.
+You do not need a graph database for this, and your Microsoft 365 subscription does not include one. You get a set of SharePoint lists, laid out so you can answer two questions: which facts came from this source, and who approved this one. The standard is built around those two questions, and you lose both the moment the record of where each fact came from is squeezed into one comma-separated column.
 
 ## In short
 
 - **What this is**: A build plan for the knowledge graph standard on Microsoft 365. Nine lists, four flows, a Power BI page, and the knowledge base register feeding the top of it.
-- **The core rule**: A node reaches live through an approval that writes a name and a date. Every part of this build that looks like a status column is the part to be suspicious of.
-- **What it does not do**: It holds facts and says what breaks when a source moves. Answering from them is the cited answer build, and it reads these lists rather than the index.
-- **The hard part**: SharePoint cannot make one column read-only to somebody who can edit the item. The acceptance gate is therefore a write path plus a detector, and you should know that before you claim it.
+- **The core rule**: A fact only goes live through an approval that records a name and a date. Be wary of any part of this build that is just a status column someone can change.
+- **What it does not do**: It holds the facts and tells you what is affected when a source changes. Answering staff questions from them is a separate build, the cited answer, which reads these lists directly.
+- **The hard part**: SharePoint cannot lock one column for someone who can edit the rest of the item. So the approval step is a flow that does the approving, plus a rule that catches hand edits afterwards. Know that before you tell anyone it is locked.
 
 ## 1. Before you start
 
 Read [the knowledge graph build standard](https://aipathway.com.au/explore-ai/knowledge-graph-build-standard) first. It defines its objects, and the lists below are those objects with SharePoint types on them. Shared conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-Write the key contract and give it a version before the first extract, and write it as Choice columns rather than as a diagram. Node types and edge types are closed lists at each version, which on this platform means a Choice column with custom values turned off. That one setting is the difference between a contract and a convention, and it is easier to set on an empty list than on one that has already grown a RELATED_TO.
+Write the key contract (the kinds of facts and links you allow) and give it a version number before the AI reads its first source. Set it up as Choice columns, not as a diagram. At each version the kinds are a fixed list, which in SharePoint means a Choice column with custom values turned off. That one setting is what stops new kinds creeping in, and it is easier to set on an empty list than on one that has already grown a vague RELATED_TO link.
 
-Second, decide where sources come from. The standard says the graph takes its sources from the register, never from a fresh upload, so if you have not built the knowledge base yet, that is the prior job and this build will be waiting on it. A source row with a blank RegisterId, the column below, has skipped a standard.
+Second, decide where sources come from. The standard says the graph takes its sources from the register, never from a fresh upload, so if you have not built the knowledge base yet, build that first. This build waits on it. A source with a blank RegisterId (the column below) has skipped the knowledge base standard.
 
 ## 2. The lists, with their columns
 
@@ -216,7 +216,7 @@ FLOW 4  The change
            A delta with a blank AffectedNodeCount never ran.
 ```
 
-Flow 2 reads the contract before it writes anything and stamps the version onto every row, so a node built under an old contract is findable later without archaeology. Flow 4 is the one the whole standard is arguing for, and it is four actions long only because Provenance exists.
+Flow 2 reads the contract before it writes anything and stamps the version onto every row, so a node built under an old contract is easy to find later. Flow 4 is the reason for the whole standard, and it is four actions long only because Provenance exists.
 
 ## 5. The Power BI model and its measures
 
@@ -274,15 +274,15 @@ Uncomputed Deltas is the measure that separates this from an index, and it works
 
 ## 6. What the flows can reach in your SharePoint, and what they never touch
 
-The flows propose the facts for your knowledge graph, for a person to accept. They read the knowledge base register, send passages from the accepted sources to the extraction model, write each proposed fact, how it links to others and where it came from to one SharePoint site, and start an approval. A named person accepts each one before it counts, and any conflict between two facts is yours to resolve.
+The flows draft each fact for your knowledge graph, ready for a person to accept. They read the knowledge base register, send passages from accepted sources to the AI model, and write each proposed fact, its links and where it came from to one SharePoint site. A named person accepts each source and each fact before it counts, and decides any conflict between two facts and what changes when a source is replaced.
 
 What each connection is for.
 
 - **SharePoint, the graph site, read and write.** The nine lists. The only place the build writes.
 - **SharePoint, the knowledge base register, read.** Where sources come from, and the checksum Flow 4 compares. The graph never writes to the register.
 - **The extraction model.** Whatever Flow 2 calls, through the HTTP action or a custom connector (both premium in Power Automate). It is sent the passages of an accepted source and nothing else, and its ModelId goes on the ExtractRuns row.
-- **Approvals and Teams.** Accepting a source, a node and a change delta, each with a person’s name written back.
-- **No ledger and no AI Pathway key.** Nothing in this build touches money or makes a call.
+- **Approvals and Teams.** Accepting a source, a fact and the changes from a replaced source, each with the person’s name recorded.
+- **No accounts system and no AI Pathway key.** Nothing in this build touches money or makes a call.
 
 Keep it to the least it needs.
 
@@ -293,7 +293,7 @@ Keep it to the least it needs.
 
 How to cut it off. Turn the flows off and nothing new is proposed, accepted or flagged as changed; what is live stays live and keeps its names. Remove the model’s connection and Flow 2 stops extracting while the rest still runs.
 
-Why not Copilot, or an agent built over the library? Either will answer from whatever passages it finds, and for a first look that is useful. Neither keeps a node a person accepted, a provenance row per fact, or a list of what breaks when an edition is replaced. Those three are the standard, and they are lists a flow can write and a person can sign.
+Why not Copilot, or an agent built over the library? Either will answer from whatever passages it finds, and for a first look that is useful. Neither keeps a record of which facts a person accepted, where each fact came from, or what is affected when an edition is replaced. Those three records are the standard, and a flow can write them for a person to sign off.
 
 ## 7. The order to build it in
 
@@ -308,9 +308,9 @@ Why not Copilot, or an agent built over the library? Either will answer from wha
 
 ## 8. Four traps specific to this build
 
-### Claiming a gate SharePoint cannot hold shut
+### Claiming SharePoint locks the approval step when it cannot
 
-There is no column-level permission in SharePoint: anybody who can edit a Nodes item can set Queue to live. So the gate is three things rather than one. Restrict write on the list to the flows and a small group, have the acceptance flow write AcceptedByUpn alongside the Person column, and put a list validation formula on the item that refuses a live row with an empty AcceptedByUpn. The validation catches the hand edit, the flow does the accepting, and the reason AcceptedByUpn exists at all is that validation formulas do not see Person columns. Build it that way and say plainly that the last line is a detector.
+There is no column-level permission in SharePoint: anybody who can edit a Nodes item can set Queue to live. So the gate is three things rather than one. Restrict write on the list to the flows and a small group, have the acceptance flow write AcceptedByUpn alongside the Person column, and put a list validation formula on the item that refuses a live row with an empty AcceptedByUpn. The validation catches the hand edit, the flow does the accepting, and the reason AcceptedByUpn exists at all is that validation formulas do not see Person columns. Build it that way and say plainly that the last part only catches a hand edit after it happens.
 
 ### Provenance as a comma-separated column
 
@@ -318,21 +318,21 @@ Source ids in one multi-line column look fine until the morning a source is repl
 
 ### Expecting to walk the graph
 
-Lists and DAX will do a hop: node to edge to node, which covers scope, supersession and conflict, and those are the questions the standard actually asks. A DERIVES chain three deep is not a query you will write here, and building the contract as if it will be is how a tidy model becomes unusable. Keep chains shallow, and if the business genuinely needs traversal, that is a reason to move the store rather than a reason to write worse flows.
+Lists and DAX will do a hop: node to edge to node, which covers scope, supersession and conflict, and those are the questions the standard asks. A DERIVES chain three deep is not a query you will write here, and building the contract as if it will be is how a tidy model becomes unusable. Keep chains shallow, and if the business needs to follow longer chains, that is a reason to move the store rather than a reason to write worse flows.
 
 ### Leaving fill-in on the Choice column
 
-With fill-in switched on, SharePoint lets a Choice column accept a value the list does not offer, and it is one setting that is easy to turn on and forget. Leave it on and the first extract that meets something awkward invents a type, the contract silently forks, and the standard's first check is gone with no error anywhere. Turn it off on Type, Queue, Jurisdiction and Method, and check it again after anyone edits the list.
+With fill-in switched on, SharePoint lets a Choice column accept a value the list does not offer, and it is one setting that is easy to turn on and forget. Leave it on and the first extract that meets something awkward invents a type, the contract quietly splits in two, and the standard's first check is gone with no error anywhere. Turn it off on Type, Queue, Jurisdiction and Method, and check it again after anyone edits the list.
 
 ## 9. Where the automation stops
 
-- Accepting a source into the library, which is the approval Flow 1 exists to record rather than to make.
-- Accepting a proposed node or edge as live. A confident extractor is still a proposal.
-- Resolving a conflict between two live nodes. DecidedBy is a person, and neither node answers until it is filled.
-- Accepting a change delta, which is what lets the affected nodes answer again.
+- Accepting a source into the library. Flow 1 records the approval; a person gives it.
+- Accepting a proposed fact or link as live. However sure the AI is, what it drafts is only a proposal.
+- Resolving a conflict between two live facts. A person decides, and neither fact is used in an answer until they do.
+- Accepting the changes when a source is replaced, which is what lets the affected facts answer again.
 - Declaring two entities the same thing when the systems disagree, and any statement that the graph is complete, compliant or approved for client use.
 
-**The pass test.** Accept one real source with a named person, let Flow 2 propose two clauses from it, and accept one of them. Then replace that source with an edition that drops the accepted clause, update the checksum on the register entry, and let Flow 4 run. You must get a ChangeDeltas row whose AffectedNodeIds came out of a filter on Provenance and names that node, an AffectedNodeCount that is a number rather than blank, the node sitting in change_pending rather than live, and the QueryRecords rows that hit it still returning it when you ask what an earlier answer relied on. Then open the Nodes list and set the unaccepted clause to live by hand: the validation must refuse it. An hour, on one source you control. If the affected list was typed, you have an index with a person doing the graph part. If the node is still live, retiring a source does not retire its answers and last year’s rule is still answering. If the hand edit saved, the acceptance gate is a convention.
+**The pass test.** Accept one real source with a named person, let Flow 2 propose two clauses from it, and accept one of them. Then replace that source with an edition that drops the accepted clause, update the checksum on the register entry, and let Flow 4 run. You must get a ChangeDeltas row whose AffectedNodeIds came out of a filter on Provenance and names that node, an AffectedNodeCount that is a number rather than blank, the node sitting in change_pending rather than live, and the QueryRecords rows that hit it still returning it when you ask what an earlier answer relied on. Then open the Nodes list and set the unaccepted clause to live by hand: the validation must refuse it. An hour, on one source you control. If the affected list was typed, you have an index with a person doing the graph part. If the node is still live, retiring a source does not retire its answers and last year’s rule is still answering. If the hand edit saved, nothing enforces the approval step.
 
 ## Related reading
 

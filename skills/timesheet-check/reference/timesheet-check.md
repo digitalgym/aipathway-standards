@@ -37,7 +37,7 @@ An open build standard for the check between the hours people capture and the pa
 
 The core rule
 
-Totals derive from entries. A penalty applied names the rule edition it came from. An anomaly leaves the queue only with a person's name and a reason. Nothing reaches payroll without a release.
+Totals are added up from the hours people entered. Every penalty names the award edition it came from. An odd entry is cleared only with a person's name and a reason. Nothing reaches payroll until a person releases it.
 
 What it does not do
 
@@ -45,7 +45,7 @@ It does not decide which award clause applies to an odd shift, does not clear an
 
 The hard part
 
-Not the arithmetic. The award edition that moved between periods, and the export that ran twice because nobody read back whether it already had.
+The sums are easy. The hard part is the award edition that changed between pay periods, and the export that ran twice because nobody checked whether it already had.
 
 The sheet said forty hours. The site app said forty-three and a half, two of them on a job the person was never on, and Saturday was paid at the weekday rate because the spreadsheet formula was written before the award changed. Nobody did anything wrong on purpose. The check that would have caught all three did not exist, so the payroll run was the check.
 
@@ -59,19 +59,19 @@ One period, entries to payroll
 6. If yes, one export is written into payroll with its id back.
 7. Has the period stayed unchanged since the export? If yes, the run publishes hours, anomalies found and resolved, and the release. If no, the export is updated, never duplicated.
 
-The entry traces first, because an hour that does not belong to a person, a day and an allocated job is not a line. The filled diamond is the release: nothing reaches payroll without a named person. The loop is the anomaly queue, cleared by a person with a reason and never by the check itself.
+Each entry is traced first, because an hour that does not belong to a person, a day and a job they were allocated to cannot go on the sheet. The filled diamond is the release. Nothing reaches payroll until a named person releases it. The loop is the list of odd entries, cleared by a person with a reason and never by the check itself.
 
 ## 1. What this standard covers
 
 Any business where hours are captured somewhere other than the payroll system: a site app, a kiosk, a paper sheet, the job system itself. Trades, construction, cleaning, labour hire, anything with a roster and jobs. If a person’s pay depends on entries somebody else made, this applies.
 
-It covers the check, not the pay. Interpreting which award clause applies to an unusual shift is a question for a person with a cited rule in front of them, and the shape of that question is the [Cited Answer standard](https://aipathway.com.au/explore-ai/cited-answer-build-standard). This standard reads a dated rule, cites it, and parks what it does not plainly cover. The [timesheet paper](https://aipathway.com.au/explore-ai/timesheet-payroll-trades) is the argument beside it.
+It covers the check, not the pay. Interpreting which award clause applies to an unusual shift is a question for a person with a cited rule in front of them, and the shape of that question is the [Cited Answer standard](https://aipathway.com.au/explore-ai/cited-answer-build-standard). This standard reads a dated rule, names it, and sets aside anything the rule does not plainly cover for a person. The [timesheet paper](https://aipathway.com.au/explore-ai/timesheet-payroll-trades) explains why it matters.
 
-It prevents a specific failure: the period that reached payroll with an anomaly nobody looked at, a penalty from an edition that had lapsed, and no name on the release.
+It prevents a specific failure: the period that reached payroll with an anomaly nobody looked at, a penalty from an award edition that had expired, and no name on the release.
 
-## 2. The closed list of anomalies
+## 2. The six kinds of odd entry
 
-Six kinds. A closed list, so an anomaly always has a name and an owner, and a new kind is a change to the standard rather than a note somebody typed.
+Six kinds, and no others, so each odd entry (an anomaly) always has a name and an owner. Adding a new kind means changing the standard, never typing a note.
 
 | Kind | What it is | Who owns it |
 | --- | --- | --- |
@@ -122,27 +122,27 @@ A Period with an export_external_id and no released_by is the defect this standa
 
 ## 4. The checks, in order
 
-The order is the claim. The entry is traced before it is totalled, the rule is read before a card is written, and the anomalies are at zero before the release is even asked for.
+Each check has to pass before the next one runs. Each entry is traced before it is added up, the rule is read before any note naming it is written, and every anomaly is cleared before the release is even asked for.
 
-1. Every entry traces to a person, a day and a job. Every entry carries a person id from the contact list, a date, and a job id from the job system that the person was allocated on that day. An entry with no job, or a job the person was not allocated, is an anomaly and never a line on the sheet.
-2. Daily and weekly totals are computed from entries, never typed. A total is the sum of the entries it names, computed at run time. A total that names no entries, or whose hours differ from the sum of the entries it names, is a typed total and fails.
-3. An anomaly is one of a closed list of kinds, and it has an owner. Over-hours in a day, overlapping entries, a missing break, an entry on a day not rostered, a job not allocated, and a rule that does not plainly apply. Each anomaly carries a kind from that list and the name of the person who owns it. A kind outside the list, or an anomaly with no owner, fails.
-4. Any penalty, overtime or allowance applied cites the rule, its edition and its effective date. An entry that attracts overtime, a weekend penalty or an allowance carries a card naming the rule, its edition and the date it took effect, read from the rule store at run time. A rule applied with no card fails.
-5. A retired rule edition cannot apply to the next period. Once a rule edition is retired, the next period applies the edition in force for its dates or parks the entry. A card for a period after the retirement that cites the retired edition fails.
-6. An entry the dated rule does not plainly cover is parked for a person. A disputed break, an unusual shift, a situation the rule text does not plainly name: the entry is parked with kind rule_unclear and an owner, and no card is written for it. The build never decides which clause applies.
-7. An anomaly leaves the queue only with a person's name and a reason. A resolution is a person's name, a reason from the list approved, corrected or rejected, and the time. The person's decision is attached as evidence. An anomaly resolved with no name, or with no decision behind it, fails.
-8. Nothing reaches payroll without a release by a named person. The period export is written only after a named person releases the period, and only when every anomaly in it is resolved. A run with no release writes nothing. An export with no release behind it, or with an open anomaly, fails.
-9. One export per period, written once, updated on a second release. The export is keyed to the period. A second release for the same period updates the existing export or refuses; it never writes a second one. A null external id is a failed export, not a success.
-10. Every period publishes hours, anomalies found and resolved, and the release, including a clean one. Each run publishes a report for the period: the hours by person and day, how many anomalies were found and how many resolved, and who released it or that nobody has. A clean period publishes too, so silence never means clean.
-11. Entries, anomalies, resolutions, rules cited and the release are retrievable by person and period. When a person disputes their pay, the record for that person and period shows every entry, every anomaly with who resolved it and why, every rule card, and who released the period.
-12. It survives the builder. Someone other than the builder can explain what it does, and it runs on an account the business owns.
-13. The pass test passes. On a real period with real entries: one overlapping pair caught, one unallocated job caught, one rule edition change parking the next period, one release by a person, and one export in the payroll system with its id.
+1. Every entry traces to a person, a day and a job. Every entry names a person from your contact list, a date, and a job from your job system that the person was allocated to that day. An entry with no job, or on a job the person was not allocated to, is flagged as a problem and never goes on the sheet.
+2. Daily and weekly totals are added up from the entries, never typed in. A total is the sum of the entries it lists, added up each time it runs. A total that lists no entries, or whose hours differ from the sum of the entries it lists, counts as typed in and fails.
+3. Every flagged problem is one of six set kinds, and someone owns it. The kinds are over-hours in a day, overlapping entries, a missing break, an entry on a day not rostered, a job not allocated, and a rule that does not plainly apply. Each flagged problem carries one of those kinds and the name of the person who owns it. Any other kind, or a problem with no owner, fails.
+4. Any penalty, overtime or allowance applied names the rule, its edition and the date it took effect. An entry that attracts overtime, a weekend penalty or an allowance carries a note naming the rule, its edition and the date it took effect, looked up from your stored rules each time it runs. A rule applied with no note fails.
+5. A rule edition that has been replaced cannot apply to the next period. Once a rule edition is replaced, the next period uses the edition in force for its dates, or the entry stops and goes to its owner to decide. A later period that cites the replaced edition fails.
+6. An entry the rule does not plainly cover goes to a person to decide. A disputed break, an unusual shift, or anything the rule's wording does not plainly name is flagged for its owner (kind: rule_unclear), and no rule note is added to it. It never decides which clause applies.
+7. A flagged problem is cleared only with a person's name and a reason. Clearing one records the person's name, a reason (approved, corrected or rejected) and the time, with their decision attached as evidence. A problem cleared with no name, or with no decision behind it, fails.
+8. Nothing goes to payroll until a named person releases the period. The period is sent to payroll only after a named person releases it, and only when every flagged problem in it is cleared. With no release, nothing is sent. A payroll export with no release behind it, or with a problem still open, fails.
+9. Each period goes to payroll once, and a second release updates it. The export is tied to the period. A second release for the same period updates the existing export or is refused, and never makes a second one. If payroll does not send back a reference number, the export has failed.
+10. Every period gets a report of hours, problems found and cleared, and the release, even a clean one. Each run publishes a report for the period with the hours by person and day, how many problems were found and how many cleared, and who released it or that nobody has yet. A clean period gets a report too, so silence never means all clear.
+11. Entries, problems, decisions, rules used and the release can be looked up by person and period. When someone disputes their pay, the record for them and that period shows every entry, every flagged problem with who cleared it and why, every rule note, and who released the period.
+12. It keeps working if the person who built it leaves. Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+13. The pass test passes. On a real pay period with real entries, it catches one overlapping pair and one unallocated job, and a rule edition change sends the next period's uncovered entry to a person. One person releases the period, and one export lands in payroll with its reference number.
 
-## 5. The award is a rule you read, not one you interpret
+## 5. The check reads the award as written, and a person interprets it
 
-Overtime after eight hours, a Saturday penalty, a meal allowance: each is a clause in an instrument with an edition and an effective date. The check applies one only when the entry plainly matches a situation that edition names, and when it does, the line carries a card saying which rule, which edition, from when. When the edition changes, the next period cites the new one, and the old one cannot produce a card.
+Overtime after eight hours, a Saturday penalty, a meal allowance: each is a clause in an award with an edition and the date it takes effect. The check applies one only when the entry plainly matches a situation that edition names, and when it does, the line carries a note (a card) saying which rule, which edition, from when. When the edition changes, the next period names the new one, and the old one can no longer be applied.
 
-An entry the rule does not plainly cover, a disputed break, a split shift nobody has seen before, is parked with the kind rule_unclear and an owner. The machine does not decide which clause applies. That is the one decision on this page that can end up in front of a tribunal, and it stays with a person who has the clause in front of them.
+An entry the rule does not plainly cover, a disputed break, a split shift nobody has seen before, is set aside as rule_unclear, with an owner. The check never decides which clause applies. That is the one decision on this page that can end up in front of a tribunal, and it stays with a person who has the clause in front of them.
 
 ## 6. What stays with a person
 
@@ -160,17 +160,17 @@ What each piece of access is for.
 - **Time entries, read.** From the site app, the kiosk or the job system, wherever hours are captured. Paper sheets are keyed into a list first.
 - **Roster, read.** To find the entry on a day the person was not rostered.
 - **Job allocations, read.** From the job system, to find hours booked to a job the person was never on.
-- **Payroll timesheets, write, once per period.** The released hours, with payroll’s own id read back. In Xero, connect an app that asks for payroll timesheets and nothing more; a Xero app created since March 2026 has to ask for narrow permissions anyway. Where payroll has no way in, the export is a file a person uploads, and they record the id payroll gives back.
+- **Payroll timesheets, write, once per period.** The released hours, with payroll’s confirmation read back. In Xero, connect an app that asks for payroll timesheets and nothing more; a Xero app created since March 2026 has to ask for narrow permissions anyway. Where payroll has no way in, the export is a file a person uploads, and they record the reference number payroll gives back.
 
 1. Write down where entries, the roster and the allocations live, and give the check read access to each: a key, an app connection or a scheduled export.
 2. Load the award edition you pay under as a dated rule, with its effective date.
-3. Your developer builds against the stub until the checks in section 4 pass.
+3. Your developer builds against sample data until the checks in section 4 pass.
 4. Connect payroll with timesheet access only, or set up the export file.
 5. Run the pass test below on a real period before the first export goes live.
 
 Why not your payroll’s own timesheet approval? Use it: approving the period there can be the release. It does not check each entry against the roster and the job allocations, or keep the owner and reason for every anomaly. Some payroll systems apply award rules for you; the check still records which edition each penalty came from, so a changed edition shows up before pay day rather than after.
 
-Where it runs. A scheduled flow with the entries, anomalies and releases in Microsoft 365 lists (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/timesheet-check-on-microsoft-365) lays these out), a small page a coding agent builds from this standard, or a routine woken at the end of each pay period. All are held to the same checks; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
+Where it runs. A scheduled flow with the entries, anomalies and releases in Microsoft 365 lists (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/timesheet-check-on-microsoft-365) lays these out), a small page a coding agent builds from this standard, or a routine that starts at the end of each pay period. All are held to the same checks; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
 
 ## Facts that can change, and when we checked them
 
@@ -182,7 +182,7 @@ Modern award rates, penalties and allowances change on a schedule set by the Fai
 
 ## 9. What your developer builds, and the step that needs care
 
-One step not to hand-roll: the release gate and the idempotent export into payroll, with an id back. Everything else a coding agent builds against the stub in an afternoon.
+One step needs real care: the release by a named person, and an export into payroll that happens exactly once and comes back with payroll's own reference. Everything else a coding agent builds against sample data in an afternoon.
 
 ```
 provider:
@@ -200,27 +200,27 @@ the live step
     there is no hosted product for it.
 ```
 
-A vendor selling timesheet automation is usually selling the capture and the arithmetic, and is silent about who released the last period and which award edition the Saturday rate came from. Ask them those two first.
+A vendor selling timesheet automation is usually selling the capture and the sums, and is silent about who released the last period and which award edition the Saturday rate came from. Ask them those two first.
 
-**The pass test.** On a real period, with the entries people actually captured. Seed two entries for one person that overlap: both must be in the anomaly queue with a supervisor’s name. Seed an entry on a job the person was never allocated: it must be an anomaly, not a line. Retire the current award edition and load the next with a later effective date: the following period must cite the new edition only, and an entry the new edition does not plainly cover must park with the kind rule_unclear. Clear every anomaly as a named person with a reason, release the period as a named person, and run twice an hour apart: exactly one export must exist in payroll with its own id, and the record for any person must show their entries, their anomalies with resolutions, the cards, and the release with a name. If the export exists without a release, or a card cites the retired edition, the standard is not implemented.
+**The pass test.** On a real period, with the entries people actually captured. Add two entries for one person that overlap: both must be in the anomaly list with a supervisor’s name. Add an entry on a job the person was never allocated: it must be an anomaly, not a line. Retire the current award edition and load the next with a later effective date: the following period must cite the new edition only, and an entry the new edition does not plainly cover must be set aside as rule_unclear. Clear every anomaly as a named person with a reason, release the period as a named person, and run twice an hour apart: exactly one export must exist in payroll with its own id, and the record for any person must show their entries, their anomalies with resolutions, the cards, and the release with a name. If the export exists without a release, or a card cites the retired edition, the standard is not implemented.
 
 ## 10. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 
-- **1. Every entry traces to a person, a day and a job.** Every entry carries a person id from the contact list, a date, and a job id from the job system that the person was allocated on that day. An entry with no job, or a job the person was not allocated, is an anomaly and never a line on the sheet.
-- **2. Daily and weekly totals are computed from entries, never typed.** A total is the sum of the entries it names, computed at run time. A total that names no entries, or whose hours differ from the sum of the entries it names, is a typed total and fails.
-- **3. An anomaly is one of a closed list of kinds, and it has an owner.** Over-hours in a day, overlapping entries, a missing break, an entry on a day not rostered, a job not allocated, and a rule that does not plainly apply. Each anomaly carries a kind from that list and the name of the person who owns it. A kind outside the list, or an anomaly with no owner, fails.
-- **4. Any penalty, overtime or allowance applied cites the rule, its edition and its effective date.** An entry that attracts overtime, a weekend penalty or an allowance carries a card naming the rule, its edition and the date it took effect, read from the rule store at run time. A rule applied with no card fails.
-- **5. A retired rule edition cannot apply to the next period.** Once a rule edition is retired, the next period applies the edition in force for its dates or parks the entry. A card for a period after the retirement that cites the retired edition fails.
-- **6. An entry the dated rule does not plainly cover is parked for a person.** A disputed break, an unusual shift, a situation the rule text does not plainly name: the entry is parked with kind rule_unclear and an owner, and no card is written for it. The build never decides which clause applies.
-- **7. An anomaly leaves the queue only with a person's name and a reason.** A resolution is a person's name, a reason from the list approved, corrected or rejected, and the time. The person's decision is attached as evidence. An anomaly resolved with no name, or with no decision behind it, fails.
-- **8. Nothing reaches payroll without a release by a named person.** The period export is written only after a named person releases the period, and only when every anomaly in it is resolved. A run with no release writes nothing. An export with no release behind it, or with an open anomaly, fails.
-- **9. One export per period, written once, updated on a second release.** The export is keyed to the period. A second release for the same period updates the existing export or refuses; it never writes a second one. A null external id is a failed export, not a success.
-- **10. Every period publishes hours, anomalies found and resolved, and the release, including a clean one.** Each run publishes a report for the period: the hours by person and day, how many anomalies were found and how many resolved, and who released it or that nobody has. A clean period publishes too, so silence never means clean.
-- **11. Entries, anomalies, resolutions, rules cited and the release are retrievable by person and period.** When a person disputes their pay, the record for that person and period shows every entry, every anomaly with who resolved it and why, every rule card, and who released the period.
-- **12. It survives the builder.** Someone other than the builder can explain what it does, and it runs on an account the business owns.
-- **13. The pass test passes.** On a real period with real entries: one overlapping pair caught, one unallocated job caught, one rule edition change parking the next period, one release by a person, and one export in the payroll system with its id.
+- **1. Every entry traces to a person, a day and a job.** Every entry names a person from your contact list, a date, and a job from your job system that the person was allocated to that day. An entry with no job, or on a job the person was not allocated to, is flagged as a problem and never goes on the sheet.
+- **2. Daily and weekly totals are added up from the entries, never typed in.** A total is the sum of the entries it lists, added up each time it runs. A total that lists no entries, or whose hours differ from the sum of the entries it lists, counts as typed in and fails.
+- **3. Every flagged problem is one of six set kinds, and someone owns it.** The kinds are over-hours in a day, overlapping entries, a missing break, an entry on a day not rostered, a job not allocated, and a rule that does not plainly apply. Each flagged problem carries one of those kinds and the name of the person who owns it. Any other kind, or a problem with no owner, fails.
+- **4. Any penalty, overtime or allowance applied names the rule, its edition and the date it took effect.** An entry that attracts overtime, a weekend penalty or an allowance carries a note naming the rule, its edition and the date it took effect, looked up from your stored rules each time it runs. A rule applied with no note fails.
+- **5. A rule edition that has been replaced cannot apply to the next period.** Once a rule edition is replaced, the next period uses the edition in force for its dates, or the entry stops and goes to its owner to decide. A later period that cites the replaced edition fails.
+- **6. An entry the rule does not plainly cover goes to a person to decide.** A disputed break, an unusual shift, or anything the rule's wording does not plainly name is flagged for its owner (kind: rule_unclear), and no rule note is added to it. It never decides which clause applies.
+- **7. A flagged problem is cleared only with a person's name and a reason.** Clearing one records the person's name, a reason (approved, corrected or rejected) and the time, with their decision attached as evidence. A problem cleared with no name, or with no decision behind it, fails.
+- **8. Nothing goes to payroll until a named person releases the period.** The period is sent to payroll only after a named person releases it, and only when every flagged problem in it is cleared. With no release, nothing is sent. A payroll export with no release behind it, or with a problem still open, fails.
+- **9. Each period goes to payroll once, and a second release updates it.** The export is tied to the period. A second release for the same period updates the existing export or is refused, and never makes a second one. If payroll does not send back a reference number, the export has failed.
+- **10. Every period gets a report of hours, problems found and cleared, and the release, even a clean one.** Each run publishes a report for the period with the hours by person and day, how many problems were found and how many cleared, and who released it or that nobody has yet. A clean period gets a report too, so silence never means all clear.
+- **11. Entries, problems, decisions, rules used and the release can be looked up by person and period.** When someone disputes their pay, the record for them and that period shows every entry, every flagged problem with who cleared it and why, every rule note, and who released the period.
+- **12. It keeps working if the person who built it leaves.** Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+- **13. The pass test passes.** On a real pay period with real entries, it catches one overlapping pair and one unallocated job, and a rule edition change sends the next period's uncovered entry to a person. One person releases the period, and one export lands in payroll with its reference number.
 
 ## Related reading
 
