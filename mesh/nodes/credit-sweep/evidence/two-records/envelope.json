@@ -1,0 +1,2122 @@
+{
+  "envelopeVersion": "1.0",
+  "runId": "run-1795780622335",
+  "standard": "two-records-build-standard",
+  "spec": "AIP-BS-TWO-RECORDS",
+  "specVersion": "2026-10-03",
+  "environment": "stub",
+  "startedAt": "2026-11-27T11:57:02.323Z",
+  "finishedAt": "2026-11-27T11:57:02.335Z",
+  "results": [
+    {
+      "checkId": "a-pair-is-declared-not-guessed",
+      "n": 1,
+      "title": "A person writes down which two records are compared, never a guess",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The contract is read before either source. The published run names the contract and declares the same master per field the contract holds. A run under no contract, or one that declares no master, fails.",
+      "actual": "runs [[\"PC-chase-list-vs-customer-account-2026-09-01\",{\"amount_due\":\"b\"}]]; no-contract world runs 0, escalations [{\"reason\":\"two-records.contract_missing\",\"detail\":\"No written pair contract naming the customer id it joins on and which record is master for the amount due. Credit Sweep does not set customer credits against invoices under a guessed contract.\",\"at\":\"2026-09-26T00:00:00.000Z\"}]",
+      "stimulus": {
+        "description": "A written pair contract naming both sources, the shared key, and a master for each compared field, beside two seeded sources.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "a-pair-is-declared-not-guessed"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "id": "PC-chase-list-vs-customer-account-2026-09-01",
+            "key": "contact_id",
+            "masterByField": {
+              "amount_due": "b"
+            }
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "acceptances": true
+          },
+          "response": {
+            "count": 0,
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "a"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "C-101",
+              "C-102"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "b"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "C-101",
+              "C-102"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "runId": "credit-sweep:2026-09-26T00:00:00.000Z",
+            "contractId": "PC-chase-list-vs-customer-account-2026-09-01",
+            "joinedOn": "contact_id",
+            "matched": 2,
+            "withinTolerance": 0,
+            "mismatched": 0,
+            "orphaned": 0,
+            "corrected": 0
+          },
+          "response": {
+            "publishedAt": "2026-09-26T00:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "keys-join-ids-not-labels",
+      "n": 2,
+      "title": "Records are matched on the shared reference, never on a name or an amount",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The run declares the contract's key as the join. Those two records are not matched and no difference is raised between them. A run joined on name or amount fails.",
+      "actual": "joinedOn contact_id; matched 1; differences []; orphans [[\"C-120\",\"a\"],[\"C-121\",\"b\"]]",
+      "stimulus": {
+        "description": "Two sources where one record in each carries the same customer name and the same amount but different ids.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "keys-join-ids-not-labels"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "id": "PC-chase-list-vs-customer-account-2026-09-01",
+            "key": "contact_id",
+            "masterByField": {
+              "amount_due": "b"
+            }
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "acceptances": true
+          },
+          "response": {
+            "count": 0,
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "a"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "C-120",
+              "C-125"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "b"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "C-121",
+              "C-125"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "orphan": "C-120",
+            "source": "a",
+            "reason": "Sunshine Coast Electrical (C-120) has open invoices on the chase list, but the ledger returned no account position under that customer id (merged or archived contact?). Not matched to any other customer by name.",
+            "owner": "Priya Nair (accounts receivable)",
+            "runId": "credit-sweep:2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "orphan": "C-121",
+            "source": "b",
+            "reason": "Sunshine Coast Electrical (C-121) has $1650.00 sitting with the business (CN-0040 $1650.00 held 56 days) and no open invoice to apply it to. Refund note drafted for a person to decide: refund, hold for the next invoice, or ask the accountant. Nothing is refunded by this bot.",
+            "owner": "Priya Nair (accounts receivable)",
+            "runId": "credit-sweep:2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "runId": "credit-sweep:2026-09-26T00:00:00.000Z",
+            "contractId": "PC-chase-list-vs-customer-account-2026-09-01",
+            "joinedOn": "contact_id",
+            "matched": 1,
+            "withinTolerance": 0,
+            "mismatched": 0,
+            "orphaned": 2,
+            "corrected": 0
+          },
+          "response": {
+            "publishedAt": "2026-09-26T00:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "matched-is-silent-mismatched-is-an-object",
+      "n": 3,
+      "title": "Records that agree stay quiet, and a mismatch is shown side by side, never corrected",
+      "verdict": "pass",
+      "held": true,
+      "expected": "No Difference exists for the three that agree. The mismatch carries the field, both values and the master's value. No write reached either source and no field changed. A corrected row fails.",
+      "actual": "differences [[\"C-134\",\"amount_due\",704.55,0,0,\"open\"],[\"C-135\",\"amount_due\",990,550,550,\"open\"]]; notices [\"Cooroy Hardware (C-134): the chase list shows $704.55 due, the customer's account shows $0.00 once money already held is counted. OP-0011 $704.55 held 198 days (since 2026-03-12), most likely INV-0634 ($704.55 due; same amount). Drafted allocation waits for your release; nothing is allocated or refunded until you accept it.\",\"Tewantin Bakery (C-135): the chase list shows $990.00 due, the customer's account shows $550.00 once money already held is counted. CN-0051 $440.00 held 25 days (since 2026-09-01), most likely INV-0636 ($440.00 due; its reference names it). Drafted allocation waits for your release; nothing is allocated or refunded until you accept it.\"]; writes 0; changed 0",
+      "stimulus": {
+        "description": "Five shared records: three that agree on every field and two that disagree on the total.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "matched-is-silent-mismatched-is-an-object"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "id": "PC-chase-list-vs-customer-account-2026-09-01",
+            "key": "contact_id",
+            "masterByField": {
+              "amount_due": "b"
+            }
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "acceptances": true
+          },
+          "response": {
+            "count": 0,
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "a"
+          },
+          "response": {
+            "count": 5,
+            "keys": [
+              "C-131",
+              "C-132",
+              "C-133",
+              "C-134",
+              "C-135"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "b"
+          },
+          "response": {
+            "count": 5,
+            "keys": [
+              "C-131",
+              "C-132",
+              "C-133",
+              "C-134",
+              "C-135"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "history": "C-134"
+          },
+          "response": {
+            "runs": 0,
+            "differences": 0,
+            "corrections": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "difference": "C-134",
+            "field": "amount_due",
+            "valueA": 704.55,
+            "valueB": 0,
+            "masterValue": 0,
+            "status": "open",
+            "runId": "credit-sweep:2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "id": "D1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "propose": "D1",
+            "proposedValue": 0,
+            "target": "a"
+          },
+          "response": {
+            "pending": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "Priya Nair (accounts receivable)",
+            "reason": "two-records.difference_open",
+            "detail": "Cooroy Hardware (C-134): the chase list shows $704.55 due, the customer's account shows $0.00 once money already held is counted. OP-0011 $704.55 held 198 days (since 2026-03-12), most likely INV-0634 ($704.55 due; same amount). Drafted allocation waits for your release; nothing is allocated or refunded until you accept it."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "history": "C-135"
+          },
+          "response": {
+            "runs": 0,
+            "differences": 0,
+            "corrections": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "difference": "C-135",
+            "field": "amount_due",
+            "valueA": 990,
+            "valueB": 550,
+            "masterValue": 550,
+            "status": "open",
+            "runId": "credit-sweep:2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "id": "D2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "propose": "D2",
+            "proposedValue": 550,
+            "target": "a"
+          },
+          "response": {
+            "pending": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "Priya Nair (accounts receivable)",
+            "reason": "two-records.difference_open",
+            "detail": "Tewantin Bakery (C-135): the chase list shows $990.00 due, the customer's account shows $550.00 once money already held is counted. CN-0051 $440.00 held 25 days (since 2026-09-01), most likely INV-0636 ($440.00 due; its reference names it). Drafted allocation waits for your release; nothing is allocated or refunded until you accept it."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "runId": "credit-sweep:2026-09-26T00:00:00.000Z",
+            "contractId": "PC-chase-list-vs-customer-account-2026-09-01",
+            "joinedOn": "contact_id",
+            "matched": 3,
+            "withinTolerance": 0,
+            "mismatched": 2,
+            "orphaned": 0,
+            "corrected": 0
+          },
+          "response": {
+            "publishedAt": "2026-09-26T00:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "nothing-is-auto-corrected",
+      "n": 4,
+      "title": "A fix is proposed with both values, and saved only after a named person accepts it",
+      "verdict": "shape_only",
+      "held": true,
+      "expected": "No write exists before the acceptance. Exactly one write exists after it, carrying the person's name, and the proposal preceded it. A write with no acceptance, or a second write, fails.",
+      "actual": "writes [{\"source\":\"a\",\"key\":\"C-141\",\"field\":\"amount_due\",\"value\":0,\"correction\":{\"differenceId\":\"D1\",\"acceptedBy\":\"Priya Nair\",\"acceptedAt\":\"2026-09-26T01:00:00.000Z\"}}]; acceptances 1; differences 1",
+      "stimulus": {
+        "description": "One open difference. The build runs, a named person accepts the proposal an hour later, and the build runs again.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "nothing-is-auto-corrected"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "id": "PC-chase-list-vs-customer-account-2026-09-01",
+            "key": "contact_id",
+            "masterByField": {
+              "amount_due": "b"
+            }
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "acceptances": true
+          },
+          "response": {
+            "count": 0,
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "a"
+          },
+          "response": {
+            "count": 1,
+            "keys": [
+              "C-141"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "b"
+          },
+          "response": {
+            "count": 1,
+            "keys": [
+              "C-141"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "history": "C-141"
+          },
+          "response": {
+            "runs": 0,
+            "differences": 0,
+            "corrections": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "difference": "C-141",
+            "field": "amount_due",
+            "valueA": 3300,
+            "valueB": 0,
+            "masterValue": 0,
+            "status": "open",
+            "runId": "credit-sweep:2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "id": "D1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "propose": "D1",
+            "proposedValue": 0,
+            "target": "a"
+          },
+          "response": {
+            "pending": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "Priya Nair (accounts receivable)",
+            "reason": "two-records.difference_open",
+            "detail": "Coastline Strata (C-141): the chase list shows $3300.00 due, the customer's account shows $0.00 once money already held is counted. PP-0003 $3300.00 held 68 days (since 2026-07-20), most likely INV-0641 ($3300.00 due; its reference names it). Drafted allocation waits for your release; nothing is allocated or refunded until you accept it."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "Priya Nair (accounts receivable)",
+            "reason": "two-records.over_threshold_amount",
+            "detail": "Coastline Strata (C-141), amount_due: chase list $3300.00, account $0.00, master $0.00. $3300.00 held against open invoices, over the declared $1000.00."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "two-records.mismatch_rate_exceeded",
+            "detail": "1 of 1 customers have money held against open invoices, over the declared rate of 0.5. Owner: Priya Nair (accounts receivable)."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "runId": "credit-sweep:2026-09-26T00:00:00.000Z",
+            "contractId": "PC-chase-list-vs-customer-account-2026-09-01",
+            "joinedOn": "contact_id",
+            "matched": 0,
+            "withinTolerance": 0,
+            "mismatched": 1,
+            "orphaned": 0,
+            "corrected": 0
+          },
+          "response": {
+            "publishedAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "id": "PC-chase-list-vs-customer-account-2026-09-01",
+            "key": "contact_id",
+            "masterByField": {
+              "amount_due": "b"
+            }
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "acceptances": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "D1"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "source": "a",
+            "key": "C-141",
+            "field": "amount_due",
+            "value": 0,
+            "correction": {
+              "differenceId": "D1",
+              "acceptedBy": "Priya Nair",
+              "acceptedAt": "2026-09-26T01:00:00.000Z"
+            }
+          },
+          "response": {
+            "writtenId": "W2"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "a"
+          },
+          "response": {
+            "count": 1,
+            "keys": [
+              "C-141"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "b"
+          },
+          "response": {
+            "count": 1,
+            "keys": [
+              "C-141"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "runId": "credit-sweep:2026-09-26T01:00:00.000Z",
+            "contractId": "PC-chase-list-vs-customer-account-2026-09-01",
+            "joinedOn": "contact_id",
+            "matched": 1,
+            "withinTolerance": 0,
+            "mismatched": 0,
+            "orphaned": 0,
+            "corrected": 1
+          },
+          "response": {
+            "publishedAt": "2026-09-26T01:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "id": "PC-chase-list-vs-customer-account-2026-09-01",
+            "key": "contact_id",
+            "masterByField": {
+              "amount_due": "b"
+            }
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "acceptances": true
+          },
+          "response": {
+            "count": 0,
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "a"
+          },
+          "response": {
+            "count": 1,
+            "keys": [
+              "C-141"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "b"
+          },
+          "response": {
+            "count": 1,
+            "keys": [
+              "C-141"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "runId": "credit-sweep:2026-09-26T02:00:00.000Z",
+            "contractId": "PC-chase-list-vs-customer-account-2026-09-01",
+            "joinedOn": "contact_id",
+            "matched": 1,
+            "withinTolerance": 0,
+            "mismatched": 0,
+            "orphaned": 0,
+            "corrected": 0
+          },
+          "response": {
+            "publishedAt": "2026-09-26T02:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "orphans-are-a-queue",
+      "n": 5,
+      "title": "A record missing from the other system is flagged with a reason and an owner",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Two orphans exist, one per source, each with a reason and an owner, and each was handed to that owner. The run counts two orphaned. A run that reports none fails.",
+      "actual": "orphans [{\"runId\":\"credit-sweep:2026-09-26T00:00:00.000Z\",\"key\":\"C-159\",\"source\":\"a\",\"reason\":\"Cooroy Hardware (C-159) has open invoices on the chase list, but the ledger returned no account position under that customer id (merged or archived contact?). Not matched to any other customer by name.\",\"owner\":\"Priya Nair (accounts receivable)\"},{\"runId\":\"credit-sweep:2026-09-26T00:00:00.000Z\",\"key\":\"C-152\",\"source\":\"b\",\"reason\":\"Peregian Physio (C-152) has $412.00 sitting with the business (OP-0014 $412.00 held 149 days) and no open invoice to apply it to. Refund note drafted for a person to decide: refund, hold for the next invoice, or ask the accountant. Nothing is refunded by this bot.\",\"owner\":\"Priya Nair (accounts receivable)\"}]; run orphaned 2",
+      "stimulus": {
+        "description": "One record in the first source with no partner in the second, and one in the second with no partner in the first.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "orphans-are-a-queue"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "id": "PC-chase-list-vs-customer-account-2026-09-01",
+            "key": "contact_id",
+            "masterByField": {
+              "amount_due": "b"
+            }
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "acceptances": true
+          },
+          "response": {
+            "count": 0,
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "a"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "C-151",
+              "C-159"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "b"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "C-151",
+              "C-152"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "orphan": "C-159",
+            "source": "a",
+            "reason": "Cooroy Hardware (C-159) has open invoices on the chase list, but the ledger returned no account position under that customer id (merged or archived contact?). Not matched to any other customer by name.",
+            "owner": "Priya Nair (accounts receivable)",
+            "runId": "credit-sweep:2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "orphan": "C-152",
+            "source": "b",
+            "reason": "Peregian Physio (C-152) has $412.00 sitting with the business (OP-0014 $412.00 held 149 days) and no open invoice to apply it to. Refund note drafted for a person to decide: refund, hold for the next invoice, or ask the accountant. Nothing is refunded by this bot.",
+            "owner": "Priya Nair (accounts receivable)",
+            "runId": "credit-sweep:2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "runId": "credit-sweep:2026-09-26T00:00:00.000Z",
+            "contractId": "PC-chase-list-vs-customer-account-2026-09-01",
+            "joinedOn": "contact_id",
+            "matched": 1,
+            "withinTolerance": 0,
+            "mismatched": 0,
+            "orphaned": 2,
+            "corrected": 0
+          },
+          "response": {
+            "publishedAt": "2026-09-26T00:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "tolerance-is-written-down",
+      "n": 6,
+      "title": "Any allowance for rounding or timing is a number a person set for each detail, never assumed",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The small difference is recorded with status within_tolerance and the large one as open. Every within_tolerance difference names a field the contract holds a tolerance for. An assumed tolerance fails.",
+      "actual": "differences [[\"C-161\",\"amount_due\",\"within_tolerance\"],[\"C-162\",\"amount_due\",\"open\"]]; run {\"id\":\"credit-sweep:2026-09-26T00:00:00.000Z\",\"at\":\"2026-09-26T00:00:00.000Z\",\"contractId\":\"PC-chase-list-vs-customer-account-2026-09-01\",\"joinedOn\":\"contact_id\",\"masterByField\":{\"amount_due\":\"b\"},\"matched\":0,\"withinTolerance\":1,\"mismatched\":1,\"orphaned\":0,\"corrected\":0,\"publishedAt\":\"2026-09-26T00:00:00.000Z\"}; undeclared [[\"C-163\",\"open\"]]",
+      "stimulus": {
+        "description": "A contract declaring a small tolerance on one field and none on another, with one mismatch inside that tolerance and one outside it.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "tolerance-is-written-down"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "id": "PC-chase-list-vs-customer-account-2026-09-01",
+            "key": "contact_id",
+            "masterByField": {
+              "amount_due": "b"
+            }
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "acceptances": true
+          },
+          "response": {
+            "count": 0,
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "a"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "C-161",
+              "C-162"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "b"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "C-161",
+              "C-162"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "history": "C-161"
+          },
+          "response": {
+            "runs": 0,
+            "differences": 0,
+            "corrections": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "difference": "C-161",
+            "field": "amount_due",
+            "valueA": 550,
+            "valueB": 549.98,
+            "masterValue": 549.98,
+            "status": "within_tolerance",
+            "runId": "credit-sweep:2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "id": "D1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "history": "C-162"
+          },
+          "response": {
+            "runs": 0,
+            "differences": 0,
+            "corrections": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "difference": "C-162",
+            "field": "amount_due",
+            "valueA": 220,
+            "valueB": 110,
+            "masterValue": 110,
+            "status": "open",
+            "runId": "credit-sweep:2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "id": "D2"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "propose": "D2",
+            "proposedValue": 110,
+            "target": "a"
+          },
+          "response": {
+            "pending": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "Priya Nair (accounts receivable)",
+            "reason": "two-records.difference_open",
+            "detail": "Tewantin Bakery (C-162): the chase list shows $220.00 due, the customer's account shows $110.00 once money already held is counted. CN-0062 $110.00 held 16 days (since 2026-09-10), no open invoice matches by reference or amount; the person picks. Drafted allocation waits for your release; nothing is allocated or refunded until you accept it."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "runId": "credit-sweep:2026-09-26T00:00:00.000Z",
+            "contractId": "PC-chase-list-vs-customer-account-2026-09-01",
+            "joinedOn": "contact_id",
+            "matched": 0,
+            "withinTolerance": 1,
+            "mismatched": 1,
+            "orphaned": 0,
+            "corrected": 0
+          },
+          "response": {
+            "publishedAt": "2026-09-26T00:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "runs-on-a-schedule-and-publishes-regardless",
+      "n": 7,
+      "title": "Every scheduled run reports its counts, including the all-clear",
+      "verdict": "pass",
+      "held": true,
+      "expected": "Two runs are published, each with all five counts and a published time, each an all-clear. A run that stays silent because there was nothing to report fails.",
+      "actual": "runs [[\"2026-09-26T00:00:00.000Z\",2,0,0,0,0],[\"2026-10-03T00:00:00.000Z\",2,0,0,0,0]]",
+      "stimulus": {
+        "description": "Two sources that agree on every record, and the clock advanced through two scheduled runs.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "runs-on-a-schedule-and-publishes-regardless"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "id": "PC-chase-list-vs-customer-account-2026-09-01",
+            "key": "contact_id",
+            "masterByField": {
+              "amount_due": "b"
+            }
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "acceptances": true
+          },
+          "response": {
+            "count": 0,
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "a"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "C-171",
+              "C-172"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "b"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "C-171",
+              "C-172"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "runId": "credit-sweep:2026-09-26T00:00:00.000Z",
+            "contractId": "PC-chase-list-vs-customer-account-2026-09-01",
+            "joinedOn": "contact_id",
+            "matched": 2,
+            "withinTolerance": 0,
+            "mismatched": 0,
+            "orphaned": 0,
+            "corrected": 0
+          },
+          "response": {
+            "publishedAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-10-03T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "id": "PC-chase-list-vs-customer-account-2026-09-01",
+            "key": "contact_id",
+            "masterByField": {
+              "amount_due": "b"
+            }
+          }
+        },
+        {
+          "at": "2026-10-03T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "acceptances": true
+          },
+          "response": {
+            "count": 0,
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-10-03T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "a"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "C-171",
+              "C-172"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-03T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "b"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "C-171",
+              "C-172"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-03T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "runId": "credit-sweep:2026-10-03T00:00:00.000Z",
+            "contractId": "PC-chase-list-vs-customer-account-2026-09-01",
+            "joinedOn": "contact_id",
+            "matched": 2,
+            "withinTolerance": 0,
+            "mismatched": 0,
+            "orphaned": 0,
+            "corrected": 0
+          },
+          "response": {
+            "publishedAt": "2026-10-03T00:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "thresholds-route-to-a-person",
+      "n": 8,
+      "title": "A difference over the set limit, or too many mismatches, reaches a named person in the same run",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The named person is notified of that difference before the run publishes, and the run is escalated for its rate. A threshold breach that waits for the next run fails.",
+      "actual": "notices [{\"to\":\"Priya Nair (accounts receivable)\",\"reason\":\"two-records.difference_open\",\"detail\":\"Coastline Strata (C-181): the chase list shows $4400.00 due, the customer's account shows $2200.00 once money already held is counted. OP-0030 $2200.00 held 208 days (since 2026-03-02), no open invoice matches by reference or amount; the person picks. Drafted allocation waits for your release; nothing is allocated or refunded until you accept it.\",\"at\":\"2026-09-26T00:00:00.000Z\"},{\"to\":\"Priya Nair (accounts receivable)\",\"reason\":\"two-records.over_threshold_amount\",\"detail\":\"Coastline Strata (C-181), amount_due: chase list $4400.00, account $2200.00, master $2200.00. $2200.00 held against open invoices, over the declared $1000.00.\",\"at\":\"2026-09-26T00:00:00.000Z\"}]; escalations [{\"reason\":\"two-records.mismatch_rate_exceeded\",\"detail\":\"1 of 3 customers have money held against open invoices, over the declared rate of 0.3. Owner: Priya Nair (accounts receivable).\",\"at\":\"2026-09-26T00:00:00.000Z\"}]; runs 1",
+      "stimulus": {
+        "description": "A contract with a threshold amount and a mismatch rate, and one difference over the amount that also tips the run over the rate.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "thresholds-route-to-a-person"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "id": "PC-chase-list-vs-customer-account-2026-09-01",
+            "key": "contact_id",
+            "masterByField": {
+              "amount_due": "b"
+            }
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "acceptances": true
+          },
+          "response": {
+            "count": 0,
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "a"
+          },
+          "response": {
+            "count": 3,
+            "keys": [
+              "C-181",
+              "C-182",
+              "C-183"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "b"
+          },
+          "response": {
+            "count": 3,
+            "keys": [
+              "C-181",
+              "C-182",
+              "C-183"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "history": "C-181"
+          },
+          "response": {
+            "runs": 0,
+            "differences": 0,
+            "corrections": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "difference": "C-181",
+            "field": "amount_due",
+            "valueA": 4400,
+            "valueB": 2200,
+            "masterValue": 2200,
+            "status": "open",
+            "runId": "credit-sweep:2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "id": "D1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "propose": "D1",
+            "proposedValue": 2200,
+            "target": "a"
+          },
+          "response": {
+            "pending": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "Priya Nair (accounts receivable)",
+            "reason": "two-records.difference_open",
+            "detail": "Coastline Strata (C-181): the chase list shows $4400.00 due, the customer's account shows $2200.00 once money already held is counted. OP-0030 $2200.00 held 208 days (since 2026-03-02), no open invoice matches by reference or amount; the person picks. Drafted allocation waits for your release; nothing is allocated or refunded until you accept it."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "Priya Nair (accounts receivable)",
+            "reason": "two-records.over_threshold_amount",
+            "detail": "Coastline Strata (C-181), amount_due: chase list $4400.00, account $2200.00, master $2200.00. $2200.00 held against open invoices, over the declared $1000.00."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "escalate",
+          "verb": "say",
+          "subject": "handoff",
+          "request": {
+            "reason": "two-records.mismatch_rate_exceeded",
+            "detail": "1 of 3 customers have money held against open invoices, over the declared rate of 0.3. Owner: Priya Nair (accounts receivable)."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "runId": "credit-sweep:2026-09-26T00:00:00.000Z",
+            "contractId": "PC-chase-list-vs-customer-account-2026-09-01",
+            "joinedOn": "contact_id",
+            "matched": 2,
+            "withinTolerance": 0,
+            "mismatched": 1,
+            "orphaned": 0,
+            "corrected": 0
+          },
+          "response": {
+            "publishedAt": "2026-09-26T00:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "history-survives-the-fix",
+      "n": 9,
+      "title": "Every accepted fix keeps both original values and who accepted it",
+      "verdict": "pass",
+      "held": true,
+      "expected": "The other source now holds the master's value, the Difference still holds both original values, and the Correction names the person, the time and the written id. Any changed field with no Correction behind it fails.",
+      "actual": "differences [{\"id\":\"D1\",\"runId\":\"credit-sweep:2026-09-26T00:00:00.000Z\",\"key\":\"C-191\",\"field\":\"amount_due\",\"valueA\":1386,\"valueB\":1018,\"masterValue\":1018,\"status\":\"accepted\"}]; corrections [{\"differenceId\":\"D1\",\"proposedValue\":1018,\"target\":\"a\",\"acceptedBy\":\"Priya Nair\",\"acceptedAt\":\"2026-09-26T02:00:00.000Z\",\"writtenId\":\"W2\"}]; changed [{\"source\":\"a\",\"key\":\"C-191\",\"field\":\"amount_due\",\"from\":1386,\"to\":1018}]",
+      "stimulus": {
+        "description": "One difference, accepted by a named person and written.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "history-survives-the-fix"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "id": "PC-chase-list-vs-customer-account-2026-09-01",
+            "key": "contact_id",
+            "masterByField": {
+              "amount_due": "b"
+            }
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "acceptances": true
+          },
+          "response": {
+            "count": 0,
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "a"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "C-191",
+              "C-192"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "b"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "C-191",
+              "C-192"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "history": "C-191"
+          },
+          "response": {
+            "runs": 0,
+            "differences": 0,
+            "corrections": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "difference": "C-191",
+            "field": "amount_due",
+            "valueA": 1386,
+            "valueB": 1018,
+            "masterValue": 1018,
+            "status": "open",
+            "runId": "credit-sweep:2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "id": "D1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "propose": "D1",
+            "proposedValue": 1018,
+            "target": "a"
+          },
+          "response": {
+            "pending": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "Priya Nair (accounts receivable)",
+            "reason": "two-records.difference_open",
+            "detail": "Cooroy Hardware (C-191): the chase list shows $1386.00 due, the customer's account shows $1018.00 once money already held is counted. CN-0091 $368.00 held 43 days (since 2026-08-14), most likely INV-0691 ($1386.00 due; its reference names it). Drafted allocation waits for your release; nothing is allocated or refunded until you accept it."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "runId": "credit-sweep:2026-09-26T00:00:00.000Z",
+            "contractId": "PC-chase-list-vs-customer-account-2026-09-01",
+            "joinedOn": "contact_id",
+            "matched": 1,
+            "withinTolerance": 0,
+            "mismatched": 1,
+            "orphaned": 0,
+            "corrected": 0
+          },
+          "response": {
+            "publishedAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "id": "PC-chase-list-vs-customer-account-2026-09-01",
+            "key": "contact_id",
+            "masterByField": {
+              "amount_due": "b"
+            }
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "acceptances": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "D1"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "source": "a",
+            "key": "C-191",
+            "field": "amount_due",
+            "value": 1018,
+            "correction": {
+              "differenceId": "D1",
+              "acceptedBy": "Priya Nair",
+              "acceptedAt": "2026-09-26T02:00:00.000Z"
+            }
+          },
+          "response": {
+            "writtenId": "W2"
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "a"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "C-191",
+              "C-192"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "b"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "C-191",
+              "C-192"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T02:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "runId": "credit-sweep:2026-09-26T02:00:00.000Z",
+            "contractId": "PC-chase-list-vs-customer-account-2026-09-01",
+            "joinedOn": "contact_id",
+            "matched": 2,
+            "withinTolerance": 0,
+            "mismatched": 0,
+            "orphaned": 0,
+            "corrected": 1
+          },
+          "response": {
+            "publishedAt": "2026-09-26T02:00:00.000Z"
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "the-record-by-key",
+      "n": 10,
+      "title": "For any shared reference, every run, difference and fix can be looked up",
+      "verdict": "pass",
+      "held": true,
+      "expected": "A read by that id returns the runs that touched it, the difference with both values, and the correction with the person's name. A record missing the correction fails.",
+      "actual": "history {\"runs\":[{\"id\":\"credit-sweep:2026-09-26T00:00:00.000Z\",\"at\":\"2026-09-26T00:00:00.000Z\",\"contractId\":\"PC-chase-list-vs-customer-account-2026-09-01\",\"joinedOn\":\"contact_id\",\"masterByField\":{\"amount_due\":\"b\"},\"matched\":1,\"withinTolerance\":0,\"mismatched\":1,\"orphaned\":0,\"corrected\":0,\"publishedAt\":\"2026-09-26T00:00:00.000Z\"}],\"differences\":[{\"id\":\"D1\",\"runId\":\"credit-sweep:2026-09-26T00:00:00.000Z\",\"key\":\"C-201\",\"field\":\"amount_due\",\"valueA\":605,\"valueB\":0,\"masterValue\":0,\"status\":\"accepted\"}],\"corrections\":[{\"differenceId\":\"D1\",\"proposedValue\":0,\"target\":\"a\",\"acceptedBy\":\"Priya Nair\",\"acceptedAt\":\"2026-09-26T01:00:00.000Z\",\"writtenId\":\"W2\"}],\"orphans\":[]}",
+      "stimulus": {
+        "description": "One shared id that was mismatched in one run, accepted, and written in the next.",
+        "now": "2026-09-26T00:00:00.000Z",
+        "inputs": [
+          {
+            "kind": "scenario",
+            "ref": "the-record-by-key"
+          }
+        ]
+      },
+      "calls": [
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "id": "PC-chase-list-vs-customer-account-2026-09-01",
+            "key": "contact_id",
+            "masterByField": {
+              "amount_due": "b"
+            }
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "acceptances": true
+          },
+          "response": {
+            "count": 0,
+            "ids": []
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "a"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "C-201",
+              "C-202"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "b"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "C-201",
+              "C-202"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "history": "C-201"
+          },
+          "response": {
+            "runs": 0,
+            "differences": 0,
+            "corrections": 0
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "evidence",
+          "verb": "attach",
+          "subject": "evidence",
+          "request": {
+            "difference": "C-201",
+            "field": "amount_due",
+            "valueA": 605,
+            "valueB": 0,
+            "masterValue": 0,
+            "status": "open",
+            "runId": "credit-sweep:2026-09-26T00:00:00.000Z"
+          },
+          "response": {
+            "id": "D1"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "gate",
+          "verb": "decide",
+          "subject": "gate",
+          "request": {
+            "propose": "D1",
+            "proposedValue": 0,
+            "target": "a"
+          },
+          "response": {
+            "pending": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "notify",
+          "verb": "say",
+          "subject": "alert",
+          "request": {
+            "to": "Priya Nair (accounts receivable)",
+            "reason": "two-records.difference_open",
+            "detail": "Peregian Physio (C-201): the chase list shows $605.00 due, the customer's account shows $0.00 once money already held is counted. RC-0201 $605.00 held 24 days (since 2026-09-02), most likely INV-0701 ($605.00 due; same amount). Drafted allocation waits for your release; nothing is allocated or refunded until you accept it."
+          },
+          "response": {
+            "ok": true
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "runId": "credit-sweep:2026-09-26T00:00:00.000Z",
+            "contractId": "PC-chase-list-vs-customer-account-2026-09-01",
+            "joinedOn": "contact_id",
+            "matched": 1,
+            "withinTolerance": 0,
+            "mismatched": 1,
+            "orphaned": 0,
+            "corrected": 0
+          },
+          "response": {
+            "publishedAt": "2026-09-26T00:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "contract": true
+          },
+          "response": {
+            "id": "PC-chase-list-vs-customer-account-2026-09-01",
+            "key": "contact_id",
+            "masterByField": {
+              "amount_due": "b"
+            }
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "acceptances": true
+          },
+          "response": {
+            "count": 1,
+            "ids": [
+              "D1"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "write_ledger",
+          "verb": "write",
+          "subject": "ledger",
+          "request": {
+            "source": "a",
+            "key": "C-201",
+            "field": "amount_due",
+            "value": 0,
+            "correction": {
+              "differenceId": "D1",
+              "acceptedBy": "Priya Nair",
+              "acceptedAt": "2026-09-26T01:00:00.000Z"
+            }
+          },
+          "response": {
+            "writtenId": "W2"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_job",
+          "verb": "read",
+          "subject": "job",
+          "request": {
+            "source": "a"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "C-201",
+              "C-202"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "source": "b"
+          },
+          "response": {
+            "count": 2,
+            "keys": [
+              "C-201",
+              "C-202"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "publish_report",
+          "verb": "say",
+          "subject": "report",
+          "request": {
+            "runId": "credit-sweep:2026-09-26T01:00:00.000Z",
+            "contractId": "PC-chase-list-vs-customer-account-2026-09-01",
+            "joinedOn": "contact_id",
+            "matched": 2,
+            "withinTolerance": 0,
+            "mismatched": 0,
+            "orphaned": 0,
+            "corrected": 1
+          },
+          "response": {
+            "publishedAt": "2026-09-26T01:00:00.000Z"
+          }
+        },
+        {
+          "at": "2026-09-26T01:00:00.000Z",
+          "port": "read_ledger",
+          "verb": "read",
+          "subject": "ledger",
+          "request": {
+            "history": "C-201"
+          },
+          "response": {
+            "runs": 1,
+            "differences": 1,
+            "corrections": 1
+          }
+        }
+      ],
+      "artefacts": []
+    },
+    {
+      "checkId": "survives-the-builder",
+      "n": 11,
+      "title": "It keeps working if the person who built it leaves",
+      "verdict": "evidence_required",
+      "expected": "The runner reports what was declared and never scores it green on its own say-so.",
+      "actual": "No software result. This one is closed by evidence, not by a run.",
+      "stimulus": {
+        "description": "No stimulus. The builder names who else can explain it and whose account the pair contract and the runs runs on.",
+        "now": "2026-11-27T11:57:02.335Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    },
+    {
+      "checkId": "pass-test",
+      "n": 12,
+      "title": "The pass test passes",
+      "verdict": "with_us",
+      "expected": "The difference shows both values and the master's. The orphan carries a reason and an owner. After a person accepts, the other source holds the master's value once, with the history kept, and the next run publishes an all-clear.",
+      "actual": "Not attempted on the stub. This check runs in production: on the hosted provider where the standard names one, otherwise on your own systems or as a scoped build (see with_us_next).",
+      "stimulus": {
+        "description": "A real pair on the business's own tenants, with one value deliberately changed in one source and one record added to only one side.",
+        "now": "2026-11-27T11:57:02.335Z",
+        "inputs": []
+      },
+      "calls": [],
+      "artefacts": []
+    }
+  ],
+  "summary": {
+    "total": 12,
+    "pass": 9,
+    "fail": 0,
+    "shapeOnly": 1,
+    "withUs": 1,
+    "evidenceRequired": 1
+  }
+}
