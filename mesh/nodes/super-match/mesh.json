@@ -1,0 +1,86 @@
+{
+  "slug": "super-match",
+  "name": "Super Match",
+  "office_task": "Each weekday, match every pay run's super to the payment that paid it, by pay run id, and flag any pay run with no matching payment inside the due window you set, with both figures.",
+  "verticals": [
+    "b2b-office"
+  ],
+  "standards": [
+    "two-records"
+  ],
+  "systems_of_record": [
+    "the payroll in the customer's own ledger (Xero, MYOB or QuickBooks), read only through the AI Pathway hosted MCP, or a payroll export where the connection does not reach payroll: each pay run's id, payday and super guarantee owed. The pay run is the master for the amount owed and for the payday. Only pay runs whose due date (payday plus the due window) has passed are read, so an on-time payment is never raised early. The payroll is never written",
+    "the super payments that left the bank, as the same ledger records them (the clearing house payment, each carrying the pay run id in its reference), read through the AI Pathway hosted MCP, or a bank statement export where the feed line is needed: the amount paid and the days after payday the money left. The only write is an accepted correction (a top-up the person says they already paid themselves), recorded through the Ledger Write Preview standard: the journal and recomputed totals are shown, the person releases it, it is written once and read back. The bot never pays, approves, posts or lodges anything itself",
+    "the bot's own store: the pair contract (with the due window in days, a setting the person confirms against current ATO guidance, never a figure the bot decides), every difference with both values, and every accepted correction with who accepted it",
+    "the system the result is published into (it issues the report_id the person opens)"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/super-match"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "schedule",
+    "webhook"
+  ],
+  "consumes": [
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    },
+    {
+      "event": "exception.closed",
+      "wake": "webhook"
+    }
+  ],
+  "emits": [
+    {
+      "event": "report.published",
+      "write": "the weekday super match where the payroll officer opens it: the pair contract it ran under, the join key (the pay run id), the master per field, the due window in force, and the counts matched, within the window, mismatched, orphaned and corrected; published every weekday, including the all-clear",
+      "readback": "the report store returns a report_id, and reading that id back returns the contract id, the five counts and the published time; no id back means the run did not publish and the owner is told"
+    },
+    {
+      "event": "exception.raised",
+      "write": "an exception naming the person who owns payroll: a pay run past its due date with no payment under its id (super owed and $0.00 paid); a payment short of or over the super owed, with both figures and the pay run's figure as master; a payment that left after the due window, with both figures and the days; a payment naming a pay run id the payroll does not have; a shortfall over the threshold amount; too many pay runs differing; or an accepted correction whose write returned no id. The bot never pays the shortfall; a person does, outside the bot",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the pay run id, the reason, both figures and the exception_owner; no id back means nothing was raised and the run stops"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "two-records.contract_missing",
+      "two-records.difference_open",
+      "two-records.super_paid_late",
+      "two-records.orphan_pay_run_unpaid",
+      "two-records.orphan_payment_no_pay_run",
+      "two-records.over_threshold_amount",
+      "two-records.mismatch_rate_exceeded",
+      "two-records.write_refused",
+      "two-records.write_not_read_back"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "seam-mirror",
+    "fields": [
+      "seam.pay_run_id",
+      "seam.payday",
+      "seam.due_window_days",
+      "seam.contract_id",
+      "seam.run_id",
+      "seam.difference_status",
+      "seam.super_owed",
+      "seam.super_paid",
+      "seam.days_after_payday",
+      "seam.accepted_by",
+      "seam.written_id",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
