@@ -1,0 +1,80 @@
+{
+  "slug": "double-pay-check",
+  "name": "Double Pay Check",
+  "office_task": "Every Thursday, check each bill approved and waiting to be paid against the other bills, waiting or paid, and hold any that look paid twice or bound for a new bank account.",
+  "verticals": [
+    "b2b-office"
+  ],
+  "standards": [
+    "duplicate-bill-hold"
+  ],
+  "systems_of_record": [
+    "the business's own ledger (Xero, MYOB Business or QuickBooks Online), read only through the AI Pathway hosted MCP: list_bills for the bills awaiting payment and list_paid_bills for the bills paid in the lookback window, each with the ledger's bill id, the supplier's contact id, the invoice number, dates and total. Suppliers are matched by the ledger's contact id, never by name. Nothing is ever written to the ledger",
+    "the supplier bank details, read from the business's own ledger connection or a supplier list it exports, until the connector reads them",
+    "the hold book the business works from (a task list, a sheet or the AI Pathway exception desk), which issues the hold id and keeps each release or void with the person's name and the time"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/double-pay-check"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "schedule",
+    "webhook"
+  ],
+  "consumes": [
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    },
+    {
+      "event": "exception.closed",
+      "wake": "webhook"
+    }
+  ],
+  "emits": [
+    {
+      "event": "exception.raised",
+      "write": "one hold per pair of bills under each rule (same supplier and invoice number after cleaning up case, spaces and leading zeros; same supplier and total within 30 days; same number and total on a second supplier record; bank account changed since the supplier was last paid; bank account on another supplier's record), showing both bills side by side with supplier, invoice number, date, total, status, paid date and bank account, the rule that fired, and the person who works the holds. A bank detail hold tells that person to ring the supplier on a number already on file, never one from the bill or its email",
+      "readback": "the hold book returns a hold_id, and reading that id back returns the rule, both bill ids, the fingerprint it was raised on and the exception_owner; no id back means nothing was raised, the bill is reported not checked and the owner is told"
+    },
+    {
+      "event": "report.published",
+      "write": "the Thursday pay run check, written where the bookkeeper opens it before approving the pay run: one line per bill approved and awaiting payment at the cutoff, each clear, held (with its hold ids and rules) or not checked (with what could not be read), published every week, including the week nothing is held",
+      "readback": "the report store returns a report_id, and reading that id back returns the run id, the cutoff and the count of bills clear, held and not checked; no id back means the run did not publish and the owner is told"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "duplicate-bill-hold.same_invoice_number",
+      "duplicate-bill-hold.same_amount_in_window",
+      "duplicate-bill-hold.supplier_entered_twice",
+      "duplicate-bill-hold.bank_changed",
+      "duplicate-bill-hold.bank_shared",
+      "duplicate-bill-hold.not_checked"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "seam-mirror",
+    "fields": [
+      "seam.bill_id",
+      "seam.run_id",
+      "seam.check_status",
+      "seam.hold_id",
+      "seam.hold_key",
+      "seam.hold_rule",
+      "seam.fingerprint",
+      "seam.released_by",
+      "seam.released_at",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}

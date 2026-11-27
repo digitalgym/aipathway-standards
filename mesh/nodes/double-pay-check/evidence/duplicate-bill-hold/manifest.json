@@ -1,0 +1,117 @@
+{
+  "spec": "AIP-BS-DUPLICATE-BILL-HOLD",
+  "standard": "duplicate-bill-hold-build-standard",
+  "edition": "2026-11-28",
+  "source": "https://aipathway.com.au/explore-ai/duplicate-bill-hold-build-standard",
+  "ran_at": "2026-11-27T20:49:02.278Z",
+  "environment": "stub",
+  "provider": "local.mock_bill_ledger",
+  "provider_block": {
+    "boundary": {
+      "never": [
+        "pay, approve, void or edit a bill",
+        "change a supplier's bank details, or contact a supplier using details from the bill or its email",
+        "release its own hold",
+        "report a bill clear when the ledger could not be read in full",
+        "raise the same pair twice when nothing on either bill has changed"
+      ],
+      "stays_with_person": [
+        "releasing or voiding each held bill, by name",
+        "ringing the supplier on a number already on file before releasing a bank detail hold",
+        "every bill reported not checked, before it goes in the pay run",
+        "merging a supplier entered twice, and fixing the bank details on a supplier record"
+      ]
+    },
+    "job": "no supplier bill is paid twice, and no payment goes to a bank account that changed by email, because both are caught before the pay run",
+    "skill": "duplicate-bill-hold",
+    "stub": "local.mock_bill_ledger",
+    "production": "office_voice.list_paid_bills",
+    "product": "AI Pathway",
+    "insert": null,
+    "with_us": {
+      "kind": "office_voice_tool",
+      "provider": "office_voice.list_paid_bills",
+      "product": "AI Pathway",
+      "note": "Two read-only tools on the AI Pathway connector read the ledger for this check: list_bills returns the bills awaiting payment and list_paid_bills the bills paid since a day, with the supplier's contact id, invoice number, dates and total. Paid bills are read from Xero today. Neither reads supplier bank details yet, so rule 5 runs on the business's own data (its own ledger connection or a supplier list it exports) until the connector does."
+    }
+  },
+  "tally": {
+    "green": 7,
+    "red": 0,
+    "with_us": 1,
+    "evidence_required": 1,
+    "total": 11
+  },
+  "checks": [
+    {
+      "id": "every-approved-bill-checked",
+      "n": 1,
+      "title": "Every approved bill waiting to be paid is checked before the pay run",
+      "verdict": "pass"
+    },
+    {
+      "id": "same-supplier-same-number",
+      "n": 2,
+      "title": "The same supplier and the same invoice number is held, however it was typed",
+      "verdict": "pass"
+    },
+    {
+      "id": "same-supplier-same-amount",
+      "n": 3,
+      "title": "The same supplier and the same total within a few weeks is held, even with different invoice numbers",
+      "verdict": "pass"
+    },
+    {
+      "id": "supplier-entered-twice",
+      "n": 4,
+      "title": "The same invoice number and total on two supplier records is held",
+      "verdict": "pass"
+    },
+    {
+      "id": "bank-details-held",
+      "n": 5,
+      "title": "A bill whose bank details changed or belong to another supplier is held",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "both-bills-side-by-side",
+      "n": 6,
+      "title": "Each hold shows both bills side by side and the rule that fired",
+      "verdict": "pass"
+    },
+    {
+      "id": "a-person-releases",
+      "n": 7,
+      "title": "A person releases or voids each hold, and the bot never touches a bill",
+      "verdict": "shape_only"
+    },
+    {
+      "id": "never-clear-on-a-partial-read",
+      "n": 8,
+      "title": "A bill that could not be compared in full is reported not checked, never clear",
+      "verdict": "pass"
+    },
+    {
+      "id": "raised-once",
+      "n": 9,
+      "title": "The same pair is raised once, and a released pair stays released unless something changes",
+      "verdict": "pass"
+    },
+    {
+      "id": "survives-the-builder",
+      "n": 10,
+      "title": "It keeps working if the person who built it leaves",
+      "verdict": "evidence_required"
+    },
+    {
+      "id": "pass-test",
+      "n": 11,
+      "title": "The pass test passes",
+      "verdict": "with_us"
+    }
+  ],
+  "next": {
+    "with_us": "Two read-only tools on the AI Pathway connector read the ledger for this check: list_bills returns the bills awaiting payment and list_paid_bills the bills paid since a day, with the supplier's contact id, invoice number, dates and total. Paid bills are read from Xero today. Neither reads supplier bank details yet, so rule 5 runs on the business's own data (its own ledger connection or a supplier list it exports) until the connector does. Call it on the AI Pathway MCP (office_voice.list_paid_bills): the owner mints a key at connect.aipathway.com.au/app/keys with the scope the tool names, on any AI Pathway account. There is no production run of these checks yet, so the stub run is the finished build; AIPATHWAY_PROVIDER=office_voice.list_paid_bills needs a live port map that is not published. Do not hand-roll the write.",
+    "evidence_required": "attach what proves each one; not a software check"
+  }
+}
