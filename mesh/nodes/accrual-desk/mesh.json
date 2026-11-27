@@ -1,0 +1,80 @@
+{
+  "slug": "accrual-desk",
+  "name": "Accrual Desk",
+  "office_task": "Each month, draft accrual journals for unbilled costs and uninvoiced work, plus next month's reversals; preview each to the cent, write it only after a named person releases it, and read it back.",
+  "verticals": [
+    "accounting-bookkeeping"
+  ],
+  "standards": [
+    "ledger-write-preview"
+  ],
+  "systems_of_record": [
+    "the client's ledger (Xero, MYOB Business or QuickBooks Online), through the AI Pathway hosted MCP on the business's own sign-in: its tax rates and three months of bills are read before any draft, and each accrual or reversal journal is written only after a named person releases its preview, carrying the key preview:<tenant>:<draft>:<preview> in the idempotency key or request id where the ledger has one and in the narration, then read back by its id and compared to the cent",
+    "the accruals list the person keeps (a sheet or a list): costs received with no bill yet, each with its lines, account and total, or a split the person keyed as journal lines",
+    "the job system's completed work not yet invoiced, each job with its lines and total",
+    "the preview book the practice keeps (a sheet, a list or the AI Pathway connector). It holds each journal drafted, its preview, and each release with the name of the person who gave it. In production the preview comes from the preview_draft tool on the AI Pathway connector (connect.aipathway.com.au), which reads the connected ledger's own tax rates",
+    "the exception desk the practice runs, which issues the exception_id"
+  ],
+  "links": {
+    "repo": "https://github.com/digitalgym/aipathway-standards/tree/main/mesh/nodes/accrual-desk"
+  },
+  "maintainer": {
+    "name": "AI Pathway",
+    "github": "digitalgym"
+  },
+  "runtime": [
+    "node",
+    "schedule",
+    "webhook"
+  ],
+  "consumes": [
+    {
+      "event": "schedule.tick",
+      "wake": "schedule"
+    },
+    {
+      "event": "exception.closed",
+      "wake": "webhook"
+    }
+  ],
+  "emits": [
+    {
+      "event": "report.published",
+      "write": "the month's accrual register in the preview book, for the person who releases: each accrual journal dated the last day of the month and its reversal dated the first of the next, where each came from (the person's list, a recurring bill that did not arrive, or a completed job not invoiced), each line worked out from quantity, unit price and discount, the ledger's no-tax type on every line, the totals, the balanced journal, and after release the ledger journal id with its read-back. A reversal is written only after its accrual reads back equal. Nothing is paid, approved or lodged; a GST or tax question goes to a person or the accountant",
+      "readback": "reading the client's month back from the preview book returns the report_id and each journal's preview_id, released_by and read-back; each written journal reads back from the ledger by its key preview:<tenant>:<draft>:<preview>, with the totals the ledger stored compared to the cent. No id back means it was not written: the journal is parked as write_failed and the ledger is read for the key before any retry"
+    },
+    {
+      "event": "exception.raised",
+      "write": "a parked journal for a named person, never written to the ledger. It is one of: a source total a cent or more away from the total worked out from its lines (both sets of figures), a tax type the ledger does not hold or does not hold at zero, or a rates read that got no answer, a journal whose debits and credits differ, a write that got no answer, or a journal whose stored totals differ from the preview. Its reversal waits with it",
+      "readback": "the exception desk returns an exception_id, and reading that id back returns the journal's draft id, the kind, both sets of figures and the exception_owner"
+    }
+  ],
+  "matches_after_intake": "id-only",
+  "exceptions": {
+    "raises": [
+      "preview.totals_differ",
+      "preview.unknown_tax_rate",
+      "preview.unbalanced",
+      "preview.write_failed",
+      "preview.readback_differs"
+    ],
+    "owner_field": "exception_owner",
+    "halts_on_open": true
+  },
+  "durable_state": {
+    "writes_to": "system-of-record",
+    "fields": [
+      "seam.draft_id",
+      "seam.reverses_draft_id",
+      "seam.preview_id",
+      "seam.rates_read_id",
+      "seam.released_by",
+      "seam.idempotency_key",
+      "seam.document_id",
+      "seam.readback_matches",
+      "seam.exception_owner"
+    ]
+  },
+  "private_memory": "none",
+  "port_of": null
+}
