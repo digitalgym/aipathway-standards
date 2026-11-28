@@ -9,7 +9,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/filing-run-on-
 
 ---
 
-The same standard, for an office that lives in Microsoft 365: every document counted as it lands, filed once to its job by the number printed on it, one exceptions list in Teams, and a close at 5pm that always adds up.
+The same standard, for an office that lives in Microsoft 365: every document counted as it lands, filed once to its job by the number printed on it, one exceptions list in Teams, and a count at 5pm that always adds up.
 
 Used by
 
@@ -22,15 +22,15 @@ Microsoft 365 already has most of the doors: a shared mailbox, the copier’s sc
 ## In short
 
 - **What this is**: A build plan for the Document Filing standard on Microsoft 365. Six lists and libraries in SharePoint, four flows, and one exceptions list a person works from Teams.
-- **The core rule**: Flow 2 looks the record up in the job system by the job, order or account number on the document. No number, or one that fits two records or none, writes an Exceptions row instead.
-- **What it does not do**: No flow replies to the sender, approves or pays, or deletes a file. A value the record already holds is never overwritten: both go on the Exceptions list.
-- **The hard part**: Calling the job system from Power Automate to find a record by id and attach the original, and keeping the daily close running when nothing arrived, so a stopped flow shows.
+- **The core rule**: Flow 2 looks the record up in the job system by the job, order or account number on the document. No number, or one that fits two records or none, and the document goes on the Exceptions list instead.
+- **What it does not do**: No flow replies to the sender, approves or pays, or deletes a file. A value the record already holds is never overwritten, and both values go on the Exceptions list.
+- **The hard part**: Calling the job system from Power Automate to find a record by its number and attach the original, and keeping the daily count running when nothing arrived, so a stopped flow shows.
 
 ## 1. Before you start
 
 Read [the Document Filing build standard](https://aipathway.com.au/explore-ai/document-filing-build-standard) first. It defines its objects, and the lists below are those objects with SharePoint types on them. Shared conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-Decide the doors. One shared mailbox that the supplier invoices, the copier’s scans and the web forms all land in is the simplest; phone photos from site go to one OneDrive folder. Every door you leave out is a document the close cannot count.
+Decide the doors. One shared mailbox that the supplier invoices, the copier’s scans and the web forms all land in is the simplest; phone photos from site go to one OneDrive folder. Every door you leave out is a document the daily count will miss.
 
 Then check how the job system is reached. ServiceM8, Simpro, Fergus, AroFlo, Jobber and Xero all have APIs; Power Automate reaches most of them through its HTTP action, which needs a premium licence for the account running the flow. Write the KeyingRules list before any flow: which kinds you file, which number finds the record, and what is typed in.
 
@@ -169,7 +169,7 @@ What each connection is for.
 - **AI Builder, or the copier’s own text.** To read the kind, the printed number and the fields off the document.
 - **Teams.** The daily close in the office channel, and each new exception to its owner.
 
-Keep the safe locked.
+Give it only the access it needs.
 
 1. Build the flows under a service account, an ordinary licensed account kept for them, not a person who might leave or change their password.
 2. Build them inside a solution, so each connection is a connection reference you can see, swap or remove in one place.
@@ -187,7 +187,7 @@ Why not SharePoint’s own document processing, or Copilot? Both can read an inv
 2. Fill in KeyingRules for the kinds you file, and agree the exception owner.
 3. Build Flow 1, and prove an email with two attachments writes two Arrivals rows and two originals.
 4. Build Flow 2 against a test job in your job system, and prove a docket with no job number writes no_id and files nothing.
-5. Build Flow 4 next, before Flow 3, so the close is running while you test the rest.
+5. Build Flow 4 next, before Flow 3, so the daily count is running while you test the rest.
 6. Build Flow 3, and prove a cleared exception files once with the person's name on it.
 
 ## 7. Four traps specific to this build
@@ -198,7 +198,7 @@ The search will often find the right job, which is the danger: the one time it i
 
 ### Treating the file hash as the duplicate check
 
-A scanned invoice and the emailed PDF never hash the same. The duplicate key is the kind, the document's own number and the record.
+A scanned invoice and the emailed PDF never have the same file fingerprint. The duplicate key is the kind, the document's own number and the record.
 
 ### An Update item step that writes every field
 

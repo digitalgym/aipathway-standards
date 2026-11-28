@@ -9,7 +9,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/approved-memor
 
 ---
 
-Five lists and three flows that turn what your AI hears about a customer into something you have agreed to, and that every other flow reads by the customer's id.
+Five lists and three flows that turn what your AI hears about a customer into something you have agreed to. Every other flow then looks it up by the customer's number from your job system.
 
 Used by
 
@@ -17,14 +17,14 @@ Used by
 - Business Systems Analyst
 - AI Officer
 
-Most businesses already have client memory: a note in the job system, a line in someone’s head, an instruction the AI picked up on a call. This plan puts it in one list, keyed to the client id your job system issued. It also adds what none of those places has, a row that says yes, which only a named person can add.
+Most businesses already have client memory: a note in the job system, a line in someone’s head, an instruction the AI picked up on a call. This plan puts it in one list, keyed to the client id your job system issued. It also adds something none of those places has. Nothing counts until a named person says yes.
 
 ## In short
 
 - **What this is**: A build plan for the client memory standard on Microsoft 365. Five lists, a commit flow, a review flow, and one filter added to each flow that already acts for a client.
-- **The core rule**: Proposals land in MemoryItems as proposed. A person adds a Decisions row. The commit flow applies it only if that person is on Approvers, and every other flow filters Status = approved.
-- **What it does not do**: No flow edits an approved row. A change is a new row with Supersedes set, and the old row is only marked superseded when the change is approved.
-- **The hard part**: Permissions on Decisions so the flow's own account cannot add a row, and every money flow reading MemoryItems on each run rather than once at the top.
+- **The core rule**: Anything the AI hears goes in as a suggestion. An approver accepts or rejects it in the Decisions list, and the commit flow only acts on a decision from someone on the Approvers list. Every other flow reads approved items only.
+- **What it does not do**: No flow changes an approved item. A change is saved as a new version, and the old one is only retired once an approver accepts the change.
+- **The hard part**: Setting permissions on the Decisions list so the flows' own account can't approve anything, and making the quote, invoice and chase flows check the memory fresh for each client, every run.
 
 ## 1. Before you start
 
@@ -34,7 +34,7 @@ Run the cash path first, from its own plan. This plan keys every row to the clie
 
 Then fill Approvers. Two people is usual: the owner and whoever runs the office. A flow’s service account is never on it.
 
-One thing to check before you build: **who can add a row to Decisions?** Break permission inheritance on that list so only the people on Approvers can add items, and the flows’ connection can read it but not write to it. That one setting is what makes an approval something the AI cannot give itself.
+One thing to check before you build: **who can add a row to Decisions?** Break permission inheritance on that list so only the people on Approvers can add items, and the flows’ connection can read it but not write to it. That one setting stops the AI approving its own suggestions.
 
 ## 2. The lists, with their columns
 
@@ -150,7 +150,7 @@ What each connection is for.
 
 - **SharePoint, the ClientMemory site.** MemoryItems, Approvers, Decisions, DecisionOutcomes and MemoryReviews. The flows read Decisions and never write to it; what Flow 2 did with each decision goes to DecisionOutcomes. The quote, invoice and chase flows from the cash path read MemoryItems here, by client id and approved only. Nothing outside the site.
 - **Outlook, one shared mailbox.** Tells the owner when a decision is refused and sends the monthly review.
-- **AI Pathway, over its MCP endpoint, if the calls feed Flow 1.** Called at https://connect.aipathway.com.au/api/mcp with a bearer key from connect.aipathway.com.au/app/keys, through the HTTP action or a custom connector (both premium in Power Automate). Read the book lets Flow 1 read what a call heard with get_memory. Leave Write drafts and notes off: it would let a flow record a fact as live, with no one approving it.
+- **AI Pathway, over its MCP endpoint, if the calls feed Flow 1.** Called at https://connect.aipathway.com.au/api/mcp with a bearer key from connect.aipathway.com.au/app/keys, through the HTTP action or a custom connector (both premium in Power Automate). Read the book lets Flow 1 read what a call heard with get_memory. Leave Write drafts and notes off. With it on, a flow could record a fact as approved without anyone approving it.
 
 Keep it to the least it needs.
 
@@ -180,20 +180,20 @@ A long-running chase flow that reads MemoryItems once will miss an approval made
 
 ### An Approve button that the flow's account can press
 
-If the flow can add a Decisions row, so can anything that can trigger the flow. Permissions on the list are the control, not a condition in the flow.
+If the flow can add a Decisions row, so can anything that can trigger the flow. Control it with permissions on the list. A condition inside the flow won't stop it.
 
 ### Editing the old row to the new value
 
-It looks tidy and it erases what was in force last week. Every change is a new row, and the old one keeps its words.
+It looks tidy, but it wipes out the instruction that applied last week. Every change is a new row, and the old one keeps its words.
 
 ## 8. Where the automation stops
 
-- Approving or rejecting every proposed row.
+- Approving or rejecting every suggested item.
 - Who is on Approvers, and which instructions are critical.
 - Choosing between two instructions that contradict each other.
 - Acting on every line of the review.
 
-**The pass test.** On your own phone line, tenant and ledger. On a real call, ask for invoices to go to a bookkeeper: MemoryItems must hold a proposed row naming the call, and the next invoice must not use it. Add a Decisions row as someone not on Approvers: it must be refused. Approve it as the owner, then raise an invoice: it must go to the bookkeeper. On another call change it, raise an invoice before approving the change and one after: the first goes to the old address and the second to the new, and the old row is superseded with its words unchanged. Run the review on the button: one MemoryReviews row listing both versions.
+**The pass test.** Use your own phone line, Microsoft 365 and accounts. On a real call, ask for invoices to go to a bookkeeper: MemoryItems must hold a proposed row naming the call, and the next invoice must not use it. Add a Decisions row as someone not on Approvers: it must be refused. Approve it as the owner, then raise an invoice: it must go to the bookkeeper. On another call change it, raise an invoice before approving the change and one after: the first goes to the old address and the second to the new, and the old row is superseded with its words unchanged. Run the review on the button: one MemoryReviews row listing both versions.
 
 ## Related reading
 

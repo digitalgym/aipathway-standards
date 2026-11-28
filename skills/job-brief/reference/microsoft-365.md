@@ -15,14 +15,14 @@ Used by
 
 - Service Coordinator
 
-Your job system already knows the gate code, the dog, the asbestos in the eaves and the quote the customer never answered. This plan copies what it holds into SharePoint each morning and posts each tech a short brief in Teams, built only from those rows. A row with no record id or no date never makes it onto the brief.
+Your job system already knows the gate code, the dog, the asbestos in the eaves and the quote the customer never answered. This plan copies what it holds into SharePoint each morning and posts each tech a short brief in Teams, built only from what was copied. Anything without a record number or a date never makes it onto the brief.
 
 ## In short
 
 - **What this is**: A build plan for the job brief standard on Microsoft 365. Six lists, a flow that copies from the job system, and a flow that builds and posts each tech's brief.
-- **The core rule**: Every line on the brief is a SiteRecords, Quotes or Assets row, in its own words, with its RecordId and date. A blank date drops the line.
+- **The core rule**: Every line on the brief is copied word for word from a site note, quote or asset in your job system, with its record number and date. A line with no date is left off.
 - **What it does not do**: No flow writes to the job system. The quote total is not even copied, so the brief cannot price anything.
-- **The hard part**: Every read filters on the job's CustomerId, so a house that changed hands keeps the old owner's history out. And a run with unchanged slots posts nothing.
+- **The hard part**: Every lookup is by the job's customer, not the address, so when a house changes hands the old owner's history stays off the brief. If nobody's jobs have changed, nothing is posted again.
 
 ## 1. Before you start
 
@@ -30,7 +30,7 @@ Read [the job brief build standard](https://aipathway.com.au/explore-ai/job-brie
 
 Check your job system holds what the brief needs: an access note and a hazard note per site, dated notes with an author, quotes with a status and an issue date. Anything it does not hold shows on the brief as missing, which is the point, but a brief that is all gaps is not much use to a tech.
 
-Then ask each tech which channel they want it on, and fill Techs. A tech with no channel gets nothing, and the owner is told.
+Then ask each tech which channel they want it on, and fill in the Techs list. A tech with no channel gets nothing, and the owner is told.
 
 One thing to decide before you build: **do customer notes go on the brief at all?** Some businesses want the tech to see “wants a call before arrival”; some would rather a note about an invoice dispute stayed in the office. Flow 2 reads one setting and quotes the notes or leaves them all out.
 
@@ -152,7 +152,7 @@ Keep it to the least it needs.
 2. Give it a read-only key in the job system. If the job system has no read-only key, say so to the owner before building.
 3. Make the service account a member of the JobBrief site and no other, or give an app registration Sites.Selected on that site.
 
-How to cut it off. Turn Flow 2 off and nothing is posted. Delete the job system key and Flow 1 copies nothing on its next run, so the next brief has nothing stale to draw on: the lists are emptied and refilled each morning.
+How to cut it off. Turn Flow 2 off and nothing is posted. Delete the job system key and Flow 1 copies nothing on its next run. The lists are emptied and refilled each morning, so the next brief has nothing old to draw on.
 
 ## 6. The order to build it in
 
@@ -166,7 +166,7 @@ How to cut it off. Turn Flow 2 off and nothing is posted. Delete the job system 
 
 ### Asking Copilot to tidy the brief
 
-A summary step reads better and breaks the standard: it rewrites a note into a claim the note does not make. The brief stays copied rows.
+A summary step reads better but breaks the standard, because it can turn a note into a claim the note does not make. Keep the brief to copied rows.
 
 ### Filtering by address
 
@@ -183,7 +183,7 @@ A flow that runs on each Slots change and posts every time sends a tech five bri
 - Each tech's channel, and the time the brief must arrive.
 - Asking the customer about anything the brief shows as missing.
 
-**The pass test.** In your own job system. Pick tomorrow’s job at a site you have visited before, with one open quote and no access note. The next morning’s brief must list the last visit with its date and record id, the open quote with its age, and access under missing. Delete the last visit’s note in the job system and run both flows again: that line must be gone, not remembered or reworded.
+**The pass test.** In your own job system. Pick tomorrow’s job at a site you have visited before, with one open quote and no access note. The next morning’s brief must list the last visit with its date and record id, the open quote with its age, and access under missing. Delete the last visit’s note in the job system and run both flows again: that line must be gone, with nothing remembered or reworded.
 
 ## Related reading
 

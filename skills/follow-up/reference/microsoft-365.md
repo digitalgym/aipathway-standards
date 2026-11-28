@@ -9,7 +9,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/follow-up-on-m
 
 ---
 
-Chasing the quote nobody answered is four list lookups in the right order. Read the arrival first, before the ranking, before the message is composed, or you will text somebody the morning after they signed.
+Chasing the quote nobody answered comes down to checking four lists in the right order. Check first whether it has already come back, before anything is ranked or written, or you will text somebody the morning after they signed.
 
 Used by
 
@@ -17,22 +17,22 @@ Used by
 - Business Systems Analyst
 - Office Manager
 
-Reminders are the easy half and every tool ships them. The standard is about the stop: the signed variation came back on Tuesday and the third text has to not go out on Wednesday. In a scheduled Power Automate flow that is a question of what you read first, because the obvious shape is to rank the list, build the message, then check whether to send. By then the message exists, and a message that exists is one action away from going.
+Reminders are the easy half, and every tool has them. The standard is about stopping. The signed variation came back on Tuesday, so the third text must not go out on Wednesday. In a scheduled Power Automate flow, that depends on what the flow checks first. The obvious way is to rank the list, write the message, then check whether to send. By then the message exists, and a message that exists is one step away from going out.
 
 ## In short
 
-- **What this is**: A build plan for the follow-up standard on Microsoft 365. Six lists, two libraries, four flows, six measures, and the call left where the standard puts it.
-- **The core rule**: The chase run opens by reading Arrivals and dropping those items from the set. That read is the first thing the flow does, before anything is ranked or composed, rather than a condition before the send.
-- **What it does not do**: Microsoft 365 sends email. It does not send a text and it does not place a disclosed, recorded call. The standard names the call as the hosted step, and this plan does not pretend a flow can be one.
-- **The hard part**: Knowing the document came back when it landed somewhere the tenant does not watch, and keeping the cap and the gap in a list a person can edit rather than in a flow only the builder can open.
+- **What this is**: A build plan for the follow-up standard on Microsoft 365: six lists, two libraries, four flows and six measures. The phone call stays with the hosted step the standard names.
+- **The core rule**: The daily chase starts by checking what has already come back and dropping those items. That check is the first thing the flow does, before anything is ranked or written, not a last check just before sending.
+- **What it does not do**: Microsoft 365 sends email. Texts, and calls with the disclosure and recording, need the hosted step the standard names. A flow cannot make those calls.
+- **The hard part**: Knowing the document came back when it landed somewhere your Microsoft 365 is not watching, and keeping the limit on touches and the gap between them in a list a person can edit, instead of in a flow only the builder can open.
 
 ## 1. Before you start
 
 Read [the follow-up build standard](https://aipathway.com.au/explore-ai/follow-up-build-standard) first. It defines its objects, and the lists below are those objects with SharePoint types on them. Shared conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-Decide one thing first: where an arrival lands. The whole standard turns on stopping the moment the thing comes back, and the tenant can only stop on an arrival it can see. A signed variation emailed to the estimator’s own address, a certificate uploaded to the builder’s portal, a PO number read out on the phone: each of those is an arrival this build will miss, and the next touch goes out the day after. Pick one library, one mailbox or one button a person presses, say so out loud to the people who receive these things, and only then write the cadence. Getting this wrong does not degrade the build gracefully. It makes it worse than no chasing at all.
+Decide one thing first: where things come back to. The whole standard depends on stopping the moment the thing comes back, and your Microsoft 365 can only stop for what it can see. A signed variation emailed to the estimator’s own address, a certificate uploaded to the builder’s portal, a PO number read out on the phone: this build will miss each of those, and the next reminder goes out the day after. Pick one library, one mailbox or one button a person presses, tell the people who receive these things, and only then write the follow-up schedule. Getting this wrong makes the build worse than no chasing at all.
 
-Second, read what the standard puts out of scope before you size this. Money that is late is the debtor chasing standard and it has its own plan. If the thing owed is a dollar amount on an invoice, you are on the wrong page. And check your cadence against what this stack can send: Outlook sends the email, and nothing here sends a text or makes a call.
+Second, read what the standard puts out of scope before you size this. Money that is late is the debtor chasing standard and it has its own plan. If the thing owed is a dollar amount on an invoice, you are on the wrong page. And check your follow-up schedule against what Microsoft 365 can send. Outlook sends the email. Texts and calls need something outside it.
 
 ## 2. The lists, with their columns
 
@@ -224,14 +224,14 @@ Touched After Arrival is the measure this plan exists to make possible, and the 
 
 ## 6. What the flows can reach in your Microsoft 365 and in Xero, and what they never touch
 
-The flows chase what a customer still owes you back, until it arrives. They keep the open items and the cadence in one SharePoint site, send each touch from one shared mailbox, watch where arrivals land, and pick up the outcome of a call on a quote in Xero nobody has answered. A no, anything disputed, dropping an item and any concession stay with you. Nobody’s Xero password goes near a flow: the owner signs in with Xero once inside AI Pathway, and the build holds a key.
+The flows chase the signature, document or answer a customer still owes you, until it comes back. They keep the open items and the follow-up schedule in one SharePoint site, send each reminder from one shared mailbox, watch the one place replies land, and pick up the outcome of a call about an unanswered quote in Xero. You decide every no, anything disputed, whether to drop an item and any concession. Your own login stays yours: you sign in with Xero once inside AI Pathway, and the build holds a key, never your password.
 
 What each connection is for.
 
 - **SharePoint, one site.** The six lists and two libraries. Flows read OpenItems, Cadences and Consent, and write Rank, Touches, Arrivals and Outcomes. Nothing outside that site.
 - **Outlook, one shared mailbox.** Sends the email touch, and is where Flow 3 watches if arrivals come in by email. The estimator’s own inbox is not part of it.
 - **Teams.** Posts the escalation to the person in EscalateTo. An email does the same job if you would rather not.
-- **AI Pathway, over its MCP endpoint.** Called at https://connect.aipathway.com.au/api/mcp with a bearer key from connect.aipathway.com.au/app/keys, through the HTTP action or a custom connector (both premium in Power Automate). Read the book lets a flow check the quote in Xero before a touch, so an accepted quote is not chased. Read chases brings the call outcome back for Flow 4. Queue calls is only for a build that sends its own ranked list; switched on in AI Pathway, the quote call rings each morning by itself inside the business’s daily call cap.
+- **AI Pathway, over its MCP endpoint.** Called at https://connect.aipathway.com.au/api/mcp with a bearer key from connect.aipathway.com.au/app/keys, through the HTTP action or a custom connector (both premium in Power Automate). Read the book lets a flow check the quote in Xero before a reminder, so an accepted quote is not chased. Read chases brings the call outcome back for Flow 4. Queue calls is only for a build that sends its own ranked list; switched on in AI Pathway, the quote call rings each morning by itself inside the business’s daily call cap.
 
 Keep it to the least it needs.
 
@@ -249,7 +249,7 @@ Why not Copilot in Outlook, across the whole tenant? Copilot will draft a polite
 
 1. Settle where arrivals land, and tell the people who send these things back. Nothing below is safe to run until that is decided.
 2. Create the six lists and two libraries. Turn on enforce unique values for OpenItems.ItemRef and Arrivals.ItemRef before any rows exist.
-3. Fill Cadences by hand, one row per kind you actually chase, with a real person in EscalateTo. Leave the cadences short. You can lengthen them later; you cannot unsend.
+3. Fill Cadences by hand, one row per kind you chase, with a real person in EscalateTo. Keep the schedules short. You can lengthen them later, but you cannot unsend.
 4. Load the register from real open items with real amounts in ValueAtRisk. A register of test rows proves nothing about whether the ranking is sane.
 5. Build Flow 3 before Flow 2. The stop has to exist before the chase does, and a half-built version that only records arrivals is already useful to somebody.
 6. Build Flow 1, and read the RankReason column on the top ten rows. If the order looks wrong to the person who chases these by hand, fix it now.
@@ -260,7 +260,7 @@ Why not Copilot in Outlook, across the whole tenant? Copilot will draft a polite
 
 ### There is no text message in this stack
 
-Microsoft 365 sends email. It does not send SMS. If a Cadences row names sms as a channel, the run has nothing to call, and the shapes it fails into are both bad: a skipped touch that quietly burns a slot in the cadence, or a Touch row with Channel sms that nothing actually sent, which the cap then counts against an item nobody ever contacted. Either drop sms from the Channels column, or put the send outside the tenant and have it write the Touch row back, and never let the flow write a Touch it did not cause.
+Microsoft 365 sends email. It does not send SMS. If a Cadences row names sms as a channel, the run has nothing to call, and the shapes it fails into are both bad: a skipped touch that quietly burns a slot in the cadence, or a Touch row with Channel sms that nothing sent, which the cap then counts against an item nobody ever contacted. Either drop sms from the Channels column, or put the send outside the tenant and have it write the Touch row back, and never let the flow write a Touch it did not cause.
 
 ### The arrival the tenant cannot see
 
@@ -276,13 +276,13 @@ Three touches, forty-eight hours apart is two numbers, and they will end up as l
 
 ## 9. Where the automation stops
 
-- The call itself. The standard names it as the hosted step, with the disclosure, the recording, calling hours, and the lawful basis recorded on every dial (existing-customer follow-up), with a wash against the Do Not Call Register for any number that has none, under it. The quote call always carries that basis, so no wash has run on these calls. None of those is a thing a flow does, and this plan does not show you how to assemble one out of flows and hope.
-- The no, and anything disputed. Whether to ring back, revise the quote or let it go is a conversation, and the customer who says they never agreed to the variation gets a person rather than a third email.
+- The call itself. The standard names it as the hosted step. That step handles the disclosure, the recording and calling hours, and records the lawful reason for every call (following up an existing customer). Any number without that reason is checked against the Do Not Call Register. The quote call always has that reason, so no register check has run on these calls. A flow cannot do any of this, so this plan does not try to build it from flows.
+- The no, and anything disputed. Whether to ring back, revise the quote or let it go is a conversation, and the customer who says they never agreed to the variation gets a person, not a third email.
 - Any discount, extension or concession offered to get an answer. There is no step anywhere in this build that offers one, which is deliberate and worth checking after anybody edits Flow 2.
 - Clearing WeOwe. Only a person can say the business has done its part, and WeOweClearedBy records who and when.
-- Writing the cadence, and closing an item at the cap. The run escalates once to a named person; deciding to drop the item is theirs.
+- Writing the follow-up schedule, and closing an item that has reached its limit. The run escalates once to a named person, and deciding to drop the item is theirs.
 
-**The pass test.** Stage one real item. Put a signed variation on the register with its actual value at risk, a contact whose only Consent row is email, and a Cadences row of three touches forty-eight hours apart. Let the run make the first touch. Then, before the second is due, drop the signed PDF into the Arrived library and run the chase twice more. You must end with exactly one Touches row, an Arrivals row carrying the link to that PDF, Status reading arrived, and Touched After Arrival reading zero. A few days of real running, and the only work is watching. If a second touch went out, the run ranked or composed before it read Arrivals, and the customer has been reminded about something they already signed, which is the exact failure the standard exists for. If the first touch went out by text, something outside the tenant sent it and the Consent rows are decorative. If the Outcomes row from that item holds a sentence rather than a date or a decision, the call step is writing transcripts and nobody will read them on Friday.
+**The pass test.** Stage one real item. Put a signed variation on the register with its actual value at risk, a contact whose only Consent row is email, and a Cadences row of three touches forty-eight hours apart. Let the run make the first touch. Then, before the second is due, drop the signed PDF into the Arrived library and run the chase twice more. You must end with exactly one Touches row, an Arrivals row carrying the link to that PDF, Status reading arrived, and Touched After Arrival reading zero. A few days of real running, and the only work is watching. If a second touch went out, the run ranked or composed before it read Arrivals, and the customer has been reminded about something they already signed, which is the exact failure the standard exists for. If the first touch went out by text, something outside your Microsoft 365 sent it and the Consent rows are being ignored. If the Outcomes row from that item holds a sentence rather than a date or a decision, the call step is writing transcripts and nobody will read them on Friday.
 
 ## Related reading
 

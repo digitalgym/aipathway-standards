@@ -17,20 +17,20 @@ Used by
 - Business Systems Analyst
 - Operations Manager
 
-Almost everything in this build is a SharePoint list and a scheduled flow, and almost none of the work is building them. The work is getting a named person into the Owner column of every row, and then discovering which of those sources live somewhere a flow cannot reach. That second discovery changes the shape of the watch, so it is the thing to find out first rather than in month two.
+Almost everything in this build is a SharePoint list and a scheduled flow, and almost none of the work is building them. The work is getting a named person into the Owner column of every row, and then discovering which of those sources live somewhere a flow cannot reach. That second discovery changes how the watch works, so find it out first rather than in month two.
 
 ## In short
 
 - **What this is**: A build plan for the knowledge base standard on Microsoft 365. Five lists, four flows, a Power BI page, and the libraries you already have left where they are.
-- **The core rule**: Nothing is searchable through this build until it is a register row with an owner, a checksum and one canonical copy. The register is the product and the search is a convenience on it.
-- **What it does not do**: Search returns passages with a register id and a locator. It never returns a paragraph something wrote from them, because nothing here was built to write one.
-- **The hard part**: A flow can read a file in SharePoint. It cannot go and read what a regulator published this morning, so half your watch is people with due dates.
+- **The core rule**: Nothing can be searched until it is on the register (the one list of your sources) with an owner, a fingerprint of the file and one master copy. The register is what you are building; search is a convenience on top of it.
+- **What it does not do**: Search returns the passage, which source it came from and where in that source. It never writes its own answer from them, because nothing here was built to.
+- **The hard part**: A flow can read a file in SharePoint. It cannot go and read what a regulator published this morning, so for those sources the watch is a person with a due date.
 
 ## 1. Before you start
 
 Read [the knowledge base build standard](https://aipathway.com.au/explore-ai/knowledge-base-build-standard) first. It defines its objects, and the lists below are those objects with SharePoint types on them. Shared conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-Decide one thing first: which of your sources live inside the tenant and which do not. A scheduled flow can open a file in a SharePoint library or a OneDrive folder, compare it to what it saw last week, and tell the owner it moved. It cannot fetch a code of practice from an issuing body’s website. Split the register on that line before you build anything, because the two halves get different flows and only one of them is software.
+Decide one thing first: which of your sources live inside your Microsoft 365 and which do not. A scheduled flow can open a file in a SharePoint library or a OneDrive folder, compare it to what it saw last week, and tell the owner it moved. It cannot fetch a code of practice from an issuing body’s website. Split the register on that line before you build anything, because the two halves get different flows and only one of them is software.
 
 Then decide who chases owners. The standard is honest that the inventory is weeks of work for a network, and the reason is a conversation per source rather than anything technical. If nobody is named for that, the build produces a list of rows with blank Owner columns, which is a tidier version of the problem you started with.
 
@@ -209,7 +209,7 @@ Ownerless Sources is the one to put on the front page, because it is the only nu
 
 ## 6. What the flows can reach in your SharePoint, and what they never touch
 
-The flows keep the register of your files up to date. They read the libraries the register covers, update the register when a file changes, and send the file’s owner an email or a task. Each source has a named person who answers for it when it moves, and which copy counts is yours to decide.
+The flows keep your list of important files up to date. They check the folders that list covers, note when a file changes, and send the file’s owner an email or a task. Each source has a named person who answers for it when it moves, and which copy counts is yours to decide.
 
 What each connection is for.
 
@@ -262,10 +262,10 @@ The tempting build is a view over rows with a blank Location. The standard says 
 ## 9. Where the automation stops
 
 - Owning a source, and answering for it when it moves or goes missing. The Owner column holds a person because somebody has to be asked.
-- Deciding which of two copies is the canonical one. A flow can find the pair. It cannot say which copy the business actually runs on.
+- Deciding which of two copies is the master. A flow can find the pair. It cannot say which copy the business runs on.
 - Closing a gap for a source that cannot be found, or deciding the business does not need it after all.
 - Who may read customer material, and how long it is kept. The register records both and sets neither.
-- Promoting a register entry to the graph. PromotedBy is a person, and no flow may write into it.
+- Moving a source from the register into the graph. A named person always does that, never a flow.
 
 **The pass test.** Put the same manual on the drive twice under two names, one of them an older edition, and register both: one row current with Indexed set to Yes, one row with Status of duplicate, DuplicateOf pointing at the first, and Indexed at No. Then replace the canonical file with a new edition and let the watch run on its own schedule rather than triggering it by hand. You should get one WatchRuns row whose RowsRead equals the live register count, the canonical row carrying a new ETag with the old value appended to SupersededChecksums, and an email to that row’s Owner naming the source. Then search a phrase the manual contains: one passage, carrying the canonical SourceId and a locator that opens. Half an hour on two real files. If the search returns two hits, the index is reading the drive rather than the register and the duplicate is live. If RowsRead is one, you built a trigger and called it a watch. If nobody was emailed, the register knows the edition changed and the owner does not, which is the exact state this standard exists to prevent.
 

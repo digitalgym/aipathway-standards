@@ -17,22 +17,22 @@ Used by
 - Business Systems Analyst
 - Accounts Officer
 
-Every quarter somebody scrolls the period looking for the bill with no invoice attached, the supplier coded differently this time, the bank fee with GST on it. This plan copies the period from your ledger into SharePoint and writes those finds into one list for the bookkeeper or BAS agent. It reads your ledger and never writes to it.
+Every quarter somebody scrolls the period looking for the bill with no invoice attached, the supplier coded differently this time, the bank fee with GST on it. This plan copies the period from your accounts into SharePoint and writes those finds into one list for the bookkeeper or BAS agent. It reads your accounts and never changes them.
 
 ## In short
 
-- **What this is**: A build plan for the BAS Ready Check standard on Microsoft 365. Five lists, a flow that copies one period from the ledger, and a flow that writes the exceptions list.
-- **The core rule**: Every flag on a line carries the ledger's own transaction id. A flag about the whole period names the period and both figures.
-- **What it does not do**: No flow writes to the ledger and none lodges anything. A flag says what was found and why; the person decides.
-- **The hard part**: The ledger connection has to still work three months later, and the usual-code check needs the history copied too, not just this quarter.
+- **What this is**: A build plan for the BAS Ready Check standard on Microsoft 365. Five lists, a flow that copies one period from your accounts, and a flow that writes the exceptions list.
+- **The core rule**: Every flag on a line carries the transaction's own id from your accounts. A flag about the whole period names the period and both figures.
+- **What it does not do**: No flow changes your accounts and none lodges anything. A flag says what was found and why, and your bookkeeper or BAS agent decides.
+- **The hard part**: The connection to your accounts has to still work three months later, and the usual-code check needs the history copied too, not just this quarter.
 
 ## 1. Before you start
 
 Read [the BAS Ready Check build standard](https://aipathway.com.au/explore-ai/bas-ready-check-build-standard) first. It defines its objects, and the lists below are those objects with SharePoint types on them. Shared conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-Agree the settings with whoever lodges the BAS: the period, the comparable period (usually the same quarter last year), how far back to look for usual codes, whether the business reports capital purchases separately, the swing band, and which accounts carry no GST in these books. The flow never decides those.
+Agree the settings with whoever lodges the BAS: the period, the comparable period (usually the same quarter last year), how far back to look for usual codes, whether the business reports capital purchases separately, how big a change on last year counts as a swing (the swing band), and which accounts carry no GST in these books. The flow never decides those.
 
-Then check what your ledger lets a connected app read. Where it cannot say whether a document is attached or a bank line is reconciled, the list says so rather than guessing.
+Then check what your accounting system lets a connected app read. Where it cannot say whether a document is attached or a bank line is reconciled, the list says so rather than guessing.
 
 ## 2. The lists, with their columns
 
@@ -128,21 +128,21 @@ Flow 2 has no AI step that writes its own words about a transaction. Evidence an
 
 ## 5. What the flows can reach in your Microsoft 365, and what they never touch
 
-The flows give your bookkeeper one list of things to look at before the BAS goes in. They read your ledger, write one row for each thing worth a look, every line pointing at the transaction it came from, and email the reviewer a link. Whether a flag is a problem, any correction in the ledger, and lodging the BAS stay with your bookkeeper or BAS agent.
+The flows give your bookkeeper one list of things to look at before the BAS goes in. They read your accounts, write one row for each thing worth a look, every line pointing at the transaction it came from, and email the reviewer a link. Whether a flag is a problem, any correction in the accounts, and lodging the BAS stay with your bookkeeper or BAS agent.
 
 What each connection is for.
 
-- **The ledger, read only, connected directly.** Xero, MYOB Business or QuickBooks Online through its own sign-in, using the HTTP action or a custom connector (both premium in Power Automate). Ask for read scopes only: transactions, tax rates, accounts, attachments and reports.
+- **Your accounts, read only, connected directly.** Xero, MYOB Business or QuickBooks Online through its own sign-in, using the HTTP action or a custom connector (both premium in Power Automate). Ask for read-only access to transactions, tax rates, accounts, attachments and reports.
 - **SharePoint, the BasReadyCheck site.** The five lists and nothing else.
 - **Outlook, one email.** The link to the period’s Exceptions view, sent to the reviewer named in Settings.
 
 Keep it to the least it needs.
 
 1. Make a service account for the build and create the flows as it, not as a person.
-2. Connect the ledger with read scopes only. If the ledger’s sign-in cannot be limited to reading, say so to the owner before building, and rely on the flow having no write step.
+2. Connect your accounts with read-only access. If the sign-in cannot be limited to reading, say so to the owner before building, and rely on the flow having no write step.
 3. Make the service account a member of the BasReadyCheck site and no other.
 
-How to cut it off. Disconnect the app in the ledger’s connected apps screen and Flow 1 copies nothing on its next run.
+How to cut it off. Disconnect the app in your accounting system’s connected apps screen and Flow 1 copies nothing on its next run.
 
 ## 6. The order to build it in
 
@@ -156,7 +156,7 @@ How to cut it off. Disconnect the app in the ledger’s connected apps screen an
 
 ### Treating a blank as no
 
-A ledger that does not report attachments returns nothing, not no. Flagging every bill as missing its invoice buries the real ones. Write cannot say.
+A ledger that does not report attachments returns nothing, not no. Flagging every bill as missing its invoice buries the real ones. Record it as cannot say.
 
 ### Asking Copilot to explain each flag
 
@@ -169,11 +169,11 @@ The usual-code check needs history. Without it every flag would be a guess, so F
 ## 8. Where the automation stops
 
 - Every flag: whether it matters and what to do about it.
-- Any change to a code, a journal or a correction in the ledger.
+- Any change to a code, a journal or a correction in the accounts.
 - Lodging the BAS, by the business or its registered agent.
 - The settings and the list of accounts that carry no GST.
 
-**The pass test.** In your own ledger. Pick a real period and seed one bill above the tax invoice threshold, with GST claimed and nothing attached. Run both flows. The bill must be on the list by its real transaction id, every id on the list must open the right transaction in the ledger, and the ledger’s own history must show nothing changed by the run.
+**The pass test.** In your own accounts. Pick a real period and seed one bill above the tax invoice threshold, with GST claimed and nothing attached. Run both flows. The bill must be on the list by its real transaction id, every id on the list must open the right transaction in your accounts, and their change history must show nothing changed by the run.
 
 ## Related reading
 

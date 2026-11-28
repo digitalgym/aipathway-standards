@@ -98,8 +98,8 @@ skill asserts.
 - 2. The records it keeps, in the shape your developer needs
 - 3. The checks, in order
 - 4. The four queues
-- 5. The change feed, and who accepts it
-- 6. Internal and public are different policies
+- 5. When a rule changes, a person accepts the change
+- 6. Your staff and the public get different answers
 - 7. What stays with a person
 - 8. What your developer builds, and the step that needs care
 - 9. A checklist to hold any build or supplier to

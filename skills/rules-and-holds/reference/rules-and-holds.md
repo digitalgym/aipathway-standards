@@ -46,7 +46,7 @@ No bot moves money, whatever the rules or a release say. No bot sends, chases or
 
 The hard part
 
-Somebody typed a limit into a bot's instructions last year. Each builder has to take theirs out and read the rules instead, and only a real invoice over the new limit proves every bot did. The stub can't show that. The pass test on your own systems can.
+Somebody typed a limit into a bot's instructions last year. Each builder has to take theirs out and read the rules instead, and only a real invoice over the new limit proves every bot did. Test data can't show that. The pass test on your own systems can.
 
 In August the owner lowered the limit for sending an invoice without a look from $10,000 to $5,000, after a $7,800 invoice went to the wrong builder. She told the invoice bot. The quote bot had its own limit in its instructions, and the chase bot had none at all, so a $9,000 variation went out on a Saturday night to a customer who had asked not to be contacted. Each bot was following the rules it had been given. Nobody had written the rules down in one place.
 
@@ -57,7 +57,7 @@ Your rules, read by every bot
 3. **A hold**: Anything with no rule, or over its limit, waits on your holds list, naming the rule that asked. hold.requested rule waits for
 4. **A named person**: Someone on that rule's release list releases or refuses. The hold keeps who and when. hold.released hold.refused
 
-Read it downward. You write the rules once. Every bot reads them before it acts, holds what needs a person, and takes a released action once.
+Read it from the top. You write the rules once. Every bot reads them before it acts, holds what needs a person, and takes a released action once.
 
 One action, through the rules
 
@@ -84,13 +84,13 @@ A business with more than one bot, or a bot and a person, taking actions a custo
 
 A hold is a row on your holds list, with the record’s ref, the amount and the rule that asked for it. It is released or refused by a person, on that list, and the next bot can read the answer.
 
-Out of scope. A bot that could not do its job raises an exception on the [Exception Desk](https://aipathway.com.au/explore-ai/exception-desk-build-standard); a hold is a planned stop. Which records are one customer is [Customer Link](https://aipathway.com.au/explore-ai/customer-link-build-standard)’s. What each standard does once released stays in that standard.
+Out of scope. A bot that could not do its job raises an exception on the [Exception Desk](https://aipathway.com.au/explore-ai/exception-desk-build-standard). A hold is a planned stop instead. Which records are one customer is [Customer Link](https://aipathway.com.au/explore-ai/customer-link-build-standard)’s. What each standard does once released stays in that standard.
 
 What cannot meet it. A bot whose limits can only live in its own instructions, with no way to read a sheet or a list before it acts. It can still follow the rules if a person keeps its instructions in step, but the first check asks for a read, and that bot cannot pass it.
 
 ## 2. The records it keeps, in the shape your developer needs
 
-One rules document, one row per hold, one row per decision. A bot reads the first, writes the second, and only reads the third.
+One rules document, one row per hold, one row per decision. A bot reads the first, adds to the second, and only reads the third.
 
 ```
 Rules                               # one document, written by a person
@@ -121,18 +121,18 @@ A limit kept in a bot's instructions, an action with no rule that went ahead, a 
 
 ## 3. The checks, in order
 
-The order follows one action. The bot reads the rules, holds what they do not cover or what is over a limit, waits for the right person, and then checks the customer, the clock, the money and its own stage before anything goes.
+Each check has to pass before the next one runs, and they follow one action from start to finish. The bot reads the rules, holds what they do not cover or what is over a limit, waits for the right person, and then checks the customer, the clock, the money and its own stage before anything goes.
 
-1. Every bot reads the one rules document fresh before it acts, never its own copy. Before it takes or holds any action, the build reads the business's rules document as it stands now: the limits, the release lists, the do-not-contact list, the contact hours and the stage holders. A limit typed into a prompt, a setting kept from an earlier run or a copy of the list is not a read. A rule a person changes applies on the next run.
-2. An action with no matching rule is held, never taken. If the rules have no entry for the action a step is about to take, the action waits as a hold for a person. Nothing goes ahead because the rules forgot to mention it. The hold says there was no rule, so the person can release this one and write the rule for next time.
-3. An action over the amount the rules set raises a hold naming the rule, and waits. When the amount on the record is over the rule's over_amount, the build raises hold.requested with the record's ref, the amount and the rule that asked for it, and takes no action until the hold is released. At or under the amount it goes ahead. A rule with no amount holds every time.
-4. Only a person on that rule's release list releases or refuses, with who and when, and a release allows one action once. A hold is released or refused only by a decision a person made on the holds list, and only if that person is on the release_by list of the rule that asked for it. The hold keeps the person's name and the time. A release allows the one action it was raised for, taken once. A decision by anyone else, including another bot, changes nothing and goes to a person.
-5. A customer on the do-not-contact list gets no send, chase or call. Before anything goes to a customer by email, text or phone, the build checks the customer's ref against the do-not-contact list in the rules. A customer on it gets nothing, whatever the amount or the stage, and the item stops with the reason for a person. It is not raised as a hold, because a release would contact them.
-6. Nothing goes to a customer outside the contact hours in the rules. A send, a text or a call to a customer happens only inside the contact hours the rules set, read in the business's own timezone. Outside them the item waits, untouched, and goes on the first run inside them.
-7. No bot moves money: any payment is refused, whatever the rules or a release say. The rules document fixes nodes_may_move_money at false, and no rule or release changes it. A step that comes due to pay, refund or transfer is refused: no payment is released and no hold is raised for one, because a released hold would let a bot pay. The item stops with the reason for a person, who pays in their own banking.
-8. A bot not named in stage_holders for its stage does nothing. The rules name one bot per stage. Before a step, the build checks that it is the one named for that stage. If another bot is named, or none is, it takes no action, raises no hold and writes nothing, so two chase bots never both chase one invoice.
-9. It survives the builder. Someone other than the builder can explain what it does, and it runs on an account the business owns.
-10. The pass test passes. On the business's own systems: the owner writes the rules once. An invoice over the limit waits as a hold until the owner releases it, then goes once; a customer on the do-not-contact list gets nothing; nothing goes after hours. The owner lowers the limit, and the next run of every bot holds at the new one.
+1. Every bot checks the one rules document before it acts, never its own copy. Before it takes or holds any action, it reads your rules document as it stands now, including the limits, the release lists, the do-not-contact list, the contact hours and which bot looks after each stage. A limit typed into a prompt, a setting kept from an earlier run or a copy of the list does not count. A rule someone changes applies from the next run.
+2. An action with no matching rule is held, never taken. If the rules have no entry for what a bot is about to do, the action waits for a person to release it. Nothing goes ahead because the rules forgot to mention it. The hold says there was no rule, so the person can release this one and write the rule for next time.
+3. Anything over the amount the rules set waits on a hold that names the rule. When the amount is over the rule's limit, it raises a hold naming the record, the amount and the rule, and does nothing until a person releases it. At or under the limit it goes ahead. A rule with no amount holds every time.
+4. Only someone on the rule's release list can release or refuse a hold, and a release covers one action, once. A hold is released or refused only by a person's decision on the holds list, and only if that person is on the release list for the rule that raised it. The hold records their name and the time. A release allows the one action it was raised for, done once. A decision by anyone else, including another bot, changes nothing and goes to a person.
+5. A customer on the do-not-contact list gets no send, chase or call. Before anything goes to a customer by email, text or phone, it checks the customer against the do-not-contact list in the rules. A customer on it gets nothing, whatever the amount or the stage, and the item stops and goes to a person with the reason. It is never raised as a hold, because releasing it would contact them.
+6. Nothing goes to a customer outside the contact hours in the rules. A send, a text or a call to a customer happens only inside the contact hours the rules set, read in the business's own timezone. Outside them the item waits untouched, and goes the first time the bot runs inside them.
+7. No bot moves money, whatever the rules or a release say. The rules document locks money movement off, and no rule or release can change it. A step that comes due to pay, refund or transfer is refused. No payment is made and no hold is raised for one, because releasing a hold would let a bot pay. The item stops and goes to a person with the reason, and they pay from their own banking.
+8. A bot the rules do not name for a stage does nothing at that stage. The rules name one bot per stage. Before each step, the bot checks that it is the one named for that stage. If another bot is named, or none is, it takes no action, raises no hold and saves nothing, so two chase bots never both chase one invoice.
+9. It keeps working if the person who built it leaves. Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+10. The pass test passes. On your own systems, the owner writes the rules once. An invoice over the limit waits as a hold until the owner releases it, then goes once. A customer on the do-not-contact list gets nothing, and nothing goes after hours. When the owner lowers the limit, every bot holds at the new one on its next run.
 
 ## 4. How every other standard uses it
 
@@ -147,7 +147,7 @@ Most standards already have a step where a person approves. With this one, that 
 | [Invoice Check](https://aipathway.com.au/explore-ai/invoice-check-build-standard) | That no bot pays a bill. A checked bill waits for a person, who pays it in your own banking. |
 | [Customer Link](https://aipathway.com.au/explore-ai/customer-link-build-standard) | Which records are one customer, so a do-not-contact entry on the Xero contact also covers the job-system client. |
 
-In the [Mesh Directory](https://aipathway.com.au/explore-ai/mesh-directory), a bot that holds an action emits `hold.requested`. The `hold.released` and `hold.refused` events come only from a person, and the directory’s gate refuses a bot that says it emits them.
+In the [Mesh Directory](https://aipathway.com.au/explore-ai/mesh-directory), a bot that holds an action sends the `hold.requested` message. The `hold.released` and `hold.refused` messages come only from a person, and the directory turns away any bot that says it sends them.
 
 ## 5. One week of rules and holds
 
@@ -167,7 +167,7 @@ In the [Mesh Directory](https://aipathway.com.au/explore-ai/mesh-directory), a b
 
 ## 7. With a Grok Bot, Claude or your own code
 
-Any of them can follow the rules, with read access to the rules document, permission to add rows to the holds list, and read access to the releases. The rules and the releases sit where only people can write: a tab or a list the bot’s connection cannot edit.
+Every bot reads your rules before it acts, and holds anything over a limit for the person you named. Each one needs read access to the rules document, permission to add rows to the holds list, and read access to the releases. You write and change the rules, choose who is on each release list, keep the do-not-contact list, and release or refuse every hold. The rules and the releases sit where only people can write: a tab or a list the bot’s connection cannot edit.
 
 1. Write the rules: a sheet, a SharePoint list or a file with the fields in section 2. Fill in your limits, release lists, do-not-contact list, contact hours and one bot per stage.
 2. Make the holds list and a releases tab or list only the people on your release lists can write to.
@@ -196,22 +196,22 @@ stays local                          # yours, and the standard
 
 Ask anyone selling an AI bot where its dollar limits live, who can release what it holds, and what it does with an action nobody wrote a rule for.
 
-**The pass test.** On the business’s own systems, not a sample. Write the rules once. Raise a real invoice over the limit: it must wait as a hold naming the rule until the owner releases it, then go once. Put a real customer on the do-not-contact list: nothing may go to them. Let a send come due after hours: it must wait for the morning. Then lower the limit and raise another invoice between the old and the new: every bot that sends invoices must hold it on its next run. A stub cannot pass this. On a stub there is one bot and one document; in a business, the old limit is still in somebody’s prompt.
+**The pass test.** On the business’s own systems, not a sample. Write the rules once. Raise a real invoice over the limit: it must wait as a hold naming the rule until the owner releases it, then go once. Put a real customer on the do-not-contact list: nothing may go to them. Let a send come due after hours: it must wait for the morning. Then lower the limit and raise another invoice between the old and the new: every bot that sends invoices must hold it on its next run. Test data cannot pass this. On test data there is one bot and one document. In a real business, the old limit is still in somebody’s bot instructions.
 
 ## 9. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 
-- **1. Every bot reads the one rules document fresh before it acts, never its own copy.** Before it takes or holds any action, the build reads the business's rules document as it stands now: the limits, the release lists, the do-not-contact list, the contact hours and the stage holders. A limit typed into a prompt, a setting kept from an earlier run or a copy of the list is not a read. A rule a person changes applies on the next run.
-- **2. An action with no matching rule is held, never taken.** If the rules have no entry for the action a step is about to take, the action waits as a hold for a person. Nothing goes ahead because the rules forgot to mention it. The hold says there was no rule, so the person can release this one and write the rule for next time.
-- **3. An action over the amount the rules set raises a hold naming the rule, and waits.** When the amount on the record is over the rule's over_amount, the build raises hold.requested with the record's ref, the amount and the rule that asked for it, and takes no action until the hold is released. At or under the amount it goes ahead. A rule with no amount holds every time.
-- **4. Only a person on that rule's release list releases or refuses, with who and when, and a release allows one action once.** A hold is released or refused only by a decision a person made on the holds list, and only if that person is on the release_by list of the rule that asked for it. The hold keeps the person's name and the time. A release allows the one action it was raised for, taken once. A decision by anyone else, including another bot, changes nothing and goes to a person.
-- **5. A customer on the do-not-contact list gets no send, chase or call.** Before anything goes to a customer by email, text or phone, the build checks the customer's ref against the do-not-contact list in the rules. A customer on it gets nothing, whatever the amount or the stage, and the item stops with the reason for a person. It is not raised as a hold, because a release would contact them.
-- **6. Nothing goes to a customer outside the contact hours in the rules.** A send, a text or a call to a customer happens only inside the contact hours the rules set, read in the business's own timezone. Outside them the item waits, untouched, and goes on the first run inside them.
-- **7. No bot moves money: any payment is refused, whatever the rules or a release say.** The rules document fixes nodes_may_move_money at false, and no rule or release changes it. A step that comes due to pay, refund or transfer is refused: no payment is released and no hold is raised for one, because a released hold would let a bot pay. The item stops with the reason for a person, who pays in their own banking.
-- **8. A bot not named in stage_holders for its stage does nothing.** The rules name one bot per stage. Before a step, the build checks that it is the one named for that stage. If another bot is named, or none is, it takes no action, raises no hold and writes nothing, so two chase bots never both chase one invoice.
-- **9. It survives the builder.** Someone other than the builder can explain what it does, and it runs on an account the business owns.
-- **10. The pass test passes.** On the business's own systems: the owner writes the rules once. An invoice over the limit waits as a hold until the owner releases it, then goes once; a customer on the do-not-contact list gets nothing; nothing goes after hours. The owner lowers the limit, and the next run of every bot holds at the new one.
+- **1. Every bot checks the one rules document before it acts, never its own copy.** Before it takes or holds any action, it reads your rules document as it stands now, including the limits, the release lists, the do-not-contact list, the contact hours and which bot looks after each stage. A limit typed into a prompt, a setting kept from an earlier run or a copy of the list does not count. A rule someone changes applies from the next run.
+- **2. An action with no matching rule is held, never taken.** If the rules have no entry for what a bot is about to do, the action waits for a person to release it. Nothing goes ahead because the rules forgot to mention it. The hold says there was no rule, so the person can release this one and write the rule for next time.
+- **3. Anything over the amount the rules set waits on a hold that names the rule.** When the amount is over the rule's limit, it raises a hold naming the record, the amount and the rule, and does nothing until a person releases it. At or under the limit it goes ahead. A rule with no amount holds every time.
+- **4. Only someone on the rule's release list can release or refuse a hold, and a release covers one action, once.** A hold is released or refused only by a person's decision on the holds list, and only if that person is on the release list for the rule that raised it. The hold records their name and the time. A release allows the one action it was raised for, done once. A decision by anyone else, including another bot, changes nothing and goes to a person.
+- **5. A customer on the do-not-contact list gets no send, chase or call.** Before anything goes to a customer by email, text or phone, it checks the customer against the do-not-contact list in the rules. A customer on it gets nothing, whatever the amount or the stage, and the item stops and goes to a person with the reason. It is never raised as a hold, because releasing it would contact them.
+- **6. Nothing goes to a customer outside the contact hours in the rules.** A send, a text or a call to a customer happens only inside the contact hours the rules set, read in the business's own timezone. Outside them the item waits untouched, and goes the first time the bot runs inside them.
+- **7. No bot moves money, whatever the rules or a release say.** The rules document locks money movement off, and no rule or release can change it. A step that comes due to pay, refund or transfer is refused. No payment is made and no hold is raised for one, because releasing a hold would let a bot pay. The item stops and goes to a person with the reason, and they pay from their own banking.
+- **8. A bot the rules do not name for a stage does nothing at that stage.** The rules name one bot per stage. Before each step, the bot checks that it is the one named for that stage. If another bot is named, or none is, it takes no action, raises no hold and saves nothing, so two chase bots never both chase one invoice.
+- **9. It keeps working if the person who built it leaves.** Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+- **10. The pass test passes.** On your own systems, the owner writes the rules once. An invoice over the limit waits as a hold until the owner releases it, then goes once. A customer on the do-not-contact list gets nothing, and nothing goes after hours. When the owner lowers the limit, every bot holds at the new one on its next run.
 
 ## Related reading
 

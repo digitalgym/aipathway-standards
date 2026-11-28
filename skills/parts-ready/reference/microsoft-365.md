@@ -22,9 +22,9 @@ Most businesses already know what tomorrow’s jobs need. It is on the quote. No
 ## In short
 
 - **What this is**: A build plan for the parts ready standard on Microsoft 365. Eight lists, a 2pm flow that checks and decides, and a Teams flow that tells each tech once per job.
-- **The core rule**: Needs come from the quote, the job or a written template. A job with none is flagged. A van counted longer ago than the limit is flagged, not trusted.
+- **The core rule**: The parts list comes from the quote, the job or a written template. A job with none is flagged. A van that has not been counted within the limit is flagged rather than trusted.
 - **What it does not do**: No flow here writes a purchase order. A shortfall goes to the Material Order flow, which prices it and holds anything over the threshold for a person.
-- **The hard part**: Getting the vans counted weekly, and the unique keys on Results and TechMessages so a re-run cannot order or message twice.
+- **The hard part**: Getting the vans counted weekly, and making sure that running the check a second time can never order a part or message a tech twice.
 
 ## 1. Before you start
 
@@ -34,7 +34,7 @@ Build the Material Order flow first, from its own plan. This plan hands every sh
 
 Then count the vans. One row per part per van in VanStock, with CountedAt filled. A weekly count on Friday afternoon is enough to start, if each closed job takes its parts off the van.
 
-One thing to decide before you build: **what time is the cut-off?** The flow runs before it, every afternoon, and writes a Runs row even when there is nothing to report.
+One thing to decide before you build: **what time is the cut-off?** The flow runs before it, every afternoon, and records the run even when there is nothing to report.
 
 ## 2. The lists, with their columns
 
@@ -196,8 +196,8 @@ Two runs a minute apart both find nothing and both write. The unique key on Resu
 
 - Moving a job, or sourcing a part, when the lead time misses the slot.
 - Accepting an equivalent part.
-- Writing the templates per job type, and counting the vans.
-- Every flagged Result.
+- Writing the parts template for each job type, and counting the vans.
+- Every flagged part or job.
 
 **The pass test.** On tomorrow’s real board. Set one job whose quote needs a part on the van, one whose part is only on the shelf, and one whose part you hold nowhere. By the cut-off: the first tech’s Teams message lists the part as on the van; the second says pick it up from the shelf, and Shelf.Reserved went up by one; the third has a PoRef from the Material Order flow or a flag naming the job. Run Flow 1 again: no new Results, no second order, no second message.
 

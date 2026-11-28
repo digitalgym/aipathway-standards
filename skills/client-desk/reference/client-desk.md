@@ -46,7 +46,7 @@ It never gives a caller a time the job does not hold, never makes a second job f
 
 The hard part
 
-Not the wording. A phone line that answers in the business's name, transfers to a real person, and reads the arrival time off the job system while the caller waits. That is the step not to hand-roll.
+The wording is easy. The hard part is a phone line that answers in the business's name, puts the caller through to a real person, and reads the arrival time off the job system while the caller waits. That is the step not to build yourself.
 
 It is 10:40 on a Tuesday. The builder is on a roof. The phone has rung four times: a new customer about a leaking shower, Mrs Patel asking when the plasterer is coming, the same Mrs Patel twenty minutes later asking to speak to someone, and a supplier. None of them is about money, and every one of them is the office admin’s job. The plasterer is running an hour late, and nobody has told Mrs Patel, which is why she rang twice.
 
@@ -60,7 +60,7 @@ One daytime call
 6. Did they ask for a person? If not, the call is done and it is on the job.
 7. If they did, they are transferred to the person the roster names. A transfer nobody picks up becomes a callback on the job with that person's name and a due time.
 
-The filled diamond is the record: a time is given only when the job holds one, and the other branch is a callback, never a guess. The last branch is the transfer, and a missed transfer becomes a callback with a name on it.
+The filled diamond is the job record. A time is given only when the job holds one, and otherwise the caller gets a callback, never a guess. The last branch is the transfer, and a missed transfer becomes a callback with a name on it.
 
 ## Done for you: Front Desk
 
@@ -71,16 +71,16 @@ What it does today
 - Answers on your own number during business hours, and says it is an AI and that the call is recorded before it asks anything.
 - Recognises an existing customer, looks up their job and answers from the booking it holds, and, when the customer asks, moves their booking to another free time on the call, or cancels it with their reason noted on the job.
 - Takes new work the way Booked After Hours does: the caller’s own words, a fixed job type, one job written into ServiceM8 or Simpro during the call.
-- Puts a caller through to a person, and hands off with a fixed reason when it should not answer itself.
+- Puts a caller through to a person, and when it should not answer something itself, hands the call over with a reason from a set list.
 - Rings the customer when today’s job moves later on your board by 15 minutes or more, with the new time read off the job, once per change. Switch on “Running late / on the way” under Automations. See [running-late calls on Front Desk](https://aipathway.com.au/running-late).
+- Rings a customer when you ask it to from your own line, running late or on the way. It reads back the job and the delay, and rings once you say yes.
 
 Not yet
 
-- Running-late or on-the-way calls you ask for on your own line. Built, and switched on per business when it is ready: it reads back the job and the delay, and rings once you say yes.
-- A job-complete message. Once a job is finished on your board, our after-the-job call rings to ask how it went, which is not the same as telling the customer it is done. That message is built against the stub, or quoted as a scoped build.
+- A job-complete message. Once a job is finished on your board, our after-the-job call rings to ask how it went, which is not the same as telling the customer it is done. You can build that message yourself from this standard, or we quote it as a separate build.
 - Status updates by text. Front Desk rings; it does not send the update as an SMS.
 
-Start a 30-day free trial, connect ServiceM8 or Simpro and point your number at it. $29 to set up your number, which comes off your first bill; prices are on the [pricing page](https://aipathway.com.au/pricing). If you would rather we set it up for you, that is a fixed-price set-up: [pick a time](https://aipathway.com.au/ai-audit#book).
+Start a 30-day free trial, connect ServiceM8 or Simpro and point your number at it. $29 to set up your number, which comes off your first bill; prices are on the [pricing page](https://aipathway.com.au/pricing). If you would rather we set it up for you, it is a fixed-price set-up, so [pick a time](https://aipathway.com.au/ai-audit#book).
 
 Rather build it yourself? Everything you need is below, free. Joining it to your own inbox, ledger or a bigger workflow? See joining it to your own system. [Front Desk](https://aipathway.com.au/calls) is held to the pass tests on this page like anything else.
 
@@ -93,7 +93,7 @@ A builder or a trade with a job system, a phone number and a schedule that moves
 
 What it does not cover. Calls after hours are [Booked After Hours](https://aipathway.com.au/explore-ai/booked-after-hours-build-standard), and new work taken in the day is written by that standard’s rules. The quote, the invoice and the chase are the [Cash Seam](https://aipathway.com.au/explore-ai/cash-seam-build-standard). Moving the arrival time when the day slips is the [Dispatch Board](https://aipathway.com.au/explore-ai/dispatch-board-build-standard)’s; this standard tells the customer once it has moved. A customer who asks to move or cancel their own booking is different. The desk does that on the call, in the job system. For the whole role on one record, read [Virtual Admin](https://aipathway.com.au/explore-ai/virtual-admin-build-standard).
 
-What cannot meet it. A job system the desk cannot read while the caller waits. Tradify has no public API and no Zapier app, so the desk cannot read a job from it live. We connect it another way: Tradify’s job export, loaded each morning by a browser step a person approves, lets the desk look the caller up and give the booked day, and anything that changed since the export becomes a callback. The transfer and callback half works as it does anywhere. The standard says so rather than pretending the desk can see a job it cannot.
+What cannot meet it. A job system the desk cannot read while the caller waits. Tradify has no public API, the connection other software uses, and no Zapier app, so the desk cannot read a job from it live. We connect it another way. Each morning, once a person approves it, a browser step loads Tradify’s job export, so the desk can look the caller up and give the booked day. Anything that changed since the export becomes a callback. The transfer and callback half works as it does anywhere. The standard says so rather than pretending the desk can see a job it cannot.
 
 ## 2. The records it keeps, in the shape your developer needs
 
@@ -129,32 +129,32 @@ A time in a message that is not the job's eta, a message whose trigger is not a 
 
 ## 3. The checks, in order
 
-The order is the claim. Disclosure comes first because it is first on the call. The lookup comes before new work because, in the day, the caller usually already has a job. The status answer and the transfer come before the messages because a customer who was told the truth on the phone is the one who does not need to ring again. Writing back comes last because it is what makes the next person’s answer right.
+Each check has to pass before the next one runs. Disclosure comes first because it is first on the call. The lookup comes before new work because, in the day, the caller usually already has a job. The status answer and the transfer come before the messages because a customer who was told the truth on the phone is the one who does not need to ring again. Writing back comes last because it is what makes the next person’s answer right.
 
-1. Disclosure first, on every daytime call. AI identification and the recording notice come before the first question, on every call the desk answers, the same as after hours. A caller who already has a job is told too.
-2. The caller is looked up before anything is written, and an existing job is worked on, not duplicated. Before writing anything, the build reads for an open job on the caller's number. A caller with an open job is handled on that job: what they said is filed to it, and no new job is made, whatever they rang about.
-3. New work is written the way Booked After Hours writes it. A caller with no open job and new work is written as one job: the caller's own words kept as said, a type from the fixed list (emergency, routine, quote, unclassified) and nothing free-text in its place. The rules do not relax because it is daytime.
-4. A status question is answered from the job, or not answered. "When is he coming?" is answered with the arrival time the job system holds, read by the job's id on that call. When the job holds no time, the caller is told that plainly and a callback is raised for the person on duty. No time is ever estimated, rounded or made up.
-5. A caller who asks for a person is put through, and a missed transfer becomes a callback with a name and a time. In business hours a caller who asks for a person is transferred to whoever the roster names as on duty. If nobody picks up, the build raises a callback on the caller's job, owned by that person, due within the time the business set. The caller is told when to expect it. Nobody is left on hold and nobody is dropped.
-6. Running late, on the way and job complete are sent only when the record changes. A status message is sent when the job system or the board records the change, woken by that event. The time in the message is the time on the job, read after the event arrived. No event, no message.
-7. One message per change, and a new change gets a new message. The same change delivered twice sends one message. A second, different change on the same job sends a second message with the new time. The build reads what was already sent before sending again.
+1. The caller hears it is AI and the call is recorded first, on every daytime call. On every call the desk answers, the caller is told they are speaking with AI and that the call is recorded, before the first question, the same as after hours. A caller who already has a job is told too.
+2. The caller is looked up before anything is saved, and an open job is used, never duplicated. Before saving anything, it checks for an open job on the caller's number. A caller with an open job is handled on that job. What they said goes on it, and no new job is made, whatever they rang about.
+3. New work is saved the same way Booked After Hours saves it. A caller with no open job and new work gets one job, with their own words kept as said and a type from the fixed list (emergency, routine, quote, unclassified), never free text in its place. The rules do not relax because it is daytime.
+4. A status question is answered from the job, or not answered. "When is he coming?" is answered with the arrival time on the job, looked up during that call. If the job has no time, the caller is told so plainly and a callback is set up for the person on duty. No time is ever estimated, rounded or made up.
+5. A caller who asks for a person is put through, and a missed transfer becomes a callback with a name and a time. In business hours a caller who asks for a person is transferred to whoever the roster names as on duty. If nobody picks up, a callback goes on the caller's job, owned by that person, due within the time the business set. The caller is told when to expect it. Nobody is left on hold and nobody is dropped.
+6. Running late, on the way and job complete messages go out only when the job changes. A status message is sent when the job system or the board records the change, set off by that change. The time in the message is the time on the job, checked after the change came through. No change, no message.
+7. One message per change, and a new change gets a new message. The same change delivered twice sends one message. A second, different change on the same job sends a second message with the new time. It checks what was already sent before sending again.
 8. An update goes only to the contact on the job, and only with their consent. A status message goes to the contact recorded on the job, by the channel they agreed to, and to nobody else. Where the job records no consent to messages, nothing is sent and the job says so.
-9. Every call and every update is written back to the job. Whoever opens the job next sees what the customer said and what the customer was told: every call the desk took and every update it sent is filed to the job with the event that caused it.
-10. A job write with no id back is not a booked job. A new job write that returns a null external id did not happen. The caller is not told they are booked, and a callback task with the caller's number goes to the person on duty.
-11. It survives the builder. Someone other than the builder can explain what it does, and it runs on an account the business owns.
+9. Every call and every update is saved on the job. Whoever opens the job next sees what the customer said and what the customer was told. Every call the desk took and every update it sent is saved on the job, with what caused it.
+10. A job that comes back with no job number is not booked. If saving a new job gives back no job number, the job was never made. The caller is not told they are booked, and a callback with the caller's number goes to the person on duty.
+11. It keeps working if the person who built it leaves. Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
 12. The pass test passes. On the business's own number and job system, in business hours: an existing customer rings to ask when the tradesperson is coming and then asks for a person who does not pick up; the arrival time is then moved on the board. The caller hears only the time on the job, gets a callback with a name on it, and receives one running-late message carrying the new time, with all of it on the job.
 
 ## 4. Who rings in the day, and what they get
 
-An existing customer asking when. The desk reads the job by its id and says the arrival time it holds, exactly. If the job holds no time, the caller hears that plainly and gets a callback from the person on duty. “Should be early afternoon” is the sentence this standard exists to stop, because it is the one that makes the second call.
+An existing customer asking when. The desk finds their job and reads out the arrival time on it, exactly. If the job holds no time, the caller hears that plainly and gets a callback from the person on duty. “Should be early afternoon” is the sentence this standard exists to stop, because it is the one that makes the second call.
 
 An existing customer asking for a person. The desk puts them through to whoever the roster names. When nobody picks up, the caller is not left on hold or dropped. A callback goes on their job, owned by that person, due within the window the business set, and the caller is told when to expect it.
 
-A new customer with new work. Written as one job, the same way Booked After Hours writes it: their own words kept, a type from the fixed list, and nothing about the work invented. Daytime is not a reason to relax a rule. If the write comes back with no id, they are not told they are booked.
+A new customer with new work. It goes in as one job, the same way Booked After Hours does it: their own words kept, a type from the fixed list, and nothing about the work made up. Daytime is not a reason to relax a rule. If the job system does not come back with a job number, they are not told they are booked.
 
 ## 5. The three messages
 
-| Message | Woken by | Carries | Never says |
+| Message | Sent when | Says | Never says |
 | --- | --- | --- | --- |
 | Running late | The arrival time on the job moves later | The new time, read from the job after the change | A time the job does not hold, or "about an hour" |
 | On the way | The tradesperson is marked as leaving for this job | The arrival time the job holds, if it holds one | A promise the board has not made |
@@ -174,7 +174,7 @@ Each one goes once per change, to the contact on the job, and only if they agree
 
 Checked as at 29 October 2026
 
-Front Desk, sold as Booked After Hours, answers the business’s number during the day as well as after hours, and moves or cancels a customer’s own booking when they ask. It rings running-late calls off a change on the board for a business that switches them on. Running-late or on-the-way calls the owner asks for on their own line are built and not yet switched on. It does not send a job-complete message, or any update by text, so those are built against the stub or quoted as a scoped build.
+Front Desk, sold as Booked After Hours, answers the business’s number during the day as well as after hours, and moves or cancels a customer’s own booking when they ask. It rings running-late calls off a change on the board for a business that switches them on, and rings a running-late or on-the-way call when the owner asks for one on their own line. It does not send a job-complete message, or any update by text, so you build those yourself from this standard, or we quote them as a separate build.
 
 Tradify has no public or partner API, confirmed in writing by their support on 10 April 2026, and no Zapier app as at 29 October 2026. If that changes, the route in section 1 changes with it.
 
@@ -182,7 +182,7 @@ Tradify has no public or partner API, confirmed in writing by their support on 1
 
 ## 8. What your developer builds, and the step that needs care
 
-One step not to hand-roll: the live line. A number that answers in the business's name with the disclosure first, transfers to a real phone, and reads the job system while the caller waits. That is Front Desk. The rest, the lookup, the message rules, the notes and the callbacks, is wiring a coding agent builds against the stub in an afternoon.
+One step is not worth building yourself, and that is the live line. It is a number that answers in the business's name with the disclosure first, transfers to a real phone, and reads the job system while the caller waits. That is Front Desk. The rest (the lookup, the message rules, the notes and the callbacks) is wiring a coding agent can build against a test version of your job system in an afternoon.
 
 ```
 provider:
@@ -195,7 +195,7 @@ the live step
     Hours. The same number answers by day and after hours.
   - running-late calls on the same Front Desk, off a change on the
     board, switched on per business under Automations. Calls the
-    owner asks for on their own line are built, not yet on. One call per
+    owner asks for on their own line are live too. One call per
     change, the time read off the job.
 
 stays local                          # yours, and the standard
@@ -211,23 +211,23 @@ cannot meet the standard
 
 A vendor selling a daytime receptionist is usually selling a voice. Ask them one thing: when Mrs Patel asks when the plasterer is coming, where does the time come from, and what does she hear when the job does not have one?
 
-**The pass test.** On the business’s own number and job system, in business hours, not a sample. Ring from a real customer’s phone and ask when the tradesperson is coming, then ask for a person and let the transfer go unanswered. Then move that job’s arrival time on the board. The recording must open with the disclosure. The time said on the call must be the time the job held. A callback must sit on the job, owned by the person the roster named. Exactly one running-late message must reach the customer’s phone, with the new time, and the job must show the call, the callback and the message. A stub cannot pass this: it holds whatever time it is given and transfers to whoever it is told, so a build can agree with itself there and still tell a real customer a time nobody wrote down.
+**The pass test.** On the business’s own number and job system, in business hours, not a sample. Ring from a real customer’s phone and ask when the tradesperson is coming, then ask for a person and let the transfer go unanswered. Then move that job’s arrival time on the board. The recording must open with the disclosure. The time said on the call must be the time the job held. A callback must sit on the job, owned by the person the roster named. Exactly one running-late message must reach the customer’s phone, with the new time, and the job must show the call, the callback and the message. A test version cannot pass this. It holds whatever time it is given and transfers to whoever it is told, so a build can agree with itself there and still tell a real customer a time nobody wrote down.
 
 ## 9. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 
-- **1. Disclosure first, on every daytime call.** AI identification and the recording notice come before the first question, on every call the desk answers, the same as after hours. A caller who already has a job is told too.
-- **2. The caller is looked up before anything is written, and an existing job is worked on, not duplicated.** Before writing anything, the build reads for an open job on the caller's number. A caller with an open job is handled on that job: what they said is filed to it, and no new job is made, whatever they rang about.
-- **3. New work is written the way Booked After Hours writes it.** A caller with no open job and new work is written as one job: the caller's own words kept as said, a type from the fixed list (emergency, routine, quote, unclassified) and nothing free-text in its place. The rules do not relax because it is daytime.
-- **4. A status question is answered from the job, or not answered.** "When is he coming?" is answered with the arrival time the job system holds, read by the job's id on that call. When the job holds no time, the caller is told that plainly and a callback is raised for the person on duty. No time is ever estimated, rounded or made up.
-- **5. A caller who asks for a person is put through, and a missed transfer becomes a callback with a name and a time.** In business hours a caller who asks for a person is transferred to whoever the roster names as on duty. If nobody picks up, the build raises a callback on the caller's job, owned by that person, due within the time the business set. The caller is told when to expect it. Nobody is left on hold and nobody is dropped.
-- **6. Running late, on the way and job complete are sent only when the record changes.** A status message is sent when the job system or the board records the change, woken by that event. The time in the message is the time on the job, read after the event arrived. No event, no message.
-- **7. One message per change, and a new change gets a new message.** The same change delivered twice sends one message. A second, different change on the same job sends a second message with the new time. The build reads what was already sent before sending again.
+- **1. The caller hears it is AI and the call is recorded first, on every daytime call.** On every call the desk answers, the caller is told they are speaking with AI and that the call is recorded, before the first question, the same as after hours. A caller who already has a job is told too.
+- **2. The caller is looked up before anything is saved, and an open job is used, never duplicated.** Before saving anything, it checks for an open job on the caller's number. A caller with an open job is handled on that job. What they said goes on it, and no new job is made, whatever they rang about.
+- **3. New work is saved the same way Booked After Hours saves it.** A caller with no open job and new work gets one job, with their own words kept as said and a type from the fixed list (emergency, routine, quote, unclassified), never free text in its place. The rules do not relax because it is daytime.
+- **4. A status question is answered from the job, or not answered.** "When is he coming?" is answered with the arrival time on the job, looked up during that call. If the job has no time, the caller is told so plainly and a callback is set up for the person on duty. No time is ever estimated, rounded or made up.
+- **5. A caller who asks for a person is put through, and a missed transfer becomes a callback with a name and a time.** In business hours a caller who asks for a person is transferred to whoever the roster names as on duty. If nobody picks up, a callback goes on the caller's job, owned by that person, due within the time the business set. The caller is told when to expect it. Nobody is left on hold and nobody is dropped.
+- **6. Running late, on the way and job complete messages go out only when the job changes.** A status message is sent when the job system or the board records the change, set off by that change. The time in the message is the time on the job, checked after the change came through. No change, no message.
+- **7. One message per change, and a new change gets a new message.** The same change delivered twice sends one message. A second, different change on the same job sends a second message with the new time. It checks what was already sent before sending again.
 - **8. An update goes only to the contact on the job, and only with their consent.** A status message goes to the contact recorded on the job, by the channel they agreed to, and to nobody else. Where the job records no consent to messages, nothing is sent and the job says so.
-- **9. Every call and every update is written back to the job.** Whoever opens the job next sees what the customer said and what the customer was told: every call the desk took and every update it sent is filed to the job with the event that caused it.
-- **10. A job write with no id back is not a booked job.** A new job write that returns a null external id did not happen. The caller is not told they are booked, and a callback task with the caller's number goes to the person on duty.
-- **11. It survives the builder.** Someone other than the builder can explain what it does, and it runs on an account the business owns.
+- **9. Every call and every update is saved on the job.** Whoever opens the job next sees what the customer said and what the customer was told. Every call the desk took and every update it sent is saved on the job, with what caused it.
+- **10. A job that comes back with no job number is not booked.** If saving a new job gives back no job number, the job was never made. The caller is not told they are booked, and a callback with the caller's number goes to the person on duty.
+- **11. It keeps working if the person who built it leaves.** Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
 - **12. The pass test passes.** On the business's own number and job system, in business hours: an existing customer rings to ask when the tradesperson is coming and then asks for a person who does not pick up; the arrival time is then moved on the board. The caller hears only the time on the job, gets a callback with a name on it, and receives one running-late message carrying the new time, with all of it on the job.
 
 ## Related reading

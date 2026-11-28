@@ -9,7 +9,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/binding-the-pa
 
 ---
 
-One graph where each fact lives once, obligations that carry their citation, and a pack generated from bound records rather than assembled in a folder.
+Each fact about your business kept in one place, every obligation with the rule that requires it, and a pack built from records that already have their evidence attached, instead of put together by hand in a folder.
 
 Used by
 
@@ -18,24 +18,24 @@ Used by
 - Document Controller
 - Compliance Officer
 
-This is the parent standard, and it is the one with the most to lose from a casual implementation. Every business already has a version of this: a folder per client, per site, per job, full of documents that were correct when somebody put them there. The standard replaces the folder with a graph and a generator, and the tenant is a perfectly good place to put both.
+This is the parent standard, and a rushed build hurts it most. Every business already has a version of it: a folder per client, per site, per job, full of documents that were correct when somebody put them there. The standard swaps the folder for one set of linked records and a step that builds the pack from them, and your Microsoft 365 is a good place for both.
 
 ## In short
 
 - **What this is**: A build plan for the rejected pack standard on Microsoft 365. Six lists, two libraries, four flows, six measures.
-- **The core rule**: Change the trading address once and every pack generated afterwards is right. That property is what you are building, and a copied value destroys it.
-- **What it does not do**: It assembles a complete, current, evidenced pack and puts it in front of the person who releases it. It does not certify anything and it does not decide that an obligation is satisfied.
-- **The hard part**: The binding layer. The standard names it as the step not to hand-roll, and there is no product for it, so this is where the care goes.
+- **The core rule**: Change the trading address once and every pack built afterwards is right. That is what you are building, and one copied-in address breaks it.
+- **What it does not do**: It puts together a complete, current pack with its evidence attached and puts it in front of the person who releases it. It does not certify anything and it does not decide that an obligation is met.
+- **The hard part**: Attaching each certificate to the thing it proves, and refusing the pack while anything is missing. The standard says not to build this step from scratch, but there is no product for it, so this is where the care goes.
 
 ## 1. Before you start
 
-Read [the rejected pack build standard](https://aipathway.com.au/explore-ai/rejected-pack-build-standard) first, and its [operator runbook](https://aipathway.com.au/explore-ai/rejected-pack-workflow) if people rather than systems are your constraint. Shared conventions for this stack are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
+Read [the rejected pack build standard](https://aipathway.com.au/explore-ai/rejected-pack-build-standard) first, and its [operator runbook](https://aipathway.com.au/explore-ai/rejected-pack-workflow) if people rather than systems are what holds you up. Shared conventions for this stack are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-The standard names the binding layer as the step not to hand-roll, and unlike some of the others **there is no product for it**. That is not an oversight and this page will not pretend otherwise. It means the binding step deserves the most care, the most testing, and the refusal behaviour built first.
+The standard names the binding step, attaching each certificate to what it proves, as the one not to build from scratch. Unlike some of the others, **there is no product for it**. So the binding step gets the most care and the most testing, and its refusal is built first.
 
 ## 2. The lists, with their columns
 
-Six lists and two libraries. The shape looks heavier than the others because it is a graph, and the weight is what lets one edit re-derive everything downstream.
+Six lists and two libraries. It looks heavier than the other plans because the lists link to each other, and those links are what let one edit flow through to every pack.
 
 ```
 Site: Packs
@@ -97,19 +97,19 @@ LIST  PackArtifacts
   Bound           Boolean         false blocks the pack
 ```
 
-PackArtifacts is what makes a pack regenerable and auditable. Without it you have a PDF and a hope, and the question you cannot answer six months later is which version of which fact it carried.
+PackArtifacts lets you rebuild a pack and check it later. Without it you have a PDF, and six months later you can't say which version of which fact it carried.
 
 ## 3. Every check, and what enforces it
 
 | The check | Enforced by | How |
 | --- | --- | --- |
-| A fact lives in one place and everything re-derives | Lookups | The trading address is a column on Entity and a lookup everywhere else. Changing it once changes every pack generated afterwards, which is the whole argument of the standard. |
-| An obligation carries the rule that says so | List design | Citation is required. An obligation with no citation cannot be defended when somebody asks why the artifact exists, and it is usually the one that turns out not to apply. |
-| Does not apply is a written reason, not an absence | List design | Applicability plus WhyNot, both required when it does not apply. A silently missing obligation looks identical to one nobody thought of. |
-| Evidence binds to the thing before the pack can close | Pack flow | The generate step refuses while any required artifact is unbound. This is the binding layer and it is the step the standard names as the hard one. |
-| The pack is generated, never assembled by hand | Pack flow | Artifacts carry version, generated_at, as_of and their sources. A pack somebody built in a folder has none of those and cannot be regenerated. |
-| A named person is on the gate | Approval | The pack is released by a person from a named group, recorded on the pack, not by whoever happened to run the flow. |
-| Expiry is derived and surfaces before it bites | Expiry flow | Tickets, insurance and inspections all carry ExpiresOn, and the flow moves the pack out of current before the date rather than after somebody is refused on site. |
+| A fact lives in one place and every pack reads it from there | Lookups | The trading address is a column on Entity and a lookup everywhere else. Changing it once changes every pack built afterwards. That is the point of the standard. |
+| An obligation carries the rule that says so | List design | Citation is required. An obligation with no rule behind it can't be defended when somebody asks why the document exists, and it is usually the one that turns out not to apply. |
+| "Does not apply" needs a written reason | List design | Applicability plus WhyNot, both required when it does not apply. An obligation that is quietly left off looks the same as one nobody thought of. |
+| Evidence is attached to what it proves before the pack can close | Pack flow | The pack step refuses while any required document has no evidence attached. The standard names this step as the hard one. |
+| The pack is built from the records, never put together by hand | Pack flow | Each document carries its version, when it was built, the date its facts were true and where they came from. A pack somebody put together in a folder has none of those and can't be rebuilt. |
+| A named person releases the pack | Approval | A person from a named group releases the pack, and their name is recorded on it. Whoever happened to run the flow can't release it. |
+| Expiry dates are worked out and flagged before they bite | Expiry flow | Tickets, insurance and inspections all carry ExpiresOn, and the flow marks the pack out of date before that date, so nobody finds out by being turned away on site. |
 
 ## 4. The four flows
 
@@ -147,7 +147,7 @@ FLOW 4  Expiry
            At handover, somebody is already standing at a gate.
 ```
 
-Flow 2's guard is the one sentence of this page that matters most. Everything else is plumbing around a refusal.
+Flow 2's refusal matters more than anything else on this page. The rest of the build supports it.
 
 ## 5. The Power BI model and its measures
 
@@ -185,7 +185,7 @@ Pack Age Days =
 AVERAGEX ( PackArtifacts, DATEDIFF ( PackArtifacts[AsOf], NOW (), DAY ) )
 ```
 
-The two must-be-zero measures are the cheapest audit in this library. An obligation with no citation and a does-not-apply with no reason are both the same failure: somebody decided something and left no way to check it.
+The two must-be-zero measures are the cheapest check you can run. An obligation with no rule cited and a does-not-apply with no reason are the same failure. Somebody decided something and left no way to check it.
 
 ## 6. What the flows can reach in your Microsoft 365, and what they never touch
 
@@ -193,10 +193,10 @@ The flows assemble a complete, current pack and put it in front of the person wh
 
 What each connection is for.
 
-- **SharePoint, the one site, read and write.** The graph lists, Obligations and PackArtifacts, the Evidence library where certificates are bound, and the Packs library where generated packs land. Nothing outside that site.
+- **SharePoint, the one site, read and write.** The linked lists, Obligations and PackArtifacts, the Evidence library where certificates are attached, and the Packs library where finished packs land. Nothing outside that site.
 - **Approvals, through Teams or Outlook.** Flow 3 asks the named release group and records who answered. The approval is the only way a pack becomes released.
 - **Outlook or Teams, to warn.** Flow 4 tells the owner that a ticket or a policy is about to expire. It sends to your own people only.
-- **The job system, read, if you want it.** For the work type and the site, which is what applicability runs on. ServiceM8 by an API key or an app connection, Simpro through your company’s own API at its simprosuite.com address, either one by a custom connector or the HTTP action (both premium). Tradify has no public API and no Zapier app, so the flow reads its job export instead. A nightly export into a list also works for the other two and needs no premium licence.
+- **The job system, read, if you want it.** For the work type and the site, which decide which obligations apply. ServiceM8 by an API key or an app connection, Simpro through your company’s own API at its simprosuite.com address, either one by a custom connector or the HTTP action (both premium). Tradify has no public API and no Zapier app, so the flow reads its job export instead. A nightly export into a list also works for the other two and needs no premium licence.
 
 Give it the least it needs.
 
@@ -207,13 +207,13 @@ Give it the least it needs.
 
 How to cut it off. Turn off the four flows, or delete their connections in Power Automate, or remove the service account from the site. Revoke the job system key or app connection on the job system’s side, and delete the app registration’s secret if you used one. The lists and libraries stay where they are, because they are yours.
 
-Why not Copilot over the whole tenant? Copilot can find a certificate and summarise it, and it sees whatever the person asking can see. It has no idea that an artifact is unbound, so it cannot refuse a pack, and the refusal in Flow 2 is what this standard is. Use it to find documents if you have it. The flows that bind, refuse and release are still this build.
+Why not Copilot across all of your Microsoft 365? Copilot can find a certificate and summarise it, and it sees whatever the person asking can see. It can’t tell that a document is missing its evidence, so it can’t refuse a pack, and that refusal in Flow 2 is the heart of this standard. Use it to find documents if you have it. You still need these flows to attach evidence, refuse incomplete packs and release finished ones.
 
 ## 7. The order to build it in
 
-1. Build Entity, Locations and People first, with one row each. The graph before anything that reads it.
+1. Build Entity, Locations and People first, with one row each. The records come before anything that reads them.
 2. Add Tickets and Cover. Index ExpiresOn now.
-3. Load Obligations for one location, with at least one marked does not apply so the WhyNot requirement is exercised.
+3. Load Obligations for one location, with at least one marked does not apply so the WhyNot column gets tested.
 4. Build Flow 1 and confirm a file cannot be uploaded without naming what it evidences.
 5. Build Flow 2 with the refusal first, before any rendering. Prove it refuses, then teach it to generate.
 6. Run the pass test: change the trading address and regenerate.
@@ -224,29 +224,29 @@ Why not Copilot over the whole tenant? Copilot can find a certificate and summar
 
 ### A pack as a folder of PDFs
 
-This is what everybody already has and it is precisely what the standard replaces. A folder cannot tell you which version of a fact each document carries, cannot be regenerated after the address changes, and quietly becomes stale one document at a time.
+This is what everybody already has, and it is what the standard replaces. A folder can't tell you which version of a fact each document carries, can't be rebuilt after the address changes, and goes out of date one document at a time.
 
-### Re-typing the entity details onto each pack
+### Re-typing the business details onto each pack
 
-The moment a fact exists in two places, one of them is wrong and it is usually the one that went out. Everything that names the entity is a lookup, and the pack template reads the lookup rather than a copied value.
+Once a fact is in two places, one of them will be wrong, and it is usually the one that went out. Anything that names the business looks it up from the Entity list, and the pack template reads that lookup, never a copied value.
 
-### Treating unbound as a warning
+### Treating missing evidence as a warning
 
-If the generate step runs and posts a note about missing evidence, packs go out incomplete and the note is the thing nobody reads. Unbound must stop the generate. That is the difference between this standard and a checklist.
+If the pack step runs and posts a note about missing evidence, packs go out incomplete and nobody reads the note. Missing evidence must stop the pack being built. A checklist only warns.
 
 ### Expiry checked when the pack is requested
 
-By then it is too late: somebody is at a gate. Run expiry on a schedule against the graph, and let the pack's currency be a property of the facts rather than a question asked at handover.
+By then it is too late, because somebody is already at a site gate. Check expiry dates on a schedule, so whether a pack is current comes from the records, not from a question asked at handover.
 
 ## 9. Where the automation stops
 
 - Certifying anything, or signing on behalf of a licensed person.
-- Deciding that an obligation does not apply. A flow can require the reason; it cannot supply it.
-- Releasing a pack. A named person from a named group, recorded.
+- Deciding that an obligation does not apply. A flow can ask for the reason, but only a person can give it.
+- Releasing a pack. A named person from a named group does it, and their name is recorded.
 - Deciding an expired ticket is close enough to let somebody on site.
-- The binding layer's judgement calls. There is no product for this step and nothing here pretends there is.
+- The judgement calls in attaching evidence. There is no product for this step.
 
-**The pass test.** Two checks, both on test data. First, mark one required artifact unbound and request a pack: the generate must refuse and name what is missing, and no file may appear in the Packs library. Second, change TradingAddress on Entity and regenerate a pack that was correct before: the new pack must carry the new address without anyone editing a template, and the old pack must still show the old one with its own AsOf. If the first produces a pack with a warning attached, you have built a checklist. If the second needs a template edited, a fact lives in two places and you have not built the graph the standard is about.
+**The pass test.** Two checks, both on test data. First, take the evidence off one required document and request a pack: the pack step must refuse and name what is missing, and no file may appear in the Packs library. Second, change TradingAddress on Entity and regenerate a pack that was correct before: the new pack must carry the new address without anyone editing a template, and the old pack must still show the old one with its own AsOf. If the first produces a pack with a warning attached, you have built a checklist. If the second needs a template edited, a fact still lives in two places, and the lists need fixing before you go on.
 
 ## Related reading
 

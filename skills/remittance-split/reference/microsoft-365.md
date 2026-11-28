@@ -9,7 +9,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/batch-payments
 
 ---
 
-The same standard, for a business that lives in Microsoft 365: each deposit and its remittance lines as SharePoint lists, exceptions decided in Teams, and one batch payment per deposit, equal to it.
+The same standard, for a business that runs on Microsoft 365: each deposit and its remittance lines as SharePoint lists, exceptions decided in Teams, and one batch payment per deposit, equal to it.
 
 Used by
 
@@ -17,22 +17,22 @@ Used by
 - Microsoft 365 Administrator
 - Finance Manager
 
-Microsoft 365 has the pieces this needs: a library to keep every remittance copy, lists to hold each line as written, and Teams for the person who decides an exception. The part that takes thought is the same as on any stack: the deposit comes from the bank, one bad line holds the whole deposit, and the batch is applied once per deposit however many copies of the remittance arrive.
+Microsoft 365 has the pieces this needs: a library to keep every remittance copy, lists to hold each line as written, and Teams for the person who decides an exception. The hard part is the same on any setup. The deposit amount comes from the bank, one bad line holds up the whole deposit, and the batch payment goes in once per deposit, however many copies of the remittance arrive.
 
 ## In short
 
 - **What this is**: A build plan for the Remittance Split standard on Microsoft 365. Five lists keyed on the deposit, three flows, and a person deciding every exception in Teams.
-- **The core rule**: Flow 3 applies a batch only when every line for a deposit is matched or decided and the lines total the deposit. Batches.DepositId is unique, so a second batch cannot be recorded.
-- **What it does not do**: No flow writes off a short payment, raises a credit, edits an invoice, or fills in the Decision column. Those stay with the bookkeeper.
-- **The hard part**: Keeping the clean lines waiting while one line is decided, and making the batch unique on the deposit rather than on the file, because the portal copy has a different name.
+- **The core rule**: Flow 3 records the batch payment only when every line for a deposit is matched or decided and the lines add up to the deposit. Each deposit can hold only one batch, so a second one cannot be recorded.
+- **What it does not do**: No flow writes off a short payment, raises a credit, edits an invoice, or decides an exception. Those stay with the bookkeeper.
+- **The hard part**: Keeping the clean lines waiting while one line is decided, and allowing one batch per deposit rather than per file, because the copy from the payer's portal has a different file name.
 
 ## 1. Before you start
 
 Read [the Remittance Split build standard](https://aipathway.com.au/explore-ai/remittance-split-build-standard) first. It defines its objects, and the lists below are those objects with SharePoint types on them. Shared conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-Check that your ledger can apply one payment across many invoices through its API, and decide how Flow 3 reaches it. Xero has batch payments; MYOB and QuickBooks Online can apply one customer payment across several invoices. Power Automate reaches each through a custom connector or the HTTP action (both premium) on a connection the business owns, not the builder’s own login.
+Check that your accounting system can apply one payment across many invoices through its API, and decide how Flow 3 reaches it. Xero has batch payments; MYOB and QuickBooks Online can apply one customer payment across several invoices. Power Automate reaches each through a custom connector or the HTTP action (both premium) on a connection the business owns, not the builder’s own login.
 
-Then decide where the deposit comes from: a statement export (CSV or OFX) from your bank dropped in a library, or a person keying in the amount, date and reference from the bank line. Not the ledger’s bank feed. Xero’s API does not give an ordinary app the bank lines waiting to be reconciled. Either way, the amount in the Deposits list comes from the bank, never from the remittance.
+Then decide where the deposit comes from: a statement export (CSV or OFX) from your bank dropped in a library, or a person keying in the amount, date and reference from the bank line. Do not use the bank feed inside your accounting system, because Xero does not give an ordinary app the bank lines waiting to be reconciled. Either way, the amount in the Deposits list comes from the bank, never from the remittance.
 
 ## 2. The lists, with their columns
 
@@ -149,18 +149,18 @@ No flow writes the Decision column. A person sets it in the Exceptions list, fro
 
 ## 5. What the flows can reach in your Microsoft 365 and your ledger, and what they never touch
 
-The flows bank a customer’s payment against the invoices it pays. They read the bank statement and the remittance, match each line to its invoice, and apply one batch payment per deposit in your ledger. Any line that doesn’t match, like a short payment or an unknown invoice, goes to your bookkeeper to decide, and write-offs and credit notes stay with you.
+The flows put each deposit against the invoices its remittance names, as one payment that matches the bank. They read the bank line and the remittance, match each line to its invoice by number, and record one batch payment per deposit in your accounts. Your bookkeeper decides every line that does not fit, and does any write-off, credit note or overpayment by hand.
 
 What each connection is for.
 
 - **SharePoint, the one site.** Deposits, the Remittances library, RemittanceLines, Exceptions and Batches. The statement exports land in a library on the same site.
 - **The remittance mailbox, read.** Where emailed remittances arrive, so a flow can save each attachment into the Remittances library. Portal copies are saved there by hand or by their own flow.
-- **The ledger, three uses.** Read invoices, to find each one by its number and what is owing. Write payments, for the one batch. Attachments, to keep the remittance with the payment. Through a custom connector or the HTTP action, both premium in Power Automate, on an app connection the business approves.
+- **Your accounting system, three uses.** Read invoices, to find each one by its number and what is owing. Write payments, for the one batch. Attachments, to keep the remittance with the payment. Through a custom connector or the HTTP action, both premium in Power Automate, on an app connection the business approves.
 - **Teams.** The card that puts each exception in front of the bookkeeper with the line and both amounts.
 
-Xero’s narrower permissions let the app ask for payments without asking to write invoices or credit notes. The payments permission still covers overpayments, prepayments and removing a payment, so the last fence is in the flows: Flow 3 has one ledger action, the batch, and no other. If you build a custom connector, define that one write action and the two reads, and nothing else.
+Xero’s narrower permissions let the app ask for payments without asking to write invoices or credit notes. The payments permission still covers overpayments, prepayments and removing a payment, so the last safeguard is in the flows. Flow 3 has one action in your accounts, the batch, and no other. If you build a custom connector, define that one write action and the two reads, and nothing else.
 
-Least privilege, as steps.
+Keep access to the minimum, step by step.
 
 1. Own the three flows with a service account, not the bookkeeper who set them up, with a named co-owner.
 2. Build them in one solution on connection references, so the ledger, mailbox, SharePoint and Teams connections are each one place to change.
@@ -184,7 +184,7 @@ Why not a ready-made third-party ledger connector? If one is offered to you, loo
 
 ### Taking the deposit amount from the remittance
 
-The remittance says what the payer meant to send. The bank says what arrived. Only the second reconciles.
+The remittance says what the payer meant to send. The bank says what arrived. Only the bank amount will reconcile.
 
 ### Matching a line on its amount when the number fails
 
@@ -194,18 +194,18 @@ Two participants or two claims are often for the same amount. A payment on the w
 
 The bank line then half reconciles, and the remainder has to be found by hand. Hold the whole deposit until every line is decided.
 
-### Keying the batch on the file name
+### Tying the batch to the file name
 
-The emailed copy and the portal copy have different names. Key on the deposit, and let SharePoint's unique column refuse the second.
+The emailed copy and the portal copy have different names. Tie the batch to the deposit, and let SharePoint refuse a second batch for the same one.
 
 ## 8. Where the automation stops
 
 - Deciding every exception: accept a short payment, name the right invoice, or take the deposit over.
 - Writing off a remainder, raising a credit note or recording an overpayment, by hand in the ledger.
 - Asking the payer for a corrected remittance.
-- Correcting a line the reader misread from the PDF.
+- Correcting a line that was misread from the PDF.
 
-**The pass test.** On the ledger’s demo company, or your own, take a real deposit and its remittance. Change one line on a copy so it is $10 short and drop it in the library: nothing is applied, and Exceptions names the line and both amounts. Restore the line: exactly one batch payment, equal to the deposit, with each invoice paid by its own line’s amount. Drop the same remittance in again: Batches still has one row for that deposit. Half an hour on your own tenant.
+**The pass test.** On the ledger’s demo company, or your own, take a real deposit and its remittance. Change one line on a copy so it is $10 short and drop it in the library: nothing is applied, and Exceptions names the line and both amounts. Restore the line: exactly one batch payment, equal to the deposit, with each invoice paid by its own line’s amount. Drop the same remittance in again: Batches still has one row for that deposit. Half an hour on your own Microsoft 365.
 
 ## Related reading
 

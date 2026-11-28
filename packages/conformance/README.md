@@ -102,7 +102,7 @@ package is the harness. The site is the standard.
 
 ## The standards
 
-49 of them, each one a job that leaks money in an Australian small business or
+50 of them, each one a job that leaks money in an Australian small business or
 network. Every one publishes its checks as data at the same `/checks.json` path.
 
 | Standard | The job |
@@ -155,6 +155,7 @@ network. Every one publishes its checks as data at the same `/checks.json` path.
 | [hand-off](https://aipathway.com.au/explore-ai/hand-off-build-standard) | Every step hands a job to the next as one envelope of refs, one holder at a time, a repeated event does nothing, and every hand-over kept in a log anyone can read |
 | [month-end-close](https://aipathway.com.au/explore-ai/month-end-close-build-standard) | Every close item passed, failed or could not check with its evidence, then a person signs off, approved journals post once and the lock date moves forward |
 | [ledger-write-preview](https://aipathway.com.au/explore-ai/ledger-write-preview-build-standard) | Before anything is written into the ledger, a preview recomputed from the inputs with the exact journal, released by a named person, written once and read back |
+| [duplicate-bill-hold](https://aipathway.com.au/explore-ai/duplicate-bill-hold-build-standard) | Before each pay run, every approved supplier bill compared with the bills waiting and paid, and anything that looks like a duplicate or a changed bank account held for a person, with both bills side by side |
 | [ledger-core](https://aipathway.com.au/explore-ai/ledger-core-build-standard) | The rules any double-entry ledger a build keeps must obey (whole cents, balanced and frozen journals, reversals, a lock date, a hash chain, reports from journals, GST labels, cutover), with a golden test suite that runs as it is |
 
 ## Also available

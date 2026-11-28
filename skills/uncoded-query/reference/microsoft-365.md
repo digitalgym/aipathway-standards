@@ -9,7 +9,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/coding-questio
 
 ---
 
-The same standard, for a practice that lives in Microsoft 365: each client's uncoded lines and their one question list a month as SharePoint lists, answers taken line by line, approvals in Teams, and one keyed write per approved coding.
+The same standard, for a practice that runs on Microsoft 365: each client's uncoded lines and their one question list a month as SharePoint lists, answers taken line by line, approvals in Teams, and each approved coding written into the client's accounts once.
 
 Used by
 
@@ -17,22 +17,22 @@ Used by
 - Practice Manager
 - Business Systems Analyst
 
-Microsoft 365 has the pieces this needs: Outlook to send each client their list, Forms or a list view for the answers, lists to hold every line and answer, and Teams for the person who approves. The part that takes thought is the same as on any stack: one list per client per month, nothing written until a person approves it, and each approval written once however often the flow runs.
+Microsoft 365 has the pieces this needs: Outlook to send each client their list, Forms or a list view for the answers, lists to hold every line and answer, and Teams for the person who approves. The hard part is the same on any setup. Each client gets one list a month, nothing goes into their accounts until a person approves it, and each approval goes in once, however often the flow runs.
 
 ## In short
 
-- **What this is**: A build plan for the Uncoded Query standard on Microsoft 365. Eight lists keyed on the ledger's own line id, four flows, and a person approving every coding in Teams.
-- **The core rule**: Flow 4 writes a coding only from an Approvals row with a person in ApprovedBy, and Writes.WriteKey is unique, so a second write of the same approval cannot be recorded.
+- **What this is**: A build plan for the Uncoded Query standard on Microsoft 365. Eight lists, each line tracked by the id it has in the client's accounts, four flows, and a person approving every coding in Teams.
+- **The core rule**: Flow 4 writes a coding only once a named person has approved it, and each approval can be written only once, so a second write of the same approval cannot be recorded.
 - **What it does not do**: No flow tells a client what is deductible, creates an account, reconciles a bank line or rings a client. Those stay with your team.
-- **The hard part**: Keying the write on the approval rather than the run, so a timeout after the ledger saved the change cannot write it twice, and reading every write back.
+- **The hard part**: Tying each write to the approval rather than to the flow run, so a dropped connection after the client's accounts saved the change cannot write it twice. Then checking every change in the accounts afterwards.
 
 ## 1. Before you start
 
 Read [the Uncoded Query build standard](https://aipathway.com.au/explore-ai/uncoded-query-build-standard) first. It defines its objects, and the lists below are those objects with SharePoint types on them. Shared conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-Decide how the flows reach each client’s ledger. They connect straight to it (Xero, MYOB Business or QuickBooks Online) through the ledger’s own app sign-in, by a custom connector or the HTTP action (both premium in Power Automate), on a connection the practice owns rather than a staff login.
+Decide how the flows reach each client’s accounts. They connect straight to them (Xero, MYOB Business or QuickBooks Online) through that system’s own app sign-in, by a custom connector or the HTTP action (both premium in Power Automate), on a connection the practice owns rather than a staff login.
 
-Then check what each ledger lets a flow read and write, on its demo or sandbox company: lines parked on suspense can be read and recoded on all three; Xero and QuickBooks Online do not hand an app the bank feed lines still waiting to be reconciled; MYOB Business lists them with an Uncoded status. No ledger lets a flow reconcile a feed line, and under this standard no flow tries.
+Then check what each accounting system lets a flow read and write, on its demo or sandbox company: lines parked on suspense can be read and recoded on all three; Xero and QuickBooks Online do not hand an app the bank feed lines still waiting to be reconciled; MYOB Business lists them with an Uncoded status. None of them lets a flow reconcile a bank feed line, and under this standard no flow tries.
 
 ## 2. The lists, with their columns
 
@@ -170,17 +170,17 @@ No flow writes the Approvals list. A person adds the row, from the Teams card or
 
 ## 5. What the flows can reach in your Microsoft 365 and your clients' ledgers, and what they never touch
 
-The flows ask your clients about the bank lines nobody can code, once a month. They read each client’s uncoded lines, chart and history, send one plain question list, and write a coding into the ledger once a person has approved it. You approve every coding, reconcile the bank line, and answer any tax question the replies raise.
+The flows ask your clients about the bank lines nobody can code, once a month. They read each client’s uncoded lines, chart and history, send one plain question list, and write a coding into the client’s accounts once a person has approved it. You approve every coding, reconcile the bank line, and answer any tax question the replies raise.
 
 What each connection is for.
 
 - **SharePoint, the one site.** The eight lists in the schema, and nothing else.
 - **Outlook, one shared mailbox.** To send each client their list and reminders from the practice’s address.
 - **Forms, or a list view.** Where each client answers each line. A pre-filled form per list keeps the line id with the answer.
-- **Each client’s ledger, three reads and one write.** Read the uncoded lines, the chart and tax codes, and past codings. Write the approved coding. Through a custom connector or the HTTP action, both premium, on an app connection the client file approves.
+- **Each client’s accounts, three reads and one write.** Read the uncoded lines, the chart and tax codes, and past codings. Write the approved coding. Through a custom connector or the HTTP action, both premium, on an app connection the client file approves.
 - **Teams.** The card that puts each suggestion, and each hand-off, in front of the approver.
 
-Least privilege, as steps.
+Keep access to the minimum, step by step.
 
 1. Own the four flows with a service account, not the bookkeeper who set them up, with a named co-owner.
 2. Build them in one solution on connection references, so each connection is one place to change.
@@ -200,21 +200,21 @@ How to cut it off. Turn off the flows in the solution, and disconnect the app in
 
 ## 7. Four traps specific to this build
 
-### Keying the list on the run instead of the client and month
+### Tying the list to the flow run instead of the client and month
 
-A flow that retries sends the client a second list. Key it on client and cycle, and let SharePoint's unique column refuse the second.
+A flow that retries sends the client a second list. Tie it to the client and the month, and let SharePoint refuse a second list.
 
 ### Merging the suggested account into the client's email
 
-It reads as advice and invites the client to argue the code. The client is asked what happened; the coding is your team's.
+It reads as advice and invites the client to argue the code. The client is asked what happened. Your team decides the coding.
 
 ### Writing the suggestion when the client answers
 
 A suggestion is a guess with a reason. Only an Approvals row with a person in it starts a write.
 
-### A fresh key on every retry
+### A new key every time the flow retries
 
-When the ledger saved the change but the answer was lost, a new key writes it again. Key on the approval.
+If the client's accounts saved the change but the reply got lost, a new key writes it again. Tie the key to the approval.
 
 ## 8. Where the automation stops
 
@@ -224,7 +224,7 @@ When the ledger saved the change but the answer was lost, a new key writes it ag
 - Following up a client after the last reminder, by phone or otherwise.
 - Every tax question the answers raise.
 
-**The pass test.** On a ledger’s demo company, park two lines on suspense, answer both through the form, and let Flow 3 suggest a coding for each. Approve one in Teams and leave the other. Run Flow 4 three times: the approved line holds exactly what was approved, read back from the ledger, with one Writes row; the other is still on suspense. Half an hour on your own tenant.
+**The pass test.** On a ledger’s demo company, park two lines on suspense, answer both through the form, and let Flow 3 suggest a coding for each. Approve one in Teams and leave the other. Run Flow 4 three times: the approved line holds exactly what was approved, read back from the ledger, with one Writes row; the other is still on suspense. Half an hour on your own Microsoft 365.
 
 ## Related reading
 

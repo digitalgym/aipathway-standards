@@ -9,7 +9,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/two-records-on
 
 ---
 
-A master per field, decided before the first run. A comparison that holds no write action at all. And a correction that lands exactly once, in a stack whose approvals can be replayed.
+Which system is right for each field, decided before the first run. A comparison that cannot change either record. And a correction that goes in exactly once, even though Microsoft 365 approvals can be run again.
 
 Used by
 
@@ -17,24 +17,24 @@ Used by
 - Business Systems Analyst
 - Operations Manager
 
-The comparison is the easy half and Power Automate does it in an afternoon. The two hard parts are a list of decisions somebody has to make before any flow runs, and a write that has to happen exactly once, after a person, on a platform where an approval can time out, be reassigned, or be replayed from the run history. Both are easy to build in the shape that looks right and is not, so both are written out below.
+Comparing the two records is the easy half, and Power Automate does it in an afternoon. The two hard parts come before and after it. Somebody has to make a list of decisions before any flow runs. And each correction has to go in exactly once, after a person accepts it, on a platform where an approval can time out, be passed to someone else, or be run again from the history. Both are easy to build in a way that looks right and is not, so both are written out below.
 
 ## In short
 
 - **What this is**: A build plan for the two records standard on Microsoft 365. Six lists, four flows, and one of those lists is nothing but decisions a person made.
-- **The core rule**: The comparison flow contains no update action against either source. Correcting is a separate flow that triggers on a person's name being set, not on a difference existing.
-- **What it does not do**: It does not correct a record on its own and it does not decide which source is right. It produces a difference carrying both values and the master's value, for a person who then accepts or does not.
-- **The hard part**: Not the comparison. Writing down once, field by field, which system is the truth. Every flow below reads that list, and none of them is allowed to guess.
+- **The core rule**: The flow that compares the records cannot change either one. Corrections run in a separate flow that only starts when a named person accepts one, never just because a difference exists.
+- **What it does not do**: It does not correct a record on its own and it does not decide which system is right. It lists each difference with both values and the value from the system you named as right for that field, for a person to accept or reject.
+- **The hard part**: Writing down once, field by field, which system is right. The comparison is the easy bit. Every flow below reads that list, and none of them is allowed to guess.
 
 ## 1. Before you start
 
 Read [the two records build standard](https://aipathway.com.au/explore-ai/two-records-build-standard) first. It defines its objects, and the lists below are those objects with SharePoint types on them. Shared conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-Decide the master per field, and write it down. Not which system is better: which one is the truth for the amount, which one for the address, which one for the date it landed. The standard calls this the decision most businesses have never made explicitly, and on this stack it is also the decision that has to exist as rows in a list before a single flow will run, because every comparison below reads it. A run that has to guess will guess differently on Tuesday.
+For each field, decide which system is right (the master), and write it down. The question is which one is right for the amount, which one for the address and which one for the date it landed, not which system is better overall. The standard calls this the decision most businesses have never made out loud. Here it also has to exist as rows in a list before a single flow will run, because every comparison below reads it. A run that has to guess will guess differently on Tuesday.
 
-Then answer a second question, because it decides the shape of the third flow. **Can your tenant write into the target source at all?** If there is a supported way to write to the system that is not master for a field, the accepted correction is a write and the target hands back an id. If there is not, the accepted correction is a task for a person carrying the value they are to key, and they record the id the target gave them. Both are the standard. A flow that writes the correction into a SharePoint copy of the ledger and treats that as the ledger is not.
+Then answer a second question, because it decides the shape of the third flow. **Can your Microsoft 365 put a change into the other system at all?** If there is a supported way in, an accepted correction goes straight into that system, which hands back a reference number. If there is not, the accepted correction goes to a person with the value to key in, and they record the reference the system gave them. Both meet the standard. A flow that puts the correction into a SharePoint copy of your accounts and treats that copy as your accounts does not.
 
-This plan is deliberately a report on two records that should already agree, not a gate on money leaving. Matching a supplier invoice to a purchase order before it is paid is a different standard with a different build.
+This plan reports on two records that should already agree. It does not stop money going out. Matching a supplier invoice to a purchase order before it is paid is a different standard with a different build.
 
 ## 2. The lists, with their columns
 
@@ -239,14 +239,14 @@ Within Tolerance is the one to watch rather than the one to be pleased about. A 
 
 ## 6. What the flows can reach in your Microsoft 365, your job system and your ledger, and what they never touch
 
-The flows find where your job system and your ledger disagree. They read both and mark every difference in the site, and once a person accepts a correction, they write that one field into the other system, once. You accept every correction, and you decide which system is right for each field.
+The flows find where your job system and your ledger disagree. They read both and list every difference, and once you accept a correction, they put that one value into the other system, once. You accept every correction, and you decide which system is right for each field.
 
 What each connection is for.
 
 - **SharePoint, the one site.** The six lists in section 2. Every flow reads and writes there.
 - **Source A, read only.** Usually the job system. Through a custom connector or the HTTP action (both premium), or a nightly export dropped into a library that Flow 1 reads.
-- **Source B, read only.** Usually the ledger. If AI Pathway is already connected to your Xero, Flow 1 can call its MCP endpoint through the HTTP action with a key from connect.aipathway.com.au/app/keys that has only “Read the book” ticked. That gives your Xero invoices, up to 120 days back, without a second Xero connection. Bank lines come from a statement export, because Xero does not give ordinary apps the unreconciled lines on a bank feed.
-- **The target, write, Flow 3 only.** Its own connection, separate from the read connection Flow 1 uses, with the narrowest permission that can change the fields the contract lets a correction touch. Where the target has no way in, there is no write connection at all, and Flow 3 makes a task for a person.
+- **Source B, read only.** Usually your accounts. If AI Pathway is already connected to your Xero, Flow 1 can call its MCP endpoint through the HTTP action with a key from connect.aipathway.com.au/app/keys that has only “Read the book” ticked. That gives your Xero invoices, up to 120 days back, without a second Xero connection. Bank lines come from a statement export, because Xero does not give ordinary apps the unreconciled lines on a bank feed.
+- **The system being corrected, Flow 3 only.** Its own connection, separate from the read connection Flow 1 uses, with the narrowest permission that can change the fields the contract lets a correction touch. Where that system has no way in, there is no connection that can change it, and Flow 3 hands the value to a person to key in.
 - **Teams and Approvals.** Flow 2’s card, with both values and the master’s value side by side.
 
 Least privilege, in practice. All four flows belong to the automation service account and sit in one solution, with the read and write connections as separate connection references, so you can remove the write and keep the comparison running. That account is a member of this site only. If an app registration is used, give it Sites.Selected on this one site. The full conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365#access).
@@ -274,7 +274,7 @@ The approval action hands you a responder and the next step is right there, so t
 
 ### Joining on a name because the key is not in both systems
 
-This is the moment the build quietly stops being the standard. Two records sharing a customer name and an amount are not a pair. If the shared id genuinely does not exist in both systems, putting it there is the project, and a fuzzy match dressed up as a reconciliation is worse than none at all, because it produces confident pairs nobody checks.
+This is the moment the build quietly stops being the standard. Two records sharing a customer name and an amount are not a pair. If the shared id really does not exist in both systems, putting it there is the project, and a fuzzy match dressed up as a reconciliation is worse than none at all, because it produces confident pairs nobody checks.
 
 ### One tolerance in the flow expression
 
@@ -286,11 +286,11 @@ This is the fastest growing list in the build, because a matched pair writes not
 
 ## 9. Where the automation stops
 
-- Accepting every correction, with their name on it. The run proposes the master's value. The write triggers on a person, never on a difference existing.
+- Accepting every correction, with their name on it. The run suggests the value from the system named as right. Nothing changes until a person accepts it, and a difference on its own never changes anything.
 - Declaring which source is master for each field, once, before the first run. No flow can infer it, and a flow that guesses will guess differently next week.
 - Setting a tolerance, and changing one. A tolerance is a judgement about rounding and timing, not a dial to turn until the mismatch count looks better.
 - Deciding an orphan is real: a record that should exist in the other source, or one that should not exist at all.
-- The write itself, where your tenant has no supported way into the other system. Then the correction is a task carrying the accepted value, and a person records the id the target gave back. That is still the standard. A flow that writes into a SharePoint copy of the ledger and calls it done is not.
+- Making the change itself, where your Microsoft 365 has no supported way into the other system. Then a person gets the accepted value to key in, and records the reference the system gave back. That still meets the standard. A flow that puts it into a SharePoint copy of your accounts and calls it done does not.
 
 **The pass test.** On the real pair, on one contract. Change one amount in one source by more than its declared tolerance, and add a record to one source only. Then touch nothing and let the next scheduled run go by itself.
 

@@ -9,7 +9,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/database-react
 
 ---
 
-Four plays with triggers you can query, a rank nobody sorts by hand, and a gate that runs on every send rather than on the view.
+Four plays, each set off by a rule you can check, a ranking nobody sorts by hand, and a check that runs before every message is sent.
 
 Used by
 
@@ -18,20 +18,20 @@ Used by
 - Marketing Manager
 - Operations Manager
 
-Reactivation fails in a predictable way. Somebody exports the database, sorts it by how long ago each person was last contacted, and works down the list until the awkwardness outweighs the optimism. The standard replaces that with four plays and a ranking. This is what the plays and the ranking look like when they live in a tenant.
+Reactivation fails in a predictable way. Somebody exports the database, sorts it by how long ago each person was last contacted, and works down the list until the awkwardness outweighs the optimism. The standard replaces that with four plays and a ranking. This is what the plays and the ranking look like when they run in your Microsoft 365.
 
 ## In short
 
 - **What this is**: A build plan for the database reactivation standard on Microsoft 365. Three lists, three flows, six measures.
-- **The core rule**: If you cannot write a play as a filter over the lists, it is not a play. That constraint is what makes the whole thing measurable.
-- **What it does not do**: Deciding somebody is finished with, or that a relationship is over, is a person's call. The system surfaces and records.
-- **The hard part**: The cooling-off check across plays. Each play is sensible alone and together they are a nuisance.
+- **The core rule**: If you cannot write a play as a rule that picks people from the lists, it is not a play. That rule is what lets you measure how each play does.
+- **What it does not do**: Deciding somebody is finished with, or that a relationship is over, is a person's call. The system finds people and records what happened.
+- **The hard part**: Making sure two plays never contact the same person too soon. Each play is sensible alone; together they are a nuisance.
 
 ## 1. Before you start
 
 Read [the database reactivation build standard](https://aipathway.com.au/explore-ai/database-reactivation-build-standard) first. It owns the four plays, the six ranking rules and the openers. Where it and this page disagree, it wins. The shared conventions for this stack are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-Like the debtor standard, this one specifies behaviour rather than record shapes. The lists below are the minimum that satisfies its checklist, not objects it names. The plays are yours to define; what is not negotiable is that each one is expressible as a query.
+Like the debtor standard, this one says what must happen, not how to lay out your records. The lists below are the least you need to meet its checklist. The plays are yours to define; the one fixed rule is that each can be written as a query on your lists.
 
 ## 2. The lists, with their columns
 
@@ -166,7 +166,7 @@ Report Reply Rate and Opt Outs side by side, always. A play that lifts replies w
 
 ## 6. What the flows can reach in your Microsoft 365 and your contact list, and what they never touch
 
-The flows put your old contact list to work again. They read the trigger fields from your CRM or job system, rank who to contact first, and send each first message from one shared mailbox. You decide what may be promised on a call. Your own login stays yours. The flows run under an account kept for them, never your username and password.
+The flows put your old contact list to work again. They read the details each play looks for in your CRM or job system, rank who to contact first, and send each first message from one shared mailbox. You decide what may be promised on a call. Your own login stays yours. The flows run under an account kept for them, never your username and password.
 
 What each connection is for.
 
@@ -176,7 +176,7 @@ What each connection is for.
 - **Teams, optional.** To post the day’s ranked list to the person who works it.
 - **AI Pathway calls, optional and off by default.** To ring back the contacts who asked, and nobody else, as section 8 of the standard sets out. Flow 3 hands those rows over with the HTTP action and a key from connect.aipathway.com.au/app/keys; the account owner ticks **Queue calls** on that key, and AI Pathway still checks the register, the flags and the calling hours at dial time.
 
-Keep the card to one floor.
+Keep it to the least it needs.
 
 1. Build the flows under a service account, an ordinary licensed account kept for them, not a person who might leave or change their password.
 2. Build them inside a solution, so each connection is a connection reference: one place to see what the flows reach, and one place to swap or remove it.
@@ -218,12 +218,12 @@ A flow built on somebody's own account stops the day they leave or change their 
 
 ## 9. Where the automation stops
 
-- Deciding a contact is finished with. The system surfaces; a person retires.
-- Clearing a suppression, and never for an opt-out, which has no clearing path at all.
-- Writing the offer. The opener is merged from real fields, but what you are offering is a commercial decision.
-- Deciding to widen a play because the list is running dry. That is the moment the plays stop having triggers.
+- Deciding a contact is finished with. The system finds them; a person decides to stop.
+- Taking someone off the do-not-contact list, and never for an opt-out, which can never be cleared.
+- Writing the offer. The opener is filled in from real details, but what you are offering is a commercial decision.
+- Deciding to widen a play because the list is running dry. That is the moment the plays stop having a real reason behind them.
 
-**The pass test.** Two staged checks, neither needing a real contact. First, add a Suppressions row for a test person with reason opted_out, then try to contact them through the normal path: the send must refuse and the refusal must be recorded. Second, append a Contacts row for another test person dated today, then run a different play that also selects them: the cooling-off guard must stop the second contact even though the play is new. If the first sends, the gate is a filter. If the second sends, you have as many contact policies as you have plays, and the person on the other end experiences all of them.
+**The pass test.** Two staged checks, neither needing a real contact. First, add a Suppressions row for a test person with reason opted_out, then try to contact them through the normal path: the send must refuse and the refusal must be recorded. Second, append a Contacts row for another test person dated today, then run a different play that also selects them: the cooling-off guard must stop the second contact even though the play is new. If the first sends, the check only hides people from a list and does not stop the send. If the second sends, you have as many contact policies as you have plays, and the person on the other end experiences all of them.
 
 ## Related reading
 

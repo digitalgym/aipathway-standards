@@ -101,7 +101,7 @@ skill asserts.
 - 6. The four flags
 - 7. What stays with a person
 - 8. Run it three ways
-- 9. Join It to Your Own System: What to Stub, and What Not to Hand-Roll
+- 9. Join It to Your Own System, and the One Step Not to Build Yourself
 - 10. A checklist to hold any build or supplier to
 
 ## Attribution

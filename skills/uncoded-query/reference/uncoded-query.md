@@ -20,7 +20,7 @@ This standard has no hosted provider; do not run conformance connect. For the ch
 
 ---
 
-If you chase clients every month to explain bank lines, this standard sends each client one plain question list a month, one line at a time with a place to answer, reminds them on your schedule, turns each answer into a suggested coding from their own chart, and writes it to the ledger only after a person approves it, once. It works the same on Xero, MYOB Business and QuickBooks Online. Written so you can build it yourself.
+If you chase clients every month to explain bank lines, this standard sends each client one plain question list a month, one line at a time with a place to answer, reminds them on your schedule, turns each answer into a suggested coding from their own chart, and puts it into the books only after a person approves it, once. It works the same on Xero, MYOB Business and QuickBooks Online. Written so you can build it yourself.
 
 Used by
 
@@ -38,7 +38,7 @@ An open build standard for one monthly job: asking clients what their unexplaine
 
 The core rule
 
-Each client gets one plain list a month: "$412.50 to BUNNINGS on 3 Oct: what was it for?", with a box to answer each line. The answer becomes a suggested account and tax code from that client's own books. Nothing goes into the ledger until a person approves it.
+Each client gets one plain list a month: "$412.50 to BUNNINGS on 3 Oct: what was it for?", with a box to answer each line. The answer becomes a suggested account and tax code from that client's own books. Nothing goes into the books until a person approves it.
 
 What it does not do
 
@@ -46,7 +46,7 @@ It never tells a client what is deductible, never invents an account, never reco
 
 The hard part
 
-Writing the approved coding into a ledger you do not own, exactly once even when the connection drops mid-write, and refusing everything nobody approved.
+Putting the approved coding into a client's books you do not own, exactly once even when the connection drops partway, and refusing everything nobody approved.
 
 The first week of the month, and forty client files each have a handful of bank lines nobody can code. Someone builds a spreadsheet per client, emails it, and waits. Half come back with one line answered. The rest get a reminder, then another, and next month the same client is asked about a line they answered three weeks ago, because the answer is in an email thread and the line is still sitting in suspense waiting for someone to code it.
 
@@ -60,7 +60,7 @@ One client's month, from uncoded line to approved coding
 6. If so, write the approved coding onto the transaction that holds the line, under one key for that approval. A bank line the ledger has not reconciled is never written by the build: it goes to a person with the approved coding to reconcile.
 7. Has this approval been written already? If not, it is written once and read back from the ledger, and a mismatch goes to a person. If so, nothing new is written, however many times the build runs.
 
-The filled diamond is the hard step: nothing reaches the ledger until a named person approves the exact coding. Everything before it a builder proves on the stub. The second diamond is what keeps a retry or a second run from coding a line twice.
+The filled diamond is the hard step: nothing reaches the books until a named person approves the exact coding. A builder can prove everything before it on a practice version. The second diamond is what keeps a retry or a second run from coding a line twice.
 
 ## 1. What this standard covers
 
@@ -72,11 +72,11 @@ What is out of scope. Money in that pays invoices is the [Remittance Split stand
 
 What cannot meet it, and what can. All three cloud ledgers can meet it for lines parked on a suspense or uncategorised account: each lets an app read those transactions and change their coding through its API. None of the three lets an ordinary app reconcile a bank feed line, and Xero and QuickBooks Online do not hand an app the feed lines still waiting to be reconciled at all, so a practice that leaves unknown lines in the feed gets the question lists but keeps the reconciling. MYOB Business does list its feed lines through the API, with an “Uncoded” status, so the questions can come straight from the feed there. A desktop ledger with no cloud API cannot meet the standard, because there is nothing a build can write to. Section 8 has the detail for each.
 
-Is there a ready-made version? Not yet. The build connects straight to each client’s ledger through the ledger’s own sign-in, and no product of ours makes that write. A [free Google Sheet version](https://docs.google.com/spreadsheets/d/19tTcI5OXZcig78e3ceA6NA2sEnb5hx1Pg92EFumfJ7Q/copy) runs the lists, reminders, suggestions and approvals and leaves the ledger entry to a person. The automated write is yours to build, or a scoped build with us.
+Is there a ready-made version? Yes, a [free Google Sheet version](https://docs.google.com/spreadsheets/d/19tTcI5OXZcig78e3ceA6NA2sEnb5hx1Pg92EFumfJ7Q/copy). Copy it and it runs the lists, reminders, suggestions and approvals, and leaves the entry in the books to a person. No product of ours puts the coding into a client’s books for you, so that automated step is yours to build, or a scoped build with us.
 
 ## 2. Chasing the same client about the same bank lines every month?
 
-Think of it as one envelope per client per month, not a drip of emails. On the day you set, the build reads each client’s ledger for the lines still uncoded and sends that client one list with all of them in it. A line coded by hand since last month is not on it. A line that lands after the list has gone waits for next month’s envelope rather than starting a second one.
+On the day you set, the build reads each client’s ledger for the lines still uncoded and sends that client one list with all of them in it. A line coded by hand since last month is not on it. A line that lands after the list has gone waits for next month’s list rather than starting a second one.
 
 Every line is one plain question, built the same way: the amount, who it went to or came from exactly as the bank printed it, the date, and “what was it for?”
 
@@ -85,7 +85,7 @@ Every line is one plain question, built the same way: the amount, who it went to
 
 The list carries a link where the client answers each line on its own, in a few words, on a phone if they like. It goes by email, and by an SMS link to the same page where the client has a mobile on file. What the client never sees: an account code, a tax code, the word suspense, or anything about what is deductible or claimable. The client is asked what happened. What that means for tax is your call, not the message’s.
 
-Reminders follow your schedule: every so many days, up to a number you set, and only for the lines still unanswered. A line the client has answered leaves every reminder, and it stays out of next month’s list too, even while its coding waits for approval and the ledger still shows it as uncoded. After the last reminder, the client’s open lines go to a person on your team. Whether to ring the client is theirs to decide, and the build places no call. AI Pathway, which places governed calls for other standards, dials only on a lawful reason such as an invoice the person owes or a callback they asked for, and a question about a bank line is none of them. So the call stays with your team.
+Reminders follow your schedule: every so many days, up to a number you set, and only for the lines still unanswered. A line the client has answered leaves every reminder, and it stays out of next month’s list too, even while its coding waits for approval and the ledger still shows it as uncoded. After the last reminder, the client’s open lines go to a person on your team. Whether to ring the client is theirs to decide, and the build places no call. AI Pathway, which places calls for other standards, rings only when there is a lawful reason, such as an invoice the person owes or a callback they asked for, and a question about a bank line is none of them.
 
 ## 3. From “tiles for the Smith St job” to an account and tax code
 
@@ -98,9 +98,9 @@ When the answer fits no account in the chart (“bought some crypto” in a file
 | no_account_fits | The answer fits no account in this client's chart. Nothing is proposed; a person decides, and adds an account if one is needed. |
 | --- | --- |
 | unanswered | The last reminder went unanswered. The open lines go to a person, who decides whether to ring. |
-| reconcile_by_person | An approved coding for a bank line the ledger has not reconciled. A person reconciles it with that coding. |
-| readback_mismatch | The ledger, read back after the write, holds something other than what was approved. |
-| write_failed | The ledger refused the write, or never answered after a retry under the same key. |
+| reconcile_by_person | An approved coding for a bank line not yet reconciled in the books. A person reconciles it with that coding. |
+| readback_mismatch | Checked afterwards, the books hold something other than what was approved. |
+| write_failed | The accounting system refused the change, or never answered, even after a retry. |
 
 ## 4. The records it keeps, in the shape your developer needs
 
@@ -151,27 +151,27 @@ A Write with no Approval behind it, a second QuestionList for the same client an
 
 ## 5. The checks, in order
 
-The order is the claim. The ledger is read before anyone is asked, the client is asked before anything is suggested, the suggestion comes from the client’s own chart, and nothing is written until a person approves it.
+Each check has to pass before the next one runs. The books are read before anyone is asked, the client is asked before anything is suggested, the suggestion comes from the client’s own chart, and nothing is written until a person approves it.
 
-1. Only lines the ledger still shows as uncoded are asked about. The lines come from the client's ledger at the time of the run: transactions parked on a suspense or uncategorised account, and bank lines not yet reconciled. A line coded by hand since the last run is not asked about.
+1. Only lines still uncoded in the books are asked about. The lines come from the client's books at the time of the run. They are transactions sitting in a suspense or uncategorised account, and bank lines not yet reconciled. A line someone coded by hand since the last run is not asked about.
 2. One question list per client per cycle, with every open line in it. Each client gets one list a cycle, grouping all of that client's uncoded lines. A second run in the same cycle sends no second list, and a line that lands mid-cycle waits for the next list rather than starting another one.
 3. Each line is one plain question with a place to answer it. A line is put to the client as the amount, who it went to or came from as the statement printed it, and the date, then "what was it for?" Every list carries a link where each line can be answered on its own.
 4. No tax advice and no bookkeeping words reach the client. Nothing sent to a client says whether something is deductible or claimable, names a tax code or an account code, or mentions suspense or reconciling. The client is asked what a payment was for; what that means for tax is the practice's call.
-5. A line already answered is never asked about again. Once the client has answered a line, it leaves every reminder, and next cycle's list does not carry it even while the coding waits for approval and the ledger still shows it as uncoded.
-6. Reminders on the schedule the practice set, then a person. Reminders go only for unanswered lines, no sooner than the interval the practice set and no more than the number it set. After the last one goes unanswered, the client's open lines go to a person, who decides whether to ring. The build places no call.
+5. A line already answered is never asked about again. Once the client has answered a line, it leaves every reminder, and next cycle's list does not carry it even while the coding waits for approval and the books still show it as uncoded.
+6. Reminders on the schedule the practice set, then a person. Reminders go only for unanswered lines, no sooner than the interval the practice set and no more than the number it set. After the last one goes unanswered, the client's open lines go to a person, who decides whether to ring. It never calls the client itself.
 7. The client's answer is kept word for word, with who and when. Each answer is recorded against its line exactly as the client typed it, with who answered and when, before anything is proposed from it.
-8. The proposed coding comes from the client's own chart, and their own history first. Every proposal is an account and a tax code from this client's chart. Where this client has coded the same payee before, that coding is proposed; otherwise the answer is matched to the client's own accounts. The chart is read in the run before any proposal.
-9. No account or tax code the client's chart lacks is ever proposed or written. When an answer fits no account in the client's chart, the line goes to a person as no_account_fits with the answer, and nothing is proposed. The build never creates an account, never borrows one from another client and never makes up a tax code.
-10. Nothing is written until a named person approves that exact coding. A proposal is not a write. The build writes a coding only when a person has approved it, by name, for that line, and it writes exactly the account and tax code they approved.
-11. The build never reconciles a bank line; a person does. The build changes the coding of a transaction already in the ledger: by editing it, or by a journal off the suspense account where the ledger will not take the edit. A bank line the ledger has not reconciled gets its question, its proposal and its approval, and then goes to a person with the approved coding to reconcile. The build never matches, creates a transaction for, or reconciles a bank line.
-12. An approved coding is written once, however often the build runs. Every write carries one key for that line and that approval, so a retry after a timeout cannot write twice. A later run reads the ledger first and writes nothing for a line that already holds its approved coding.
-13. Every write is read back, and a mismatch goes to a person. After a write, the build reads the line back from the ledger and records what the ledger now holds against the approval. If it differs from what was approved, the line goes to a person as readback_mismatch and is not written again.
-14. It survives the builder. Someone other than the builder can explain what it does, and it runs on an account the business owns.
-15. The pass test passes. On a real client file, an approved coding is written into the ledger exactly once and reads back as approved, and a proposed coding nobody approved is never written.
+8. The proposed coding comes from the client's own chart, and their own history first. Every proposal is an account and a tax code from this client's own chart of accounts. If this client has coded the same payee before, that coding is proposed. Otherwise the answer is matched to the client's own accounts. The chart is checked in the same run before any proposal.
+9. No account or tax code the client's chart lacks is ever proposed or entered. When an answer fits no account in the client's chart, the line goes to a person with the answer, and nothing is proposed (reason: no_account_fits). It never creates an account, borrows one from another client or makes up a tax code.
+10. Nothing goes into the books until a named person approves that exact coding. A proposal is only a suggestion. A coding goes into the books only when a person has approved it, by name, for that line, and it enters exactly the account and tax code they approved.
+11. A person reconciles bank lines, never the bot. It changes the coding of a transaction already in the books, by editing it, or by a journal off the suspense account where the books will not take the edit. A bank line not yet reconciled gets its question, its proposal and its approval, then goes to a person with the approved coding to reconcile. It never matches, creates a transaction for, or reconciles a bank line.
+12. An approved coding goes in once, however often it runs. Every save is tied to that line and that approval, so a retry after a timeout never enters it twice. A later run checks the books first and changes nothing for a line that already holds its approved coding.
+13. Every coding is read back to confirm it saved, and a mismatch goes to a person. After saving, it reads the line back from the books and records what they now hold against the approval. If it differs from what was approved, the line goes to a person and is not entered again (reason: readback_mismatch).
+14. It keeps working if the person who built it leaves. Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+15. The pass test passes. On a real client file, an approved coding goes into the books exactly once and reads back as approved, and a proposed coding nobody approved never goes in.
 
 ## 6. Nothing in the books until someone signs off, and then only once
 
-A suggestion is not a write. Each one lands in front of the approver (a bookkeeper or the practice’s senior) with the client’s answer beside it. They approve it as it is, or change the account or tax code and approve that. The build writes exactly what they approved, under their name, and nothing for a line nobody approved.
+A suggestion never goes into the books by itself. Each one lands in front of the approver (a bookkeeper or the practice’s senior) with the client’s answer beside it. They approve it as it is, or change the account or tax code and approve that. The build writes exactly what they approved, under their name, and nothing for a line nobody approved.
 
 Once means once per approval. Every write carries one key made from the line and the approval, and the ledger is asked to treat a second write with the same key as the first. That matters on the day the connection drops after the ledger saved the change but before it said so: the build retries with the same key and gets the first answer back, rather than writing again. A later run reads the ledger first, and a line that already holds its approved coding is left alone.
 
@@ -190,7 +190,7 @@ And the build never reconciles. It changes the coding of a transaction already i
 
 ## 8. Xero, MYOB or QuickBooks: what each lets a build do
 
-Think of the ledger access as a pencil with no rubber: it can write a coding a person approved, and nothing else. The build reads three things (the uncoded lines, the client’s chart and tax codes, and how the client coded before) and writes one. Connect each client file through the ledger’s own app sign-in, never with a staff login, and to stop it, disconnect the app in the ledger’s settings.
+It puts the coding a person approved into each client’s books. It reads three things (the uncoded lines, the client’s chart and tax codes, and how the client coded before) and writes one: the approved coding. You approve every coding, reconcile any line still in the bank feed, and follow up a client who has not answered. Connect each client file through the ledger’s own app sign-in, never with a staff login.
 
 | Ledger | What the build can read | How the approved coding is written |
 | --- | --- | --- |
@@ -200,7 +200,7 @@ Think of the ledger access as a pencil with no rubber: it can write a coding a p
 
 Before you build, prove the write on each ledger’s demo or sandbox company with a line parked on suspense: that the edit (or the journal) is accepted, that the tax code reads back as written, and what happens to a line in a locked period. The answers differ by ledger and change over time, which is why the read back is a check rather than an assumption.
 
-1. Your developer builds against the stub until the checks in section 5 pass.
+1. Your developer builds against the practice version until the checks in section 5 pass.
 2. Connect the build to a demo company and run the pass test below.
 3. Connect one real client file, and check the build calls nothing beyond the three reads and the one write.
 4. Let the first month of approvals be read back by a person before anyone stops checking.
@@ -210,14 +210,14 @@ Why not give a bot the practice’s login? A login can do everything a person ca
 Where the workflow lives is your choice, held to the same checks:
 
 - **A Google Sheet.** The lines pasted in or exported, one list per client sent by email, answers recorded against each line, suggestions from the client’s chart and an approve column, with the ledger entry made by a person.
-- **Microsoft 365.** SharePoint lists for the lines, lists, answers and approvals, approvals in Teams, and one keyed write per approval. The [Microsoft 365 plan](https://aipathway.com.au/explore-ai/coding-questions-on-microsoft-365) lays out the lists and flows.
+- **Microsoft 365.** SharePoint lists for the lines, lists, answers and approvals, approvals in Teams, and each approval written once. The [Microsoft 365 plan](https://aipathway.com.au/explore-ai/coding-questions-on-microsoft-365) lays out the lists and flows.
 - **A long-lived bot.** A routine that runs on your list day, sends the lists, takes the answers, and posts suggestions to the approver in Teams, Slack or email.
 
 How to run any standard each of these ways is in [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
 
 ## 9. What your developer builds, and the step that needs care
 
-One step not to hand-roll: the write itself, into a client ledger you do not own, only for a coding a named person approved, under one key per approval, and read back. The lists, reminders, answers, suggestions and hand-offs a coding agent builds against the stub.
+One step that needs care: putting the coding into a client's books you do not own, only for a coding a named person approved, once per approval, and checked afterwards. A coding agent builds the lists, reminders, answers, suggestions and hand-offs against the practice version.
 
 ```
 provider:
@@ -252,27 +252,27 @@ cannot meet the standard
 
 A vendor selling client query automation is usually selling the email. Ask them three things: what stops their build writing a coding nobody approved, what happens when the connection drops after the ledger saved the change, and whether it ever tells your client what is deductible.
 
-**The pass test.** On your own ledger (or its demo company), park two lines on the suspense account, answer both on the answer page, and let the build suggest a coding for each. Approve one and leave the other. Run the build three times. The approved line must hold exactly the account and tax code you approved, read back from the ledger, with one change in its history. The other must still be on suspense. A few minutes to stage. If the unapproved line moved, the build writes guesses, which is the failure this standard exists to prevent.
+**The pass test.** In your own books (or the demo company), park two lines on the suspense account, answer both on the answer page, and let the build suggest a coding for each. Approve one and leave the other. Run the build three times. The approved line must hold exactly the account and tax code you approved, checked in the books afterwards, with one change in its history. The other must still be on suspense. A few minutes to stage. If the unapproved line moved, the build writes guesses, and it fails.
 
 ## 10. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 
-- **1. Only lines the ledger still shows as uncoded are asked about.** The lines come from the client's ledger at the time of the run: transactions parked on a suspense or uncategorised account, and bank lines not yet reconciled. A line coded by hand since the last run is not asked about.
+- **1. Only lines still uncoded in the books are asked about.** The lines come from the client's books at the time of the run. They are transactions sitting in a suspense or uncategorised account, and bank lines not yet reconciled. A line someone coded by hand since the last run is not asked about.
 - **2. One question list per client per cycle, with every open line in it.** Each client gets one list a cycle, grouping all of that client's uncoded lines. A second run in the same cycle sends no second list, and a line that lands mid-cycle waits for the next list rather than starting another one.
 - **3. Each line is one plain question with a place to answer it.** A line is put to the client as the amount, who it went to or came from as the statement printed it, and the date, then "what was it for?" Every list carries a link where each line can be answered on its own.
 - **4. No tax advice and no bookkeeping words reach the client.** Nothing sent to a client says whether something is deductible or claimable, names a tax code or an account code, or mentions suspense or reconciling. The client is asked what a payment was for; what that means for tax is the practice's call.
-- **5. A line already answered is never asked about again.** Once the client has answered a line, it leaves every reminder, and next cycle's list does not carry it even while the coding waits for approval and the ledger still shows it as uncoded.
-- **6. Reminders on the schedule the practice set, then a person.** Reminders go only for unanswered lines, no sooner than the interval the practice set and no more than the number it set. After the last one goes unanswered, the client's open lines go to a person, who decides whether to ring. The build places no call.
+- **5. A line already answered is never asked about again.** Once the client has answered a line, it leaves every reminder, and next cycle's list does not carry it even while the coding waits for approval and the books still show it as uncoded.
+- **6. Reminders on the schedule the practice set, then a person.** Reminders go only for unanswered lines, no sooner than the interval the practice set and no more than the number it set. After the last one goes unanswered, the client's open lines go to a person, who decides whether to ring. It never calls the client itself.
 - **7. The client's answer is kept word for word, with who and when.** Each answer is recorded against its line exactly as the client typed it, with who answered and when, before anything is proposed from it.
-- **8. The proposed coding comes from the client's own chart, and their own history first.** Every proposal is an account and a tax code from this client's chart. Where this client has coded the same payee before, that coding is proposed; otherwise the answer is matched to the client's own accounts. The chart is read in the run before any proposal.
-- **9. No account or tax code the client's chart lacks is ever proposed or written.** When an answer fits no account in the client's chart, the line goes to a person as no_account_fits with the answer, and nothing is proposed. The build never creates an account, never borrows one from another client and never makes up a tax code.
-- **10. Nothing is written until a named person approves that exact coding.** A proposal is not a write. The build writes a coding only when a person has approved it, by name, for that line, and it writes exactly the account and tax code they approved.
-- **11. The build never reconciles a bank line; a person does.** The build changes the coding of a transaction already in the ledger: by editing it, or by a journal off the suspense account where the ledger will not take the edit. A bank line the ledger has not reconciled gets its question, its proposal and its approval, and then goes to a person with the approved coding to reconcile. The build never matches, creates a transaction for, or reconciles a bank line.
-- **12. An approved coding is written once, however often the build runs.** Every write carries one key for that line and that approval, so a retry after a timeout cannot write twice. A later run reads the ledger first and writes nothing for a line that already holds its approved coding.
-- **13. Every write is read back, and a mismatch goes to a person.** After a write, the build reads the line back from the ledger and records what the ledger now holds against the approval. If it differs from what was approved, the line goes to a person as readback_mismatch and is not written again.
-- **14. It survives the builder.** Someone other than the builder can explain what it does, and it runs on an account the business owns.
-- **15. The pass test passes.** On a real client file, an approved coding is written into the ledger exactly once and reads back as approved, and a proposed coding nobody approved is never written.
+- **8. The proposed coding comes from the client's own chart, and their own history first.** Every proposal is an account and a tax code from this client's own chart of accounts. If this client has coded the same payee before, that coding is proposed. Otherwise the answer is matched to the client's own accounts. The chart is checked in the same run before any proposal.
+- **9. No account or tax code the client's chart lacks is ever proposed or entered.** When an answer fits no account in the client's chart, the line goes to a person with the answer, and nothing is proposed (reason: no_account_fits). It never creates an account, borrows one from another client or makes up a tax code.
+- **10. Nothing goes into the books until a named person approves that exact coding.** A proposal is only a suggestion. A coding goes into the books only when a person has approved it, by name, for that line, and it enters exactly the account and tax code they approved.
+- **11. A person reconciles bank lines, never the bot.** It changes the coding of a transaction already in the books, by editing it, or by a journal off the suspense account where the books will not take the edit. A bank line not yet reconciled gets its question, its proposal and its approval, then goes to a person with the approved coding to reconcile. It never matches, creates a transaction for, or reconciles a bank line.
+- **12. An approved coding goes in once, however often it runs.** Every save is tied to that line and that approval, so a retry after a timeout never enters it twice. A later run checks the books first and changes nothing for a line that already holds its approved coding.
+- **13. Every coding is read back to confirm it saved, and a mismatch goes to a person.** After saving, it reads the line back from the books and records what they now hold against the approval. If it differs from what was approved, the line goes to a person and is not entered again (reason: readback_mismatch).
+- **14. It keeps working if the person who built it leaves.** Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+- **15. The pass test passes.** On a real client file, an approved coding goes into the books exactly once and reads back as approved, and a proposed coding nobody approved never goes in.
 
 Building this on Microsoft 365: [the lists, the flows and the approvals a person gives](https://aipathway.com.au/explore-ai/coding-questions-on-microsoft-365).
 

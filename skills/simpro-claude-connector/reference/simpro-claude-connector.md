@@ -45,7 +45,7 @@ It does not email or text anyone, does not move a job or quote to another status
 
 The hard part
 
-Not making the connection. Knowing where Simpro's answers can mislead: a list missing the detail you need, an office status that looks like the customer's yes, and a search that cannot find a phone number.
+Making the connection is the easy bit. The work is knowing where Simpro's answers can mislead. A list can be missing the detail you need, an office status can look like the customer's yes, and the search cannot find a phone number.
 
 You ask Claude which quotes are still waiting on customers. It answers in seconds, confidently, and two of them were accepted last week. Connecting Claude to Simpro takes an afternoon. Making sure it never invents a figure, never books a job twice and never messages a customer is what this standard is for.
 
@@ -59,7 +59,7 @@ One question, answered from your Simpro
 6. If yes, the connector first looks for the record that already exists: by its own reference, and for a caller by phone number reduced to digits.
 7. Is it already in Simpro? If yes, it uses that record, so one request makes one record. If no, it saves the record once, at Simpro's first status, and never moves it to another status. Nothing is sent to a customer.
 
-The key comes first, and it is yours. Every answer is looked up fresh, with every detail asked for. The filled diamond is a save. Most questions never reach it, and those that do check for an existing record first. Nothing on this path messages a customer or changes a status.
+The key comes first, and it is yours. Every answer is looked up fresh, with every detail asked for. The filled diamond is the one step that saves anything to Simpro. Most questions never reach it, and those that do check for an existing record first. Nothing on this path messages a customer or changes a status.
 
 ## 1. Claude answers from your Simpro, and you can check every answer
 
@@ -79,19 +79,19 @@ What each piece of access is for.
 - **Jobs, read.** To say what a job holds, and to look for an existing job before a booking is saved.
 - **Customers, read.** To match a caller by phone digits and to leave Do Not Call customers off any list to contact.
 - **Invoices, read.** To say who owes what and how late, with the invoice number behind each figure.
-- **Jobs, write, only if you want bookings.** One new job for a caller, at the first status, for a person to take from there. Say no and the build has no write at all.
+- **Jobs, add new, only if you want bookings.** One new job for a caller, at the first status, for a person to take from there. Say no and the build cannot add anything to Simpro.
 
 1. In Simpro, open System, then Setup. API is near the bottom; choose Applications. If it is not there, the login is not an administrator.
 2. Click Request API access and choose Build something myself (Simpro’s own examples for it are Claude, ChatGPT and Make). Describe it plainly: a read-only connection from Claude to your own Simpro that sends nothing to customers and changes no job or quote.
 3. Wait for Simpro to review it. Simpro does not publish how long that takes.
 4. When the application appears under Applications, download its file. It holds the access details and your Simpro’s web address.
 5. Give the key to whoever sets up the connection, to store somewhere only your business controls. Never paste it into a chat, an email or a shared document.
-6. Decide whether Claude may book jobs. If not, tell your developer to leave the write out.
+6. Decide whether Claude may book jobs. If not, tell your developer to leave out the booking step.
 7. Run the pass test below, removing the application last. Turning it back on afterwards means asking Simpro again, so use a test application if you can.
 
-Rather not build it? Simpro does not offer a Claude connector of its own. AI Pathway runs one: paste its address into Claude, sign in with Simpro and pick your company, and it reads quotes, jobs, customers and overdue invoices live, read-only, in about two minutes (the [step-by-step guide](https://aipathway.com.au/explore-ai/claude-and-simpro#signin) shows it). That runs on a sign-in you approved in Simpro, on our service. This standard is for building your own, where the key, the connector and the log all stay in systems you control. And if what you want is a customer rung when their job slips on the board, that is not this connector, which never contacts anyone. We make that running-late call from your Simpro board once you switch it on under Automations.
+Rather not build it? Simpro does not offer a Claude connector of its own. AI Pathway runs one: paste its address into Claude, sign in with Simpro and pick your company, and it reads quotes, jobs, customers and overdue invoices live, read-only, in about two minutes (the [step-by-step guide](https://aipathway.com.au/explore-ai/claude-and-simpro#signin) shows it). That runs on a sign-in you approved in Simpro, on our service. This standard is for building your own, where the key, the connector and the log all stay in systems you control. This connector never contacts anyone. If you want a customer rung when their job slips on the board, we make that running-late call from your Simpro board once you switch it on under Automations.
 
-Where it runs. On a computer or account you own, as an MCP server Claude connects to, or in Microsoft 365 with the key held in a custom connector (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/simpro-connector-on-microsoft-365) lays it out). Both are held to the same checks; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
+Where it runs. On a computer or account you own, as a connector Claude plugs into (an MCP server), or in Microsoft 365 with the key held in a custom connector (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/simpro-connector-on-microsoft-365) lays it out). Both are held to the same checks; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
 
 ## Facts that can change, and when we checked them
 
@@ -132,7 +132,7 @@ A Write with no simpro_job_id reported to the user as booked, and an Answer whos
 
 ## 4. The checks, in order
 
-The order matters. The key is yours before anything is read. Every detail is asked for before an answer is given. Every booking checks for an existing record before anything is saved.
+Each check has to pass before the next one runs. The key is yours before anything is read. Every detail is asked for before an answer is given. Every booking checks for an existing record before anything is saved.
 
 1. It runs on access granted to your own Simpro, and removing it switches it off. An administrator requests API access in your own Simpro (Simpro reviews the request; a business can no longer create the application itself), and the key it grants is kept somewhere only your business controls. It is never pasted into a chat, an email, a document or code anyone else can see. Removing the application in Simpro switches the connection off, and you can do it without asking anyone.
 2. Every answer comes from Simpro at the moment you ask. Answers about a job, quote, invoice or customer are looked up fresh each time. Nothing comes from an old copy, last week's export, or what Claude remembers from earlier.
@@ -142,13 +142,13 @@ The order matters. The key is yours before anything is read. Every detail is ask
 6. Notes inside a job are treated as information, never as instructions. Job descriptions and notes are written by staff and customers, and can arrive with web formatting in them. The formatting is removed before they are quoted, and nothing written in a note is ever acted on, however it is worded.
 7. It stays within Simpro's speed limit, and waits when asked to. Simpro allows each connection ten requests a second and says so when that is exceeded. The connection then waits before asking again, and finishes the job rather than giving up. It also asks for more in each request, so it needs fewer of them.
 8. Before adding a customer or job, it checks they are not already in Simpro, matching phone numbers digit by digit. Simpro's search is built for names, and in our own work it did not find phone numbers. So a caller is matched by comparing phone numbers as plain digits: 0412 345 678 and +61 412 345 678 count as the same. A new customer is added only when there is no match.
-9. Asking twice makes one record, and an unconfirmed save counts as failed. Every booking carries its own reference, and the connection checks for it before saving. If the request is repeated, it finds the first booking instead of making a second. If Simpro does not confirm the save with a record number, it is reported as failed, never as done.
+9. Asking twice makes one booking, and a save that is not confirmed counts as failed. Every booking carries its own reference, and the connection checks for it before saving. If the request is repeated, it finds the first booking instead of making a second. If Simpro does not confirm the save with a record number, it is reported as failed, never as done.
 10. Nothing it does reaches a customer: no messages, and no status changes. The connection cannot email or text anyone. A job it creates starts at Simpro's first status, and it never moves a job or quote to another status, because Simpro's own automations can message the customer or raise an invoice when a status changes. Changing a status stays with a person.
 11. A customer marked Do Not Call never appears on a list to ring or text. Simpro has a Do Not Call setting on each customer. Any list of people to contact leaves them out and says how many were left out, so you know the list is not your whole book.
-12. Every request is recorded where your business can read it. For every look-up and every save: when it happened, what was asked, which records came back or were saved, and whether it worked. The record lives where your business already keeps things, and reading it does not need the person who built it.
+12. Every request is recorded where your business can read it. Every look-up and every save is logged with when it happened, what was asked, which records came back or were saved, and whether it worked. The log lives where your business already keeps things, and reading it does not need the person who built it.
 13. If Simpro refuses the key, it stops and says so, and never answers from earlier. A deleted or refused key means the business has switched the connection off. It says Simpro refused the connection and gives no figures, rather than falling back on anything it saw before.
-14. It survives the builder. Someone other than the builder can explain what it does, and it runs on an account the business owns.
-15. The pass test passes. On the business's own Simpro with its own key: the three oldest quotes still waiting on the customer, a job booked twice for a caller already on file under a differently written number, and the key deleted before a last question.
+14. It keeps working if the person who built it leaves. Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+15. The pass test passes. On your own Simpro with your own key, three things are tried. It finds the three oldest quotes still waiting on the customer, books a job twice for a caller already on file under a differently written number, and is asked a last question after the key is deleted.
 
 ## 5. Seven places a quick setup gives wrong answers
 
@@ -190,7 +190,7 @@ Check:   GET /api/v1.0/info/ says whether the build is multi-company
 
 ## 7. What your developer builds, and the step that needs care
 
-Nothing to buy and nothing we host. It runs on your own computer or account, on your own key. Your developer tests it against a practice copy first, then points it at your Simpro.
+Built to this standard, there is nothing to buy and nothing we host. It runs on your own computer or account, on your own key. Your developer tests it against a practice copy first, then points it at your Simpro.
 
 ```
 provider:
@@ -224,13 +224,13 @@ Hold a DIY build or a vendor to this. If a box is empty, it is not in production
 - **6. Notes inside a job are treated as information, never as instructions.** Job descriptions and notes are written by staff and customers, and can arrive with web formatting in them. The formatting is removed before they are quoted, and nothing written in a note is ever acted on, however it is worded.
 - **7. It stays within Simpro's speed limit, and waits when asked to.** Simpro allows each connection ten requests a second and says so when that is exceeded. The connection then waits before asking again, and finishes the job rather than giving up. It also asks for more in each request, so it needs fewer of them.
 - **8. Before adding a customer or job, it checks they are not already in Simpro, matching phone numbers digit by digit.** Simpro's search is built for names, and in our own work it did not find phone numbers. So a caller is matched by comparing phone numbers as plain digits: 0412 345 678 and +61 412 345 678 count as the same. A new customer is added only when there is no match.
-- **9. Asking twice makes one record, and an unconfirmed save counts as failed.** Every booking carries its own reference, and the connection checks for it before saving. If the request is repeated, it finds the first booking instead of making a second. If Simpro does not confirm the save with a record number, it is reported as failed, never as done.
+- **9. Asking twice makes one booking, and a save that is not confirmed counts as failed.** Every booking carries its own reference, and the connection checks for it before saving. If the request is repeated, it finds the first booking instead of making a second. If Simpro does not confirm the save with a record number, it is reported as failed, never as done.
 - **10. Nothing it does reaches a customer: no messages, and no status changes.** The connection cannot email or text anyone. A job it creates starts at Simpro's first status, and it never moves a job or quote to another status, because Simpro's own automations can message the customer or raise an invoice when a status changes. Changing a status stays with a person.
 - **11. A customer marked Do Not Call never appears on a list to ring or text.** Simpro has a Do Not Call setting on each customer. Any list of people to contact leaves them out and says how many were left out, so you know the list is not your whole book.
-- **12. Every request is recorded where your business can read it.** For every look-up and every save: when it happened, what was asked, which records came back or were saved, and whether it worked. The record lives where your business already keeps things, and reading it does not need the person who built it.
+- **12. Every request is recorded where your business can read it.** Every look-up and every save is logged with when it happened, what was asked, which records came back or were saved, and whether it worked. The log lives where your business already keeps things, and reading it does not need the person who built it.
 - **13. If Simpro refuses the key, it stops and says so, and never answers from earlier.** A deleted or refused key means the business has switched the connection off. It says Simpro refused the connection and gives no figures, rather than falling back on anything it saw before.
-- **14. It survives the builder.** Someone other than the builder can explain what it does, and it runs on an account the business owns.
-- **15. The pass test passes.** On the business's own Simpro with its own key: the three oldest quotes still waiting on the customer, a job booked twice for a caller already on file under a differently written number, and the key deleted before a last question.
+- **14. It keeps working if the person who built it leaves.** Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+- **15. The pass test passes.** On your own Simpro with your own key, three things are tried. It finds the three oldest quotes still waiting on the customer, books a job twice for a caller already on file under a differently written number, and is asked a last question after the key is deleted.
 
 ## Related reading
 

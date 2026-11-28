@@ -9,7 +9,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/asking-for-rev
 
 ---
 
-The same standard, for a trade business that lives in Microsoft 365: Power Automate reads the job system for finished jobs, every customer gets the same message and review link, and a low score texts the owner.
+The Review Request standard, for a trade business that runs on Microsoft 365. Power Automate checks your job system for finished jobs, every customer gets the same message and review link, and a low score sends the owner a text.
 
 Used by
 
@@ -17,22 +17,22 @@ Used by
 - Business Systems Analyst
 - Office Manager
 
-The message is the easy part. The hard part is the same as on any stack: the flow reads the job system at the moment of sending, so a job with an open callback waits; every customer gets the words from one row in Rules, so there is nowhere for a second link to live; and an opt-out is kept against the customer, where no later job can reach it.
+Writing the message is easy. The hard part is the same on Microsoft 365 as anywhere else. The flow checks the job system again just before it sends, so a job with an open callback waits. Every customer gets the words from the one Rules row, so there is no place for a second link. And an opt-out is kept against the customer, not the job, so no later job can ask them again.
 
 ## In short
 
 - **What this is**: A build plan for the Review Request standard on Microsoft 365. Five lists, three flows, and a job system Power Automate can read.
-- **The core rule**: Flow 1 builds every ask from Rules.MessageText and Rules.ReviewLink with only the name filled in. No list has a column for a different link or a score threshold.
-- **What it does not do**: No flow sends anything to a customer after they reply, and no flow posts or answers a review. A low score adds an alert to the owner in Teams or by SMS.
-- **The hard part**: Reading callbacks, disputes and complaints from the job system each time a message would go, and matching a reply that arrives days later back to its job.
+- **The core rule**: Every ask uses the one message and the one review link from the Rules list, with only the customer's name filled in. There is nowhere to set a different link, or a score that decides who gets the link.
+- **What it does not do**: No flow sends anything to a customer after they reply, and no flow posts or answers a review. A low score sends the owner an alert in Teams or by text.
+- **The hard part**: Checking the job system for callbacks, disputes and complaints every time a message is about to go, and matching a reply that arrives days later to the right job.
 
 ## 1. Before you start
 
 Read [the Review Request build standard](https://aipathway.com.au/explore-ai/review-request-build-standard) first. It defines its objects, and the lists below are those objects with SharePoint types on them. Shared conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-Check what your job system lets a flow read. ServiceM8, Simpro, Fergus, Jobber and AroFlo each have an integration route, usually through the HTTP action (premium in Power Automate) with a key or app connection the business owns, rather than a ready connector. You need job status and its timestamps, linked callback jobs, and the invoice’s disputed state. Tradify has no public API and no Zapier app, so a flow cannot read it live: as the standard says, the paid trigger is read from Xero instead, and the hold check is a browser step a person approves.
+Check what your job system lets a flow read. ServiceM8, Simpro, Fergus, Jobber and AroFlo can each be read, usually through Power Automate’s HTTP action (a premium feature) with a key or app connection the business owns, rather than a ready-made connector. The flow needs each job’s status and when it changed, any callback jobs linked to it, and whether its invoice is disputed. Tradify has no public API and no Zapier app, so a flow cannot read it live. As the standard says, the flow then starts from the paid invoice in Xero instead, and the hold check is a browser step a person approves.
 
-Then decide where the texts go from. An SMS provider with a connector or an HTTP API, on an account the business owns, with inbound replies forwarded back into Flow 2. Email works the same way through a shared Outlook mailbox. Fill in the one Rules row before switching anything on.
+Then decide which account sends the texts: an SMS provider with a Power Automate connector or an API, on an account the business owns, that sends customers’ replies back into Flow 2. Email works the same way through a shared Outlook mailbox. Fill in the one Rules row before switching anything on.
 
 ## 2. The lists, with their columns
 
@@ -149,11 +149,11 @@ What each connection is for.
 
 - **SharePoint, the one site.** Rules, Asks, Holds, OptOuts and Replies. The flows read and write rows there and nowhere else.
 - **The job system, read.** Jobs for the finished status and the re-read at sending, customers for the name and the mobile or email, invoices only for the disputed state. Through a custom connector or the HTTP action, both premium in Power Automate.
-- **The SMS account, send and receive.** The one ask and the one reminder, and the inbound webhook that brings the 1 to 5 and any STOP back into Flow 2. Anyone holding that webhook’s URL can start Flow 2, so keep it where you keep keys.
+- **The SMS account, send and receive.** The one ask and the one reminder, and the link (a webhook) that brings each 1 to 5 score and any STOP back into Flow 2. Anyone holding that link can start Flow 2, so keep it as safe as a password.
 - **One shared mailbox, send and read.** The same for customers you reach by email.
 - **Teams, or a text to the owner.** The hold reason, the missing mobile, and the low-score alert. Nothing there goes to a customer.
 
-Least privilege, as steps.
+Give each account only what it needs.
 
 1. Own the three flows with a service account, not the office manager’s own account, with a named co-owner.
 2. Build them in one solution on connection references, so the job system, SMS, mailbox and SharePoint connections are each one place to change.
@@ -163,7 +163,7 @@ Least privilege, as steps.
 
 How to cut it off. Turn off the flows in the solution and nothing more is sent. Revoke the build’s key in the job system, and remove the webhook or key in the SMS account. OptOuts stays, so a customer who said STOP stays stopped if you switch it back on. The other switches are in [the shared conventions](https://aipathway.com.au/explore-ai/standards-on-microsoft-365#access).
 
-Why not put the review link in the invoice email? It is free and it takes a minute. It also goes to the customer with the open callback and the disputed invoice, it cannot wait, it cannot remind once and stop, and a STOP has nowhere to live. The hold and the opt-out are the reason for the build.
+Why not put the review link in the invoice email? It is free and it takes a minute. It also goes to the customer with the open callback and the disputed invoice, it cannot wait, it cannot remind once and stop, and there is nowhere to record a STOP. Holding those jobs and keeping the opt-out are why the build is worth doing.
 
 ## 6. The order to build it in
 
@@ -189,7 +189,7 @@ Next month's job is a new Asks row. If the STOP lived on last month's row, Flow 
 
 ### Asking Copilot to draft a reply to the review
 
-Answering reviews is the owner's. No flow here posts to Google or replies on it, and none should.
+Answering reviews is the owner's job. No flow here posts to Google or replies on it, and none should.
 
 ## 8. Where the automation stops
 
@@ -198,7 +198,7 @@ Answering reviews is the owner's. No flow here posts to Google or replies on it,
 - Writing the message, the wait, the reminder interval and the window.
 - Marking a review as posted, and taking anyone off OptOuts, which happens only if they ask.
 
-**The pass test.** Mark two real jobs complete in your job system, one with a callback job open against it, with your own mobile as the customer on both. After the wait, the clean job gets one ask and the other has a Holds row naming the open callback. Reply 2 from your phone: the owner is alerted, Replies holds your words exactly, and nothing more arrives on your phone. Close the callback: the second job gets the same message, word for word. A minute to stage on your own tenant, then the wait.
+**The pass test.** Mark two real jobs complete in your job system, one with a callback job open against it, with your own mobile as the customer on both. After the wait, the clean job gets one ask and the other has a Holds row naming the open callback. Reply 2 from your phone: the owner is alerted, Replies holds your words exactly, and nothing more arrives on your phone. Close the callback: the second job gets the same message, word for word. It takes a minute to set up in your own Microsoft 365, then the wait.
 
 ## Related reading
 

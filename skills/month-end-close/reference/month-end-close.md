@@ -20,7 +20,7 @@ This standard has no hosted provider; do not run conformance connect. For the ch
 
 ---
 
-Close the month the same way every time, for every company you run: each item on the checklist checked against your accounts with the evidence written down, then you sign off, and only then do the month’s journals post and the month lock. Works with Xero, MYOB or QuickBooks. Written so you can build it yourself.
+Close the month the same way every time, for every company you run: each item on the checklist checked against your accounts with the evidence written down, then you sign off, and only then do the month’s journals go into your accounts and the month lock. Works with Xero, MYOB or QuickBooks. Written so you can build it yourself.
 
 Used by
 
@@ -46,7 +46,7 @@ It never makes up an accrual amount, never calls a difference too small to matte
 
 The hard part
 
-Writing into accounts we do not own: the approved journals posted exactly once even when the connection drops halfway, and the lock date set only after a person said yes, and only forward.
+Putting things into accounts that belong to you. Each approved journal has to go in exactly once, even when the connection drops halfway, and the lock date is set only after a person says yes, and only forward.
 
 It is the fifth working day of the month. The bank feeds are mostly done, there are a few transactions nobody can explain sitting in suspense, the audit fee accrual is in last month’s spreadsheet, and the accountant wants to know if October is closed. Somebody ticks the list from memory. Three weeks later a late bill lands in October and the report you already sent is wrong. The list is the same every month. Saying it is done, and meaning it, is yours.
 
@@ -65,13 +65,13 @@ The filled diamond is your sign-off: before it, the agent only reads your accoun
 
 ## 1. What this standard covers
 
-A business, or a bookkeeper or accounting practice working for one, that closes the month in a cloud ledger, for one entity or many. For each entity and month the build works an eight-item checklist against the ledger, records a result with its evidence for every item, proposes the month’s accrual and prepayment journals from the schedule the business keeps, and holds the pack for a person. After that person signs off, it posts the journals they approved, once each, moves the lock date forward to the period end, and hands the closed month to the [Recurring Report](https://aipathway.com.au/explore-ai/recurring-report-build-standard) standard for the monthly pack.
+A business, or a bookkeeper or accounting practice working for one, that closes the month in Xero, MYOB or QuickBooks, for one company or many. For each company and month the build works an eight-item checklist against your accounts, records a result with its evidence for every item, proposes the month’s accrual and prepayment journals from the schedule the business keeps, and holds the pack for a person. After that person signs off, it puts the journals they approved into your accounts, once each, moves the lock date forward to the period end, and hands the closed month to the [Recurring Report](https://aipathway.com.au/explore-ai/recurring-report-build-standard) standard for the monthly pack.
 
 Out of scope. Year-end adjustments, tax returns and lodgement, payroll itself, and coding transactions. An uncoded line is handed to the [Uncoded Query](https://aipathway.com.au/explore-ai/uncoded-query-build-standard) standard, which asks the person who knows what it was. Whether a difference matters is the reviewer’s call, never the build’s.
 
-How it connects. Straight to your ledger, through the ledger’s own sign-in and API, approved by you. No product of ours sits between the build and your accounts, and AI Pathway is not the ledger connection.
+How it connects. Straight to your accounting software, through its own sign-in, approved by you. The build talks to your accounts directly, with no AI Pathway product in between.
 
-What cannot meet it, and where a person steps in. All three ledgers below let an app read what the checklist needs and post a journal. None of them, as far as their own API references show, lets an app set the lock date: Xero and MYOB Business publish it as read only, and Intuit’s reference does not confirm a write for QuickBooks Online. So on all three today the lock step stays with a person: the build raises one task for the reviewer to set it, then reads it back before the month counts as closed. Where a ledger cannot give the statement balance or an aged report to an app, that item is recorded as could not check, or worked out from the open invoices and bills, never assumed.
+What cannot meet it, and where a person steps in. All three accounting systems below let an app read what the checklist needs and add a journal. None of them, as far as their own developer documents show, lets an app set the lock date. Xero and MYOB Business publish it as read only, and Intuit’s documents do not confirm QuickBooks Online allows it. So on all three today, a person sets the lock date. The build raises one job for the reviewer to set it, then checks it before the month counts as closed. Where the accounting software cannot give an app the statement balance or an aged report, that item is recorded as could not check, or worked out from the open invoices and bills, never assumed.
 
 ## Facts that can change, and when we checked them
 
@@ -89,22 +89,22 @@ These change. Check the vendor’s current API reference before you build, and t
 
 ## 2. What closed means, item by item
 
-Every item ends as one of three results. Pass and fail both name the ledger read they came from, when it was made and the figures compared. Could not check says why. A blank is never a pass.
+Every item ends as one of three results. Pass and fail both name where in your accounts the figures came from, when they were read, and the figures compared. Could not check says why. A blank is never a pass.
 
 | Item | It passes when |
 | --- | --- |
-| bank | Every bank and card account is reconciled to a statement line dated on or after the period end, the ledger balance equals the statement balance, and nothing is left unreconciled. |
+| bank | Every bank and card account is reconciled to a statement line dated on or after the period end, the balance in your accounts equals the statement balance, and nothing is left unreconciled. |
 | uncoded | No line is left uncoded or in a suspense account. Each one found is handed to Uncoded Query, which asks the person who knows. |
 | receivables | The aged receivables at period end equal the receivables control account, to the cent. |
 | payables | The aged payables at period end equal the payables control account, to the cent. |
-| payroll | Every pay run the business expects in the month has been posted. |
+| payroll | Every pay run the business expects in the month is in your accounts. |
 | accruals | Every line on your accruals and prepayments schedule has a proposed journal, with an amount from the schedule or from a person's entry this month. |
 | tax_control | The tax control account (GST in Australia) agrees with the figure for the period's return. |
 | clearing | Every clearing account, such as payroll clearing or undeposited funds, is at zero. |
 
 ## 3. The close pack, in the shape your developer needs
 
-One pack per entity per period. Money is whole cents. The build fills everything except the schedule, a person's amounts and the sign-off.
+One pack per company per month. Money is in whole cents. The build fills everything except the schedule, any amounts a person enters, and the sign-off.
 
 ```
 entity
@@ -146,56 +146,56 @@ There is no field for a materiality threshold and no status the build can set on
 
 ## 4. The checks, in order
 
-The order is the argument. Evidence comes before any result, the schedule before any journal, and a person’s sign-off before anything is written into your accounts. A close that looks finished and is not is worse than one that says plainly what it could not check.
+Each check has to pass before the next one runs. Every figure needs its evidence before a result is shown, the schedule comes before any journal, and you sign off before anything goes into your accounts. A close that tells you plainly what it could not check is better than one that looks finished and is not.
 
 1. Every item on the checklist gets a result. For every entity and every period, each of the eight items (bank, uncoded, receivables, payables, payroll, accruals, tax control, clearing) is recorded as pass, fail or could not check. None is skipped, and a blank is never read as a pass.
-2. A pass or a fail carries its evidence. Every pass and every fail names the ledger read it came from, with the time of the read and what it showed: the balances compared, the lines found, the dates missing. A pass with no read behind it is not a pass.
-3. What could not be read is recorded as could not check. When the ledger does not answer, or a figure the item needs is not available, the item is recorded as could not check with the reason. It is never a pass because nothing was found, and never a fail the build made up.
-4. Every bank account is reconciled to a statement dated at period end. Each bank and card account passes only when its last reconciled statement line is dated on or after the period end, the ledger balance equals the statement balance at that date, and no statement lines are left unreconciled. One account short fails the item, and the result names the account.
-5. Uncoded and suspense lines are handed to Uncoded Query, once. Every line left uncoded or sitting in a suspense account fails the item and is raised once, with its line id, to the Uncoded Query queue, which asks the person who knows what it was. The close never recodes a line itself, and a second run does not raise it again.
-6. An accrual amount comes from the schedule or a person, never a guess. Each accrual and prepayment is proposed as a journal for a person to approve, with its amount taken from the schedule the business keeps or from a person's entry for the period, carrying who entered it. A line with no amount is not proposed: it is raised once to the bookkeeper as no_amount. Last month's figure, an average or a model's estimate is never an amount.
-7. A difference is reported, never judged small enough. The tax control account agrees with the return figure for the period, each clearing account is at zero, and the aged receivables and payables equal their control accounts, to the cent. Any difference fails the item with both figures and the difference. Whether a difference matters is the reviewer's call, not the build's.
-8. Nothing is written into the ledger before a person signs off. No journal is posted and no lock date is set or asked for until a named person has signed off that entity's close for that period. Only the journals the sign-off approves are posted. An entity nobody signed off has nothing written.
-9. Each approved journal posts exactly once, and is read back. Each approved journal is posted with the intent id close:<tenant>:<entity>:<period>:<schedule line>. A retry carries the same id and lands once. A post with no answer is treated as not posted, raised as write_failed to the bookkeeper and tried again. The journals are read back from the ledger before anything else happens.
-10. The lock date moves forward to period end, only after sign-off. Once the approved journals read back, the lock date is set to the period end and read back. It is never set before sign-off and never moved earlier than it already is. Where the ledger's API cannot write the lock date, the build does not try: it raises one task for the reviewer to set it by hand, and reads it back.
-11. The closed period is handed to the Recurring Report, once. Only when the lock date reads back at or after the period end is the period handed to the Recurring Report standard for the client pack, once per entity and period, with the lock date it read.
-12. It survives the builder. Someone other than the builder can explain what it does, and it runs on an account the business owns.
-13. The pass test passes. In the business's own ledger: run the close for one entity with one accrual on the schedule. With no sign-off, nothing is posted and the lock date does not move. After a recorded sign-off, the accrual posts exactly once and reads back, a second run posts nothing, and the lock date reads back at the period end, set by the build where the ledger allows it or by the reviewer on the task it raised.
+2. A pass or a fail carries its evidence. Every pass and every fail names the look at your accounts it came from, when that look was taken, and what it showed, such as the balances compared, the lines found or the dates missing. A pass with nothing read behind it does not count.
+3. What could not be read is recorded as could not check. When the accounting system does not answer, or a figure the item needs is not available, the item is recorded as could not check, with the reason. It is never a pass because nothing was found, and never a made-up fail.
+4. Every bank account is reconciled to a statement dated at period end. Each bank and card account passes only when its last reconciled statement line is dated on or after the period end, the balance in your books equals the statement balance at that date, and no statement lines are left unreconciled. One account short fails the item, and the result names the account.
+5. Uncoded and suspense lines are handed to Uncoded Query, once. Every line left uncoded or sitting in a suspense account fails the item and is passed once, with its line reference, to Uncoded Query, which asks the person who knows what it was. The close never recodes a line itself, and a second run does not pass it on again.
+6. An accrual amount comes from the schedule or a person, never a guess. Each accrual and prepayment is proposed as a journal for a person to approve. Its amount comes from the schedule the business keeps, or from a person's entry for the period with their name on it. A line with no amount is not proposed; it goes once to the bookkeeper (reason: no_amount). Last month's figure, an average or an AI estimate is never used as an amount.
+7. A difference is reported, never judged small enough. The tax control account agrees with the return figure for the period, each clearing account is at zero, and the aged receivables and payables equal their control accounts, to the cent. Any difference fails the item with both figures and the difference. Whether a difference matters is the reviewer's call.
+8. Nothing goes into your accounts before a person signs off. No journal is posted and no lock date is set or asked for until a named person has signed off that entity's close for that period. Only the journals the sign-off approves are posted. An entity nobody signed off has nothing entered.
+9. Each approved journal posts exactly once, and is read back to confirm. Each approved journal carries one fixed reference, close:<tenant>:<entity>:<period>:<schedule line>, so a retry carries the same reference and never makes a second one. If the system gives no answer, the journal is treated as not posted, goes to the bookkeeper (reason: write_failed) and is tried again. The journals are read back from your accounts before anything else happens.
+10. The lock date moves forward to period end, only after sign-off. Once the approved journals are confirmed, the lock date is set to the period end and read back. It is never set before sign-off and never moved earlier than it already is. Where the accounting system will not let an app set the lock date, it does not try. It gives the reviewer one job to set it by hand, then reads it back.
+11. The closed period is handed to the Recurring Report, once. Only once the lock date reads back at or after the period end is the period handed to the Recurring Report standard for the client pack, once per entity and period, with the lock date it found.
+12. It keeps working if the person who built it leaves. Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+13. The pass test passes. In the business's own accounts, run the close for one entity with one accrual on the schedule. With no sign-off, nothing is posted and the lock date does not move. After a recorded sign-off, the accrual posts exactly once and reads back, a second run posts nothing, and the lock date reads back at the period end, set automatically where the accounting system allows it or by the reviewer from the job they were given.
 
 ## 5. One company at the end of October
 
-An illustration, not data, using the figures the runnable stub uses. On 5 November the agent works October for a plumbing company. The operating account is reconciled to the 31st and agrees. The business card is only reconciled to the 27th, so bank fails and names the card. Two card payments sit in suspense, so uncoded fails and both go to Uncoded Query. Aged receivables are $10.00 away from the control account, and payroll clearing holds 40 cents: both fail, with the figures, and nobody is told they are too small to matter.
+An illustration, not real data, using the figures from the test version. On 5 November the agent works October for a plumbing company. The operating account is reconciled to the 31st and agrees. The business card is only reconciled to the 27th, so bank fails and names the card. Two card payments sit in suspense, so uncoded fails and both go to Uncoded Query. Aged receivables are $10.00 away from the control account, and payroll clearing holds 40 cents: both fail, with the figures, and nobody is told they are too small to matter.
 
 The schedule holds the audit fee accrual at $1,200.00, so that is proposed. Electricity has no fixed amount; the bookkeeper enters $450.00 for October and the next run proposes it, with her name on it. Insurance has no amount and nobody has entered one, so it is not proposed: it goes to the bookkeeper, even though last month’s figure is sitting right there.
 
-The reviewer reads the pack, accepts the differences, and signs off approving both journals. The first post times out after it landed; the next run reads the journals back, finds it by its intent id, and does not post it again. The ledger cannot set its own lock date, so the reviewer gets one task, sets it to 31 October, and the next run reads it back and hands October to the monthly report.
+The reviewer reads the pack, accepts the differences, and signs off, approving both journals. The first journal goes in, but the connection drops before the answer comes back. The next run checks the journals, finds it by its reference, and does not enter it again. The build cannot set the lock date in this accounting software, so the reviewer gets one job, sets it to 31 October, and the next run checks it and hands October to the monthly report.
 
-## 6. Writing into your accounts, once
+## 6. Each journal goes into your accounts once
 
-This is the step not to hand-roll, and the reason the standard exists. Each approved journal carries the intent id `close:<tenant>:<entity>:<period>:<line>` in its narration or memo, and in the ledger’s idempotency key or request id where it has one. Before any retry the build reads the journals back and looks for that id. A post with no answer does not count as posted. It is raised to the bookkeeper and tried again only after the read back. Like a cheque book stub, the id is how you know the cheque was already written.
+This is the step that needs the most care, and the reason the standard exists. Each approved journal carries the reference `close:<tenant>:<entity>:<period>:<line>` in its narration or memo, and in the accounting software’s duplicate-protection key where it has one. Before trying again, the build reads the journals back and looks for that reference. A journal sent with no answer back does not count as entered. It goes to the bookkeeper, and is tried again only after that check. Like the reference on a bank transfer, the id is how you know the payment already went through.
 
-The lock date is written last, only after the journals read back, and only forward: if the ledger already holds a later date, the build leaves it alone. Where the ledger’s API cannot write it, the build raises one task for the reviewer and waits for the read back. The month counts as closed only when the lock date reads back at the period end or later.
+The lock date is set last, only after the journals are confirmed, and only forward. If your accounts already hold a later date, the build leaves it alone. Where the accounting software will not let the build set it, the build raises one job for the reviewer and waits until it can confirm the date. The month counts as closed only when the lock date shows the period end or later.
 
 ## 7. What stays with a person
 
 - Reviewing the close pack and signing off by name, approving each proposed journal or leaving it out.
 - Keeping the accruals and prepayments schedule, and entering any amount it does not hold, each month.
 - Deciding whether any difference or failed item matters, and what to do about it.
-- Setting the lock date by hand where the ledger's API cannot, and never moving it back without a reason you would write down.
+- Setting the lock date by hand where the accounting software will not let the build do it, and never moving it back without a reason you would write down.
 - What each uncoded line was, through the Uncoded Query standard.
 
 ## 8. Run it your way
 
 The same checks and the same pass test on each. Two rules hold whichever you pick: nothing is written into your accounts before a person signs off, and the lock date only moves forward.
 
-- **Google Workspace.** A sheet with tabs for your entities, the figures you take from your ledger’s reports, your accruals schedule, the close results, the proposed journals and the sign-off. It records every item with its evidence, builds the approved journals as rows to import into your ledger once, and asks you to set the lock date. It never connects to your ledger and sends nothing. [Make your own copy](https://docs.google.com/spreadsheets/d/1bw4VROLAZguVz8St6wlDHkBHLtBffTgFNWnV-cqlk8k/copy)
-- **Microsoft 365.** SharePoint lists for the pack and the sign-off, a flow that works the checklist through your ledger’s own connector, and a second flow that runs only after sign-off. The [Signing Off the Month build plan](https://aipathway.com.au/explore-ai/signing-off-the-month-on-microsoft-365) lays out the lists and flows.
-- **Your own Grok Bot or Claude.** To read the pack and explain a failed item, not to sign off or post. Ask it why bank failed or what is still in suspense. Keep the posting and the lock date in code that reads back, never in a chat.
-- **Your own code.** This page. Hand it to a coding agent: it gets the checks as data, the stub world, and a runner that tells it when the build is right. See [running a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
+- **Google Workspace.** A sheet with tabs for your companies, the figures you take from your accounting software’s reports, your accruals schedule, the close results, the proposed journals and the sign-off. It records every item with its evidence, lays out the approved journals as rows you import into your accounts once, and asks you to set the lock date. It works only inside the sheet, and you do the import yourself. [Make your own copy](https://docs.google.com/spreadsheets/d/1bw4VROLAZguVz8St6wlDHkBHLtBffTgFNWnV-cqlk8k/copy)
+- **Microsoft 365.** SharePoint lists for the pack and the sign-off, a flow that works the checklist through your accounting software’s own connector, and a second flow that runs only after sign-off. The [Signing Off the Month build plan](https://aipathway.com.au/explore-ai/signing-off-the-month-on-microsoft-365) lays out the lists and flows.
+- **Your own Grok Bot or Claude.** To read the pack and explain a failed item. Signing off and entering journals stay out of the chat. Ask it why bank failed or what is still in suspense. Keep entering journals and setting the lock date in code that checks its own work.
+- **Your own code.** This page. Hand it to a coding agent. It gets the checks as data, a test version to build against, and a runner that tells it when the build is right. See [running a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
 
-## 9. Join It to Your Own Ledger: What to Stub, and What Not to Hand-Roll
+## 9. Connect It to Your Own Accounts: What to Test First, and What Needs Care
 
-There is no hosted step. The build connects straight to your ledger through the ledger's own sign-in, and the production check runs there. The parts that need care are the read back before any retry, the sign-off before any write, and a lock date that only moves forward. All of it runs against the stub first.
+Nothing is hosted. The build connects straight to your accounting software through its own sign-in, and the final check runs there. Three things need care: checking before any retry, the sign-off before anything goes in, and a lock date that only moves forward. All of it runs against a test version first.
 
 ```
 provider:
@@ -225,25 +225,25 @@ no port exists for
 
 Anyone selling a month-end close agent should be able to answer one question: show me the sign-off that came before last month's journals, and the read back that proves each posted once.
 
-**The pass test.** In your own ledger, not a sample. Take one entity with one accrual on the schedule and run the close for the month. With no sign-off, nothing is posted and the lock date does not move. Sign off, approving the accrual. Run it: the journal posts once, with the intent id in its narration, and reads back. Run it again: nothing new is posted. The lock date reads back at the period end, set by the build where your ledger allows it or by you on the task it raised. A stub cannot pass this: on a stub the journal and the lock date are rows in the runner’s memory. Only your own ledger, through its own sign-in, proves the write landed once, after a person’s sign-off, and survived a retry.
+**The pass test.** Do this in your own accounts, not a sample. Take one company with one accrual on the schedule and run the close for the month. With no sign-off, nothing goes into your accounts and the lock date does not move. Sign off, approving the accrual. Run it: the journal goes in once, with its reference in the narration, and the build confirms it. Run it again: nothing new goes in. The lock date reads back at the period end, set by the build where your ledger allows it or by you on the task it raised. A test version cannot pass this, because its journals and lock date exist only in its own memory. Only your own accounts, through their own sign-in, prove the journal went in once, after you signed off, and stayed that way after a retry.
 
 ## 10. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 
 - **1. Every item on the checklist gets a result.** For every entity and every period, each of the eight items (bank, uncoded, receivables, payables, payroll, accruals, tax control, clearing) is recorded as pass, fail or could not check. None is skipped, and a blank is never read as a pass.
-- **2. A pass or a fail carries its evidence.** Every pass and every fail names the ledger read it came from, with the time of the read and what it showed: the balances compared, the lines found, the dates missing. A pass with no read behind it is not a pass.
-- **3. What could not be read is recorded as could not check.** When the ledger does not answer, or a figure the item needs is not available, the item is recorded as could not check with the reason. It is never a pass because nothing was found, and never a fail the build made up.
-- **4. Every bank account is reconciled to a statement dated at period end.** Each bank and card account passes only when its last reconciled statement line is dated on or after the period end, the ledger balance equals the statement balance at that date, and no statement lines are left unreconciled. One account short fails the item, and the result names the account.
-- **5. Uncoded and suspense lines are handed to Uncoded Query, once.** Every line left uncoded or sitting in a suspense account fails the item and is raised once, with its line id, to the Uncoded Query queue, which asks the person who knows what it was. The close never recodes a line itself, and a second run does not raise it again.
-- **6. An accrual amount comes from the schedule or a person, never a guess.** Each accrual and prepayment is proposed as a journal for a person to approve, with its amount taken from the schedule the business keeps or from a person's entry for the period, carrying who entered it. A line with no amount is not proposed: it is raised once to the bookkeeper as no_amount. Last month's figure, an average or a model's estimate is never an amount.
-- **7. A difference is reported, never judged small enough.** The tax control account agrees with the return figure for the period, each clearing account is at zero, and the aged receivables and payables equal their control accounts, to the cent. Any difference fails the item with both figures and the difference. Whether a difference matters is the reviewer's call, not the build's.
-- **8. Nothing is written into the ledger before a person signs off.** No journal is posted and no lock date is set or asked for until a named person has signed off that entity's close for that period. Only the journals the sign-off approves are posted. An entity nobody signed off has nothing written.
-- **9. Each approved journal posts exactly once, and is read back.** Each approved journal is posted with the intent id close:<tenant>:<entity>:<period>:<schedule line>. A retry carries the same id and lands once. A post with no answer is treated as not posted, raised as write_failed to the bookkeeper and tried again. The journals are read back from the ledger before anything else happens.
-- **10. The lock date moves forward to period end, only after sign-off.** Once the approved journals read back, the lock date is set to the period end and read back. It is never set before sign-off and never moved earlier than it already is. Where the ledger's API cannot write the lock date, the build does not try: it raises one task for the reviewer to set it by hand, and reads it back.
-- **11. The closed period is handed to the Recurring Report, once.** Only when the lock date reads back at or after the period end is the period handed to the Recurring Report standard for the client pack, once per entity and period, with the lock date it read.
-- **12. It survives the builder.** Someone other than the builder can explain what it does, and it runs on an account the business owns.
-- **13. The pass test passes.** In the business's own ledger: run the close for one entity with one accrual on the schedule. With no sign-off, nothing is posted and the lock date does not move. After a recorded sign-off, the accrual posts exactly once and reads back, a second run posts nothing, and the lock date reads back at the period end, set by the build where the ledger allows it or by the reviewer on the task it raised.
+- **2. A pass or a fail carries its evidence.** Every pass and every fail names the look at your accounts it came from, when that look was taken, and what it showed, such as the balances compared, the lines found or the dates missing. A pass with nothing read behind it does not count.
+- **3. What could not be read is recorded as could not check.** When the accounting system does not answer, or a figure the item needs is not available, the item is recorded as could not check, with the reason. It is never a pass because nothing was found, and never a made-up fail.
+- **4. Every bank account is reconciled to a statement dated at period end.** Each bank and card account passes only when its last reconciled statement line is dated on or after the period end, the balance in your books equals the statement balance at that date, and no statement lines are left unreconciled. One account short fails the item, and the result names the account.
+- **5. Uncoded and suspense lines are handed to Uncoded Query, once.** Every line left uncoded or sitting in a suspense account fails the item and is passed once, with its line reference, to Uncoded Query, which asks the person who knows what it was. The close never recodes a line itself, and a second run does not pass it on again.
+- **6. An accrual amount comes from the schedule or a person, never a guess.** Each accrual and prepayment is proposed as a journal for a person to approve. Its amount comes from the schedule the business keeps, or from a person's entry for the period with their name on it. A line with no amount is not proposed; it goes once to the bookkeeper (reason: no_amount). Last month's figure, an average or an AI estimate is never used as an amount.
+- **7. A difference is reported, never judged small enough.** The tax control account agrees with the return figure for the period, each clearing account is at zero, and the aged receivables and payables equal their control accounts, to the cent. Any difference fails the item with both figures and the difference. Whether a difference matters is the reviewer's call.
+- **8. Nothing goes into your accounts before a person signs off.** No journal is posted and no lock date is set or asked for until a named person has signed off that entity's close for that period. Only the journals the sign-off approves are posted. An entity nobody signed off has nothing entered.
+- **9. Each approved journal posts exactly once, and is read back to confirm.** Each approved journal carries one fixed reference, close:<tenant>:<entity>:<period>:<schedule line>, so a retry carries the same reference and never makes a second one. If the system gives no answer, the journal is treated as not posted, goes to the bookkeeper (reason: write_failed) and is tried again. The journals are read back from your accounts before anything else happens.
+- **10. The lock date moves forward to period end, only after sign-off.** Once the approved journals are confirmed, the lock date is set to the period end and read back. It is never set before sign-off and never moved earlier than it already is. Where the accounting system will not let an app set the lock date, it does not try. It gives the reviewer one job to set it by hand, then reads it back.
+- **11. The closed period is handed to the Recurring Report, once.** Only once the lock date reads back at or after the period end is the period handed to the Recurring Report standard for the client pack, once per entity and period, with the lock date it found.
+- **12. It keeps working if the person who built it leaves.** Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+- **13. The pass test passes.** In the business's own accounts, run the close for one entity with one accrual on the schedule. With no sign-off, nothing is posted and the lock date does not move. After a recorded sign-off, the accrual posts exactly once and reads back, a second run posts nothing, and the lock date reads back at the period end, set automatically where the accounting system allows it or by the reviewer from the job they were given.
 
 ## Related reading
 

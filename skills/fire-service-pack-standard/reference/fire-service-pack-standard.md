@@ -20,7 +20,7 @@ This standard has no hosted provider; do not run conformance connect. For the ch
 
 ---
 
-The visit happened. The record fails three months later, when a building owner, an insurer or an auditor asks for it. Binding evidence to an asset identity is what stops that.
+The visit happened. The record fails three months later, when a building owner, an insurer or an auditor asks for it. Tying each photo, reading and certificate to the exact asset before the job closes is what stops that.
 
 Used by
 
@@ -33,19 +33,19 @@ Used by
 
 What this is
 
-The rejected pack standard applied to fire and electrical service records. The parent owns the specification; this is what the trade adds.
+The rejected pack standard, applied to fire and electrical service records. That standard sets the rules. This page adds what changes for your trade.
 
 The core rule
 
-Evidence binds to the asset identity before the job can close. Chasing evidence afterwards is the failure, not the fix.
+The photos, readings and certificate are attached to the right asset before the job can close. Chasing them afterwards is how packs fail.
 
 What it does not do
 
-It assembles a complete record and puts it in front of the person who certifies. It does not certify, and it does not decide a pass.
+It puts together a complete record for the person who certifies. The technician who attended records the result, and the person who certifies signs.
 
 The hard part
 
-Unbound work is invisible unless you build the queue. Nothing surfaces it on its own, and it ages quietly.
+A job marked done with evidence missing stays invisible unless you keep a list of them. Nothing else will show it to you, and it sits there getting older.
 
 In this trade the work and the record of the work are not two things. A test that was performed correctly and recorded against the wrong asset, or with no photograph of the tag, is worth nothing to the person who has to rely on it. The failure is almost always the system letting the job close, rarely the technician.
 
@@ -59,81 +59,81 @@ One visit, and whether it counts
 6. If yes, checks 6 and 7: any electrical certificate attached, and the next action owner named.
 7. A defect or an isolation? If neither, it is a pass, the only state that counts as coverage. If either, it is coded with a retest date and comes back round, because an isolation without one is a defect wearing a different label.
 
-Identity first, the document last. The filled diamond is the unbound queue: work marked done with evidence missing is not a pass, and it is the queue the whole standard exists to make visible.
+The asset is confirmed first and the document comes last. The filled diamond is the unbound list, for work marked done with evidence missing. It never counts as a pass, and the whole standard exists so you can see it.
 
-## 1. Read the parent standard first
+## 1. Start with the rejected pack standard
 
-The specification is [the rejected pack build standard](https://aipathway.com.au/explore-ai/rejected-pack-build-standard), which names the binding layer as the step not to hand-roll and explains why. This paper adds what changes when the pack is a service record rather than a claim or an invoice, and it changes in three places: the identity being bound to, the kinds of evidence, and who is waiting at the end.
+The full rules are in [the rejected pack build standard](https://aipathway.com.au/explore-ai/rejected-pack-build-standard), which explains why attaching evidence to the right record is the step that needs the most care. This paper adds what changes when the pack is a service record instead of a claim or an invoice. Three things change: the asset the evidence is attached to, the kinds of evidence, and who is waiting at the end.
 
 ## 2. The twelve checks, in order
 
-The order is not cosmetic. Identity comes first because every later check is meaningless if it is attached to the wrong thing. A missing electrical certificate is checked before defects are coded, because it stops the close outright. The client-facing document is generated from the record rather than assembled alongside it. These are the same twelve checks, in the same order, as the conformance checklist in section 11.
+Each check has to pass before the next one runs. The asset comes first, because every later check is worthless if it is attached to the wrong one. A missing electrical certificate is checked before defects are coded, because it stops the job closing outright. The report your client sees is produced from the record, never put together separately. These are the same twelve checks, in the same order, as the checklist in section 11.
 
-1. **Identity before everything.** A record cannot be created without resolving to exactly one asset. An unresolvable asset is a finding, not a note on the job.
-2. **The visit discharges something.** Every record names the obligation it satisfies. A visit that discharges nothing cannot be counted as coverage.
-3. **Result is recorded, never computed.** Pass, defect or isolated is entered by the competent person who attended. Nothing in the system derives it from the evidence.
-4. **Evidence is a property of the class.** Required evidence differs by asset class, and readings are stored as numbers in fields rather than photographs of gauges.
-5. **Baseline absence is reportable.** Where baseline data was required and unavailable, the record stores that as a non-conformance rather than leaving the field blank.
-6. **Electrical work blocks the close.** A missing certificate or test sheet stops the job closing. It never raises a reminder and lets the job through.
-7. **Defects are coded.** Defects come from a closed list with a named owner for the next action, so they can be counted and chased. Free text is a description, not a defect.
-8. **Isolation carries a revisit date.** An isolation records who authorised it, why, and the date it must be revisited, and it escalates when that date passes.
-9. **Unbound is a queue you can see.** Work marked done with required evidence missing sits in its own queue with its age on a chart. It is never reported as a pass.
-10. **Documents are generated from the record.** Anything client-facing is derived from the bound record, never assembled from a template on somebody's desktop.
-11. **Jurisdiction is data.** Retention period and who may attest are dated, cited values per state, not constants in the code.
-12. **The pass test passes.** The signature stays with a person. The build assembles and presents the pack; it does not certify, decide compliance, or produce a certificate.
+1. **Every record is matched to exactly one asset first.** A service record can't be made until the visit matches exactly one asset. An asset that can't be matched is recorded as a finding, never left as a note on the job.
+2. **Every visit meets a named obligation.** Every record names the obligation it meets. A visit that meets none doesn't count towards coverage.
+3. **The result is entered by a person, never worked out by the system.** Pass, defect or isolated is entered by the competent person who attended. The system never works it out from the evidence.
+4. **Each asset class has its own required evidence.** Required evidence differs by asset class, and readings are saved as numbers rather than photos of gauges.
+5. **A missing baseline is recorded so it can be reported.** Where baseline data was required and isn't available, the record saves that as a non-conformance instead of leaving the space blank.
+6. **Electrical work can't close without its paperwork.** A missing certificate or test sheet stops the job closing. It never sends a reminder and lets the job through anyway.
+7. **Every defect is recorded with a code.** Defects come from a set list, each with a named owner for the next step, so they can be counted and chased. Free text can describe a defect but doesn't count as one.
+8. **An isolation carries a revisit date.** An isolation records who authorised it, why, and the date it must be revisited. When that date passes, it is raised with a person.
+9. **Work missing its evidence (unbound) waits on a list you can see.** Work marked done with required evidence missing sits on its own list, with how long it has waited shown on a chart. It is never reported as a pass.
+10. **Documents are made from the record.** Anything the client sees is made from the record with its evidence attached, never put together from a template on somebody's desktop.
+11. **Each state's rules are kept as dated entries.** How long records are kept and who may attest are set for each state, each dated and with its source, rather than fixed in the software.
+12. **The pass test passes.** The signature stays with a person. It puts the pack together and presents it, and it never certifies, decides compliance or produces a certificate.
 
-## 3. Four queues, and unbound is not pass
+## 3. Every visit lands in one of four lists, and missing evidence is never a pass
 
-| Queue | What it holds | The rule |
+| List | What it holds | The rule |
 | --- | --- | --- |
-| Pass | Every check satisfied, evidence bound, competent person recorded | The only state that counts as coverage |
-| Defect | A coded fault with an owner | Carries a rectification path. Closing the visit does not close the defect |
-| Blocked | Attended, could not complete: no access, asset missing, site closed | Feeds the access queue. The obligation stays live. Not yet covered by a check below |
-| Unbound | Work marked done with required evidence missing | Not a pass. This is the queue the whole standard exists to make visible |
+| Pass | Every check passed, the evidence attached to the asset, and the qualified person who did the work recorded | The only result that counts as the service done |
+| Defect | A coded fault with an owner | Has a next step to fix it. Closing the visit does not close the defect |
+| Blocked | Attended, could not complete: no access, asset missing, site closed | Goes on the list to rebook access. The service is still due. None of the checks below tests this yet |
+| Unbound | Work marked done with required evidence missing | Not a pass. The whole standard exists so you can see this list |
 
-If you implement one thing from this paper, implement the unbound queue and put its age on a chart. A business that has never measured it tends to assume its number is near zero, and the reason is structural rather than cultural: nothing anywhere else in the system has a reason to mention it.
+If you build one thing from this paper, build the unbound list and chart how old each item on it is. A business that has never counted it usually assumes the number is near zero, because nothing else in the system mentions it.
 
-The blocked queue is part of the shape, but none of the twelve checks tests it yet. A build can pass every check and still lose blocked visits, so look for that queue by hand.
+None of the twelve checks tests the blocked list yet. A build can pass every check and still lose blocked visits, so check that list by hand.
 
 ## 4. Different asset classes need different evidence
 
-A single required-evidence list across the whole register is the second common mistake. It is either so short it proves nothing, or so long that technicians photograph things that do not matter and skip the one that does. Required evidence is a property of the obligation class.
+One list of required evidence for every asset you look after is the second common mistake. It is either so short it proves nothing, or so long that technicians photograph things that do not matter and skip the one that does. Set the required evidence for each class of asset.
 
 ### Portable and visual items
 
-Identity, location in situ, and the tag or label after service. The location shot is the one people drop, and it is the one that answers “which of the four in that corridor is this”.
+Which asset it is, a photo of where it sits, and the tag or label after service. The location shot is the one people drop, and it is the one that answers “which of the four in that corridor is this”.
 
 ### Systems with readings
 
-Readings as numbers in fields, not as a photograph of a gauge and not as free text. A number you cannot trend is a number you will not use, and trending is most of the value.
+Readings typed in as numbers, never a photo of a gauge or a note. You can only track a reading over time if it is a number, and tracking it over time is most of the value.
 
 ### Anything with electrical work
 
-The certificate or test sheet is required evidence, and its absence blocks the close rather than raising a reminder. This is the single most common cause of a pack that fails later.
+The certificate or test sheet is required evidence. Without it the job cannot close, and a reminder is not enough. This is the single most common cause of a pack that fails later.
 
 ### Passive and structural items
 
-A different trade with a different pack. Defect codes that mean something for a portable item mean nothing here, and reusing the list is how a defect register becomes unreadable.
+A different trade with a different pack. Defect codes that mean something for a portable item mean nothing here. Reusing the list makes your defect register unreadable.
 
-## 5. The exception that needs naming
+## 5. An asset taken out of service needs a date to come back
 
-An asset taken out of service temporarily is a legitimate outcome and it is the one exception most systems handle badly, because it looks like a resolution. An isolation without a retest date is a defect wearing a different label, and it is the state most likely to still be true a year later with nobody accountable.
+Taking an asset out of service for now is a fair result, and most systems handle it badly because it looks finished. Without a retest date it is a defect under another name, and it is the one most likely to still be sitting there a year later with nobody answering for it.
 
-Record it as its own result, with who authorised it, why, and the date it must be revisited. If that date passes, it escalates like any other breached obligation and it does not clear itself when the work is eventually done.
+Record it as its own result, with who authorised it, why, and the date it must be revisited. If that date passes, it goes up the line like any other overdue service, and it does not clear itself when the work is finally done.
 
 ## 6. Who is waiting at the end
 
-The pack exists to be handed to somebody who signs. That person is the reason every check above is worth enforcing, and they are also the reason none of this should be automated past them. A model may check that required fields are present and flag a photograph that does not show what it should. It does not decide that the asset complies, and it does not produce a certificate.
+The pack is for the person who signs. Every check above is there for them, and none of it should run past them. The AI can check that nothing required is missing and flag a photo that does not show what it should. Deciding the asset complies, and any certificate, stays with that person.
 
-**The attestation stays with a person, in every state.** In New South Wales only an accredited practitioner may assess each measure and endorse the annual statement; in Queensland the occupier signs the yearly statement; in Victoria the owner prepares the annual report. Whatever the build does, do not automate past that signature. The machine binds evidence and produces it. It never attests.
+**A person signs the statement, in every state.** In New South Wales only an accredited practitioner may assess each measure and endorse the annual statement; in Queensland the occupier signs the yearly statement; in Victoria the owner prepares the annual report. Whatever the build does, do not automate past that signature. The build attaches the evidence and presents it. The signature is always a person’s.
 
 Read that boundary alongside [the industry map](https://aipathway.com.au/explore-ai/fire-electrical-compliance-five-jobs), which lists the specific things in this trade that stay with a licensed person.
 
-## 7. Jurisdiction is data, not a constant
+## 7. The rules differ by state, so store them per state
 
 The same physical asset sits under a different annual attestation, a different retention period and a different answer to “who may sign” depending on the building’s address. Queensland runs on an occupier’s statement, New South Wales on an annual fire safety statement that only an accredited practitioner may endorse, Victoria on an annual essential safety measures report prepared by the owner. Retention differs too, and so does how long you have to produce the pack when somebody asks.
 
-A build that hard-codes one retention period is wrong in the other states, quietly, until an audit. Hold these as dated values keyed by jurisdiction, with the source and the date they were checked stored beside them, so a change is one edit rather than a re-read of the whole build.
+A build with one retention period written into it is wrong in the other states, and nobody notices until an audit. Store each state’s values with their source and the date you checked them, so a rule change is one edit instead of a re-read of the whole build.
 
 Sources, as at 18 September 2026
 
@@ -141,9 +141,9 @@ Queensland: Building Fire Safety Regulation 2008 and QDC MP6.1, via Queensland F
 
 **Check the figures against the primary instrument before you rely on them**, and store the date you checked. This standard tells you the shape and where to look. It is not legal advice and it does not tell you that a building complies.
 
-## 8. The objects, and the fields that make them bindable
+## 8. The records it needs, so evidence can be tied to an asset
 
-Section 2 says evidence binds to an asset identity before close. That is only enforceable if the identity is a field rather than a description, so here are the objects this standard actually needs. Names are illustrative; the shape is not.
+Section 2 says evidence is attached to the asset before the job closes. That only works if each asset has a fixed id instead of a description like 'the one in the kitchen', so these are the records this standard needs. The names are examples; the shape is required.
 
 ```
 asset:
@@ -194,27 +194,27 @@ The two fields that carry the whole standard are service_record.asset_id and evi
 
 ## 9. Connect your job system and document store to the pack, without it signing anything
 
-It puts the service pack together, ready for you to sign. It reads completed visits, their photographs and readings, and the asset register, and files the evidence and a draft pack in one folder you choose. You decide who is competent, and you sign and attest; the issued copy is saved only once a person has signed it. Your own login stays yours. The build connects with its own key or app connection, never your username and password.
+It puts the service pack together, ready for you to sign. It reads completed visits, their photos and readings, and the asset register, and files the evidence and a draft pack in one folder you choose. You decide who is qualified to do the work, and you sign; the final copy is saved only once it is signed. Your own login stays yours: the build connects with its own key or app connection, never your username and password.
 
 What each piece of access is for.
 
 - **Jobs and attachments, read.** To see a visit marked done, and the tag photograph, location shot, readings and certificate that came with it.
-- **The asset register, read.** For the asset identity each record binds to, its class and the obligation it discharges.
-- **One pack folder, write.** To file the bound evidence and the pack generated from the record, in the Microsoft 365 or Google Drive store the business already keeps.
+- **The asset register, read.** For the asset each record is attached to, its class and the service it is due for.
+- **One pack folder, write.** To file the attached evidence and the pack made from the record, in the Microsoft 365 or Google Drive store the business already keeps.
 
 1. In ServiceM8, Simpro or the job system you run, create a key or app connection for the build with jobs and attachments to read.
 2. Give the build access to one pack folder or library, not the whole drive.
-3. Load the asset register with a stable id per asset, the same id that is printed on the tag.
+3. Load the asset register with one id per asset that never changes, the same id printed on the tag.
 4. Write the required evidence per asset class (section 4) and the jurisdiction values with their source and the date you checked them (section 7).
 5. Run the pass test below on one real completed visit.
 
-Why not the job system’s own forms? Forms in ServiceM8 or Simpro are a good place to capture the photographs and readings, and the build should read from them rather than replace them. Capturing is not binding. Before you rely on a form alone, stage the first leg of the pass test: delete the tag photograph and try to close the job. If it closes, the unbound queue does not exist yet.
+Why not the job system’s own forms? Forms in ServiceM8 or Simpro are a good place to capture the photographs and readings, and the build should read from them rather than replace them. Taking a photo does not attach it to the asset. Before you rely on a form alone, try the first part of the pass test. Delete the tag photograph and try to close the job. If it closes, you have no unbound list yet.
 
-Where it runs. A scheduled flow with the register and the queues in Microsoft 365 lists (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/fire-service-pack-on-microsoft-365) lays these out), a small dashboard a coding agent builds from this page, or a routine woken when a job is marked done. All three are held to the same checks; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
+Where it runs. A scheduled flow with the register and the queues in Microsoft 365 lists (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/fire-service-pack-on-microsoft-365) lays these out), a small dashboard a coding agent builds from this page, or a routine that runs when a job is marked done. All three are held to the same checks; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
 
 ## 10. What your developer builds, and the step that needs care
 
-Section 1 points at the parent standard, which names the binding layer as the step not to hand-roll and says plainly that no product covers it. That is still true here. This block exists so an agent does not go looking for one, and does not stand up a second document store beside the one the business already keeps.
+The rejected pack standard names attaching evidence to the record as the step that needs the most care, and says no product does it. That is still true here. This block is here so an AI agent does not go looking for one, or set up a second document store beside the one the business already keeps.
 
 ```
 provider:
@@ -238,26 +238,26 @@ stays_local:
   - the signature, which stays with a person
 ```
 
-Fire and electrical work is licensed work. The build routes and records; it does not decide competency and it does not sign.
+Fire and electrical work is licensed work. The build sorts and records the evidence. A person decides who is qualified, and a person signs.
 
-**The pass test.** Take one completed visit and delete its tag photograph, then try to close the job: it must not close, and the record must land in unbound rather than pass. Then take a visit where no baseline reading was available and look at the record: the absence must be stored as a recorded non-conformance, not as an empty field, because an empty field and a missing baseline are different facts and only one of them is reportable. Then ask the system for the same asset’s pack twice, once as a Queensland site and once as a Victorian one: if the retention period and the person who may attest do not differ, the jurisdiction is hard-coded somewhere and the build is wrong in at least one state.
+**The pass test.** Take one completed visit and delete its tag photograph, then try to close the job: it must not close, and the record must land in unbound, not pass. Then take a visit where no baseline reading was available and look at the record: the absence must be stored as a recorded non-conformance, not as an empty field, because an empty field and a missing baseline are different facts and only one of them is reportable. Then ask the system for the same asset’s pack twice, once as a Queensland site and once as a Victorian one: if the retention period and the person who may attest do not differ, one state’s rules are written into the build and it is wrong in at least one state.
 
 ## 11. A checklist to hold any build or supplier to
 
 A build conforms to this standard when every line is true. Hand it to whoever built yours, including an AI coding agent, and make them answer it.
 
-- **1. Identity before everything.** A record cannot be created without resolving to exactly one asset. An unresolvable asset is a finding, not a note on the job.
-- **2. The visit discharges something.** Every record names the obligation it satisfies. A visit that discharges nothing cannot be counted as coverage.
-- **3. Result is recorded, never computed.** Pass, defect or isolated is entered by the competent person who attended. Nothing in the system derives it from the evidence.
-- **4. Evidence is a property of the class.** Required evidence differs by asset class, and readings are stored as numbers in fields rather than photographs of gauges.
-- **5. Baseline absence is reportable.** Where baseline data was required and unavailable, the record stores that as a non-conformance rather than leaving the field blank.
-- **6. Electrical work blocks the close.** A missing certificate or test sheet stops the job closing. It never raises a reminder and lets the job through.
-- **7. Defects are coded.** Defects come from a closed list with a named owner for the next action, so they can be counted and chased. Free text is a description, not a defect.
-- **8. Isolation carries a revisit date.** An isolation records who authorised it, why, and the date it must be revisited, and it escalates when that date passes.
-- **9. Unbound is a queue you can see.** Work marked done with required evidence missing sits in its own queue with its age on a chart. It is never reported as a pass.
-- **10. Documents are generated from the record.** Anything client-facing is derived from the bound record, never assembled from a template on somebody's desktop.
-- **11. Jurisdiction is data.** Retention period and who may attest are dated, cited values per state, not constants in the code.
-- **12. The pass test passes.** The signature stays with a person. The build assembles and presents the pack; it does not certify, decide compliance, or produce a certificate.
+- **1. Every record is matched to exactly one asset first.** A service record can't be made until the visit matches exactly one asset. An asset that can't be matched is recorded as a finding, never left as a note on the job.
+- **2. Every visit meets a named obligation.** Every record names the obligation it meets. A visit that meets none doesn't count towards coverage.
+- **3. The result is entered by a person, never worked out by the system.** Pass, defect or isolated is entered by the competent person who attended. The system never works it out from the evidence.
+- **4. Each asset class has its own required evidence.** Required evidence differs by asset class, and readings are saved as numbers rather than photos of gauges.
+- **5. A missing baseline is recorded so it can be reported.** Where baseline data was required and isn't available, the record saves that as a non-conformance instead of leaving the space blank.
+- **6. Electrical work can't close without its paperwork.** A missing certificate or test sheet stops the job closing. It never sends a reminder and lets the job through anyway.
+- **7. Every defect is recorded with a code.** Defects come from a set list, each with a named owner for the next step, so they can be counted and chased. Free text can describe a defect but doesn't count as one.
+- **8. An isolation carries a revisit date.** An isolation records who authorised it, why, and the date it must be revisited. When that date passes, it is raised with a person.
+- **9. Work missing its evidence (unbound) waits on a list you can see.** Work marked done with required evidence missing sits on its own list, with how long it has waited shown on a chart. It is never reported as a pass.
+- **10. Documents are made from the record.** Anything the client sees is made from the record with its evidence attached, never put together from a template on somebody's desktop.
+- **11. Each state's rules are kept as dated entries.** How long records are kept and who may attest are set for each state, each dated and with its source, rather than fixed in the software.
+- **12. The pass test passes.** The signature stays with a person. It puts the pack together and presents it, and it never certifies, decides compliance or produces a certificate.
 
 ## Related reading
 

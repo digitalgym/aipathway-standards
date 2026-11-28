@@ -17,24 +17,24 @@ Used by
 - Business Systems Analyst
 - Scheduling Coordinator
 
-The temptation on this stack is to copy each job’s arrival time into a list so the desk can read it quickly. Then the board moves the time, the list does not, and the desk tells a customer a time that was true this morning. Nothing here copies the job. The lists hold what the business sets, the roster, and what the desk did: the calls it took, the callbacks it raised, the messages it sent.
+The temptation in Microsoft 365 is to copy each job’s arrival time into a list so the desk can read it quickly. Then the board moves the time, the list does not, and the desk tells a customer a time that was true this morning. Nothing here copies the job. The lists hold what the business sets, the roster, and what the desk did: the calls it took, the callbacks it raised, the messages it sent.
 
 ## In short
 
 - **What this is**: A build plan for the client desk standard on Microsoft 365. Four lists, three flows, and the arrival time read from the job system every time it is needed.
-- **The core rule**: A status answer and a running-late message both read the job by its id at the moment they need the time. No list holds one.
-- **What it does not do**: It does not hold a job, an arrival time or a contact, and a second delivery of the same schedule change cannot make a second message.
-- **The hard part**: The phone line itself is the step not to hand-roll, and it is not a Power Automate job. On this stack the hard column is Updates.ChangeKey, which makes a repeated change fail at the list.
+- **The core rule**: A status answer and a running-late message both look the job up at the moment they need the time. No list holds one.
+- **What it does not do**: It does not hold a job, an arrival time or a contact. If the same schedule change comes through twice, the customer still gets one message.
+- **The hard part**: Don't build the phone line yourself, and Power Automate can't run one. In Microsoft 365 the hard part is the ChangeKey column on the Updates list. It refuses to save the same change twice, so the customer can't get the same message twice.
 
 ## 1. Before you start
 
 Read [the client desk build standard](https://aipathway.com.au/explore-ai/client-desk-build-standard) first. It defines its objects, and the lists below are those objects with SharePoint types on them. Shared conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-Decide where the daytime calls are answered. The voice on the line, with its disclosure and its transfer, is not built in Microsoft 365. Whatever answers calls the flows below over HTTP: look the caller up, read the job, raise a callback.
+Decide where the daytime calls are answered. The voice on the line, with its disclosure and its transfer, is not built in Microsoft 365. Whatever answers the phone calls the flows below to look the caller up, read the job and raise a callback.
 
 Then fill the Roster. One row per shift, with the person on duty and how soon a callback is due. Every transfer and every callback reads it, so a blank shift is a callback with nobody on it.
 
-One thing to check before you build: **does your job system send an event when an arrival time changes, or a job is marked on the way or complete?** If it does, Flow 3 triggers on it. If not, Flow 3 polls on a schedule and keeps a watermark. A message sent because someone remembered to click a button is not the standard.
+One thing to check before you build: **does your job system send an event when an arrival time changes, or a job is marked on the way or complete?** If it does, Flow 3 starts from it. If not, Flow 3 checks for changes on a schedule and remembers where it got to. The standard needs the message to go without anyone remembering to click a button.
 
 ## 2. The lists, with their columns
 
@@ -122,7 +122,7 @@ FLOW 3  Status message               (schedule change, by event or poll)
            send to the job's contact; note it on the job
 ```
 
-None of the flows holds a time between runs. Each one reads the job when it needs the time, which is the whole defence against the stale answer.
+None of the flows holds a time between runs. Each one reads the job when it needs the time. That is what stops the desk giving a customer an out-of-date time.
 
 ## 5. What the flows can reach in your Microsoft 365 and your job system, and what they never touch
 
@@ -137,7 +137,7 @@ What each connection is for.
 - **Teams, optional.** To tell the callback’s owner it is theirs and when it is due.
 - **Front Desk from AI Pathway, if it answers the line.** It answers the business’s number all day, and on a ServiceM8 or Simpro board, switched on under Automations, it rings the customer when a job moves later. It does not send a job-complete message or any update by text, so Flow 3 still covers those.
 
-Keep the marker out of reach.
+Keep it to the least it needs.
 
 1. Build the flows under a service account, an ordinary licensed account kept for them, not a person who might leave or change their password.
 2. Build them inside a solution, so each connection is a connection reference you can see, swap or remove in one place.

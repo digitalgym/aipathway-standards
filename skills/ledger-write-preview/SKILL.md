@@ -92,14 +92,14 @@ skill asserts.
 ## The work, in order
 
 - 1. What this standard covers
-- 2. The arithmetic, line by line
+- 2. How each figure is worked out, line by line
 - 3. The preview, in the shape your developer needs
 - 4. The checks, in order
 - 5. One morning’s drafts
 - 6. Writing into your accounts, once
 - 7. What stays with a person
 - 8. Run it your way
-- 9. What to Stub, and What Not to Hand-Roll
+- 9. What to Test on Practice Data, and What Not to Build Yourself
 - 10. A checklist to hold any build or supplier to
 
 ## Attribution

@@ -98,7 +98,7 @@ skill asserts.
 - 3. The checks, in order
 - 4. What your bookkeeper reads
 - 5. The records it keeps, in the shape your developer needs
-- 6. One list, and nothing written back
+- 6. One list, and nothing changed in your accounts
 - 7. What stays with a person
 - 8. Run it your way
 - 9. What your developer builds, and the step that needs care

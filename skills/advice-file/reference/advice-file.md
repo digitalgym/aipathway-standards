@@ -33,11 +33,11 @@ Used by
 
 What this is
 
-An open build standard for a multi-office advice or credit network, where the interview, the product search and the follow-up all have to survive a licence, a responsible-lending file and a handover.
+An open build standard for a multi-office advice or credit network, where the interview, the product search and the follow-up all have to stand up to licence obligations, a responsible-lending file and a handover to another broker.
 
 The core rule
 
-The file is the product. The assistant may write fields, tasks and source cards into it. It is not allowed to be the source of any of them.
+The client file is what matters. The assistant may fill in details, raise jobs and attach lender sources, but every detail has to come from the client or a document, never from the assistant itself.
 
 What it does not do
 
@@ -45,9 +45,9 @@ It does not approve a loan, select a product or certify best interests. It fills
 
 The hard part
 
-Transcription is the easy bit. The hard part is the week the lender changes the policy, with every answer already given that was true on the day sitting in a model that cannot forget.
+Writing down the call is the easy bit. The hard part is the week a lender changes its policy. Every answer already given was right on the day, and a model trained on the old policy keeps giving it.
 
-A named model trained on the network is not a file. Record the interview, map fields not vibes, cite the live lender clause, leave a task with an owner, and score the office off the book it actually holds. The custom model is the part you do not train.
+A model trained on the network’s data does not give you a client file. Record the interview, put each detail the client gives into its proper place on the record, quote the current lender clause, leave a job with a named person for anything missing, and score each office on the files it holds. Do not train a custom model on lender policy.
 
 One interview, end to end
 
@@ -59,31 +59,31 @@ One interview, end to end
 6. If yes, compute what is missing from the required keys for that purpose, and raise one task per blocking gap with an owner and a due date.
 7. Are source cards attached and no blocking gap open? If yes, the draft is ready for a named person to send. If no, it is blocked with the task showing the gap, and comes back through the same check when the gap closes.
 
-Office, broker, client and purpose come first because they decide which keys are required. The filled diamond is the live write into the CRM, verified by an external id coming back, which is the step not to hand-roll. The loop is the blocked queue, with the task showing the gap.
+Office, broker, client and purpose come first because they decide which details the file needs. The filled diamond is saving the file into the CRM, confirmed when the CRM sends back its own reference. That is the step not to build yourself. The loop is a file waiting on a missing detail, with a job showing the gap.
 
 ## 1. What this standard covers
 
 Any network that sells regulated advice or credit assistance off a shared panel, a shared CRM and a shared set of interviews: mortgage aggregation, insurance broking, wealth in a dealer group, a rent roll with a statutory clock. If the next broker has to pick up the file, and a regulator can ask how the recommendation was formed, this applies.
 
-It does not cover a chatbot on the website, a general assistant over the shared drive, or a fine-tune of the aggregator’s documents. Those have their own failure modes. The distinguishing feature here is that the truth lives in three places that move independently: the client’s circumstances, the lender’s current policy, and the network’s own operating rules.
+It does not cover a chatbot on the website, a general assistant over the shared drive, or a model trained on the aggregator’s documents. Those go wrong in their own ways. What sets this one apart is that the facts live in three places, and each changes on its own timetable: the client’s circumstances, the lender’s current policy, and the network’s own operating rules.
 
-The failure this prevents is narrower than hallucination in general. It is the recommendation that was compliant eighteen months ago, delivered today with the same confidence, because the model learned the panel rather than reading it.
+The problem this prevents is specific. A recommendation that was compliant eighteen months ago gets delivered today with the same confidence, because the model memorised the lender panel instead of checking it each time.
 
-The worked example. In September 2026 Yellow Brick Road described a suite of agents trained on the network’s own data and rolled across its brokers: record the client call, populate the profile, flag missing information, raise follow-ups, search lender policy, coach the broker, later coach the pipeline. That is a fair product brief. It is not a standard. A standard names the objects, the order of the checks, the step you do not hand-roll, and the test a stub cannot fake. Decomposed, that brief is four jobs and one network control, and three of them are already published here.
+The worked example. In September 2026 Yellow Brick Road described a suite of agents trained on the network’s own data and rolled across its brokers: record the client call, populate the profile, flag missing information, raise follow-ups, search lender policy, coach the broker, later coach the pipeline. That is a fair product brief, but a standard has to go further. It names the records, the order of the checks, the step you should not build yourself, and the test that only a real system can pass. Broken down, that brief is four jobs and one network control, and three of them are already published here.
 
 | Job | What moves | Where it is specified |
 | --- | --- | --- |
-| Interview to file | Speech becomes fields on the client record, once | This standard, sections 2 to 6 |
-| Cited panel search | A question becomes a live lender clause with a source card | The Cited Answer standard |
-| Completeness chase | A missing field becomes an owned task with a due date | This standard, check 6 |
-| Pipeline work | A ranked book becomes one play and one next action | The Database Reactivation standard |
-| One score across offices | The same keys, four kinds of drift | The Multi-Site Conformance standard |
+| Interview to file | What the client says goes onto the client record, once | This standard, sections 2 to 6 |
+| Cited panel search | A question is answered from the current lender clause, with its source shown | The Cited Answer standard |
+| Completeness chase | A missing detail becomes a job for a named person, with a due date | This standard, check 6 |
+| Pipeline work | The client book, ranked, becomes one next step per client | The Database Reactivation standard |
+| One score across offices | Every office records the same details, scored four ways for drift | The Multi-Site Conformance standard |
 
-Coaching is not a fifth job. Coaching is a derived view over the file and the source cards. If the file is empty, the coach is a speech. How the five fit together, and the order to build them, is in [combining the build standards](https://aipathway.com.au/explore-ai/combining-the-standards).
+Coaching is not a fifth job. It reads the file and the lender sources, so if the file is empty, the coaching is just talk. How the five fit together, and the order to build them, is in [combining the build standards](https://aipathway.com.au/explore-ai/combining-the-standards).
 
 ## 2. The records it keeps, in the shape your developer needs
 
-Seven objects. The source card and the missing field are the two most implementations leave out, because the conversation appears to function without them.
+Seven records. The lender source and the missing detail are the two most builds leave out, because the conversation seems to work without them.
 
 ```
 Interview
@@ -140,53 +140,53 @@ An AdviceFile that is complete while required keys still sit in MissingField is 
 
 ## 3. The checks, in order
 
-The order is the claim. A build that does the same things in another order usually fails the pass test: fields written before the disclosure, a summary mapped before the verbatim is stored, a recommendation drafted before completeness is computed.
+Each check has to pass before the next one runs. Nothing goes on the file before the client has heard the disclosure. The client’s own words are stored before any summary is made from them. No recommendation is drafted until the file has been checked for missing details.
 
-1. Disclosure and consent are recorded before the first field. On every recorded channel, the recording and transcription notice is given and recorded before the first question. Refused consent means notes typed by a person, not a file the assistant pretends it heard.
-2. Verbatim is stored before any field is filled. The client's own words are kept with a span before classification is applied. Classification is applied to a copy, never to the only copy.
-3. Only published field keys are writable, and completeness is computed. "Client seems comfortable with repayments" is not a field. Serviceability inputs are. Completeness is a function of the required keys for that purpose, never a flag somebody sets.
-4. Anything with a lookup is resolved, read back, and written as resolved. Address, employer, existing lender, product: the spoken value is the query, the resolved value is what is written. Low confidence becomes a MissingField with reason asked_unclear, not a guessed value.
-5. One live file per client, updated and never duplicated. The CRM record is the file. A second interview on the same client updates it. A null external_id is a failed interview, not a completed one.
-6. Every blocking gap is a task with an owner and a due date, raised once. Each missing required key becomes a MissingField and, where it blocks the next stage, one task with a named owner and a due date. A reminder in chat does not count, and a task is not raised twice for the same gap.
-7. Lender policy is a cited answer, never a recalled one. A panel question is answered from clauses with an edition and an effective date, with a source card, or it is declined to a person. The model's memory of what a lender does is not a source.
-8. A retired clause cannot answer, and a new one answers only once a person accepts it. When the lender moves the policy, answers drawn from the old clause change or decline, and the new clause answers only after a named person accepts it.
-9. A recommendation cannot leave draft with a blocking gap or no card, and is sent by a person. Ready_for_person is a gate, not a vibe. A draft with an open blocking MissingField or an empty source_card_ids stays in draft or blocked. Sent_by is a person, and a machine cannot occupy it.
-10. Coaching cites a span or a clause, and breach_suspect goes to a named person. A CoachingEvent without an evidence span or a source card is a note, and notes do not roll into a score. A finding marked breach_suspect is escalated to a named compliance person, not softened into tone.
-11. Recording, transcript, extracts, writes, cards, tasks and coaching are retrievable together. Everything the interview produced can be listed by interview id and by file id. If the recording dies and the fields remain, the file is hearsay.
-12. With the library detached, the assistant declines. Ask the policy question with the panel library removed. The only conforming output is a decline. A remembered answer fails, even when the words are right.
-13. It survives the builder. Someone other than the builder can explain what it does, and it runs on an account the business owns.
-14. The pass test passes. Two interviews on a real CRM tenant, one panel move in a dated library the business controls, and the detached-library question, all as the pass test after section 8 describes.
+1. The client hears the recording notice, and their answer is recorded, before anything goes on the file. Whenever the interview is recorded, the client is told it is being recorded and transcribed before the first question, and that is noted on the file. If the client says no, a person types the notes, and the assistant builds nothing from what it heard.
+2. The client's exact words are saved before anything on the file is filled in. The client's own words are kept, marked to the point in the interview where they were said, before they are sorted onto the file. The sorting works on a copy, never on the only copy.
+3. Only items on the published list can be filled in, and a file is complete only when the items are there. "Client seems comfortable with repayments" is not an item on the list. The serviceability figures are. A file counts as complete only when every item required for that purpose is present, worked out from the file and never ticked by somebody.
+4. Anything that can be looked up is looked up, read back, and saved as found. For an address, employer, existing lender or product, what the client said is used to search, and the match found is what gets saved. If the match is unclear, the item is marked missing (reason: asked_unclear) and nothing is guessed.
+5. One live file per client, updated and never duplicated. The client's record in the CRM is the file. A second interview with the same client updates it. If the CRM gives back no record number when the file is saved, the interview counts as failed, never as complete.
+6. Every gap that holds the file up becomes one task, with an owner and a due date. Each missing required item is marked missing and, where it holds up the next step, becomes one task with a named owner and a due date. A reminder in chat does not count, and the same gap never gets a second task.
+7. Lender policy is answered from the policy itself, never from memory. A question about a panel lender is answered from that lender's policy clauses, each with its edition and the date it took effect, shown on a source card. Otherwise the assistant declines and passes it to a person. What the AI remembers about a lender does not count as a source.
+8. A retired policy clause stops answering, and its replacement answers only once a person accepts it. When a lender changes its policy, answers based on the old clause change or are declined. The new clause is only used after a named person accepts it.
+9. A recommendation stays in draft while a gap holds it up or it has no source card, and only a person sends it. A draft is only marked ready for a person when it passes. A draft with an open gap holding it up, or with no source cards, stays in draft or blocked. The person who sends it is a named person, never the system.
+10. Coaching points to the client's words or a policy clause, and a suspected breach goes to a named person. Coaching that points to neither the exact words from the interview nor a source card is only a note, and notes do not count toward a score. A finding marked as a suspected breach (breach_suspect) goes to a named compliance person and is never softened into a comment on tone.
+11. The recording, transcript and everything made from the interview can be pulled up together. Everything the interview produced (the recording, transcript, what was taken from it, what was saved, the source cards, tasks and coaching) can be listed by the interview's reference and by the file's. If the recording is lost and the filled-in file remains, the file is hearsay.
+12. With the lender policy library removed, the assistant declines. Ask the policy question with the panel's policy library removed. The only correct answer is to decline. An answer from memory fails, even when the words are right.
+13. It keeps working if the person who built it leaves. Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+14. The pass test passes. Two interviews on the business's real CRM account, one lender policy change in a dated library the business controls, and the policy question asked with the library removed, all run as the pass test after section 8 describes.
 
 ## 4. What “trained on all our data” is allowed to mean
 
 It is allowed to mean three things. It is not allowed to mean a fourth.
 
-- Retrieval over the network's own artefacts, versioned: interview templates, the key contract, playbooks, the credit policy the licensee actually issued, each dated.
-- Retrieval over the lender panel, as instruments and clauses with effective dates, accepted by a named person before they can answer.
-- Weights that classify utterances onto the key contract: a mapper, evaluated against labelled spans, replaceable without retraining anything about policy.
+- Looking up the network's own documents, each dated and versioned: interview templates, the list of details every file must hold, playbooks, and the credit policy the licensee issued.
+- Looking up the lender panel, clause by clause with the date each took effect, each one accepted by a named person before it can be used in an answer.
+- A model that sorts what the client said into the right details on the file. It is tested against marked-up examples and can be swapped out without retraining anything about policy.
 
-Not allowed: a model that has absorbed the panel and the book so it can answer without a card. That is the failure the Cited Answer standard names, and giving it a product name does not change it. When the lender moves a clause, every answer already given that relied on the old one must be findable, and a weight cannot be queried for the files it touched.
+Not allowed: a model that has memorised the lender panel and the client book so it can answer without quoting a source. The Cited Answer standard rules this out, whatever the product is called. When a lender changes a clause, you must be able to find every answer that relied on the old one, and a trained model cannot tell you which files it affected.
 
-The name can stay on the product. The standard names the mapper and the library. If a vendor cannot show you the clause an answer used and the date it was live, they have trained a memory, not built a file. Where the library itself should come from, and how it is versioned, is the [Knowledge Graph standard](https://aipathway.com.au/explore-ai/knowledge-graph-build-standard).
+The product can keep its name. If a vendor cannot show you the clause an answer used and the date it was current, they have trained a memory and have not built a client file. Where the library itself should come from, and how it is versioned, is the [Knowledge Graph standard](https://aipathway.com.au/explore-ai/knowledge-graph-build-standard).
 
 ## 5. The four queues for a recommendation
 
-Every draft lands in exactly one. A build that only implements the last one has not implemented this standard.
+Every draft sits in exactly one of these. A build that only has the last one does not meet this standard.
 
 | Queue | What it holds | The rule |
 | --- | --- | --- |
-| Draft | Extracts written, search not finished or cards not attached | Cannot be sent. Cannot be described to the client as a recommendation |
-| Blocked | One or more missing fields that block, or a source conflict | A task exists. The person sees the gap, not a softer answer |
-| Ready for person | Cards attached, no blocking gap | A named broker or credit officer may send. The machine cannot |
-| Sent by person | The send event, with the person and the timestamp | The only state a client is allowed to hear |
+| Draft | Details recorded, but the lender search is not finished or the sources are not attached | Cannot be sent. Cannot be described to the client as a recommendation |
+| Blocked | One or more missing fields that block, or a source conflict | A job is raised, and the broker sees exactly what is missing |
+| Ready for person | Cards attached, no blocking gap | Only a named broker or credit officer may send it |
+| Sent by person | The send, with who sent it and when | The only recommendation a client may be told about |
 
-Declining to recommend is a success. An assistant that invents a “best fit” to avoid an empty product list has failed the standard, including when the invention is plausible.
+Declining to recommend counts as a pass. An assistant that makes up a “best fit” to avoid an empty product list fails the standard, even when the made-up answer sounds right.
 
 ## 6. Multi-site is not training
 
-A franchise network will ask for the assistant to train new brokers. Training material is not a control, and the [Multi-Site Conformance standard](https://aipathway.com.au/explore-ai/multi-site-conformance-build-standard) already says so. One versioned key contract across every office. Four kinds of drift to score: missing keys, renamed keys, extra local keys that shadow a network key, and offices running an old edition. One completeness score, computed once from the file, not from the coach’s opinion of the interview.
+A franchise network will ask for the assistant to train new brokers. Training material does not keep offices consistent, and the [Multi-Site Conformance standard](https://aipathway.com.au/explore-ai/multi-site-conformance-build-standard) already says so. Every office works from one dated list of the details a file must hold. Score four kinds of drift: missing details, renamed details, local extras that stand in for a network detail, and offices still on an old version of the list. Work out one completeness score from the file itself, not from the coach’s opinion of the interview.
 
-If two offices can both be “using the assistant” and produce files that cannot be joined, you have a brand, not a standard.
+If two offices both “use the assistant” and their files still cannot be compared, the offices share a brand and nothing more.
 
 ## 7. What stays with a person
 
@@ -195,16 +195,16 @@ These are the parts where an Australian credit licensee carries an obligation a 
 - Recording and transcription consent on the call.
 - The responsible-lending assessment and the decision that the loan is not unsuitable.
 - The product recommendation issued to the client.
-- Acceptance of a lender-policy change into the live library.
-- Waiver of a blocking missing field.
-- Escalation of a breach_suspect coaching finding.
+- Accepting a lender-policy change into the library brokers answer from.
+- Waiving a missing detail that would otherwise stop the file.
+- Escalating a coaching finding that suggests a possible breach.
 - Any statement to the client that a document has been certified, verified or approved.
 
-The assistant may draft. It may not occupy sent_by, waived_by, accepted_by or decided_by.
+The assistant may draft. Only a person can send, waive, accept or decide, and the file records who did.
 
 ## 8. What your developer builds, and the step that needs care
 
-One step not to hand-roll: the live CRM write. Everything else an AI coding agent can build against the stub in an afternoon.
+One step not to build yourself: saving the file into the CRM your brokers already use. An AI coding agent can build everything else against a test copy in an afternoon.
 
 ```
 provider:
@@ -231,7 +231,7 @@ the gate
     you either write as data or you do not have.
 ```
 
-There is no hosted product for this standard. The production check runs against the network's own CRM tenant and a dated panel library it controls. A vendor selling the transcription and the coaching is selling the easy half, and is usually silent about who accepts a lender-policy change. Ask them that first.
+There is no hosted product for this standard. The final check runs on the network's own CRM and a dated lender library it controls. A vendor selling transcription and coaching is selling the easy half, and rarely says who accepts a lender-policy change. Ask them that first.
 
 **The pass test.** Stage it on a real tenant of the CRM and a dated panel library you control. Interview A: a purchase file, owner-occupier, PAYG, genuine savings spoken unclearly, the address said once and slightly wrong. Disclosure must precede the first question, the address must be resolved and read back, the savings figure must land as a missing field with reason asked_unclear rather than a guessed dollar amount, one file must be written with an external id, and nothing may reach ready_for_person. Interview B: the same client, the same day, the savings figure now clear. The existing file is updated, not duplicated; the gap closes; a second task is not raised; still no send. Then retire the clause a draft would have used and load its replacement accepted by a named person: the draft moves to blocked, a search returns the new card or a decline, and the retired clause cannot come back as live. Then detach the library and ask the same scenario. The only conforming output is a decline. If it answers from memory, the build fails even if the words are right.
 
@@ -239,20 +239,20 @@ There is no hosted product for this standard. The production check runs against 
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 
-- **1. Disclosure and consent are recorded before the first field.** On every recorded channel, the recording and transcription notice is given and recorded before the first question. Refused consent means notes typed by a person, not a file the assistant pretends it heard.
-- **2. Verbatim is stored before any field is filled.** The client's own words are kept with a span before classification is applied. Classification is applied to a copy, never to the only copy.
-- **3. Only published field keys are writable, and completeness is computed.** "Client seems comfortable with repayments" is not a field. Serviceability inputs are. Completeness is a function of the required keys for that purpose, never a flag somebody sets.
-- **4. Anything with a lookup is resolved, read back, and written as resolved.** Address, employer, existing lender, product: the spoken value is the query, the resolved value is what is written. Low confidence becomes a MissingField with reason asked_unclear, not a guessed value.
-- **5. One live file per client, updated and never duplicated.** The CRM record is the file. A second interview on the same client updates it. A null external_id is a failed interview, not a completed one.
-- **6. Every blocking gap is a task with an owner and a due date, raised once.** Each missing required key becomes a MissingField and, where it blocks the next stage, one task with a named owner and a due date. A reminder in chat does not count, and a task is not raised twice for the same gap.
-- **7. Lender policy is a cited answer, never a recalled one.** A panel question is answered from clauses with an edition and an effective date, with a source card, or it is declined to a person. The model's memory of what a lender does is not a source.
-- **8. A retired clause cannot answer, and a new one answers only once a person accepts it.** When the lender moves the policy, answers drawn from the old clause change or decline, and the new clause answers only after a named person accepts it.
-- **9. A recommendation cannot leave draft with a blocking gap or no card, and is sent by a person.** Ready_for_person is a gate, not a vibe. A draft with an open blocking MissingField or an empty source_card_ids stays in draft or blocked. Sent_by is a person, and a machine cannot occupy it.
-- **10. Coaching cites a span or a clause, and breach_suspect goes to a named person.** A CoachingEvent without an evidence span or a source card is a note, and notes do not roll into a score. A finding marked breach_suspect is escalated to a named compliance person, not softened into tone.
-- **11. Recording, transcript, extracts, writes, cards, tasks and coaching are retrievable together.** Everything the interview produced can be listed by interview id and by file id. If the recording dies and the fields remain, the file is hearsay.
-- **12. With the library detached, the assistant declines.** Ask the policy question with the panel library removed. The only conforming output is a decline. A remembered answer fails, even when the words are right.
-- **13. It survives the builder.** Someone other than the builder can explain what it does, and it runs on an account the business owns.
-- **14. The pass test passes.** Two interviews on a real CRM tenant, one panel move in a dated library the business controls, and the detached-library question, all as the pass test after section 8 describes.
+- **1. The client hears the recording notice, and their answer is recorded, before anything goes on the file.** Whenever the interview is recorded, the client is told it is being recorded and transcribed before the first question, and that is noted on the file. If the client says no, a person types the notes, and the assistant builds nothing from what it heard.
+- **2. The client's exact words are saved before anything on the file is filled in.** The client's own words are kept, marked to the point in the interview where they were said, before they are sorted onto the file. The sorting works on a copy, never on the only copy.
+- **3. Only items on the published list can be filled in, and a file is complete only when the items are there.** "Client seems comfortable with repayments" is not an item on the list. The serviceability figures are. A file counts as complete only when every item required for that purpose is present, worked out from the file and never ticked by somebody.
+- **4. Anything that can be looked up is looked up, read back, and saved as found.** For an address, employer, existing lender or product, what the client said is used to search, and the match found is what gets saved. If the match is unclear, the item is marked missing (reason: asked_unclear) and nothing is guessed.
+- **5. One live file per client, updated and never duplicated.** The client's record in the CRM is the file. A second interview with the same client updates it. If the CRM gives back no record number when the file is saved, the interview counts as failed, never as complete.
+- **6. Every gap that holds the file up becomes one task, with an owner and a due date.** Each missing required item is marked missing and, where it holds up the next step, becomes one task with a named owner and a due date. A reminder in chat does not count, and the same gap never gets a second task.
+- **7. Lender policy is answered from the policy itself, never from memory.** A question about a panel lender is answered from that lender's policy clauses, each with its edition and the date it took effect, shown on a source card. Otherwise the assistant declines and passes it to a person. What the AI remembers about a lender does not count as a source.
+- **8. A retired policy clause stops answering, and its replacement answers only once a person accepts it.** When a lender changes its policy, answers based on the old clause change or are declined. The new clause is only used after a named person accepts it.
+- **9. A recommendation stays in draft while a gap holds it up or it has no source card, and only a person sends it.** A draft is only marked ready for a person when it passes. A draft with an open gap holding it up, or with no source cards, stays in draft or blocked. The person who sends it is a named person, never the system.
+- **10. Coaching points to the client's words or a policy clause, and a suspected breach goes to a named person.** Coaching that points to neither the exact words from the interview nor a source card is only a note, and notes do not count toward a score. A finding marked as a suspected breach (breach_suspect) goes to a named compliance person and is never softened into a comment on tone.
+- **11. The recording, transcript and everything made from the interview can be pulled up together.** Everything the interview produced (the recording, transcript, what was taken from it, what was saved, the source cards, tasks and coaching) can be listed by the interview's reference and by the file's. If the recording is lost and the filled-in file remains, the file is hearsay.
+- **12. With the lender policy library removed, the assistant declines.** Ask the policy question with the panel's policy library removed. The only correct answer is to decline. An answer from memory fails, even when the words are right.
+- **13. It keeps working if the person who built it leaves.** Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+- **14. The pass test passes.** Two interviews on the business's real CRM account, one lender policy change in a dated library the business controls, and the policy question asked with the library removed, all run as the pass test after section 8 describes.
 
 ## Related reading
 

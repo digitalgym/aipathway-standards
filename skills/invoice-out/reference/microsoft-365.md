@@ -9,7 +9,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/invoicing-out-
 
 ---
 
-Completion is the trigger, the book is the only source of a rate, and nothing goes out without a release. SharePoint can refuse the second invoice outright; the write into the ledger is the one part it will not do for you.
+The invoice starts when the job is marked complete, every rate comes from your price book, and nothing goes out until someone releases it. SharePoint can refuse a second invoice for the same job. Getting the draft into Xero or MYOB is the one part it cannot do for you.
 
 Used by
 
@@ -18,22 +18,22 @@ Used by
 - Bookkeeper
 - Finance Manager
 
-The arithmetic on an invoice is the easy half and it is the half every tool sells. The hard half is that the invoice exists on the day the job finished, exists once, carries a rate somebody can point at, and carries the name of whoever said send. Three of those four are list design. The fourth is a gate, and Power Automate will happily let you build a version that has no gate at all.
+Adding up an invoice is the easy half, and it is the half every tool sells. The hard half is four things: the invoice exists on the day the job finished, it exists once, every rate can be traced to the price book, and it names whoever said send. Setting up the lists right gives you the first three. The fourth needs a step that can say no, and Power Automate will happily let you build a version without one.
 
 ## In short
 
-- **What this is**: A build plan for the invoice out standard on Microsoft 365. Six lists, a library, four flows, seven measures.
-- **The core rule**: Every line traces to a job line and takes the book's rate at draft time. A code the book does not hold parks the invoice. No rate is ever entered on a form.
-- **What it does not do**: It never sends without a release. A named person releases, or a rule that person wrote down once with a threshold on it, and either way the release is on the row.
-- **The hard part**: The job marked complete twice, and the ledger write that returns nothing. A flow run that succeeded is not the same fact as an invoice that exists.
+- **What this is**: A build plan for the invoice out standard on Microsoft 365: six lists, a library, four flows and seven measures.
+- **The core rule**: Every invoice line comes from a line on the job and takes the price book's rate on the day it is drafted. If the price book does not hold an item, the invoice stops and waits for you to price it. Nobody types a rate.
+- **What it does not do**: Every invoice waits for a release. A named person releases it, or a rule that person wrote down once with a dollar limit, and either way the invoice records who or what released it.
+- **The hard part**: The job marked complete twice, and the draft that never arrives in Xero. A flow that finished without errors does not prove the invoice exists.
 
 ## 1. Before you start
 
 Read [the invoice out build standard](https://aipathway.com.au/explore-ai/invoice-out-build-standard) first. It defines its objects, and the lists below are those objects with SharePoint types on them. Shared conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-Decide one thing first: how this tenant learns that a job is complete. If the job system can send a notification to a mailbox you can monitor, that is your trigger. If it cannot, a scheduled flow reads completions on a cadence and the invoice is late by at most that cadence, which is a number worth choosing on purpose. A Tradify business has neither, because Tradify has no public API and no Zapier app, and the standard already says so: the job lines are entered by a person and everything below still applies from the Jobs list onwards.
+Decide one thing first: how your Microsoft 365 finds out a job is complete. If the job system can email a notice to a mailbox you can watch, that starts the flow. If it cannot, a flow checks for finished jobs on a schedule, and the invoice can be late by up to that gap, so choose it on purpose. A Tradify business has neither, because Tradify has no public API and no Zapier app, and the standard already says so: the job lines are entered by a person and everything below still applies from the Jobs list onwards.
 
-Then decide where the price book lives and what an edition of it means. The standard asks every rate to come from the book read at draft time, and a book with no edition on it cannot answer the only question that matters six months later, which is which rate was in force when this invoice was drafted.
+Then decide where the price book lives and how you date each version of it. Every rate comes from the price book on the day the invoice is drafted, and a price book with no version date cannot answer the question that matters six months later: which rate applied when this invoice was drafted.
 
 ## 2. The lists, with their columns
 
@@ -211,12 +211,12 @@ Book Gaps grouped by code is the measure that pays for the build. Every park wit
 
 ## 6. What the flows can reach in your Microsoft 365 and in Xero, and what they never touch
 
-The flows draft an invoice for every finished job. They read the jobs marked complete and the lines on them, price each line from your price book, and write one draft invoice per job into Xero. You release each invoice, or set the rule that does it under your threshold, and send it from Xero, and any line your price book doesn’t hold comes to you to price. Nobody’s Xero, ServiceM8 or Simpro password goes near a flow: the owner signs in on each one’s own page inside AI Pathway, and the build holds one key.
+The flows draft an invoice for every finished job. They read the jobs marked complete and the lines on them, price each line from your price book, and put one draft invoice per job into Xero. You release each invoice, or set the rule that does it under your limit, and send it from Xero. Any line your price book doesn’t hold, and any variation without a signed acceptance, comes to you. Your own login stays yours: you sign in to Xero, ServiceM8 or Simpro once on its own page inside AI Pathway, and the build holds one key, never your password.
 
 What each connection is for.
 
 - **SharePoint, one site.** Jobs, JobLines, PriceBook, Invoices, InvoiceLines, ReleaseRules and the SignedAcceptances library. Nothing outside that site.
-- **AI Pathway, over its MCP endpoint.** Called at https://connect.aipathway.com.au/api/mcp with a bearer key from connect.aipathway.com.au/app/keys, through the HTTP action or a custom connector (both premium in Power Automate). Read the book lists finished jobs from ServiceM8 or Simpro once they are connected in AI Pathway, and reads your Xero Items. Write drafts and notes writes the draft invoice, and the id comes back for ExternalId. Leave Queue calls unticked: this job never rings anyone.
+- **AI Pathway, over its MCP endpoint.** Called at https://connect.aipathway.com.au/api/mcp with a bearer key from connect.aipathway.com.au/app/keys, through the HTTP action or a custom connector (both premium in Power Automate). Read the book lists finished jobs from ServiceM8 or Simpro once they are connected in AI Pathway, and reads your Xero Items. Write drafts and notes writes the draft invoice, and the id comes back for ExternalId. Leave Queue calls unticked, because this build never rings anyone.
 - **Outlook, one shared mailbox.** Only if completion reaches you as a notification email from the job system. The flows send no invoices from it.
 - **Approvals and Teams.** The release in Flow 3, to the person who set the rule.
 - **Tradify: no connection.** It has no public API and no Zapier app, so a person enters the job lines and everything from the Jobs list onwards still applies.
@@ -231,16 +231,16 @@ Keep it to the least it needs.
 
 How to cut it off. Turn the flows off and nothing drafts. Delete the AI Pathway key at connect.aipathway.com.au/app/keys and the flows stop reaching Xero and the job system on the next run; removing AI Pathway from Xero’s connected apps cuts Xero off for every key at once. Drafts already in Xero stay drafts until a person approves them.
 
-Why not your own Xero app behind a custom connector? You can. Then you create the Xero app, ask for granular scopes (required for apps created from March 2026), and own the token refresh, the duplicate guard and the recovery when a write’s response is lost, from then on. That is the one write the standard’s [connect section](https://aipathway.com.au/explore-ai/invoice-out-build-standard#connect) says not to hand-roll unless the owner asks for it.
+Why not your own Xero app behind a custom connector? You can. Then you create the Xero app, ask for granular scopes (required for apps created from March 2026), and own the token refresh, the duplicate guard and the recovery when a write’s response is lost, from then on. That is the one write the standard’s [connect section](https://aipathway.com.au/explore-ai/invoice-out-build-standard#connect) says not to build yourself unless the owner asks for it.
 
 ## 7. The order to build it in
 
-1. Stand up PriceBook as a list with an Edition column, even if the first edition is one export out of the job system. A rate with no edition cannot be defended in the conversation this build exists for.
+1. Stand up PriceBook as a list with an Edition column, even if the first edition is one export out of the job system. A rate with no edition date cannot be defended when a customer queries the bill.
 2. Create Jobs and JobLines and get completion landing in them, by monitored mailbox or by a scheduled read. Until a job arrives with Status complete there is nothing downstream to test.
 3. Create Invoices with JobRef indexed and unique values switched on, before any flow writes to it. Turning it on later means first deciding which of the duplicates was real.
 4. Build Flow 1 with the park checks only, and no pricing at all. Prove an unsigned variation parks before you prove a clean job prices.
 5. Add the pricing to Flow 1 and take Rate off every form on InvoiceLines.
-6. Wire Flow 2, and prove the blank ExternalId path parks. This is the step most builds skip, and the one that leaves invoices that exist only in SharePoint.
+6. Build Flow 2, and prove that a draft Xero never received is held back (a blank ExternalId parks it). This is the step most builds skip, and the one that leaves invoices that exist only in SharePoint.
 7. Build Flow 3 with the person's approval only. Add the threshold rule once the person's path works, not before.
 8. Build Flow 4, confirm a parked invoice cannot reach it, then connect Power BI with Sent Without Release on the front page.
 
@@ -252,7 +252,7 @@ A Currency column that renders in the list view is a Currency column somebody wi
 
 ### Reading the modified trigger as the completion event
 
-A when-an-item-is-modified trigger fires on every column change, including the ones Flow 2 and Flow 3 make on the way back. Condition the trigger on Status being complete, guard Flow 1 with a read for an existing invoice, and let the unique index be the thing that actually stops the duplicate.
+A when-an-item-is-modified trigger fires on every column change, including the ones Flow 2 and Flow 3 make on the way back. Condition the trigger on Status being complete, guard Flow 1 with a read for an existing invoice, and let the unique index be the thing that stops the duplicate.
 
 ### Counting a successful run as a successful ledger write
 
@@ -265,10 +265,10 @@ Approvals keep their own history, and it is a fine audit trail and a terrible re
 ## 9. Where the automation stops
 
 - The release, or the threshold rule that stands in for it. A person writes that number down once, under their own name, and everything over it comes back to them.
-- Pricing a line the book does not hold, and the separate decision about whether it belongs in the book. The park is the ask; nobody automates the answer.
-- The variation, and every argument about what was actually agreed. Agreed on the phone is not signed, and the build cannot tell the difference between a missing file and a missing conversation.
+- Pricing a line the price book does not hold, and deciding whether it belongs in the price book. The build stops and asks, and a person answers.
+- The variation, and every argument about what was agreed. Agreed on the phone is not signed, and the build cannot tell a missing file from a conversation that never happened.
 - Anything that assesses, serves or argues a claim under security of payment law. This build raises a stage invoice with the stage named on it; the claim stays with the builder and their advisor.
-- Credit notes, write-offs and discounts. This raises invoices and never reduces one, which is also why nothing here has a negative Currency column.
+- Credit notes, write-offs and discounts. This build raises invoices and never reduces one, which is also why nothing here has a negative Currency column.
 
 **The pass test.** Stage one job with four lines: a callout, two hours of labour, a material the book holds, and a variation with no acceptance file against it. Mark it complete, then mark it complete again an hour later. You must get exactly one Invoices row for that JobRef, parked with ParkReason unsigned_variation, with no rate written on anything and no SentAt. Then put the signed acceptance in the library, point the job line at it, and let the flow run again: the invoice should draft at the book’s rates with BookEdition stamped on it. Ten minutes on test data. If a second Invoices row appeared, unique values is not switched on and no amount of flow logic will hold that line. If the invoice drafted with the variation priced, the flow is reading the job lines and not the acceptance, and the first customer to ask what they signed will find that out before you do.
 

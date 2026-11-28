@@ -41,11 +41,11 @@ The order is paid by a secure link before the kitchen ticket prints. An unpaid l
 
 What it does not do
 
-It never invents a dish or a price, never sells a dine-in dish for pickup, never calls a dish safe for an allergy, never takes a card number by voice, and never confirms a table it could not write.
+It never invents a dish or a price, never sells a dine-in dish for pickup, never calls a dish safe for an allergy, never takes a card number by voice, and never confirms a table the booking system has not taken.
 
 The hard part
 
-Not the conversation. The money and the kitchen are two of the venue's systems, and the order has to land in both, in the right order, exactly once.
+The conversation is the easy part. The payment and the kitchen run on two separate systems, and the order has to reach both, in the right order, exactly once.
 
 Friday, 6:15pm. Every table is full, the kitchen is three tickets behind, and the phone has rung out four times. Two of those were pickup orders that went to the place down the road. The third was a booking for Saturday. The fourth got through, and the person who answered it, between plates, wrote “pho” on the docket without asking beef or chicken.
 
@@ -65,11 +65,11 @@ The first diamond is the menu and the hours: a dish the venue does not make, a d
 
 A caller, or a visitor in the chat on the venue’s website, who wants to order for pickup or book a table, at a moment nobody on the floor can take it. The build answers, says it is an AI, and takes the order or the booking the way the venue’s best front-of-house person would: from the real menu, with every choice asked, read back, paid, and into the kitchen once. The phone and the chat follow the same rules. Only the opening line differs, because a chat is not a recorded call.
 
-What is out of scope. Delivery: handing an order to a courier is a separate write with its own failure, and it is not here. Ordering at the table, menu design, specials boards and stock control are out of scope too. So is answering every call: this standard is about the calls the floor cannot take. A venue that wants every call answered, all day, is describing the [Client Desk standard](https://aipathway.com.au/explore-ai/client-desk-build-standard), and the two can run on one number.
+What is out of scope. Delivery is out. Handing an order to a courier is a separate step that can fail in its own ways. Ordering at the table, menu design, specials boards and stock control are out of scope too. So is answering every call. This standard covers only the calls the floor cannot take. A venue that wants every call answered, all day, is describing the [Client Desk standard](https://aipathway.com.au/explore-ai/client-desk-build-standard), and the two can run on one number.
 
-What cannot meet it, and what can. Any till that can read out its menu by API and take an order into the kitchen can meet it, with any payment provider that can make a payment link and say whether it was paid. Square is one example of a till that does both. What cannot meet it is a till with no API, a menu that exists only as a PDF, or a payment step that asks the caller for their card number. A build on those can take messages, but it cannot pass check 2 or check 9 live.
+What cannot meet it, and what can. Any till whose API can share its menu and send an order to the kitchen can meet it, with any payment provider that can make a payment link and say whether it was paid. Square is one example of a till that does both. What cannot meet it is a till with no API, a menu that exists only as a PDF, or a payment step that asks the caller for their card number. A build on those can take messages, but it cannot pass check 2 or check 9 live.
 
-Is there a ready-made version? Yes. Pickup Orders from AI Pathway runs it on your own number and your website chat for $199 a month, up to 450 calls; a busier venue is $499 a month, up to 1,500. Nothing is charged per call. Done for you, where we connect your till, payment provider and booking system and tune it to your menu, is quoted per venue. The standard stays a Draft until the order write into the till has run live for a venue.
+Is there a ready-made version? Yes. Pickup Orders from AI Pathway runs it on your own number and your website chat for $199 a month, up to 450 calls; a busier venue is $499 a month, up to 1,500. Nothing is charged per call. Done for you, where we connect your till, payment provider and booking system and tune it to your menu, is quoted per venue. The standard stays a Draft until sending an order into the till has run live for a venue.
 
 ## 2. The menu, and what the build may say
 
@@ -77,10 +77,10 @@ The build says nothing about food that the venue’s own records do not hold. Fi
 
 | What | From | The rule |
 | --- | --- | --- |
-| Dishes, options and prices | The venue's till | Read on every call. Never typed into the build, never copied into a second menu that drifts. |
-| Which dishes go out for pickup | The owner's pickup list | Kept beside the till, keyed by the till's own item id, because most tills have no reliable takeaway flag. Anything not on it is dine-in only. |
+| Dishes, options and prices | The venue's till | Read on every call. Never typed into the build, never copied into a second menu that falls out of date. |
+| Which dishes go out for pickup | The owner's pickup list | Kept beside the till, matched to each dish by the till's own item number, because most tills have no reliable way to mark a dish as takeaway. Anything not on it is dine-in only. |
 | Required choices | The venue's till | Beef or chicken, pork or vegetable. A dish with one is never ordered without it. Where the choice sets the price, the till's option price is the price. |
-| Allergens | The venue's till, or the owner's record | What the venue recorded for each dish. A dish with nothing recorded is not allergen free; it is unrecorded. |
+| Allergens | The venue's till, or the owner's record | What the venue recorded for each dish. A dish with nothing recorded is treated as unknown, never as allergen free. |
 | Kitchen hours and lead time | The owner's settings | Today's service windows and how long the kitchen needs. A closed kitchen takes bookings only. |
 
 The pickup list is the one most builds leave out, because the till already has a menu and it looks complete. But a clay-pot dish that leaves the kitchen in a lidded bowl and arrives at the car park as soup is a dine-in dish, and only the owner knows which ones those are. Asked for one, the build says it is dine-in only and offers a pickup dish or a table.
@@ -99,21 +99,21 @@ The price comes last, and from the payment provider. The build never adds up the
 
 ## 4. Paid before the kitchen
 
-This is the departure from every other call standard on this site. A pickup order is two writes into two of the venue’s systems: a payment link from its payment provider, then the ticket in its till. The order between them is the standard.
+This is where it differs from every other call standard on this site. A pickup order goes into two of the venue’s systems: a payment link from its payment provider, then the ticket in its till. The payment always comes first.
 
-The build texts the caller a secure link, waits for the provider to say it was paid, and only then writes the ticket. A ticket that prints first is a meal cooked for someone who may never come, and in most tills an order marked paid that was not is also a wrong end-of-day. A link that is not paid in the time the venue set is cancelled, so it cannot be paid later for an order the kitchen never saw.
+The build texts the caller a secure link, waits for the provider to say it was paid, and only then sends the ticket to the kitchen. A ticket that prints first is a meal cooked for someone who may never come, and in most tills an order marked paid that was not also leaves the end-of-day count wrong. A link that is not paid in the time the venue set is cancelled, so it cannot be paid later for an order the kitchen never saw.
 
-A caller who starts reading out a card number is stopped politely and sent the link. No card number reaches anything the build writes to: not the order, not the log, not the transcript the build keeps. And both writes carry a key for the call, so a dropped line, a caller who rings back, or a retried event finds the order already placed rather than charging and printing it twice.
+A caller who starts reading out a card number is stopped politely and sent the link. No card number is kept anywhere the build records, including the order, the log and the transcript. Both the payment link and the ticket carry the call’s own reference, so a dropped line, a caller who rings back, or a step that runs twice finds the order already placed rather than charging and printing it twice.
 
 ## 5. Tables
 
-A table is confirmed only once the venue’s booking system has taken it and given back a reference. Until the booking system is connected, the build texts the caller the venue’s own booking link and says plainly that nothing is held yet. “I’ll pop you down for seven” with no write behind it is a table for six people that does not exist when they arrive.
+A table is confirmed only once the venue’s booking system has taken it and given back a reference. Until the booking system is connected, the build texts the caller the venue’s own booking link and says plainly that nothing is held yet. “I’ll pop you down for seven” with nothing in the booking system behind it is a table for six people that does not exist when they arrive.
 
 A party over the venue’s limit, or anything that sounds like a function, goes to the manager for a callback. The build never tries the booking system for it, because a booking system that accepts a table of fourteen at 7pm on a Saturday is not the same as a kitchen that can feed it.
 
 ## 6. The records it keeps, in the shape your developer needs
 
-Six objects. The Menu is read, never stored: the build holds the till's item ids and nothing else about food. The Handoff is the one most builds leave out, because a caller who was told someone would ring back and never was looks the same as a call that went well.
+Six objects. The Menu is read, never stored. The build holds the till's item ids and nothing else about food. The Handoff is the one most builds leave out, because a caller who was told someone would ring back and never was looks the same as a call that went well.
 
 ```
 MenuItem                          # read from the till on every call
@@ -152,27 +152,27 @@ Handoff
   - detail, caller_phone, called_back_by
 ```
 
-A Ticket whose PaymentLink was not paid when it printed is the defect this standard exists to make unrepresentable. A total the build worked out itself is the other.
+A Ticket whose PaymentLink was not paid when it printed is the defect this standard exists to make impossible. A total the build worked out itself is the other.
 
 ## 7. The checks, in order
 
-The order is the claim. The disclosure comes before anything is asked, the menu is read before any dish is discussed, the read-back comes before the link, and the payment comes before the ticket.
+Each check has to pass before the next one runs. The caller hears it is an AI before anything is asked, the menu is read before any dish is discussed, the order is read back before the link goes, and the payment clears before the ticket prints.
 
 1. It says it is an AI and that the call is recorded, first. Before anything else is said or asked, the caller hears that they are talking to an AI assistant for the venue and that the call is recorded.
-2. The menu comes from the venue's till, and the total from its payment provider. Every dish, option and price is read from the venue's own menu before anything is offered. The build never states a price of its own: the total the caller hears is the one the payment provider returned.
+2. The menu comes from the venue's till, and the total from its payment provider. Every dish, option and price is read from the venue's own menu before anything is offered. It never makes up a price. The total the caller hears is the one the payment provider worked out.
 3. A dine-in dish is never sold for pickup. Only dishes on the owner's pickup list are offered for pickup. A dine-in-only dish is declined in plain words, with a pickup alternative or a booking.
-4. A dish that is not on the menu is not invented. Asked for something the venue does not make, the build says so and offers the closest real dish. It never names a price for it.
+4. A dish that is not on the menu is not invented. Asked for something the venue does not make, it says so and offers the closest real dish. It never names a price for it.
 5. Every required choice is asked, once each. A dish with a required choice (beef or chicken, pork or veg) is never ordered without it. Each missing choice is asked on its own, and a choice the caller already gave is not asked again.
-6. Allergy answers come from the menu, never call a dish safe, and go on the ticket. An allergy question is answered only from the allergens the venue recorded, with a shared-kitchen warning and never the word safe. The allergy is carried onto the order. A serious allergy goes to a person before anything is ordered.
+6. Allergy answers come from the menu, never call a dish safe, and go on the ticket. An allergy question is answered only from the allergens the venue recorded, with a shared-kitchen warning and never the word safe. The allergy goes on the order and the kitchen ticket. A serious allergy goes to a person before anything is ordered.
 7. No pickup time the kitchen cannot make. A pickup time is inside today's service windows and after the kitchen's lead time. When the kitchen is closed for the day, it is bookings only, and the caller is told when it next opens.
 8. The order is read back and confirmed before anything is charged. Every dish and its choices are read back and the caller says yes before a payment link is requested. A no means nothing is placed.
-9. The kitchen ticket prints only once the order is paid. The ticket is written into the venue's till only after the payment provider says the link was paid. A link left unpaid is cancelled so it cannot be paid later, and no ticket prints.
-10. A card number is never taken by voice. Payment is a secure link. A caller who starts reading out a card is stopped and sent the link, and no card number reaches any system the build writes to.
-11. No table is confirmed without the booking system. A table is confirmed only once it is written into the venue's booking system. Until the system is connected, the caller is texted the venue's own booking link. A party over the venue's limit goes to the manager.
-12. A person is brought in for four reasons, and only those. A complaint, a serious allergy, a big group or function, or a caller who wants a person. Each handoff names its reason. A routine order is never handed off.
-13. A retried call never charges or prints twice. The payment request and the ticket carry a key for the call, so a dropped line or a retried event finds the order already placed.
-14. It survives the builder. Someone other than the builder can explain what it does, and it runs on an account the business owns.
-15. The pass test passes. A real call to the venue's forwarded number orders a dish with a required choice, is paid by link, and prints in the venue's own till with that choice; an unpaid order never prints; a dine-in dish is never sold.
+9. The kitchen ticket prints only once the order is paid. The ticket goes into the venue's till only after the payment provider confirms the link was paid. A link left unpaid is cancelled so it cannot be paid later, and no ticket prints.
+10. A card number is never taken by voice. Payment is a secure link. A caller who starts reading out a card is stopped and sent the link, and no card number goes into any system it uses.
+11. No table is confirmed without the booking system. A table is confirmed only once the venue's booking system has accepted it. Until that system is connected, the caller is texted the venue's own booking link. A party over the venue's limit goes to the manager.
+12. A person is brought in for four reasons, and only those. The four are a complaint, a serious allergy, a big group or function, and a caller who wants a person. Each handover says which reason it is. A routine order is never handed to a person.
+13. A retried call never charges or prints twice. The payment link and the ticket are both tied to that call, so if the line drops or the call comes through again, it finds the order already placed and never makes a second one.
+14. It keeps working if the person who built it leaves. Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+15. The pass test passes. A real call to the venue's forwarded number orders a dish with a required choice, is paid by link, and prints in the venue's own till with that choice. An unpaid order never prints, and a dine-in dish is never sold.
 
 The handoffs, a closed list:
 
@@ -196,14 +196,14 @@ The handoffs, a closed list:
 The conversation needs a voice or chat agent; everything around it can live where the venue already works. Three ways, all held to the same checks:
 
 - **Existing tools only.** A shared sheet or Microsoft 365 lists for the pickup list, the orders and the handoffs, with the agent writing into them and a flow that prints only paid orders. The [Microsoft 365 plan](https://aipathway.com.au/explore-ai/pickup-orders-on-microsoft-365) lays out the lists and flows.
-- **A personal dashboard.** Hand this page to a coding agent and it builds a small page for the owner: the pickup list to tick, today’s orders with their payment status, and the handoffs to ring back, against the stub until the till has to be real.
-- **A long-lived bot.** The agent on the venue’s forwarded number and its website chat, with the payment provider’s webhook waking the step that prints the ticket.
+- **A personal dashboard.** Hand this page to a coding agent and it builds a small page for the owner: the pickup list to tick, today’s orders with their payment status, and the handoffs to ring back, on practice data until it has to work with your real till.
+- **A long-lived bot.** The agent on the venue’s forwarded number and its website chat, with the payment provider’s paid notice starting the step that prints the ticket.
 
 How to run any standard each of these ways is in [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
 
 ## 10. What your developer builds, and the step that needs care
 
-Three steps not to hand-roll, and they are one step really: reading the menu from the till, asking the venue's payment provider for a link it prices, and printing the ticket in the same till only once that link is paid. Everything else a coding agent builds against the stub in an afternoon.
+One step needs care, and it has three parts: reading the menu from the till, asking the venue's payment provider for a link it prices, and printing the ticket in the same till only once that link is paid. A coding agent can build everything else on practice data in an afternoon.
 
 ```
 provider:
@@ -240,27 +240,27 @@ cannot meet the standard
 
 A vendor selling an AI phone line for restaurants is usually selling the conversation. Ask them three things: what the kitchen sees when the caller never pays, where the price the caller hears comes from, and what happens when the caller asks for a dish that is on the menu but not for takeaway.
 
-**The pass test.** Three real calls to the venue’s forwarded number. First, order a dish with a required choice without naming it, answer the question, and pay the link: the ticket must print in the venue’s own till as paid, with the choice and the total the payment provider charged. Second, order and never pay: nothing may reach the kitchen, and once the link expires it must no longer take a payment. Third, ask for a dish that is on the menu but not on the pickup list: it must be declined. All three take ten minutes to stage. If the second call printed, the kitchen is cooking on trust, which is the failure this standard exists to prevent.
+**The pass test.** Three real calls to the venue’s forwarded number. First, order a dish with a required choice without naming it, answer the question, and pay the link: the ticket must print in the venue’s own till as paid, with the choice and the total the payment provider charged. Second, order and never pay: nothing may reach the kitchen, and once the link expires it must no longer take a payment. Third, ask for a dish that is on the menu but not on the pickup list: it must be declined. All three take ten minutes to set up. If the second call printed, the kitchen is cooking on trust, and the build fails.
 
 ## 11. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 
 - **1. It says it is an AI and that the call is recorded, first.** Before anything else is said or asked, the caller hears that they are talking to an AI assistant for the venue and that the call is recorded.
-- **2. The menu comes from the venue's till, and the total from its payment provider.** Every dish, option and price is read from the venue's own menu before anything is offered. The build never states a price of its own: the total the caller hears is the one the payment provider returned.
+- **2. The menu comes from the venue's till, and the total from its payment provider.** Every dish, option and price is read from the venue's own menu before anything is offered. It never makes up a price. The total the caller hears is the one the payment provider worked out.
 - **3. A dine-in dish is never sold for pickup.** Only dishes on the owner's pickup list are offered for pickup. A dine-in-only dish is declined in plain words, with a pickup alternative or a booking.
-- **4. A dish that is not on the menu is not invented.** Asked for something the venue does not make, the build says so and offers the closest real dish. It never names a price for it.
+- **4. A dish that is not on the menu is not invented.** Asked for something the venue does not make, it says so and offers the closest real dish. It never names a price for it.
 - **5. Every required choice is asked, once each.** A dish with a required choice (beef or chicken, pork or veg) is never ordered without it. Each missing choice is asked on its own, and a choice the caller already gave is not asked again.
-- **6. Allergy answers come from the menu, never call a dish safe, and go on the ticket.** An allergy question is answered only from the allergens the venue recorded, with a shared-kitchen warning and never the word safe. The allergy is carried onto the order. A serious allergy goes to a person before anything is ordered.
+- **6. Allergy answers come from the menu, never call a dish safe, and go on the ticket.** An allergy question is answered only from the allergens the venue recorded, with a shared-kitchen warning and never the word safe. The allergy goes on the order and the kitchen ticket. A serious allergy goes to a person before anything is ordered.
 - **7. No pickup time the kitchen cannot make.** A pickup time is inside today's service windows and after the kitchen's lead time. When the kitchen is closed for the day, it is bookings only, and the caller is told when it next opens.
 - **8. The order is read back and confirmed before anything is charged.** Every dish and its choices are read back and the caller says yes before a payment link is requested. A no means nothing is placed.
-- **9. The kitchen ticket prints only once the order is paid.** The ticket is written into the venue's till only after the payment provider says the link was paid. A link left unpaid is cancelled so it cannot be paid later, and no ticket prints.
-- **10. A card number is never taken by voice.** Payment is a secure link. A caller who starts reading out a card is stopped and sent the link, and no card number reaches any system the build writes to.
-- **11. No table is confirmed without the booking system.** A table is confirmed only once it is written into the venue's booking system. Until the system is connected, the caller is texted the venue's own booking link. A party over the venue's limit goes to the manager.
-- **12. A person is brought in for four reasons, and only those.** A complaint, a serious allergy, a big group or function, or a caller who wants a person. Each handoff names its reason. A routine order is never handed off.
-- **13. A retried call never charges or prints twice.** The payment request and the ticket carry a key for the call, so a dropped line or a retried event finds the order already placed.
-- **14. It survives the builder.** Someone other than the builder can explain what it does, and it runs on an account the business owns.
-- **15. The pass test passes.** A real call to the venue's forwarded number orders a dish with a required choice, is paid by link, and prints in the venue's own till with that choice; an unpaid order never prints; a dine-in dish is never sold.
+- **9. The kitchen ticket prints only once the order is paid.** The ticket goes into the venue's till only after the payment provider confirms the link was paid. A link left unpaid is cancelled so it cannot be paid later, and no ticket prints.
+- **10. A card number is never taken by voice.** Payment is a secure link. A caller who starts reading out a card is stopped and sent the link, and no card number goes into any system it uses.
+- **11. No table is confirmed without the booking system.** A table is confirmed only once the venue's booking system has accepted it. Until that system is connected, the caller is texted the venue's own booking link. A party over the venue's limit goes to the manager.
+- **12. A person is brought in for four reasons, and only those.** The four are a complaint, a serious allergy, a big group or function, and a caller who wants a person. Each handover says which reason it is. A routine order is never handed to a person.
+- **13. A retried call never charges or prints twice.** The payment link and the ticket are both tied to that call, so if the line drops or the call comes through again, it finds the order already placed and never makes a second one.
+- **14. It keeps working if the person who built it leaves.** Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+- **15. The pass test passes.** A real call to the venue's forwarded number orders a dish with a required choice, is paid by link, and prints in the venue's own till with that choice. An unpaid order never prints, and a dine-in dish is never sold.
 
 Building this on Microsoft 365: [the lists, the flows and the payment status no flow writes](https://aipathway.com.au/explore-ai/pickup-orders-on-microsoft-365).
 

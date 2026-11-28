@@ -91,7 +91,7 @@ skill asserts.
 ## The work, in order
 
 - 1. What this standard covers
-- 2. Derive the position, never store it
+- 2. Work the arrears out fresh, never save the number
 - 3. The four triage outcomes
 - 4. The stop conditions
 - 5. Six rules that keep it trustworthy

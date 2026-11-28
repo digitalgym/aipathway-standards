@@ -17,7 +17,7 @@ Used by
 - Business Systems Analyst
 - Operations Manager
 
-Most offices already keep comparable sales somewhere in Microsoft 365: a spreadsheet on a shared drive, a folder of appraisal PDFs. What they do not keep is which rules chose the sales, or a copy of the page the vendor actually saw. This plan puts both in the tenant.
+Most offices already keep comparable sales somewhere in Microsoft 365: a spreadsheet on a shared drive, a folder of appraisal PDFs. What they do not keep is which rules chose the sales, or a copy of the page the vendor saw. This plan keeps both in your Microsoft 365.
 
 ## In short
 
@@ -32,7 +32,7 @@ Read [the Price One-Pager build standard](https://aipathway.com.au/explore-ai/pr
 
 ## 2. The lists, with their columns
 
-Four lists and one library. Versions is one row per build and Shown is append only, which is the whole difference between a page and a record.
+Four lists and one library. Versions gets one row per build, and Shown can only be added to, never changed. That is what turns a page into a record.
 
 ```
 Site: PriceEvidence
@@ -83,20 +83,20 @@ No column on Sales is filled by a person guessing: a sale with no Source is left
 Shown is append only. A correction is a new Version and a new file, never an edit to the old one.
 ```
 
-Sales.Source is the provenance, all of it. A sale typed in with a source a person can name meets the standard's checks; live sales with a source you can follow are the step not to hand-roll.
+Sales.Source records where each sale came from, and nothing else does. A sale typed in with a source a person can name meets the standard's checks. Live sales with a source you can follow are the step not to build yourself.
 
 ## 3. Every check, and what enforces it
 
 | The check | Enforced by | How |
 | --- | --- | --- |
-| Rules are read before any sale is chosen | Build flow | The first action reads Rules; every filter after it uses those values. The rules are written onto the version. |
+| Rules are read before any sale is chosen | Build flow | The first step reads Rules, and every filter after it uses those values. The rules are copied onto the version. |
 | Every comparable meets every rule | Build flow | One filter per rule over Sales, each exclusion written with the rule it broke. |
-| Source and date on each | Build flow | Rows with a blank Source or SoldOn never reach the comparables array. |
+| Source and date on each | Build flow | Rows with a blank Source or SoldOn never make the list of comparables. |
 | Withheld or unverified never in the range | Build flow | Only PriceStatus = verified feeds the min, median and max. |
 | Too few means no range | Build flow | Below MinCount the range columns stay blank and Flags gets too_few. |
 | Underquote and stale are flagged | Build flow | QuotedFrom below RangeLow adds underquote; a ReadOn older than the window adds stale. Both hold the version. |
 | Approval names the version | Approval | Start and wait for an approval on this Versions row. An edit creates a new row and a new approval. |
-| What was shown is kept | Give flow | Writes the approved version as a file into Shown. Nothing in any flow updates or deletes a Shown file. |
+| What was shown is kept | Give flow | Saves the approved version as a file in Shown. Nothing in any flow changes or deletes a Shown file. |
 
 ## 4. The two flows and the approval
 
@@ -129,11 +129,11 @@ Flow 1 never edits a Versions row it did not just create. An edit is a rebuild, 
 
 ## 5. What the flows can reach in your Microsoft 365 and your sales data, and what they never touch
 
-The flows build the page that shows a vendor where the price came from. They read your selection rules and recorded sales on one SharePoint site, build a new version of the page, and file it once it is approved. The agent approves every version, gives the page to the vendor, and owns the price and everything said about it. Your own login stays yours: the flows run under their own account, never your username and password.
+The flows build the page that shows a vendor where the price came from. They read your selection rules and recorded sales on one SharePoint site, build a new version of the page, and file it once it is approved. The agent writes the selection rules, approves every version, gives the page to the vendor, and owns the price and everything said about it. Your own login stays yours: the flows run under their own account, never your username and password.
 
 What each connection is for.
 
-- **SharePoint, the one site.** Rules and Sales, read. Versions, a new row per build. Shown, add only. Nothing outside that site.
+- **SharePoint, the one site.** Rules and Sales, read. Versions, a new row per build. Shown, new files only. Nothing outside that site.
 - **Approvals, through Teams or Outlook.** The agent approves each version by name, and gives the reason when the quote sits below the evidence.
 - **The sales source, read.** The sales come from a source the agency already licenses. The plain route is an export loaded into Sales with its Source and SoldOn filled. If your provider offers an API and your licence allows it, a custom connector or the HTTP action (both premium) can read it instead. Check that the licence lets you keep the sales you used on the record, because the record is the point.
 
@@ -146,7 +146,7 @@ Give it the least it needs.
 
 How to cut it off. Turn off the two flows, or delete their connections in Power Automate. Remove the service account from the site, and revoke the data provider key if you used one. Every page already in Shown stays where it is.
 
-Why not the comparable sales report your data provider already gives you? Keep using it to find the sales; it is usually the best source you have. Ask whether it holds the rules you wrote before you looked at the prices, the agent’s estimate kept apart from the range, an approval per version, or a copy of what this vendor was shown on this date. Where it does not, those are what this build adds.
+Why not the comparable sales report your data provider already gives you? Keep using it to find the sales. It is usually the best source you have. Ask whether it holds the rules you wrote before you looked at the prices, the agent’s estimate kept apart from the range, an approval per version, or a copy of what this vendor was shown on this date. Where it does not, those are what this build adds.
 
 ## 6. The order to build it in
 
@@ -165,7 +165,7 @@ A view is a filter somebody can change while the page is open. The rules are a l
 
 ### Letting the agent's estimate into a calculated column
 
-A calculated column over the range and the estimate is the merge the standard forbids. Keep the estimate in its own columns, and never in a formula that touches the range.
+A calculated column over the range and the estimate mixes the two, which the standard forbids. Keep the estimate in its own columns, and never in a formula that touches the range.
 
 ### Editing a version after approval
 
@@ -173,7 +173,7 @@ SharePoint will let you. Turn off editing on approved rows with a flow that copi
 
 ### Assuming the library is the record
 
-A site owner can delete a file. A retention label helps, and it is a setting someone can change. A record that has to survive a dispute is the step the standard says not to hand-roll.
+A site owner can delete a file. A retention label helps, and it is a setting someone can change. A record that has to survive a dispute is the step the standard says not to build yourself.
 
 ## 8. Where the automation stops
 
@@ -182,7 +182,7 @@ A site owner can delete a file. A retention label helps, and it is a setting som
 - Writing the rules, before looking at the prices.
 - Giving the page to the vendor.
 
-**The pass test.** Two staged checks, no real vendor involved. First, add a sale that breaks the distance rule at a price you would like to see, and set QuotedFrom below the lowest comparable: the build must leave the far sale out with its rule named, flag underquote, and refuse Flow 2 until the approval carries a reason. Second, give version 1, then change one sale and rebuild: version 2 must need its own approval, and the Shown file for version 1 must be unchanged. The standard’s own pass test, on live sales with a record that survives, is the part this tenant cannot prove on its own.
+**The pass test.** Two staged checks, no real vendor involved. First, add a sale that breaks the distance rule at a price you would like to see, and set QuotedFrom below the lowest comparable: the build must leave the far sale out with its rule named, flag underquote, and refuse Flow 2 until the approval carries a reason. Second, give version 1, then change one sale and rebuild: version 2 must need its own approval, and the Shown file for version 1 must be unchanged. The standard’s own pass test, on live sales with a record that survives, is the part your Microsoft 365 cannot prove on its own.
 
 ## Related reading
 

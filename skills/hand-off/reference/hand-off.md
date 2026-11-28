@@ -41,22 +41,22 @@ A hand-off names the records and never copies them. The next bot reads the job f
 
 What it does not do
 
-It never decides which bot does which stage; you name one per stage. It never edits or deletes the history. It never releases a hold or closes an exception, which only a person can do.
+It never decides which bot does each step; you name one bot per step. It never edits or deletes the history. It never releases a hold or closes an exception, which only a person can do.
 
 The hard part
 
-Real job systems retry their webhooks, and two bots can grab the same job in the same second. The stub delivers each event once, in order. The pass test on your own systems, with the webhook replayed by hand, is where that shows.
+Real job systems can send the same "job finished" message twice, and two bots can grab the same job in the same second. A test setup sends each message once, in order, so it never shows the problem. Only the pass test on your own systems, with the message sent again by hand, shows whether the build copes.
 
-Job 4471 was finished on a Friday. Simpro fired its webhook, the invoice bot raised the invoice and posted “ACME, $1,840, done” to a Teams chat the chase bot watched. Simpro retried the webhook ten minutes later and ACME got a second invoice. On Monday the office manager knocked $340 off the job for a missed part, and the chase bot, still working from the chat message, chased $1,840. When ACME rang to complain, nobody could say which bot had done what.
+Job 4471 was finished on a Friday. Simpro sent out its “job finished” message, the invoice bot raised the invoice and posted “ACME, $1,840, done” to a Teams chat the chase bot watched. Simpro sent the same message again ten minutes later and ACME got a second invoice. On Monday the office manager knocked $340 off the job for a missed part, and the chase bot, still working from the chat message, chased $1,840. When ACME rang to complain, nobody could say which bot had done what.
 
 The job, passed along by refs
 
-1. **Your systems**: Simpro or ServiceM8, Xero or MYOB. They hold the customer, the address and the amount, and stay the truth. simpro:4471 xero:INV-0932 fire
-2. **One envelope**: A type, who sent it, the record's ref, what caused it. No names, no amounts. type subject caused_by is appended to
-3. **The log**: Every envelope, in order, never edited. The dedupe keys and the claims sit beside it. handoffs claims processed wakes
-4. **The next bot**: Named for its stage. Claims the job, reads it by its ref, does its one step. invoice desk chase desk
+1. **Your systems**: Simpro or ServiceM8, Xero or MYOB. They hold the customer, the address and the amount, and stay the one true copy. simpro:4471 xero:INV-0932 fire
+2. **One envelope**: What happened, who sent it, which record, and what caused it. No names, no amounts. type subject caused_by is appended to
+3. **The log**: Every note, in order, never edited. Beside it sit the list of messages each bot has already handled and which bot holds which job. handoffs claims processed wakes
+4. **The next bot**: Named for its step. Takes the job, reads it fresh from your system, does its one step. invoice desk chase desk
 
-Read it downward. Each bot reads the job from your own system, does one step and hands over a note of refs. The log keeps every note, so the trail of a job is always there to read.
+Read it downward. Each bot reads the job from your own system, does one step and hands over a note naming the records. The log keeps every note, so the trail of a job is always there to read.
 
 One hand-off, through the claim
 
@@ -69,13 +69,13 @@ One hand-off, through the claim
 7. If another step follows, it hands over one envelope of refs, with no names or amounts, caused by the event that woke it. The next step runs the same routine.
 8. Every envelope is appended to the log and never edited, so walking it from the job shows where the job is and who touched it.
 
-The filled diamond is the claim. A bot works a job only when the read-back names it. The loop is the next bot running the same short routine from the envelope it was handed.
+The filled diamond is where a bot takes the job. It works the job only when it checks back and finds its own name on it. The loop is the next bot running the same short routine from the note it was handed.
 
 ## 1. What this standard covers
 
-A business running more than one bot, where one bot’s finished step is another’s start: the job finished, the invoice raised, the chase due. Every record is named by a **ref**, the system and the id it issued, written `simpro:4471` or `xero:INV-0932`. A **stage** is one standard’s step, and a **node** is the bot that does it.
+A business running more than one bot, where one bot’s finished step is another’s start: the job finished, the invoice raised, the chase due. Every record is named by a **ref**, which is the system plus the number that system gave the record, written `simpro:4471` or `xero:INV-0932`. A **stage** is one standard’s step, and a **node** is the bot that does it.
 
-The standard fixes four things every node does the same way:
+The standard sets four things every bot does the same way:
 
 - The envelope.
 - The claim.
@@ -84,7 +84,7 @@ The standard fixes four things every node does the same way:
 
 Out of scope. What each step does is its own standard’s business: [Invoice Out](https://aipathway.com.au/explore-ai/invoice-out-build-standard) says how the invoice is raised, this one says how the chase bot hears about it. Which refs are one customer is [Customer Link](https://aipathway.com.au/explore-ai/customer-link-build-standard)’s. Where a stopped job goes is the [Exception Desk](https://aipathway.com.au/explore-ai/exception-desk-build-standard)’s.
 
-What cannot meet it. A bot that only works inside a live chat, with nothing to wake it but a person typing, has no event to start from and no envelope to send. A job system with no webhook and no API, like Tradify, can still take part through a schedule that lists jobs by status, but the claim then lives in a list beside it, and the stage holders rule is the guard that matters.
+What cannot meet it. A bot that only works inside a live chat, with nothing to wake it but a person typing, has nothing to start from and no note to send. A job system that cannot send messages or be connected to, like Tradify, can still take part: a bot checks its job list by status on a schedule. The bot’s name on a job then sits in a separate list, so the rule naming one bot per step does most of the work of stopping a job being done twice.
 
 ## 2. The records it keeps, in the shape your developer needs
 
@@ -124,17 +124,17 @@ A name or an amount in data, a type the vocabulary does not name, a claim with n
 
 ## 3. The checks, in order
 
-The order follows one hand-off. What is sent, what it may carry, what happens when it arrives twice, who may work it, who may not, where it is kept, and what a bot does with an event it has never seen.
+The checks follow one hand-off from start to finish: what is sent, what it may carry, what happens when it arrives twice, who may work it, who may not, where it is kept, and what a bot does with a message it has never seen.
 
-1. Every hand-off is one envelope in the contract's shape. When a step finishes, it emits one envelope: specversion 1.0, a unique id, a type from the mesh vocabulary (or an x-<publisher>. extension), source node:<its slug>, the time, the subject as a <system>:<id> ref, aiphandoffversion 1.0, and data with refs keyed by the vocabulary's id names and caused_by naming the event that woke it. A node never emits customer.linked, customer.unlinked, hold.released, hold.refused or exception.closed, because only a person causes those.
-2. The envelope carries references, never copies, and the next step reads the record by its ref. No customer name, address, email, phone or amount goes in an envelope, under any field name, extensions included. The step that receives it reads each record it needs from the system of record by the ref it was given, and uses what it read. A copy that arrived in an envelope is never trusted over the record.
-3. A repeated event does nothing. Before its step, a node looks up the dedupe key <ref>|<event id>|<node slug>. If it has handled that key, it stops. When it finishes, it records the key. A retried webhook, a replayed queue or a second poll of the same event cannot fire a step twice.
-4. One holder at a time: claim with an expiry, read it back, work only if you hold it. Before its step, a node writes itself onto the record as seam.holder with seam.holder_until no more than 30 minutes ahead, reads the record back, and works only if the read-back names it. A record another node holds, unexpired, is skipped, not queued. A claim past its expiry frees the record. When the step is done, the node clears its own claim.
-5. A bot not named for its stage does nothing. The business's rules name one node per stage (stage_holders). A node reads the rules each run and, if they name another node for its stage, or none, it stops before it reads, claims, writes or hands over anything.
-6. Every hand-off is appended to a log that is never edited, and the log shows where a job is by walking caused_by. Every envelope, from a system's own webhook or from a node, is appended to one log. Nothing in it is edited or deleted, by a node or a tidy-up. Starting from the job's first event and following caused_by forward, anyone can read where the job is now and every node and system that touched it.
-7. An extension event a bot does not know is ignored, not failed. An event named x-<publisher>.<event> that the node does not consume is skipped: no exception, no hold, no stop. A later 1.x envelope is read for the fields the node knows, because minor versions only add. The node carries on with the next event.
-8. It survives the builder. Someone other than the builder can explain what it does, and it runs on an account the business owns.
-9. The pass test passes. On the business's own systems, with two real bots in a chain: a real job is finished, the job system's own webhook wakes the first bot, it claims, works and hands over, and the second picks up from the envelope alone. The webhook retried does nothing, a second copy of the first bot not named for the stage does nothing, and the log answers where the job is and who touched it.
+1. Every hand-over is one note in the same shared format. When a step finishes, it sends one hand-over note in the shared format (event format 1.0, hand-off version 1.0). The note carries a unique id, an event type from the shared list (or a publisher's own x-<publisher>. type), which bot sent it, the time, the record it is about as <system>:<id>, the record numbers it points to, and the event that set it off (caused_by). A bot never sends customer.linked, customer.unlinked, hold.released, hold.refused or exception.closed, because only a person can cause those.
+2. The note points to the records and never copies them, and the next step reads the record itself. No customer name, address, email, phone number or amount goes in a hand-over note, under any label, add-ons included. The next step reads each record it needs straight from the system it lives in, using the reference it was given, and works from that. A copy that came in a note is never trusted over the record.
+3. A repeated event does nothing. Before its step, a bot checks whether it has already handled this record and this event (its key is <ref>|<event id>|<node slug>). If it has, it stops, and when it finishes it records the key. An event that is resent, replayed or picked up twice can never run a step twice.
+4. Only one bot works a record at a time, and its hold lasts 30 minutes at most. Before its step, a bot puts its name on the record with an end time no more than 30 minutes ahead, reads the record back, and works only if its own name is there. A record another bot still holds is skipped, not queued, and a hold past its end time frees the record. When the step is done, the bot takes its name off.
+5. A bot not named for its stage does nothing. The business's rules name one bot for each stage. Every run, a bot reads the rules, and if they name another bot for its stage, or none, it stops before it reads, holds, saves or hands over anything.
+6. Every hand-over goes into a log that is never edited, and the log shows where a job is. Every hand-over note, whether a system sent it or a bot did, is added to one log. Nothing in it is edited or deleted, by a bot or a tidy-up. Starting from the job's first event and following each note to the next one it set off (caused_by), anyone can see where the job is now and every bot and system that touched it.
+7. An add-on event a bot does not know is ignored, never treated as an error. An event named x-<publisher>.<event> that the bot does not use is skipped without raising an exception, a hold or a stop. A note in a later 1.x version is read for the parts the bot knows, because those versions only add things. The bot carries on with the next event.
+8. It keeps working if the person who built it leaves. Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+9. The pass test passes. On the business's own systems, with two real bots in a chain, a real job is finished. The job system's own alert wakes the first bot, which takes the job, does its step and hands over, and the second picks up from the hand-over note alone. The alert sent again does nothing, a second copy of the first bot not named for the stage does nothing, and the log shows where the job is and who touched it.
 
 ## 4. How every other standard uses it
 
@@ -144,19 +144,19 @@ Each standard already ends with something done: a job created, a quote drafted, 
 | --- | --- | --- |
 | [Booked After Hours](https://aipathway.com.au/explore-ai/booked-after-hours-build-standard) | job.created, with the job's ref | Quote Out, or the morning dispatch |
 | [Quote Out](https://aipathway.com.au/explore-ai/quote-out-build-standard) | quote.drafted, with the quote and the job | a person to send it, then the quote chase |
-| [Invoice Out](https://aipathway.com.au/explore-ai/invoice-out-build-standard) | invoice.raised, with the invoice and the job | the send, then Debtor Chasing |
+| [Invoice Out](https://aipathway.com.au/explore-ai/invoice-out-build-standard) | invoice.raised, with the invoice and the job | sending it, then Debtor Chasing |
 | [Debtor Chasing](https://aipathway.com.au/explore-ai/debtor-chasing-build-standard) | promise.recorded, or hold.requested | the next chase, or a person |
-| [Any step that stops](https://aipathway.com.au/explore-ai/exception-desk-build-standard) | exception.raised, with a named owner | the Exception Desk, and nothing downstream |
+| [Any step that stops](https://aipathway.com.au/explore-ai/exception-desk-build-standard) | exception.raised, with a named owner | the Exception Desk, and no later step |
 
-In the [Mesh Directory](https://aipathway.com.au/explore-ai/mesh-directory), a bot that sends this envelope declares `"handoff": "1.0"` in its listing, and the conformance run for this standard is the proof. A publisher’s own events travel as `x-firecheck.defect.found`, and every other bot lets them pass.
+In the [Mesh Directory](https://aipathway.com.au/explore-ai/mesh-directory), a bot that sends these notes says so in its listing with `"handoff": "1.0"`, and passing this standard’s conformance run proves it. A bot maker’s own messages, such as `x-firecheck.defect.found`, pass through every other bot untouched.
 
 ## 5. Job 4471, from finished to chased
 
-1. Friday, 3:10pm. The job is finished. Simpro fires job.completed for `simpro:4471`, and it goes in the log with Simpro as its source.
-2. 3:11pm. The invoice desk picks it up. The rules name it for the invoice stage, and it has not seen this event before. It writes itself onto the job until 3:41pm, reads the job back, finds its own name, and reads the customer and the $1,840 from Simpro. It raises `xero:INV-0932`, clears its claim, and hands over invoice.raised with the invoice and the job as refs, caused by Simpro’s event.
-3. 3:20pm. Simpro retries. The same event, the same id. The invoice desk finds the key `simpro:4471|E1|invoice-desk` already handled and does nothing.
+1. Friday, 3:10pm. The job is finished. Simpro sends job.completed for `simpro:4471`, and it goes in the log with Simpro as the sender.
+2. 3:11pm. The invoice desk picks it up. The rules name it for the invoice stage, and it has not seen this event before. It writes itself onto the job until 3:41pm, reads the job back, finds its own name, and reads the customer and the $1,840 from Simpro. It raises `xero:INV-0932`, takes its name off the job, and hands over invoice.raised naming the invoice and the job, with Simpro’s message as the cause.
+3. 3:20pm. Simpro sends it again. It is the same message with the same id. The invoice desk finds the key `simpro:4471|E1|invoice-desk` already handled and does nothing.
 4. Monday. The amount changes, the hand-off does not. The office manager takes $340 off in Xero. The chase desk, woken when the invoice falls due, reads `xero:INV-0932` and chases $1,500, because the hand-off never said $1,840.
-5. When ACME rings. The office manager asks where 4471 is. Walking the log from Simpro’s event shows the invoice desk, Xero’s send and the chase desk’s reminder, in order, with the time of each.
+5. When ACME rings. The office manager asks where 4471 is. Reading the log forward from Simpro’s message shows the invoice desk, Xero’s send and the chase desk’s reminder, in order, with the time of each.
 
 ## 6. What stays with a person
 
@@ -166,20 +166,20 @@ In the [Mesh Directory](https://aipathway.com.au/explore-ai/mesh-directory), a b
 
 ## 7. With a Grok Bot, Claude or your own code
 
-Any of them can be a node. Each is woken by an event (a webhook, a schedule, a new row in the log) and runs the same short routine: check its stage and the dedupe key, read the record by its ref, claim it, do its one step, hand over and stop. It keeps nothing between runs, so it can run an hour later on another account.
+Any of them can be a bot in the chain. Each one wakes on a message from your job system, a schedule or a new row in the log, and runs the same short routine. It checks it is the bot named for this step and has not handled this message before, reads the record fresh, puts its name on the job, does its one step, hands over and stops. It keeps nothing between runs, so it can run an hour later on another account.
 
 1. Make the log: a sheet, a SharePoint list or a table with one row per envelope, where the bots can add rows and nobody can edit them.
 2. Make the rules: one row per stage naming the bot that does it. Only you edit it.
-3. Give every bot the same standing instructions: the routine above, the envelope in section 2, and that a name or an amount never goes in a hand-off.
+3. Give every bot the same standing instructions: the routine above, the note format in section 2, and that a name or an amount never goes in a hand-off.
 4. Run the checklist in section 9 with two of your bots and a real job.
 
 Where it runs. In SharePoint lists and Power Automate flows (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/job-trail-on-microsoft-365) lays them out), a Google Sheet with a log tab, or a small table a coding agent builds from this page. Keys and connections for an AI Pathway bot are made at connect.aipathway.com.au. All are held to the same checks.
 
-Why not just post to a shared chat? A chat message is read once by whoever is watching, says whatever the bot felt like saying, and cannot be replayed. An envelope is read the same way by every bot, and the log answers questions a month later.
+A shared chat can’t do this job. A chat message is read once by whoever is watching, says whatever the bot felt like saying, and cannot be replayed. A note in the log is read the same way by every bot, and the log still answers questions a month later.
 
 ## 8. What your developer builds, and the step that needs care
 
-There is no hosted step to buy. The log, the claims and the dedupe keys are yours, and so are the bots. The hard part is a real job system's webhooks, which is why the pass test runs on your own.
+There is no hosted step to buy. The log, the claims and the dedupe keys are yours, and so are the bots. The hard part is a real job system sending the same message twice, late or out of order, which is why the pass test runs on your own.
 
 ```
 provider:
@@ -195,21 +195,21 @@ stays local                          # yours, and the standard
 
 Ask anyone selling you a team of bots to show you the log for one job: every hand-over, what caused it, and which bot held the job at each step.
 
-**The pass test.** On the business’s own systems, with two real bots in a chain. Finish a real job: the job system’s webhook wakes the first bot, it claims, works and hands over, and the second picks up from the envelope alone. Replay the webhook by hand: nothing new is written. Switch on a second copy of the first bot that the rules do not name: it does nothing. Walk the log from the job: it names both bots and the systems in order, and no envelope holds a name or an amount. A stub cannot pass this. On a stub every event arrives once and in order; a real webhook arrives twice, late and out of order.
+**The pass test.** On the business’s own systems, with two real bots in a chain. Finish a real job: the job system’s own message wakes the first bot, it puts its name on the job, works and hands over, and the second picks up from the note alone. Send the job system’s message again by hand: nothing new is created. Switch on a second copy of the first bot that the rules do not name: it does nothing. Read the log from the job: it names both bots and the systems in order, and no note holds a name or an amount. A test setup cannot pass this. In a test setup every message arrives once and in order; a real job system’s message can arrive twice, late and out of order.
 
 ## 9. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 
-- **1. Every hand-off is one envelope in the contract's shape.** When a step finishes, it emits one envelope: specversion 1.0, a unique id, a type from the mesh vocabulary (or an x-<publisher>. extension), source node:<its slug>, the time, the subject as a <system>:<id> ref, aiphandoffversion 1.0, and data with refs keyed by the vocabulary's id names and caused_by naming the event that woke it. A node never emits customer.linked, customer.unlinked, hold.released, hold.refused or exception.closed, because only a person causes those.
-- **2. The envelope carries references, never copies, and the next step reads the record by its ref.** No customer name, address, email, phone or amount goes in an envelope, under any field name, extensions included. The step that receives it reads each record it needs from the system of record by the ref it was given, and uses what it read. A copy that arrived in an envelope is never trusted over the record.
-- **3. A repeated event does nothing.** Before its step, a node looks up the dedupe key <ref>|<event id>|<node slug>. If it has handled that key, it stops. When it finishes, it records the key. A retried webhook, a replayed queue or a second poll of the same event cannot fire a step twice.
-- **4. One holder at a time: claim with an expiry, read it back, work only if you hold it.** Before its step, a node writes itself onto the record as seam.holder with seam.holder_until no more than 30 minutes ahead, reads the record back, and works only if the read-back names it. A record another node holds, unexpired, is skipped, not queued. A claim past its expiry frees the record. When the step is done, the node clears its own claim.
-- **5. A bot not named for its stage does nothing.** The business's rules name one node per stage (stage_holders). A node reads the rules each run and, if they name another node for its stage, or none, it stops before it reads, claims, writes or hands over anything.
-- **6. Every hand-off is appended to a log that is never edited, and the log shows where a job is by walking caused_by.** Every envelope, from a system's own webhook or from a node, is appended to one log. Nothing in it is edited or deleted, by a node or a tidy-up. Starting from the job's first event and following caused_by forward, anyone can read where the job is now and every node and system that touched it.
-- **7. An extension event a bot does not know is ignored, not failed.** An event named x-<publisher>.<event> that the node does not consume is skipped: no exception, no hold, no stop. A later 1.x envelope is read for the fields the node knows, because minor versions only add. The node carries on with the next event.
-- **8. It survives the builder.** Someone other than the builder can explain what it does, and it runs on an account the business owns.
-- **9. The pass test passes.** On the business's own systems, with two real bots in a chain: a real job is finished, the job system's own webhook wakes the first bot, it claims, works and hands over, and the second picks up from the envelope alone. The webhook retried does nothing, a second copy of the first bot not named for the stage does nothing, and the log answers where the job is and who touched it.
+- **1. Every hand-over is one note in the same shared format.** When a step finishes, it sends one hand-over note in the shared format (event format 1.0, hand-off version 1.0). The note carries a unique id, an event type from the shared list (or a publisher's own x-<publisher>. type), which bot sent it, the time, the record it is about as <system>:<id>, the record numbers it points to, and the event that set it off (caused_by). A bot never sends customer.linked, customer.unlinked, hold.released, hold.refused or exception.closed, because only a person can cause those.
+- **2. The note points to the records and never copies them, and the next step reads the record itself.** No customer name, address, email, phone number or amount goes in a hand-over note, under any label, add-ons included. The next step reads each record it needs straight from the system it lives in, using the reference it was given, and works from that. A copy that came in a note is never trusted over the record.
+- **3. A repeated event does nothing.** Before its step, a bot checks whether it has already handled this record and this event (its key is <ref>|<event id>|<node slug>). If it has, it stops, and when it finishes it records the key. An event that is resent, replayed or picked up twice can never run a step twice.
+- **4. Only one bot works a record at a time, and its hold lasts 30 minutes at most.** Before its step, a bot puts its name on the record with an end time no more than 30 minutes ahead, reads the record back, and works only if its own name is there. A record another bot still holds is skipped, not queued, and a hold past its end time frees the record. When the step is done, the bot takes its name off.
+- **5. A bot not named for its stage does nothing.** The business's rules name one bot for each stage. Every run, a bot reads the rules, and if they name another bot for its stage, or none, it stops before it reads, holds, saves or hands over anything.
+- **6. Every hand-over goes into a log that is never edited, and the log shows where a job is.** Every hand-over note, whether a system sent it or a bot did, is added to one log. Nothing in it is edited or deleted, by a bot or a tidy-up. Starting from the job's first event and following each note to the next one it set off (caused_by), anyone can see where the job is now and every bot and system that touched it.
+- **7. An add-on event a bot does not know is ignored, never treated as an error.** An event named x-<publisher>.<event> that the bot does not use is skipped without raising an exception, a hold or a stop. A note in a later 1.x version is read for the parts the bot knows, because those versions only add things. The bot carries on with the next event.
+- **8. It keeps working if the person who built it leaves.** Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+- **9. The pass test passes.** On the business's own systems, with two real bots in a chain, a real job is finished. The job system's own alert wakes the first bot, which takes the job, does its step and hands over, and the second picks up from the hand-over note alone. The alert sent again does nothing, a second copy of the first bot not named for the stage does nothing, and the log shows where the job is and who touched it.
 
 ## Related reading
 

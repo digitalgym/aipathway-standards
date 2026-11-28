@@ -37,7 +37,7 @@ An open build standard for ordering the materials on a job from the suppliers th
 
 The core rule
 
-Every ordered line traces to a material line on the job. Every price comes from the supplier's catalogue read at order time. Stock is read first. The write is keyed to the job and the supplier, so a second run cannot order twice.
+Every line ordered comes from a material line on the job. Every price comes from the supplier's catalogue, checked when the order is made. Stock on the shelf is checked first. Each job gets one order per supplier, so running it again cannot order twice.
 
 What it does not do
 
@@ -45,9 +45,9 @@ It does not spend over the threshold, does not accept a supplier's substitution,
 
 The hard part
 
-The job that was ordered on Monday and again on Wednesday because nobody read back, and the docket that was signed on site and never compared to what was ordered.
+The job that was ordered on Monday and again on Wednesday because nobody checked for the first order, and the docket that was signed on site and never compared to what was ordered.
 
-The job needed forty metres of pipe. Thirty were on the shelf, sixty were ordered, twice, at last month’s price, from a supplier who sent a substitute nobody agreed to. The docket was signed on site and filed. The invoice for all of it arrived three weeks later and was paid because it matched the docket. None of that was fraud. It was ordering without a standard.
+The job needed forty metres of pipe. Thirty were on the shelf, sixty were ordered, twice, at last month’s price, from a supplier who sent a substitute nobody agreed to. The docket was signed on site and filed. The invoice for all of it arrived three weeks later and was paid because it matched the docket.
 
 One job, list to delivery
 
@@ -59,15 +59,15 @@ One job, list to delivery
 6. If yes, it is sent, and the supplier's lead time is checked against the job's start so the owner is told if it will miss.
 7. Does the delivery match the order line by line? If yes, the order, the release and the docket are on the record by job. If no, the variance is a queue with an owner, and a substitution is accepted only by a person.
 
-Stock is read before anything is ordered, because the cheapest material is the one already on the shelf. The filled diamond is the write: one order per job and supplier into the system the business buys from, with an id back. The loop is the delivery, matched back line by line, with every variance a queue.
+Stock is checked before anything is ordered, because the cheapest material is the one already on the shelf. The filled diamond is where the order is placed: one order per job and supplier, in the system the business buys from, with that system’s order number back. The loop is the delivery, matched line by line, with anything that does not match sent to a person.
 
 ## 1. What this standard covers
 
 Any business that orders materials for jobs: plumbers with a wholesaler account, builders with three suppliers and a yard, electricians who keep stock on the van. If a job carries a material list and somebody has to turn it into orders, this applies.
 
-It sits between two standards that exist. The [Quote Out standard](https://aipathway.com.au/explore-ai/quote-out-build-standard) is where the material lines came from, priced only from the book. The [Invoice Check standard](https://aipathway.com.au/explore-ai/invoice-check-build-standard) is where the supplier’s invoice goes next, checked against the order this standard produced. The [material ordering paper](https://aipathway.com.au/explore-ai/material-ordering-trades) is the argument beside it. The [Parts Ready standard](https://aipathway.com.au/explore-ai/parts-ready-build-standard) is the check in front of it: the afternoon before, it holds tomorrow’s jobs against the van and the shelf, and hands only the real shortfalls to this standard to order.
+It sits between two standards that exist. The [Quote Out standard](https://aipathway.com.au/explore-ai/quote-out-build-standard) is where the material lines came from, priced only from the book. The [Invoice Check standard](https://aipathway.com.au/explore-ai/invoice-check-build-standard) is where the supplier’s invoice goes next, checked against the order this standard produced. The [material ordering paper](https://aipathway.com.au/explore-ai/material-ordering-trades) makes the case for it. The [Parts Ready standard](https://aipathway.com.au/explore-ai/parts-ready-build-standard) is the check in front of it: the afternoon before, it holds tomorrow’s jobs against the van and the shelf, and hands only the real shortfalls to this standard to order.
 
-What cannot meet it. A supplier with no catalogue the business can read, only a phone number, cannot be the source of a price. Orders to that supplier park on every line until a person prices them, and the standard says so rather than letting a remembered price through.
+What cannot meet it. A supplier with no catalogue the business can read, only a phone number, cannot be the source of a price. Orders to that supplier stop on every line until a person prices them, and the standard says so rather than letting a remembered price through.
 
 ## 2. The records it keeps, in the shape your developer needs
 
@@ -109,39 +109,39 @@ An Order with status sent and no release is the defect this standard exists to m
 
 ## 3. The checks, in order
 
-The order is the claim. Stock is read before the catalogue, the catalogue before the write, and the existing order before a new one, because a build that orders first and checks afterwards has already spent the money.
+Each check has to pass before the next one runs. Stock on the shelf is checked before the catalogue, the catalogue before anything is sent to the supplier, and any existing order before a new one, because a build that orders first and checks afterwards has already spent the money.
 
-1. Every ordered line traces to a material line on the job. An order line exists because the job carries a material line with that catalogue code and quantity. Nothing is ordered that the job does not list, and nothing on the job is dropped without a parked reason.
-2. Stock on hand is read before the order, and a line stock covers is reserved rather than ordered. Before any order is written, stock on hand is read. A line the store or the van already covers is reserved against the job and does not appear on a purchase order. An order that ignores stock fails.
-3. Every line carries the supplier's catalogue code and price, read at order time, and a line no catalogue holds parks the order. The price on a line is the supplier's catalogue price for that code, read when the order is drafted. No price is typed, remembered or averaged. A code no supplier's catalogue holds parks the order with reason not_in_catalogue and a person is told.
-4. One order per job and supplier, written once, updated on a second run. The write is keyed to the job and the supplier. A second run for the same job updates the existing order or does nothing. Two orders for one job and supplier fails, and a null external id is a failed write, not a success.
-5. An order over the threshold, or to a supplier not on the approved list, is released only by a named person. A release is one of two things: a named person, or a rule a named person set with a threshold. An order whose total is over the threshold, or whose supplier is not on the approved list, waits for a person. Under the threshold and to an approved supplier, the rule may release.
-6. Each supplier carries a lead time, and an order that would miss the job's start tells the job owner. Lead time is a number on the supplier or the catalogue line, not a guess. When the order's arrival date lands after the job's start, the job owner is told in the same run, with the order and the supplier named.
-7. A delivery is recorded against the order line by line, and a delivery with no order is refused. When goods arrive, the docket is matched to the order and each line is recorded with the quantity received and, where it differs, a reason: short or damaged. A docket that matches no order is not recorded as a delivery; it is raised to a person.
-8. Short, over, wrong item and a changed price are escalated with the order id and an owner, never absorbed. Every difference between what was ordered and what arrived is a variance with a kind, the order id and an owner. It is never silently accepted into the job's cost, and it is never silently written off.
-9. A supplier's substitution is accepted only by a named person. When the supplier delivers a different item in place of the one ordered, the line is received only when a named person has accepted the substitute. Without that acceptance the line is held as a variance and a person is told. A substitution accepted by a rule, or by nobody, fails.
-10. Every order, release, delivery and variance is retrievable by job. When the supplier's invoice arrives, or the customer asks what a material cost, the record shows by job id: each order with its external id and the catalogue edition, who released it or which rule did, each delivery line by line, and every variance with its owner.
-11. It survives the builder. Someone other than the builder can explain what it does, and it runs on an account the business owns.
-12. The pass test passes. On the real job system and a real supplier account: one job ordered twice, one line covered from stock, one line no catalogue holds, one order over the threshold waiting for a person, and one delivery short.
+1. Every line ordered matches a material line on the job. A line is only ordered because the job lists that material, with that catalogue code and quantity. Nothing is ordered that the job does not list, and nothing on the job is dropped without being stopped for a person with the reason.
+2. Stock on hand is checked before ordering, and anything already in stock is set aside for the job instead. Before any order is drafted, it checks stock on hand. A line the store or the van already covers is set aside for the job and does not go on a purchase order. An order that ignores stock fails.
+3. Every line uses the supplier's catalogue code and today's catalogue price, and a code no catalogue holds stops the order. The price on a line is the supplier's catalogue price for that code, checked when the order is drafted. No price is typed, remembered or averaged. If no supplier's catalogue holds a code, the order stops and a person is told why (reason: not_in_catalogue).
+4. One order per job and supplier, created once and updated on a second run. Each order is tied to the job and the supplier, so it never makes a second one. A second run for the same job updates the existing order or does nothing. Two orders for one job and supplier fails, and an order the ordering system did not give a number to has failed to save.
+5. An order over your limit, or to a supplier not on the approved list, goes out only when a named person releases it. An order is released either by a named person, or by a rule with a dollar limit that a named person set. An order over the limit, or to a supplier not on the approved list, waits for a person. Under the limit and to an approved supplier, the rule may release it.
+6. Each supplier has a lead time, and the job owner is told when an order would arrive after the job starts. Lead time is a number recorded on the supplier or the catalogue line, never a guess. When an order would arrive after the job's start, the job owner is told straight away, with the order and the supplier named.
+7. A delivery is checked off against the order line by line, and a delivery with no order is refused. When goods arrive, the docket is matched to the order and each line is recorded with the quantity received and, where it differs, why (short or damaged). A docket that matches no order is not recorded as a delivery. It goes to a person instead.
+8. Short, over, wrong item and a changed price each go to a named person with the order number, never quietly swallowed. Every difference between what was ordered and what arrived is logged with its kind, the order number and the person who owns it. It is never quietly added to the job's cost, and never quietly written off.
+9. A supplier's substitution is accepted only by a named person. When the supplier delivers a different item in place of the one ordered, the line counts as received only once a named person has accepted the substitute. Until then it is held as a difference and a person is told. A substitute accepted by a rule, or by nobody, fails.
+10. Every order, release, delivery and difference can be pulled up by job. When the supplier's invoice arrives, or the customer asks what a material cost, look up the job number to see each order with its number in the ordering system and the catalogue edition, who released it or which rule did, each delivery line by line, and every difference with its owner.
+11. It keeps working if the person who built it leaves. Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+12. The pass test passes. On your real job system and a real supplier account, run one job through twice, with one line covered from stock, one line no catalogue holds, one order over the limit waiting for a person, and one delivery short.
 
 ## 4. The six queues
 
 | Queue | What it holds | The rule |
 | --- | --- | --- |
 | Draft | Lines from the job, priced from the catalogue, not yet released | Exists with its id. Nothing has been sent |
-| Parked | A code no catalogue holds, or a write that failed | A reason and an owner. Never sent |
+| Parked | A code no catalogue holds, or an order that did not go through | A reason and an owner. Never sent |
 | Waiting for release | Over the threshold, or to a supplier not on the approved list | A named person releases it, or it waits |
-| Sent | Released, written into the ordering system, supplier's lead time checked against the start | The job owner is told if it will miss |
+| Sent | Released, placed in the ordering system, supplier's lead time checked against the start | The job owner is told if it will miss |
 | Delivered | A docket matched to the order line by line | The record the supplier's invoice is checked against |
-| Variance | Short, over, wrong item, damaged, a changed price, a substitution | Escalated with the order id and an owner. A substitution is accepted only by a person |
+| Variance | Short, over, wrong item, damaged, a changed price, a substitution | Sent to its owner with the order number. A substitution is accepted only by a person |
 
-Parking is a success. An order that waits a morning for a person to price one line beats one that went out at a remembered price, and beats by a long way one that went out twice.
+An order held back is the system working. An order that waits a morning for a person to price one line beats one that went out at a remembered price, and beats by a long way one that went out twice.
 
 ## 5. Delivery, and what it feeds
 
 A delivery is recorded against the order line by line: what was ordered, what arrived, and a reason for any gap. Short, damaged and substituted are the reasons. A delivery with no order to match is refused, because the supplier who delivers what nobody ordered will invoice for it. A substitution is accepted only by a named person, who is usually the one on site who can see whether it will do.
 
-The matched delivery is the record the supplier’s invoice should be compared against. The Invoice Check standard covers that comparison against the order; it does not yet read the docket, so the received quantity recorded here is what a builder adds to it. Order, docket and invoice, three records that agree or a variance with an owner. That is the whole reason the docket is matched here rather than signed and filed.
+The matched delivery is the record the supplier’s invoice should be compared against. The Invoice Check standard covers that comparison against the order; it does not yet read the docket, so the received quantity recorded here is what a builder adds to it. Order, docket and invoice either agree, or the difference goes to a named person. That is why the docket is matched here rather than signed and filed.
 
 ## 6. What stays with a person
 
@@ -152,11 +152,11 @@ The matched delivery is the record the supplier’s invoice should be compared a
 
 ## 7. Connect your job system and supplier accounts for orders, without it spending over your limit
 
-It orders each job’s materials, once, from your approved suppliers. It reads the job’s material list, the stock on hand and the supplier’s catalogue, and writes one order per job and supplier. Any order over your limit, any new supplier, any substitute and any delivery that doesn’t match comes to you to decide. Your own login stays yours. The build connects with its own key or app connection, never your username and password, and it never holds the password to your trade account.
+It orders each job’s materials, once, from your approved suppliers. It reads the job’s material list, the stock on hand and the supplier’s catalogue, and places one order per job and supplier. Any order over your limit, any new supplier, any substitute and any delivery that doesn’t match comes to you to decide. Your own login stays yours. The build connects with its own key or app connection, never your username and password, and it never holds the password to your trade account.
 
 What each piece of access is for.
 
-- **Jobs, read.** For the material list, the start date and the job owner, and to read the job again before writing so a second run finds the first order.
+- **Jobs, read.** For the material list, the start date and the job owner, and to read the job again before placing an order, so a second run finds the first order.
 - **Stock, read and reserve.** So the thirty metres already on the shelf are reserved for the job, not ordered again.
 - **The supplier’s catalogue, read.** The only source of a price and a lead time, read at order time.
 - **Purchase orders, write.** One order per job and supplier, in the job system’s purchasing or the supplier’s ordering, with the id back.
@@ -167,13 +167,13 @@ What each piece of access is for.
 4. Decide who records a delivery against the order, usually the person on site who signs the docket.
 5. Run the pass test below on one real job.
 
-Why not your supplier’s app, or the purchase orders already in your job system? A supplier’s app orders well from that supplier and knows nothing about your shelf, your other suppliers or the job. Your job system’s purchase orders are the right place for the order to live, and where this build writes when the system allows it. Before building around one, check two things: does it stop a second order for the same job and supplier, and does it hold an order over a threshold for a named person. If it does both, use it, and build only the stock read and the delivery match.
+Why not your supplier’s app, or the purchase orders already in your job system? A supplier’s app orders well from that supplier and knows nothing about your shelf, your other suppliers or the job. Your job system’s purchase orders are the right place for the order to live, and where this build puts the order when the system allows it. Before building around one, check two things: does it stop a second order for the same job and supplier, and does it hold an order over a threshold for a named person. If it does both, use it, and build only the stock read and the delivery match.
 
 Where it runs. A scheduled flow with the orders and deliveries as lists (the [Microsoft 365 plan](https://aipathway.com.au/explore-ai/material-orders-on-microsoft-365) lays these out), a Google Sheet with a timer, or a small build a coding agent makes from this page. All are held to the same checks; see [run a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
 
 ## 8. What your developer builds, and the step that needs care
 
-One step not to hand-roll: the idempotent write of the order into the system the business buys from, with an id back. Everything else a coding agent builds against the stub in an afternoon.
+One step not to build from scratch: placing the order in the system the business buys from exactly once, and getting its order number back. A coding agent can build everything else against a stand-in system in an afternoon.
 
 ```
 provider:
@@ -193,24 +193,24 @@ the live step
 
 A vendor selling purchasing automation is usually selling the picking list, which is the easy half, and is silent about what happens when the job is ordered twice or the supplier sends a substitute. Ask them those two first.
 
-**The pass test.** On the real job system and a real supplier account. Order one job twice, an hour apart: one order per supplier must exist with the system’s own id, updated not duplicated. Put stock on the shelf for one line: it must be reserved, not ordered. Put a code on the job that no catalogue holds: the order must park with that reason and carry no price for it. Set a threshold and order one job over it: it must wait for a named person, and go out only with their name on the release. Then record a delivery one line short: the variance must be in the queue with an owner. If any of those five is not what happened, the standard is not implemented.
+**The pass test.** On the real job system and a real supplier account. Order one job twice, an hour apart: one order per supplier must exist with the system’s own id, updated not duplicated. Put stock on the shelf for one line: it must be reserved, not ordered. Put a code on the job that no catalogue holds: the order must be held back with that reason and carry no price for it. Set a threshold and order one job over it: it must wait for a named person, and go out only with their name on the release. Then record a delivery one line short: the variance must be in the queue with an owner. If any of those five is not what happened, the standard is not implemented.
 
 ## 9. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 
-- **1. Every ordered line traces to a material line on the job.** An order line exists because the job carries a material line with that catalogue code and quantity. Nothing is ordered that the job does not list, and nothing on the job is dropped without a parked reason.
-- **2. Stock on hand is read before the order, and a line stock covers is reserved rather than ordered.** Before any order is written, stock on hand is read. A line the store or the van already covers is reserved against the job and does not appear on a purchase order. An order that ignores stock fails.
-- **3. Every line carries the supplier's catalogue code and price, read at order time, and a line no catalogue holds parks the order.** The price on a line is the supplier's catalogue price for that code, read when the order is drafted. No price is typed, remembered or averaged. A code no supplier's catalogue holds parks the order with reason not_in_catalogue and a person is told.
-- **4. One order per job and supplier, written once, updated on a second run.** The write is keyed to the job and the supplier. A second run for the same job updates the existing order or does nothing. Two orders for one job and supplier fails, and a null external id is a failed write, not a success.
-- **5. An order over the threshold, or to a supplier not on the approved list, is released only by a named person.** A release is one of two things: a named person, or a rule a named person set with a threshold. An order whose total is over the threshold, or whose supplier is not on the approved list, waits for a person. Under the threshold and to an approved supplier, the rule may release.
-- **6. Each supplier carries a lead time, and an order that would miss the job's start tells the job owner.** Lead time is a number on the supplier or the catalogue line, not a guess. When the order's arrival date lands after the job's start, the job owner is told in the same run, with the order and the supplier named.
-- **7. A delivery is recorded against the order line by line, and a delivery with no order is refused.** When goods arrive, the docket is matched to the order and each line is recorded with the quantity received and, where it differs, a reason: short or damaged. A docket that matches no order is not recorded as a delivery; it is raised to a person.
-- **8. Short, over, wrong item and a changed price are escalated with the order id and an owner, never absorbed.** Every difference between what was ordered and what arrived is a variance with a kind, the order id and an owner. It is never silently accepted into the job's cost, and it is never silently written off.
-- **9. A supplier's substitution is accepted only by a named person.** When the supplier delivers a different item in place of the one ordered, the line is received only when a named person has accepted the substitute. Without that acceptance the line is held as a variance and a person is told. A substitution accepted by a rule, or by nobody, fails.
-- **10. Every order, release, delivery and variance is retrievable by job.** When the supplier's invoice arrives, or the customer asks what a material cost, the record shows by job id: each order with its external id and the catalogue edition, who released it or which rule did, each delivery line by line, and every variance with its owner.
-- **11. It survives the builder.** Someone other than the builder can explain what it does, and it runs on an account the business owns.
-- **12. The pass test passes.** On the real job system and a real supplier account: one job ordered twice, one line covered from stock, one line no catalogue holds, one order over the threshold waiting for a person, and one delivery short.
+- **1. Every line ordered matches a material line on the job.** A line is only ordered because the job lists that material, with that catalogue code and quantity. Nothing is ordered that the job does not list, and nothing on the job is dropped without being stopped for a person with the reason.
+- **2. Stock on hand is checked before ordering, and anything already in stock is set aside for the job instead.** Before any order is drafted, it checks stock on hand. A line the store or the van already covers is set aside for the job and does not go on a purchase order. An order that ignores stock fails.
+- **3. Every line uses the supplier's catalogue code and today's catalogue price, and a code no catalogue holds stops the order.** The price on a line is the supplier's catalogue price for that code, checked when the order is drafted. No price is typed, remembered or averaged. If no supplier's catalogue holds a code, the order stops and a person is told why (reason: not_in_catalogue).
+- **4. One order per job and supplier, created once and updated on a second run.** Each order is tied to the job and the supplier, so it never makes a second one. A second run for the same job updates the existing order or does nothing. Two orders for one job and supplier fails, and an order the ordering system did not give a number to has failed to save.
+- **5. An order over your limit, or to a supplier not on the approved list, goes out only when a named person releases it.** An order is released either by a named person, or by a rule with a dollar limit that a named person set. An order over the limit, or to a supplier not on the approved list, waits for a person. Under the limit and to an approved supplier, the rule may release it.
+- **6. Each supplier has a lead time, and the job owner is told when an order would arrive after the job starts.** Lead time is a number recorded on the supplier or the catalogue line, never a guess. When an order would arrive after the job's start, the job owner is told straight away, with the order and the supplier named.
+- **7. A delivery is checked off against the order line by line, and a delivery with no order is refused.** When goods arrive, the docket is matched to the order and each line is recorded with the quantity received and, where it differs, why (short or damaged). A docket that matches no order is not recorded as a delivery. It goes to a person instead.
+- **8. Short, over, wrong item and a changed price each go to a named person with the order number, never quietly swallowed.** Every difference between what was ordered and what arrived is logged with its kind, the order number and the person who owns it. It is never quietly added to the job's cost, and never quietly written off.
+- **9. A supplier's substitution is accepted only by a named person.** When the supplier delivers a different item in place of the one ordered, the line counts as received only once a named person has accepted the substitute. Until then it is held as a difference and a person is told. A substitute accepted by a rule, or by nobody, fails.
+- **10. Every order, release, delivery and difference can be pulled up by job.** When the supplier's invoice arrives, or the customer asks what a material cost, look up the job number to see each order with its number in the ordering system and the catalogue edition, who released it or which rule did, each delivery line by line, and every difference with its owner.
+- **11. It keeps working if the person who built it leaves.** Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+- **12. The pass test passes.** On your real job system and a real supplier account, run one job through twice, with one line covered from stock, one line no catalogue holds, one order over the limit waiting for a person, and one delivery short.
 
 ## Related reading
 

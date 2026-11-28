@@ -9,7 +9,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/cited-answer-o
 
 ---
 
-An assistant over your own documents is the easy half and you may already have it. The half that makes it safe to rely on is the part nobody ships by default.
+An assistant over your own documents is the easy half and you may already have it. The half that makes it safe to rely on is the part no product gives you out of the box.
 
 Used by
 
@@ -18,22 +18,22 @@ Used by
 - Compliance Officer
 - Quality Manager
 
-This is the build plan most likely to be read by somebody who believes they have already done it, because the tenant comes with an assistant and the assistant answers questions about documents. The gap between that and this standard is the gap between a citation and a dated clause.
+This is the build plan most likely to be read by somebody who believes they have already done it, because your Microsoft 365 comes with an assistant that answers questions about documents. That assistant tells you which document an answer came from. This standard needs the exact clause, and the date it applied.
 
 ## In short
 
 - **What this is**: A build plan for the cited answer standard on Microsoft 365. A library, four lists, three flows, five measures, and whichever assistant you already pay for on top.
-- **The core rule**: Retrieval runs over clauses with effective dates. A superseded clause cannot produce a live answer, and no general document assistant knows that on its own.
-- **What it does not do**: It never certifies, never issues or forecloses a certificate, and never resolves a conflict between two live instruments.
-- **The hard part**: Finding every answer that relied on an instrument that just changed, which is only possible if the cards were stored on the answers.
+- **The core rule**: It searches clauses, each with the dates it applies from and to. A clause that has been replaced cannot give a live answer, and no general document assistant knows that on its own.
+- **What it does not do**: Certificates, and any clash between two rules in force, stay with a person. It never certifies, and never issues or rules out a certificate.
+- **The hard part**: Finding every answer that relied on a rule that just changed. That only works if each answer stored its source cards when it was given.
 
 ## 1. Before you start, and the thing to get straight
 
 Read [the cited answer build standard](https://aipathway.com.au/explore-ai/cited-answer-build-standard) first. Shared conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-**Pointing a document assistant at a folder of standards does not implement this.** A document-grounded assistant tells you which file an answer came from. This standard is about a clause, its edition, its jurisdiction and the date it was live, and about a retired clause being unable to answer at all. No general assistant has a concept of a superseded clause, because nothing in a document tells it one.
+**Pointing a document assistant at a folder of standards does not implement this.** An assistant that reads your documents tells you which file an answer came from. This standard needs the clause, its edition, the jurisdiction it applies in and the date it was in force, and a retired clause must not answer at all. No general assistant knows a clause has been replaced, because nothing in the document tells it.
 
-So the assistant is the part you already have. The clause library, the source cards and the change feed are the build, and they sit underneath whichever model you are paying for.
+The assistant is the part you already have. What you build is the clause library, the source cards and the weekly check for rule changes, and they sit underneath whichever AI model you pay for.
 
 ## 2. The lists, with their columns
 
@@ -175,7 +175,7 @@ AVERAGEX (
 )
 ```
 
-Do not treat a falling Decline Rate as progress. It falls when the library genuinely improves and also when somebody loosens the retrieval filter, and those are opposite events. Read it against Uncited Answers, which must stay at zero.
+Do not treat a falling Decline Rate as progress. It falls when the library really improves and also when somebody loosens the retrieval filter, and those are opposite events. Read it against Uncited Answers, which must stay at zero.
 
 ## 6. What the flows can reach in your Microsoft 365, and what they never touch
 
@@ -198,13 +198,13 @@ Give it the least it needs.
 
 How to cut it off. Turn off the three flows, or delete their connections in Power Automate. Remove the service account from the site, delete the app registration’s secret if you used one, and revoke the model key with its provider. The library, the cards and every answer already given stay on the site, which is what you want if somebody later asks why.
 
-Why not a Copilot Studio agent over the library? It makes a good front door, and an agent can call a Power Automate flow. Let it hand the question to Flow 1, so the decline is decided before anything is written. What it cannot be is the gate itself: answering straight from documents cites a file, not a dated clause, and it has no idea a clause was retired. That is the first trap below.
+Why not a Copilot Studio agent over the library? It makes a good front door, and an agent can call a Power Automate flow. Let it hand the question to Flow 1, so the decline is decided before anything is written. It cannot be the check itself. Answering straight from documents cites a file instead of a dated clause, and it has no idea a clause was retired. That is the first trap below.
 
 ## 7. The order to build it in
 
 1. Create the library and lists. Index ClauseId.
 2. Load one instrument and split it into clauses. One instrument is enough to prove the shape and small enough to check by hand.
-3. Create source cards for those clauses, with a real accepting person. If nobody will accept them, stop: that is the finding.
+3. Create source cards for those clauses, with a real accepting person. If nobody will accept them, stop there. That is your answer.
 4. Build Flow 1 up to step 3 and no further. Prove it declines before teaching it to answer.
 5. Add steps 4 to 7. Confirm SourceCardIds is written on the answer.
 6. Retire a clause and run the pass test.
@@ -215,7 +215,7 @@ Why not a Copilot Studio agent over the library? It makes a good front door, and
 
 ### Assuming Copilot over SharePoint satisfies this
 
-It does not. A document-grounded assistant cites the file it drew on. This standard is about a clause, an edition, a jurisdiction and an effective date, and about a superseded clause being unable to produce a live answer. Nothing in a general document assistant knows that a clause was retired. The clause library and the card layer are yours to build whichever assistant sits on top.
+An assistant that reads your documents cites the file it drew on. This standard is about a clause, an edition, a jurisdiction and an effective date, and about a superseded clause being unable to produce a live answer. Nothing in a general document assistant knows that a clause was retired. The clause library and the card layer are yours to build whichever assistant sits on top.
 
 ### The instrument library as the only store
 
@@ -223,7 +223,7 @@ Dropping PDFs in a library and pointing retrieval at it gives you document-level
 
 ### Declining implemented as a prompt instruction
 
-Telling a model to say it does not know is a request, not a gate. The decline must be the branch taken when retrieval returns nothing, decided in the flow before the model is asked to write anything.
+Telling a model to say it does not know is only a request, and a request can be talked around. When the search finds no clause, the flow itself must decline, before the model is asked to write anything.
 
 ### No link from an instrument to the answers that relied on it
 
@@ -237,7 +237,7 @@ When an instrument moves you need the list of answers already given from it. Tha
 - Any answer where being wrong is somebody's safety rather than somebody's afternoon.
 - Deciding a question is outside the body of rules you hold, and saying so to the person who asked.
 
-**The pass test.** Retire one clause your assistant answers from: set its EffectiveTo and load the replacement with a later EffectiveFrom, then ask the same question again. The answer must either change and cite the new clause, or decline into change_pending until somebody accepts the delta. Then ask something adjacent that your library genuinely does not cover: it must decline and name a person, with no body text composed. A few minutes on your own material. If the first still answers from the retired clause, retrieval is not filtering on the date. If the second produces a plausible paragraph, the model is answering from memory and you have a chatbot with a citation field.
+**The pass test.** Retire one clause your assistant answers from: set its EffectiveTo and load the replacement with a later EffectiveFrom, then ask the same question again. The answer must either change and cite the new clause, or decline, marked change pending, until somebody accepts the change. Then ask something close by that your library does not cover: it must decline and name a person, and write no answer text. A few minutes on your own material. If the first still answers from the retired clause, the search is not filtering by date. If the second produces a plausible paragraph, the model is answering from memory and you have a chatbot with a citation field.
 
 ## Related reading
 

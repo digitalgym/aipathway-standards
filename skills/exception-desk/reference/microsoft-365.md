@@ -9,7 +9,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/parked-items-o
 
 ---
 
-Four lists and four flows that give every other flow in your business one place to park what it cannot decide, with an owner, a clock and a person to close it.
+Four lists and four flows that give every other flow in your business one place to put what it cannot decide, with an owner, a due time and a person to close it.
 
 Used by
 
@@ -17,14 +17,14 @@ Used by
 - Business Systems Analyst
 - Operations Manager
 
-Every flow you build will hit something it should not decide: a price that is not in the book, a job nobody is licensed for, a write ServiceM8 refused. Without this, each one emails someone, posts in a different Teams chat or quietly stops. This plan gives them one list to append to, and gives you one list to work from.
+Every flow you build will hit something it should not decide: a price that is not in the price book, a job nobody is licensed for, a change ServiceM8 would not save. Without this, each one emails someone, posts in a different Teams chat or quietly stops. This plan gives every flow one list to add to, and gives you one list to work from.
 
 ## In short
 
-- **What this is**: A build plan for the exception desk standard on Microsoft 365. Four lists, a raise flow every other flow calls, a close flow, an hourly escalation flow and a morning summary in Teams.
-- **The core rule**: Flows only ever add or update open rows. A row is closed when a person adds a Closes row with an outcome, and the owner and clock always come from Routing.
-- **What it does not do**: No flow closes a row, picks an owner, or does anything about a dispute or hardship claim except hand it to the person Routing names and set the stop every chase flow reads.
-- **The hard part**: Keeping exactly one open row per record and type when two flows raise at once, and permissions on Closes so no flow can close its own item.
+- **What this is**: A build plan for the exception desk standard on Microsoft 365: four lists, a flow every other flow calls to add an item, a flow that records a close, an hourly escalation flow and a morning summary in Teams.
+- **The core rule**: Flows only ever add or update open items. An item is closed when a person records an outcome in the Closes list, and the owner and due time always come from the Routing list.
+- **What it does not do**: A person closes each item, unless you let a type close itself once it clears, and Routing names every owner. A dispute or hardship claim goes straight to the person Routing names, and every chasing flow stops on that job.
+- **The hard part**: Keeping exactly one open item per job and type when two flows add one at the same moment, and setting permissions so no flow can close its own item.
 
 ## 1. Before you start
 
@@ -32,9 +32,9 @@ Read [the exception desk build standard](https://aipathway.com.au/explore-ai/exc
 
 Fill Routing first: one row per type, with the person who owns it, how many hours they have, and who it goes to if it is late. A type with no row falls to the row for other, so write that one too.
 
-Then decide when the summary is due. Seven in the morning is common; pick the time the office actually starts.
+Then decide when the summary is due. Seven in the morning is common, but pick the time your office starts.
 
-Before you build, check who can add a row to Closes. Break permission inheritance on that list so only the office can add items, and the flows’ connection can read it but not write to it. That one setting is what makes a close something no flow can do by itself.
+Before you build, check who can add to Closes. Break permission inheritance on that list so only the office can add items, and the flows can read it but not add to it. That one setting is what stops any flow closing an item by itself.
 
 ## 2. The lists, with their columns
 
@@ -150,12 +150,12 @@ Flow 2 is the only flow that sets Status closed, and it only ever does so from a
 
 ## 5. What the flows can reach in your Microsoft 365, and what they never touch
 
-The flows keep everything the other flows couldn’t decide in one list, each item with an owner and a due time. They write each item to one SharePoint site, checked against its record in your job system or Xero, and post one summary a day to Teams. A person closes each item and records the outcome, and every dispute or hardship claim goes to its named owner. You decide who owns each kind of item.
+The flows keep everything the other flows couldn’t decide in one list, each item with an owner and a due time. They write each item to one SharePoint site, checked against its record in your job system or Xero, and post one summary a day to Teams. A person closes each item and records the outcome, unless you let a type close itself once it clears. Every dispute or hardship claim goes to its named owner. You decide who owns each kind of item.
 
 What each connection is for.
 
 - **SharePoint, the ExceptionDesk site.** Exceptions, Routing, Closes and Summaries. The flows read Routing and Closes and never write to either. Your other flows (the quote, invoice and chase flows) call Flow 1 to raise, and read StopChase before they act on a record.
-- **Your job system and ledger, read only.** Flow 1 reads the record before it writes a row, through the connector or HTTP action you already use for ServiceM8, Simpro, AroFlo, Fergus or Xero. It needs read access to jobs, quotes and invoices and nothing else.
+- **Your job system and Xero, read only.** Flow 1 checks the job, quote or invoice before it adds an item, through the connector or HTTP action you already use for ServiceM8, Simpro, AroFlo, Fergus or Xero. It needs read access to jobs, quotes and invoices and nothing else.
 - **Teams, one channel.** Flow 4 posts the morning summary, and Flow 3 posts each escalation to the person Routing names.
 
 Keep it to the least it needs.
@@ -164,9 +164,9 @@ Keep it to the least it needs.
 2. Put the four flows in a solution and use connection references, so each connection is made once, by the service account.
 3. Make the service account a member of the ExceptionDesk site and no other, or, with an app registration, give it Sites.Selected on that site only.
 4. Break inheritance on Closes and Routing so only the office can add or change items, and give the service account read on both.
-5. Give the job system and ledger connections read scopes only.
+5. Give the job system and Xero connections read-only access.
 
-How to cut it off. Turn the flows off and nothing new is parked, escalated or summarised; every open row stays where it is for a person to close. Take the service account out of the site and every flow loses the queue at once.
+How to cut it off. Turn the flows off and nothing new is added, escalated or summarised, and every open item stays where it is for a person to close. Take the service account out of the site and every flow loses the list at once.
 
 ## 6. The order to build it in
 
@@ -195,11 +195,11 @@ A morning with no summary looks the same as a broken flow. The "none" message is
 ## 8. Where the automation stops
 
 - Closing every row, with the outcome.
-- Writing Routing: who owns each type, the clock, who it escalates to.
+- Writing Routing: who owns each type, how long they have, and who it escalates to.
 - Every dispute and hardship claim.
 - Deciding when a label that keeps arriving as other becomes a type.
 
-**The pass test.** On your own tenant, job system and ledger. Raise three items from three different places: a sheet or form parks an invoice on an unpriced line, a call handoff names an address it could not resolve, and a bot raises a parts shortfall. All three must sit in Exceptions, each with its record id, its owner from Routing and a due time. Raise the shortfall again: still one row, RaiseCount 2. Let one go past its due time and wait two runs of Flow 3: one escalation. The next morning’s summary lists all three.
+**The pass test.** Do this on your own Microsoft 365, job system and Xero. Raise three items from three different places: a sheet or form holds back an invoice with an unpriced line, a call handover names an address it could not find, and a bot raises a parts shortfall. All three must sit in Exceptions, each with its record id, its owner from Routing and a due time. Raise the shortfall again: still one row, RaiseCount 2. Let one go past its due time and wait two runs of Flow 3: one escalation. The next morning’s summary lists all three.
 
 ## Related reading
 

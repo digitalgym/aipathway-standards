@@ -37,7 +37,7 @@ An open build standard for the week after an open home. Everyone who signed in a
 
 The core rule
 
-Nothing leaves without the agent's yes: not a follow-up, not the vendor report. The build reads, drafts, sorts and counts. You approve.
+Nothing goes out without your yes, neither a follow-up nor the vendor report. The build reads, drafts, sorts and counts, and you approve.
 
 What it does not do
 
@@ -45,7 +45,7 @@ It never follows up someone with no consent on the sign-in sheet, never answers 
 
 The hard part
 
-Not the drafting. Keeping every opt-out honoured across every listing and every tool you send from, and keeping a record of who said what that still answers a vendor's question months later.
+The drafting is easy. The hard part is keeping every opt-out honoured across every listing and every tool you send from, and keeping a record of who said what that still answers a vendor's question months later.
 
 Saturday’s open had thirty groups through. By Tuesday the vendor is asking what people thought, the sign-in sheet is in the car, and the follow-ups that would have told you went to the eight people you remembered. The report the vendor gets is your impression of the afternoon. It is usually fair. It is also the thing a vendor quotes back to you when the campaign goes long and they want to know who said the price was right.
 
@@ -80,14 +80,14 @@ Rather build it yourself? Everything you need is below, free. Joining it to your
 
 ## Set up the open-home feedback Google Sheet, without letting it email buyers on its own
 
-The sheet holds the pen; you hold the stamp. It reads the one spreadsheet you copied, writes a draft for every attendee who gave consent, files the replies you paste in and drafts the vendor report. It sends none of it until you type yes against that row. It cannot open your Drive, your other spreadsheets or your CRM, it sends no texts and it rings nobody. Nothing runs until you choose Run now, and once the hourly run is on, **Open-Home Feedback > Pause the hourly run** turns it off in one click.
+It follows up every attendee who said yes at sign-in, and turns their replies into a report for the vendor. It reads the register in the spreadsheet you copied, writes a draft for every attendee who gave consent, files the replies you paste in and drafts the vendor report. You approve each follow-up and the vendor report before they go, and every offer, complaint and reply it cannot sort comes to you.
 
 1. [Make your own copy](https://docs.google.com/spreadsheets/d/1Qbzmz0Az8cBsCjM9HcxFbIVGsxillCpDImgEzkB-ctc/copy). The script comes with it and lives in your Google account.
 2. Fill in Listings, with the vendor’s email the approved report goes to, and Opens, with the one question each open asks: interest, the price or the contract.
 3. Paste the register as written. Put yes in consent only where the person agreed at sign-in, and yes in call_ok only where they ticked that they would take a call.
 4. Choose **Open-Home Feedback > Run now**. Google shows “Google hasn’t verified this app” because the script is your own copy, not a published app. Choose Advanced, then Go to Open-Home Feedback, and read the list below before you allow it.
 5. Read each draft on FollowUps and type yes in approved. The next run sends it. A follow-up for someone who left only a mobile is marked for you to send from your phone.
-6. To have it run every hour, choose **Connect…** (below).
+6. To have it run every hour, choose **Connect…** (below). **Open-Home Feedback > Pause the hourly run** turns it off in one click.
 
 What each Google permission is for. Google lists six. Each one has a single job here:
 
@@ -98,13 +98,13 @@ What each Google permission is for. Google lists six. Each one has a single job 
 - **Display a dialog:** the Connect… window.
 - **See your email address:** to fill in the agent’s email, where offers and complaints go.
 
-Connect…, and what the AI Pathway key can do. The sheet shows a link and a code. Open the link, sign in to AI Pathway, check the code matches and approve. The sheet picks the key up by itself: nothing is pasted, and the key is never shown in the sheet. The key asks for one permission: to hold an attendee who asked for a call, so a call can be asked for. It cannot dial. The call stays off until voice_step on Settings says on, and even then AI Pathway decides at dial time on the AI disclosure, the Do Not Call Register and calling hours. The sheet then asks who the agent is, the person who approves and gets every offer and complaint, and turns on the hourly run.
+Connect…, and what the AI Pathway key can do. The sheet shows a link and a code. Open the link, sign in to AI Pathway, check the code matches and approve. The sheet picks the key up by itself: nothing is pasted, and the key is never shown in the sheet. The key has one permission: to put an attendee who asked for a call on the list for one. It cannot dial. The call stays off until voice_step on Settings says on, and even then AI Pathway checks the AI disclosure, the Do Not Call Register and calling hours before it rings. The sheet then asks who the agent is, the person who approves and gets every offer and complaint, and turns on the hourly run.
 
 Why not your CRM’s own follow-up? Use it if it holds the checks in section 4. Before you rely on it, ask it two things: does someone who replied STOP at last month’s listing get nothing this week, and does anything go to a buyer or the vendor before you say yes. We have not tested Rex, Agentbox or VaultRE against this standard. The sheet is for an agent whose CRM cannot show both.
 
 ## 1. What this standard covers
 
-The week after an open home for a property you are selling. The sign-in register is the input: names, mobiles, emails, and the consent each person gave when they signed in. The outputs are a follow-up per attendee, the replies sorted, a handful of exceptions for you, and the vendor’s report for the week.
+The week after an open home for a property you are selling. The sign-in register is the input: names, mobiles, emails, and the consent each person gave when they signed in. The outputs are a follow-up per attendee, the replies sorted, a handful of problems for you to sort out, and the vendor’s report for the week.
 
 What is out of scope. Negotiating. An offer is the agent’s to pass to the vendor and a complaint is the agent’s to handle, so the build hands both over and stops. Setting or changing the price guide is the agent’s too. And working the rest of your database, the past buyers and the old appraisals, is the [Database Reactivation standard](https://aipathway.com.au/explore-ai/database-reactivation-build-standard). An attendee who says they have a place to sell becomes a lead for that work, not a second campaign here.
 
@@ -168,22 +168,22 @@ A VendorReport with any field not named here is the defect check 9 exists for: a
 
 ## 4. The checks, in order
 
-The order is the claim. Consent is read before anything is drafted, a draft exists before anything sends, the agent’s yes sits between the two, and the vendor report is built from filed replies rather than from a reading of the afternoon.
+Each check has to pass before the next one runs. Consent is checked before anything is drafted, and nothing sends until you have said yes to the draft. The vendor report is built from the sorted replies, not from your memory of the afternoon.
 
-1. The register is read as written, never repaired. Each sign-in row needs a name, a way to reach them and the open it belongs to. A row missing any of them is an exception for a person, not a guess.
-2. No consent recorded, no follow-up. Consent is what the attendee gave at sign-in, read from the register. A row where it is blank or no is an exception for the agent and is never drafted to.
-3. The same person at two opens is one attendee. Matched on the mobile or the email, not the name. They get one follow-up for the listing, and the duplicate is flagged so the agent sees they came back.
-4. Each draft thanks them and asks one question. Interest, price feedback or the contract, one of them. The draft names the agency, carries a way to opt out, and is written, not sent.
-5. A person approves every follow-up before it sends. The send is a separate step from the draft, and it reads the agent's yes against that draft. No approval, no send.
+1. The sign-in register is read as written, never filled in. Each sign-in needs a name, a way to reach them and the open it belongs to. If any of them is missing, it goes to a person with the gap named. Nothing is guessed.
+2. No consent recorded, no follow-up. Consent is what the attendee gave at sign-in, as the register shows it. If it is blank or no, that person goes to the agent and no message is ever drafted to them.
+3. The same person at two opens is one attendee. They are matched on mobile or email, never on name. They get one follow-up for the listing, and the repeat visit is flagged so the agent sees they came back.
+4. Each draft thanks them and asks one question. The one question is about interest, price feedback or the contract. The draft names the agency, includes a way to opt out, and is only drafted, never sent.
+5. A person approves every follow-up before it sends. Sending is a separate step from drafting, and it checks the agent said yes to that exact draft. Without approval, nothing sends.
 6. An opt-out is honoured across every open and listing. A reply of STOP, or any request to stop, is recorded as withdrawn consent and blocks every later message to that person, whichever open they sign in at next.
-7. Every reply is classified, and an unclear one goes to a person. Hot buyer, price feedback, not interested, or also has a property to sell (an appraisal lead). A reply can carry more than one. One that fits none is unclear and goes to the agent.
-8. An offer or a complaint goes to the agent, unanswered. An offer is the agent's to pass to the vendor, and a complaint is the agent's to handle. The build hands both over with a typed reason and sends nothing back.
-9. The vendor report counts, quotes and invents nothing. Counts that add up, price comments word for word, themes that each point at the replies they came from, and no names or numbers of attendees. No sentiment score and no percentage that the counts do not give.
+7. Every reply is sorted, and an unclear one goes to a person. Each reply is sorted as hot buyer, price feedback, not interested, or also has a property to sell (an appraisal lead). A reply can be more than one. One that fits none is unclear and goes to the agent.
+8. An offer or a complaint goes to the agent, unanswered. An offer is the agent's to pass to the vendor, and a complaint is the agent's to handle. It hands both to the agent with the reason marked, and sends nothing back to the person.
+9. The vendor report counts, quotes and invents nothing. It has counts that add up, price comments word for word, and themes that each point to the replies they came from. It never includes attendees' names or phone numbers, a mood score, or a percentage the counts do not give.
 10. The agent approves the vendor report before it goes. The report is drafted to the agent first. It goes to the vendor only once the agent has approved that version.
-11. Who said what is on the record. Consent as captured, every send with who approved it, every reply word for word, every class and every opt-out, kept so that a vendor dispute weeks later can be answered from the record and not from memory.
-12. The call is off by default, and only to someone who asked. If the agent turns the optional call on, it goes only to an attendee who ticked that they would take one, through a gate that decides at dial time, and opens by saying it is an AI calling for the agency.
-13. It survives the builder. Someone other than the builder can explain what it does, and it runs on an account the business owns.
-14. The pass test passes. A vendor disputes a week's report, and the record answers it: who signed in with what consent, what was sent with whose approval, and what each person said, word for word. An attendee who opted out was never messaged again.
+11. Who said what is on the record. It keeps consent as given, every message sent with who approved it, every reply word for word, how each reply was sorted, and every opt-out. A vendor dispute weeks later can then be answered from the record instead of from memory.
+12. The call is off by default, and only to someone who asked. If the agent turns the optional call on, it goes only to an attendee who ticked that they would take one, after a final check right before dialling, and it opens by saying it is an AI calling for the agency.
+13. It keeps working if the person who built it leaves. Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+14. The pass test passes. A vendor disputes a week's report, and the record answers it. It shows who signed in with what consent, what was sent with whose approval, and what each person said, word for word. An attendee who opted out was never messaged again.
 
 ## 5. One question, and the four kinds of reply
 
@@ -202,7 +202,7 @@ A reply can carry two classes: “the price seems right, but we would need to se
 
 Counts that add up: how many people came through, how many were followed up, how many replied, and how many replies fell in each class. The price comments in buyers’ own words, without their names. The themes you tagged, each pointing at the replies it came from. That is the whole report.
 
-What it never carries: a sentiment score, a percentage the counts do not give, a summary sentence that nobody said, an attendee’s name, mobile or email, or an offer. A vendor who reads “buyer sentiment: positive” in week two and sees no offers in week five will ask who was positive. The verbatim comment answers that. The adjective does not.
+What it never carries: a sentiment score, a percentage the counts do not give, a summary sentence that nobody said, an attendee’s name, mobile or email, or an offer. A vendor who reads “buyer sentiment: positive” in week two and sees no offers in week five will ask who was positive. The buyer’s own words answer that; the adjective does not.
 
 It is drafted to you first. You read it, take out anything a buyer would not want passed on, and approve that version. Only the approved version goes to the vendor.
 
@@ -211,7 +211,7 @@ It is drafted to you first. You read it, take out anything a buyer would not wan
 - Approving each follow-up before it sends. The build has no way to approve its own draft.
 - Approving the vendor report before it goes, version by version.
 - Every offer. Passing it to the vendor is the agent's job and the build never replies to it.
-- Every complaint, and every reply the build could not classify.
+- Every complaint, and every reply the build could not sort.
 - A sign-in row with no consent or no way to reach the person.
 - Turning the optional call on. It is off until a person changes it.
 
@@ -219,15 +219,15 @@ It is drafted to you first. You read it, take out anything a buyer would not wan
 
 Where you run it does not matter, as long as the checks hold. Three ways agents run it, cheapest first:
 
-- **With the tools you already have.** The register in a Google Sheet (the free one above, or your own), follow-ups as email drafts you approve by sending, replies pasted back in, and the vendor report as a draft email. A coding agent can write the classifier and the report from section 3 in an afternoon.
-- **A personal dashboard your coding agent builds.** One page: this week’s drafts with an approve button, the replies by class, the exceptions, and the report waiting for a yes. Hand this page to the agent and ask for exactly that, against the stub.
+- **With the tools you already have.** The register in a Google Sheet (the free one above, or your own), follow-ups as email drafts you approve by sending, replies pasted back in, and the vendor report as a draft email. A coding agent can write the reply sorting and the report from section 3 in an afternoon.
+- **A personal dashboard your coding agent builds.** One page: this week’s drafts with an approve button, the replies by class, the exceptions, and the report waiting for a yes. Hand this page to the agent and ask for exactly that, built against a stand-in system first.
 - **A long-lived bot routine.** A scheduled routine that reads the register after each open, drafts, and messages you for each approval in Slack or Teams. It must still wait for your yes; a bot that approves its own drafts fails check 5.
 
 Each of the three is walked through, for every standard, in [running a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere). A Microsoft 365 office can use the [build plan on Microsoft 365](https://aipathway.com.au/explore-ai/inspection-feedback-on-microsoft-365).
 
-## 9. Join It to Your Own System: What to Stub, and What Not to Hand-Roll
+## 9. Join It to Your Own System: What to Build, and What Not to Build From Scratch
 
-Everything in sections 2 to 6 is free to build against the stub, and the sheet above already does it. The step not to hand-roll is the channel at volume and the record behind it: consent and opt-outs that hold across every listing and every tool you send from, and a record of who said what that answers a vendor dispute. No product of ours runs that step for this standard today.
+Everything in sections 2 to 6 is free to build against a stand-in system, and the sheet above already does it. The step not to build from scratch is sending at volume and the record behind it: consent and opt-outs that hold across every listing and every tool you send from, and a record of who said what that settles a vendor dispute. No product of ours runs that step for this standard today.
 
 ```
 provider:
@@ -268,20 +268,20 @@ A vendor selling automated open-home follow-up is usually selling the messages. 
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 
-- **1. The register is read as written, never repaired.** Each sign-in row needs a name, a way to reach them and the open it belongs to. A row missing any of them is an exception for a person, not a guess.
-- **2. No consent recorded, no follow-up.** Consent is what the attendee gave at sign-in, read from the register. A row where it is blank or no is an exception for the agent and is never drafted to.
-- **3. The same person at two opens is one attendee.** Matched on the mobile or the email, not the name. They get one follow-up for the listing, and the duplicate is flagged so the agent sees they came back.
-- **4. Each draft thanks them and asks one question.** Interest, price feedback or the contract, one of them. The draft names the agency, carries a way to opt out, and is written, not sent.
-- **5. A person approves every follow-up before it sends.** The send is a separate step from the draft, and it reads the agent's yes against that draft. No approval, no send.
+- **1. The sign-in register is read as written, never filled in.** Each sign-in needs a name, a way to reach them and the open it belongs to. If any of them is missing, it goes to a person with the gap named. Nothing is guessed.
+- **2. No consent recorded, no follow-up.** Consent is what the attendee gave at sign-in, as the register shows it. If it is blank or no, that person goes to the agent and no message is ever drafted to them.
+- **3. The same person at two opens is one attendee.** They are matched on mobile or email, never on name. They get one follow-up for the listing, and the repeat visit is flagged so the agent sees they came back.
+- **4. Each draft thanks them and asks one question.** The one question is about interest, price feedback or the contract. The draft names the agency, includes a way to opt out, and is only drafted, never sent.
+- **5. A person approves every follow-up before it sends.** Sending is a separate step from drafting, and it checks the agent said yes to that exact draft. Without approval, nothing sends.
 - **6. An opt-out is honoured across every open and listing.** A reply of STOP, or any request to stop, is recorded as withdrawn consent and blocks every later message to that person, whichever open they sign in at next.
-- **7. Every reply is classified, and an unclear one goes to a person.** Hot buyer, price feedback, not interested, or also has a property to sell (an appraisal lead). A reply can carry more than one. One that fits none is unclear and goes to the agent.
-- **8. An offer or a complaint goes to the agent, unanswered.** An offer is the agent's to pass to the vendor, and a complaint is the agent's to handle. The build hands both over with a typed reason and sends nothing back.
-- **9. The vendor report counts, quotes and invents nothing.** Counts that add up, price comments word for word, themes that each point at the replies they came from, and no names or numbers of attendees. No sentiment score and no percentage that the counts do not give.
+- **7. Every reply is sorted, and an unclear one goes to a person.** Each reply is sorted as hot buyer, price feedback, not interested, or also has a property to sell (an appraisal lead). A reply can be more than one. One that fits none is unclear and goes to the agent.
+- **8. An offer or a complaint goes to the agent, unanswered.** An offer is the agent's to pass to the vendor, and a complaint is the agent's to handle. It hands both to the agent with the reason marked, and sends nothing back to the person.
+- **9. The vendor report counts, quotes and invents nothing.** It has counts that add up, price comments word for word, and themes that each point to the replies they came from. It never includes attendees' names or phone numbers, a mood score, or a percentage the counts do not give.
 - **10. The agent approves the vendor report before it goes.** The report is drafted to the agent first. It goes to the vendor only once the agent has approved that version.
-- **11. Who said what is on the record.** Consent as captured, every send with who approved it, every reply word for word, every class and every opt-out, kept so that a vendor dispute weeks later can be answered from the record and not from memory.
-- **12. The call is off by default, and only to someone who asked.** If the agent turns the optional call on, it goes only to an attendee who ticked that they would take one, through a gate that decides at dial time, and opens by saying it is an AI calling for the agency.
-- **13. It survives the builder.** Someone other than the builder can explain what it does, and it runs on an account the business owns.
-- **14. The pass test passes.** A vendor disputes a week's report, and the record answers it: who signed in with what consent, what was sent with whose approval, and what each person said, word for word. An attendee who opted out was never messaged again.
+- **11. Who said what is on the record.** It keeps consent as given, every message sent with who approved it, every reply word for word, how each reply was sorted, and every opt-out. A vendor dispute weeks later can then be answered from the record instead of from memory.
+- **12. The call is off by default, and only to someone who asked.** If the agent turns the optional call on, it goes only to an attendee who ticked that they would take one, after a final check right before dialling, and it opens by saying it is an AI calling for the agency.
+- **13. It keeps working if the person who built it leaves.** Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+- **14. The pass test passes.** A vendor disputes a week's report, and the record answers it. It shows who signed in with what consent, what was sent with whose approval, and what each person said, word for word. An attendee who opted out was never messaged again.
 
 ## Facts that can change, and when we checked them
 

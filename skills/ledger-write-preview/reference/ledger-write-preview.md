@@ -39,7 +39,7 @@ An open build standard for any bot or build that writes into your accounts. Befo
 
 The core rule
 
-The build previews. A named person releases. Only then is the document written, once, and read back to check the ledger stored the same totals.
+It shows you a preview, and a named person releases it. Only then is the document written, once, and read back to check your accounts stored the same totals.
 
 What it does not do
 
@@ -47,9 +47,9 @@ It never corrects a total quietly, never guesses a GST rate, never writes a jour
 
 The hard part
 
-Getting the cents right the way your ledger does, line by line, and writing exactly once into accounts we do not own when the connection drops halfway.
+Getting the cents right the way your accounting software does, line by line, and writing each document exactly once into your accounts, even when the connection drops halfway.
 
-A bot raised forty invoices overnight. Thirty-nine are right. One has GST a cent higher than the line it sits on, because the bot worked the tax out on the total instead of per line, and nobody will notice until the BAS does not reconcile in three months. The ledger took it without a murmur. The preview is where somebody would have seen it.
+A bot raised forty invoices overnight. Thirty-nine are right. One has GST a cent higher than the line it sits on, because the bot worked the tax out on the total instead of per line, and nobody will notice until the BAS does not reconcile in three months. Your accounts took it without a murmur. A preview is where somebody would have seen it.
 
 One draft, from the hand-over to the read-back
 
@@ -62,15 +62,15 @@ One draft, from the hand-over to the read-back
 7. Do the totals the ledger stored equal the preview? If yes, the read-back is recorded and the document is done.
 8. If no, it is parked for a person with both sets of figures. The build does not edit the document to match.
 
-The filled diamond is the release. Before it, the build only reads your ledger’s tax rates and fills the preview. Everything written into your accounts comes after it, and the document is done only when it reads back equal to the preview.
+The filled diamond is the release. Before it, the build only reads the tax rates in your accounts and fills in the preview. Everything written into your accounts comes after it, and the document is finished only when what your accounts stored matches the preview.
 
 ## 1. What this standard covers
 
-Any build that writes documents into a cloud ledger: a bot raising invoices from finished jobs, a flow turning supplier emails into bills, an agent posting accruals. The documents are invoices, bills, credit notes, spend money and receive money transactions, and manual journals. Before each one is written, the build produces a preview from the draft’s inputs alone and holds it for a person. After that person releases it, the build writes it once, reads it back and compares.
+Any build that writes documents into Xero, MYOB or QuickBooks: a bot raising invoices from finished jobs, a flow turning supplier emails into bills, an agent posting accruals. The documents are invoices, bills, credit notes, spend money and receive money transactions, and manual journals. Before each one goes in, the build works out a preview from the draft’s own inputs and holds it for a person. Once that person releases it, the build writes it once, reads it back and compares the figures.
 
 Out of scope. Deciding what to invoice or what a bill is for, coding a transaction, and the month-end close. A line nobody can code goes to the [Uncoded Query](https://aipathway.com.au/explore-ai/uncoded-query-build-standard) standard, and journals posted at month end follow the [Month-End Close](https://aipathway.com.au/explore-ai/month-end-close-build-standard), which can use this preview for each one.
 
-How it connects. The tax rates and the write go through the ledger’s own sign-in and API, approved by you. The preview can be worked out by your own build, or by AI Pathway’s preview_draft tool on the connector you already signed in to.
+It shows you every figure before anything goes into your accounts. It reads the tax rates and writes each document through your accounting software’s own sign-in, which you approve, and the preview is worked out by your own build or by AI Pathway’s preview tool (preview_draft) on the connector you already signed in to. You release each preview by name, and any draft that does not add up comes to you with both figures.
 
 ## Facts that can change, and when we checked them
 
@@ -86,9 +86,9 @@ These change, and a ledger can have its own rounding setting. Check the vendor�
 
 **Check these against the primary instrument before you rely on them**, and store the date you checked beside the value rather than hard-coding it. This standard tells you the shape and where to look. It is not legal advice and it does not tell you that anything complies.
 
-## 2. The arithmetic, line by line
+## 2. How each figure is worked out, line by line
 
-Every figure in the preview is worked out from the inputs, never copied from the draft. Money is whole cents. The tax rate is the one your ledger holds for the line’s tax type, read before the preview; a tax type it does not hold parks the draft.
+Every figure in the preview is worked out from the inputs, never copied from the draft. Money is whole cents. The tax rate is the one your accounts hold for the line’s tax type, read before the preview. If your accounts do not hold that tax type, the draft stops and comes to you with the gap named. It never guesses a rate.
 
 | Figure | How it is worked out |
 | --- | --- |
@@ -139,55 +139,55 @@ There is no field for a tolerance and no status the build can set on a release. 
 
 ## 4. The checks, in order
 
-The order is the claim. The arithmetic comes before the preview, the preview before any release, and the release before anything is written. A document that went in wrong is harder to find than one that never went in.
+Each check has to pass before the next one runs. The sums are done before the preview is shown, the preview comes before any release, and nothing goes into your accounts until it is released. A document that went in wrong is harder to find than one that never went in.
 
-1. Every draft gets a preview or is parked. Each draft handed over to be written ends the run with a preview in the book or a parked item that says why not. None is skipped, and none goes to the ledger on the strength of the draft alone.
-2. Every line amount is recomputed from its inputs. Each line amount in the preview is quantity times unit price less any discount, rounded to the cent, half away from zero. It is worked out from the inputs, never copied from the amount the draft states.
-3. Tax is recomputed per line from the ledger's own rate. The tax on each line comes from the rate the ledger holds for that line's tax type, read before the preview: for amounts before tax, amount x rate; for amounts including tax, amount x rate / (1 + rate); each rounded to the cent on the line. The preview names the read the rates came from.
-4. The subtotal, total tax and total are recomputed. The preview's total tax is the sum of the line taxes. Before tax, the subtotal is the sum of the line amounts and the total is the subtotal plus tax. Including tax, the total is the sum of the line amounts and the subtotal is the total less tax.
-5. The preview shows the exact journal, and it balances. The preview lists the journal lines the document will post, account, debit and credit: the control account for the total, each line's account for its amount before tax, and the tax account for the tax. Debits equal credits to the cent. A draft whose journal cannot balance is parked as unbalanced and never previewed for release.
-6. A draft whose totals differ by a cent is parked, never adjusted. When the draft's stated subtotal, total tax or total differs from the recomputed figure by any amount, even one cent, the draft is parked for a person with both sets of figures. The build does not correct it, round it away or write either version.
-7. A tax rate the ledger does not hold is never guessed. When a line names a tax type the ledger has no rate for, or the ledger does not answer the rates read, the draft is parked as unknown_tax_rate. The build never assumes 10%, never borrows a rate from another line and never writes the draft.
-8. Nothing is written until a named person releases the preview. A document is written only after a named person has released the preview for that draft, and what is written is that preview. A draft nobody released has nothing written, however long it waits.
-9. Each released document is written exactly once. Each write carries an idempotency key, preview:<tenant>:<draft>:<preview>, in the ledger's idempotency key or request id where it has one, and in the reference or memo. Before any retry the build reads the ledger for that key. A write with no answer is not counted as written; it is parked as write_failed and tried again only after the read.
-10. The document is read back and its totals compared with the preview. After a write, the build reads the document back from the ledger and compares the subtotal, total tax and total the ledger stored with the preview, to the cent, and records the comparison. A difference is parked for a person with both sets of figures; the build does not edit the document to match.
-11. A dry run writes nothing. With dry run on, the build reads, recomputes, previews and parks exactly as it would otherwise, and makes no write to the ledger, even for a released preview.
-12. It survives the builder. Someone other than the builder can explain what it does, and it runs on an account the business owns.
-13. The pass test passes. In the business's own ledger: take one invoice draft, one bill draft and one draft whose stated tax is a cent out. The two good drafts preview with totals and a balanced journal; the third is parked with both figures. With no release, nothing is written. After a named person releases, each is written once, a second run writes nothing, and each reads back with the ledger's stored totals equal to the preview.
+1. Every draft gets a preview, or stops and goes to a person with the reason. By the end of the run, each draft handed over to go into your accounts has a preview on record, or has stopped with a note saying why. None is skipped, and none goes into the books on the strength of the draft alone.
+2. Every line amount is worked out again from scratch. Each line amount in the preview is quantity times unit price less any discount, rounded to the cent, with half a cent rounded away from zero. It is worked out from the quantity, price and discount, never copied from the amount the draft states.
+3. Tax is worked out line by line from the rate in your own accounts. The tax on each line uses the rate your accounting system holds for that line's tax type, looked up before the preview. For amounts before tax it is amount x rate, and for amounts including tax it is amount x rate / (1 + rate), each rounded to the cent on the line. The preview says which lookup the rates came from.
+4. The subtotal, total tax and total are worked out again. The preview's total tax is the sum of the line taxes. Before tax, the subtotal is the sum of the line amounts and the total is the subtotal plus tax. Including tax, the total is the sum of the line amounts and the subtotal is the total less tax.
+5. The preview shows exactly what will hit each account, and it balances. The preview lists each account, debit and credit the document will post: the control account for the total, each line's account for its amount before tax, and the tax account for the tax. Debits equal credits to the cent. A draft that cannot balance stops and goes to a person as unbalanced, and is never put up for release.
+6. A draft whose totals are out by even a cent stops for a person, and is never adjusted. When the draft's subtotal, total tax or total differs from the worked-out figure by any amount, even one cent, the draft stops and goes to a person with both sets of figures. It never corrects the draft, rounds the gap away or enters either version.
+7. A tax rate your accounts do not hold is never guessed. When a line names a tax type your accounts have no rate for, or the accounting system does not answer the rate lookup, the draft stops and goes to a person (reason: unknown_tax_rate). It never assumes 10%, never borrows a rate from another line and never enters the draft.
+8. Nothing goes into the books until a named person releases the preview. A document goes into your accounts only after a named person has released the preview for that draft, and what goes in is that preview. A draft nobody released never goes in, however long it waits.
+9. Each released document goes into the books exactly once. Each document carries one fixed reference, preview:<tenant>:<draft>:<preview>, in the system's duplicate-guard key or request id where it has one, and in the reference or memo. Before any retry it looks in your accounts for that reference, so it never makes a second one. If the system gives no answer, the document is not counted as entered; it stops and goes to a person (reason: write_failed) and is tried again only after that check.
+10. The saved document is read back and its totals checked against the preview. Once a document is in, it reads it back from your accounts and checks the saved subtotal, total tax and total against the preview, to the cent, and records the check. Any difference goes to a person with both sets of figures. It never edits the document to make them match.
+11. A dry run puts nothing into the books. With dry run on, it reads, works out, previews and stops drafts for a person exactly as it would otherwise, and enters nothing into your accounts, even for a released preview.
+12. It keeps working if the person who built it leaves. Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+13. The pass test passes. In the business's own accounts, take one invoice draft, one bill draft and one draft whose stated tax is a cent out. The two good drafts get previews with totals and a balanced journal, and the third stops for a person with both figures. With no release, nothing goes in. After a named person releases, each goes in once, a second run adds nothing, and each reads back with saved totals equal to the preview.
 
 ## 5. One morning’s drafts
 
-An illustration, not data, using the figures the runnable stub uses. A plumbing business’s bot hands over nine drafts. An invoice for three filters at $19.99 less 15% comes to $50.97 on that line, with $5.10 GST; 2.5 hours at $19.99 is $49.98 with $5.00 GST; the GST free line carries none. The preview shows the totals and the journal: receivables debited $156.05, sales credited for each line, GST credited $10.10. It balances.
+A made-up example, using the figures from the practice data that comes with this standard. A plumbing business’s bot hands over nine drafts. An invoice for three filters at $19.99 less 15% comes to $50.97 on that line, with $5.10 GST; 2.5 hours at $19.99 is $49.98 with $5.00 GST; the GST free line carries none. The preview shows the totals and the journal: receivables debited $156.05, sales credited for each line, GST credited $10.10. It balances.
 
-A second invoice for $123.45 states GST of $12.36. Per line it is $12.35. It is parked with both figures, and nothing is written. A bill for import freight names a tax type the ledger does not hold, so it is parked too, not given 10%. A wages journal with $100.00 of debits and $90.00 of credits is parked as unbalanced.
+A second invoice for $123.45 states GST of $12.36. Per line it is $12.35. It stops and goes to the bookkeeper with both figures, and nothing is written. A bill for import freight names a tax type the accounts do not hold, so it stops too, rather than being given 10%. A wages journal with $100.00 of debits and $90.00 of credits stops because it does not balance.
 
-The bookkeeper releases every preview but one. The first write times out after it landed; the next run reads the ledger for its key, finds it, and does not write it again. One bill reads back with GST a cent lower than the preview, so it goes to the bookkeeper with both figures. Everything else reads back equal.
+The bookkeeper releases every preview but one. The first write times out after it has already gone in. The next run looks for its key in the accounts, finds it, and does not write it again. One bill comes back from the accounts with GST a cent lower than the preview, so it goes to the bookkeeper with both figures. Everything else matches.
 
 ## 6. Writing into your accounts, once
 
-Each released preview carries the key `preview:<tenant>:<draft>:<preview>` in the document’s reference or memo, and in the ledger’s idempotency key or request id where it has one. Before any write the build reads the ledger for that key. A write with no answer does not count as written. It is parked and tried again only after the read.
+Each document goes in once, even if the connection drops halfway. Each released preview carries the key `preview:<tenant>:<draft>:<preview>` in the document’s reference or memo, and in the ledger’s idempotency key or request id where it has one. Before writing anything, the build looks for that key in your accounts. A write that gets no answer does not count as done. It is held, and tried again only after the build has looked.
 
-The document is done only when it reads back. The build compares the subtotal, total tax and total the ledger stored with the preview, to the cent, and records the result. A difference goes to a person with both sets of figures; the build never edits the document to match. With dry run on, everything up to the release happens as usual and nothing is written.
+A document is finished only when the build has read it back. It compares the subtotal, total tax and total your accounts stored with the preview, to the cent, and records the result. A difference comes to you with both sets of figures, and the build never changes the document to make it match. In a dry run, everything up to the release happens as usual and nothing goes into your accounts.
 
 ## 7. What stays with a person
 
 - Releasing each preview, by name.
-- Every parked draft: totals a cent out, a tax type the ledger does not hold, a journal that does not balance.
+- Every draft that stops: totals a cent out, a tax type your accounts do not hold, a journal that does not balance.
 - A document whose stored totals differ from the preview once it is written.
-- Fixing the bot or build upstream that produced a wrong total, so the next draft is right.
+- Fixing the bot or build that produced a wrong total, so the next draft is right.
 
 ## 8. Run it your way
 
-The same checks and the same pass test on each. Two rules hold whichever you pick: nothing is written before a named person releases it, and a cent is a difference.
+The same checks and the same pass test on each. Whichever you pick, two rules hold. Nothing is written before a named person releases it, and a cent out counts as a difference.
 
-- **Google Workspace.** A sheet with tabs for the drafts, your ledger’s tax rates, the previews and the releases, working each line out with the formulas above. It never connects to your ledger. See [building on Google Workspace](https://aipathway.com.au/explore-ai/building-on-google-workspace).
-- **Microsoft 365.** SharePoint lists for the drafts, previews and releases, a flow that works out each preview through your ledger’s own connector, and a second that writes only after release. The [Release Before Posting build plan](https://aipathway.com.au/explore-ai/release-before-posting-on-microsoft-365) lays out the lists and flows.
-- **Your own Grok Bot or Claude.** Connected to your ledger through AI Pathway, it calls preview_draft before it writes anything and shows you the preview in the chat. You release it there; the write and the read-back follow.
-- **Your own code.** This page. Hand it to a coding agent: it gets the checks as data, the stub world, and a runner that tells it when the build is right. See [running a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
+- **Google Workspace.** A sheet with tabs for the drafts, the tax rates from your accounts, the previews and the releases, working each line out with the formulas above. It never connects to your accounts. See [building on Google Workspace](https://aipathway.com.au/explore-ai/building-on-google-workspace).
+- **Microsoft 365.** SharePoint lists for the drafts, previews and releases, a flow that works out each preview through your accounting software’s own connector, and a second that writes only after release. The [Release Before Posting build plan](https://aipathway.com.au/explore-ai/release-before-posting-on-microsoft-365) lays out the lists and flows.
+- **Your own Grok Bot or Claude.** Connected to your accounts through AI Pathway, it asks for a preview before it writes anything and shows it to you in the chat. You release it there, and the write and the check after it follow.
+- **Your own code.** Hand this page to a coding agent. It gets the checks as data, practice data to build against, and a test runner that tells it when the build is right. See [running a standard anywhere](https://aipathway.com.au/explore-ai/run-a-standard-anywhere).
 
-## 9. What to Stub, and What Not to Hand-Roll
+## 9. What to Test on Practice Data, and What Not to Build Yourself
 
-Everything runs against the stub first: the drafts, the ledger's rates, the preview book, the release and a ledger that can lose an answer. In production the preview comes from preview_draft on the AI Pathway connector at connect.aipathway.com.au, which reads the connected ledger's own tax rates. The write and the read-back are your build's, against your own ledger.
+Everything runs on practice data first: the drafts, the tax rates, the previews, the release and an accounts connection that can drop an answer. In production the preview comes from preview_draft on the AI Pathway connector at connect.aipathway.com.au, which reads the connected ledger's own tax rates. The write and the read-back are your build's, against your own ledger.
 
 ```
 provider:
@@ -215,27 +215,27 @@ no port exists for
   written document to match
 ```
 
-Anyone selling a bot that writes into your ledger should be able to answer one question: show me the preview a person released before last week's invoices went in, and the read-back that proves each was written once.
+Anyone selling a bot that writes into your accounts should be able to answer one question: show me the preview a person released before last week's invoices went in, and the read-back that proves each was written once.
 
-**The pass test.** In your own ledger, not a sample. Hand the build an invoice draft, a bill draft and a draft whose stated tax is a cent out. The first two preview with recomputed totals and a balanced journal; the third is parked with both figures. With no release, nothing is written. Release the two. Each is written once, with the key in its reference, and reads back with the ledger’s stored totals equal to the preview. Run it again: nothing new is written. A stub cannot pass this. On a stub the documents are rows in the runner’s memory. Only your own ledger, with its own tax rates and rounding, proves the figures agree and the write landed once.
+**The pass test.** In your own accounts, not a sample. Hand the build an invoice draft, a bill draft and a draft whose stated tax is a cent out. The first two preview with recomputed totals and a balanced journal; the third stops with both figures. With no release, nothing is written. Release the two. Each is written once, with the key in its reference, and reads back with the stored totals equal to the preview. Run it again: nothing new is written. Practice data cannot pass this, because there the documents only exist in the test’s memory. Only your own accounts, with its own tax rates and rounding, proves the figures agree and the write landed once.
 
 ## 10. A checklist to hold any build or supplier to
 
 Hold a DIY build or a vendor to this. If a box is empty, it is not in production.
 
-- **1. Every draft gets a preview or is parked.** Each draft handed over to be written ends the run with a preview in the book or a parked item that says why not. None is skipped, and none goes to the ledger on the strength of the draft alone.
-- **2. Every line amount is recomputed from its inputs.** Each line amount in the preview is quantity times unit price less any discount, rounded to the cent, half away from zero. It is worked out from the inputs, never copied from the amount the draft states.
-- **3. Tax is recomputed per line from the ledger's own rate.** The tax on each line comes from the rate the ledger holds for that line's tax type, read before the preview: for amounts before tax, amount x rate; for amounts including tax, amount x rate / (1 + rate); each rounded to the cent on the line. The preview names the read the rates came from.
-- **4. The subtotal, total tax and total are recomputed.** The preview's total tax is the sum of the line taxes. Before tax, the subtotal is the sum of the line amounts and the total is the subtotal plus tax. Including tax, the total is the sum of the line amounts and the subtotal is the total less tax.
-- **5. The preview shows the exact journal, and it balances.** The preview lists the journal lines the document will post, account, debit and credit: the control account for the total, each line's account for its amount before tax, and the tax account for the tax. Debits equal credits to the cent. A draft whose journal cannot balance is parked as unbalanced and never previewed for release.
-- **6. A draft whose totals differ by a cent is parked, never adjusted.** When the draft's stated subtotal, total tax or total differs from the recomputed figure by any amount, even one cent, the draft is parked for a person with both sets of figures. The build does not correct it, round it away or write either version.
-- **7. A tax rate the ledger does not hold is never guessed.** When a line names a tax type the ledger has no rate for, or the ledger does not answer the rates read, the draft is parked as unknown_tax_rate. The build never assumes 10%, never borrows a rate from another line and never writes the draft.
-- **8. Nothing is written until a named person releases the preview.** A document is written only after a named person has released the preview for that draft, and what is written is that preview. A draft nobody released has nothing written, however long it waits.
-- **9. Each released document is written exactly once.** Each write carries an idempotency key, preview:<tenant>:<draft>:<preview>, in the ledger's idempotency key or request id where it has one, and in the reference or memo. Before any retry the build reads the ledger for that key. A write with no answer is not counted as written; it is parked as write_failed and tried again only after the read.
-- **10. The document is read back and its totals compared with the preview.** After a write, the build reads the document back from the ledger and compares the subtotal, total tax and total the ledger stored with the preview, to the cent, and records the comparison. A difference is parked for a person with both sets of figures; the build does not edit the document to match.
-- **11. A dry run writes nothing.** With dry run on, the build reads, recomputes, previews and parks exactly as it would otherwise, and makes no write to the ledger, even for a released preview.
-- **12. It survives the builder.** Someone other than the builder can explain what it does, and it runs on an account the business owns.
-- **13. The pass test passes.** In the business's own ledger: take one invoice draft, one bill draft and one draft whose stated tax is a cent out. The two good drafts preview with totals and a balanced journal; the third is parked with both figures. With no release, nothing is written. After a named person releases, each is written once, a second run writes nothing, and each reads back with the ledger's stored totals equal to the preview.
+- **1. Every draft gets a preview, or stops and goes to a person with the reason.** By the end of the run, each draft handed over to go into your accounts has a preview on record, or has stopped with a note saying why. None is skipped, and none goes into the books on the strength of the draft alone.
+- **2. Every line amount is worked out again from scratch.** Each line amount in the preview is quantity times unit price less any discount, rounded to the cent, with half a cent rounded away from zero. It is worked out from the quantity, price and discount, never copied from the amount the draft states.
+- **3. Tax is worked out line by line from the rate in your own accounts.** The tax on each line uses the rate your accounting system holds for that line's tax type, looked up before the preview. For amounts before tax it is amount x rate, and for amounts including tax it is amount x rate / (1 + rate), each rounded to the cent on the line. The preview says which lookup the rates came from.
+- **4. The subtotal, total tax and total are worked out again.** The preview's total tax is the sum of the line taxes. Before tax, the subtotal is the sum of the line amounts and the total is the subtotal plus tax. Including tax, the total is the sum of the line amounts and the subtotal is the total less tax.
+- **5. The preview shows exactly what will hit each account, and it balances.** The preview lists each account, debit and credit the document will post: the control account for the total, each line's account for its amount before tax, and the tax account for the tax. Debits equal credits to the cent. A draft that cannot balance stops and goes to a person as unbalanced, and is never put up for release.
+- **6. A draft whose totals are out by even a cent stops for a person, and is never adjusted.** When the draft's subtotal, total tax or total differs from the worked-out figure by any amount, even one cent, the draft stops and goes to a person with both sets of figures. It never corrects the draft, rounds the gap away or enters either version.
+- **7. A tax rate your accounts do not hold is never guessed.** When a line names a tax type your accounts have no rate for, or the accounting system does not answer the rate lookup, the draft stops and goes to a person (reason: unknown_tax_rate). It never assumes 10%, never borrows a rate from another line and never enters the draft.
+- **8. Nothing goes into the books until a named person releases the preview.** A document goes into your accounts only after a named person has released the preview for that draft, and what goes in is that preview. A draft nobody released never goes in, however long it waits.
+- **9. Each released document goes into the books exactly once.** Each document carries one fixed reference, preview:<tenant>:<draft>:<preview>, in the system's duplicate-guard key or request id where it has one, and in the reference or memo. Before any retry it looks in your accounts for that reference, so it never makes a second one. If the system gives no answer, the document is not counted as entered; it stops and goes to a person (reason: write_failed) and is tried again only after that check.
+- **10. The saved document is read back and its totals checked against the preview.** Once a document is in, it reads it back from your accounts and checks the saved subtotal, total tax and total against the preview, to the cent, and records the check. Any difference goes to a person with both sets of figures. It never edits the document to make them match.
+- **11. A dry run puts nothing into the books.** With dry run on, it reads, works out, previews and stops drafts for a person exactly as it would otherwise, and enters nothing into your accounts, even for a released preview.
+- **12. It keeps working if the person who built it leaves.** Someone other than the person who built it can explain what it does, and it runs on an account the business owns.
+- **13. The pass test passes.** In the business's own accounts, take one invoice draft, one bill draft and one draft whose stated tax is a cent out. The two good drafts get previews with totals and a balanced journal, and the third stops for a person with both figures. With no release, nothing goes in. After a named person releases, each goes in once, a second run adds nothing, and each reads back with saved totals equal to the preview.
 
 ## Related reading
 

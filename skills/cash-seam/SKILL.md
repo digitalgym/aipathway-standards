@@ -96,7 +96,7 @@ skill asserts.
 - 2. The records it keeps, in the shape your developer needs
 - 3. The checks, in order
 - 4. The three handovers
-- 5. When a write comes back empty
+- 5. When a save comes back with no id
 - 6. What stays with a person
 - 7. Connect ServiceM8 or Simpro and Xero so one job number runs from the call to the chase, with nothing sent on its own
 - 9. What your developer builds, and the step that needs care

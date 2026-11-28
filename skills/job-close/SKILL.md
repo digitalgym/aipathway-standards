@@ -98,7 +98,7 @@ skill asserts.
 - 2. The close, in the shape your developer needs
 - 3. The checks, in order
 - 4. One close, from the roof space to complete
-- 5. What gets parked, and whose it is
+- 5. What gets set aside for the office, and whose it is
 - 6. Writing it once
 - 7. What stays with a person
 - 8. Run it your way

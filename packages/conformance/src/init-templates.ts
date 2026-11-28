@@ -138,6 +138,7 @@ const WORLDS: Record<string, string> = {
   "hand-off-build-standard": "HandOffWorld",
   "ledger-write-preview-build-standard": "LedgerWritePreviewWorld",
   "ledger-core-build-standard": "LedgerCoreWorld",
+  "duplicate-bill-hold-build-standard": "DuplicateBillHoldWorld",
 };
 
 /**

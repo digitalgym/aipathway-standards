@@ -9,7 +9,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/dispatch-board
 
 ---
 
-One slot per job, a licence read on the day, and each party told exactly once. Two of those three are a column setting, and the third is the order you write a flow in.
+One slot per job, a licence checked on the day, and each person told exactly once. Two of those are a setting in SharePoint, and the third is the order the flow does things in.
 
 Used by
 
@@ -17,22 +17,22 @@ Used by
 - Operations Manager
 - Scheduler
 
-The interesting part of a dispatch board is the four things that have to be impossible: a slot on an address nobody resolved, a second slot for one job, a gas job on a lapsed licence, and a customer told twice because a flow was rerun. SharePoint can make two of those unrepresentable with a column setting. The other two are the order the flow does things in, and Power Automate will happily let you get that order wrong.
+A dispatch board has to make four things impossible: a slot on an address nobody confirmed, a second slot for one job, a gas job on a lapsed licence, and a customer told twice because a flow ran again. SharePoint can rule out two of those with a column setting. The other two depend on the order the flow does things in, and Power Automate will happily let you get that order wrong.
 
 ## In short
 
 - **What this is**: A build plan for the dispatch board standard on Microsoft 365. Seven lists, four flows, seven measures, and a job system beside it where one exists.
-- **The core rule**: Told once survives a rerun only if the message row is created before the send and the key is unique. A send action followed by a log is told once until the first retry.
-- **What it does not do**: Nothing in this stack geocodes an address or measures the drive between two of them. Both are inputs the build reads, and where they come from is a decision you make before you start.
-- **The hard part**: The change. The slot has to move, the version has to move with it, and each party gets exactly one fresh message, which is a different count from zero and a different count from two.
+- **The core rule**: A customer stays told once, even when the flow runs again, only if each message is logged before it is sent and the log refuses a second entry for the same message. Send first and log after, and the first retry sends it twice.
+- **What it does not do**: Nothing in Microsoft 365 looks an address up on a map or measures the drive between two of them. Both come in from outside, and where they come from is a decision you make before you start.
+- **The hard part**: A job that changes. The slot has to move, the job's version number moves with it, and each person gets exactly one new message, never none and never two.
 
 ## 1. Before you start
 
 Read [the dispatch board build standard](https://aipathway.com.au/explore-ai/dispatch-board-build-standard) first. It defines its objects, and the lists below are those objects with SharePoint types on them. Shared conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-Decide one thing first: whether your job system can take the slot write and hand back its own id. The standard is explicit that ServiceM8, Simpro and Jobber can take a booked time against a job and that Tradify has no public API and no Zapier app, so it cannot. That answer decides what the ExternalId column below means. Where the write exists, ExternalId is the job system’s own id and a blank one is a failed write. Where it does not, the tenant is the board, a person copies the slot across, and the standard says to keep that honest rather than pretend the id came from somewhere.
+Decide one thing first: whether your job system can take the booked time from the flow and send back its own id for it. The standard says ServiceM8, Simpro and Jobber can take a booked time against a job and that Tradify has no public API and no Zapier app, so it cannot. That answer decides what the ExternalId column below means. Where the write exists, ExternalId is the job system’s own id and a blank one is a failed write. Where it cannot, the SharePoint lists are the board, a person copies the slot across, and the standard says to record that plainly rather than pretend the id came from the job system.
 
-Two inputs this stack does not produce. A resolved address is not something SharePoint or Power Automate can derive: the resolution comes from a person confirming it or from a service outside the tenant, and the column below records which. Travel between two resolved addresses is the same. The standard says travel is read, never guessed, and a table of minutes somebody typed in March is a guess with a column name on it. Know where both come from before you build anything, because a board that fills up on unresolved addresses is worse than an empty one.
+Two things Microsoft 365 cannot produce. SharePoint and Power Automate cannot confirm an address. That comes from a person confirming it or from a lookup service outside Microsoft 365, and the column below records which. Travel between two resolved addresses is the same. The standard says travel is read, never guessed, and a table of minutes somebody typed in March is a guess with a column name on it. Know where both come from before you build anything, because a board that fills up on unconfirmed addresses is worse than an empty one.
 
 ## 2. The lists, with their columns
 
@@ -230,7 +230,7 @@ Silent Jobs is the front page. Every other number here describes something visib
 
 ## 6. What the flows can reach in your Microsoft 365 and your job system, and what they never touch
 
-The flows plan the day: who goes where, and when. They read your jobs, techs and licences, book each job a time in your job system, and tell a customer once on the channel they agreed to. Anything unusual, like an emergency bumping a booked job, comes to you to decide, and you keep each tech’s licence record true. Your own login stays yours. The flows run under an account kept for them, and the job system sees a key made for the build, never your username and password.
+The flows plan the day, so the right tech is at the right house at the right time. They read your jobs, techs and licences, book each job a time in your job system, and tell a customer once on the channel they agreed to. Anything unusual, like an emergency bumping a booked job, comes to you to decide, and you keep each tech’s licence record true. Your own login stays yours. The flows run under an account kept for them, and the job system sees a key made for the build, never your username and password.
 
 What each connection is for.
 
@@ -241,7 +241,7 @@ What each connection is for.
 - **Teams, optional.** For escalations and the weekly Silent Jobs post to the dispatcher.
 - **AI Pathway, if you run it on ServiceM8 or Simpro.** It needs nothing from these flows. With running-late calls switched on under Automations, it rings the customer when a job moves later on the board, so a slipped day is a call as well as Flow 4’s written message.
 
-Keep the till locked.
+Give it the least access it needs.
 
 1. Build the flows under a service account, an ordinary licensed account kept for them, not a person who might leave or change their password.
 2. Build them inside a solution, so each connection is a connection reference you can see, swap or remove in one place.
@@ -285,12 +285,12 @@ Gas: Yes is the column everyone builds first, and it is right for about a year. 
 ## 9. Where the automation stops
 
 - Accepting an emergency displacement. The approval writes a name onto the slot it moved, and that name is the point of the step.
-- Deciding a job is outside the area, or that a window cannot be met. The board raises the escalation; the judgement is a person's.
+- Deciding a job is outside the area, or that a window cannot be met. The board flags it, and a person decides.
 - Anything said to a customer who is upset that the time moved. The build sends one factual message per version and stops there.
 - Keeping the licence record true. The flow reads Licences on the day; a person keeps the rows current, and no amount of enforcement in SharePoint fixes a row that was never updated.
-- Resolving an address the service or the person could not. That job sits in the queue with a reason until somebody rings the customer back.
+- Confirming an address the lookup service or the person could not. That job sits in the queue with a reason until somebody rings the customer back.
 
-**The pass test.** Stage one job in your own tenant. Put a gas requirement on it and make the only tech free in the window one whose Licences row expired yesterday. Run the slot flow: there must be no Slots row at all, and one Escalations row reading no_licensed_tech with a named Owner. Now extend that licence and run the flow twice, an hour apart, without changing anything else. You must end with exactly one Slots row carrying an ExternalId, and exactly one Messages row for the customer. Finally move WindowFrom by two hours and let the change flow run: the same Slots row moves, JobVersion goes up, and the customer and the tech each gain exactly one more message. Ten minutes on test data. If a second Slots row appeared, enforce unique values is off and one job will get two vans. If the customer has two messages for one version, the flow sent before it wrote the row, and every retry from here on is another text. If the gas job got slotted at all, the licence is being read from something other than a dated record.
+**The pass test.** Stage one job in your own Microsoft 365. Put a gas requirement on it and make the only tech free in the window one whose Licences row expired yesterday. Run the slot flow: there must be no Slots row at all, and one Escalations row reading no_licensed_tech with a named Owner. Now extend that licence and run the flow twice, an hour apart, without changing anything else. You must end with exactly one Slots row carrying an ExternalId, and exactly one Messages row for the customer. Finally move WindowFrom by two hours and let the change flow run: the same Slots row moves, JobVersion goes up, and the customer and the tech each gain exactly one more message. Ten minutes on test data. If a second Slots row appeared, enforce unique values is off and one job will get two vans. If the customer has two messages for one version, the flow sent before it wrote the row, and every retry from here on is another text. If the gas job got slotted at all, the licence is being read from something other than a dated record.
 
 ## Related reading
 

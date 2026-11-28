@@ -21,20 +21,20 @@ A venue on Microsoft 365 usually takes phone orders on a notepad by the till and
 
 ## In short
 
-- **What this is**: A build plan for the Takeaway Orders standard on Microsoft 365. Five lists, three flows, and a payment status only the payment provider writes.
-- **The core rule**: The ticket flow prints only after it reads paid from the provider, once per order.
+- **What this is**: A build plan for the Takeaway Orders standard on Microsoft 365. Five lists, three flows, and a paid status that only the payment provider can set.
+- **The core rule**: The kitchen ticket prints once per order, and only after the payment provider confirms it is paid.
 - **What it does not do**: It holds no copy of the menu and no card number. The till and the payment provider keep those.
-- **The hard part**: Waking the ticket step from the provider's webhook, not from the moment the link was made.
+- **The hard part**: Starting the ticket step when the payment provider reports the payment, rather than when the payment link was sent.
 
 ## 1. Before you start
 
 Read [the Takeaway Orders build standard](https://aipathway.com.au/explore-ai/takeaway-orders-build-standard) first. It owns the menu rules, the read-back, the payment order and the handoffs. Where it and this page disagree, it wins. The shared conventions for this stack are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-Microsoft 365 is not the conversation. The phone and the chat are a voice or chat agent, and the menu, the payment and the ticket are the venue’s till and payment provider. This plan is what sits between them: the lists the agent writes to, and the flows that move an order from paid to printed.
+A voice or chat agent takes the call or the chat, and the venue’s till and payment provider hold the menu, the payment and the ticket. This plan is what sits between them: the lists the agent writes to, and the flows that move an order from paid to printed.
 
 ## 2. The lists, with their columns
 
-Five lists. There is no Menu list: the till is the menu, read on every call. PickupList holds only what the till cannot say reliably, and OrderKey is unique so a call cannot be charged or printed twice.
+Five lists. There is no Menu list: the till is the menu, read on every call. PickupList holds only what the till can't tell you reliably, and each call's OrderKey can be used only once, so a call cannot be charged or printed twice.
 
 ```
 Site: PickupOrders
@@ -92,13 +92,13 @@ There is no column for a card number and none for 'allergy safe'. A list that co
 
 | The check | Enforced by | How |
 | --- | --- | --- |
-| The menu and the prices come from the till | Agent tool | The agent's menu tool calls the till on every call. There is no Menu list to drift, and the Orders row stores the till's item ids only. |
+| The menu and the prices come from the till | Agent tool | The agent's menu tool calls the till on every call. There is no copy of the menu to go out of date, and each order keeps only the till's item ids. |
 | A dine-in dish is never sold for pickup | PickupList | The agent's menu tool returns only items whose ItemId is on PickupList. Anything else comes back marked dine-in only. |
-| The total is the provider's | Payment flow | The flow sends the lines to the payment provider and writes back the TotalCents it returns. It never adds anything up. |
-| Paid before the kitchen | Ticket flow | Woken by the provider's webhook. It re-reads the payment from the provider, refuses anything not paid, and writes TicketId once. |
+| The total is the provider's | Payment flow | The flow sends the lines to the payment provider and records the total the provider sends back. It never adds anything up itself. |
+| Paid before the kitchen | Ticket flow | It starts when the payment provider reports a payment. It checks the payment with the provider again, stops anything not paid, and prints the ticket once. |
 | An unpaid link is cancelled | Expiry flow | Every few minutes, an open link older than the venue's limit is cancelled at the provider and the row set to cancelled. |
-| One order per call | OrderKey, unique | The call or chat id, with unique values enforced on the list, and passed to the provider and the till as the idempotency key. |
-| A person for four reasons | Handoffs | A Choice with four values and no fill-in. A new row posts to the manager's Teams channel. |
+| One order per call | OrderKey, unique | Each call or chat has its own id, and the list accepts each id only once. The same id goes to the payment provider and the till, so a repeat can't charge or print twice. |
+| A person for four reasons | Handoffs | Four fixed reasons, with no free-text option. Each new handoff posts to the manager's Teams channel. |
 
 ## 4. The three flows
 
@@ -130,12 +130,12 @@ FLOW 3  Cancel the unpaid
   never    cancel a link the provider says is paid
 ```
 
-Flow 2 is woken by the payment, not by Flow 1, so an order that is never paid never wakes the step that prints. The re-read in its guard is what keeps a forged or replayed webhook from printing.
+Flow 2 is woken by the payment, not by Flow 1, so an order that is never paid never wakes the step that prints. Because it checks the payment with the provider again before printing, a fake or repeated payment message can't print a ticket.
 
 ## 5. The order to build it in
 
 1. Create the five lists. Make OrderKey and ItemId unique before anything writes to them, and lock PaymentStatus to the flows’ service account.
-2. Build Flow 2 first, with its guard, and prove it refuses an order whose link is open.
+2. Build Flow 2 first, with its guard, and prove it won’t print an order that hasn’t been paid.
 3. Build Flow 1 and Flow 3, then run the pass test below.
 4. Only then point the agent at the lists, and the venue’s number at the agent.
 
@@ -147,11 +147,11 @@ It is right on the day it is made. The first time a dish sells out or a price ch
 
 ### Printing from the payment flow
 
-It is one flow instead of two, and it prints the moment the link is made rather than when it is paid. The ticket belongs in a flow the provider's webhook wakes, and that flow reads the payment again before it prints.
+It is one flow instead of two, and it prints the moment the link is made rather than when it is paid. The ticket belongs in its own flow that starts when the provider reports the payment, and that flow checks the payment again before it prints.
 
-### PaymentStatus a person can edit
+### A paid status anyone can edit
 
-Somebody ticks paid to get an order moving on a busy night, and the kitchen cooks an order nobody paid for. Break inheritance on the column's list and give write access to the flow's service account only.
+Somebody ticks paid to get an order moving on a busy night, and the kitchen cooks an order nobody paid for. Lock that list so only the flows' service account can change it.
 
 ### Running the flows on one manager's account
 
@@ -159,12 +159,12 @@ The flows stop the day that manager leaves, at 6pm on a Friday. Use a service ac
 
 ## 7. Where the automation stops
 
-- Every Handoffs row. A person rings back and sets CalledBackBy; no flow can.
+- Every Handoffs row. A person rings back and records who called; no flow can.
 - The pickup list. The owner decides what goes out; the agent only reads it.
 - A refund. No flow issues one.
 - A table over the venue's limit, or a function.
 
-**The pass test.** Two staged checks, neither needing a real customer. First, add an Orders row with ReadBackAt set and let Flow 1 make the link, then leave it unpaid: Flow 2 must not run, nothing may reach the till, and after the venue’s limit Flow 3 must cancel the link. Second, pay a second test order with a test card: Flow 2 must print it once, and sending the same webhook again must print nothing. If the first printed, the kitchen is cooking on trust. If the second printed twice, the key is decoration.
+**The pass test.** Two staged checks, neither needing a real customer. First, add an Orders row with ReadBackAt set and let Flow 1 make the payment link, then leave it unpaid: Flow 2 must not run, nothing may reach the till, and after the venue’s limit Flow 3 must cancel the link. Second, pay a second test order with a test card: Flow 2 must print it once, and sending the same payment message again must print nothing. If the first printed, the kitchen would cook orders nobody paid for. If the second printed twice, the one-order-per-call check is not working.
 
 ## Related reading
 

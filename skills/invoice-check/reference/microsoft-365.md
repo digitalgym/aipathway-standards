@@ -9,7 +9,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/checking-invoi
 
 ---
 
-Four checks in a fixed order, stopping at the first failure. The order is the claim, and a parallel implementation quietly discards it.
+Four checks in a fixed order, stopping at the first failure. Each check has to pass before the next one runs, so they are built one after another, never side by side.
 
 Used by
 
@@ -17,20 +17,20 @@ Used by
 - Contract Administrator
 - Commercial Manager
 
-What makes this workflow work is that the checks run in an order, stop when one fails, and leave a record that outlives the decision somebody made about it. Power Automate makes the first of those slightly awkward and the second entirely up to you, which is why both are called out here.
+This works because the checks run in order, stop when one fails, and leave a record that is still there after someone decides what to do about it. Power Automate makes the first of those a little awkward and leaves the second entirely to you, so both are spelled out here.
 
 ## In short
 
 - **What this is**: A build plan for the invoice check standard on Microsoft 365. Three lists, a library, three flows, six measures.
-- **The core rule**: The checks are ordered because each one assumes the previous passed. Running them in parallel produces differences that are not real.
+- **The core rule**: Each check has to pass before the next one runs, because each one assumes the one before it passed. Running them all at once produces differences that are not real.
 - **What it does not do**: It never approves or rejects a payment. It produces a difference in dollars and the evidence behind it, for a person who is accountable for the decision.
-- **The hard part**: The cumulative position. Every individual variance is defensible; the run of them is the thing nobody is looking at.
+- **The hard part**: The running total across an order. Each small difference looks fine on its own, and nobody is watching them add up.
 
 ## 1. Before you start
 
-Read [the invoice check build standard](https://aipathway.com.au/explore-ai/invoice-check-build-standard) first. It defines its objects, and the lists below are those objects with SharePoint types on them. Shared conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
+Read [the invoice check build standard](https://aipathway.com.au/explore-ai/invoice-check-build-standard) first. It defines the records, and the lists below are those records set up in SharePoint. Shared conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-Decide one thing first: what the invoice is being checked against. A purchase order, a subcontract, a schedule of rates. If that reference does not exist in a queryable form, no amount of extraction helps, and standing it up is the real first task.
+Decide one thing first: what the invoice is being checked against. A purchase order, a subcontract, a schedule of rates. If that is not held somewhere a flow can look it up, reading the invoices will not help, and setting it up is the real first job.
 
 ## 2. The lists, with their columns
 
@@ -154,11 +154,11 @@ Unchecked =                          -- should be near zero
 CALCULATE ( COUNTROWS ( Invoices ), Invoices[Outcome] = "not_checked" )
 ```
 
-Cumulative By Order is the measure the standard is really arguing for. Put it on the front page against each order, because the pattern it shows is invisible in any view built one invoice at a time.
+Cumulative By Order is the measure that matters most. Put it on the front page against each order, because the pattern it shows is invisible in any view built one invoice at a time.
 
-## 6. What the flows can reach in your accounts inbox and your ledger, and what they never touch
+## 6. What the flows can reach in your accounts inbox and your accounts system, and what they never touch
 
-The flows check every subcontractor invoice against what you ordered. They match each invoice that lands in your accounts mailbox against its order or schedule, the bills already in your ledger and your written variation approvals, and write every difference down on one SharePoint site. You approve each bill, and variations and any dispute with a subcontractor are yours to decide. Your own login stays yours. The flows run under their own account and their own keys, never your username and password.
+The flows check every subcontractor invoice against what you ordered. They match each invoice that lands in your accounts mailbox against its order or schedule, the bills already in your accounts and your written variation approvals, and write every difference down on one SharePoint site. You approve each bill, and variations and any dispute with a subcontractor are yours to decide. Your own login stays yours. The flows run under their own account and their own keys, never your username and password.
 
 What each connection is for.
 
@@ -167,9 +167,9 @@ What each connection is for.
 - **The reference, read.** The purchase order, subcontract or schedule of rates each invoice is checked against. If it lives in a list on the same site, nothing more is needed. If it lives in Xero, MYOB or the job system, read it by a custom connector or the HTTP action (both premium), or load a nightly export into a list.
 - **Bills in Xero, read, through AI Pathway.** So the same claim is never checked twice. If Xero is already connected to AI Pathway, a key with “Read the book” lists the bills, called from the flow over its MCP endpoint with the HTTP action or a custom connector (both premium). AI Pathway does not read purchase orders, so those still come through the route above.
 - **The variation approvals, read.** The folder or list where written approvals live, for check 3.
-- **Teams, to announce.** A card that tells the queue owner an exception is waiting. The card is a pointer; the Exceptions row is the record.
+- **Teams, to announce.** A card that tells the queue owner an exception is waiting. The card only points to it. The record is the row in the Exceptions list.
 
-This plan drafts no bills. If you add that, read the [standard’s connect section](https://aipathway.com.au/explore-ai/invoice-check-build-standard) first: the stop at draft has to be in the build, and its pass test checks it.
+This plan drafts no bills. If you add that, read the [standard’s connect section](https://aipathway.com.au/explore-ai/invoice-check-build-standard) first. The build has to stop at a draft bill, and its pass test checks that it does.
 
 Give it the least it needs.
 
@@ -184,7 +184,7 @@ Why not a bill capture add-on for Xero? Bill capture reads an invoice into a bil
 
 ## 7. The order to build it in
 
-1. Stand up the reference the invoice is checked against. Without it nothing downstream means anything.
+1. Set up the order or schedule each invoice is checked against. Without it, none of the later checks mean anything.
 2. Create the library and three lists. Index InvoiceRef everywhere.
 3. Build Flow 1 and confirm the original is stored unchanged with a row beside it.
 4. Build Flow 2 with check 1 only, in a sequential scope with the termination already in place. Add checks 2 to 4 afterwards.
@@ -196,7 +196,7 @@ Why not a bill capture add-on for Xero? Bill capture reads an invoice into a bil
 
 ### Running the four checks in parallel
 
-Parallel branches are the obvious Power Automate shape and they are wrong here. The order is the claim the standard makes: a rate failure makes the quantity comparison meaningless, and running it anyway produces a second difference that is not real. Use a sequential scope with a termination condition.
+Parallel branches are the obvious Power Automate shape and they are wrong here. Each check has to pass before the next one runs. A rate failure makes the quantity comparison meaningless, and running it anyway produces a second difference that is not real. Use a sequential scope with a termination condition.
 
 ### Storing the source document as an attachment only
 
@@ -212,10 +212,10 @@ If the extraction produces 0.82 and nothing says why, nobody can decide whether 
 
 ## 9. Where the automation stops
 
-- Approving or rejecting a payment. The workflow produces a difference and evidence; the decision is a person's and it is recorded as theirs.
-- Accepting a variation. That is a commercial decision with contractual consequences.
+- Approving or rejecting a payment. The workflow gives you a difference and the evidence. You make the decision, and it is recorded under your name.
+- Accepting a variation. That is a business decision with consequences under the contract.
 - Anything that assesses, chases or advises on a statutory payment claim. Security of Payment is a statutory process and it stays with the client and their advisor.
-- Changing the reference. If the order is wrong, that is a conversation, not a correction a flow makes on the way past.
+- Changing the order or schedule. If the order is wrong, a person talks it through and fixes it. A flow never corrects it.
 
 **The pass test.** Stage an invoice that fails the second check and passes the first. Run it. You must get exactly two CheckResults rows with a status of pass or fail, two more recorded as not_run, and one Exception whose NeverRan names those two. Then decide that exception and confirm the row is still there with its Difference intact and DecidedBy set. A minute on test data. If all four checks produced a difference, they ran in parallel and three of those numbers are meaningless. If deciding emptied or removed the row, the cumulative position across the order is already gone.
 

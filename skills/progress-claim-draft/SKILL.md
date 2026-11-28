@@ -103,7 +103,7 @@ skill asserts.
 - 6. What the law says, and what we leave to you
 - 7. What stays with a person
 - 8. Run it your way
-- 9. Join It to Your Own System: What to Stub, and What Not to Hand-Roll
+- 9. Join It to Your Own System: What to Build, and What Not to Build From Scratch
 - 10. A checklist to hold any build or supplier to
 
 ## Attribution

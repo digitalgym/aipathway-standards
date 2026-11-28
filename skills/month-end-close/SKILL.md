@@ -98,10 +98,10 @@ skill asserts.
 - 3. The close pack, in the shape your developer needs
 - 4. The checks, in order
 - 5. One company at the end of October
-- 6. Writing into your accounts, once
+- 6. Each journal goes into your accounts once
 - 7. What stays with a person
 - 8. Run it your way
-- 9. Join It to Your Own Ledger: What to Stub, and What Not to Hand-Roll
+- 9. Connect It to Your Own Accounts: What to Test First, and What Needs Care
 - 10. A checklist to hold any build or supplier to
 
 ## Attribution

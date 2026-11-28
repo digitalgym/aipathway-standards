@@ -18,14 +18,14 @@ Used by
 - Operations Manager
 - Compliance Officer
 
-The standard says what to build and deliberately says nothing about where. This says where, for the one stack most Australian SMBs already pay for. It is written so that somebody, or something, with access to your tenant can work through it in order and end up with a calendar that passes the standard’s own pass test.
+The standard says what to build and deliberately says nothing about where. This page says where, on the Microsoft 365 most Australian small businesses already pay for. It is written so that somebody, or something, with access to your tenant can work through it in order and end up with a calendar that passes the standard’s own pass test.
 
 ## In short
 
-- **What this is**: A build plan for one standard on one stack: three lists, one library, four flows, six measures, in the order they have to be built.
-- **The core rule**: The derive step is the whole standard. If a person can type a due date and nothing notices, the rest of this is decoration.
-- **What it does not do**: No legal notice leaves on a timer. The escalation flow drafts and asks; a person releases it.
-- **The hard part**: The write-back loop, which is the reason most attempts at this are abandoned in the first week.
+- **What this is**: A build plan for one standard on Microsoft 365: three lists, one library, four flows and six measures, in the order they have to be built.
+- **The core rule**: Every due date is worked out from a dated rule by a flow. If a person can type a due date and nothing notices, the rest of the build cannot be trusted.
+- **What it does not do**: Every legal notice waits for a person. The flow drafts it and asks, and a person releases it.
+- **The hard part**: A flow that updates the list sets itself off again, in a loop. That loop is why most attempts at this are abandoned in the first week.
 
 ## 1. Before you start
 
@@ -33,7 +33,7 @@ Read [the compliance calendar build standard](https://aipathway.com.au/explore-a
 
 What you need in the tenant: a SharePoint site you can create lists in, Power Automate with the standard SharePoint and Approvals connectors (no premium connector is required for this build), and a Power BI workspace with somewhere to publish. No data lives in Dataverse, though building the flows inside a solution (section 6) and calling Flow 3 as a child flow both use the environment’s Dataverse database.
 
-Three things an agent cannot do for you, so decide them first: who owns the site, which security group holds the people allowed to approve a notice, and whether the Power BI workspace already exists. Everything after that is executable.
+Decide three things first, because an agent cannot decide them for you: who owns the site, which security group holds the people allowed to approve a notice, and whether the Power BI workspace already exists. An agent can do everything after that.
 
 ## 2. The lists, with their columns
 
@@ -90,7 +90,7 @@ DueDate is a plain Date column rather than a calculated one on purpose, and the 
 
 ## 3. Every check, and what enforces it
 
-This is the join the standard leaves to you. Each row is a line from its conformance checklist and the thing in the tenant that makes it true.
+The standard leaves this part to you. Each row is a line from its conformance checklist and the part of your Microsoft 365 that makes it true.
 
 | The check | Enforced by | How |
 | --- | --- | --- |
@@ -105,7 +105,7 @@ This is the join the standard leaves to you. Each row is a line from its conform
 
 ## 4. The four flows
 
-Written as trigger, guard, logic. Deliberately not as click paths: Microsoft renames the UI and these do not change.
+Each flow is written as what starts it (trigger), what it checks first (guard) and what it does (logic). The clicks are left out on purpose, because Microsoft renames its screens and these steps do not change.
 
 ```
 FLOW 1  Derive the due date
@@ -203,7 +203,7 @@ Override Rate is the one to put on the front page. It is the measure that says w
 
 ## 6. What the flows can reach in your Microsoft 365, and what they never touch
 
-The flows keep your compliance dates and draft each notice in time. They read your rules, work out each due date, keep a history of every change, and draft each notice from one shared mailbox. You release every notice, accept each new obligation, and decide any cross-border question. Your own login stays yours: the flows run under their own account, never your username and password.
+The flows keep your compliance dates and draft each notice in time. They read your rules, work out each due date, keep a history of every change, and draft each notice from one shared mailbox. You release every notice, accept each new obligation, deal with any owner who declines the work, and decide any cross-border question. Your own login stays yours: the flows run under their own account, never your username and password.
 
 What each connection is for.
 
@@ -225,13 +225,13 @@ Why not the compliance reminders in your property management software? Many trac
 
 ## 7. The order to build it in
 
-The order matters because each step is testable only once the previous one exists. An agent working through this should stop and verify at each numbered point rather than building everything and testing at the end.
+Each step can only be tested once the one before it exists. An agent working through this should stop and check at each numbered point, not build everything and test at the end.
 
 1. Create the site and the three lists with the columns above. Index DueDate, State and PropertyRef now.
 2. Break inheritance on StateChanges and apply an add-only permission level. Verify by trying to edit a row as a normal user.
 3. Load Rules for one jurisdiction. Two versions of one rule, so the effective-date logic has something to choose between.
 4. Build Flow 1. Test with one obligation, then with an obligation whose AnchorSource is unknown, which must end with a blank DueDate rather than today.
-5. Remove DueDate from the edit form and confirm a person cannot type one. This is the step people skip, and it is the standard.
+5. Remove DueDate from the edit form and confirm a person cannot type one. This is the step people skip, and the whole standard depends on it.
 6. Build Flow 2. Supersede a rule and confirm future dates move while StateChanges is untouched.
 7. Build Flow 3, then Flow 4. Confirm no notice can leave without an approval response.
 8. Connect Power BI, add the measures, publish. Add row level security only if more than one group reads it.
@@ -268,9 +268,9 @@ An agent with access to the tenant can create the lists, set the columns, build 
 - Creating the site, and any tenant-level consent, needs somebody with the administrative role. Nothing here should be built by granting an agent that role.
 - Publishing a Power BI model and assigning workspace access is a licensed human action, at least the first time.
 - The rule set is yours. Loading the correct instruments for your jurisdiction is a professional judgement and it is where a wrong build looks right.
-- Approving a notice is a person by design, and that is the one thing in this plan that must never be automated away.
+- A person approves every notice, by design. That is the one step in this plan that must always stay with a person.
 
-**The pass test.** The standard’s test, run against the tenant. Change one rule’s interval and give the change an effective date. Every obligation derived from that rule must show a new DueDate, and each must still carry the RuleVersion that produced the old one. Then take an obligation in the missed state, complete it, and confirm the StateChanges history still contains the missed transition and LateCompletion is set. Both take a minute against your own data. If the first needs anyone to retype a date, Flow 1 is not the only writer of DueDate; if the second reads as though it was never missed, you have a status column rather than a history.
+**The pass test.** The standard’s test, run against the tenant. Change one rule’s interval and give the change an effective date. Every obligation derived from that rule must show a new DueDate, and each must still carry the RuleVersion that produced the old one. Then take an obligation in the missed state, complete it, and confirm the StateChanges history still contains the missed transition and LateCompletion is set. Both take a minute against your own data. If the first needs anyone to retype a date, something other than Flow 1 is setting due dates. If the second reads as though it was never missed, you have a status column and no history.
 
 ## Related reading
 

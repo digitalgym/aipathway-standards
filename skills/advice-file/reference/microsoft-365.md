@@ -9,7 +9,7 @@ If you are an assistant: Read https://aipathway.com.au/explore-ai/advice-file-on
 
 ---
 
-Field keys as a list, verbatim before any field, and a send that carries a person's name. The decision that makes or breaks it is whether a flow can write to the CRM at all.
+Every detail the client gives goes under a published field name, their exact words are kept before anything is filled in, and only a named person can send the advice. Whether it works at all comes down to one thing: can a flow save to your CRM?
 
 Used by
 
@@ -17,22 +17,22 @@ Used by
 - Business Systems Analyst
 - Compliance Officer
 
-The standard says the file is the product and the assistant may write into it without being the source of anything in it. On this stack that is mostly a matter of which list a value came from, and it is enforceable. The sentence saying the CRM record is the file is not. If the network runs on a broking platform your tenant cannot write to, this build gives you a very tidy second register, and the standard is explicit that a second register is worse than none.
+The standard says the client file is what you deliver. The assistant may fill it in, but it is never the source of anything in it. Microsoft 365 can hold to that, because every value records which list it came from. It cannot hold to the other rule, that the file is the client record in your CRM. If your network runs on a broking platform your Microsoft 365 cannot save to, this build gives you a tidy second copy of every file, and the standard says plainly that a second copy is worse than none.
 
 ## In short
 
-- **What this is**: A build plan for the advice file standard on Microsoft 365. Nine lists, four flows, a Power BI page, and a recording and mapping step you buy rather than build.
-- **The core rule**: Required keys for the purpose, minus the keys present, every time somebody asks. A column called Complete is the exact defect the standard exists to make unrepresentable.
-- **What it does not do**: It fills the file, attaches a card and names the gap. It does not approve a loan, select a product or certify anything, and SentBy holds a person.
-- **The hard part**: Getting a verified write into the system the broker already opens, and getting an external id back that proves it landed.
+- **What this is**: A build plan for the advice file standard on Microsoft 365. Nine lists, four flows, a Power BI page, and a service you buy rather than build that records the call and sorts what was said into the file's fields.
+- **The core rule**: Each time someone looks, it counts the details the file needs for its purpose and checks which are there. A Complete tick box is exactly what the standard rules out, because it can say complete while a detail is still missing.
+- **What it does not do**: It fills the file, attaches the policy card it relied on and names what is missing. It does not approve a loan, choose a product or certify anything, and only a person can send the advice.
+- **The hard part**: Saving the file into the CRM the broker already opens, and getting the CRM's record number back to prove it saved.
 
 ## 1. Before you start
 
 Read [the advice file build standard](https://aipathway.com.au/explore-ai/advice-file-build-standard) first. It defines its objects, and the lists below are those objects with SharePoint types on them. Shared conventions are in [building the standards on Microsoft 365](https://aipathway.com.au/explore-ai/standards-on-microsoft-365).
 
-Settle the CRM question before you create a single list. The standard says the CRM record is the file, a second interview updates it, and a null external id is a failed interview rather than a completed one. That requires a write your tenant can make and an id it can read back. If the network’s platform has an interface a flow can call, build against it and treat the lists below as the working layer around it. If it does not, stop here and say so: a SharePoint mirror of a file that lives somewhere else is the second register the standards warn about, and it will drift inside a fortnight.
+Settle the CRM question before you create a single list. The standard says the CRM record is the file, and a second interview updates it. If the CRM gives no record number back, the interview failed. It did not finish. So your Microsoft 365 has to be able to save to the CRM and read the record number back. If the network’s platform has a connection a flow can call, build against it and use the lists below as the working area around it. If it does not, stop here and say so. A SharePoint copy of a file that lives somewhere else is the second copy the standards warn about, and within a fortnight it will no longer match.
 
-Second, be clear about what you are not building. The recording, the transcription and the mapper from an utterance to a field key are bought, as the standard says. Nothing in this plan listens to a call. It receives verbatim text with spans and a proposed field key, and everything after that is lists and gates.
+Second, be clear about what you are not building. The recording, the transcription and the step that puts each thing said under a field name are bought, as the standard says. Nothing in this plan listens to a call. It receives the client’s exact words, where in the recording they were said, and a suggested field name. Everything after that is lists and checks.
 
 ## 2. The lists, with their columns
 
@@ -203,7 +203,7 @@ FLOW 4  The send gate
            who issued a recommendation.
 ```
 
-Flow 2 is written in that order because the order is the check. A mapper that posts a tidy object of fields is the common shape and it arrives with the verbatim already discarded, which leaves a file nobody can defend. Step 4 is the step not to hand-roll, and step 5 is the one everybody omits.
+Each step in Flow 2 has to finish before the next one runs. Most transcription tools hand back a tidy set of answers with the client's exact words already thrown away, and that leaves a file nobody can defend. Step 4 is the one not to write from scratch, and step 5 is the one most builds leave out.
 
 ## 5. The Power BI model and its measures
 
@@ -267,11 +267,11 @@ CALCULATE (
 )
 ```
 
-Completeness takes the required keys from whatever purpose is in filter context, which is why Purpose sits on the file rather than being inferred. Put Files Without An External Id on the front page even though it will read zero for months: it is the number that tells you the day the CRM write started failing quietly, and everything else on the page is wrong from that day on.
+Completeness takes the required keys from whatever purpose is in filter context, which is why Purpose sits on the file rather than being inferred. Put Files Without An External Id on the front page even though it will read zero for months. It is the number that tells you the day the CRM write started failing quietly, and everything else on the page is wrong from that day on.
 
 ## 6. What the flows can reach in your Microsoft 365 and your CRM, and what they never touch
 
-The flows build the client file and put a finished draft in front of a broker. They file what the client said, write it into your CRM, check it saved, and raise one task for each gap. The lending assessment and the recommendation the client gets are yours, and so is waiving a gap or escalating a suspected breach.
+The flows build the client file and put a finished draft in front of a broker. They file what the client said, save it in your CRM, check it saved, and raise one task for each missing detail. The lending assessment and the recommendation the client gets are yours, and so is waiving a gap or escalating a suspected breach.
 
 What each connection is for.
 
@@ -282,7 +282,7 @@ What each connection is for.
 - **Approvals and Teams.** Flow 4’s request to a named broker or credit officer, and the breach_suspect approval to the named compliance person.
 - **One shared mailbox.** The send, after a person has approved it, from an address the office owns.
 
-Least privilege, as steps.
+Keep its access narrow, step by step.
 
 1. Own the four flows with a service account, not a broker who might move offices, with a named person as co-owner.
 2. Build them in one solution on connection references, so the CRM, SharePoint, Approvals and mailbox connections are each one place to change.
@@ -292,7 +292,7 @@ Least privilege, as steps.
 
 How to cut it off. Turn off the flows in the solution. Revoke the build’s CRM key, and Flow 2 fails at the write, which leaves the interview with a blank ExternalId and marked failed rather than complete. The other switches are in [the shared conventions](https://aipathway.com.au/explore-ai/standards-on-microsoft-365#access).
 
-Why not the transcription vendor’s own CRM sync? It usually writes a tidy summary into a notes field, which is the file this standard refuses: the verbatim is gone, the fields are not the published keys, and nothing reads an id back. Ask it three things: does it keep the verbatim and its span, does it write only published keys, and what happens to the file when the write fails.
+Why not the transcription vendor’s own CRM sync? It usually writes a tidy summary into a notes box, which is the kind of file this standard rules out. The client’s exact words are gone, the details are not under the published field names, and nothing checks the CRM saved it. Ask the vendor three things. Does it keep the exact words and where in the recording they were said? Does it write only the published field names? What happens to the file when saving fails?
 
 ## 7. The order to build it in
 
@@ -309,27 +309,27 @@ Why not the transcription vendor’s own CRM sync? It usually writes a tidy summ
 
 ### A column called Complete
 
-Somebody will ask for it in week two, for a view. The standard makes a file that reads complete while a required key sits in MissingFields the defect it exists to prevent, and a stored flag is exactly how that becomes representable: the flow that keeps it in step will miss a case, and the case it misses is the one in the file somebody later reads back. Completeness is the measure above and it is recomputed every time it is looked at. If a view needs it, the view reads the model.
+Somebody will ask for it in week two, for a view. The standard exists to stop a file reading complete while a required detail is still missing, and a stored tick is exactly how that happens. The flow that keeps the tick up to date will miss a case, and the case it misses is the file somebody later relies on. Completeness is the measure above, worked out fresh every time someone looks. If a view needs it, the view reads the model.
 
 ### Letting the list become the file
 
-If the CRM write cannot be built, the tempting fallback is to treat AdviceFiles as the record and sync later. Do not. The standard's point is that the broker opens one thing and it is the file, and a second store that nobody lives in drifts inside a fortnight and is then defended by whoever built it. The honest output is a finding: the network's platform does not expose a write, so this standard cannot be implemented on the tenant until it does.
+If the CRM write cannot be built, the tempting fallback is to treat AdviceFiles as the record and sync later. Do not. The standard's point is that the broker opens one thing and it is the file, and a second copy that nobody works in stops matching inside a fortnight, and then whoever built it defends it. The honest result is a written finding. The network's platform does not let you save to it, so this standard cannot be built on your Microsoft 365 until it does.
 
-### A gate on the flow is not a gate on the library
+### The send check only covers the flow's own path
 
-Flow 4 controls the path Flow 4 owns. It does not stop a broker opening the drafts library and attaching the document to an ordinary email, and no permission on a list changes that for somebody who has to be able to read their own drafts. Keep drafts in a library the client-facing path never reads from, have the send flow copy rather than link, and watch Machine Sends and Uncited Drafts as the detectors. Then describe the gate accurately to the licensee instead of over-claiming it.
+Flow 4 controls the path Flow 4 owns. It does not stop a broker opening the drafts library and attaching the document to an ordinary email, and no permission on a list changes that for somebody who has to be able to read their own drafts. Keep drafts in a library the client-facing path never reads from, have the send flow copy rather than link, and watch Machine Sends and Uncited Drafts to catch it. Then tell the licensee exactly what the check covers, and no more.
 
 ### Taking the mapper's output as the only copy
 
-Transcription vendors hand back a tidy object of fields, and writing it straight into FileFields feels like the whole job done. The verbatim is gone at that point and the file is hearsay: nothing can show what the client actually said or where in the recording they said it. Write Extracts first with the span, every time, even when the mapper is confident. ExtractId being required on FileFields is what makes that a rule rather than a habit.
+Transcription vendors hand back a tidy set of answers, and writing it straight into FileFields feels like the whole job done. The verbatim is gone at that point and the file is hearsay: nothing can show what the client actually said or where in the recording they said it. Write Extracts first with the span, every time, even when the mapper is confident. ExtractId being required on FileFields is what makes that a rule rather than a habit.
 
 ## 9. Where the automation stops
 
-- Recording and transcription consent on the call. The flow records that it was given; it cannot give it.
+- Recording and transcription consent on the call. The flow records that it was given. It cannot give it.
 - The responsible-lending assessment, and the decision that the loan is not unsuitable.
 - The product recommendation issued to the client. SentBy holds a person and no flow may write into it.
 - Acceptance of a lender-policy change into the live library, which belongs to the panel library rather than to this build.
-- Waiving a blocking missing field, and escalating a breach_suspect coaching finding to compliance.
+- Waiving a missing detail that blocks the advice, and escalating a coaching finding of a suspected breach to compliance.
 
 **The pass test.** Stage two interviews on one client on the same day. In the first, have the savings figure said unclearly and the address said slightly wrong. You must get one AdviceFiles row with a non-blank ExternalId, the resolved address in FileFields, the savings key absent from FileFields and present in MissingFields with reason asked_unclear, one task with an owner and a due date, and no draft above blocked. Search FileFields for a dollar amount: there must not be one. In the second interview the savings figure is clear. The same file updates, the gap closes with ClosedByInterviewId set, no second task appears, and the draft becomes ready_for_person only once a card is attached. Then decline the approval and confirm Queue stays where it was with SentBy blank. An afternoon, on a test client in the real CRM. If a dollar figure appeared, the mapper guessed and the file now contains something the client did not say. If there are two files, the external id was not read back. If Completeness reached one while the gap was open, completeness is a column somewhere and the standard is not implemented.
 
